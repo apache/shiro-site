@@ -22,18 +22,21 @@
     <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
     <meta name="y_key" content="e47896cd6bae4920">
 
-    ## Only render a <title> element if the page specifies a title:
+    <title>
     #if ($title)
-        <title>
         #if($title.contains("|"))
-            ## specifying a custom title, just render it directly:
+            ## The page has a full custom title, render it directly:
             $title
         #else
             ## standard title, append the project name appended for SEO:
             $title | Apache Shiro
         #end
-        </title>
+    #else
+        ## No title found in the page metadata, set the default:
+        Apache Shiro | Java Security Framework
     #end
+    </title>
+
 
     <link rel="icon" type="image/vnd.microsoft.icon" href="$root/assets/images/favicon.ico">
 
