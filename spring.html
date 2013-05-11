@@ -1,0 +1,208 @@
+<h1><a name="Spring-IntegratingApacheShirointoSpringbasedApplications"></a>Integrating Apache Shiro into Spring based Applications</h1>
+
+<p>This page covers the ways to integrate Shiro into <a class="external-link" href="http://www.springframework.org" rel="nofollow">Spring</a>-based applications.</p>
+
+<p>Shiro's JavaBeans compatibility makes it perfectly suited to be configured via Spring XML or other Spring-based configuration mechanisms.  Shiro applications need an application singleton <tt>SecurityManager</tt> instance.  Note that this does not have to be a <em>static</em> singleton, but there should only be a single instance used by the application, whether its a static singleton or not.</p>
+
+<h2><a name="Spring-StandaloneApplications"></a>Standalone Applications</h2>
+
+<p>Here is the simplest way to enable an application singleton <tt>SecurityManager</tt> in Spring applications:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">
+<span class="code-tag"><span class="code-comment">&lt;!-- Define the realm you want to use to connect to your back-end security datasource: --&gt;</span></span>
+<span class="code-tag">&lt;bean id=<span class="code-quote">"myRealm"</span> class=<span class="code-quote">"..."</span>&gt;</span>
+...
+<span class="code-tag">&lt;/bean&gt;</span>
+
+<span class="code-tag">&lt;bean id=<span class="code-quote">"securityManager"</span> class=<span class="code-quote">"org.apache.shiro.mgt.DefaultSecurityManager"</span>&gt;</span>
+    <span class="code-tag"><span class="code-comment">&lt;!-- Single realm app.  If you have multiple realms, use the 'realms' property instead. --&gt;</span></span>
+    <span class="code-tag">&lt;property name=<span class="code-quote">"realm"</span> ref=<span class="code-quote">"myRealm"</span>/&gt;</span>
+<span class="code-tag">&lt;/bean&gt;</span>
+<span class="code-tag">&lt;bean id=<span class="code-quote">"lifecycleBeanPostProcessor"</span> class=<span class="code-quote">"org.apache.shiro.spring.LifecycleBeanPostProcessor"</span>/&gt;</span>
+
+<span class="code-tag"><span class="code-comment">&lt;!-- For simplest integration, so that all SecurityUtils.* methods work in all cases, --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- make the securityManager bean a static singleton.  DO NOT do this in web         --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- applications - see the 'Web Applications' section below instead.                 --&gt;</span></span>
+<span class="code-tag">&lt;bean class=<span class="code-quote">"org.springframework.beans.factory.config.MethodInvokingFactoryBean"</span>&gt;</span>
+    <span class="code-tag">&lt;property name=<span class="code-quote">"staticMethod"</span> value=<span class="code-quote">"org.apache.shiro.SecurityUtils.setSecurityManager"</span>/&gt;</span>
+    <span class="code-tag">&lt;property name=<span class="code-quote">"arguments"</span> ref=<span class="code-quote">"securityManager"</span>/&gt;</span>
+<span class="code-tag">&lt;/bean&gt;</span>
+</pre>
+</div></div>
+
+
+<h2><a name="Spring-WebApplications"></a>Web Applications</h2>
+
+<p>Shiro has first-rate support for Spring web applications.  In a web application, all Shiro-accessible web requests must go through a master Shiro Filter.  This filter itself is extremely powerful, allowing for <br clear="none">
+ad-hoc custom filter chains to be executed based on any URL path expression.</p>
+
+<p>Prior to Shiro 1.0, you had to use a hybrid approach in Spring web applications, defining the Shiro filter and<br clear="none">
+all of its configuration properties in web.xml but define the <tt>SecurityManager</tt> in Spring XML.  This was a little frustrating since you couldn't 1) consolidate your configuration in one place and 2) leverage the configuration power of the more advanced Spring features, like the <tt>PropertyPlaceholderConfigurer</tt> or abstract beans to consolidate common configuration.</p>
+
+<p>Now in Shiro 1.0 and later, all Shiro configuration is done in Spring XML providing access to the more robust Spring configuration mechanisms.</p>
+
+<p>Here is how to configure Shiro in a Spring-based web application:</p>
+
+<h3><a name="Spring-web.xml"></a>web.xml</h3>
+
+<p>In addition to your other Spring web.xml elements (<tt>ContextLoaderListener</tt>, <tt>Log4jConfigListener</tt>, etc), define the following filter and filter mapping:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">
+<span class="code-tag"><span class="code-comment">&lt;!-- The filter-name matches name of a 'shiroFilter' bean inside applicationContext.xml --&gt;</span></span>
+<span class="code-tag">&lt;filter&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>shiroFilter<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;filter-class&gt;</span>org.springframework.web.filter.DelegatingFilterProxy<span class="code-tag">&lt;/filter-class&gt;</span>
+    <span class="code-tag">&lt;init-param&gt;</span>
+        <span class="code-tag">&lt;param-name&gt;</span>targetFilterLifecycle<span class="code-tag">&lt;/param-name&gt;</span>
+        <span class="code-tag">&lt;param-value&gt;</span>true<span class="code-tag">&lt;/param-value&gt;</span>
+    <span class="code-tag">&lt;/init-param&gt;</span>
+<span class="code-tag">&lt;/filter&gt;</span>
+
+...
+
+<span class="code-tag"><span class="code-comment">&lt;!-- Make sure any request you want accessible to Shiro is filtered. /* catches all --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- requests.  Usually this filter mapping is defined first (before all others) to --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- ensure that Shiro works in subsequent filters in the filter chain:             --&gt;</span></span>
+<span class="code-tag">&lt;filter-mapping&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>shiroFilter<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;url-pattern&gt;</span>/*<span class="code-tag">&lt;/url-pattern&gt;</span>
+<span class="code-tag">&lt;/filter-mapping&gt;</span>
+</pre>
+</div></div>
+
+<h3><a name="Spring-applicationContext.xml"></a>applicationContext.xml</h3>
+
+<p>In your applicationContext.xml file, define the web-enabled <tt>SecurityManager</tt> and the 'shiroFilter' bean that will be referenced from <tt>web.xml</tt>.</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">
+<span class="code-tag">&lt;bean id=<span class="code-quote">"shiroFilter"</span> class=<span class="code-quote">"org.apache.shiro.spring.web.ShiroFilterFactoryBean"</span>&gt;</span>
+    <span class="code-tag">&lt;property name=<span class="code-quote">"securityManager"</span> ref=<span class="code-quote">"securityManager"</span>/&gt;</span>
+    &lt;!-- override these for application-specific URLs if you like:
+    <span class="code-tag">&lt;property name=<span class="code-quote">"loginUrl"</span> value=<span class="code-quote">"/login.jsp"</span>/&gt;</span>
+    <span class="code-tag">&lt;property name=<span class="code-quote">"successUrl"</span> value=<span class="code-quote">"/home.jsp"</span>/&gt;</span>
+    <span class="code-tag">&lt;property name=<span class="code-quote">"unauthorizedUrl"</span> value=<span class="code-quote">"/unauthorized.jsp"</span>/&gt;</span> --&gt;
+    <span class="code-tag"><span class="code-comment">&lt;!-- The 'filters' property is not necessary since any declared javax.servlet.Filter bean  --&gt;</span></span>
+    <span class="code-tag"><span class="code-comment">&lt;!-- defined will be automatically acquired and available via its beanName in chain        --&gt;</span></span>
+    <span class="code-tag"><span class="code-comment">&lt;!-- definitions, but you can perform instance overrides or name aliases here if you like: --&gt;</span></span>
+    <span class="code-tag">&lt;!-- &lt;property name=<span class="code-quote">"filters"</span>&gt;</span>
+        <span class="code-tag">&lt;util:map&gt;</span>
+            <span class="code-tag">&lt;entry key=<span class="code-quote">"anAlias"</span> value-ref=<span class="code-quote">"someFilter"</span>/&gt;</span>
+        <span class="code-tag">&lt;/util:map&gt;</span>
+    <span class="code-tag">&lt;/property&gt;</span> --&gt;
+    <span class="code-tag">&lt;property name=<span class="code-quote">"filterChainDefinitions"</span>&gt;</span>
+        <span class="code-tag">&lt;value&gt;</span>
+            # some example chain definitions:
+            /admin/** = authc, roles[admin]
+            /docs/** = authc, perms[document:read]
+            /** = authc
+            # more URL-to-FilterChain definitions here
+        <span class="code-tag">&lt;/value&gt;</span>
+    <span class="code-tag">&lt;/property&gt;</span>
+<span class="code-tag">&lt;/bean&gt;</span>
+
+<span class="code-tag"><span class="code-comment">&lt;!-- Define any javax.servlet.Filter beans you want anywhere in this application context.   --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- They will automatically be acquired by the 'shiroFilter' bean above and made available --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- to the 'filterChainDefinitions' property.  Or you can manually/explicitly add them     --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- to the shiroFilter's 'filters' Map if desired. See its JavaDoc for more details.       --&gt;</span></span>
+<span class="code-tag">&lt;bean id=<span class="code-quote">"someFilter"</span> class=<span class="code-quote">"..."</span>/&gt;</span>
+<span class="code-tag">&lt;bean id=<span class="code-quote">"anotherFilter"</span> class=<span class="code-quote">"..."</span>&gt;</span> ... <span class="code-tag">&lt;/bean&gt;</span>
+...
+
+<span class="code-tag">&lt;bean id=<span class="code-quote">"securityManager"</span> class=<span class="code-quote">"org.apache.shiro.web.mgt.DefaultWebSecurityManager"</span>&gt;</span>
+    <span class="code-tag"><span class="code-comment">&lt;!-- Single realm app.  If you have multiple realms, use the 'realms' property instead. --&gt;</span></span>
+    <span class="code-tag">&lt;property name=<span class="code-quote">"realm"</span> ref=<span class="code-quote">"myRealm"</span>/&gt;</span>
+    &lt;!-- By default the servlet container sessions will be used.  Uncomment this line
+         to use shiro's native sessions (see the JavaDoc for more): --&gt;
+    <span class="code-tag"><span class="code-comment">&lt;!-- &lt;property name=<span class="code-quote">"sessionMode"</span> value=<span class="code-quote">"native"</span>/&gt;</span> --&gt;</span>
+<span class="code-tag">&lt;/bean&gt;</span>
+<span class="code-tag">&lt;bean id=<span class="code-quote">"lifecycleBeanPostProcessor"</span> class=<span class="code-quote">"org.apache.shiro.spring.LifecycleBeanPostProcessor"</span>/&gt;</span>
+
+<span class="code-tag"><span class="code-comment">&lt;!-- Define the Shiro Realm implementation you want to use to connect to your back-end --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- security datasource: --&gt;</span></span>
+<span class="code-tag">&lt;bean id=<span class="code-quote">"myRealm"</span> class=<span class="code-quote">"..."</span>&gt;</span>
+...
+<span class="code-tag">&lt;/bean&gt;</span>
+</pre>
+</div></div>
+
+<h2><a name="Spring-EnablingShiroAnnotations"></a>Enabling Shiro Annotations</h2>
+
+<p>In both standalone and web applications, you might want to use Shiro's Annotations for security checks (for example, <tt>@RequiresRoles</tt>, <tt>@RequiresPermissions</tt>, etc.  This requires Shiro's Spring AOP integration to scan for the appropriate annotated classes and perform security logic as necessary. </p>
+
+<p>Here is how to enable these annotations.  Just add these two bean definitions to <tt>applicationContext.xml</tt>:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">
+<span class="code-tag"><span class="code-comment">&lt;!-- Enable Shiro Annotations for Spring-configured beans.  Only run after --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- the lifecycleBeanProcessor has run: --&gt;</span></span>
+<span class="code-tag">&lt;bean class=<span class="code-quote">"org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"</span> depends-on=<span class="code-quote">"lifecycleBeanPostProcessor"</span>/&gt;</span>
+<span class="code-tag">&lt;bean class=<span class="code-quote">"org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor"</span>&gt;</span>
+    <span class="code-tag">&lt;property name=<span class="code-quote">"securityManager"</span> ref=<span class="code-quote">"securityManager"</span>/&gt;</span>
+<span class="code-tag">&lt;/bean&gt;</span>
+</pre>
+</div></div>
+
+<h2><a name="Spring-SecureSpringRemoting"></a>Secure Spring Remoting</h2>
+
+<p>There are two parts to Shiro's Spring remoting support: Configuration for the client making the remoting call and configuration for the server receiving and processing the remoting call.</p>
+
+<h3><a name="Spring-ServersideConfiguration"></a>Server-side Configuration</h3>
+
+<p>When a remote method invocation comes in to a Shiro-enabled server, the <a href="subject.html" title="Subject">Subject</a> associated with that RPC call must be bound to the receiving thread for access during the thread's execution.  This is done by defining Shiro's <tt>SecureRemoteInvocationExecutor</tt> bean in <tt>applicationContext.xml</tt>:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">
+<span class="code-tag"><span class="code-comment">&lt;!-- Secure Spring remoting:  Ensure any Spring Remoting method invocations --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- can be associated with a Subject for security checks. --&gt;</span></span>
+<span class="code-tag">&lt;bean id=<span class="code-quote">"secureRemoteInvocationExecutor"</span> class=<span class="code-quote">"org.apache.shiro.spring.remoting.SecureRemoteInvocationExecutor"</span>&gt;</span>
+    <span class="code-tag">&lt;property name=<span class="code-quote">"securityManager"</span> ref=<span class="code-quote">"securityManager"</span>/&gt;</span>
+<span class="code-tag">&lt;/bean&gt;</span>
+</pre>
+</div></div>
+
+<p>Once you have defined this bean, you must plug it in to whatever remoting <tt>Exporter</tt> you are using to export/expose your services.  <tt>Exporter</tt> implementations are defined according to the remoting mechanism/protocol in use.  See Spring's <a class="external-link" href="http://static.springsource.org/spring/docs/2.5.x/reference/remoting.html" rel="nofollow">Remoting chapter</a> on defining <tt>Exporter</tt> beans.</p>
+
+<p>For example, if using HTTP-based remoting (notice the property reference to the <tt>secureRemoteInvocationExecutor</tt> bean):</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">
+<span class="code-tag">&lt;bean name=<span class="code-quote">"/someService"</span> class=<span class="code-quote">"org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"</span>&gt;</span>
+    <span class="code-tag">&lt;property name=<span class="code-quote">"service"</span> ref=<span class="code-quote">"someService"</span>/&gt;</span>
+    <span class="code-tag">&lt;property name=<span class="code-quote">"serviceInterface"</span> value=<span class="code-quote">"com.pkg.service.SomeService"</span>/&gt;</span>
+    <span class="code-tag">&lt;property name=<span class="code-quote">"remoteInvocationExecutor"</span> ref=<span class="code-quote">"secureRemoteInvocationExecutor"</span>/&gt;</span>
+<span class="code-tag">&lt;/bean&gt;</span>
+</pre>
+</div></div>
+
+<h3><a name="Spring-ClientsideConfiguration"></a>Client-side Configuration</h3>
+
+<p>When a remote call is being executed, the <tt>Subject</tt> identifying information must be attached to the remoting payload to let the server know who is making the call.  If the client is a Spring-based client, that association is done via Shiro's <tt>SecureRemoteInvocationFactory</tt>:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">
+<span class="code-tag">&lt;bean id=<span class="code-quote">"secureRemoteInvocationFactory"</span> class=<span class="code-quote">"org.apache.shiro.spring.remoting.SecureRemoteInvocationFactory"</span>/&gt;</span>
+</pre>
+</div></div>
+
+<p>Then after you've defined this bean, you need to plug it in to the protocol-specific Spring remoting <tt>ProxyFactoryBean</tt> you're using.</p>
+
+<p>For example, if you were using HTTP-based remoting (notice the property reference to the <tt>secureRemoteInvocationFactory</tt> bean defined above):</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">
+<span class="code-tag">&lt;bean id=<span class="code-quote">"someService"</span> class=<span class="code-quote">"org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean"</span>&gt;</span>
+    <span class="code-tag">&lt;property name=<span class="code-quote">"serviceUrl"</span> value=<span class="code-quote">"http://host:port/remoting/someService"</span>/&gt;</span>
+    <span class="code-tag">&lt;property name=<span class="code-quote">"serviceInterface"</span> value=<span class="code-quote">"com.pkg.service.SomeService"</span>/&gt;</span>
+    <span class="code-tag">&lt;property name=<span class="code-quote">"remoteInvocationFactory"</span> ref=<span class="code-quote">"secureRemoteInvocationFactory"</span>/&gt;</span>
+<span class="code-tag">&lt;/bean&gt;</span>
+</pre>
+</div></div>
+
+<h2><a name="Spring-Lendahandwithdocumentation"></a>Lend a hand with documentation </h2>
+
+<p>While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time.  If you'd like to help the Shiro project, please consider corrected, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro. </p>
+
+<p>The easiest way to contribute your documentation is to send it to the <a class="external-link" href="http://shiro-user.582556.n2.nabble.com/" rel="nofollow">User Forum</a> or the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.</p>

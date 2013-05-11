@@ -1,0 +1,47 @@
+<h1><a name="Developers-ApacheShiroDeveloperReferenceInformation"></a>Apache Shiro Developer Reference Information</h1>
+
+<p>This page and its children are dedicated for reference information used by the Apache Shiro development team when performing tasks as a committer.</p>
+
+<h2><a name="Developers-WritingDocumentation"></a>Writing Documentation</h2>
+
+<p>All non-JavaDoc documentation is written in our <a class="external-link" href="https://cwiki.apache.org/confluence/display/SHIRO">Apache Shiro Confluence Wiki Space</a>.  This space is converted into the public website as described below.</p>
+
+<h2><a name="Developers-Version2Brainstorming"></a>Version 2 Brainstorming</h2>
+
+<p>Version 2 has no timeline yet, but if you're interested in seeing what the major ideas are, as well as to contribute any of your own, you can visit the <a class="external-link" href="https://cwiki.apache.org/confluence/display/SHIRO/Version+2+Brainstorming">Version 2 Brainstorming Page</a>.</p>
+
+<h2><a name="Developers-Website"></a>Website</h2>
+
+<p>The Shiro website is automatically generated based on the content maintained in the <a class="external-link" href="https://cwiki.apache.org/confluence/display/SHIRO">Apache Shiro Confluence Wiki Space</a>, with a few notable exceptions that we'll cover in a bit.  Here's how it works:</p>
+
+<ol><li>Shiro committers and approved contributors modify the Confluence wiki pages as necessary.  The left navigation panel is controlled by the <a class="external-link" href="https://cwiki.apache.org/confluence/display/SHIRO/Navigation">Navigation wiki page</a>.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline"></li><li>Confluence detects changes to these pages and executes a 3rd-party <a class="external-link" href="http://code.google.com/p/couldit-autoexport" rel="nofollow">Auto Export Confluence Plugin</a> that renders the content to .html files that can be served to the world (this plugin was installed in Confluence by the Apache Infrastructure team).  If you're setting up <tt>Auto Export</tt> for the first time, read the "Setting up Confluence Export" section below.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline"> 
+	<ol><li>A project contributor makes a single Velocity-based HTML template file.  It can reference associated static assets (images, css files, javascript, etc) as necessary.  They test it in their HTML design tool of choice to get the look and feel they want.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline"></li><li>The template designer sends the one HTML template file only (and not the referenced static assets) to an Apache member with Confluence administrative privileges and asks them to install their HTML template file into the <tt>Auto Export</tt> plugin configuration.  Unfortunately only a Confluence administrators may perform this function - the plugin does not support administration on a per-project level.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+You will have to separately upload the any referenced static assets to another location.  We'll cover that shortly.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline"></li><li>The Confluence administrator installs the HTML template for the project's space only.</li><li>For each wiki page, the auto export plugin merges the page content with an HTML template and outputs a new <tt>.html</tt> file (html template + wiki content body = finished page).</li><li>All of the output files and any associated data (attachments, etc) are placed in a filesystem directory that mirrors content tree hierarchy in the wiki.<br clear="none">
+the The output files mirror the  fileThe auto export plugin takes all of the pages and their content (attachments, etc), applies a single HTML template to each wiki page, and outputs each 'merged' page (html template + embedded wiki content = finished page)</li></ol>
+	</li></ol>
+
+
+<p>The website files are maintained on <tt>people.apache.org</tt> in <tt>/www/shiro.apache.org</tt>:</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>&gt; ssh people.apache.org
+
+(a bunch of login messages)
+
+[lhazlewood@minotaur:~]$
+[lhazlewood@minotaur:~]$ cd /www/shiro.apache.org
+[lhazlewood@minotaur:/www/shiro.apache.org]$ 
+</pre>
+</div></div>
+
+<p>Changes made to any files under this directory are synced and published to a set of mirrored Apache web servers that we can't access.  So note: <b>Any changes to files under this directory will be propagated to the public Shiro site</b>.  Be careful!</p>

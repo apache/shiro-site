@@ -1,0 +1,241 @@
+<h1><a name="Testing-TestingwithApacheShiro"></a>Testing with Apache Shiro</h1>
+
+<p>This part of the documentation explains how to enable Shiro in unit tests.</p>
+
+<h2><a name="Testing-Whattoknowfortests"></a>What to know for tests</h2>
+
+<p>As we've already covered in the <a href="subject.html" title="Subject">Subject reference</a>, we know that a Subject is security-specific view of the 'currently executing' user, and that Subject instances are always bound to a thread to ensure we know <em>who</em> is executing logic at any time during the thread's execution.</p>
+
+<p>This means three basic things must always occur in order to support being able to access the currently executing Subject:</p>
+
+<ol><li>A <tt>Subject</tt> instance must be created</li><li>The <tt>Subject</tt> instance must be <em>bound</em> to the currently executing thread.</li><li>After the thread is finished executing (or if the thread's execution results in a <tt>Throwable</tt>), the <tt>Subject</tt> must be <em>unbound</em> to ensure that the thread remains 'clean' in any thread-pooled environment.</li></ol>
+
+
+<p>Shiro has architectural components that perform this bind/unbind logic automatically for a running application.  For example, in a web application, the root Shiro Filter performs this logic when <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/servlet/AbstractShiroFilter.html#doFilterInternal(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)">filtering a request</a>.  But as test environments and frameworks differ, we need to perform this bind/unbind logic ourselves for our chosen test framework.</p>
+
+<h2><a name="Testing-TestSetup"></a>Test Setup</h2>
+
+<p>So we know after creating a <tt>Subject</tt> instance, it must be <em>bound</em> to thread.  After the thread (or in this case, a test) is finished executing, we must <em>unbind</em> the Subject to keep the thread 'clean'.</p>
+
+<p>Luckily enough, modern test frameworks like JUnit and TestNG natively support this notion of 'setup' and 'teardown' already.  We can leverage this support to simulate what Shiro would do in a 'complete' application.  We've created a base abstract class that you can use in your own testing below - feel free to copy and/or modify as you see fit.  It can be used in both unit testing and integration testing (we're using JUnit in this example, but TestNG works just as well):</p>
+
+<h3><a name="Testing-AbstractShiroTest"></a>AbstractShiroTest</h3>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+<span class="code-keyword">import</span> org.apache.shiro.SecurityUtils;
+<span class="code-keyword">import</span> org.apache.shiro.UnavailableSecurityManagerException;
+<span class="code-keyword">import</span> org.apache.shiro.mgt.<span class="code-object">SecurityManager</span>;
+<span class="code-keyword">import</span> org.apache.shiro.subject.Subject;
+<span class="code-keyword">import</span> org.apache.shiro.subject.support.SubjectThreadState;
+<span class="code-keyword">import</span> org.apache.shiro.util.LifecycleUtils;
+<span class="code-keyword">import</span> org.apache.shiro.util.ThreadState;
+<span class="code-keyword">import</span> org.junit.AfterClass;
+
+/**
+ * Abstract test <span class="code-keyword">case</span> enabling Shiro in test environments.
+ */
+<span class="code-keyword">public</span> <span class="code-keyword">abstract</span> class AbstractShiroTest {
+
+    <span class="code-keyword">private</span> <span class="code-keyword">static</span> ThreadState subjectThreadState;
+
+    <span class="code-keyword">public</span> AbstractShiroTest() {
+    }
+
+    /**
+     * Allows subclasses to set the currently executing {@link Subject} instance.
+     *
+     * @param subject the Subject instance
+     */
+    <span class="code-keyword">protected</span> void setSubject(Subject subject) {
+        clearSubject();
+        subjectThreadState = createThreadState(subject);
+        subjectThreadState.bind();
+    }
+
+    <span class="code-keyword">protected</span> Subject getSubject() {
+        <span class="code-keyword">return</span> SecurityUtils.getSubject();
+    }
+
+    <span class="code-keyword">protected</span> ThreadState createThreadState(Subject subject) {
+        <span class="code-keyword">return</span> <span class="code-keyword">new</span> SubjectThreadState(subject);
+    }
+
+    /**
+     * Clears Shiro's thread state, ensuring the thread remains clean <span class="code-keyword">for</span> <span class="code-keyword">future</span> test execution.
+     */
+    <span class="code-keyword">protected</span> void clearSubject() {
+        doClearSubject();
+    }
+
+    <span class="code-keyword">private</span> <span class="code-keyword">static</span> void doClearSubject() {
+        <span class="code-keyword">if</span> (subjectThreadState != <span class="code-keyword">null</span>) {
+            subjectThreadState.clear();
+            subjectThreadState = <span class="code-keyword">null</span>;
+        }
+    }
+
+    <span class="code-keyword">protected</span> <span class="code-keyword">static</span> void setSecurityManager(<span class="code-object">SecurityManager</span> securityManager) {
+        SecurityUtils.setSecurityManager(securityManager);
+    }
+
+    <span class="code-keyword">protected</span> <span class="code-keyword">static</span> <span class="code-object">SecurityManager</span> getSecurityManager() {
+        <span class="code-keyword">return</span> SecurityUtils.getSecurityManager();
+    }
+
+    @AfterClass
+    <span class="code-keyword">public</span> <span class="code-keyword">static</span> void tearDownShiro() {
+        doClearSubject();
+        <span class="code-keyword">try</span> {
+            <span class="code-object">SecurityManager</span> securityManager = getSecurityManager();
+            LifecycleUtils.destroy(securityManager);
+        } <span class="code-keyword">catch</span> (UnavailableSecurityManagerException e) {
+            <span class="code-comment">//we don't care about <span class="code-keyword">this</span> when cleaning up the test environment
+</span>            <span class="code-comment">//(<span class="code-keyword">for</span> example, maybe the subclass is a unit test and it didn't
+</span>            <span class="code-comment">// need a <span class="code-object">SecurityManager</span> instance because it was using only 
+</span>            <span class="code-comment">// mock Subject instances)
+</span>        }
+        setSecurityManager(<span class="code-keyword">null</span>);
+    }
+}
+</pre>
+</div></div>
+
+<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Testing &amp; Frameworks</b><br clear="none">The code in the <tt>AbstractShiroTest</tt> class uses Shiro's <tt>ThreadState</tt> concept and a static SecurityManager.  These techniques are useful in tests and in framework code, but rarely ever used in application code.  
+
+<p>Most end-users working with Shiro who need to ensure thread-state consistency will almost always use Shiro's automatic management mechanisms, namely the <tt>Subject.associateWith</tt> and the <tt>Subject.execute</tt> methods.  These methods are covered in the reference on <a href="subject.html#Subject-ThreadAssociation">Subject thread association</a>.</p></td></tr></table></div>
+
+<h2><a name="Testing-UnitTesting"></a>Unit Testing</h2>
+
+<p>Unit testing is mostly about testing your code and only your code in a limited scope.  When you take Shiro into account, what you really want to focus on is that your code works correctly with Shiro's <em>API</em> - you don't want to necessarily test that Shiro's implementation is working correctly (that's something that the Shiro development team must ensure in Shiro's code base).</p>
+
+<p>Testing to see if Shiro's implementations work in conjunction with your implementations is really integration testing (discussed below).</p>
+
+<h3><a name="Testing-ExampleShiroUnitTest"></a>ExampleShiroUnitTest</h3>
+
+<p>Because unit tests are better suited for testing your own logic (and not any implementations your logic might call), it is a great idea to <em>mock</em> any APIs that your logic depends on.  This works very well with Shiro - you can mock the <tt>Subject</tt> interface and have it reflect whatever conditions you want your code under test to react to.  We can leverage modern mock frameworks like <a class="external-link" href="http://easymock.org/" rel="nofollow">EasyMock</a> and <a class="external-link" href="http://mockito.org/" rel="nofollow">Mockito</a> to do this for us.  </p>
+
+<p>But as stated above, the key in Shiro tests is to remember that any Subject instance (mock or real) must be bound to the thread during test execution.  So all we need to do is bind the mock Subject to ensure things work as expected.</p>
+
+<p>(this example uses EasyMock, but Mockito works equally as well):</p>
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+<span class="code-keyword">import</span> org.apache.shiro.subject.Subject;
+<span class="code-keyword">import</span> org.junit.After;
+<span class="code-keyword">import</span> org.junit.Test;
+
+<span class="code-keyword">import</span> <span class="code-keyword">static</span> org.easymock.EasyMock.*;
+
+/**
+ * Simple example test class showing how one may perform unit tests <span class="code-keyword">for</span> code that requires Shiro APIs.
+ */
+<span class="code-keyword">public</span> class ExampleShiroUnitTest <span class="code-keyword">extends</span> AbstractShiroTest {
+
+    @Test
+    <span class="code-keyword">public</span> void testSimple() {
+
+        <span class="code-comment">//1.  Create a mock authenticated Subject instance <span class="code-keyword">for</span> the test to run:
+</span>        Subject subjectUnderTest = createNiceMock(Subject.class);
+        expect(subjectUnderTest.isAuthenticated()).andReturn(<span class="code-keyword">true</span>);
+
+        <span class="code-comment">//2. Bind the subject to the current thread:
+</span>        setSubject(subjectUnderTest);
+
+        <span class="code-comment">//perform test logic here.  Any call to 
+</span>        <span class="code-comment">//SecurityUtils.getSubject() directly (or nested in the 
+</span>        <span class="code-comment">//call stack) will work properly.
+</span>    }
+
+    @After
+    <span class="code-keyword">public</span> void tearDownSubject() {
+        <span class="code-comment">//3. Unbind the subject from the current thread:
+</span>        clearSubject();
+    }
+
+}
+</pre>
+</div></div>
+
+<p>As you can see, we're not setting up a Shiro <tt>SecurityManager</tt> instance or configuring a <tt>Realm</tt> or anything like that.  We're simply creating a mock <tt>Subject</tt> instance and binding it to the thread via the <tt>setSubject</tt> method call.  This will ensure that any calls in our test code or in the code we're testing to <tt>SecurityUtils.getSubject()</tt> will work correctly.</p>
+
+<p>Note that the <tt>setSubject</tt> method implementation will bind your mock Subject to the thread and it will remain there until you call <tt>setSubject</tt> with a different <tt>Subject</tt> instance or until you explicitly clear it from the thread via the <tt>clearSubject()</tt> call.</p>
+
+<p>How long you keep the subject bound to the thread (or swap it out for a new instance in a different test) is up to you and your testing requirements.  </p>
+
+<h4><a name="Testing-tearDownSubject%28%29"></a>tearDownSubject()</h4>
+
+<p>The <tt>tearDownSubject()</tt> method in the example uses a Junit 4 annotation to ensure that the Subject is cleared from the thread after every test method is executed, no matter what.  This requires you to set up a new <tt>Subject</tt> instance and set it (via <tt>setSubject</tt>) for every test that executes.</p>
+
+<p>This is not strictly necessary however.  For example, you could just bind a new Subject instance (via <tt>setSujbect</tt>) at the beginning of every test, say, in an <tt>@Before</tt>-annotated method.  But if you're going to do that, you might as well have the <tt>@After tearDownSubject()</tt> method to keep things symmetrical and 'clean'.</p>
+
+<p>You can mix and match this setup/teardown logic in each method manually or use the @Before and @After annotations as you see fit.  The <tt>AbstractShiroTest</tt> super class will however unbind the Subject from the thread after all tests because of the <tt>@AfterClass</tt> annotation in its <tt>tearDownShiro()</tt> method.</p>
+
+<h2><a name="Testing-IntegrationTesting"></a>Integration Testing</h2>
+
+<p>Now that we've covered unit test setup, let's talk a bit about integration testing.  Integration testing is testing implementations across API boundaries.  For example, testing that implementation A works when calling implementation B and that implementation B does what it is supposed to.</p>
+
+<p>You can easily perform integration testing in Shiro as well.  Shiro's <tt>SecurityManager</tt> instance and things it wraps (like Realms and SessionManager, etc) are all very lightweight POJOs that use very little memory.  This means you can create and tear down a <tt>SecurityManager</tt> instance for every test class you execute.  When your integration tests run, they will be using 'real' <tt>SecurityManager</tt> and <tt>Subject</tt> instances like your application will be using at runtime.</p>
+
+<h3><a name="Testing-ExampleShiroIntegrationTest"></a>ExampleShiroIntegrationTest</h3>
+
+<p>The example code below looks almost identical to the Unit Test example above, but the 3 step process is slightly different:</p>
+
+<ol><li>There is now a step '0', which sets up a 'real' SecurityManager instance.</li><li>Step 1 now constructs a 'real' Subject instance with the <tt>Subject.Builder</tt> and binds it to the thread.</li></ol>
+
+
+<p>Thread binding and unbinding (steps 2 and 3) function the same as the Unit Test example.</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+<span class="code-keyword">import</span> org.apache.shiro.config.IniSecurityManagerFactory;
+<span class="code-keyword">import</span> org.apache.shiro.mgt.<span class="code-object">SecurityManager</span>;
+<span class="code-keyword">import</span> org.apache.shiro.subject.Subject;
+<span class="code-keyword">import</span> org.apache.shiro.util.Factory;
+<span class="code-keyword">import</span> org.junit.After;
+<span class="code-keyword">import</span> org.junit.BeforeClass;
+<span class="code-keyword">import</span> org.junit.Test;
+
+<span class="code-keyword">public</span> class ExampleShiroIntegrationTest <span class="code-keyword">extends</span> AbstractShiroTest {
+
+    @BeforeClass
+    <span class="code-keyword">public</span> <span class="code-keyword">static</span> void beforeClass() {
+        <span class="code-comment">//0.  Build and set the <span class="code-object">SecurityManager</span> used to build Subject instances used in your tests
+</span>        <span class="code-comment">//    This typically only needs to be done once per class <span class="code-keyword">if</span> your shiro.ini doesn't change,
+</span>        <span class="code-comment">//    otherwise, you'll need to <span class="code-keyword">do</span> <span class="code-keyword">this</span> logic in each test that is different
+</span>        Factory&lt;<span class="code-object">SecurityManager</span>&gt; factory = <span class="code-keyword">new</span> IniSecurityManagerFactory(<span class="code-quote">"classpath:test.shiro.ini"</span>);
+        setSecurityManager(factory.getInstance());
+    }
+
+    @Test
+    <span class="code-keyword">public</span> void testSimple() {
+        <span class="code-comment">//1.  Build the Subject instance <span class="code-keyword">for</span> the test to run:
+</span>        Subject subjectUnderTest = <span class="code-keyword">new</span> Subject.Builder(getSecurityManager()).buildSubject();
+
+        <span class="code-comment">//2. Bind the subject to the current thread:
+</span>        setSubject(subjectUnderTest);
+
+        <span class="code-comment">//perform test logic here.  Any call to 
+</span>        <span class="code-comment">//SecurityUtils.getSubject() directly (or nested in the 
+</span>        <span class="code-comment">//call stack) will work properly.
+</span>    }
+
+    @AfterClass
+    <span class="code-keyword">public</span> void tearDownSubject() {
+        <span class="code-comment">//3. Unbind the subject from the current thread:
+</span>        clearSubject();
+    }
+}
+</pre>
+</div></div>
+
+<p>As you can see, a concrete <tt>SecurityManager</tt> implementation is instantiated and made accessible for the remainder of the test via the <tt>setSecurityManager</tt> method.  Test methods can then use this <tt>SecurityManager</tt> when using the <tt>Subject.Builder</tt> later via the <tt>getSecurityManager()</tt> method.</p>
+
+<p>Also note that the <tt>SecurityManager</tt> instance is set up once in a <tt>@BeforeClass</tt> setup method - a fairly common practice for most test classes.  But if you wanted to, you could create a new <tt>SecurityManager</tt> instance and set it via <tt>setSecurityManager</tt> at any time from any test method - for example, you might reference two different .ini files to build a new <tt>SecurityManager</tt> depending on your test requirements.  </p>
+
+<p>Finally, just as with the Unit Test example, the <tt>AbstractShiroTest</tt> super class will clean up all Shiro artifacts (any remaining <tt>SecurityManager</tt> and <tt>Subject</tt> instance) via its <tt>@AfterClass tearDownShiro()</tt> method to ensure the thread is 'clean' for the next test class to run.</p>
+
+<h2><a name="Testing-Lendahandwithdocumentation"></a>Lend a hand with documentation </h2>
+
+<p>While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time.  If you'd like to help the Shiro project, please consider corrected, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro. </p>
+
+<p>The easiest way to contribute your documentation is to send it to the <a class="external-link" href="http://shiro-user.582556.n2.nabble.com/" rel="nofollow">User Forum</a> or the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.</p>

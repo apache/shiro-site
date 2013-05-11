@@ -1,0 +1,165 @@
+<h1><a name="ConfluenceAutoExport-ConfluenceAutoExportProcessforApacheShiro"></a>Confluence Auto Export Process for Apache Shiro</h1>
+
+<p>This page describes how we use the Confluence <tt>Auto Export</tt> plugin to create a custom look and feel for our project's public website while still using Confluence to manage and host our content.  </p>
+
+<p>This page is especially useful if you're a member of another Apache project that wants to use Confluence as your content repository but have a nicely formatted custom look and feel that you can design.</p>
+
+<h3><a name="ConfluenceAutoExport-Overview"></a>Overview</h3>
+
+<p>The high level overview is that you create a custom look and feel in the form of an HTML template.  Confluence is then configured to automatically export your project space to static .html files that conform to the template.  This allows a project website to have a different look entirely than the default Confluence theme.</p>
+
+<p>The generated 'templatized' static .html files are then served as the project's public facing website, which is beneficial for scalability - an Apache farm of web servers can serve the static files (doing what Apache does best), relieving the Confluence server from direct and/or heavy load.</p>
+
+<h3><a name="ConfluenceAutoExport-StepbyStep"></a>Step-by-Step</h3>
+
+<p>Here are step-by-step instructions to enable this for your project:</p>
+
+<ol><li><b>Create Your HTML Template</b>
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+A project contributor creates a single Velocity-based HTML template file.  The Confluence documentation has a <a class="external-link" href="http://confluence.atlassian.com/display/CONFDEV/Basic+Introduction+to+Velocity" rel="nofollow">Basic Introduction to Velocity</a> that links to the <a class="external-link" href="http://velocity.apache.org/engine/releases/velocity-1.4/user-guide.html">Velocity User Guide</a>.  You'll want to read the Velocity User Guide to understand how to set template variables, write conditional statements, etc.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Confluence Velocity Objects</b><br clear="none">When writing your template, you will want to know about the <a class="external-link" href="http://confluence.atlassian.com/display/CONFDEV/Confluence+Objects+Accessible+From+Velocity" rel="nofollow">Confluence Objects Accessible From Velocity</a>.  You can use these existing variables and macros from within your template as necessary.</td></tr></table></div>
+<p><br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+Also note that your template file can reference static assets such as images, css files and javascript as necessary.  Typically a template designer will work in whatever design tool they like and test it out on browsers etc.  Its just that the static assets themselves are not imported into the <tt>Auto Export</tt> plugin directly.  They need to be hosted in a separate location.  We'll cover that next.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+<b>Example</b>: Here is <a href="shiroConfluenceAutoExportTemplate.vhtml.txt?version=1&amp;modificationDate=1274492875000">Shiro's Auto Export HTML Template</a> (as of 21 May 2010).  You can use it as an example or modify as necessary for your own site in accordance with the Apache 2.0 license.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline"></p></li><li><b>Upload Template Static Resources</b>
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+Static resources that your .html template file references are not imported into the <tt>Auto Export</tt> plugin - you need to place those in a separate location.  The way we've done it for Shiro is to create a single purposefully reserved directory at the root of our website called <tt>static</tt>.  So if our public website root is located here:
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>people.apache.org:/www/incubator.apache.org/shiro/
+</pre>
+</div></div>
+<p><br clear="none" class="atl-forced-newline">
+then all of our static content that we manage manually will be in this directory:
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline"></p>
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>people.apache.org:/www/incubator.apache.org/shiro/static/
+</pre>
+</div></div>
+<p><br clear="none" class="atl-forced-newline">
+It is important that you don't create a Confluence page at the root of your Confluence space named <tt>Static</tt> as it will conflict with your manually managed static directory above.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+Also note that because everything else in the <tt>/www/incubator.apache.org/shiro</tt> directory is auto-exported from Confluence, you really don't ever want to mess with any files in that directory.  Stick to only manually editing things in the <tt>static</tt> subdirectory and you'll be fine.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+So, if our .html template referenced some images, css, and javascript in an <tt>assets</tt> directory while we were designing the template, you'll need to secure <tt>rsync</tt> or <tt>sftp</tt> those resources to a matching directory structure on <tt>people.apache.org</tt> under our reserved <tt>static</tt> directory:
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline"></p>
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>/www/incubator.apache.org/shiro/static/assets/images/header.jpg
+/www/incubator.apache.org/shiro/static/assets/css/style.css
+/www/incubator.apache.org/shiro/static/assets/js/some-javscript-library-minified.js
+...
+</pre>
+</div></div>
+<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Heavy CSS</b><br clear="none">For reasons that will become apparent later, it is recommended to make heavy use of CSS in your template as well as ensure that the CSS definitions are in an external static file and <b>not</b> embedded in the template itself: you will be able to freely change your CSS files in this static directory, while it will be much harder to change the template after it is installed.  If your template heavily leverages CSS, you can change the CSS whenever you want.</td></tr></table></div>
+<p><br clear="none" class="atl-forced-newline"></p></li><li><b>Update Template Resource References</b>
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+Once you've uploaded those resources to their appropriate place on <tt>people.apache.org</tt> filesystem, you need to now change your template to reference their runtime location where they will be when your page is served by the web server.  We did this by setting a Velocity variable in our template that reflects the runtime site root:
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>&lt;!DOCTYPE html PUBLIC ...
+ASF license header here ...
+##
+#set ($siteroot = "http://incubator.apache.org/shiro")
+... other variables, macro definitions, etc here ...
+##
+&lt;html&gt;
+... rest of html template here ...
+&lt;/html&gt;
+</pre>
+</div></div>
+<p><br clear="none" class="atl-forced-newline">
+Then you an use the Velocity variables in your html to reference their location:
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline"></p>
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>&lt;img src="$siteroot/assets/images/header.jpg"/&gt;
+</pre>
+</div></div>
+<p><br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+Again, see <a href="shiroConfluenceAutoExportTemplate.vhtml.txt?version=1&amp;modificationDate=1274492875000">Shiro's Auto Export HTML Template</a> as an example.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline"></p></li><li><b>Set Up a Cron Job to Sync Auto-Exported Content</b>
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+When <tt>Auto Export</tt> runs, it outputs its content into a different directory than your website filesystem location.  You need to ensure that after <tt>Auto Export</tt> runs, the generated content will make its way to the correct filesystem location that will be published to the web server farm.  You can do that by setting up a cron job on <b>one</b> of the project team member's <tt>people.apache.org</tt> account:
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+First make sure that when the crontab editor runs, it is using an editor that you feel comfortable in (VI, Emacs, etc):
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>&gt; export EDITOR=vi
+</pre>
+</div></div>
+<p><br clear="none" class="atl-forced-newline">
+Then execute the following crontab command, which will launch your preferred editor:
+<br clear="none" class="atl-forced-newline"></p>
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>&gt; crontab -e
+</pre>
+</div></div>
+<p><br clear="none" class="atl-forced-newline">
+Ensure the following 3 cron lines* are in that file (where <tt>SPACENAME</tt> is the case-sensitive Confluence space name (in our case <tt>SHIRO</tt>) and <tt>PROJECTNAME</tt> is typically your lower-case project name (in our case <tt>shiro</tt>):
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline"></p>
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>0 * * * * /usr/local/bin/rsync -p -r /www/confluence-exports/SPACENAME/ /www/incubator.apache.org/PROJECTNAME &gt;/dev/null 2&gt;&amp;1
+5 * * * * find /www/incubator.apache.org/PROJECTNAME -type f -exec chmod g+rw {} \; &gt;/dev/null 2&gt;&amp;1
+5 * * * * find /www/incubator.apache.org/PROJECTNAME -type d -exec chmod g+rwx {} \; &gt;/dev/null 2&gt;&amp;1
+</pre>
+</div></div>
+<p><br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+Then save and exit the file.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+These 3 cron lines say:</p>
+	<ul><li>Line 1: "Every minute (on the minute), rsync the Confluence auto-exported content from its output directory to my project's public website directory"</li><li>Line 2: "Every minute (at the 5 second mark), ensure all the files in my project's public website are (recursively) made group readable and writable".  You want other project team members to be able to write to them if necessary.</li><li>Line 3: "Every minute (at the 5 second mark), ensure all the directories in my project's public website are (recursively) made group readable, writable and executable".
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+* The <tt><b>&gt;/dev/null 2&gt;&amp;1</b></tt> parts at the end of each line will swallow any output that would have been emailed to you if anything failed.  Typically you'll see some innocuous permission-related messages that can be ignored.  You can always take off that part on each line if you want regular emails - up to you.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline"></li></ul>
+	</li><li><b>Ask a Confluence Administrator to Import Your Template</b>
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+After you've updated your template to reference the correct resource paths and made your crontab entries, you need to find an Apache member with Confluence administrative privileges to add your template file to the <tt>Auto Export</tt> plugin configuration.  Unfortunately only a Confluence administrator may perform this function - the plugin does not support per-project administrators.  Check with your project mentors or the Incubator PMC as they will typically know who to contact.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+Once they've added the template to the configuration, also (kindly) ask them if they would explicitly export your Confluence space so you can test the results.  You can also change and save a wiki page at any time to trigger the export process and it will be copied to your project webspace when the cron job runs.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+<b>Note</b>: This is why it is important to use CSS heavily in your template. Because you may not have direct access to change the template whenever you want, it is better to rely on CSS that you <em>can</em> change whenever you want.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline"></li><li><b>Verify Pages Export Correctly</b>
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+After your template has been installed and you make modifications to your space pages, you should see them start to show up within a minute or two in your project's root web directory (again, for Shiro, this is in <tt>people.apache.org:/www/incubator.apache.org/shiro</tt>).  Look inside the .html files and you should see your HTML template code surrounding the wiki content.  If you see this, <tt>Auto Export</tt> and your cron job are running propertly.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline"></li><li><b>Wait For the Web Server Farm</b>
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+As mentioned before, the static .html files exported to your <tt>/www/incubator.apache.org/projectname</tt> web directory need to propagate to an Apache web server farm that actually services HTTP requests.  We don't have access to those machines, so we have to wait for an automated process (managed by Apache Infrastructure) to pick up the files in <tt>/www</tt> and sync them to the server farm.  This process can take up to an hour or two.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+After an hour or two, visit the site, hit refresh, and you should see any changes that you made previously in Confluence display as a nice page with your template's look and feel.  You can make changes to Confluence pages from this point on and you won't need to touch the template or <tt>Auto Export</tt> settings again (unless you want to change the template).
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline">
+Now you're done setting up Auto Export!</li></ol>
+
+
+<p>Please contact the <tt>dev@shiro.apache.org</tt> mailing list with errata.</p>

@@ -1,0 +1,199 @@
+<div>
+<ul><li><a href="#Version2Brainstorming-RenameAuthenticationInfotoAccount">Rename AuthenticationInfo to Account</a></li><li><a href="#Version2Brainstorming-Realmrefactoring">Realm refactoring</a></li><li><a href="#Version2Brainstorming-Splitshirocoreintomodules">Split shiro-core into modules</a></li><li><a href="#Version2Brainstorming-Eventdrivendesign">Event-driven design</a></li><li><a href="#Version2Brainstorming-SubjectPrincipalCollection">Subject PrincipalCollection</a></li><li><a href="#Version2Brainstorming-ComponentNames">Component Names</a></li><li><a href="#Version2Brainstorming-AuthorizationANTLRGrammar">Authorization ANTLR Grammar</a></li><li><a href="#Version2Brainstorming-AuthorizationRequest%2FResponse">AuthorizationRequest/Response</a></li><li><a href="#Version2Brainstorming-ReinforcecustomizationviaOODelegation%28compositionoverinheritance%29">Reinforce customization via OO Delegation (composition over inheritance)</a></li><li><a href="#Version2Brainstorming-MultiStageAuthenticationviarequest%2Fresponse">Multi-Stage Authentication via request/response</a></li><li><a href="#Version2Brainstorming-CaptchaSupport">Captcha Support</a></li><li><a href="#Version2Brainstorming-Configurationperfilterinstanceandnopathmatching">Configuration per filter instance and no path matching</a></li><li><a href="#Version2Brainstorming-Webmodulerepackaging.">Web module repackaging.</a></li></ul></div>
+
+<p>There is currently no timeline for a version 2, but this space represents any brainstorming efforts that the community wishes to address that may be major feature enhancements that can't be backwards compatible. Typically discussions from the dev list resulting in some form of consensus will probably make it into this page. Actionable items will go into Jira, potentially referencing this page for clarity.</p>
+
+<ul class="alternate" type="square"><li>(I know this isn't a feature but its equally is not more important) Deeper and more accessible documentation and how-tos.</li><li>management system for long lived hashes</li><li>token/ticket system</li><li>more generalized way to handle unauthorized exceptions</li><li>lower level crypto toolkit to facilitate customizations</li><li>unauthorizedUrl per path filter</li></ul>
+
+
+<h3><a name="Version2Brainstorming-RenameAuthenticationInfotoAccount"></a>Rename AuthenticationInfo to Account</h3>
+
+<p>The existing <tt>AuthenticationInfo</tt> name is less intuitive and is essentially the same thing.</p>
+
+<h3><a name="Version2Brainstorming-Realmrefactoring"></a>Realm refactoring</h3>
+
+<p>Most Realms differ little in their implementations - mostly by the protocols they use.  Create a 'DefaultRealm' implementation (or something similar) that allows pluggable AccountResolver and AuthorizationResolver interfaces that abstract away interaction with the data stores and the rest of the internal Realm logic (e.g. authc and authz caching, etc) can be shared by most Realm implementation.</p>
+
+<h3><a name="Version2Brainstorming-Splitshirocoreintomodules"></a>Split shiro-core into modules</h3>
+
+<p>Maybe shiro-core should be split up into separate modules (e.g. shiro-crypto, shiro-authc, shiro-authz, etc) if possible.  This may or may not be possible due to the tight integration of APIs (e.g. Shiro authentication depends on shiro hashing (crypto) etc).  A cursory investigation should be made if possible.</p>
+
+<h3><a name="Version2Brainstorming-Eventdrivendesign"></a>Event-driven design</h3>
+<p><b>This can be in 1.3+ as these would be all new packages/classes and do not require signature changes to existing code</b></p>
+
+<p>Utilize events significantly and more effectively.  Base on Akka's event model and <a class="external-link" href="http://code.google.com/p/guava-libraries/wiki/EventBusExplained" rel="nofollow">Guava's EventBus</a>.  This enables ideal loose coupling/high cohesion plugins/integration/customization.</p>
+
+<p>Package:  <tt>org.apache.shiro.event</tt></p>
+
+<p>Potential classes:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+<span class="code-keyword">public</span> class ShiroEvent <span class="code-keyword">extends</span> EventObject {
+
+    <span class="code-keyword">private</span> <span class="code-keyword">final</span> <span class="code-object">long</span> timestamp; <span class="code-comment">//millis since Epoch (UTC time zone).
+</span>
+    <span class="code-keyword">public</span> ShiroEvent(<span class="code-object">Object</span> source) {
+        <span class="code-keyword">super</span>(source);
+        <span class="code-keyword">this</span>.timestamp = <span class="code-keyword">new</span> Date().getTime();
+    }
+
+    <span class="code-keyword">public</span> <span class="code-object">long</span> getTimestamp() {
+        <span class="code-keyword">return</span> timestamp;
+    }
+}
+</pre>
+</div></div>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+<span class="code-keyword">public</span> <span class="code-keyword">interface</span> Publisher {
+
+    void publish(<span class="code-object">Object</span> event);
+}
+</pre>
+</div></div>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+
+/** Marker annotation <span class="code-keyword">for</span> a method that wishes to receive a particular event instance. */
+<span class="code-keyword">public</span> @<span class="code-keyword">interface</span> Subscribe {
+}
+</pre>
+</div></div>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+
+/** 
+  * Listener implementations just annotate a method as @Subscribe.  
+  * The single method argument determines the type of event received.
+  */
+<span class="code-keyword">public</span> class MyListener {
+
+    @Subscribe
+    <span class="code-keyword">public</span> void doSomething(SomeEvent event) {
+        ...
+    }
+}
+
+</pre>
+</div></div>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+<span class="code-keyword">public</span> <span class="code-keyword">interface</span> SubscriberRegistry {
+
+    void register(<span class="code-object">Object</span> subscriber);
+
+    void unregister(<span class="code-object">Object</span> subscriber);
+}
+</pre>
+</div></div>
+
+<p>An EventBus can be created based on Publisher + SubscriberRegistry:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+<span class="code-keyword">public</span> class SynchronousEventBus <span class="code-keyword">implements</span> Publisher, SubscriberRegistry {
+    ...
+}
+</pre>
+</div></div>
+
+<h3><a name="Version2Brainstorming-SubjectPrincipalCollection"></a>Subject PrincipalCollection</h3>
+
+<p>Convert this to be a sub-interface of Map with additional per-Realm utility methods.</p>
+
+<p>See the <a class="external-link" href="http://svn.apache.org/repos/asf/shiro/trunk/core/src/main/java/org/apache/shiro/subject/PrincipalMap.java">PrincipalMap</a> concept for ideas (experimental, not referenced in Shiro 1.x at the moment).</p>
+
+<p>Maybe rename this to 'attributes'?  i.e. <tt>subject.getAttributes()</tt>?</p>
+
+<h3><a name="Version2Brainstorming-ComponentNames"></a>Component Names</h3>
+
+<p>Change classes named FooDAO to FooStore instead.</p>
+
+<h3><a name="Version2Brainstorming-AuthorizationANTLRGrammar"></a>Authorization ANTLR Grammar</h3>
+
+<p>Ideally, we can have a single annotation:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+@Secured(<span class="code-quote">"authz expression here"</span>)
+<span class="code-keyword">public</span> void someMethod(){...}
+</pre>
+</div></div>
+
+<p>Where the 'authz expression here' is authorization assertion statement backed by an ANTLR lexer/parser, for example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+@Secured(<span class="code-quote">"(role(admin) || role(developer)) || perm(account:12345:open)"</span>)
+</pre>
+</div></div>
+
+<p>This would translate the expression into the relevant hasRole/isPermitted calls.</p>
+
+<h3><a name="Version2Brainstorming-AuthorizationRequest%2FResponse"></a>AuthorizationRequest/Response</h3>
+
+<p>Employing the same grammar as mentioned above, instead of multiple subject.isPermitted/hasRole calls, the same thing could be achieved with an AuthorizationRequest/Response scheme.  For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+AuthorizationRequest request = <span class="code-comment">//create request w/ expression
+</span>AuthorizationResponse response = subject.authorize(authorizationRequest);
+<span class="code-keyword">if</span> (response.isAuthorized()) {
+...
+} <span class="code-keyword">else</span> {
+...
+}
+</pre>
+</div></div>
+
+<h3><a name="Version2Brainstorming-ReinforcecustomizationviaOODelegation%28compositionoverinheritance%29"></a>Reinforce customization via OO Delegation (composition over inheritance)</h3>
+
+<ul class="alternate" type="square"><li>Any of the features provided by PathMatchingFilter would be provided for any configured filter via a proxy mechanism.  The proxy would likely support the PathMatchingFilter features, setting request attributes as necessary for the wrapped filter to react to.  This eliminates the need to subclass PathMatchingFilter to utilize these features.</li><li>The same principal would be probably be applied for realms.  A DefaultRealm could be created that delegates to an AuthenticationInfoAccessor and AuthorizationInfoAccessor (or whatever we want to call them) that performs the same behavior as AuthenticatingRealm#doGetAuthenticationInfo and AuthorizingRealm#doGetAuthorizationInfo.  The end result is no more subclassing realms for 95% of use cases, and instead providing accessors.</li></ul>
+
+
+<h3><a name="Version2Brainstorming-MultiStageAuthenticationviarequest%2Fresponse"></a>Multi-Stage Authentication via request/response</h3>
+
+<p>In applications that need to authenticate via multiple mechanisms (e.g. multi-factor authentication), a Request/Response protocol for login would probably be easier to use to support such workflows.  For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+LoginRequest request = <span class="code-comment">//create login request
+</span>LoginResponse response = subject.login(request);
+<span class="code-keyword">if</span> (!response.isComplete()) {
+    LoginRequest secondRequest = response.nextRequest();
+    <span class="code-comment">//populate w/ data <span class="code-keyword">for</span> 2nd phase
+</span>   response = subject.login(secondRequest);
+}
+<span class="code-keyword">if</span> (response.hasException()) {
+    <span class="code-keyword">throw</span> response.getException();
+}
+...
+</pre>
+</div></div>
+
+<p>Additionally probably change the Authenticator signature to be as follows:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+AuthenticationResult authenticate(AuthenticationRequest) <span class="code-keyword">throws</span> AuthenticationException;
+</pre>
+</div></div>
+
+<h3><a name="Version2Brainstorming-CaptchaSupport"></a>Captcha Support</h3>
+
+<p>Captcha support would assist in human being verification (during login, during form submission, etc).</p>
+
+<h3><a name="Version2Brainstorming-Configurationperfilterinstanceandnopathmatching"></a>Configuration per filter instance and no path matching</h3>
+<p><a name="Version2Brainstorming-filterperinstance"></a><br clear="none">
+<a class="external-link" href="https://issues.apache.org/jira/browse/SHIRO-256">SHIRO-256</a> is opened for this and <a class="external-link" href="http://tynamo.org" rel="nofollow">Tynamo.org</a> already has an implementation for it. This would both simplify the filter logic and result in better performance.</p>
+
+<h3><a name="Version2Brainstorming-Webmodulerepackaging."></a>Web module repackaging.</h3>
+
+<p>The Web module is largely Servlet-specific at the moment.  As such, its packaging should reflect this, in the same way that all other support modules are named, e.g. <br clear="none">
+module name: <tt>shiro-servlet</tt><br clear="none">
+package base: <tt>org.apache.shiro.servlet.*</tt></p>

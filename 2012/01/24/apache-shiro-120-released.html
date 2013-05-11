@@ -1,0 +1,41 @@
+<p><font color="#222222">Dear Apache Shiro Community,</font></p>
+
+<p><font color="#222222">The Shiro team is pleased to announce the release of Apache Shiro version 1.2.0!</font></p>
+
+<p><font color="#222222">This release includes a number of bug fixes and new features since the&#160;</font><font color="#222222">1.1.0 release. &#160;The 1.2.0 release is available from</font> <font color="#222222"><a href="../../../download.html" title="Download">the Download page</a></font><font color="#222222">.</font></p>
+
+<p><font color="#222222">All binaries (.jars) are available in Maven Central already. &#160;Please&#160;</font><font color="#222222">note that the Apache mirrors are still updating to reflect the source&#160;</font><font color="#222222">distribution, but some mirrors may not be updated yet. &#160;If a mirror&#160;</font><font color="#222222">download link does not work, please try another or wait another 12 to&#160;</font><font color="#222222">24 hours.</font></p>
+
+<h3><a name="ApacheShiro1.2.0Released%21-NewFeatures"></a>New Features</h3>
+
+<ul><li>The ability to disable sessions per filter chain or entirely for an&#160;application.</li><li>Servlet Context Listener initialization in web apps (to allow&#160;components to utilize Shiro before Filter initialization)</li><li>A command line program to securely hash passwords (or any url, file&#160;or stream input for that matter).</li><li>New secure password hash formats that adhere to Modular Crypt Format&#160;conventions. &#160;These secure password hashes can be computed with the&#160;above named command line program and saved in text config (e.g.&#160;shiro.ini) directly. &#160;Plaintext passwords should never be stored. &#160;For&#160;those familiar with the Apache HTTPD passwd program, this achieves the&#160;same benefits.</li><li>A new LogoutFilter, as many apps don't need to show a view during&#160;logout (just logout and redirect to some known location).</li><li>Shiro filters can be enabled or disabled without removing them from&#160;the filter chain - useful in development (e.g. turn ssl requirement&#160;off in dev, but keep it on in production).</li><li><font color="#222222">A lot of work has gone into making secure password hash storage and&#160;</font><font color="#222222">comparison a much simpler task in Shiro, focused around the new&#160;</font><font color="#222222">concept of a PasswordService. &#160;You can use a PasswordService directly&#160;</font><font color="#222222">in your application code to hash passwords securely. &#160;You can then&#160;</font><font color="#222222">configure a PasswordMatcher on your Realm(s) to use the same&#160;</font><font color="#222222">PasswordService for password comparisons. &#160;See the PasswordService&#160;</font><font color="#222222">JavaDoc for example .ini configuration:</font>
+	<ul><li><font color="#222222">PasswordService:&#160;</font><a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/credential/PasswordService.html">static/current/apidocs/org/apache/shiro/authc/credential/PasswordService.html</a></li><li><font color="#222222">PasswordMatcher:&#160;</font><a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/credential/PasswordMatcher.html">static/current/apidocs/org/apache/shiro/authc/credential/PasswordMatcher.html</a></li></ul>
+	</li></ul>
+
+
+<p><font color="#222222">More complete PasswordService and related config documentation will be&#160;</font><font color="#222222">added to the Shiro website in the next few days - it was better to&#160;</font><font color="#222222">release now for the many who are waiting on the release, and follow up&#160;</font><font color="#222222">with this part of the documentation shortly.</font></p>
+<ul><li><font color="#222222">Three new 'support' modules:</font>
+	<ul><li><font color="#222222">Apache Karaf features (shiro-features-1.2.0.jar)</font></li><li><font color="#222222">Google Guice:&#160;</font><a class="external-link" href="guice.html">guice.html</a></li><li><font color="#222222">Jasig CAS:&#160;</font><a class="external-link" href="cas.html">cas.html</a></li></ul>
+	</li></ul>
+
+
+<p><font color="#222222">And even more new features! &#160;See the 'Resolved Issues' below for a&#160;</font><font color="#222222">complete list.</font></p>
+
+<h3><a name="ApacheShiro1.2.0Released%21-Backwardsincompatibleorpotentialbreakingchanges"></a>Backwards-incompatible or potential breaking changes</h3>
+
+<p><font color="#222222">There are only a few small cases where breakage could occur - please&#160;</font><font color="#222222">view the release notes to ensure you mitigate any potential breaking&#160;</font><font color="#222222">change - particularly if you are using the SecureRandomNumberGenerator</font><br clear="none">
+<font color="#222222">or Shiro's Block Cipher Services (AES, Blowfish):</font></p>
+
+<p><a class="external-link" href="https://svn.apache.org/repos/asf/shiro/tags/shiro-root-1.2.0/RELEASE-NOTES">https://svn.apache.org/repos/asf/shiro/tags/shiro-root-1.2.0/RELEASE-NOTES</a></p>
+
+<h3><a name="ApacheShiro1.2.0Released%21-ResolvedIssues"></a>Resolved Issues</h3>
+
+<p><font color="#222222">Jira resolved issue report:</font></p>
+
+<p><a class="external-link" href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12310950&amp;version=12315478">https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12310950&amp;version=12315478</a></p>
+
+<p><font color="#222222">Enjoy!</font></p>
+
+
+
+<p><font color="#222222">The Apache Shiro</font> Team</p>

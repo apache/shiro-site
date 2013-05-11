@@ -1,0 +1,36 @@
+<h1><a name="DeveloperResources-ApacheShiroDeveloperResources"></a>Apache Shiro Developer Resources</h1>
+
+<p>This page and its children are dedicated for reference information used by the Apache Shiro development team when performing tasks as a committer or contributor</p>
+
+<h2><a name="DeveloperResources-WritingDocumentation"></a>Writing Documentation</h2>
+
+<p>All non-JavaDoc documentation is written in our <a class="external-link" href="http://cwiki.apache.org/confluence/display/SHIRO/">Apache Shiro Confluence Wiki Space</a>.  This space is converted into the public website by the <a href="confluence-auto-export.html" title="Confluence Auto Export">Confluence Auto Export Process</a>.</p>
+
+<h2><a name="DeveloperResources-SourceCodeRepository"></a>Source Code Repository</h2>
+
+<p>We use the Subversion repository located at <a class="external-link" href="http://svn.apache.org/repos/asf/shiro">http://svn.apache.org/repos/asf/shiro</a>.  Committers must use the <tt>https</tt> scheme (not <tt>http</tt>).</p>
+
+<p>Active development is done in the <tt>trunk</tt> subdirectory.  The <tt>branches</tt> and <tt>tags</tt> peer subdirectories exist based on the <a class="external-link" href="http://apr.apache.org/versioning.html">Apache APR Versioning Scheme</a> and are generally created/maintained by the dev team using the <a class="external-link" href="http://maven.apache.org/plugins/maven-release-plugin/">Maven Release Plugin</a>.</p>
+
+<h3><a name="DeveloperResources-BuildingfromSubversion"></a>Building from Subversion</h3>
+
+<p>For Shiro cutting-edge development, you can check-out the code from Subversion and build it using <a class="external-link" href="http://maven.apache.org">Maven</a> 2.2+:</p>
+
+<ol><li>Check out the code:
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+mkdir shiro
+cd shiro
+svn co https:<span class="code-comment">//svn.apache.org/repos/asf/shiro/trunk trunk</span>
+</pre>
+</div></div></li><li>Build the project using <a class="external-link" href="http://maven.apache.org">Maven</a> 2.2+:
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+cd trunk
+mvn install
+</pre>
+</div></div>
+<p>The resulting artifacts will be in your local M2 Repo under the org.apache.shiro group.</p></li></ol>
+
+
+<div class="panelMacro"><table class="warningMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/forbidden.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Cutting-edge development</b><br clear="none">When building from <tt>trunk</tt> or any branches, use the generated artifacts at your own risk!  Current and previous stable releases will always be available via the <a href="download.html" title="Download">Download</a> page.</td></tr></table></div>

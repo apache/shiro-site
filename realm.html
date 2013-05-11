@@ -1,0 +1,218 @@
+<h1><a name="Realm-ApacheShiroRealms"></a>Apache Shiro Realms</h1>
+
+<div class="toc">
+<ul><li><a href="#Realm-RealmConfiguration">Realm Configuration</a></li><ul><li><a href="#Realm-ExplicitAssignment">Explicit Assignment</a></li><li><a href="#Realm-ImplicitAssignment">Implicit Assignment</a></li></ul><li><a href="#Realm-RealmAuthentication">Realm Authentication</a></li><ul><li><a href="#Realm-Supporting%7B%7BAuthenticationTokens%7D%7D">Supporting <tt>AuthenticationTokens</tt></a></li><li><a href="#Realm-Handlingsupported%7B%7BAuthenticationTokens%7D%7D">Handling supported <tt>AuthenticationTokens</tt></a></li><li><a href="#Realm-CredentialsMatching">Credentials Matching</a></li><ul><li><a href="#Realm-SimpleEqualityCheck">Simple Equality Check</a></li><li><a href="#Realm-HashingCredentials">Hashing Credentials</a></li><ul><li><a href="#Realm-HashingandCorrespondingMatchers">Hashing and Corresponding Matchers</a></li><ul><li><a href="#Realm-%7B%7BSaltedAuthenticationInfo%7D%7D"> <tt>SaltedAuthenticationInfo</tt></a></li></ul></ul></ul><li><a href="#Realm-DisablingAuthentication">Disabling Authentication</a></li></ul><li><a href="#Realm-RealmAuthorization">Realm Authorization</a></li><li><a href="#Realm-Lendahandwithdocumentation">Lend a hand with documentation</a></li></ul></div>
+
+<p>A <tt>Realm</tt> is a component that can access application-specific security data such as users, roles, and permissions.  The <tt>Realm</tt> translates this application-specific data into a format that Shiro understands so Shiro can in turn provide a single easy-to-understand <a href="subject.html" title="Subject">Subject</a> programming API no matter how many data sources exist or how application-specific your data might be.</p>
+
+<p>Realms usually have a 1-to-1 correlation with a data source such as a relational database, LDAP directory, file system, or other similar resource.  As such, implementations of the <tt>Realm</tt> interface use data source-specific APIs to discover authorization data (roles, permissions, etc), such as JDBC, File IO, Hibernate or JPA, or any other Data Access API.  </p>
+
+<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1">A Realm is essentially a security-specific <a class="external-link" href="http://en.wikipedia.org/wiki/Data_Access_Object" rel="nofollow">DAO</a></td></tr></table></div>
+
+<p>Because most of these data sources usually store both authentication data (credentials such as passwords) as well as authorization data (such as roles or permissions), every Shiro <tt>Realm</tt> can perform <em>both</em> authentication and authorization operations.</p>
+
+<h2><a name="Realm-RealmConfiguration"></a>Realm Configuration</h2>
+
+<p>If using Shiro's INI configuration, you define and reference <tt>Realms</tt> like any other object in the <tt>[main]</tt> section, but they are configured on the <tt>securityManager</tt> in one of two ways: explicitly or implicitly.</p>
+
+<h3><a name="Realm-ExplicitAssignment"></a>Explicit Assignment</h3>
+
+<p>Based on knowledge of INI configuration thus far, this is an obvious configuration approach.  After defining one or more Realms, you set them as a collection property on the <tt>securityManager</tt> object.</p>
+
+<p>For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+fooRealm = com.company.foo.Realm
+barRealm = com.company.another.Realm
+bazRealm = com.company.baz.Realm
+
+securityManager.realms = $fooRealm, $barRealm, $bazRealm
+</pre>
+</div></div>
+
+<p>Explicit assignment is deterministic - you control exactly which realms are used as well as <em>the order</em> that they will be used for authentication and authorization. Realm ordering effects are described in detail in the Authentication chapter's <a href="authentication.html#Authentication-sequence">Authentication Sequence</a> section. </p>
+
+<h3><a name="Realm-ImplicitAssignment"></a>Implicit Assignment</h3>
+
+<div class="panelMacro"><table class="warningMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/forbidden.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Not Preferred</b><br clear="none">Implicit assignment can cause unexpected behavior if you change the order in which realms are defined.  It is recommended that you avoid this approach and use Explicit Assignment, which has deterministic behavior.  It is likely Implicit Assignment will be deprecated/removed from a future Shiro release.</td></tr></table></div>
+
+<p>If for some reason you don't want to explicitly configure the <tt>securityManager.realms</tt> property, you can allow Shiro to detect all configured realms and assign them to the <tt>securityManager</tt> directly.</p>
+
+<p>Using this approach, realms are assigned to the <tt>securityManager</tt> instance in the <em>order that they are defined</em>.</p>
+
+<p>That is, for the following <tt>shiro.ini</tt> example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+blahRealm = com.company.blah.Realm
+fooRealm = com.company.foo.Realm
+barRealm = com.company.another.Realm
+
+# no securityManager.realms assignment here
+</pre>
+</div></div>
+
+<p>basically has the same effect as if the following line were appended:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+securityManager.realms = $blahRealm, $fooRealm, $barRealm
+</pre>
+</div></div>
+
+<p>However, realize that with implicit assignment, just the order that the realms are defined directly affects how they are consulted during authentication and authorization attempts.  If you change their definition order, you will change how the master <tt>Authenticator</tt>'s <a href="authentication.html#Authentication-sequence">Authentication Sequence</a> functions.</p>
+
+<p>For this reason, and to ensure deterministic behavior, we recommend using Explicit Assignment instead of Implicit Assignment. <br clear="none">
+<a name="Realm-authentication"></a></p>
+<h2><a name="Realm-RealmAuthentication"></a>Realm Authentication</h2>
+
+<p>Once you understand Shiro's master <a href="authentication.html#Authentication-sequence">Authentication workflow</a>, it is important to know exactly what happens when the <tt>Authenticator</tt> interacts with a <tt>Realm</tt> during an authentication attempt.</p>
+
+<h3><a name="Realm-Supporting%7B%7BAuthenticationTokens%7D%7D"></a>Supporting <tt>AuthenticationTokens</tt></h3>
+
+<p>As mentioned in the <a href="authentication.html#Authentication-sequence">authentication sequence</a>, just before a <tt>Realm</tt> is consulted to perform an authentication attempt, its <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/Realm.html#supports(org.apache.shiro.authc.AuthenticationToken)">supports</a></tt> method is called.  If the return value is <tt>true</tt>, only then will its <tt>getAuthenticationInfo(token)</tt> method be invoked.</p>
+
+<p>Typically a realm will check the type (interface or class) of the submitted token to see if it can process it.  For example, a Realm that processes biometric data may not understand <tt>UsernamePasswordTokens</tt> at all, in which case it would return <tt>false</tt> from the <tt>supports</tt> method.</p>
+
+<h3><a name="Realm-Handlingsupported%7B%7BAuthenticationTokens%7D%7D"></a>Handling supported <tt>AuthenticationTokens</tt></h3>
+
+<p>If a <tt>Realm</tt> <tt>supports</tt> a submitted <tt>AuthenticationToken</tt>, the <tt>Authenticator</tt> will call the Realm's  <a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/Realm.html#getAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken)">getAuthenticationInfo(token)</a> method.  This effectively represents an authentication attempt with the <tt>Realm's</tt> backing data source.  The method, in order:</p>
+
+<ol><li>Inspects the <tt>token</tt> for the identifying principal (account identifying information)</li><li>Based on the <tt>principal</tt>, looks up corresponding account data in the data source</li><li>Ensures that the token's supplied <tt>credentials</tt> matches those stored in the data store</li><li>If the credentials match, an <a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/AuthenticationInfo.html">AuthenticationInfo</a> instance is returned that encapsulates the account data in a format Shiro understands</li><li>If the credentials DO NOT match, an <a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html">AuthenticationException</a> is thrown</li></ol>
+
+
+<p>This is the highest-level workflow for all Realm <tt>getAuthenticationInfo</tt> implementations.  Realms are free to do whatever they want during this method, such as record the attempt in an audit log, update data records, or anything else that makes sense for the authentication attempt for that data store.</p>
+
+<p>The only thing required is that, if the credentials match for the given principal(s), that a non-null <tt>AuthenticationInfo</tt> instance is returned that represents Subject account information from that data source.</p>
+
+<div class="panelMacro"><table class="infoMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Save Time</b><br clear="none">Implementing <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/Realm.html">Realm</a></tt> interface directly might be time consuming and error prone.  Most people choose to subclass the <a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html">AuthorizingRealm</a> abstract class instead of starting from scratch.  This class implements common authentication and authorization workflow to save you time and effort.</td></tr></table></div>
+
+<h3><a name="Realm-CredentialsMatching"></a>Credentials Matching</h3>
+
+<p>In the above realm authentication workflow, a Realm has to verify that the <a href="subject.html" title="Subject">Subject</a>'s submitted credentials (e.g. password) must match the credentials stored in the data store.  If they match, authentication is considered successful, and the system has verified the end-user's identity.</p>
+
+<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Realm Credentials Matching</b><br clear="none">It is each Realm's responsibility to match submitted credentials with those stored in the Realm's backing data store, and not the <tt>Authenticator's</tt> responsibility.  Each <tt>Realm</tt> has intimate knowledge of credentials format and storage and can perform detailed credentials matching, whereas the <tt>Authenticator</tt> is a generic workflow component.</td></tr></table></div>
+
+<p>The credentials matching process is nearly identical in all applications and usually only differs by the data compared.  To ensure this process is pluggable and customizable if necessary, the <a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/AuthenticatingRealm.html">AuthenticatingRealm</a> and its subclasses support the concept of a <a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/credential/CredentialsMatcher.html">CredentialsMatcher</a> to perform the credentials comparison.</p>
+
+<p>After discovering account data, it and the submitted <tt>AuthenticationToken</tt> are presented to a <tt>CredentialsMatcher</tt> to see if what was submitted matches what is stored in the data store. </p>
+
+<p>Shiro has some <tt>CredentialsMatcher</tt> implementations to get you started out of the box, such as the <a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/credential/SimpleCredentialsMatcher.html">SimpleCredentialsMatcher</a> and <a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/credential/HashedCredentialsMatcher.html">HashedCredentialsMatcher</a> implementations, but if you wanted to configure a custom implementation for custom matching logic, you could do so directly:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+Realm myRealm = <span class="code-keyword">new</span> com.company.shiro.realm.MyRealm();
+CredentialsMatcher customMatcher = <span class="code-keyword">new</span> com.company.shiro.realm.CustomCredentialsMatcher();
+myRealm.setCredentialsMatcher(customMatcher);
+</pre>
+</div></div>
+
+<p>Or, if using Shiro's INI <a href="configuration.html" title="Configuration">configuration</a>:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+[main]
+...
+customMatcher = com.company.shiro.realm.CustomCredentialsMatcher
+myRealm = com.company.shiro.realm.MyRealm
+myRealm.credentialsMatcher = $customMatcher
+...
+</pre>
+</div></div>
+
+
+<h4><a name="Realm-SimpleEqualityCheck"></a>Simple Equality Check</h4>
+
+<p>All of Shiro's out-of-the-box <tt>Realm</tt> implementations default to using a <a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/credential/SimpleCredentialsMatcher.html">SimpleCredentialsMatcher</a>.  The <tt>SimpleCredentialsMatcher</tt> performs a plain direct equality check of the stored account credentials with what was submitted in the <tt>AuthenticationToken</tt>.</p>
+
+<p>For example, if a <a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/UsernamePasswordToken.html">UsernamePasswordToken</a> was submitted, the <tt>SimpleCredentialsMatcher</tt> verifies that the password submitted is exactly equal to the password stored in the database.</p>
+
+<p>The <tt>SimpleCredentialsMatcher</tt> performs direct equality comparisons for more than just Strings though.  It can work with most common byte sources, such as Strings, character arrays, byte arrays, Files and InputStreams.  See its JavaDoc for more.</p>
+
+<h4><a name="Realm-HashingCredentials"></a>Hashing Credentials</h4>
+
+<p>Instead of storing credentials in their raw form and performing raw/plain comparisons, a much more secure way of storing end-user's credentials (e.g. passwords) is to one-way hash them first before storing them in the data store.  </p>
+
+<p>This ensures that end-users' credentials are never stored in their raw form and that no one can know the original/raw value.  This is a much more secure mechanism than plain-text or raw comparisons, and all security-conscious applications should favor this approach over non-hashed storage.</p>
+
+<p>To support these preferred cryptographic hashing strategies, Shiro provides <a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/credential/HashedCredentialsMatcher.html">HashedCredentialsMatcher</a> implementations to be configured on realms instead of the aforementioned <tt>SimpleCredentialsMatcher</tt>.</p>
+
+<p>Hashing credentials and the benefits of salting and multiple hash iterations are outside the scope of this <tt>Realm</tt> documentation, but definitely read the <a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/credential/HashedCredentialsMatcher.html">HashedCredentialsMatcher JavaDoc</a> which covers these principles in detail.</p>
+
+<h5><a name="Realm-HashingandCorrespondingMatchers"></a>Hashing and Corresponding Matchers</h5>
+
+<p>So how do you configure a Shiro-enabled application to do this easily?</p>
+
+<p>Shiro provides multiple <tt>HashedCredentialsMatcher</tt> subclass implementations.  You must configure the specific implementation on your realm to match the hashing algorithm you use to hash your users' credentials.</p>
+
+<p>For example, let's say your application uses username/password pairs for authentication.  And due to the benefits of hashing credentials described above, let's say you want to one-way hash a user's password using the <a class="external-link" href="http://en.wikipedia.org/wiki/SHA_hash_functions" rel="nofollow">SHA-256</a> algorithm when you create a user account.  You would hash the user's entered plain-text password and save that value:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+<span class="code-keyword">import</span> org.apache.shiro.crypto.hash.Sha256Hash;
+<span class="code-keyword">import</span> org.apache.shiro.crypto.RandomNumberGenerator;
+<span class="code-keyword">import</span> org.apache.shiro.crypto.SecureRandomNumberGenerator;
+...
+
+<span class="code-comment">//We'll use a Random <span class="code-object">Number</span> Generator to generate salts.  This
+</span><span class="code-comment">//is much more secure than using a username as a salt or not
+</span><span class="code-comment">//having a salt at all.  Shiro makes <span class="code-keyword">this</span> easy.
+</span><span class="code-comment">//
+</span><span class="code-comment">//Note that a normal app would reference an attribute rather
+</span><span class="code-comment">//than create a <span class="code-keyword">new</span> RNG every time:
+</span>RandomNumberGenerator rng = <span class="code-keyword">new</span> SecureRandomNumberGenerator();
+<span class="code-object">Object</span> salt = rng.nextBytes();
+
+<span class="code-comment">//Now hash the plain-text password with the random salt and multiple
+</span><span class="code-comment">//iterations and then Base64-encode the value (requires less space than Hex):
+</span><span class="code-object">String</span> hashedPasswordBase64 = <span class="code-keyword">new</span> Sha256Hash(plainTextPassword, salt, 1024).toBase64();
+
+User user = <span class="code-keyword">new</span> User(username, hashedPasswordBase64);
+<span class="code-comment">//save the salt with the <span class="code-keyword">new</span> account.  The HashedCredentialsMatcher
+</span><span class="code-comment">//will need it later when handling login attempts:
+</span>user.setPasswordSalt(salt);
+userDAO.create(user);
+</pre>
+</div></div>
+
+<p>Since you're <tt>SHA-256</tt> hashing your user's passwords, you need to tell Shiro to use the appropriate <tt>HashedCredentialsMatcher</tt> to match your hashing preferences.  In this example, we create a random salt and perform 1024 hash iterations for strong security (see the <tt>HashedCredentialsMatcher</tt> JavaDoc for why).  Here is the Shiro INI configuration to make this work:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+[main]
+...
+credentialsMatcher = org.apache.shiro.authc.credential.Sha256CredentialsMatcher
+# base64 encoding, not hex in <span class="code-keyword">this</span> example:
+credentialsMatcher.storedCredentialsHexEncoded = <span class="code-keyword">false</span>
+credentialsMatcher.hashIterations = 1024
+# This next property is only needed in Shiro 1.0.  Remove it in 1.1 and later:
+credentialsMatcher.hashSalted = <span class="code-keyword">true</span>
+
+...
+myRealm = com.company.....
+myRealm.credentialsMatcher = $credentialsMatcher
+...
+</pre>
+</div></div>
+
+<h6><a name="Realm-%7B%7BSaltedAuthenticationInfo%7D%7D"></a><tt>SaltedAuthenticationInfo</tt></h6>
+
+<p>The last thing to do to ensure this works is that your <tt>Realm</tt> implementation must return a <a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/SaltedAuthenticationInfo.html">SaltedAuthenticationInfo</a> instance instead of a normal <tt>AuthenticationInfo</tt> one.  The <tt>SaltedAuthenticationInfo</tt> interface ensures that the salt that you used when you created the user account (e.g. the <tt>user.setPasswordSalt(salt);</tt> call above) can be referenced by the <tt>HashedCredentialsMatcher</tt>.</p>
+
+<p>The <tt>HashedCredentialsMatcher</tt> needs the salt in order to perform the same hashing technique on the submitted <tt>AuthenticationToken</tt> to see if the token matches what you saved in the data store.  So if you use salting for user passwords (and you should!!!), ensure your <tt>Realm</tt> implementation represents that by returning <tt>SaltedAuthenticationInfo</tt> instances.</p>
+
+<h3><a name="Realm-DisablingAuthentication"></a>Disabling Authentication</h3>
+
+<p>If for some reason, you don't want a Realm to perform authentication for a data source (maybe because you only want the Realm to perform authorization), you can disable a Realm's support for authentication entirely by always returning <tt>false</tt> from the Realm's <tt>supports</tt> method.  Then your realm will never be consulted during an authentication attempt.  </p>
+
+<p>Of course at least one configured <tt>Realm</tt> needs to be able to support AuthenticationTokens if you want to authenticate Subjects. </p>
+
+<h2><a name="Realm-RealmAuthorization"></a>Realm Authorization</h2>
+<p>TBD</p>
+
+<h2><a name="Realm-Lendahandwithdocumentation"></a>Lend a hand with documentation </h2>
+
+<p>While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time.  If you'd like to help the Shiro project, please consider corrected, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro. </p>
+
+<p>The easiest way to contribute your documentation is to send it to the <a class="external-link" href="http://shiro-user.582556.n2.nabble.com/" rel="nofollow">User Forum</a> or the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.</p>

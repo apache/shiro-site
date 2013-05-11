@@ -1,0 +1,99 @@
+<h1><a name="CommandLineHasher-CommandLineHasher"></a>Command Line Hasher</h1>
+
+<div class="toc">
+<ul><li><a href="#CommandLineHasher-Usage">Usage</a></li><li><a href="#CommandLineHasher-CommonScenarios">Common Scenarios</a></li><ul><li><a href="#CommandLineHasher-%7B%7Bshiro.ini%7D%7DUserPasswords"> <tt>shiro.ini</tt> User Passwords</a></li><li><a href="#CommandLineHasher-MD5checksum">MD5 checksum</a></li></ul></ul></div>
+
+<p>Shiro 1.2.0 and later provides a command line program that can hash strings and resources (files, URLs, classpath entries) of almost any type.  To use it, you must have a Java Virtual Machine installed and the 'java' command must be accessible in your <tt>$PATH</tt> environment variable.</p>
+
+<h2><a name="CommandLineHasher-Usage"></a>Usage</h2>
+
+<p>Ensure you have access to the <tt>shiro-tools-hasher-</tt><em>version</em><tt>-cli.jar</tt> file.  You can either find this in a source build in the <em>buildroot</em><tt>/tools/hasher/target</tt> directory or via download through Maven.</p>
+
+<p>Once you have access to the jar, you can run the following command:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+&gt; java -jar shiro-tools-hasher-X.X.X-cli.jar
+</pre>
+</div></div>
+
+<p>This will print all available options for both standard (MD5, SHA1) and more complex password hashing scenarios.</p>
+
+<h2><a name="CommandLineHasher-CommonScenarios"></a>Common Scenarios</h2>
+
+<p>Please read the printed instructions for the above command.  It will provide an exhaustive list of instructions which will help you use the hasher depending on your needs.  However, we've provided some quick reference usages/scenarios below for convenience.</p>
+
+<h3><a name="CommandLineHasher-%7B%7Bshiro.ini%7D%7DUserPasswords"></a><tt>shiro.ini</tt> User Passwords</h3>
+
+<p>It is best to keep user passwords in the <tt>shiro.ini</tt> <tt>[users]</tt> section secure.  To add a new user account line, use the above command with the <tt><b>-p</b></tt> (or <tt>--password</tt>) option:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+&gt; java -jar shiro-tools-hasher-X.X.X-cli.jar -p
+</pre>
+</div></div>
+
+<p>It will then ask you to enter the password and then confirm it:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+Password to hash:
+Password to hash (confirm):
+</pre>
+</div></div>
+
+<p>When this command executes, it will print out the securely-salted-iterated-and-hashed password.  For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+$shiro1$SHA-256$500000$eWpVX2tGX7WCP2J+jMCNqw==$it/NRclMOHrfOvhAEFZ0mxIZRdbcfqIBdwdwdDXW2dM=
+</pre>
+</div></div>
+
+<p>Take this value and place it as the password in the user definition line (followed by any optional roles) as defined in the <a href="configuration.html#Configuration-%5Cusers%5C">INI Users Configuration</a> documentation.  For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+[users]
+...
+user1 = $shiro1$SHA-256$500000$eWpVX2tGX7WCP2J+jMCNqw==$it/NRclMOHrfOvhAEFZ0mxIZRdbcfqIBdwdwdDXW2dM=
+</pre>
+</div></div>
+
+<p>You will also need to ensure that the implicit <tt>iniRealm</tt> uses a <tt>CredentialsMatcher</tt> that knows how to perform secure hashed password comparisons.  So configure this in the <tt>[main]</tt> section as well:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+[main]
+...
+passwordMatcher = org.apache.shiro.authc.credential.PasswordMatcher
+iniRealm.credentialsMatcher = $passwordMatcher
+...
+</pre>
+</div></div>
+
+
+<h3><a name="CommandLineHasher-MD5checksum"></a>MD5 checksum</h3>
+
+<p>Although you can perform any hash with any algorithm supported on the JVM, the default hashing algorithm is MD5, common for file checksums.  Just use the <tt><b>-r</b></tt> (or <tt>--resource</tt>) option to indicate the following value is a resource location (and not text you wish hashed):</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+&gt; java -jar shiro-tools-hasher-X.X.X-cli.jar -r RESOURCE_PATH
+</pre>
+</div></div>
+
+<p>By default <tt>RESOURCE_PATH</tt> is expected to be a file path, but you may specify classpath or URL resources by using the <tt>classpath:</tt> or <tt>url:</tt> prefix respectively.</p>
+
+<p>Some examples:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+&lt;command&gt; -r fileInCurrentDirectory.txt
+&lt;command&gt; -r ../../relativePathFile.xml
+&lt;command&gt; -r ~/documents/myfile.pdf
+&lt;command&gt; -r /usr/local/logs/absolutePathFile.log
+&lt;command&gt; -r url:http:<span class="code-comment">//foo.com/page.html
+</span>&lt;command&gt; -r classpath:/WEB-INF/lib/something.jar
+</pre>
+</div></div>

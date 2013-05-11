@@ -1,0 +1,820 @@
+<h1><a name="Web-ApacheShiroWebSupport"></a>Apache Shiro Web Support</h1>
+<div class="toc">
+<ul><li><a href="#Web-Configuration">Configuration</a></li><ul><li><a href="#Web-%7B%7Bweb.xml%7D%7D"> <tt>web.xml</tt></a></li><ul><li><a href="#Web-Shiro1.2andlater">Shiro 1.2 and later</a></li><ul><li><a href="#Web-Custom%7B%7BWebEnvironment%7D%7DClass">Custom <tt>WebEnvironment</tt> Class</a></li><li><a href="#Web-CustomConfigurationLocations">Custom Configuration Locations</a></li></ul><li><a href="#Web-Shiro1.1andearlier">Shiro 1.1 and earlier</a></li><ul><li><a href="#Web-CustomPath">Custom Path</a></li><li><a href="#Web-InlineConfig">Inline Config</a></li></ul></ul><li><a href="#Web-WebINIconfiguration">Web INI configuration</a></li><ul><li><a href="#Web-%7B%7B%5Curls%5C%7D%7D"> <tt>[urls]</tt></a></li><ul><li><a href="#Web-URLPathExpressions">URL Path Expressions</a></li><li><a href="#Web-FilterChainDefinitions">Filter Chain Definitions</a></li><ul><li><a href="#Web-AvailableFilters">Available Filters</a></li></ul></ul></ul></ul><li><a href="#Web-DefaultFilters">Default Filters</a></li><li><a href="#Web-EnablingandDisablingFilters">Enabling and Disabling Filters</a></li><ul><li><a href="#Web-GeneralEnabling%2FDisabling">General Enabling/Disabling</a></li><li><a href="#Web-RequestspecificEnabling%2FDisabling">Request-specific Enabling/Disabling</a></li><li><a href="#Web-PathspecificEnabling%2FDisabling">Path-specific Enabling/Disabling</a></li></ul><li><a href="#Web-SessionManagement">Session Management</a></li><ul><li><a href="#Web-ServletContainerSessions">Servlet Container Sessions</a></li><ul><li><a href="#Web-ServletContainerSessionTimeout">Servlet Container Session Timeout</a></li></ul><li><a href="#Web-NativeSessions">Native Sessions</a></li><ul><li><a href="#Web-%7B%7BDefaultWebSessionManager%7D%7D"> <tt>DefaultWebSessionManager</tt></a></li><ul><li><a href="#Web-NativeSessionTimeout">Native Session Timeout</a></li><li><a href="#Web-SessionCookie">Session Cookie</a></li><ul><li><a href="#Web-SessionCookieConfiguration">Session Cookie Configuration</a></li><li><a href="#Web-DisablingtheSessionCookie">Disabling the Session Cookie</a></li></ul></ul></ul></ul><li><a href="#Web-RememberMeServices">Remember Me Services</a></li><ul><li><a href="#Web-ProgrammaticSupport">Programmatic Support</a></li><li><a href="#Web-FormbasedLogin">Form-based Login</a></li><li><a href="#Web-Cookieconfiguration">Cookie configuration</a></li><li><a href="#Web-Custom%7B%7BRememberMeManager%7D%7D">Custom <tt>RememberMeManager</tt></a></li></ul><li><a href="#Web-JSP%2FGSPTagLibrary">JSP / GSP Tag Library</a></li><ul><li><a href="#Web-TagLibraryConfiguration">Tag Library Configuration</a></li><li><a href="#Web-The%7B%7Bguest%7D%7Dtag">The <tt>guest</tt> tag</a></li><li><a href="#Web-The%7B%7Buser%7D%7Dtag">The <tt>user</tt> tag</a></li><li><a href="#Web-The%7B%7Bauthenticated%7D%7Dtag">The <tt>authenticated</tt> tag</a></li><li><a href="#Web-The%7B%7BnotAuthenticated%7D%7Dtag">The <tt>notAuthenticated</tt> tag</a></li><li><a href="#Web-The%7B%7Bprincipal%7D%7Dtag">The <tt>principal</tt> tag</a></li><ul><li><a href="#Web-Typedprincipal">Typed principal</a></li><li><a href="#Web-Principalproperty">Principal property</a></li></ul><li><a href="#Web-The%7B%7BhasRole%7D%7Dtag">The <tt>hasRole</tt> tag</a></li><li><a href="#Web-The%7B%7BlacksRole%7D%7Dtag">The <tt>lacksRole</tt> tag</a></li><li><a href="#Web-The%7B%7BhasAnyRole%7D%7Dtag">The <tt>hasAnyRole</tt> tag</a></li><li><a href="#Web-The%7B%7BhasPermission%7D%7Dtag">The <tt>hasPermission</tt> tag</a></li><li><a href="#Web-The%7B%7BlacksPermission%7D%7Dtag">The <tt>lacksPermission</tt> tag</a></li></ul><li><a href="#Web-Lendahandwithdocumentation">Lend a hand with documentation</a></li></ul></div>
+
+<p><a name="Web-configuration"></a></p>
+<h2><a name="Web-Configuration"></a>Configuration</h2>
+
+<p>The simplest way to integrate Shiro into any web application is to configure a Servlet ContextListener and Filter in web.xml that understands how to read Shiro's INI configuration.  The bulk of the INI config format itself is defined in the Configuration pages's <a href="configuration.html#Configuration-INISections">INI Sections</a> section, but we'll cover some additional web-specific sections here.</p>
+
+<div class="panelMacro"><table class="infoMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Using Spring?</b><br clear="none">Spring Framework users will not perform this setup.  If you use Spring, you will want to read about <a href="spring.html#Spring-WebApplications">Spring-specific web configuration</a> instead.</td></tr></table></div>
+
+<h3><a name="Web-%7B%7Bweb.xml%7D%7D"></a><tt>web.xml</tt></h3>
+
+<h4><a name="Web-Shiro1.2andlater"></a>Shiro 1.2 and later</h4>
+
+<p>In Shiro 1.2 and later, standard web applications initialize Shiro by adding the following XML chunks to <tt>web.xml</tt>:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">
+<span class="code-tag">&lt;listener&gt;</span>
+    <span class="code-tag">&lt;listener-class&gt;</span>org.apache.shiro.web.env.EnvironmentLoaderListener<span class="code-tag">&lt;/listener-class&gt;</span>
+<span class="code-tag">&lt;/listener&gt;</span>
+
+...
+
+<span class="code-tag">&lt;filter&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>ShiroFilter<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;filter-class&gt;</span>org.apache.shiro.web.servlet.ShiroFilter<span class="code-tag">&lt;/filter-class&gt;</span>
+<span class="code-tag">&lt;/filter&gt;</span>
+
+<span class="code-tag">&lt;filter-mapping&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>ShiroFilter<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;url-pattern&gt;</span>/*<span class="code-tag">&lt;/url-pattern&gt;</span>
+    <span class="code-tag">&lt;dispatcher&gt;</span>REQUEST<span class="code-tag">&lt;/dispatcher&gt;</span> 
+    <span class="code-tag">&lt;dispatcher&gt;</span>FORWARD<span class="code-tag">&lt;/dispatcher&gt;</span> 
+    <span class="code-tag">&lt;dispatcher&gt;</span>INCLUDE<span class="code-tag">&lt;/dispatcher&gt;</span> 
+    <span class="code-tag">&lt;dispatcher&gt;</span>ERROR<span class="code-tag">&lt;/dispatcher&gt;</span>
+<span class="code-tag">&lt;/filter-mapping&gt;</span>
+</pre>
+</div></div>
+
+<p>This assumes a Shiro INI <a href="configuration.html" title="Configuration">Configuration</a> file is located at either of the following two locations, using whichever is found first:</p>
+<ol><li><tt>/WEB-INF/shiro.ini</tt></li><li><tt>shiro.ini</tt> file at the root of the classpath.</li></ol>
+
+
+<p>Here is what the above config does:</p>
+
+<ul><li>The <tt>EnvironmentLoaderListener</tt> initializes a Shiro <tt>WebEnvironment</tt> instance (which contains everything Shiro needs to operate, including the <tt>SecurityManager</tt>) and makes it accessible in the <tt>ServletContext</tt>.  If you need to obtain this <tt>WebEnvironment</tt> instance at any time, you can call <tt>WebUtils.getRequiredWebEnvironment(servletContext)</tt>.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline"></li><li>The <tt>ShiroFilter</tt> will use this <tt>WebEnvironment</tt> to perform all necessary security operations for any filtered request.
+<br clear="none" class="atl-forced-newline">
+<br clear="none" class="atl-forced-newline"></li><li>Finally, the <tt>filter-mapping</tt> definition ensures that all requests are filtered by the <tt>ShiroFilter</tt>, recommended for most web applications to ensure that any request can be secured.</li></ul>
+
+
+<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>ShiroFilter filter-mapping</b><br clear="none">It is usually desirable to define the <tt>ShiroFilter filter-mapping</tt> before any other <tt>filter-mapping</tt> declarations to ensure that Shiro can function in those filters as well.</td></tr></table></div>
+
+<h5><a name="Web-Custom%7B%7BWebEnvironment%7D%7DClass"></a>Custom <tt>WebEnvironment</tt> Class</h5>
+
+<p>By default the <tt>EnvironmentLoaderListener</tt> will create an <tt>IniWebEnvironment</tt> instance, which assumes Shiro's INI-based <a href="configuration.html" title="Configuration">Configuration</a>.  If you like, you may specify a custom <tt>WebEnvironment</tt> instance instead by specifying a <tt>ServletContext</tt> <tt>context-param</tt> in <tt>web.xml</tt>:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">
+<span class="code-tag">&lt;context-param&gt;</span>
+    <span class="code-tag">&lt;param-name&gt;</span>shiroEnvironmentClass<span class="code-tag">&lt;/param-name&gt;</span>
+    <span class="code-tag">&lt;param-value&gt;</span>com.foo.bar.shiro.MyWebEnvironment<span class="code-tag">&lt;/param-value&gt;</span>
+<span class="code-tag">&lt;/context-param&gt;</span>
+</pre>
+</div></div>
+
+<p>This allows you to customize how a configuration format is parsed and represented as a <tt>WebEnvironment</tt> instance.  You could subclass the existing <tt>IniWebEnvironment</tt> for custom behavior, or support different configuration formats entirely.  For example, if someone wanted to configure Shiro in XML instead of INI, they could create an XML-based implementation, e.g. <tt>com.foo.bar.shiro.XmlWebEnvironment</tt>.</p>
+
+<h5><a name="Web-CustomConfigurationLocations"></a>Custom Configuration Locations</h5>
+
+<p>The <tt>IniWebEnvironment</tt> class expects to read and load INI configuration files.  By default, this class will automatically look in the following two locations for the Shiro <tt>.ini</tt> configuration (in order):</p>
+
+<ol><li><tt>/WEB-INF/shiro.ini</tt></li><li><tt>classpath:shiro.ini</tt></li></ol>
+
+
+<p>It will use whichever is found first.</p>
+
+<p>However, if you wish to place your config in another location, you may specify that location with another <tt>context-param</tt> in <tt>web.xml</tt>:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">
+<span class="code-tag">&lt;context-param&gt;</span>
+    <span class="code-tag">&lt;param-name&gt;</span>shiroConfigLocations<span class="code-tag">&lt;/param-name&gt;</span>
+    <span class="code-tag">&lt;param-value&gt;</span>YOUR_RESOURCE_LOCATION_HERE<span class="code-tag">&lt;/param-value&gt;</span>
+<span class="code-tag">&lt;/context-param&gt;</span>
+</pre>
+</div></div>
+
+<p>By default, the <tt>param-value</tt> is expected to be resolvable by the rules defined by <tt>ServletContext.</tt><tt><a class="external-link" href="http://download.oracle.com/javaee/6/api/javax/servlet/ServletContext.html#getResource(java.lang.String)" rel="nofollow">getResource</a></tt> method.  For example, <tt>/WEB-INF/some/path/shiro.ini</tt>  </p>
+
+<p>But you may also specify specific file-system, classpath or URL locations by using an appropriate resource prefix supported by Shiro's <a class="external-link" href="static/current/apidocs/org/apache/shiro/io/ResourceUtils.html">ResourceUtils class</a>, for example:</p>
+<ul><li><tt><a class="external-link" href="file:/home/foobar/myapp/shiro.ini" rel="nofollow">file:/home/foobar/myapp/shiro.ini</a></tt></li><li><tt>classpath:com/foo/bar/shiro.ini</tt></li><li><tt>url:<a class="external-link" href="http://confighost.mycompany.com/myapp/shiro.ini" rel="nofollow">http://confighost.mycompany.com/myapp/shiro.ini</a></tt></li></ul>
+
+
+<h4><a name="Web-Shiro1.1andearlier"></a>Shiro 1.1 and earlier</h4>
+
+<p>The simplest way to enable Shiro in a 1.1 or earlier web application is to define the IniShiroFilter and specify a <tt>filter-mapping</tt>:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">
+<span class="code-tag">&lt;filter&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>ShiroFilter<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;filter-class&gt;</span>org.apache.shiro.web.servlet.IniShiroFilter<span class="code-tag">&lt;/filter-class&gt;</span>
+<span class="code-tag">&lt;/filter&gt;</span>
+
+...
+
+<span class="code-tag"><span class="code-comment">&lt;!-- Make sure any request you want accessible to Shiro is filtered. /* catches all --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- requests.  Usually this filter mapping is defined first (before all others) to --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- ensure that Shiro works in subsequent filters in the filter chain:             --&gt;</span></span>
+<span class="code-tag">&lt;filter-mapping&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>ShiroFilter<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;url-pattern&gt;</span>/*<span class="code-tag">&lt;/url-pattern&gt;</span>
+    <span class="code-tag">&lt;dispatcher&gt;</span>REQUEST<span class="code-tag">&lt;/dispatcher&gt;</span> 
+    <span class="code-tag">&lt;dispatcher&gt;</span>FORWARD<span class="code-tag">&lt;/dispatcher&gt;</span> 
+    <span class="code-tag">&lt;dispatcher&gt;</span>INCLUDE<span class="code-tag">&lt;/dispatcher&gt;</span> 
+    <span class="code-tag">&lt;dispatcher&gt;</span>ERROR<span class="code-tag">&lt;/dispatcher&gt;</span>
+<span class="code-tag">&lt;/filter-mapping&gt;</span>
+</pre>
+</div></div>
+
+<p>This definition expects your INI configuration to be in a shiro.ini file at the root of the classpath (e.g. <tt>classpath:shiro.ini</tt>).</p>
+
+<h5><a name="Web-CustomPath"></a>Custom Path</h5>
+
+<p>If you do not want to place your INI config in <tt>/WEB-INF/shiro.ini</tt> or <tt>classpath:shiro.ini</tt>, you may specify a custom resource location as necessary.  Add a <tt>configPath init-param</tt> and specify a resource location:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">
+<span class="code-tag">&lt;filter&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>ShiroFilter<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;filter-class&gt;</span>org.apache.shiro.web.servlet.IniShiroFilter<span class="code-tag">&lt;/filter-class&gt;</span>
+    <span class="code-tag">&lt;init-param&gt;</span>
+        <span class="code-tag">&lt;param-name&gt;</span>configPath<span class="code-tag">&lt;/param-name&gt;</span>
+        <span class="code-tag">&lt;param-value&gt;</span>/WEB-INF/anotherFile.ini<span class="code-tag">&lt;/param-value&gt;</span>
+    <span class="code-tag">&lt;/init-param&gt;</span>
+<span class="code-tag">&lt;/filter&gt;</span>
+
+...
+</pre>
+</div></div>
+
+<p>Unqualified (schemeless or 'non-prefixed') <tt>configPath</tt> values are assumed to be <tt>ServletContext</tt> resource paths, resolvable via the rules defined by the<br clear="none">
+<tt>ServletContext.</tt><tt><a class="external-link" href="http://download.oracle.com/javaee/6/api/javax/servlet/ServletContext.html#getResource(java.lang.String)" rel="nofollow">getResource</a></tt> method.</p>
+
+<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>ServletContext resource paths - Shiro 1.2+</b><br clear="none">ServletContext resource paths are available in Shiro 1.2 and later.  In 1.1 and earlier, all <tt>configPath</tt> definitions must specify a <tt>classpath:</tt>, <tt>file:</tt> or <tt>url:</tt> prefix.</td></tr></table></div>
+
+<p>You may also specify other non-<tt>ServletContext</tt> resource locations by using <tt>classpath:</tt>, <tt>url:</tt>, or <tt>file:</tt> prefixes indicating classpath, url, or filesystem locations respectively.  For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">
+...
+<span class="code-tag">&lt;init-param&gt;</span>
+    <span class="code-tag">&lt;param-name&gt;</span>configPath<span class="code-tag">&lt;/param-name&gt;</span>
+    <span class="code-tag">&lt;param-value&gt;</span>url:http://configHost/myApp/shiro.ini<span class="code-tag">&lt;/param-value&gt;</span>
+<span class="code-tag">&lt;/init-param&gt;</span>
+...
+</pre>
+</div></div>
+
+<h5><a name="Web-InlineConfig"></a>Inline Config</h5>
+
+<p>Finally, it is also possible to embed your INI configuration inline in web.xml without using an INI file at all.  You do this by using the <tt>config init-param</tt> instead of <tt>configPath</tt>:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">
+<span class="code-tag">&lt;filter&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>ShiroFilter<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;filter-class&gt;</span>org.apache.shiro.web.servlet.IniShiroFilter<span class="code-tag">&lt;/filter-class&gt;</span>
+    <span class="code-tag">&lt;init-param&gt;</span><span class="code-tag">&lt;param-name&gt;</span>config<span class="code-tag">&lt;/param-name&gt;</span><span class="code-tag">&lt;param-value&gt;</span>
+
+    # INI Config Here
+
+    <span class="code-tag">&lt;/param-value&gt;</span><span class="code-tag">&lt;/init-param&gt;</span>
+<span class="code-tag">&lt;/filter&gt;</span>
+...
+</pre>
+</div></div>
+
+<p>Inline config is often fine for small or simple applications, but it is usually more convenient to externalize it in a dedicated shiro.ini file for the following reasons:</p>
+
+<ul><li>You might edit security configuration a lot and don't want to add revision control 'noise' to the web.xml file</li><li>You might want to separate security config from the rest of web.xml config</li><li>Your security configuration might become large and you want to keep web.xml lean and easier to read</li><li>You have a complex build system where the same shiro config might need to be referenced in multiple places</li></ul>
+
+
+<p>It is up to you - use what makes sense for your project.<br clear="none">
+<a name="Web-webini"></a></p>
+<h3><a name="Web-WebINIconfiguration"></a>Web INI configuration</h3>
+
+<p>In addition to the standard <tt>[main]</tt>, <tt>[users]</tt> and <tt>[roles]</tt> sections already described in the main <a href="configuration.html" title="Configuration">Configuration</a> chapter, you can additionally specify a web-specific <tt>[urls]</tt> section in your <tt>shiro.ini</tt> file:</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre># [main], [users] and [roles] above here
+...
+[urls]
+...
+</pre>
+</div></div>
+
+<p>The <tt>[urls]</tt> section allows you to do something that doesn't exist in any web framework that we've seen yet:  the ability to define ad-hoc filter chains for any matching URL path in your application!</p>
+
+<p>This is <em>far</em> more flexible, powerful and concise than how you define filter chains normally in <tt>web.xml</tt>:  even if you never used any other feature that Shiro provided and used only this, it alone would make it worth using.</p>
+
+<h4><a name="Web-%7B%7B%5Curls%5C%7D%7D"></a><tt>[urls]</tt></h4>
+
+<p>The format of each line in the <tt>urls</tt> section is as follows:</p>
+
+<div class="panel" style="border-width: 1px;"><div class="panelContent">
+<p><tt><em>URL_Ant_Path_Expression</em></tt> <tt>=</tt> <tt><em>Path_Specific_Filter_Chain</em></tt></p>
+</div></div>
+
+<p>For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+...
+[urls]
+
+/index.html = anon
+/user/create = anon
+/user/** = authc
+/admin/** = authc, roles[administrator]
+/<span class="code-keyword">rest</span>/** = authc, <span class="code-keyword">rest</span>
+/remoting/rpc/** = authc, perms[<span class="code-quote">"remote:invoke"</span>]
+</pre>
+</div></div>
+
+<p>Next we'll cover exactly what these lines mean.</p>
+
+<h5><a name="Web-URLPathExpressions"></a>URL Path Expressions</h5>
+
+<p>The token on the left of the equals sign (=) is an <a class="external-link" href="http://ant.apache.org">Ant</a>-style path expression relative to your web application's context root.</p>
+
+<p>For example, let's say you had the following <tt>[urls]</tt> line:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+/account/** = ssl, authc
+</pre>
+</div></div>
+
+<p>This line states that "Any request to my application's path of <tt>/account</tt> or any of it's sub paths (<tt>/account/foo</tt>, <tt>/account/bar/baz</tt>, etc) will trigger the 'ssl, authc' filter chain".  We'll cover filter chains below.</p>
+
+<p>Note that all path expressions are relative to your application's context root.  This means that if you deploy your application one day to, say, <tt>www.somehost.com/myapp</tt> and then later deploy it to <tt>www.anotherhost.com</tt> (no 'myapp' sub-path), the pattern matching will still work.  All paths are relative to the <a class="external-link" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api/javax/servlet/http/HttpServletRequest.html#getContextPath()" rel="nofollow">HttpServletRequest.getContextPath()</a> value.</p>
+
+
+<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Order Matters!</b><br clear="none">URL path expressions are evaluated against an incoming request in the order they are defined and the <em>FIRST MATCH WINS</em>.  For example, let's asume that there are the following chain definitions:
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+/account/** = ssl, authc
+/account/signup = anon
+</pre>
+</div></div>
+
+<p>If an incoming request is intended to reach <tt>/account/signup/index.html</tt> (accessible by all 'anon'ymous users), <em>it will never be handled!</em>.  The reason is that the <tt>/account/**</tt> pattern matched the incoming request first and 'short-circuited' all remaining definitions.</p>
+
+<p>Always remember to define your filter chains based on a <em>FIRST MATCH WINS</em> policy!</p></td></tr></table></div>
+
+<h5><a name="Web-FilterChainDefinitions"></a>Filter Chain Definitions</h5>
+
+<p>The token on the right of the equals sign (=) is comma-delimited list of filters to execute for a request matching that path.  It must match the following format:</p>
+
+<div class="panel" style="border-width: 1px;"><div class="panelContent">
+<p><tt>filter1[optional_config1], filter2[optional_config2], ..., filterN[optional_configN]</tt></p>
+</div></div>
+
+<p>where:</p>
+<ul class="alternate" type="square"><li><em>filterN</em> is the name of a filter bean defined in the <tt>[main]</tt> section and</li><li><tt>[optional_configN]</tt> is an optional bracketed string that has meaning for that particular filter for <em>that particular path</em> (per-filter, <em>path-specific</em> configuration!).  If the filter does not need specific config for that URL path, you may discard the brackets so <tt>filterN[]</tt> just becomes <tt>filterN</tt>.</li></ul>
+
+
+<p>And because filter tokens define chains (aka a List), remember that order matters!  Define your comma-delimited list in the order that you want the request to flow through the chain.</p>
+
+<p>Finally, each filter is free to handle the response however it wants if its necessary conditions are not met (e.g. perform a redirect, respond with an HTTP error code, direct rendering, etc).  Otherwise it is expected to allow the request to continue through the chain on to the final destination view.</p>
+
+<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1">Being able to react to path specific configuration, i.e. the <tt>[optional_configN]</tt> part of a filter token, is a unique feature available to Shiro filters.
+
+<p>If you want to create your own <tt>javax.servlet.Filter</tt> implementation that can also do this, make sure your filter subclasses <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html">org.apache.shiro.web.filter.PathMatchingFilter</a></p></td></tr></table></div>
+
+<h6><a name="Web-AvailableFilters"></a>Available Filters</h6>
+
+<p>The 'pool' of filters available for use in filter chain definitions are defined in the <tt>[main]</tt> section.  The name assigned to them in the main section is the name to use in the filter chain definitions.  For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+[main]
+...
+myFilter = com.company.web.some.FilterImplementation
+myFilter.property1 = value1
+...
+
+[urls]
+...
+/some/path/** = myFilter
+</pre>
+</div></div>
+<p><a name="Web-defaultfilters"></a></p>
+<h2><a name="Web-DefaultFilters"></a>Default Filters</h2>
+
+<p>When running a web-app, Shiro will create some useful default <tt>Filter</tt> instances and make them available in the <tt>[main]</tt> section automatically.  You can configure them in <tt>main</tt> as you would any other bean and reference them in your chain definitions.  For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+[main]
+...
+# Notice how we didn't define the class <span class="code-keyword">for</span> the FormAuthenticationFilter ('authc') - it is instantiated and available already:
+authc.loginUrl = /login.jsp
+...
+
+[urls]
+...
+# make sure the end-user is authenticated.  If not, redirect to the 'authc.loginUrl' above,
+# and after successful authentication, redirect them back to the original account page they
+# were trying to view:
+/account/** = authc
+...
+</pre>
+</div></div>
+
+<p>The default Filter instances available automatically are defined by the <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/mgt/DefaultFilter.html">DefaultFilter enum</a> and the enum's <tt>name</tt> field is the name available for configuration.  They are:</p>
+
+<div class="table-wrap">
+<table class="confluenceTable"><tbody><tr><th colspan="1" rowspan="1" class="confluenceTh"> Filter Name </th><th colspan="1" rowspan="1" class="confluenceTh"> Class </th></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"> anon </td><td colspan="1" rowspan="1" class="confluenceTd"> <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/authc/AnonymousFilter.html">org.apache.shiro.web.filter.authc.AnonymousFilter</a> </td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"> authc </td><td colspan="1" rowspan="1" class="confluenceTd"> <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html">org.apache.shiro.web.filter.authc.FormAuthenticationFilter</a> </td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"> authcBasic </td><td colspan="1" rowspan="1" class="confluenceTd"> <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/authc/BasicHttpAuthenticationFilter.html">org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter</a> </td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"> logout </td><td colspan="1" rowspan="1" class="confluenceTd"> <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/authc/LogoutFilter.html">org.apache.shiro.web.filter.authc.LogoutFilter</a> </td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"> noSessionCreation </td><td colspan="1" rowspan="1" class="confluenceTd"> <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/session/NoSessionCreationFilter.html">org.apache.shiro.web.filter.session.NoSessionCreationFilter</a> </td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"> perms </td><td colspan="1" rowspan="1" class="confluenceTd"> <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/authz/PermissionsAuthorizationFilter.html">org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter</a> </td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"> port </td><td colspan="1" rowspan="1" class="confluenceTd"> <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/authz/PortFilter.html">org.apache.shiro.web.filter.authz.PortFilter</a> </td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"> rest </td><td colspan="1" rowspan="1" class="confluenceTd"> <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/authz/HttpMethodPermissionFilter.html">org.apache.shiro.web.filter.authz.HttpMethodPermissionFilter</a> </td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"> roles </td><td colspan="1" rowspan="1" class="confluenceTd"> <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/authz/RolesAuthorizationFilter.html">org.apache.shiro.web.filter.authz.RolesAuthorizationFilter</a> </td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"> ssl </td><td colspan="1" rowspan="1" class="confluenceTd"> <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/authz/SslFilter.html">org.apache.shiro.web.filter.authz.SslFilter</a> </td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"> user </td><td colspan="1" rowspan="1" class="confluenceTd"> <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/authc/UserFilter.html">org.apache.shiro.web.filter.authc.UserFilter</a> </td></tr></tbody></table>
+</div>
+
+
+<h2><a name="Web-EnablingandDisablingFilters"></a>Enabling and Disabling Filters</h2>
+
+<p>As is the case with any filter chain definition mechanism (<tt>web.xml</tt>, Shiro's INI, etc), you enable a filter just by including it in the filter chain definition, and you disable it by removing it from the chain definition.</p>
+
+<p>But a new feature added in Shiro 1.2 is the ability to enable or disable filters without removing them from the filter chain.  If enabled (the default setting), then a request will be filtered as expected.  If disabled, then the filter will allow the request to pass through immediately to the next element in the <tt>FilterChain</tt>.  You can trigger a filter's enabled state generally based on a configuration property, or you can even trigger it on a <em>per request</em> basis.</p>
+
+<p>This is a powerful concept because it is often more convenient to enable or disable a filter based on certain requirements than to change the static filter chain definition, which would be permanent and inflexible.</p>
+
+<p>Shiro accomplishes this via its <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/servlet/OncePerRequestFilter.html">OncePerRequestFilter</a> abstract parent class.  All of Shiro's out-of-the-box Filter implementations subclass this one and therefore are able to be enabled or disabled without removing them from the filter chain.  You can subclass this class for your own filter implementations if you need this functionality as well*.</p>
+
+<p>*<a class="external-link" href="https://issues.apache.org/jira/browse/SHIRO-224">SHIRO-224</a> will hopefully enable this feature for any filter, not just those subclassing <tt>OncePerRequestFilter</tt>.  If this is important to you, please vote for the issue.</p>
+
+<h3><a name="Web-GeneralEnabling%2FDisabling"></a>General Enabling/Disabling</h3>
+
+<p>The <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/servlet/OncePerRequestFilter.html">OncePerRequestFilter</a> (and all of its subclasses) supports enabling/disabling across all requests as well as on a per-request basis.</p>
+
+<p>General enabling or disabling of a filter for all requests is done by setting its <tt>enabled</tt> property to true or false.  The default setting is <tt>true</tt> since most filters inherently need to execute if they are configured in a chain.</p>
+
+<p>For example, in shiro.ini:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+[main]
+...
+# configure Shiro's <span class="code-keyword">default</span> 'ssl' filter to be disabled <span class="code-keyword">while</span> testing:
+ssl.enabled = <span class="code-keyword">false</span>
+
+[urls]
+...
+/some/path = ssl, authc
+/another/path = ssl, roles[admin]
+...
+</pre>
+</div></div>
+
+<p>This example shows that potentially many URL paths can all require that a request must be secured by an SSL connection.  Setting up SSL while in development can be frustrating and time consuming.  While in development, you can disable the ssl filter.  When deploying to production, you can enable it with one configuration property - something that is much easier than manually changing all of the URL paths or maintaining two Shiro configurations.</p>
+
+<h3><a name="Web-RequestspecificEnabling%2FDisabling"></a>Request-specific Enabling/Disabling</h3>
+
+<p><tt>OncePerRequestFilter</tt> actually determines if the filter is enabled or disabled based on its <tt>isEnabled(request, response)</tt> method.</p>
+
+<p>This method defaults to returning the value of the <tt>enabled</tt> property, which is used for generally enabling/disabling all requests as mentioned above.  If you wanted to enable or disable a filter based on <em>request specific</em> criteria, you can override the <tt>OncePerRequestFilter</tt> <tt>isEnabled(request,response)</tt> method to perform more specific checks.</p>
+
+<h3><a name="Web-PathspecificEnabling%2FDisabling"></a>Path-specific Enabling/Disabling</h3>
+
+<p>Shiro's <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html">PathMatchingFilter</a> (a subclass of <tt>OncePerRequestFilter</tt> has the ability to react to configuration based on a <em>specific path</em> being filtered.  This means you can enable or disable a filter based on the path and the path-specific configuration in addition to the incoming request and response.</p>
+
+<p>If you need to be able to react to the matching path and the path-specific configuration to determine if a filter is enabled or disabled, instead of overriding <tt>OncePerRequestFilter</tt> <tt>isEnabled(request,response)</tt> method, you would override the <tt>PathMatchingFilter</tt> <tt>isEnabled(request,response,path,pathConfig)</tt> method instead.</p>
+
+<p><a name="Web-sessionManagement"></a></p>
+<h2><a name="Web-SessionManagement"></a>Session Management</h2>
+
+<h3><a name="Web-ServletContainerSessions"></a>Servlet Container Sessions</h3>
+
+<p>In web environments, Shiro's default session manager <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/session/mgt/SessionManager.html">SessionManager</a></tt> implementation is the <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/web/session/mgt/ServletContainerSessionManager.html">ServletContainerSessionManager</a></tt>.  This very simple  implementation delegates all session management duties (including session clustering if the servlet container supports it) to the runtime Servlet container.  It is essentially a bridge for Shiro's session API to the servlet container and does little else.</p>
+
+<p>A benefit of using this default is that apps that work with existing servlet container session configuration (timeout, any container-specific clustering mechanisms, etc) will work as expected.  </p>
+
+<p>A downside of this default is that you are tied to the servlet container's specific session behavior.  For example, if you wanted to cluster sessions, but you used Jetty for testing and Tomcat in production, your container-specific configuration (or code) would not be portable.</p>
+
+<h4><a name="Web-ServletContainerSessionTimeout"></a>Servlet Container Session Timeout</h4>
+
+<p>If using the default servlet container support, you configure session timeout as expected in your web application's <tt>web.xml</tt> file.  For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+&lt;session-config&gt;
+  &lt;!-- web.xml expects the session timeout in minutes: --&gt;
+  &lt;session-timeout&gt;30&lt;/session-timeout&gt;
+&lt;/session-config&gt;
+</pre>
+</div></div>
+
+<h3><a name="Web-NativeSessions"></a>Native Sessions</h3>
+
+<p>If you want your session configuration settings and clustering to be portable across servlet containers (e.g. Jetty in testing, but Tomcat or JBoss in production), or you want to control specific session/clustering features, you can enable Shiro's native session management.  </p>
+
+<p>The word 'Native' here means that Shiro's own enterprise session management implementation will be used to support all <tt>Subject</tt> and <tt>HttpServletRequest</tt> sessions and bypass the servlet container completely.  But rest assured - Shiro implements the relevant parts of the Servlet specification directly so any existing web/http related code works as expected and never needs to 'know' that Shiro is transparently managing sessions.</p>
+
+<h4><a name="Web-%7B%7BDefaultWebSessionManager%7D%7D"></a><tt>DefaultWebSessionManager</tt></h4>
+
+<p>To enable native session management for your web application, you will need to configure a native web-capable session manager to override the default servlet container-based one.  You can do that by configuring an instance of <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/web/session/mgt/DefaultWebSessionManager.html">DefaultWebSessionManager</a></tt> on Shiro's <tt>SecurityManager</tt>.  For example, in <tt>shiro.ini</tt>:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>shiro.ini native web session management</b></div><div class="codeContent panelContent">
+<pre class="code-java">
+[main]
+...
+sessionManager = org.apache.shiro.web.session.mgt.DefaultWebSessionManager
+# configure properties (like session timeout) here <span class="code-keyword">if</span> desired
+
+# Use the configured <span class="code-keyword">native</span> session manager:
+securityManager.sessionManager = $sessionManager
+</pre>
+</div></div>
+
+<p>Once declared, you can configure the <tt>DefaultWebSessionManager</tt> instance with native session options like session timeout and clustering configuration as described in the <a href="session-management.html" title="Session Management">Session Management</a> section.</p>
+
+<h5><a name="Web-NativeSessionTimeout"></a>Native Session Timeout</h5>
+
+<p>After configuring the <tt>DefaultWebSessionManager</tt> instance, session timeout is configured as described in <a href="session-management.html#SessionManagement-sessionTimeout">Session Management: Session Timeout</a></p>
+
+<h5><a name="Web-SessionCookie"></a>Session Cookie</h5>
+
+<p>The <tt>DefaultWebSessionManager</tt> supports two web-specific configuration properties: </p>
+<ul class="alternate" type="square"><li><tt>sessionIdCookieEnabled</tt> (a boolean)</li><li><tt>sessionIdCookie</tt>, a <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/servlet/Cookie.html">Cookie</a> instance.</li></ul>
+
+
+<div class="panelMacro"><table class="infoMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Cookie as a template</b><br clear="none">The <tt>sessionIdCookie</tt> property is essentially a template - you configure the <tt>Cookie</tt> instance properties, and this template will be used to set the actual HTTP <tt>Cookie</tt> header at runtime with an appropriate session ID value.</td></tr></table></div>
+
+<h6><a name="Web-SessionCookieConfiguration"></a>Session Cookie Configuration</h6>
+
+<p>The DefaultWebSessionManager's <tt>sessionIdCookie</tt> default instance is a <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html">SimpleCookie</a></tt>.  This simple implementation allows JavaBeans-style property configuration for all of the relevant properties you would want to configure on an http Cookie.</p>
+
+<p>For example, you could set the Cookie domain:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+[main]
+...
+securityManager.sessionManager.sessionIdCookie.domain = foo.com
+</pre>
+</div></div>
+
+<p>See the <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html">SimpleCookie JavaDoc</a> for additional properties.</p>
+
+<p>The cookie's default name is <tt>JSESSIONID</tt> in accordance with the servlet specification.  Additionally, Shiro's cookie supports the <tt><a class="external-link" href="http://en.wikipedia.org/wiki/HTTP_cookie#HttpOnly_cookie" rel="nofollow">HttpOnly</a></tt> flag.  The <tt>sessionIdCookie</tt> sets <tt>HttpOnly</tt> to <tt>true</tt> by default for extra security.</p>
+
+<div class="panelMacro"><table class="infoMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1">Shiro's <tt>Cookie</tt> concept supports the <tt>HttpOnly</tt> flag even in Servlet 2.4 and 2.5 environments (whereas the Servlet API only supports it natively in 2.6 or later).</td></tr></table></div>
+
+<h6><a name="Web-DisablingtheSessionCookie"></a>Disabling the Session Cookie</h6>
+
+<p>If you do not want session cookies to be used, you can disable their use by configuring the <tt>sessionIdCookieEnabled</tt> property to false.  For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Disabling native session cookies</b></div><div class="codeContent panelContent">
+<pre class="code-java">
+[main]
+...
+securityManager.sessionManager.sessionIdCookieEnabled = <span class="code-keyword">false</span>
+</pre>
+</div></div>
+
+<p><a name="Web-rememberme"></a></p>
+<h2><a name="Web-RememberMeServices"></a>Remember Me Services</h2>
+
+<p>Shiro will perform 'rememberMe' services if the <tt>AuthenticationToken</tt> implements the <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/RememberMeAuthenticationToken.html">org.apache.shiro.authc.RememberMeAuthenticationToken</a></tt> interface.  This interface specifies a method:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+<span class="code-object">boolean</span> isRememberMe();
+</pre>
+</div></div>
+
+<p>If this method returns <tt>true</tt>, Shiro will remember the end-user's identity across sessions.</p>
+
+<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>UsernamePasswordToken and RememberMe</b><br clear="none">The frequently-used <tt>UsernamePasswordToken</tt> already implements the <tt>RememberMeAuthenticationToken</tt> interface and supports rememberMe logins.</td></tr></table></div>
+
+<h3><a name="Web-ProgrammaticSupport"></a>Programmatic Support</h3>
+
+<p>To use rememberMe programmatically, you can set the value to <tt>true</tt> on a class that supports this configuration.  For example, using the standard <tt>UsernamePasswordToken</tt>:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+UsernamePasswordToken token = <span class="code-keyword">new</span> UsernamePasswordToken(username, password);
+
+token.setRememberMe(<span class="code-keyword">true</span>);
+
+SecurityUtils.getSubject().login(token);
+...
+</pre>
+</div></div>
+
+<h3><a name="Web-FormbasedLogin"></a>Form-based Login</h3>
+
+<p>For web applications, the <tt>authc</tt> filter is by default a <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html">FormAuthenticationFilter</a></tt>.  This supports reading the 'rememberMe' boolean as a form/request parameter.  By default, it expects the request param to be named <tt>rememberMe</tt>.  Here is an example shiro.ini config supporting this:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+
+[main]
+authc.loginUrl = /login.jsp
+
+[urls]
+
+# your login form page here:
+login.jsp = authc
+</pre>
+</div></div>
+
+<p>And in your web form, have a checkbox named 'rememberMe':</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+<span class="code-tag">&lt;form ...&gt;</span>
+
+   Username: <span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"username"</span>/&gt;</span> <span class="code-tag">&lt;br/&gt;</span>
+   Password: <span class="code-tag">&lt;input type=<span class="code-quote">"password"</span> name=<span class="code-quote">"password"</span>/&gt;</span>
+   ...
+   <span class="code-tag">&lt;input type=<span class="code-quote">"checkbox"</span> name=<span class="code-quote">"rememberMe"</span> value=<span class="code-quote">"true"</span>/&gt;</span>Remember Me? 
+   ...
+<span class="code-tag">&lt;/form&gt;</span>
+</pre>
+</div></div>
+
+<p>By default, the <tt>FormAuthenticationFilter</tt> will look for request parameters named <tt>username</tt>, <tt>password</tt> and <tt>rememberMe</tt>.  If these are different than the form field names that you use in your form, you'll want to configure the names on the <tt>FormAuthenticationFilter</tt>.  For example, in <tt>shiro.ini</tt>:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+[main]
+...
+authc.loginUrl = /whatever.jsp
+authc.usernameParam = somethingOtherThanUsername
+authc.passwordParam = somethingOtherThanPassword
+authc.rememberMeParam = somethingOtherThanRememberMe
+...
+</pre>
+</div></div>
+
+<h3><a name="Web-Cookieconfiguration"></a>Cookie configuration</h3>
+
+<p>You can configure how the <tt>rememberMe</tt> cookie functions by setting the default {{RememberMeManager}}s various cookie properties.  For example, in shiro.ini:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+[main]
+...
+
+securityManager.rememberMeManager.cookie.name = foo
+securityManager.rememberMeManager.cookie.maxAge = blah
+...
+</pre>
+</div></div>
+
+<p>See the <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/web/mgt/CookieRememberMeManager.html">CookieRememberMeManager</a></tt> and the supporting <tt><a class="external-link" href="static/current/apidocs/src-html/org/apache/shiro/web/servlet/SimpleCookie.html">SimpleCookie</a></tt> JavaDoc for configuration properties.</p>
+
+<h3><a name="Web-Custom%7B%7BRememberMeManager%7D%7D"></a>Custom <tt>RememberMeManager</tt></h3>
+
+<p>It should be noted that if the default cookie-based <tt>RememberMeManager</tt> implementation does not meet your needs, you can plug in any you like in to the <tt>securityManager</tt> like you would configure any other object reference:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+[main]
+...
+rememberMeManager = com.my.impl.RememberMeManager
+securityManager.rememberMeManager = $rememberMeManager
+</pre>
+</div></div>
+
+<p><a name="Web-taglibrary"></a></p>
+<h2><a name="Web-JSP%2FGSPTagLibrary"></a>JSP / GSP Tag Library</h2>
+
+<p>Apache Shiro provides a <tt>Subject</tt>-aware JSP/GSP tag library that allows you to control your JSP, JSTL or GSP page output based on the current Subject's state.  This is quite useful for personalizing views based on the identity and authorization state of the current user viewing the web page.<br clear="none">
+<a name="Web-taglibrary"></a></p>
+
+<h3><a name="Web-TagLibraryConfiguration"></a>Tag Library Configuration</h3>
+
+<p>The Tag Library Descriptor (TLD) file is bundled in <tt>shiro-web.jar</tt> in the <tt>META-INF/shiro.tld</tt> file.  To use any of the tags, add the following line to the top of your JSP page (or wherever you define page directives):</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+&lt;%@ taglib prefix=<span class="code-quote">"shiro"</span> uri=<span class="code-quote">"http:<span class="code-comment">//shiro.apache.org/tags"</span> %&gt;</span>
+</pre>
+</div></div>
+
+<p>We've used the <tt>shiro</tt> prefix to indicate the shiro tag library namespace, but you can assign whatever name you like.</p>
+
+<p>Now we'll cover each tag and show how it might be used to render a page.<br clear="none">
+<a name="Web-guesttag"></a></p>
+<h3><a name="Web-The%7B%7Bguest%7D%7Dtag"></a>The <tt>guest</tt> tag</h3>
+
+<p>The <tt>guest</tt> tag will display its wrapped content only if the current <tt>Subject</tt> is considered a 'guest'.  A guest is any <tt>Subject</tt> that does not have an identity.  That is, we don't know who the user is because they have not logged in and they are not remembered (from Remember Me services) from a previous site visit.</p>
+
+<p>Example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+<span class="code-tag">&lt;shiro:guest&gt;</span>
+    Hi there!  Please <span class="code-tag">&lt;a href=<span class="code-quote">"login.jsp"</span>&gt;</span>Login<span class="code-tag">&lt;/a&gt;</span> or <span class="code-tag">&lt;a href=<span class="code-quote">"signup.jsp"</span>&gt;</span>Signup<span class="code-tag">&lt;/a&gt;</span> today!
+<span class="code-tag">&lt;/shiro:guest&gt;</span>
+</pre>
+</div></div>
+
+<p>The <tt>guest</tt> tag is the logical opposite of the <tt><a href="#Web-usertag">user</a></tt> tag.<br clear="none">
+<a name="Web-usertag"></a></p>
+<h3><a name="Web-The%7B%7Buser%7D%7Dtag"></a>The <tt>user</tt> tag</h3>
+
+<p>The <tt>user</tt> tag will display its wrapped content only if the current <tt>Subject</tt> is considered a 'user'.  A 'user' in this context is defined as a <tt>Subject</tt> with a known identity, either from a successful authentication or from 'RememberMe' services.  Note that this tag is semantically different from the <a href="#Web-authenticatedtag">authenticated</a> tag, which is more restrictive than this tag.</p>
+
+<p>Example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+<span class="code-tag">&lt;shiro:user&gt;</span>
+    Welcome back John!  Not John? Click <span class="code-tag">&lt;a href=<span class="code-quote">"login.jsp"</span>&gt;</span>here<span class="code-tag">&lt;a&gt;</span> to login.
+<span class="code-tag">&lt;/shiro:user&gt;</span>
+</pre>
+</div></div>
+
+<p>The <tt>user</tt> tag is the logical opposite of the <tt><a href="#Web-guesttag">guest</a></tt> tag.<br clear="none">
+<a name="Web-authenticatedtag"></a></p>
+<h3><a name="Web-The%7B%7Bauthenticated%7D%7Dtag"></a>The <tt>authenticated</tt> tag</h3>
+
+<p>Displays body content only if the current user has successfully authenticated <em>during their current session</em>. It is more restrictive than the 'user' tag. It is logically opposite to the 'notAuthenticated' tag.</p>
+
+<p>The <tt>authenticated</tt> tag will display its wrapped content only if the current <tt>Subject</tt> has successfully authenticated <em>during their current session</em>.  It is a more restrictive tag than the <a href="#Web-usertag">user</a>, which is used to guarantee identity in sensitive workflows.</p>
+
+<p>Example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+<span class="code-tag">&lt;shiro:authenticated&gt;</span>
+    <span class="code-tag">&lt;a href=<span class="code-quote">"updateAccount.jsp"</span>&gt;</span>Update your contact information<span class="code-tag">&lt;/a&gt;</span>.
+<span class="code-tag">&lt;/shiro:authenticated&gt;</span>
+</pre>
+</div></div>
+
+<p>The <tt>authenticated</tt> tag is the logical opposite of the <tt><a href="#Web-notauthenticatedtag">notAuthenticated</a></tt> tag.<br clear="none">
+<a name="Web-notauthenticatedtag"></a></p>
+<h3><a name="Web-The%7B%7BnotAuthenticated%7D%7Dtag"></a>The <tt>notAuthenticated</tt> tag</h3>
+
+<p>The <tt>notAuthenticated</tt> tag will display its wrapped content if the current <tt>Subject</tt> has <b>NOT</b> yet successfully authenticated during the current session.</p>
+
+<p>Example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+<span class="code-tag">&lt;shiro:notAuthenticated&gt;</span>
+    Please <span class="code-tag">&lt;a href=<span class="code-quote">"login.jsp"</span>&gt;</span>login<span class="code-tag">&lt;/a&gt;</span> in order to update your credit card information.
+<span class="code-tag">&lt;/shiro:notAuthenticated&gt;</span>
+</pre>
+</div></div>
+
+<p>The <tt>notAuthenticated</tt> tag is the logical opposite of the <tt><a href="#Web-authenticatedtag">authenticated</a></tt> tag.<br clear="none">
+<a name="Web-principaltag"></a></p>
+<h3><a name="Web-The%7B%7Bprincipal%7D%7Dtag"></a>The <tt>principal</tt> tag</h3>
+
+<p>The <tt>principal</tt> tag will output the Subject's <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#getPrincipal()">principal</a></tt> (identifying attribute) or a property of that principal.</p>
+
+<p>Without any tag attributes, the tag will render the <tt>toString()</tt> value of the principal.  For example (assuming the principal is a String username):</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+Hello, <span class="code-tag">&lt;shiro:principal/&gt;</span>, how are you today?
+</pre>
+</div></div>
+
+<p>This is (mostly) equivalent to the following:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+Hello, <span class="code-tag">&lt;%= SecurityUtils.getSubject().getPrincipal().toString() %&gt;</span>, how are you today?
+</pre>
+</div></div>
+
+<h4><a name="Web-Typedprincipal"></a>Typed principal</h4>
+
+<p>The <tt>principal</tt> tag assumes by default that the principal to print is the <tt>subject.getPrincipal()</tt> value.  But if you wanted to print a value that is <em>not</em> the primary principal, but another in the Subject's {<a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#getPrincipals()">principal collection</a>, you can acquire that principal by type and print that value instead.</p>
+
+<p>For example, printing the Subject's user ID (and not the username), assuming the ID was in the principal collection:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+User ID: <span class="code-tag">&lt;principal type=<span class="code-quote">"java.lang.Integer"</span>/&gt;</span>
+</pre>
+</div></div>
+
+<p>This is (mostly) equivalent to the following:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+User ID: <span class="code-tag">&lt;%= SecurityUtils.getSubject().getPrincipals().oneByType(Integer.class).toString() %&gt;</span>
+</pre>
+</div></div>
+
+<h4><a name="Web-Principalproperty"></a>Principal property</h4>
+
+<p>But what if the principal (either the default primary principal or 'typed' principal above) is a complex object and not a simple string, and you wanted to reference a property on that principal?  You can use the <tt>property</tt> attribute to indicate the name of the property to read (must be accessible via a JavaBeans-compatible getter method).  For example (assuming the primary principal is a User object):</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+Hello, <span class="code-tag">&lt;shiro:principal property=<span class="code-quote">"firstName"</span>/&gt;</span>, how are you today?
+</pre>
+</div></div>
+
+<p>This is (mostly) equivalent to the following:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+Hello, <span class="code-tag">&lt;%= SecurityUtils.getSubject().getPrincipal().getFirstName().toString() %&gt;</span>, how are you today?
+</pre>
+</div></div>
+
+<p>Or, combined with the type attribute:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+Hello, <span class="code-tag">&lt;shiro:principal type=<span class="code-quote">"com.foo.User"</span> property=<span class="code-quote">"firstName"</span>/&gt;</span>, how are you today?
+</pre>
+</div></div>
+
+<p>this is largely equivalent to the following:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+Hello, <span class="code-tag">&lt;%= SecurityUtils.getSubject().getPrincipals().oneByType(com.foo.User.class).getFirstName().toString() %&gt;</span>, how are you today?
+</pre>
+</div></div>
+<p><a name="Web-hasroletag"></a></p>
+<h3><a name="Web-The%7B%7BhasRole%7D%7Dtag"></a>The <tt>hasRole</tt> tag</h3>
+
+<p>The <tt>hasRole</tt> tag will display its wrapped content only if the current <tt>Subject</tt> is assigned the specified role.</p>
+
+<p>For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+<span class="code-tag">&lt;shiro:hasRole name=<span class="code-quote">"administrator"</span>&gt;</span>
+    <span class="code-tag">&lt;a href=<span class="code-quote">"admin.jsp"</span>&gt;</span>Administer the system<span class="code-tag">&lt;/a&gt;</span>
+<span class="code-tag">&lt;/shiro:hasRole&gt;</span>
+</pre>
+</div></div>
+
+<p>The <tt>hasRole</tt> tag is the logical opposite of the <a href="#Web-lacksroletag">lacksRole</a> tag.<br clear="none">
+<a name="Web-lacksroletag"></a></p>
+<h3><a name="Web-The%7B%7BlacksRole%7D%7Dtag"></a>The <tt>lacksRole</tt> tag</h3>
+
+<p>The <tt>lacksRole</tt> tag will display its wrapped content only if the current <tt>Subject</tt> <b>is NOT</b> assigned the specified role.</p>
+
+<p>For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+<span class="code-tag">&lt;shiro:lacksRole name=<span class="code-quote">"administrator"</span>&gt;</span>
+    Sorry, you are not allowed to administer the system.
+<span class="code-tag">&lt;/shiro:lacksRole&gt;</span>
+</pre>
+</div></div>
+
+<p>The <tt>lacksRole</tt> tag is the logical opposite of the <a href="#Web-hasroletag">hasRole</a> tag.<br clear="none">
+<a name="Web-hasanyroletag"></a></p>
+<h3><a name="Web-The%7B%7BhasAnyRole%7D%7Dtag"></a>The <tt>hasAnyRole</tt> tag</h3>
+
+<p>The <tt>hasAnyRole</tt> tag will display its wrapped content if the current <tt>Subject</tt> is assigned <em>any</em> of the specified roles from a comma-delimited list of role names.</p>
+
+<p>For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+<span class="code-tag">&lt;shiro:hasAnyRoles name=<span class="code-quote">"developer, project manager, administrator"</span>&gt;</span>
+    You are either a developer, project manager, or administrator.
+<span class="code-tag">&lt;/shiro:lacksRole&gt;</span>
+</pre>
+</div></div>
+
+<p>The <tt>hasAnyRole</tt> tag does not currently have a logically opposite tag.<br clear="none">
+<a name="Web-haspermissiontag"></a></p>
+<h3><a name="Web-The%7B%7BhasPermission%7D%7Dtag"></a>The <tt>hasPermission</tt> tag</h3>
+
+<p>The <tt>hasPermission</tt> tag will display its wrapped content only if the current <tt>Subject</tt> 'has' (implies) the specified permission.  That is, the user has the specified ability.</p>
+
+<p>For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+<span class="code-tag">&lt;shiro:hasPermission name=<span class="code-quote">"user:create"</span>&gt;</span>
+    <span class="code-tag">&lt;a href=<span class="code-quote">"createUser.jsp"</span>&gt;</span>Create a new User<span class="code-tag">&lt;/a&gt;</span>
+<span class="code-tag">&lt;/shiro:hasPermission&gt;</span>
+</pre>
+</div></div>
+
+<p>The <tt>hasPermission</tt> tag is the logical opposite of the <a href="#Web-lackspermissiontag">lacksPermission</a> tag.<br clear="none">
+<a name="Web-lackspermissiontag"></a></p>
+<h3><a name="Web-The%7B%7BlacksPermission%7D%7Dtag"></a>The <tt>lacksPermission</tt> tag</h3>
+
+<p>The <tt>lacksPermission</tt> tag will display its wrapped content only if the current <tt>Subject</tt> <b>DOES NOT</b> have (imply) the specified permission.  That is, the user <b>DOES NOT</b> have the specified ability.</p>
+
+<p>For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-html">
+<span class="code-tag">&lt;shiro:lacksPermission name=<span class="code-quote">"user:delete"</span>&gt;</span>
+    Sorry, you are not allowed to delete user accounts.
+<span class="code-tag">&lt;/shiro:hasPermission&gt;</span>
+</pre>
+</div></div>
+
+<p>The <tt>lacksPermission</tt> tag is the logical opposite of the <a href="#Web-haspermissiontag">hasPermission</a> tag.</p>
+
+<h2><a name="Web-Lendahandwithdocumentation"></a>Lend a hand with documentation </h2>
+
+<p>While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time.  If you'd like to help the Shiro project, please consider corrected, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro. </p>
+
+<p>The easiest way to contribute your documentation is to send it to the <a class="external-link" href="http://shiro-user.582556.n2.nabble.com/" rel="nofollow">User Forum</a> or the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.</p>

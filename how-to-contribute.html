@@ -1,0 +1,85 @@
+<h1><a name="HowtoContribute-ContributingtoApacheShiro"></a>Contributing to Apache Shiro</h1>
+
+<ul><li><a href="#HowtoContribute-introduction">Introduction</a></li><li><a href="#HowtoContribute-help">Help Wanted Here</a></li><li><a href="#HowtoContribute-procedure">Procedure for reporting bugs and issues and enhancement suggestions</a></li><li><a href="#HowtoContribute-svn">SVN Usage</a></li><li><a href="#HowtoContribute-committer">SVN Committers</a></li><li><a href="#HowtoContribute-issues">Procedure for Raising Development Issues</a></li><li><a href="#HowtoContribute-patches">How to prepare and contribute patches</a></li><li><a href="#HowtoContribute-revert">How to revert changes in SVN</a></li><li><a href="#HowtoContribute-tips">Contribution Notes and Tips</a></li></ul>
+
+
+<p><a name="HowtoContribute-introductions"></a></p>
+<h2><a name="HowtoContribute-Introduction"></a>Introduction</h2>
+
+<p>The Shiro Project is an <a class="external-link" href="http://www.opensource.org" rel="nofollow">Open Source</a> volunteer project released under a <a href="license.html" title="License">very liberal license</a>. This means there are many ways to contribute to the project - either with direct participation (coding, documenting, answering questions, proposing ideas, reporting bugs, suggesting bug-fixes, etc..) or by resource donations (staff time, conference presentations, publicity, software) and even general hardware/money <a class="external-link" href="http://www.apache.org/foundation/thanks.html">donations</a> via the <a class="external-link" href="http://www.apache.org">Apache Software Foundation</a>.</p>
+
+<p>To begin with, we suggest you to subscribe to the <a href="mailing-lists.html" title="Mailing Lists">Shiro mailing lists</a> (follow the link for information on how to subscribe and to access the mail list archives). Listen-in for a while, to hear how others make contributions.</p>
+
+<p>You can get your local working copy of the <a href="download.html" title="Download">latest and greatest code</a> by following the directions in our <a href="download.html" title="Download">Download</a> page. Review the To Do list in the <a class="external-link" href="https://issues.apache.org/jira/browse/SHIRO">issue tracker</a> and then choose a task that interests you. Perhaps you have noticed something that needs patching, or have a new feature to contribute. Make the changes, do the testing, generate a patch, and discuss on the <a href="mailing-lists.html" title="Mailing Lists">dev mailing list</a>. (Do not worry - the process is easy and explained below.)</p>
+
+<p>Document writers are usually the most wanted people so if you like to help but you're not familiar with the innermost technical details, don't worry: you can still be tremendously helpful!</p>
+
+<p><a name="HowtoContribute-help"></a></p>
+<h2><a name="HowtoContribute-HelpWantedHere"></a>Help Wanted Here </h2>
+
+<p>You can be a huge help by providing extra assistance in any of the following areas:</p>
+
+<ul><li>Assisting to improve documentation and the website.</li><li>Testing Shiro (especially its less-frequently-used features) on various configurations and reporting back.</li><li>New samples for the 'shiro-sample' to concisely describe and demonstrate features. Such samples can also enable automated testing.</li><li>Debugging - producing reproducible test cases and/or finding causes of bugs. Most bugs are recorded as issues (see <a href="#HowtoContribute-procedure">explanation below</a>).</li><li>Providing new use-cases and requirements. If you think that Shiro does not quite meet your needs then tell us about it on the mailing list.</li><li>Specifying/analysing/designing new features - and beyond. If you wish to get further involved with this, please join the <a href="mailing-lists.html" title="Mailing Lists"><tt>shiro-dev</tt> mailing list</a>, install and try out Shiro and read some of the <a href="mailing-lists.html" title="Mailing Lists">mail archives</a>. You should have a reasonable fluency in security technologies, some Java and Maven skills, and a basic understanding of the Shiro architecture - don't just say "it should have XYZ" without reading anything first - because chances are, somebody has already thought of that feature!)</li><li>Packaging easy-to-install packages (such as RPMs) for the myriad of possible configurations out there. (The project does not maintain anything but the basic .zip and .tar.gz packages, but anyone is welcome to build their own specific packages and announce them on the forrest-dev list)</li><li>... and there is just one other thing - don't forget to tell everyone who asks, how great Shiro is! The more people that know about and start to use Shiro, the larger the pool of potential contributors will be.</li></ul>
+
+
+<p><a name="HowtoContribute-procedure"></a></p>
+<h2><a name="HowtoContribute-Procedureforreportingbugsandissuesandenhancementsuggestions"></a>Procedure for reporting bugs and issues and enhancement suggestions</h2>
+
+<p>If you think that you have found a bug or you have a suggestion for improvement, then please discuss it on one of the <a href="mailing-lists.html" title="Mailing Lists">mailing lists</a>. However, please check our <a class="external-link" href="https://issues.apache.org/jira/browse/SHIRO">issue tracker</a> first as it may be already reported.</p>
+
+<p>The <a class="external-link" href="https://issues.apache.org/jira/browse/SHIRO">Apache Shiro Issue Tracker</a> collates our known issues. Obviously not every issue is listed there. Some issues have been discussed on the mailing list but do not yet have an issue recorded.</p>
+
+<p>The Roadmap is the best way to get an overview. The Unscheduled list also needs regular review, and committers will schedule some of those for the next release.</p>
+
+<p>When creating a new issue, please provide a concise Summary Title and a short Description. Add further information as Comments and include links to the mail archives. The normal procedure is to discuss the issue on the mailing list and then add relevant notes to the issue tracker, otherwise it becomes cluttered.</p>
+
+<p><a name="HowtoContribute-svn"></a></p>
+<h2><a name="HowtoContribute-SVNUsage"></a>SVN Usage</h2>
+
+<p>An overview of how to use Subversion (SVN) to participate in Shiro development. Do not be afraid - you cannot accidently destroy the actual code repository, because you are working with a local copy as an anonymous user. Therefore, you do not have the system permissions to change anything. You can only update your local repository and compare your revisions with the real repository. The <a href="download.html" title="Download">Download Shiro</a> page explains how to check-out the code base and build your local copy.</p>
+
+<p><a name="HowtoContribute-committer"></a></p>
+<h2><a name="HowtoContribute-SVNCommitters"></a>SVN Committers</h2>
+
+<p>After a developer has consistently provided contributions (code, documentation and discussion) and demonstrated committment, then the rest of the dev community may vote to grant this developer commit access to the Subversion repository. See the <a class="external-link" href="http://www.apache.org/dev/">ASF developers resources</a> especially the <a class="external-link" href="http://www.apache.org/dev/version-control.html">Source code repositories</a>.</p>
+
+<p><a name="HowtoContribute-issues"></a></p>
+<h2><a name="HowtoContribute-ProcedureforRaisingDevelopmentIssues"></a>Procedure for Raising Development Issues</h2>
+
+<p>There are two methods for discussing development and submitting patches. So that everyone can be productive, it is important to know which method is appropriate for a certain situation and how to go about it without confusion. This section explains when to use the developer <a href="mailing-lists.html" title="Mailing Lists">mailing list</a> and the <a class="external-link" href="https://issues.apache.org/jira/browse/SHIRO">issue tracker</a>.</p>
+
+<p>Research your topic thoroughly before beginning to discuss a new development issue. Search and browse through the email archives - your issue may have been discussed before. Prepare your post clearly and concisely.</p>
+
+<p>Most issues will be discovered, resolved, and then patched quickly via the developer mailing list. Larger issues, and ones that are not yet fully understood or are hard to solve, are destined for the issue tracker.</p>
+
+<p>Experienced developers use the issue tracker directly, as they are very sure when they have found a bug and when not. However, less experienced users should first discuss it on the user or developer mailing list (as appropriate). Impatient people always enter everything into the issue tracker without caring if it is a bug of Shiro or their own installation/configuration mistake - please do not do this.</p>
+
+<p>As a rule-of-thumb, discuss an issue on the developers mailing list first to work out any details. After it is confirmed to be worthwhile, and you are clear about it, then submit the bug description or patch via Bug Tracking.</p>
+
+<p>Perhaps you do not get any answer on your first reply, so just post it again until you get one. (But please not every hour - allow a few days for the list to deal with it.) Bear in mind that other countries will have holidays at different times to your country and that they are in different time zones. You might also consider rewriting your initial posting.  It may have not been clear to the readers on the mailing list.</p>
+
+<p><a name="HowtoContribute-patches"></a></p>
+<h2><a name="HowtoContribute-Howtoprepareandcontributepatches"></a>How to prepare and contribute patches</h2>
+
+<p>If you use the current development version of Shiro via Subversion, then do 'svn update; svn status' to see what files that you have changed. Do 'svn diff &gt; mypatch.txt' to make a patch which includes every change. To make a patch for a specific file, do svn diff <tt>src/documentation/content/xdocs/faq.xml &gt; faq.xml.diff</tt>. It is better to prepare the patch from the <tt>$SHIRO_HOME</tt> directory so that it contains a definite path to the document. However, be careful that the patch does not contain other work-in-progress.</p>
+
+<p>For more information about working with SVN, see <a class="external-link" href="http://svnbook.red-bean.com/" rel="nofollow">Version Control with Subversion</a> - the opensource SVN book.</p>
+
+<p>If you use a downloaded released version of Shiro (or don't use SVN), then use the 'diff' command of your operating system: <tt>diff -u faq.xml.orig faq.xml &gt; mypatch.txt</tt> (better to do that from <tt>$SHIRO_HOME</tt> directory). If you want to use the most recent version of the documentation then grab its source file directly from the <a href="download.html" title="Download">SVN server</a> (and tell us which Revision number you used).</p>
+
+<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Note</b><br clear="none">Please send all contributions via our <a class="external-link" href="https://issues.apache.org/jira/browse/SHIRO">issue tracker</a>. and specify the Forrest version or svn version of the source.</td></tr></table></div>
+
+<p>It is always a good idea to check the <a class="external-link" href="https://issues.apache.org/jira/browse/SHIRO">Shiro issue tracker</a> before diving in.</p>
+
+<p><a name="HowtoContribute-revert"></a></p>
+<h2><a name="HowtoContribute-HowtorevertchangesinSVN"></a>How to revert changes in SVN</h2>
+
+<p>Check out <a class="external-link" href="http://svnbook.red-bean.com/en/1.0/ch04s04.html#svn-ch-4-sect-4.2" rel="nofollow">http://svnbook.red-bean.com/en/1.0/ch04s04.html#svn-ch-4-sect-4.2</a> for instructions on how to revert (roll back) changes to svn.</p>
+
+<p><a name="HowtoContribute-tips"></a></p>
+<h2><a name="HowtoContribute-ContributionNotesandTips"></a>Contribution Notes and Tips</h2>
+
+<p>This is a collection of tips for contributing to the project in a manner that is productive for all parties.</p>
+
+<ul><li>See general ASF <a class="external-link" href="http://www.apache.org/dev/contrib-email-tips.html">Tips for email contributors</a></li><li>There is no such thing as a dumb question.  Always check the <a href="mailing-lists.html" title="Mailing Lists">archives</a> to see if someone else asked it first and maybe already received an answer.</li><li>Every contribution is worthwhile. Even if the code isn't perfect.  Even if the documentation has typos.  Even if you got it wrong the first time around. Any contribution is a start of something special.  Through your continued effort and the help of the community, your contribution will evolve and get ever closer to "perfect".</li><li>Use sensible and concise email subject headings. Search engines, and humans trying to browse a voluminous list, will respond favourably to a descriptive title.</li><li>Start new threads with new Subject for new topics, rather than reusing the previous Subject line.</li><li>Keep each topic focused. If some new topic arises then start a new discussion. This leaves the original topic to continue uncluttered.<br clear="none">
+Whenever you decide to start a new topic, then start with a fresh new email message window. Do not use the "Reply to" button, because threaded mail-readers get confused (they utilise the In-reply-to header). If so, then your new topic will get lost in the previous thread and go unanswered.</li><li>Prepend your email subject line with a marker when that is appropriate, e.g. [Proposal], [RT] (Random Thought which quickly blossom into research topics <img align="middle" class="emoticon" src="https://cwiki.apache.org/confluence/images/icons/emoticons/smile.gif" height="20" width="20" alt="" border="0">, [STATUS] (development status of a certain facility).</li><li>Remember that most people are participating in development on a volunteer basis and in their "spare time". These enthusiasts will attempt to respond to issues. It may take a little while to get your answers.</li><li>Research your topic thoroughly before beginning to discuss a new development issue. Search and browse through the email archives - your issue may have been discussed before. Do not just perceive a problem and then rush out with a question - instead, delve.</li><li>Try to at least offer a partial solution and not just a problem statement.</li><li>Take the time to clearly explain your issue and write a concise email message. Less confusion facilitates fast and complete resolution.</li><li>Do not bother to send an email reply that simply says "thanks". When the issue is resolved, that is the finish - end of thread. Reduce clutter.</li><li>You would usually do any development work against the trunk of SVN.</li><li>When sending a patch, you usually do not need to worry about which SVN branch it should be applied to. The maintainers of the repository will decide.</li><li>Keep all project-related discussion on the mailing list. It is much better to utilise the wider audience, rather than to break off into private discussion groups. You never know who else will have the answer to your issues, and anyway other people are interested in the outcome.</li><li>Become familiar with the mailing lists. As you browse and search, you will see the way other people do things. Follow the leading examples.</li></ul>
