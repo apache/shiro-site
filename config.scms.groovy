@@ -4,6 +4,10 @@ scms {
 
     patterns {
 
+        'static/**/*.html' {
+            template = 'templates/none.vtl'
+        }
+
         '**/*.html' {
             template = 'templates/default.vtl'
             model {
