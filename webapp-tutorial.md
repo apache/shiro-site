@@ -9,6 +9,19 @@ This document is an introductory step-by-step tutorial to securing a web applica
 
 This step-by-step tutorial should take ~ 45 minutes to 1 hour to complete.  When you are finished, you will have a very good idea of how Shiro works in a web application.
 
+### Table of Contents
+
+* [Overview](#overview)
+* [Project Setup](#project-setup)
+* [Step 1: Enable Shiro](#step1)
+* [Step 2: Connect to a User Store](#step2)
+* [Step 3: Enable Login and Logout](#step3)
+* [Step 4: User-Specific UI Changes](#step4)
+* [Step 5: Allow Access to Only Authenticated Users](#step5)
+* [Step 6: Role-based Access Control](#step6)
+* [Step 7: Permission-based Access Control](#step7)
+
+<a id="overview"></a>
 ## Overview
 
 While Apache Shiro's core design goals allow it to be used to secure _any_ JVM-based application, such as command line applications, server daemons, web apps, etc, this guide will focus on the most common use case: securing a web application running in a [Servlet](http://en.wikipedia.org/wiki/Java_Servlet) container, such as Tomcat or Jetty.
@@ -34,6 +47,7 @@ We will start by setting up the project, including the build tool and declaring 
 
 Once we complete setup, we will then layer in individual pieces of functionality, including integration with a security data store, then enabling user login, logout, and access control.
 
+<a id="project-setup"></a>
 ## Project Setup
 
 Instead of having to manually set up a directory structure and initial set of basic files, we've done this for you in a git repository.
@@ -98,6 +112,7 @@ Next, open your web browser to [localhost:8080](http://localhost:8080), and you'
 
 Hit `ctl-C` (or `cmd-C` on a mac) to shut down the web app.
 
+<a id="step1"></a>
 ## Step 1: Enable Shiro
 
 Our initial repository `master` branch is just a simple generic web application that could be used as a template for any application.  Let's add the bare minimum to enable Shiro in the web app next.
@@ -177,6 +192,7 @@ This time, you will see log output similar to the following, indicating that Shi
 
 Hit `ctl-C` (or `cmd-C` on a mac) to shut down the web app.
 
+<a id="step2"></a>
 ## Step 2: Connect to a User Store
 
 Perform the following git checkout command to load the `step2` branch:
@@ -316,6 +332,7 @@ If you've checked out the `step2` branch, you'll notice the `shiro.ini` file's `
     stormpathClient.apiKeyFileLocation = $HOME/.stormpath/apiKey.properties
     stormpathRealm = com.stormpath.shiro.realm.ApplicationRealm
     stormpathRealm.client = $stormpathClient
+    
     # Find this URL in your Stormpath console for an application you create:
     # Applications -> (choose application name) --> Details --> REST URL
     stormpathRealm.applicationRestUrl = https://api.stormpath.com/v1/applications/$STORMPATH_APPLICATION_ID
@@ -348,6 +365,7 @@ This time, you will see log output similar to the following, indicating that Shi
 
 Hit `ctl-C` (or `cmd-C` on a mac) to shut down the web app.
 
+<a id="step3"></a>
 ## Step 3: Enable Login and Logout
 
 Now we have users, and we can add, remove and disable them easily in a UI.  Now we can start enabling features like login/logout and access control in our application.
@@ -432,6 +450,7 @@ Tip: If you want a successful login to redirect the user to a different page oth
 
 Hit `ctl-C` (or `cmd-C` on a mac) to shut down the web app.
 
+<a id="step4"></a>
 ## Step 4: User-specific UI changes
 
 It's usually a requirement to change a web user interface based on who the user is.  We can do that easily because Shiro supports a JSP tag library to do things based on the currently logged-in Subject (user).
@@ -503,6 +522,7 @@ Try visiting [localhost:8080](http://localhost:8080) as a guest, and then login.
 
 Hit `ctl-C` (or `cmd-C` on a mac) to shut down the web app.
 
+<a id="step5"></a>
 ## Step 5: Allow Access to Only Authenticated Users
 
 While you can change page content based on Subject state, often times you will want to restrict entire sections of your webapp based on if someone has **proven** their identity (authenticated) during their current interaction with the web application.
@@ -568,6 +588,7 @@ Try visiting [localhost:8080](http://localhost:8080).  Once there, click the new
 
 Hit `ctl-C` (or `cmd-C` on a mac) to shut down the web app.
 
+<a id="step6"></a>
 ## Step 6: Role-Based Access Control
 
 In addition to controlling access based on authentication, it is often a requirement to restrict access to certain parts of the application based on what role(s) are assigned to the current `Subject`.
@@ -641,11 +662,94 @@ Try visiting [localhost:8080](http://localhost:8080) and log in with different u
 
 Hit `ctl-C` (or `cmd-C` on a mac) to shut down the web app.
 
+<a id="step7"></a>
+## Step 7: Permission-Based Access Control
+
+Role-based access control is good for many use cases, but it suffers from one major problem: you can't add or delete roles at runtime.  Role checks are hard-coded with role names, so if you changed the role names or role configuration, or add or remove roles, you have to go back and change your code!
+
+Because of this, Shiro has a powerful marquis feature: built-in support for _permissions_.  In Shiro, a permission is a raw statement of functionality, for example 'open a door' 'create a blog entry', 'delete the `jsmith` user', etc.  Permissions reflect your application's raw functionality, so you only need to change permission checks when you change your application's functionlity - not if you want to change your role or user model.
+
+To demonstrate this, we will create some permissions and assign them to a user, and then customize our web UI based on a user's authorization (permissions).
+
+### Step 7a: Add Permissions
+
+Shiro `Realm`s are read-only components: every data store models roles, groups, permissions, accounts, and their relationships differently, so Shiro doesn't have a 'write' API to modify these resources.  To modify the underlying the model objects, you just modify them directly via whatever API you desire.  Your Shiro Realm then knows how to read this information and represent it in a format Shiro understands.
+
+As such, since we're using Stormpath in this sample app, we'll assign permissions to an account and group in a Stormpath API-specific way.
+
+Let's execute a cURL request to add some permissions to our previously created Jean-Luc Picard account.  Using that account's `href` URL, we'll post some `apacheShiroPermissions` to the account via [custom data](http://docs.stormpath.com/rest/product-guide/#custom-data):
+
+    curl -X POST --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
+        -H "Accept: application/json" \
+        -H "Content-Type: application/json" \
+        -d '{
+                "apacheShiroPermissions": [
+                    "ship:NCC-1701-D:command",
+                    "user:jlpicard:edit"
+                ]
+            }' \
+    "https://api.stormpath.com/v1/accounts/$JLPICARD_ACCOUNT_ID/customData"
+   
+where `$JLPICARD_ACCOUNT_ID` matches the uid of the Jean-Luc Picard you created at the beginning of this tutorial.
+
+This adds two permissions directly to the Stormpath Account:
+
+* `ship:NCC-1701-D:command`
+* `user:jlpicard:edit`
+
+These use Shiro's [WildcardPermission](http://shiro.apache.org/permissions.html) syntax.  
+
+The first basically means _the ability to 'command' the 'ship' with identifier 'NCC-1701-D'_.  This is an example of an _instance-level_ permission: controlling access to a specific _instance_ `NCC-1701-D` of a resource `ship`.  The second is also an instance-level permission that states _the ability to `edit` the `user` with identifier `jlpicard`_.
+
+How permissions are stored in Stormpath, as well as how to customize storage and access options in Stormpath is out of scope for this document, but this is explained in the [Shiro Stormpath plugin documentation](https://github.com/stormpath/stormpath-shiro/wiki#permissions).
+
+### Step 7b: Permission Tags
+
+Just as we have JSP tags for role checks, parallel tags exist for permission checks as well.  We update the `/home.jsp` page to let the user know if they're allowed to do something or not based on the permissions that are assigned to them.  These messages are added in a new `<h2>Permissions</h2>` section of the home page:
+
+    <h2>Permissions</h2>
+    
+    <ul>
+        <li>You may <shiro:lacksPermission name="ship:NCC-1701-D:command"><b>NOT</b> </shiro:lacksPermission> command the <code>NCC-1701-D</code> Starship!</li>
+        <li>You may <shiro:lacksPermission name="user:${account.username}:edit"><b>NOT</b> </shiro:lacksPermission> edit the ${account.username} user!</li>
+    </ul>
+
+When you visit the home page the first time, before you log in, you will see the following output:
+
+    You may NOT command the NCC-1701-D Starship!
+    You may NOT edit the user!
+
+But after you log in with your Jean-Luc Picard account, you will see this instead:
+
+    You may command the NCC-1701-D Starship!
+    You may edit the user!
+
+You can see that Shiro resolved that the authenticated user had permissions, and the output was rendered in an appropriate way.
+
+You can also use the `<shiro:hasPermission>` tag for affirmative permission checks.
+
+Finally, we'll call to attention an extremely powerful feature with permission checks.  Did you see how the second permission check used a _runtime_ generated permission value?
+
+    <shiro:lacksPermission name="user:${account.username}:edit"> ...
+
+The `${account.username}` value is interpreted at runtime and forms the final `user:aUsername:edit` value, and then the final String value is used for the permission check.
+
+This is _extremely_ powerful: you can perform permission checks based on who the current user is and _what is currently being interacted with_.  These runtime-based instance-level permission checks are a foundational technique for developing highly customizable and secure applications.
+
+### Step 7c: Run the webapp
+
+After checking out the `step7` branch, go ahead and run the web app:
+
+    $ mvn jetty:run
+
+Try visiting [localhost:8080](http://localhost:8080) and log in and out of the UI with your Jean-Luc Picard account (and other accounts), and see the page output change based on what permissions are assigned (or not)!
+
+Hit `ctl-C` (or `cmd-C` on a mac) to shut down the web app.
+
 ## Summary
 
 We hope you have found this introductory tutorial for Shiro-enabled webapps useful.  In coming editions of this tutorial, we will cover:
 
-* Shiro's extremely powerful [permissions](http://shiro.apache.org/permissions.html) and Permission-Based Access Control.
 * Plugging in different user data stores, like an RDBMS or NoSQL data store.
 
 ### Fixes and Pull Requests
