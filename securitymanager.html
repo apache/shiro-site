@@ -8,9 +8,16 @@
 
 <p>As stated previously, the application's <tt>SecurityManager</tt> performs security operations and manages state for <em>all</em> application users.  In Shiro's default <tt>SecurityManager</tt> implementations, this includes:</p>
 
-<ul><li>Authentication</li><li>Authorization</li><li>Session Management</li><li>Cache Management</li><li><a href="realm.html" title="Realm">Realm</a> coordination</li><li>Event propagation</li><li>"Remember Me" Services</li><li>Subject creation</li><li>Logout<br clear="none">
-and more.</li></ul>
-
+<ul>
+	<li>Authentication</li>
+	<li>Authorization</li>
+	<li>Session Management</li>
+	<li>Cache Management</li>
+	<li><a href="realm.html" title="Realm">Realm</a> coordination</li>
+	<li>Event propagation</li>
+	<li>"Remember Me" Services</li>
+	<li>Subject creation</li>
+	<li>Logout<br clear="none">and more.</li></ul>
 
 <p>But this is a lot of functionality to try to manage in a single component.  And, making these things flexible and customizable would be very difficult if everything were lumped into a single implementation class.  </p>
 
@@ -22,7 +29,13 @@ and more.</li></ul>
 
 <p>The nested components that the <tt>SecurityManager</tt> coordinates and delegates to are:</p>
 
-<ul><li><a href="authenticator.html" title="Authenticator">Authenticator</a> (<tt>org.apache.shiro.authc.Authenticator</tt>)</li><li><a href="authorizer.html" title="Authorizer">Authorizer</a> (<tt>org.apache.shiro.authz.Authorizer</tt>)</li><li><a href="sessionmanager.html" title="SessionManager">SessionManager</a> (<tt>org.apache.shiro.session.mgt.SessionManager</tt>)</li><li><a href="cachemanager.html" title="CacheManager">CacheManager</a> (<tt>org.apache.shiro.cache.CacheManager</tt>)</li><li><a class="createlink" href="https://cwiki.apache.org/confluence/pages/createpage.action?spaceKey=SHIRO&amp;title=RememberMeManager&amp;linkCreation=true&amp;fromPageId=9373660">RememberMeManager</a> (<tt>org.apache.shiro.mgt.RememberMeManager</tt>)</li><li><a class="createlink" href="https://cwiki.apache.org/confluence/pages/createpage.action?spaceKey=SHIRO&amp;title=SubjectFactory&amp;linkCreation=true&amp;fromPageId=9373660">SubjectFactory</a> (<tt>org.apache.shiro.mgt.SubjectFactory</tt>)</li></ul>
+<ul>
+	<li>Authenticator (<tt>org.apache.shiro.authc.Authenticator</tt>)</li>
+	<li>Authorizer (<tt>org.apache.shiro.authz.Authorizer</tt>)</li>
+	<li>SessionManager (<tt>org.apache.shiro.session.mgt.SessionManager</tt>)</li>
+	<li><a href="cachemanager.html" title="CacheManager">CacheManager</a> (<tt>org.apache.shiro.cache.CacheManager</tt>)</li>
+	<li>RememberMeManager  (<tt>org.apache.shiro.mgt.RememberMeManager</tt>)</li>
+	<li>SubjectFactory(<tt>org.apache.shiro.mgt.SubjectFactory</tt>)</li></ul>
 
 
 <p>The <tt>SecurityManager</tt> implementations and are also JavaBeans compatible, which allows you (or a configuration mechanism) to easily customize the pluggable components via standard JavaBeans accessor/mutator methods (get*/set*).  This means the Shiro's architectural modularity can translate into very easy configuration for custom behavior.</p>

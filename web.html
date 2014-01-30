@@ -1,4 +1,34 @@
 <h1><a name="Web-ApacheShiroWebSupport"></a>Apache Shiro Web Support</h1>
+
+<table align="right" width="275" style="margin-left: 20px; margin-bottom: 20px; border-style: solid; border-width: 2px; border-color: navy" cellpadding="10px">
+
+<tr>
+<td>
+<div id="border">
+  <h2>Related Content</h2>
+	
+  <h3><a href="web-features.html">Web Apps with Shiro</a></h3>
+  <p>Learn more about integrating Shiro into web applications. </br><span style="font-size:11"><a href="web-features.html">Read More &gt;&gt;</a></span></p>
+	
+  <h3><a href="webapp-tutorial.html">Web App Tutorial</a></h3>
+  <p>Step-by-step tutorial for securing a web application with Shiro. </br><span style="font-size:11"><a href="webapp-tutorial.html">Read More &gt;&gt;</a></span></p>
+	
+  <h3><a href="/session-management-features.html">Session Management</a></h3>
+  <p>Shiro enables sessions for any application environment. Learn more! </br><span style="font-size:11"><a href="/session-management-features.html">Read More &gt;&gt;</a></span></p>
+	
+  <h3><a href="//permissions.html">Permissions</a></h3>
+  <p>Learn more about Shiro's powerful and intuitive permission syntax. </br><span style="font-size:11"><a href="/permissions.html">Read More &gt;&gt;</a></span></p>
+	
+  <h3><a href="java-authentication-guide.html">Java Authentication Guide</a></h3>
+  <p>Learn how Authentication in Java is performed in Shiro. </br><span style="font-size:11"><a href="java-authentication-guide.html">Read More &gt;&gt;</a></span></p>	
+	
+  <h3><a href="java-authorization-guide.html">Java Authorization Guide</a></h3>
+  <p>Learn how Shiro handles access control in Java. </br><span style="font-size:11"><a href="java-authorization-guide.html">Read More &gt;&gt;</a></span></p>	
+
+</div>
+</td>
+</tr>
+</table>
 <div class="toc">
 <ul><li><a href="#Web-Configuration">Configuration</a></li><ul><li><a href="#Web-%7B%7Bweb.xml%7D%7D"> <tt>web.xml</tt></a></li><ul><li><a href="#Web-Shiro1.2andlater">Shiro 1.2 and later</a></li><ul><li><a href="#Web-Custom%7B%7BWebEnvironment%7D%7DClass">Custom <tt>WebEnvironment</tt> Class</a></li><li><a href="#Web-CustomConfigurationLocations">Custom Configuration Locations</a></li></ul><li><a href="#Web-Shiro1.1andearlier">Shiro 1.1 and earlier</a></li><ul><li><a href="#Web-CustomPath">Custom Path</a></li><li><a href="#Web-InlineConfig">Inline Config</a></li></ul></ul><li><a href="#Web-WebINIconfiguration">Web INI configuration</a></li><ul><li><a href="#Web-%7B%7B%5Curls%5C%7D%7D"> <tt>[urls]</tt></a></li><ul><li><a href="#Web-URLPathExpressions">URL Path Expressions</a></li><li><a href="#Web-FilterChainDefinitions">Filter Chain Definitions</a></li><ul><li><a href="#Web-AvailableFilters">Available Filters</a></li></ul></ul></ul></ul><li><a href="#Web-DefaultFilters">Default Filters</a></li><li><a href="#Web-EnablingandDisablingFilters">Enabling and Disabling Filters</a></li><ul><li><a href="#Web-GeneralEnabling%2FDisabling">General Enabling/Disabling</a></li><li><a href="#Web-RequestspecificEnabling%2FDisabling">Request-specific Enabling/Disabling</a></li><li><a href="#Web-PathspecificEnabling%2FDisabling">Path-specific Enabling/Disabling</a></li></ul><li><a href="#Web-SessionManagement">Session Management</a></li><ul><li><a href="#Web-ServletContainerSessions">Servlet Container Sessions</a></li><ul><li><a href="#Web-ServletContainerSessionTimeout">Servlet Container Session Timeout</a></li></ul><li><a href="#Web-NativeSessions">Native Sessions</a></li><ul><li><a href="#Web-%7B%7BDefaultWebSessionManager%7D%7D"> <tt>DefaultWebSessionManager</tt></a></li><ul><li><a href="#Web-NativeSessionTimeout">Native Session Timeout</a></li><li><a href="#Web-SessionCookie">Session Cookie</a></li><ul><li><a href="#Web-SessionCookieConfiguration">Session Cookie Configuration</a></li><li><a href="#Web-DisablingtheSessionCookie">Disabling the Session Cookie</a></li></ul></ul></ul></ul><li><a href="#Web-RememberMeServices">Remember Me Services</a></li><ul><li><a href="#Web-ProgrammaticSupport">Programmatic Support</a></li><li><a href="#Web-FormbasedLogin">Form-based Login</a></li><li><a href="#Web-Cookieconfiguration">Cookie configuration</a></li><li><a href="#Web-Custom%7B%7BRememberMeManager%7D%7D">Custom <tt>RememberMeManager</tt></a></li></ul><li><a href="#Web-JSP%2FGSPTagLibrary">JSP / GSP Tag Library</a></li><ul><li><a href="#Web-TagLibraryConfiguration">Tag Library Configuration</a></li><li><a href="#Web-The%7B%7Bguest%7D%7Dtag">The <tt>guest</tt> tag</a></li><li><a href="#Web-The%7B%7Buser%7D%7Dtag">The <tt>user</tt> tag</a></li><li><a href="#Web-The%7B%7Bauthenticated%7D%7Dtag">The <tt>authenticated</tt> tag</a></li><li><a href="#Web-The%7B%7BnotAuthenticated%7D%7Dtag">The <tt>notAuthenticated</tt> tag</a></li><li><a href="#Web-The%7B%7Bprincipal%7D%7Dtag">The <tt>principal</tt> tag</a></li><ul><li><a href="#Web-Typedprincipal">Typed principal</a></li><li><a href="#Web-Principalproperty">Principal property</a></li></ul><li><a href="#Web-The%7B%7BhasRole%7D%7Dtag">The <tt>hasRole</tt> tag</a></li><li><a href="#Web-The%7B%7BlacksRole%7D%7Dtag">The <tt>lacksRole</tt> tag</a></li><li><a href="#Web-The%7B%7BhasAnyRole%7D%7Dtag">The <tt>hasAnyRole</tt> tag</a></li><li><a href="#Web-The%7B%7BhasPermission%7D%7Dtag">The <tt>hasPermission</tt> tag</a></li><li><a href="#Web-The%7B%7BlacksPermission%7D%7Dtag">The <tt>lacksPermission</tt> tag</a></li></ul><li><a href="#Web-Lendahandwithdocumentation">Lend a hand with documentation</a></li></ul></div>
 
