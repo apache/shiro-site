@@ -14,7 +14,7 @@ The following example assumes you have SVN commit permissions to the `publish` d
     
     cd site
     # This next command will take a few seconds, be patient :)
-    scms ../publish
+    scms trunk publish
     # Open up the local publish/index.html file in your web browser.  Ensure the changes reflect what you want. 
     #
     # This next commands will publish changes to live ASF web servers.  Be confident the changes are what you want:
