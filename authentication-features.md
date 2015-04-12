@@ -41,7 +41,7 @@ The Shiro framework is designed to make authentication as clean and intuitive as
 
 *   **'Remember Me' built in** - Standard in the Shiro API is the ability to remember your users if they return to your application.  You can offer a better user experience to your them with minimal development effort.
 
-*   **Pluggable data sources** - Shiro uses pluggable data access objects (DAOs), called Realms, to connect to security data sources like LDAP and Active Directory.  To help you avoid building and maintaining integrations yourself, Shiro provides out-of-the-box realms for popular data sources like LDAP, Active Directory, Kerberos, and JDBC.  If needed, you can also create your own realms to support specific functionality not included in the basic realms.
+*   **Pluggable data sources** - Shiro uses pluggable data access objects (DAOs), called Realms, to connect to security data sources like LDAP and Active Directory.  To help you avoid building and maintaining integrations yourself, Shiro provides out-of-the-box realms for popular data sources like LDAP, Active Directory, and JDBC.  If needed, you can also create your own realms to support specific functionality not included in the basic realms.
 
 *   **Login with one or more realms** - Using Shiro, you can easily authenticate a user against one or more realms and return one unified view of their identity.  In addition, you can customize the authentication process with Shiro's notion of an authentication strategy. The strategies can be setup in configuration files so changes don't require source code modifications-- reducing complexity and maintenance effort.
 
