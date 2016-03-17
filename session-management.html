@@ -223,11 +223,11 @@ securityManager.cacheManager = $cacheManager
 <p><a name="SessionManagement-ehcachesessioncacheconfiguration"></a></p>
 <h5><a name="SessionManagement-EHCacheSessionCacheConfiguration"></a>EHCache Session Cache Configuration</h5>
 
-<p>By default, the <tt>EhCacheManager</tt> uses a Shiro-specific <tt><a class="external-link" href="https://svn.apache.org/repos/asf/shiro/trunk/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml">ehcache.xml</a></tt> file that sets up the Session cache region and the necessary settings to ensure Sessions are stored and retrieved properly.</p>
+<p>By default, the <tt>EhCacheManager</tt> uses a Shiro-specific <tt><a class="external-link" href="https://github.com/apache/shiro/tree/master/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml">ehcache.xml</a></tt> file that sets up the Session cache region and the necessary settings to ensure Sessions are stored and retrieved properly.</p>
 
 <p>However, if you wish to change the cache settings, or configure your own <tt>ehcache.xml</tt> or EHCache <tt>net.sf.ehcache.CacheManager</tt> instance, you will need to configure the cache region to ensure that Sessions are handled correctly.</p>
 
-<p>If you look at the default <tt><a class="external-link" href="https://svn.apache.org/repos/asf/shiro/trunk/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml">ehcache.xml</a></tt> file, you will see the following <tt>shiro-activeSessionCache</tt> cache configuration:</p>
+<p>If you look at the default <tt><a class="external-link" href="https://github.com/apache/shiro/tree/master/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml">ehcache.xml</a></tt> file, you will see the following <tt>shiro-activeSessionCache</tt> cache configuration:</p>
 
 <div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
 <pre class="code-xml">

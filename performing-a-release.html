@@ -15,8 +15,8 @@
 &gt; mvn release:prepare -DdryRun=<span class="code-keyword">true</span>
 &gt; mvn deploy -Pdocs
 &gt; mvn release:clean
-&gt; mvn release:prepare -Dusername=YOUR_SVN_USERNAME -Dpassword=YOUR_SVN_PASSWORD
-&gt; mvn release:perform -Dusername=YOUR_SVN_USERNAME -Dpassword=YOUR_SVN_PASSWORD
+&gt; mvn release:prepare -Dusername=YOUR_ASF_USERNAME -Dpassword=YOUR_ASF_PASSWORD
+&gt; mvn release:perform -Dusername=YOUR_ASF_USERNAME -Dpassword=YOUR_ASF_PASSWORD
 </pre>
 </div></div></li><li>Log in to <a class="external-link" href="https://repository.apache.org">https://repository.apache.org</a>.  Navigate to "Staging Repositories" (on the left nav panel).  Find the repository starting with 'org.apache.shiro' and <tt>close</tt> it.</li><li>Send out the VOTE email to the <tt>dev@shiro.apache.org</tt> mailing list.  Here's a good template:
 <div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
@@ -28,7 +28,7 @@ The 59 issues solved <span class="code-keyword">for</span> 1.2.0:
 https:<span class="code-comment">//issues.apache.org/jira/secure/IssueNavigator!executeAdvanced.jspa?jqlQuery=project+%3D+SHIRO+AND+fixVersion+%3D+%221.2.0%22+AND+%28status+%21%3D+Open+and+status+%21%3D+%22In+Progress%22%29+ORDER+BY+priority+DESC&amp;runQuery=<span class="code-keyword">true</span>&amp;clear=<span class="code-keyword">true</span>
 </span>
 The tag to be voted upon:
-&lt;SVN_URL_OF_THE_RELEASE_TAG&gt; (e.g. https:<span class="code-comment">//svn.apache.org/repos/asf/shiro/tags/1.2.0)
+&lt;GIT_URL_OF_THE_RELEASE_TAG&gt; (e.g. https:<span class="code-comment">//github.com/apache/shiro/tree/1.2.0)
 </span>
 Staging repo <span class="code-keyword">for</span> binaries:
 &lt;URL_OF_THE_CLOSED_REPO_FROM_ABOVE_STEP&gt; (e.g. https:<span class="code-comment">//repository.apache.org/content/repositories/orgapacheshiro-92/)
@@ -52,7 +52,7 @@ Vote open <span class="code-keyword">for</span> 72 hours. Please <span class="co
 
 <h2><a name="PerformingaRelease-AfteraSuccessfulVote"></a>After a Successful Vote</h2>
 
-<ol><li>Update the <a class="external-link" href="http://svn.apache.org/repos/asf/shiro/trunk/shiro.doap.rdf">Shiro DOAP file in subversion</a> to include another release information chunk (<em>after</em> the other similar chunks):
+<ol><li>Update the <a class="external-link" href="https://github.com/apache/shiro/blob/master/shiro.doap.rdf">Shiro DOAP file in git</a> to include another release information chunk (<em>after</em> the other similar chunks):
 <div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
 <pre class="code-xml">
 <span class="code-tag">&lt;release&gt;</span>
@@ -65,7 +65,7 @@ Vote open <span class="code-keyword">for</span> 72 hours. Please <span class="co
 </pre>
 </div></div>
 <p><br clear="none" class="atl-forced-newline">
-With the appropriate <tt>RELEASE_DATE</tt> (e.g. 2011-10-01) and <tt>VERSION</tt> (e.g. 1.1.0).  Save and commit the file to SVN.
+With the appropriate <tt>RELEASE_DATE</tt> (e.g. 2011-10-01) and <tt>VERSION</tt> (e.g. 1.1.0).  Save and commit the file to Git.
 <br clear="none" class="atl-forced-newline">
 <br clear="none" class="atl-forced-newline"></p></li><li>Put the distribution on the ASF web servers
 	<ol><li>SSH into people.apache.org and &#65279;cd&#160;to to Shiro's distribution location:
