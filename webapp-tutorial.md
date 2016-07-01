@@ -41,7 +41,7 @@ This is a step-by-step tutorial.  The tutorial, and all of its steps, exist as a
 
 ### The Application
 
-The web application we will build is a super webapp that can be used as a starting point for your own application.  It will demonstrate user login, logout, user-specific welcome messages, access control to certain parts of the web application, and integration with a plugglable security data store.
+The web application we will build is a super webapp that can be used as a starting point for your own application.  It will demonstrate user login, logout, user-specific welcome messages, access control to certain parts of the web application, and integration with a pluggable security data store.
 
 We will start by setting up the project, including the build tool and declaring dependencies, as well as configuring the servlet `web.xml` file to launch the web application and the Shiro environment.
 
@@ -151,7 +151,7 @@ This .ini contains simply a `[main]` section with some minimal configuration:
 
 ### 1b: Enable Shiro in `web.xml`
 
-While we have a `shiro.ini` configuration, we need to actually _load_ it and start a new Shiro environment and make that environment avaiable to the web application.
+While we have a `shiro.ini` configuration, we need to actually _load_ it and start a new Shiro environment and make that environment available to the web application.
 
 We do all of this by adding a few things to the existing `src/main/webapp/WEB-INF/web.xml` file:
 
@@ -407,7 +407,7 @@ This allows Shiro's default `authc` filter (by default, a [`FormAuthenticationFi
 
 The `[urls]` section is a new [web-specific INI section](http://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D).
 
-This section allows you to use a very succinct name/value pair syntax to tell shiro how to filter request for any given URL path.  All paths in `[urls]` are relative to the web application's [HttpServletRequest.getContextPath()](http://java.sun.com/j2ee/sdk_1.3/techdocs/api/javax/servlet/http/HttpServletRequest.html#getContextPath()) value.
+This section allows you to use a very succinct name/value pair syntax to tell shiro how to filter request for any given URL path.  All paths in `[urls]` are relative to the web application's [`HttpServletRequest.getContextPath()`](http://java.sun.com/j2ee/sdk_1.3/techdocs/api/javax/servlet/http/HttpServletRequest.html#getContextPath()) value.
 
 These name/value pairs offer an extremely powerful way to filter requests, allowing for all sorts of security rules.  A deeper coverage of urls and filter chains is outside the scope of this document, but please do [read more about it](http://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D) if you're interested.
 
@@ -432,7 +432,7 @@ The `step3` branch contains a new `src/main/webapp/login.jsp` page.  This is a s
 3. There is a `password` form field.  The Shiro `authc` filter will automatically look for a `password` request parameter during login submission.
 4. There is a `rememberMe` checkbox whose 'checked' state can be a 'truthy' value (`true`, `t`, `1`, `enabled`, `y`, `yes`, or `on`).
 
-Our login.jsp form just uses the default `username`, `password`, and `rememberMe` form field names.  They naems are configurable if you wish to change them - see the [`FormAuthenticationFilter` JavaDoc](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html) for information.
+Our login.jsp form just uses the default `username`, `password`, and `rememberMe` form field names.  These names are configurable if you wish to change them - see the [`FormAuthenticationFilter` JavaDoc](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html) for information.
 
 ### Step 3c: Run the webapp
 
@@ -536,7 +536,7 @@ Perform the following git checkout command to load the `step5` branch:
 Step 5 introduces the following 3 changes:
 
 1. We added a new section (url path) of the webapp that we want to restrict to only authenticated users.
-2. We changed `shiro.ini` to tell shiro to only allow authenticated users to that part of the web app.
+2. We changed `shiro.ini` to tell Shiro to only allow authenticated users to that part of the web app.
 3. We modified the home page to change its output based on if the current `Subject` is authenticated or not.
 
 
