@@ -110,7 +110,7 @@ Now that you've cloned the project, you can run the web application by executing
 
 Next, open your web browser to [localhost:8080](http://localhost:8080), and you'll see the home page with a **Hello, World!** greeting.  
 
-Hit `ctl-C` (or `cmd-C` on a mac) to shut down the web app.
+Hit `ctl-C` to shut down the web app.
 
 <a id="step1"></a>
 ## Step 1: Enable Shiro
@@ -136,7 +136,7 @@ If you checked out the `step1` branch, you'll see the contents of this new `src/
 
     [main]
     
-    # Let's use some in-memory caching to reduce the number of runtime lookups against Stormpath.
+    # Let's use some in-memory caching to reduce the number of runtime lookups against a remote user store.
     # A real application might want to use a more robust caching solution (e.g. ehcache or a
     # distributed cache).  When using such caches, be aware of your cache TTL settings: too high
     # a TTL and the cache won't reflect any potential changes in Stormpath fast enough.  Too low
@@ -190,7 +190,7 @@ This time, you will see log output similar to the following, indicating that Shi
     16:04:19.807 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Starting Shiro environment initialization.
     16:04:19.904 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Shiro environment initialized in 95 ms.
 
-Hit `ctl-C` (or `cmd-C` on a mac) to shut down the web app.
+Hit `ctl-C` to shut down the web app.
 
 <a id="step2"></a>
 ## Step 2: Connect to a User Store
@@ -241,9 +241,9 @@ A Stormpath API Key is required for the Stormpath Realm to communicate with Stor
 
 1. Log in to the [Stormpath Admin Console](https://api.stormpath.com/) using the email address and password you used to register with Stormpath.
 
-2. In the top-right corner of the resulting page, visit **Settings > My Account**.
+2. On the middle-right the resulting page, visit **API Keys: Manage API Keys** in the **DEVELOPER TOOLS** section of the page.
 
-3. On the Account Details page, under **Security Credentials**, click **Create API Key**.
+3. On the Account Details page, in the **Security Credentials** section, click **Create API Key** under **Api Keys**.
 
     This will generate your API Key and download it to your computer as an `apiKey.properties` file. If you open the file in a text editor, you will see something similar to the following:
 
@@ -258,48 +258,60 @@ A Stormpath API Key is required for the Stormpath Realm to communicate with Stor
 
         $ chmod go-rwx $HOME/.stormpath/apiKey.properties
 
-#### Register the web application with Stormpath
+#### Retrieve the default Stormpath Application
 
-We have to register our web application with Stormpath to allow the app to use Stormpath for user management and authentication.  You register the web app with Stormpath simply by making a REST request, `POST`ing a new Application resource to the Stormpath `applications` URL:
+When you signed up for Stormpath, an empty application was automatically created for you. It's called: `My Application`.
 
-    curl -X POST --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
-        -H "Accept: application/json" \
-        -H "Content-Type: application/json" \
-        -d '{
-               "name" : "Apache Shiro Tutorial Webapp"
-            }' \
-        'https://api.stormpath.com/v1/applications?createDirectory=true'
+We have to register our web application with Stormpath to allow the app to use Stormpath for user management and authentication. In order to register our web application with the `My Application` Stormpath application, we need to know some information. Fortunately, we can retrieve this information using the Stormpath API.
 
+First, we need the location of your tenant from Stormpath. Here's how you get that:
+
+    curl -i --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
+        'https://api.stormpath.com/v1/tenants/current'
+        
 where:
 
 * $YOUR_API_KEY_ID is the apiKey.id value in apiKey.properties and
-* YOUR_API_KEY_SECRET is the apiKey.secret value in apiKey.properties
+* $YOUR_API_KEY_SECRET is the apiKey.secret value in apiKey.properties
 
-This will create your application. Here’s an example response:
+You'll get a response like this:
+
+    HTTP/1.1 302 Found
+    Date: Fri, 28 Aug 2015 18:34:51 GMT
+    Location: https://api.stormpath.com/v1/tenants/sOmELoNgRaNDoMIdHeRe
+    Server: Apache
+    Set-Cookie: rememberMe=deleteMe; Path=/; Max-Age=0; Expires=Thu, 27-Aug-2015 18:34:52 GMT
+    Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+    Content-Length: 0
+    Connection: keep-alive
+    
+Notice the `Location` header. This is the location of your Stormpath tenant. Now, we can retrieve the location of the `My Application` Stormpath application, again using the API:
+
+    curl -u $API_KEY_ID:$API_KEY_SECRET \
+        -H "Accept: application/json" \
+        '$TENANT_HREF/applications?name=My%20Application'
+        
+where: 
+
+* $YOUR_API_KEY_ID is the apiKey.id value in apiKey.properties and
+* $YOUR_API_KEY_SECRET is the apiKey.secret value in apiKey.properties
+* $TENANT_HREF is the value of the `Location` header from the previous step
+
+The response from this has a lot of information in it. Here’s an example excerpt from the response:
 
     {
+        ...
         "href": "https://api.stormpath.com/v1/applications/aLoNGrAnDoMAppIdHeRe",
-        "name": "Apache Shiro Tutorial Webapp",
-        "description": null,
+        "name": "My Application",
+        "description": "This application was automatically created for you in Stormpath for use with our Quickstart guides(https://docs.stormpath.com). It does apply to your subscription's number of reserved applications and can be renamed or reused for your own purposes.",
         "status": "ENABLED",
         "tenant": {
             "href": "https://api.stormpath.com/v1/tenants/sOmELoNgRaNDoMIdHeRe"
         },
-        "accounts": {
-            "href": "https://api.stormpath.com/v1/applications/aLoNGrAnDoMAppIdHeRe/accounts"
-        },
-        "groups": {
-            "href": "https://api.stormpath.com/v1/applications/aLoNGrAnDoMAppIdHeRe/groups"
-        },
-        "loginAttempts": {
-            "href": "https://api.stormpath.com/v1/applications/aLoNGrAnDoMAppIdHeR/loginAttempts"
-        },
-        "passwordResetTokens": {
-            "href": "https://api.stormpath.com/v1/applications/aLoNGrAnDoMAppIdHeRe/passwordResetTokens"
-        } 
+        ...
     }
 
-Make note of the top-level `href`, e.g. `https://api.stormpath.com/v1/applications/$YOUR_APPLICATION_ID` - we will use this href in the `shiro.ini` configuration next.
+Make note of your top-level `href` from above - we will use this href in the `shiro.ini` configuration next.
 
 #### Create an application test user account
 
@@ -315,7 +327,13 @@ Now that we have an application, we'll want to create a sample/test user for tha
                "email": "capt@enterprise.com",
                "password":"Changeme1"
             }' \
-     "https://api.stormpath.com/v1/applications/$YOUR_APPLICATION_ID/accounts"
+     "$YOUR_APPLICATION_HREF/accounts"
+     
+where:
+
+* $YOUR_API_KEY_ID is the apiKey.id value in apiKey.properties and
+* $YOUR_API_KEY_SECRET is the apiKey.secret value in apiKey.properties
+* $YOUR_APPLICATION_HREF is the application `href` you made note of above
 
 Again, don't forget to change `$YOUR_APPLICATION_ID` in the URL above to match your application’s ID!
 
@@ -363,7 +381,7 @@ This time, you will see log output similar to the following, indicating that Shi
     16:08:26.201 [main] INFO  o.a.s.c.IniSecurityManagerFactory - Realms have been explicitly set on the SecurityManager instance - auto-setting of realms will not occur.
     16:08:26.201 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Shiro environment initialized in 731 ms.
 
-Hit `ctl-C` (or `cmd-C` on a mac) to shut down the web app.
+Hit `ctl-C` to shut down the web app.
 
 <a id="step3"></a>
 ## Step 3: Enable Login and Logout
@@ -448,7 +466,7 @@ Enter in a username and password of the account you created at the end of Step 2
 
 Tip: If you want a successful login to redirect the user to a different page other than the home page (context path `/`), you can set the `authc.successUrl = /whatever` in the INI's `[main]` section.
 
-Hit `ctl-C` (or `cmd-C` on a mac) to shut down the web app.
+Hit `ctl-C` to shut down the web app.
 
 <a id="step4"></a>
 ## Step 4: User-specific UI changes
@@ -520,7 +538,7 @@ After checking out the `step4` branch, go ahead and run the web app:
 
 Try visiting [localhost:8080](http://localhost:8080) as a guest, and then login.  After successful login, you will see the page content change to reflect that you're now a known user!
 
-Hit `ctl-C` (or `cmd-C` on a mac) to shut down the web app.
+Hit `ctl-C` to shut down the web app.
 
 <a id="step5"></a>
 ## Step 5: Allow Access to Only Authenticated Users
@@ -554,7 +572,7 @@ This [Shiro filter chain definition](http://shiro.apache.org/web.html#Web-Filter
 
 But what happens if someone tries to access that path or any of its children paths?
 
-But do you remember in Step 3 when we added the following line to the `[main]` section:
+Do you remember in Step 3 when we added the following line to the `[main]` section:
 
     shiro.loginUrl = /login.jsp
 
@@ -564,7 +582,9 @@ Based on this line of config, the `authc` filter is now smart enough to know tha
 
 ### Step 5c: Update our home page
 
-The final change for Step 5 is to update the `/home.jsp` page to let the user know they can access the new part of the web site.  These lines were added below the welcome message:
+The final change for Step 5 is to update the `/home.jsp` page to let the user know they can access the new part of the web site.
+
+These lines were added below the welcome message:
 
     <shiro:authenticated><p>Visit your <a href="<c:url value="/account"/>">account page</a>.</p></shiro:authenticated>
     <shiro:notAuthenticated><p>If you want to access the authenticated-only <a href="<c:url value="/account"/>">account page</a>,
@@ -586,7 +606,7 @@ After checking out the `step5` branch, go ahead and run the web app:
 
 Try visiting [localhost:8080](http://localhost:8080).  Once there, click the new `/account` link and watch it redirect you to force you to log in.  Once logged in, return to the home page and see the content change again now that you're authenticated.  You can visit the account page and the home page as often as you want, until you log out. Nice!
 
-Hit `ctl-C` (or `cmd-C` on a mac) to shut down the web app.
+Hit `ctl-C` to shut down the web app.
 
 <a id="step6"></a>
 ## Step 6: Role-Based Access Control
@@ -605,7 +625,7 @@ The fastest way to do that in this tutorial is to populate some Groups within St
 
 To do this, log in to the UI and navigate as follows:
 
-**Directories > Apache Shiro Tutorial Webapp Directory > Groups**
+**Directories > My Application Directory > Groups**
 
 Add the following three groups:
 
@@ -617,7 +637,7 @@ Add the following three groups:
 
 Once you've created the groups, add the `Jean-Luc Picard` account to the `Captains` and `Officers` groups.  You might want to create some ad-hoc accounts and add them to whatever groups you like.  Make sure some of the accounts don't overlap groups so you can see changes based on separate Groups assigned to user accounts.
 
-### Step 6b:  RBAC Tags
+### Step 6b: Role Based Access Control (RBAC) Tags
 
 We update the `/home.jsp` page to let the user know what roles they have and which ones they don't.  These messages are added in a new `<h2>Roles</h2>` section of the home page:
 
@@ -660,7 +680,7 @@ After checking out the `step6` branch, go ahead and run the web app:
 
 Try visiting [localhost:8080](http://localhost:8080) and log in with different user accounts that are assigned different roles and watch the home page's **Roles** section content change!
 
-Hit `ctl-C` (or `cmd-C` on a mac) to shut down the web app.
+Hit `ctl-C` to shut down the web app.
 
 <a id="step7"></a>
 ## Step 7: Permission-Based Access Control
@@ -744,7 +764,7 @@ After checking out the `step7` branch, go ahead and run the web app:
 
 Try visiting [localhost:8080](http://localhost:8080) and log in and out of the UI with your Jean-Luc Picard account (and other accounts), and see the page output change based on what permissions are assigned (or not)!
 
-Hit `ctl-C` (or `cmd-C` on a mac) to shut down the web app.
+Hit `ctl-C` to shut down the web app.
 
 ## Summary
 
