@@ -27,7 +27,7 @@
 </tr>
 </table>
 
-<p>Apache Shiro 1.2.6 is the current stable release (Java 1.6+ JVM).</p>
+<p>Apache Shiro 1.3.0 is the current stable release (Java 1.6+ JVM).</p>
 
 <p>To download Shiro please follow the instructions below.</p>
 
@@ -43,16 +43,24 @@
 <div>
     <ul>
         <li>
-            <a href="#latest">Latest Stable Release (1.2.6)</a>
+            <a href="#latest">Latest Stable Release (1.3.0)</a>
             <ul>
-                <li><a href="#latestBinary">1.2.6 Binary Distribution</a></li>
-                <li><a href="#latestSource">1.2.6 Source Code Distribution</a></li>
-                <li><a href="#latestGit">1.2.6 Git Source repository</a></li>
+                <li><a href="#latestBinary">1.3.0 Binary Distribution</a></li>
+                <li><a href="#latestSource">1.3.0 Source Code Distribution</a></li>
+                <li><a href="#latestGit">1.3.0 Git Source repository</a></li>
             </ul>
         </li>
         <li><a href="#previous">Previous Releases</a>
             <ul>
-                <li><a href="#Download-1.1.0">1.1.0</a></li>
+                <li><a href="#1.2.xBinary">1.2.6</a></li>
+                <ul>
+                    <li><a href="#1.2.xBinary">1.2.6 Binary Distribution</a></li>
+                    <li><a href="#1.2.xSource">1.2.6 Source Code Distribution</a></li>
+                    <li><a href="#1.2.xGit">1.2.6 Git Source repository</a></li>
+                </ul>
+            </ul>
+            <ul>
+                <li><a href="#1.1.0Binary">1.1.0</a></li>
                 <ul>
                     <li><a href="#1.1.0Binary">1.1.0 Binary Distribution</a></li>
                     <li><a href="#1.1.0Source">1.1.0 Source Code Distribution</a></li>
@@ -64,9 +72,9 @@
 </div>
 
 
-<h2><a name="latest"></a>Latest Stable Release (1.2.6)</h2>
+<h2><a name="latest"></a>Latest Stable Release (1.3.0)</h2>
 
-<h3><a name="latestBinary"></a>1.2.6 Binary Distribution</h3>
+<h3><a name="latestBinary"></a>1.3.0 Binary Distribution</h3>
 
 <p>Associated documentation can be found <a href="documentation.html" title="Documentation">here</a></p>
 
@@ -77,7 +85,7 @@
 </p>
 <div class="table-wrap">
 
-    <table class="confluenceTable" id="TBL1365578679386">
+    <table class="confluenceTable" id="table-latest">
         <tbody>
             <tr>
                 <th colspan="1" rowspan="1" class="confluenceTh"> Artifact</th>
@@ -86,8 +94,7 @@
             </tr>
             <tr>
                 <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-all/1.2.6/shiro-all-1.2.6.jar"
-                                                                    rel="nofollow">shiro-all</a></td>
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-all/1.3.0/shiro-all-1.3.0.jar">shiro-all</a></td>
                 <td colspan="1" rowspan="1" class="confluenceTd"><b>Not Recommended</b></td>
                 <td colspan="1" rowspan="1" class="confluenceTd"> Includes all binary functionality for Shiro (without
                     dependencies), useful in certain build environments (e.g. Ant). However, this is <b>NOT</b>
@@ -98,8 +105,274 @@
             </tr>
             <tr>
                 <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-core/1.2.6/shiro-core-1.2.6.jar"
-                                                                    rel="nofollow">shiro-core</a></td>
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-core/1.3.0/shiro-core-1.3.0.jar">shiro-core</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd">
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-core&lt;/artifactId&gt;
+  &lt;version&gt;1.3.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Required in all environments. <a class="external-link"
+                                                                                                   href="http://slf4j.org/">Slf4j</a>'s
+                    <tt>slf4j-api</tt> jar and one of its binding jars is required. <tt>commons-beanutils</tt> is
+                    required only if using INI config.
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-web/1.3.0/shiro-web-1.3.0.jar">shiro-web</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd">
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-web&lt;/artifactId&gt;
+  &lt;version&gt;1.3.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Enables support for web-based applications.</td>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-aspectj/1.3.0/shiro-aspectj-1.3.0.jar">shiro-aspectj</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd">
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-aspectj&lt;/artifactId&gt;
+  &lt;version&gt;1.3.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
+                                                                             href="http://www.eclipse.org/aspectj/">AspectJ</a> support for
+                    Shiro AOP and Annotations.
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-cas/1.3.0/shiro-cas-1.3.0.jar">shiro-cas</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd">
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-cas&lt;/artifactId&gt;
+  &lt;version&gt;1.3.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Enables Jasig <a class="external-link"
+                                                                                   href="http://www.jasig.org/cas">CAS</a> support.
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-ehcache/1.3.0/shiro-ehcache-1.3.0.jar">shiro-ehcache</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd">
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-ehcache&lt;/artifactId&gt;
+  &lt;version&gt;1.3.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
+                                                                             href="http://ehcache.org">Ehcache</a>-based
+                    famework caching.
+                </td>
+            </tr>
+            
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-hazelcast/1.3.0/shiro-hazelcast-1.3.0.jar">shiro-hazelcast</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd">
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-hazelcast&lt;/artifactId&gt;
+  &lt;version&gt;1.3.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
+                                                                             href="http://hazelcast.org">Hazelcast</a>-based
+                    famework caching.
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-features/1.3.0/shiro-features-1.3.0-features.xml">shiro-features</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd">
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-features&lt;/artifactId&gt;
+  &lt;version&gt;1.3.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> OSGi / <a class="external-link"
+                                                                            href="http://karaf.apache.org/">Apache
+                    Karaf</a> integration.
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-guice/1.3.0/shiro-guice-1.3.0.jar">shiro-guice</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd">
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-guice&lt;/artifactId&gt;
+  &lt;version&gt;1.3.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
+                                                                             href="http://code.google.com/p/google-guice/">Google Guice</a>
+                    integration.
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-quartz/1.3.0/shiro-quartz-1.3.0.jar">shiro-quartz</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd">
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-quartz&lt;/artifactId&gt;
+  &lt;version&gt;1.3.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
+                                                                             href="http://www.quartz-scheduler.org/">Quartz</a>-based scheduling
+                    for Shiro native session validation.
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-spring/1.3.0/shiro-spring-1.3.0.jar">shiro-spring</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd">
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-spring&lt;/artifactId&gt;
+  &lt;version&gt;1.3.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
+                                                                             href="http://www.springsource.org/about">Spring Framework</a>
+                    integration.
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/tools/shiro-tools-hasher/1.3.0/shiro-tools-hasher-1.3.0-cli.jar">shiro-tools-hasher-cli</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd"><b>Not Relevant</b></td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> A command-line program to perform hashing (MD5, SHA,
+                    etc) for files, streams and passwords. Note that this is a command line program and not intended to
+                    be <br clear="none">
+                    used as a Maven/program dependency. It is intended to be downloaded and executed:
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">
+java -jar shiro-tools-hasher-1.3.0-cli.jar
+</pre>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<h3><a name="latestSource"></a>1.3.0 Source Code Distribution</h3>
+
+<p>The source bundle requires JDK 1.6 and Maven 3.0.3+ to build:</p>
+
+<p><a class="external-link" href="http://www.apache.org/dyn/closer.cgi/shiro/1.3.0/shiro-root-1.3.0-source-release.zip">zip</a>
+    (<a class="external-link"
+        href="http://www.apache.org/dyn/closer.cgi/shiro/1.3.0/shiro-root-1.3.0-source-release.zip.asc">pgp</a>, <a
+            class="external-link"
+            href="http://www.apache.org/dyn/closer.cgi/shiro/1.3.0/shiro-root-1.3.0-source-release.zip.md5">md5</a>, <a
+            class="external-link"
+            href="http://www.apache.org/dyn/closer.cgi/shiro/1.3.0/shiro-root-1.3.0-source-release.zip.sha1">sha1</a>)
+</p>
+
+<h3><a name="latestGit"></a>1.3.0 Git Source repository</h3>
+
+<p>The source can be cloned anonymously from Git with this command:</p>
+<div class="code panel" style="border-width: 1px;">
+    <div class="codeContent panelContent">
+<pre class="code-java">
+git clone https:<span class="code-comment">//github.com/apache/shiro.git</span>
+git checkout shiro-root-1.3.0 -b shiro-root-1.3.0
+</pre>
+    </div>
+</div>
+
+<h2><a name="previous"></a>Previous Releases</h2>
+
+
+<h3><a name="1.2.xBinary"></a>1.2.6 Binary Distribution</h3>
+
+<p>Associated documentation can be found <a href="documentation.html" title="Documentation">here</a></p>
+
+<p>To download the files directly as one .jar file just click the link in the "Artifact" column. If you would like
+    acquire Shiro through Maven, then please use the markup listed under "Maven Usage"</p>
+
+<p>
+</p>
+<div class="table-wrap">
+
+    <table class="confluenceTable" id="table-1.2.x">
+        <tbody>
+            <tr>
+                <th colspan="1" rowspan="1" class="confluenceTh"> Artifact</th>
+                <th colspan="1" rowspan="1" class="confluenceTh"> Maven Usage</th>
+                <th colspan="1" rowspan="1" class="confluenceTh"> Notes</th>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-all/1.2.6/shiro-all-1.2.6.jar">shiro-all</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd"><b>Not Recommended</b></td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Includes all binary functionality for Shiro (without
+                    dependencies), useful in certain build environments (e.g. Ant). However, this is <b>NOT</b>
+                    recommended in Maven builds as it does not retain correct dependency metadata, which can lead to
+                    Maven working incorrectly. For Maven builds, it is <b>highly</b> recommended to specify individual
+                    modules listed below as you require them.
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-core/1.2.6/shiro-core-1.2.6.jar">shiro-core</a></td>
                 <td colspan="1" rowspan="1" class="confluenceTd">
                     <div class="code panel" style="border-width: 1px;">
                         <div class="codeContent panelContent">
@@ -112,16 +385,14 @@
                     </div>
                 </td>
                 <td colspan="1" rowspan="1" class="confluenceTd"> Required in all environments. <a class="external-link"
-                                                                                                   href="http://slf4j.org/"
-                                                                                                   rel="nofollow">Slf4j</a>'s
+                                                                                                   href="http://slf4j.org/">Slf4j</a>'s
                     <tt>slf4j-api</tt> jar and one of its binding jars is required. <tt>commons-beanutils</tt> is
                     required only if using INI config.
                 </td>
             </tr>
             <tr>
                 <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-web/1.2.6/shiro-web-1.2.6.jar"
-                                                                    rel="nofollow">shiro-web</a></td>
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-web/1.2.6/shiro-web-1.2.6.jar">shiro-web</a></td>
                 <td colspan="1" rowspan="1" class="confluenceTd">
                     <div class="code panel" style="border-width: 1px;">
                         <div class="codeContent panelContent">
@@ -137,8 +408,7 @@
             </tr>
             <tr>
                 <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-aspectj/1.2.6/shiro-aspectj-1.2.6.jar"
-                                                                    rel="nofollow">shiro-aspectj</a></td>
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-aspectj/1.2.6/shiro-aspectj-1.2.6.jar">shiro-aspectj</a></td>
                 <td colspan="1" rowspan="1" class="confluenceTd">
                     <div class="code panel" style="border-width: 1px;">
                         <div class="codeContent panelContent">
@@ -151,15 +421,13 @@
                     </div>
                 </td>
                 <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
-                                                                             href="http://www.eclipse.org/aspectj/"
-                                                                             rel="nofollow">AspectJ</a> support for
+                                                                             href="http://www.eclipse.org/aspectj/">AspectJ</a> support for
                     Shiro AOP and Annotations.
                 </td>
             </tr>
             <tr>
                 <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-cas/1.2.6/shiro-cas-1.2.6.jar"
-                                                                    rel="nofollow">shiro-cas</a></td>
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-cas/1.2.6/shiro-cas-1.2.6.jar">shiro-cas</a></td>
                 <td colspan="1" rowspan="1" class="confluenceTd">
                     <div class="code panel" style="border-width: 1px;">
                         <div class="codeContent panelContent">
@@ -172,14 +440,12 @@
                     </div>
                 </td>
                 <td colspan="1" rowspan="1" class="confluenceTd"> Enables Jasig <a class="external-link"
-                                                                                   href="http://www.jasig.org/cas"
-                                                                                   rel="nofollow">CAS</a> support.
+                                                                                   href="http://www.jasig.org/cas">CAS</a> support.
                 </td>
             </tr>
             <tr>
                 <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-ehcache/1.2.6/shiro-ehcache-1.2.6.jar"
-                                                                    rel="nofollow">shiro-ehcache</a></td>
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-ehcache/1.2.6/shiro-ehcache-1.2.6.jar">shiro-ehcache</a></td>
                 <td colspan="1" rowspan="1" class="confluenceTd">
                     <div class="code panel" style="border-width: 1px;">
                         <div class="codeContent panelContent">
@@ -192,14 +458,13 @@
                     </div>
                 </td>
                 <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
-                                                                             href="http://ehcache.org" rel="nofollow">Ehcache</a>-based
+                                                                             href="http://ehcache.org">Ehcache</a>-based
                     famework caching.
                 </td>
             </tr>
             <tr>
                 <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-features/1.2.6/shiro-features-1.2.6-features.xml"
-                                                                    rel="nofollow">shiro-features</a></td>
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-features/1.2.6/shiro-features-1.2.6-features.xml">shiro-features</a></td>
                 <td colspan="1" rowspan="1" class="confluenceTd">
                     <div class="code panel" style="border-width: 1px;">
                         <div class="codeContent panelContent">
@@ -218,8 +483,7 @@
             </tr>
             <tr>
                 <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-guice/1.2.6/shiro-guice-1.2.6.jar"
-                                                                    rel="nofollow">shiro-guice</a></td>
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-guice/1.2.6/shiro-guice-1.2.6.jar">shiro-guice</a></td>
                 <td colspan="1" rowspan="1" class="confluenceTd">
                     <div class="code panel" style="border-width: 1px;">
                         <div class="codeContent panelContent">
@@ -232,15 +496,13 @@
                     </div>
                 </td>
                 <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
-                                                                             href="http://code.google.com/p/google-guice/"
-                                                                             rel="nofollow">Google Guice</a>
+                                                                             href="http://code.google.com/p/google-guice/">Google Guice</a>
                     integration.
                 </td>
             </tr>
             <tr>
                 <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-quartz/1.2.6/shiro-quartz-1.2.6.jar"
-                                                                    rel="nofollow">shiro-quartz</a></td>
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-quartz/1.2.6/shiro-quartz-1.2.6.jar">shiro-quartz</a></td>
                 <td colspan="1" rowspan="1" class="confluenceTd">
                     <div class="code panel" style="border-width: 1px;">
                         <div class="codeContent panelContent">
@@ -253,15 +515,13 @@
                     </div>
                 </td>
                 <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
-                                                                             href="http://www.quartz-scheduler.org/"
-                                                                             rel="nofollow">Quartz</a>-based scheduling
+                                                                             href="http://www.quartz-scheduler.org/">Quartz</a>-based scheduling
                     for Shiro native session validation.
                 </td>
             </tr>
             <tr>
                 <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-spring/1.2.6/shiro-spring-1.2.6.jar"
-                                                                    rel="nofollow">shiro-spring</a></td>
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-spring/1.2.6/shiro-spring-1.2.6.jar">shiro-spring</a></td>
                 <td colspan="1" rowspan="1" class="confluenceTd">
                     <div class="code panel" style="border-width: 1px;">
                         <div class="codeContent panelContent">
@@ -274,15 +534,13 @@
                     </div>
                 </td>
                 <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
-                                                                             href="http://www.springsource.org/about"
-                                                                             rel="nofollow">Spring Framework</a>
+                                                                             href="http://www.springsource.org/about">Spring Framework</a>
                     integration.
                 </td>
             </tr>
             <tr>
                 <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/tools/shiro-tools-hasher/1.2.6/shiro-tools-hasher-1.2.6-cli.jar"
-                                                                    rel="nofollow">shiro-tools-hasher-cli</a></td>
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/tools/shiro-tools-hasher/1.2.6/shiro-tools-hasher-1.2.6-cli.jar">shiro-tools-hasher-cli</a></td>
                 <td colspan="1" rowspan="1" class="confluenceTd"><b>Not Relevant</b></td>
                 <td colspan="1" rowspan="1" class="confluenceTd"> A command-line program to perform hashing (MD5, SHA,
                     etc) for files, streams and passwords. Note that this is a command line program and not intended to
@@ -300,6 +558,205 @@ java -jar shiro-tools-hasher-1.2.6-cli.jar
         </tbody>
     </table>
 </div>
+
+
+<h3><a name="1.2.xSource"></a>1.2.6 Source Code Distribution</h3>
+
+<p>The source bundle requires JDK 1.6 and Maven 3.0.3+ to build:</p>
+
+<p><a class="external-link" href="http://www.apache.org/dyn/closer.cgi/shiro/1.2.6/shiro-root-1.2.6-source-release.zip">zip</a>
+    (<a class="external-link"
+        href="http://www.apache.org/dyn/closer.cgi/shiro/1.2.6/shiro-root-1.2.6-source-release.zip.asc">pgp</a>, <a
+            class="external-link"
+            href="http://www.apache.org/dyn/closer.cgi/shiro/1.2.6/shiro-root-1.2.6-source-release.zip.md5">md5</a>, <a
+            class="external-link"
+            href="http://www.apache.org/dyn/closer.cgi/shiro/1.2.6/shiro-root-1.2.6-source-release.zip.sha1">sha1</a>)
+</p>
+
+<h3><a name="1.2.xGit"></a>1.2.6 Git Source repository</h3>
+
+<p>The source can be cloned anonymously from Git with this command:</p>
+<div class="code panel" style="border-width: 1px;">
+    <div class="codeContent panelContent">
+<pre class="code-java">
+git clone https:<span class="code-comment">//github.com/apache/shiro.git</span>
+git checkout shiro-root-1.2.6 -b shiro-root-1.2.6
+</pre>
+    </div>
+</div>
+
+
+<h3><a name="1.1.0"></a>1.1.0</h3>
+
+<h4><a name="1.1.0Binary"></a>1.1.0 Binary Distribution</h4>
+
+<p>Associated documentation can be found <a href="documentation.html" title="Documentation">here</a></p>
+
+<p>To download the files directly as one .jar file just click the link in the "Artifact" column. If you would like
+    acquire Shiro through Maven, then please use the markup listed under "Maven Usage"</p>
+
+<p>
+</p>
+<div class="table-wrap">
+
+    <table class="confluenceTable" id="table-1.1.0">
+        <tbody>
+            <tr>
+                <th colspan="1" rowspan="1" class="confluenceTh"> Artifact</th>
+                <th colspan="1" rowspan="1" class="confluenceTh"> Maven Usage</th>
+                <th colspan="1" rowspan="1" class="confluenceTh"> Notes</th>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-all/1.1.0/shiro-all-1.1.0.jar">shiro-all</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd"><b>Not Recommended</b></td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Includes all binary functionality for Shiro (without
+                    dependencies), useful in certain build environments (e.g. Ant). However, this is <b>NOT</b>
+                    recommended in Maven builds as it does not retain correct dependency metadata, which can lead to
+                    Maven working incorrectly. For Maven builds, it is <b>highly</b> recommended to specify individual
+                    modules listed below as you require them.
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-core/1.1.0/shiro-core-1.1.0.jar">shiro-core</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd">
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-core&lt;/artifactId&gt;
+  &lt;version&gt;1.1.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Required in all environments. <a class="external-link"
+                                                                                                   href="http://slf4j.org/">Slf4j</a>'s
+                    <tt>slf4j-api</tt> jar and one of its binding jars is required. <tt>commons-beanutils</tt> is
+                    required only if using INI config.
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-web/1.1.0/shiro-web-1.1.0.jar">shiro-web</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd">
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-web&lt;/artifactId&gt;
+  &lt;version&gt;1.1.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Enables support for web-based applications.</td>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-aspectj/1.1.0/shiro-aspectj-1.1.0.jar">shiro-aspectj</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd">
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-aspectj&lt;/artifactId&gt;
+  &lt;version&gt;1.1.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
+                                                                             href="http://www.eclipse.org/aspectj/">AspectJ</a> support for
+                    Shiro AOP and Annotations.
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-ehcache/1.1.0/shiro-ehcache-1.1.0.jar">shiro-ehcache</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd">
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-ehcache&lt;/artifactId&gt;
+  &lt;version&gt;1.1.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
+                                                                             href="http://ehcache.org">Ehcache</a>-based
+                    famework caching.
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-quartz/1.1.0/shiro-quartz-1.1.0.jar">shiro-quartz</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd">
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-quartz&lt;/artifactId&gt;
+  &lt;version&gt;1.1.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
+                                                                             href="http://www.quartz-scheduler.org/">Quartz</a>-based scheduling
+                    for Shiro native session validation.
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
+                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-spring/1.1.0/shiro-spring-1.1.0.jar">shiro-spring</a></td>
+                <td colspan="1" rowspan="1" class="confluenceTd">
+                    <div class="code panel" style="border-width: 1px;">
+                        <div class="codeContent panelContent">
+<pre class="code-java">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-spring&lt;/artifactId&gt;
+  &lt;version&gt;1.1.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
+                                                                             href="http://www.springsource.org/about">Spring Framework</a>
+                    integration.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<h4><a name="1.1.0Source"></a>1.1.0 Source Code Distribution</h4>
+
+<p>The 1.1.0 source bundle requires JDK 1.5+ and Maven 2.2+ to build:</p>
+
+<p><a class="external-link"
+      href="http://archive.apache.org/dist/shiro/1.1.0/shiro-root-1.1.0-source-release.zip">zip</a> (<a
+        class="external-link" href="http://archive.apache.org/dist/shiro/1.1.0/shiro-root-1.1.0-source-release.zip.asc">pgp</a>,
+    <a class="external-link" href="http://archive.apache.org/dist/shiro/1.1.0/shiro-root-1.1.0-source-release.zip.md5">md5</a>,
+    <a class="external-link" href="http://archive.apache.org/dist/shiro/1.1.0/shiro-root-1.1.0-source-release.zip.sha1">sha1</a>)
+</p>
+
+<h4><a name="1.1.0Git"></a>1.1.0 Git Source repository</h4>
+
+<p>The source can be cloned anonymously from Git with this command:</p>
+<div class="code panel" style="border-width: 1px;">
+    <div class="codeContent panelContent">
+<pre class="code-java">
+git clone https:<span class="code-comment">//github.com/apache/shiro.git</span>
+git checkout shiro-root-1.1.0 -b shiro-root-1.1.0
+</pre>
+    </div>
+</div>
+
 
 <script type="text/javascript"> <!--
 //Copyright(c)2005,2010 Bob Swift and other contributors. All rights reserved. 
@@ -618,221 +1075,8 @@ function customizeMacroTable(tableId, columnTypes, firstDataRowIndex, highlightC
 
 var columnTypes = ['S'];
 var columnAttributes = 'style=&quot;white-space:nowrap;&quot;,,';
-customizeMacroTable('TBL1365578679386', columnTypes, 1, 'lightgoldenrodyellow', true, 'Click to sort', '', false, false, false, true, 0, false, '');
+customizeMacroTable('table-latest', columnTypes, 1, 'lightgoldenrodyellow', true, 'Click to sort', '', false, false, false, true, 0, false, '');
+customizeMacroTable('table-1.2.x', columnTypes, 1, 'lightgoldenrodyellow', true, 'Click to sort', '', false, false, false, true, 0, false, '');
+customizeMacroTable('table-1.1.0', columnTypes, 1, 'lightgoldenrodyellow', true, 'Click to sort', '', false, false, false, true, 0, false, '');
 //-->
 </script>
-
-<h3><a name="latestSource"></a>1.2.6 Source Code Distribution</h3>
-
-<p>The source bundle requires JDK 1.6 and Maven 3.0.3+ to build:</p>
-
-<p><a class="external-link" href="http://www.apache.org/dyn/closer.cgi/shiro/1.2.6/shiro-root-1.2.6-source-release.zip">zip</a>
-    (<a class="external-link"
-        href="http://www.apache.org/dyn/closer.cgi/shiro/1.2.6/shiro-root-1.2.6-source-release.zip.asc">pgp</a>, <a
-            class="external-link"
-            href="http://www.apache.org/dyn/closer.cgi/shiro/1.2.6/shiro-root-1.2.6-source-release.zip.md5">md5</a>, <a
-            class="external-link"
-            href="http://www.apache.org/dyn/closer.cgi/shiro/1.2.6/shiro-root-1.2.6-source-release.zip.sha1">sha1</a>)
-</p>
-
-<h3><a name="latestGit"></a>1.2.6 Git Source repository</h3>
-
-<p>The source can be cloned anonymously from Git with this command:</p>
-<div class="code panel" style="border-width: 1px;">
-    <div class="codeContent panelContent">
-<pre class="code-java">
-git clone https:<span class="code-comment">//github.com/apache/shiro.git</span>
-git checkout shiro-root-1.2.6 -b shiro-root-1.2.6
-</pre>
-    </div>
-</div>
-
-<h2><a name="previous"></a>Previous Releases</h2>
-
-<h3><a name="1.1.0"></a>1.1.0</h3>
-
-<h4><a name="1.1.0Binary"></a>1.1.0 Binary Distribution</h4>
-
-<p>Associated documentation can be found <a href="documentation.html" title="Documentation">here</a></p>
-
-<p>To download the files directly as one .jar file just click the link in the "Artifact" column. If you would like
-    acquire Shiro through Maven, then please use the markup listed under "Maven Usage"</p>
-
-<p>
-</p>
-<div class="table-wrap">
-
-    <table class="confluenceTable" id="TBL1365578679388">
-        <tbody>
-            <tr>
-                <th colspan="1" rowspan="1" class="confluenceTh"> Artifact</th>
-                <th colspan="1" rowspan="1" class="confluenceTh"> Maven Usage</th>
-                <th colspan="1" rowspan="1" class="confluenceTh"> Notes</th>
-            </tr>
-            <tr>
-                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-all/1.1.0/shiro-all-1.1.0.jar"
-                                                                    rel="nofollow">shiro-all</a></td>
-                <td colspan="1" rowspan="1" class="confluenceTd"><b>Not Recommended</b></td>
-                <td colspan="1" rowspan="1" class="confluenceTd"> Includes all binary functionality for Shiro (without
-                    dependencies), useful in certain build environments (e.g. Ant). However, this is <b>NOT</b>
-                    recommended in Maven builds as it does not retain correct dependency metadata, which can lead to
-                    Maven working incorrectly. For Maven builds, it is <b>highly</b> recommended to specify individual
-                    modules listed below as you require them.
-                </td>
-            </tr>
-            <tr>
-                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-core/1.1.0/shiro-core-1.1.0.jar"
-                                                                    rel="nofollow">shiro-core</a></td>
-                <td colspan="1" rowspan="1" class="confluenceTd">
-                    <div class="code panel" style="border-width: 1px;">
-                        <div class="codeContent panelContent">
-<pre class="code-java">&lt;dependency&gt;
-  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
-  &lt;artifactId&gt;shiro-core&lt;/artifactId&gt;
-  &lt;version&gt;1.1.0&lt;/version&gt;
-&lt;/dependency&gt;</pre>
-                        </div>
-                    </div>
-                </td>
-                <td colspan="1" rowspan="1" class="confluenceTd"> Required in all environments. <a class="external-link"
-                                                                                                   href="http://slf4j.org/"
-                                                                                                   rel="nofollow">Slf4j</a>'s
-                    <tt>slf4j-api</tt> jar and one of its binding jars is required. <tt>commons-beanutils</tt> is
-                    required only if using INI config.
-                </td>
-            </tr>
-            <tr>
-                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-web/1.1.0/shiro-web-1.1.0.jar"
-                                                                    rel="nofollow">shiro-web</a></td>
-                <td colspan="1" rowspan="1" class="confluenceTd">
-                    <div class="code panel" style="border-width: 1px;">
-                        <div class="codeContent panelContent">
-<pre class="code-java">&lt;dependency&gt;
-  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
-  &lt;artifactId&gt;shiro-web&lt;/artifactId&gt;
-  &lt;version&gt;1.1.0&lt;/version&gt;
-&lt;/dependency&gt;</pre>
-                        </div>
-                    </div>
-                </td>
-                <td colspan="1" rowspan="1" class="confluenceTd"> Enables support for web-based applications.</td>
-            </tr>
-            <tr>
-                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-aspectj/1.1.0/shiro-aspectj-1.1.0.jar"
-                                                                    rel="nofollow">shiro-aspectj</a></td>
-                <td colspan="1" rowspan="1" class="confluenceTd">
-                    <div class="code panel" style="border-width: 1px;">
-                        <div class="codeContent panelContent">
-<pre class="code-java">&lt;dependency&gt;
-  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
-  &lt;artifactId&gt;shiro-aspectj&lt;/artifactId&gt;
-  &lt;version&gt;1.1.0&lt;/version&gt;
-&lt;/dependency&gt;</pre>
-                        </div>
-                    </div>
-                </td>
-                <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
-                                                                             href="http://www.eclipse.org/aspectj/"
-                                                                             rel="nofollow">AspectJ</a> support for
-                    Shiro AOP and Annotations.
-                </td>
-            </tr>
-            <tr>
-                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-ehcache/1.1.0/shiro-ehcache-1.1.0.jar"
-                                                                    rel="nofollow">shiro-ehcache</a></td>
-                <td colspan="1" rowspan="1" class="confluenceTd">
-                    <div class="code panel" style="border-width: 1px;">
-                        <div class="codeContent panelContent">
-<pre class="code-java">&lt;dependency&gt;
-  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
-  &lt;artifactId&gt;shiro-ehcache&lt;/artifactId&gt;
-  &lt;version&gt;1.1.0&lt;/version&gt;
-&lt;/dependency&gt;</pre>
-                        </div>
-                    </div>
-                </td>
-                <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
-                                                                             href="http://ehcache.org" rel="nofollow">Ehcache</a>-based
-                    famework caching.
-                </td>
-            </tr>
-            <tr>
-                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-quartz/1.1.0/shiro-quartz-1.1.0.jar"
-                                                                    rel="nofollow">shiro-quartz</a></td>
-                <td colspan="1" rowspan="1" class="confluenceTd">
-                    <div class="code panel" style="border-width: 1px;">
-                        <div class="codeContent panelContent">
-<pre class="code-java">&lt;dependency&gt;
-  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
-  &lt;artifactId&gt;shiro-quartz&lt;/artifactId&gt;
-  &lt;version&gt;1.1.0&lt;/version&gt;
-&lt;/dependency&gt;</pre>
-                        </div>
-                    </div>
-                </td>
-                <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
-                                                                             href="http://www.quartz-scheduler.org/"
-                                                                             rel="nofollow">Quartz</a>-based scheduling
-                    for Shiro native session validation.
-                </td>
-            </tr>
-            <tr>
-                <td colspan="1" rowspan="1" class="confluenceTd"><a class="external-link"
-                                                                    href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-spring/1.1.0/shiro-spring-1.1.0.jar"
-                                                                    rel="nofollow">shiro-spring</a></td>
-                <td colspan="1" rowspan="1" class="confluenceTd">
-                    <div class="code panel" style="border-width: 1px;">
-                        <div class="codeContent panelContent">
-<pre class="code-java">&lt;dependency&gt;
-  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
-  &lt;artifactId&gt;shiro-spring&lt;/artifactId&gt;
-  &lt;version&gt;1.1.0&lt;/version&gt;
-&lt;/dependency&gt;</pre>
-                        </div>
-                    </div>
-                </td>
-                <td colspan="1" rowspan="1" class="confluenceTd"> Enables <a class="external-link"
-                                                                             href="http://www.springsource.org/about"
-                                                                             rel="nofollow">Spring Framework</a>
-                    integration.
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<script type="text/javascript"> <!--
-var columnTypes = ['S'];
-var columnAttributes = 'style=&quot;white-space:nowrap;&quot;,,';
-customizeMacroTable('TBL1365578679388', columnTypes, 1, 'lightgoldenrodyellow', true, 'Click to sort', '', false, false, false, true, 0, false, '');
-//-->
-</script>
-
-<h4><a name="1.1.0Source"></a>1.1.0 Source Code Distribution</h4>
-
-<p>The 1.1.0 source bundle requires JDK 1.5+ and Maven 2.2+ to build:</p>
-
-<p><a class="external-link"
-      href="http://archive.apache.org/dist/shiro/1.1.0/shiro-root-1.1.0-source-release.zip">zip</a> (<a
-        class="external-link" href="http://archive.apache.org/dist/shiro/1.1.0/shiro-root-1.1.0-source-release.zip.asc">pgp</a>,
-    <a class="external-link" href="http://archive.apache.org/dist/shiro/1.1.0/shiro-root-1.1.0-source-release.zip.md5">md5</a>,
-    <a class="external-link" href="http://archive.apache.org/dist/shiro/1.1.0/shiro-root-1.1.0-source-release.zip.sha1">sha1</a>)
-</p>
-
-<h4><a name="1.1.0Git"></a>1.1.0 Git Source repository</h4>
-
-<p>The source can be cloned anonymously from Git with this command:</p>
-<div class="code panel" style="border-width: 1px;">
-    <div class="codeContent panelContent">
-<pre class="code-java">
-git clone https:<span class="code-comment">//github.com/apache/shiro.git</span>
-git checkout shiro-root-1.1.0 -b shiro-root-1.1.0
-</pre>
-    </div>
-</div>
