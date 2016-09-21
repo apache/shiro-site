@@ -257,6 +257,9 @@ A Stormpath API Key is required for the Stormpath Realm to communicate with Stor
 5. Also change the file permissions to ensure only you can read this file. For example, on *nix operating systems:
 
         $ chmod go-rwx $HOME/.stormpath/apiKey.properties
+        $ chmod u-w $HOME/.stormpath/apiKey.properties
+
+On Windows, you can [set file permissions similarly](http://msdn.microsoft.com/en-us/library/bb727008.aspx).
 
 #### Retrieve the default Stormpath Application
 
@@ -317,7 +320,7 @@ Make note of your top-level `href` from above - we will use this href in the `sh
 
 Now that we have an application, we'll want to create a sample/test user for that application:
 
-    curl -X POST --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
+    curl --request POST --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
         -H "Accept: application/json" \
         -H "Content-Type: application/json" \
         -d '{
@@ -341,33 +344,30 @@ Again, don't forget to change `$YOUR_APPLICATION_ID` in the URL above to match y
 
 Once you choose at least one user store to connect to for Shiro's needs, we'll need to configure a `Realm` that represents that data store and then tell the Shiro `SecurityManager` about it.
 
-If you've checked out the `step2` branch, you'll notice the `shiro.ini` file's `[main]` section now has the following additions:
+If you've checked out the `step2` branch, you'll notice the `src/main/webapp/WEB-INF/shiro.ini` file's `[main]` section now has the following additions:
 
     # Configure a Realm to connect to a user datastore.  In this simple tutorial, we'll just point to Stormpath since it
     # takes 5 minutes to set up:
     stormpathClient = com.stormpath.shiro.client.ClientFactory
     stormpathClient.cacheManager = $cacheManager
-    stormpathClient.apiKeyFileLocation = $HOME/.stormpath/apiKey.properties
+    
+    # (Optional) If you put your apiKey.properties in the non-default location, you set the location here
+    #stormpathClient.apiKeyFileLocation = $HOME/.stormpath/apiKey.properties
+    
     stormpathRealm = com.stormpath.shiro.realm.ApplicationRealm
     stormpathRealm.client = $stormpathClient
     
     # Find this URL in your Stormpath console for an application you create:
     # Applications -> (choose application name) --> Details --> REST URL
-    stormpathRealm.applicationRestUrl = https://api.stormpath.com/v1/applications/$STORMPATH_APPLICATION_ID
+    # (Optional) If you only have one Application
+    #stormpathRealm.applicationRestUrl = https://api.stormpath.com/v1/applications/$STORMPATH_APPLICATION_ID
+    
     stormpathRealm.groupRoleResolver.modeNames = name
     securityManager.realm = $stormpathRealm
 
-Make the following changes:
+Note the optional lines:  
 
-1. Change the `$HOME` placeholder to be your actual home directory path, e.g. `/home/jsmith` so the final `stormpathClient.apiKeyFileLocation` value is something like `/home/jsmith/.stormpath/apiKey.properties`.  This path must match the location of the `apiKey.properties` file you downloaded from Stormpath in Step 2a.
-
-2. Change the `$STORMPATH_APPLICATION_ID` placeholder to be the actual ID value in the `href` returned from Stormpath at the end of Step 2a.  The final `stormpathRealm.applicationRestUrl` value should look something like `https://api.stormpath.com/v1/applications/6hsPwoRZ0hCk6ToytVxi4D` (with a different application ID of course).
-
-### 2c: Commit your changes
-
-Your replaced `$HOME` and `STORMPATH_APPLICATION_ID` values are specific to your application. Go ahead and commit those changes to your branch:
-
-    $ git add . && git commit -m "updated app-specific placeholders" .
+- If you have been using Stormpath for a while and you have more then one Stormpath application, the `stormpathRealm.applicationRestUrl` property must be set. 
 
 ### 2d: Run the webapp
 
