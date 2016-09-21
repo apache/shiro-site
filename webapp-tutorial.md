@@ -346,25 +346,26 @@ Once you choose at least one user store to connect to for Shiro's needs, we'll n
 
 If you've checked out the `step2` branch, you'll notice the `src/main/webapp/WEB-INF/shiro.ini` file's `[main]` section now has the following additions:
 
-    # Configure a Realm to connect to a user datastore.  In this simple tutorial, we'll just point to Stormpath since it
-    # takes 5 minutes to set up:
-    stormpathClient = com.stormpath.shiro.client.ClientFactory
-    stormpathClient.cacheManager = $cacheManager
-    
-    # (Optional) If you put your apiKey.properties in the non-default location, you set the location here
-    #stormpathClient.apiKeyFileLocation = $HOME/.stormpath/apiKey.properties
-    
-    stormpathRealm = com.stormpath.shiro.realm.ApplicationRealm
-    stormpathRealm.client = $stormpathClient
-    
-    # Find this URL in your Stormpath console for an application you create:
-    # Applications -> (choose application name) --> Details --> REST URL
-    # (Optional) If you only have one Application
-    #stormpathRealm.applicationRestUrl = https://api.stormpath.com/v1/applications/$STORMPATH_APPLICATION_ID
-    
-    stormpathRealm.groupRoleResolver.modeNames = name
-    securityManager.realm = $stormpathRealm
+<pre style="white-space: pre;"><code>
+# Configure a Realm to connect to a user datastore.  In this simple tutorial, we'll just point to Stormpath since it
+# takes 5 minutes to set up:
+stormpathClient = com.stormpath.shiro.client.ClientFactory
+stormpathClient.cacheManager = $cacheManager
 
+# (Optional) If you put your apiKey.properties in the non-default location, you set the location here
+#stormpathClient.apiKeyFileLocation = $HOME/.stormpath/apiKey.properties
+
+stormpathRealm = com.stormpath.shiro.realm.ApplicationRealm
+stormpathRealm.client = $stormpathClient
+
+# Find this URL in your Stormpath console for an application you create:
+# Applications -> (choose application name) --> Details --> REST URL
+# (Optional) If you only have one Application
+#stormpathRealm.applicationRestUrl = https://api.stormpath.com/v1/applications/$STORMPATH_APPLICATION_ID
+
+stormpathRealm.groupRoleResolver.modeNames = name
+securityManager.realm = $stormpathRealm
+</code></pre>
 Note the optional lines:  
 
 - If you have been using Stormpath for a while and you have more then one Stormpath application, the `stormpathRealm.applicationRestUrl` property must be set. 
