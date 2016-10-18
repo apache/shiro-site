@@ -7,7 +7,7 @@
 
 <p>Realms usually have a 1-to-1 correlation with a data source such as a relational database, LDAP directory, file system, or other similar resource.  As such, implementations of the <tt>Realm</tt> interface use data source-specific APIs to discover authorization data (roles, permissions, etc), such as JDBC, File IO, Hibernate or JPA, or any other Data Access API.  </p>
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1">A Realm is essentially a security-specific <a class="external-link" href="http://en.wikipedia.org/wiki/Data_Access_Object" rel="nofollow">DAO</a></td></tr></table></div>
+#tip('Tip', 'A Realm is essentially a security-specific <a class="external-link" href="http://en.wikipedia.org/wiki/Data_Access_Object" rel="nofollow">DAO</a>')
 
 <p>Because most of these data sources usually store both authentication data (credentials such as passwords) as well as authorization data (such as roles or permissions), every Shiro <tt>Realm</tt> can perform <em>both</em> authentication and authorization operations.</p>
 
@@ -31,11 +31,11 @@ securityManager.realms = $fooRealm, $barRealm, $bazRealm
 </pre>
 </div></div>
 
-<p>Explicit assignment is deterministic - you control exactly which realms are used as well as <em>the order</em> that they will be used for authentication and authorization. Realm ordering effects are described in detail in the Authentication chapter's <a href="authentication.html#Authentication-sequence">Authentication Sequence</a> section. </p>
+<p>Explicit assignment is deterministic - you control exactly which realms are used as well as <em>the order</em> that they will be used for authentication and authorization. Realm ordering effects are described in detail in the Authentication chapter's <a href="authentication.html\#Authentication-sequence">Authentication Sequence</a> section. </p>
 
 <h3><a name="Realm-ImplicitAssignment"></a>Implicit Assignment</h3>
 
-<div class="panelMacro"><table class="warningMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/forbidden.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Not Preferred</b><br clear="none">Implicit assignment can cause unexpected behavior if you change the order in which realms are defined.  It is recommended that you avoid this approach and use Explicit Assignment, which has deterministic behavior.  It is likely Implicit Assignment will be deprecated/removed from a future Shiro release.</td></tr></table></div>
+#danger('Not Preferred', 'Implicit assignment can cause unexpected behavior if you change the order in which realms are defined.  It is recommended that you avoid this approach and use Explicit Assignment, which has deterministic behavior.  It is likely Implicit Assignment will be deprecated/removed from a future Shiro release.')
 
 <p>If for some reason you don't want to explicitly configure the <tt>securityManager.realms</tt> property, you can allow Shiro to detect all configured realms and assign them to the <tt>securityManager</tt> directly.</p>
 
@@ -61,23 +61,23 @@ securityManager.realms = $blahRealm, $fooRealm, $barRealm
 </pre>
 </div></div>
 
-<p>However, realize that with implicit assignment, just the order that the realms are defined directly affects how they are consulted during authentication and authorization attempts.  If you change their definition order, you will change how the master <tt>Authenticator</tt>'s <a href="authentication.html#Authentication-sequence">Authentication Sequence</a> functions.</p>
+<p>However, realize that with implicit assignment, just the order that the realms are defined directly affects how they are consulted during authentication and authorization attempts.  If you change their definition order, you will change how the master <tt>Authenticator</tt>'s <a href="authentication.html\#Authentication-sequence">Authentication Sequence</a> functions.</p>
 
 <p>For this reason, and to ensure deterministic behavior, we recommend using Explicit Assignment instead of Implicit Assignment. <br clear="none">
 <a name="Realm-authentication"></a></p>
 <h2><a name="Realm-RealmAuthentication"></a>Realm Authentication</h2>
 
-<p>Once you understand Shiro's master <a href="authentication.html#Authentication-sequence">Authentication workflow</a>, it is important to know exactly what happens when the <tt>Authenticator</tt> interacts with a <tt>Realm</tt> during an authentication attempt.</p>
+<p>Once you understand Shiro's master <a href="authentication.html\#Authentication-sequence">Authentication workflow</a>, it is important to know exactly what happens when the <tt>Authenticator</tt> interacts with a <tt>Realm</tt> during an authentication attempt.</p>
 
 <h3><a name="Realm-Supporting%7B%7BAuthenticationTokens%7D%7D"></a>Supporting <tt>AuthenticationTokens</tt></h3>
 
-<p>As mentioned in the <a href="authentication.html#Authentication-sequence">authentication sequence</a>, just before a <tt>Realm</tt> is consulted to perform an authentication attempt, its <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/Realm.html#supports(org.apache.shiro.authc.AuthenticationToken)">supports</a></tt> method is called.  If the return value is <tt>true</tt>, only then will its <tt>getAuthenticationInfo(token)</tt> method be invoked.</p>
+<p>As mentioned in the <a href="authentication.html\#Authentication-sequence">authentication sequence</a>, just before a <tt>Realm</tt> is consulted to perform an authentication attempt, its <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/Realm.html\#supports(org.apache.shiro.authc.AuthenticationToken)">supports</a></tt> method is called.  If the return value is <tt>true</tt>, only then will its <tt>getAuthenticationInfo(token)</tt> method be invoked.</p>
 
 <p>Typically a realm will check the type (interface or class) of the submitted token to see if it can process it.  For example, a Realm that processes biometric data may not understand <tt>UsernamePasswordTokens</tt> at all, in which case it would return <tt>false</tt> from the <tt>supports</tt> method.</p>
 
 <h3><a name="Realm-Handlingsupported%7B%7BAuthenticationTokens%7D%7D"></a>Handling supported <tt>AuthenticationTokens</tt></h3>
 
-<p>If a <tt>Realm</tt> <tt>supports</tt> a submitted <tt>AuthenticationToken</tt>, the <tt>Authenticator</tt> will call the Realm's  <a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/Realm.html#getAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken)">getAuthenticationInfo(token)</a> method.  This effectively represents an authentication attempt with the <tt>Realm's</tt> backing data source.  The method, in order:</p>
+<p>If a <tt>Realm</tt> <tt>supports</tt> a submitted <tt>AuthenticationToken</tt>, the <tt>Authenticator</tt> will call the Realm's  <a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/Realm.html\#getAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken)">getAuthenticationInfo(token)</a> method.  This effectively represents an authentication attempt with the <tt>Realm's</tt> backing data source.  The method, in order:</p>
 
 <ol><li>Inspects the <tt>token</tt> for the identifying principal (account identifying information)</li><li>Based on the <tt>principal</tt>, looks up corresponding account data in the data source</li><li>Ensures that the token's supplied <tt>credentials</tt> matches those stored in the data store</li><li>If the credentials match, an <a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/AuthenticationInfo.html">AuthenticationInfo</a> instance is returned that encapsulates the account data in a format Shiro understands</li><li>If the credentials DO NOT match, an <a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html">AuthenticationException</a> is thrown</li></ol>
 
@@ -86,13 +86,13 @@ securityManager.realms = $blahRealm, $fooRealm, $barRealm
 
 <p>The only thing required is that, if the credentials match for the given principal(s), that a non-null <tt>AuthenticationInfo</tt> instance is returned that represents Subject account information from that data source.</p>
 
-<div class="panelMacro"><table class="infoMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Save Time</b><br clear="none">Implementing <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/Realm.html">Realm</a></tt> interface directly might be time consuming and error prone.  Most people choose to subclass the <a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html">AuthorizingRealm</a> abstract class instead of starting from scratch.  This class implements common authentication and authorization workflow to save you time and effort.</td></tr></table></div>
+#info('Save Time', 'Implementing <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/Realm.html">Realm</a></tt> interface directly might be time consuming and error prone.  Most people choose to subclass the <a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html">AuthorizingRealm</a> abstract class instead of starting from scratch.  This class implements common authentication and authorization workflow to save you time and effort.')
 
 <h3><a name="Realm-CredentialsMatching"></a>Credentials Matching</h3>
 
 <p>In the above realm authentication workflow, a Realm has to verify that the <a href="subject.html" title="Subject">Subject</a>'s submitted credentials (e.g. password) must match the credentials stored in the data store.  If they match, authentication is considered successful, and the system has verified the end-user's identity.</p>
 
-<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Realm Credentials Matching</b><br clear="none">It is each Realm's responsibility to match submitted credentials with those stored in the Realm's backing data store, and not the <tt>Authenticator's</tt> responsibility.  Each <tt>Realm</tt> has intimate knowledge of credentials format and storage and can perform detailed credentials matching, whereas the <tt>Authenticator</tt> is a generic workflow component.</td></tr></table></div>
+#warning('Realm Credentials Matching', 'It is each Realm''s responsibility to match submitted credentials with those stored in the Realm''s backing data store, and not the <tt>Authenticator''s</tt> responsibility.  Each <tt>Realm</tt> has intimate knowledge of credentials format and storage and can perform detailed credentials matching, whereas the <tt>Authenticator</tt> is a generic workflow component.')
 
 <p>The credentials matching process is nearly identical in all applications and usually only differs by the data compared.  To ensure this process is pluggable and customizable if necessary, the <a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/AuthenticatingRealm.html">AuthenticatingRealm</a> and its subclasses support the concept of a <a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/credential/CredentialsMatcher.html">CredentialsMatcher</a> to perform the credentials comparison.</p>
 

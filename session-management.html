@@ -84,7 +84,7 @@ session.setAttribute( <span class="code-quote">"someKey"</span>, someValue);
 <ul><li>If the <tt>Subject</tt> already has a <tt>Session</tt>, the boolean argument is ignored and the <tt>Session</tt> is returned immediately</li><li>If the <tt>Subject</tt> does not yet have a <tt>Session</tt> and the <tt>create</tt> boolean argument is <tt>true</tt>, a new session will be created and returned.</li><li>If the <tt>Subject</tt> does not yet have a <tt>Session</tt> and the <tt>create</tt> boolean argument is <tt>false</tt>, a new session will not be created and <tt>null</tt> is returned.</li></ul>
 
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Any Application</b><br clear="none"><tt>getSession</tt> calls work in any application, even non-web applications.</td></tr></table></div>
+#tip('Any Application', '<tt>getSession</tt> calls work in any application, even non-web applications.')
 
 <p><tt>subject.getSession(false)</tt> can be used to good effect when developing framework code to ensure a Session isn't created unnecessarily.</p>
 
@@ -96,7 +96,7 @@ session.setAttribute( <span class="code-quote">"someKey"</span>, someValue);
 
 <p>The default <tt>SecurityManager</tt> implementation defaults to using a <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/mgt/DefaultSecurityManager.html">DefaultSessionManager</a></tt> out of the box.  The <tt>DefaultSessionManager</tt> implementation provides all of the enterprise-grade session management features needed for an application, like Session validation, orphan cleanup, etc.  This can be used in any application.</p>
 
-<div class="panelMacro"><table class="infoMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Web Applications</b><br clear="none">Web applications use different <tt>SessionManager</tt> implementations.  Please see the <a href="web.html" title="Web">Web</a> documentation for web-specific Session Management information.</td></tr></table></div>
+#info('Web Applications', 'Web applications use different <tt>SessionManager</tt> implementations.  Please see the <a href="web.html" title="Web">Web</a> documentation for web-specific Session Management information.')
 
 <p>Like all other components managed by the <tt>SecurityManager</tt>, the <tt>SessionManager</tt> can be acquired or set via JavaBeans-style getter/setter methods on all of Shiro's default <tt>SecurityManager</tt> implementations (<tt>getSessionManager()</tt>/<tt>setSessionManager()</tt>).  Or for example, if using <tt>shiro.ini</tt> <a href="configuration.html" title="Configuration">Configuration</a>:</p>
 
@@ -149,7 +149,7 @@ securityManager.sessionManager.sessionListeners = $aSessionListener, $anotherSes
 </pre>
 </div></div>
 
-<div class="panelMacro"><table class="infoMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>All Session Events</b><br clear="none"><tt>SessionListeners</tt> are notified when an event occurs for <em>any</em> session - not just for a particular session.</td></tr></table></div>
+#info('All Session Events', '<tt>SessionListeners</tt> are notified when an event occurs for <em>any</em> session - not just for a particular session.')
 
 <p><a name="SessionManagement-sessionstorage"></a></p>
 <h3><a name="SessionManagement-SessionStorage"></a>Session Storage</h3>
@@ -172,7 +172,7 @@ securityManager.sessionManager.sessionDAO = $sessionDAO
 
 <p>However, as you might expect, Shiro already has some good <tt>SessionDAO</tt> implementations that you can use out of the box or subclass for your own needs.<br clear="none">
 <a name="SessionManagement-websessionmanagersessiondao"></a></p>
-<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Web Applications</b><br clear="none">The above <tt>securityManager.sessionManager.sessionDAO = $sessionDAO</tt> assignment only works when using a Shiro native session manager.  Web applications by default do not use a native session manager and instead retain the Servlet Container's default session manager which does not support a SessionDAO.  If you would like to enable a SessionDAO in a web-based application for custom session storage or session clustering, you will have to first configure a native web session manager.  For example:
+#warning('Web Applications', 'The above <tt>securityManager.sessionManager.sessionDAO = $sessionDAO</tt> assignment only works when using a Shiro native session manager.  Web applications by default do not use a native session manager and instead retain the Servlet Container's default session manager which does not support a SessionDAO.  If you would like to enable a SessionDAO in a web-based application for custom session storage or session clustering, you will have to first configure a native web session manager.  For example:
 
 <div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
 <pre class="code-java">
@@ -184,19 +184,18 @@ securityManager.sessionManager = $sessionManager
 # Configure a SessionDAO and then set it:
 securityManager.sessionManager.sessionDAO = $sessionDAO
 </pre>
-</div></div></td></tr></table></div>
+</div></div>')
 
-<div class="panelMacro"><table class="warningMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/forbidden.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Configure a SessionDAO!</b><br clear="none">Shiro's default configuration native SessionManagers use <b><em>in-memory-only</em></b> Session storage.  This is unsuitable for most production applications.  Most production applications will want to either configure the provided EHCache support (see below) or provide their own <tt>SessionDAO</tt> implementation.  
-
-<p>Note that web applications use a servlet-container-based SessionManager by default and do not have this issue.  This is only an issue when using a Shiro native SessionManager.</p></td></tr></table></div>
+#danger('Configure a SessionDAO!', 'Shiro''s default configuration native SessionManagers use <b><em>in-memory-only</em></b> Session storage.  This is unsuitable for most production applications.  Most production applications will want to either configure the provided EHCache support (see below) or provide their own <tt>SessionDAO</tt> implementation.
+<p>Note that web applications use a servlet-container-based SessionManager by default and do not have this issue.  This is only an issue when using a Shiro native SessionManager.</p>')
 
 <p><a name="SessionManagement-ehcachesessiondao"></a></p>
 <h4><a name="SessionManagement-EHCacheSessionDAO"></a>EHCache SessionDAO</h4>
 
 <p>EHCache is not enabled by default, but if you do not plan on implementing your own <tt>SessionDAO</tt>, it is <b>highly</b> recommended that you enable the EHCache support for Shiro's SessionManagement.  The EHCache SessionDAO will store sessions in memory and support overflow to disk if memory becomes constrained.  This is highly desirable for production applications to ensure that you don't randomly 'lose' sessions at runtime.</p>
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Use EHCache as your default</b><br clear="none">If you're not writing a custom <tt>SessionDAO</tt>, definitely enable EHCache in your Shiro configuration.  EHCache can also be beneficial beyond Sessions, caching authentication and authorization data as well.  See the <a href="caching.html" title="Caching">Caching</a> documentation for more information.</td></tr></table></div>
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Container-Independent Session Clustering</b><br clear="none">EHCache is also a nice choice if you quickly need container-independent session clustering. You can transparently plug in <a class="external-link" href="http://www.terracotta.org/" rel="nofollow">TerraCotta</a> behind EHCache and have a container-independent clustered session cache.  No more worrying about Tomcat, JBoss, Jetty, WebSphere or WebLogic specific session clustering ever again!</td></tr></table></div>
+#tip('Use EHCache as your default', 'If you're not writing a custom <tt>SessionDAO</tt>, definitely enable EHCache in your Shiro configuration.  EHCache can also be beneficial beyond Sessions, caching authentication and authorization data as well.  See the <a href="caching.html" title="Caching">Caching</a> documentation for more information.')
+#tip('Container-Independent Session Clustering', 'EHCache is also a nice choice if you quickly need container-independent session clustering. You can transparently plug in <a class="external-link" href="http://www.terracotta.org/" rel="nofollow">TerraCotta</a> behind EHCache and have a container-independent clustered session cache.  No more worrying about Tomcat, JBoss, Jetty, WebSphere or WebLogic specific session clustering ever again!')
 <p>Enabling EHCache for sessions is very easy.  First, ensure that you have the <tt>shiro-ehcache-&lt;version&gt;.jar</tt> file in your classpath (see the <a href="download.html" title="Download">Download</a> page or use Maven or Ant+Ivy). </p>
 
 <p>Once in the classpath, this first <tt>shiro.ini</tt> example shows you how to use EHCache for all of Shiro's caching needs (not just Session support):</p>
@@ -218,7 +217,7 @@ securityManager.cacheManager = $cacheManager
 
 <p>Then, when the <tt>SessionManager</tt> asks the <tt>EnterpriseCacheSessionDAO</tt> to persist a <tt>Session</tt>, it will use an EHCache-backed <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/cache/Cache.html">Cache</a></tt> implementation to store the Session data.</p>
 
-<div class="panelMacro"><table class="infoMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Web Applications</b><br clear="none">Don't forget that assigning a <tt>SessionDAO</tt> is a feature when using Shiro native SessionManager implementations.  Web applications by default use a Servlet container-based SessionManager which does not support a <tt>SessionDAO</tt>.  Configure a native web SessionManager as <a href="#SessionManagement-websessionmanagersessiondao">explained above</a> if you want to use Ehcache-based session storage in a web application.</td></tr></table></div>
+#info('Web Applications', 'Don't forget that assigning a <tt>SessionDAO</tt> is a feature when using Shiro native SessionManager implementations.  Web applications by default use a Servlet container-based SessionManager which does not support a <tt>SessionDAO</tt>.  Configure a native web SessionManager as <a href="#SessionManagement-websessionmanagersessiondao">explained above</a> if you want to use Ehcache-based session storage in a web application.')
 
 <p><a name="SessionManagement-ehcachesessioncacheconfiguration"></a></p>
 <h5><a name="SessionManagement-EHCacheSessionCacheConfiguration"></a>EHCache Session Cache Configuration</h5>
@@ -342,7 +341,7 @@ securityManager.sessionManager.sessionValidationSchedulerEnabled = <span class="
 
 <p>Sessions will still be validated when they are retrieved from the session data store, but this will disable Shiro's periodic validation.</p>
 
-<div class="panelMacro"><table class="warningMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/forbidden.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Enable Session Validation <em>somewhere</em></b><br clear="none">If you turn off Shiro's session validation scheduler, you <em>MUST</em> perform periodic session validation via some other mechanism (cron job, etc.).  This is the only way to guarantee Session orphans do not fill up the data store.</td></tr></table></div>
+#danger('Enable Session Validation <em>somewhere</em>', 'If you turn off Shiro's session validation scheduler, you <em>MUST</em> perform periodic session validation via some other mechanism (cron job, etc.).  This is the only way to guarantee Session orphans do not fill up the data store.')
 
 <h4><a name="SessionManagement-InvalidSessionDeletion"></a>Invalid Session Deletion</h4>
 
@@ -384,10 +383,10 @@ securityManager.sessionManager.deleteInvalidSessions = <span class="code-keyword
 
 <p>This gives you the flexibility of choosing the exact clustering mechanism that is suitable for <em>your</em> environment.</p>
 
-<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Cache Memory</b><br clear="none">Note that when enabling a distributed/enterprise cache to be your session clustering data store, one of the following two cases must be true:
+#warning('Cache Memory', 'Note that when enabling a distributed/enterprise cache to be your session clustering data store, one of the following two cases must be true:
 <ul><li>The distributed cache has enough cluster-wide memory to retain <em>all</em> active/current sessions</li><li>If the distributed cache does not have enough cluster-wide memory to retain all active sessions, it must support disk overflow so sessions are not lost.<br clear="none">
 Failure for the cache to support either of the two cases will result in sessions being randomly lost, which would likely be frustrating to end-users.</li></ul>
-</td></tr></table></div>
+')
 
 <h3><a name="SessionManagement-%7B%7BEnterpriseCacheSessionDAO%7D%7D"></a><tt>EnterpriseCacheSessionDAO</tt></h3>
 
@@ -553,7 +552,7 @@ securityManager.subjectDAO.sessionStorageEvaluator.sessionStorageEnabled = <span
 
 <p>This will prevent Shiro from using a Subject's session to store that Subject's state across requests/invocations/messages <em>for all Subjects</em>.  Just be sure that you authenticate on every request so Shiro will know who the Subject is for any given request/invocation/message.</p>
 
-<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Shiro's Needs vs. Your Needs</b><br clear="none">This will disable Shiro's own implementations from using Sessions as a storage strategy.  It <b>DOES NOT</b> disable Sessions entirely.  A session will still be created if any of your own code explicitly calls <tt>subject.getSession()</tt> or <tt>subject.getSession(true)</tt>.</td></tr></table></div>
+#warning('Shiro's Needs vs. Your Needs', 'This will disable Shiro's own implementations from using Sessions as a storage strategy.  It <b>DOES NOT</b> disable Sessions entirely.  A session will still be created if any of your own code explicitly calls <tt>subject.getSession()</tt> or <tt>subject.getSession(true)</tt>.')
 
 <h3><a name="SessionManagement-AHybridApproach"></a>A Hybrid Approach</h3>
 

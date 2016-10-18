@@ -31,9 +31,9 @@
 <h3><a name="Tutorial-Setup"></a>Setup</h3>
 
 <p>In this simple example, we'll create a very simple command-line application that will run and quickly exit, just so you can get a feel for Shiro's API.</p>
+<br/><br/>
 
-<div class="panelMacro"><table class="infoMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Any Application</b><br clear="none">Apache Shiro was designed from day one to support <em>any</em> application - from the smallest command-line applications to the largest clustered web applications.  Even though we're creating a simple app for this tutorial, know that the same usage patterns apply no matter how your application is created or where it is deployed.</td></tr></table></div> 
-
+#info('Any Application', 'Apache Shiro was designed from day one to support <em>any</em> application - from the smallest command-line applications to the largest clustered web applications.  Even though we''re creating a simple app for this tutorial, know that the same usage patterns apply no matter how your application is created or where it is deployed.')
 <p>This tutorial requires Java 1.5 or later.  We'll also be using Apache <a class="external-link" href="http://maven.apache.org">Maven</a> as our build tool, but of course this is not required to use Apache Shiro.  You may acquire Shiro's .jars and incorporate them in any way you like into your application, for example maybe using Apache <a class="external-link" href="http://ant.apache.org">Ant</a> and <a class="external-link" href="http://ant.apache.org/ivy">Ivy</a>.</p>
 
 <p>For this tutorial, please ensure that you are using Maven 2.2.1 or later.  You should be able to type <tt>mvn --version</tt> in a command prompt and see something similar to the following:</p>
@@ -186,7 +186,7 @@ OS name: <span class="code-quote">"mac os x"</span> version: <span class="code-q
 
 <p>To that end, Shiro provides a default &#8216;common denominator&#8217; solution via text-based <a class="external-link" href="http://en.wikipedia.org/wiki/INI_file" rel="nofollow">INI</a> configuration. People are pretty tired of using bulky XML files these days, and INI is easy to read, simple to use, and requires very few dependencies. You&#8217;ll also see later that with a simple understanding of object graph navigation, INI can be used effectively to configure simple object graphs like the SecurityManager. </p>
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Many Configuration Options</b><br clear="none">Shiro's <tt>SecurityManager</tt> implementations and all supporting components are all JavaBeans compatible.  This allows Shiro to be configured with practically any configuration format such as XML (Spring, JBoss, Guice, etc), <a class="external-link" href="http://www.yaml.org/" rel="nofollow">YAML</a>, JSON, Groovy Builder markup, and more.  INI is just Shiro's 'common denominator' format that allows configuration in any environment in case other options are not available.</td></tr></table></div>
+#tip('Many Configuration Options', 'Shiro''s <tt>SecurityManager</tt> implementations and all supporting components are all JavaBeans compatible.  This allows Shiro to be configured with practically any configuration format such as XML (Spring, JBoss, Guice, etc), <a class="external-link" href="http://www.yaml.org/" rel="nofollow">YAML</a>, JSON, Groovy Builder markup, and more.  INI is just Shiro''s ''common denominator'' format that allows configuration in any environment in case other options are not available.')
 
 <h5><a name="Tutorial-%7B%7Bshiro.ini%7D%7D"></a><tt>shiro.ini</tt></h5>
 
@@ -339,7 +339,7 @@ session.setAttribute( <span class="code-quote">"someKey"</span>, <span class="co
 
 <p>There are many different types of exceptions you can check, or throw your own for custom conditions Shiro might not account for.  See the <a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html">AuthenticationException JavaDoc</a> for more. </p>
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Handy Hint</b><br clear="none">Security best practice is to give generic login failure messages to users because you do not want to aid an attacker trying to break into your system.</td></tr></table></div>
+#tip('Handy Hint', 'Security best practice is to give generic login failure messages to users because you do not want to aid an attacker trying to break into your system.')
 
 <p>Ok, so by now, we have a logged in user.  What else can we do?</p>
 

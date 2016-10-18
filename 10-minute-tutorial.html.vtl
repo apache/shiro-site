@@ -1,3 +1,5 @@
+#parse("templates/macros.vtl")
+
 <h1><a name="10MinuteTutorial-10MinuteTutorialonApacheShiro"></a>10 Minute Tutorial on Apache Shiro</h1>
 
 <div class="addthis_toolbox addthis_default_style">
@@ -42,23 +44,7 @@
 
 <p>Ok. Now let's actually do something!</p>
 
-<div class="panelMacro">
-    <table class="infoMacro">
-        <colgroup span="1">
-            <col span="1" width="24">
-            <col span="1">
-        </colgroup>
-        <tr>
-            <td colspan="1" rowspan="1" valign="top"><img align="middle"
-                                                          src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.png"
-                                                          width="16" height="16" alt="" border="0"></td>
-            <td colspan="1" rowspan="1">Shiro can be run in any environment, from the simplest command line application
-                to the biggest enterprise web and clustered applications, but we'll use the simplest possible example in
-                a simple <tt>main</tt> method for this QuickStart so you can get a feel for the API.
-            </td>
-        </tr>
-    </table>
-</div>
+#info('Note', 'Shiro can be run in any environment, from the simplest command line application to the biggest enterprise web and clustered applications, but we''ll use the simplest possible example in a simple <tt>main</tt> method for this QuickStart so you can get a feel for the API.')
 
 <h2><a name="10MinuteTutorial-Download"></a>Download</h2>
 
@@ -214,23 +200,7 @@ session.setAttribute( <span class="code-quote">"someKey"</span>, <span class="co
                             href="static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html">AuthenticationException
         JavaDoc</a> for more. </p>
 
-<div class="panelMacro">
-    <table class="tipMacro">
-        <colgroup span="1">
-            <col span="1" width="24">
-            <col span="1">
-        </colgroup>
-        <tr>
-            <td colspan="1" rowspan="1" valign="top"><img align="middle"
-                                                          src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.png"
-                                                          width="16" height="16" alt="" border="0"></td>
-            <td colspan="1" rowspan="1"><b>Handy Hint</b><br clear="none">Security best practice is to give generic
-                login failure messages to users because you do not want to aid an attacker trying to break into your
-                system.
-            </td>
-        </tr>
-    </table>
-</div>
+#tip('Handy Hint', 'Security best practice is to give generic login failure messages to users because you do not want to aid an attacker trying to break into your system.')
 
 <p>Ok, so by now, we have a logged in user. What else can we do?</p>
 

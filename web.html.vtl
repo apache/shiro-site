@@ -35,9 +35,9 @@
 <p><a name="Web-configuration"></a></p>
 <h2><a name="Web-Configuration"></a>Configuration</h2>
 
-<p>The simplest way to integrate Shiro into any web application is to configure a Servlet ContextListener and Filter in web.xml that understands how to read Shiro's INI configuration.  The bulk of the INI config format itself is defined in the Configuration pages's <a href="configuration.html#Configuration-INISections">INI Sections</a> section, but we'll cover some additional web-specific sections here.</p>
+<p>The simplest way to integrate Shiro into any web application is to configure a Servlet ContextListener and Filter in web.xml that understands how to read Shiro's INI configuration.  The bulk of the INI config format itself is defined in the Configuration pages's <a href="configuration.html\#Configuration-INISections">INI Sections</a> section, but we'll cover some additional web-specific sections here.</p>
 
-<div class="panelMacro"><table class="infoMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Using Spring?</b><br clear="none">Spring Framework users will not perform this setup.  If you use Spring, you will want to read about <a href="spring.html#Spring-WebApplications">Spring-specific web configuration</a> instead.</td></tr></table></div>
+#info('Using Spring?', 'Spring Framework users will not perform this setup.  If you use Spring, you will want to read about <a href="spring.html\#Spring-WebApplications">Spring-specific web configuration</a> instead.')
 
 <h3><a name="Web-%7B%7Bweb.xml%7D%7D"></a><tt>web.xml</tt></h3>
 
@@ -82,7 +82,7 @@
 <br clear="none" class="atl-forced-newline"></li><li>Finally, the <tt>filter-mapping</tt> definition ensures that all requests are filtered by the <tt>ShiroFilter</tt>, recommended for most web applications to ensure that any request can be secured.</li></ul>
 
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>ShiroFilter filter-mapping</b><br clear="none">It is usually desirable to define the <tt>ShiroFilter filter-mapping</tt> before any other <tt>filter-mapping</tt> declarations to ensure that Shiro can function in those filters as well.</td></tr></table></div>
+#tip('ShiroFilter filter-mapping', 'It is usually desirable to define the <tt>ShiroFilter filter-mapping</tt> before any other <tt>filter-mapping</tt> declarations to ensure that Shiro can function in those filters as well.')
 
 <h5><a name="Web-Custom%7B%7BWebEnvironment%7D%7DClass"></a>Custom <tt>WebEnvironment</tt> Class</h5>
 
@@ -119,7 +119,7 @@
 </pre>
 </div></div>
 
-<p>By default, the <tt>param-value</tt> is expected to be resolvable by the rules defined by <tt>ServletContext.</tt><tt><a class="external-link" href="http://download.oracle.com/javaee/6/api/javax/servlet/ServletContext.html#getResource(java.lang.String)" rel="nofollow">getResource</a></tt> method.  For example, <tt>/WEB-INF/some/path/shiro.ini</tt>  </p>
+<p>By default, the <tt>param-value</tt> is expected to be resolvable by the rules defined by <tt>ServletContext.</tt><tt><a class="external-link" href="http://download.oracle.com/javaee/6/api/javax/servlet/ServletContext.html\#getResource(java.lang.String)" rel="nofollow">getResource</a></tt> method.  For example, <tt>/WEB-INF/some/path/shiro.ini</tt>  </p>
 
 <p>But you may also specify specific file-system, classpath or URL locations by using an appropriate resource prefix supported by Shiro's <a class="external-link" href="static/current/apidocs/org/apache/shiro/io/ResourceUtils.html">ResourceUtils class</a>, for example:</p>
 <ul><li><tt><a class="external-link" href="file:/home/foobar/myapp/shiro.ini" rel="nofollow">file:/home/foobar/myapp/shiro.ini</a></tt></li><li><tt>classpath:com/foo/bar/shiro.ini</tt></li><li><tt>url:<a class="external-link" href="http://confighost.mycompany.com/myapp/shiro.ini" rel="nofollow">http://confighost.mycompany.com/myapp/shiro.ini</a></tt></li></ul>
@@ -174,9 +174,9 @@
 </div></div>
 
 <p>Unqualified (schemeless or 'non-prefixed') <tt>configPath</tt> values are assumed to be <tt>ServletContext</tt> resource paths, resolvable via the rules defined by the<br clear="none">
-<tt>ServletContext.</tt><tt><a class="external-link" href="http://download.oracle.com/javaee/6/api/javax/servlet/ServletContext.html#getResource(java.lang.String)" rel="nofollow">getResource</a></tt> method.</p>
+<tt>ServletContext.</tt><tt><a class="external-link" href="http://download.oracle.com/javaee/6/api/javax/servlet/ServletContext.html\#getResource(java.lang.String)" rel="nofollow">getResource</a></tt> method.</p>
 
-<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>ServletContext resource paths - Shiro 1.2+</b><br clear="none">ServletContext resource paths are available in Shiro 1.2 and later.  In 1.1 and earlier, all <tt>configPath</tt> definitions must specify a <tt>classpath:</tt>, <tt>file:</tt> or <tt>url:</tt> prefix.</td></tr></table></div>
+#warning('ServletContext resource paths - Shiro 1.2+', 'ServletContext resource paths are available in Shiro 1.2 and later.  In 1.1 and earlier, all <tt>configPath</tt> definitions must specify a <tt>classpath:</tt>, <tt>file:</tt> or <tt>url:</tt> prefix.')
 
 <p>You may also specify other non-<tt>ServletContext</tt> resource locations by using <tt>classpath:</tt>, <tt>url:</tt>, or <tt>file:</tt> prefixes indicating classpath, url, or filesystem locations respectively.  For example:</p>
 
@@ -273,10 +273,10 @@
 
 <p>This line states that "Any request to my application's path of <tt>/account</tt> or any of it's sub paths (<tt>/account/foo</tt>, <tt>/account/bar/baz</tt>, etc) will trigger the 'ssl, authc' filter chain".  We'll cover filter chains below.</p>
 
-<p>Note that all path expressions are relative to your application's context root.  This means that if you deploy your application one day to, say, <tt>www.somehost.com/myapp</tt> and then later deploy it to <tt>www.anotherhost.com</tt> (no 'myapp' sub-path), the pattern matching will still work.  All paths are relative to the <a class="external-link" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api/javax/servlet/http/HttpServletRequest.html#getContextPath()" rel="nofollow">HttpServletRequest.getContextPath()</a> value.</p>
+<p>Note that all path expressions are relative to your application's context root.  This means that if you deploy your application one day to, say, <tt>www.somehost.com/myapp</tt> and then later deploy it to <tt>www.anotherhost.com</tt> (no 'myapp' sub-path), the pattern matching will still work.  All paths are relative to the <a class="external-link" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api/javax/servlet/http/HttpServletRequest.html\#getContextPath()" rel="nofollow">HttpServletRequest.getContextPath()</a> value.</p>
 
 
-<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Order Matters!</b><br clear="none">URL path expressions are evaluated against an incoming request in the order they are defined and the <em>FIRST MATCH WINS</em>.  For example, let's asume that there are the following chain definitions:
+#warning('Order Matters!', 'URL path expressions are evaluated against an incoming request in the order they are defined and the <em>FIRST MATCH WINS</em>.  For example, let''s asume that there are the following chain definitions:
 
 <div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
 <pre class="code-java">
@@ -285,9 +285,9 @@
 </pre>
 </div></div>
 
-<p>If an incoming request is intended to reach <tt>/account/signup/index.html</tt> (accessible by all 'anon'ymous users), <em>it will never be handled!</em>.  The reason is that the <tt>/account/**</tt> pattern matched the incoming request first and 'short-circuited' all remaining definitions.</p>
+<p>If an incoming request is intended to reach <tt>/account/signup/index.html</tt> (accessible by all ''anon''ymous users), <em>it will never be handled!</em>.  The reason is that the <tt>/account/**</tt> pattern matched the incoming request first and ''short-circuited'' all remaining definitions.</p>
 
-<p>Always remember to define your filter chains based on a <em>FIRST MATCH WINS</em> policy!</p></td></tr></table></div>
+<p>Always remember to define your filter chains based on a <em>FIRST MATCH WINS</em> policy!</p>')
 
 <h5><a name="Web-FilterChainDefinitions"></a>Filter Chain Definitions</h5>
 
@@ -305,9 +305,8 @@
 
 <p>Finally, each filter is free to handle the response however it wants if its necessary conditions are not met (e.g. perform a redirect, respond with an HTTP error code, direct rendering, etc).  Otherwise it is expected to allow the request to continue through the chain on to the final destination view.</p>
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1">Being able to react to path specific configuration, i.e. the <tt>[optional_configN]</tt> part of a filter token, is a unique feature available to Shiro filters.
-
-<p>If you want to create your own <tt>javax.servlet.Filter</tt> implementation that can also do this, make sure your filter subclasses <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html">org.apache.shiro.web.filter.PathMatchingFilter</a></p></td></tr></table></div>
+#tip('Tip', 'Being able to react to path specific configuration, i.e. the <tt>[optional_configN]</tt> part of a filter token, is a unique feature available to Shiro filters.
+<p>If you want to create your own <tt>javax.servlet.Filter</tt> implementation that can also do this, make sure your filter subclasses <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html">org.apache.shiro.web.filter.PathMatchingFilter</a></p>')
 
 <h6><a name="Web-AvailableFilters"></a>Available Filters</h6>
 
@@ -455,15 +454,14 @@ securityManager.sessionManager = $sessionManager
 
 <h5><a name="Web-NativeSessionTimeout"></a>Native Session Timeout</h5>
 
-<p>After configuring the <tt>DefaultWebSessionManager</tt> instance, session timeout is configured as described in <a href="session-management.html#SessionManagement-sessionTimeout">Session Management: Session Timeout</a></p>
+<p>After configuring the <tt>DefaultWebSessionManager</tt> instance, session timeout is configured as described in <a href="session-management.html\#SessionManagement-sessionTimeout">Session Management: Session Timeout</a></p>
 
 <h5><a name="Web-SessionCookie"></a>Session Cookie</h5>
 
 <p>The <tt>DefaultWebSessionManager</tt> supports two web-specific configuration properties: </p>
 <ul class="alternate" type="square"><li><tt>sessionIdCookieEnabled</tt> (a boolean)</li><li><tt>sessionIdCookie</tt>, a <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/servlet/Cookie.html">Cookie</a> instance.</li></ul>
 
-
-<div class="panelMacro"><table class="infoMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Cookie as a template</b><br clear="none">The <tt>sessionIdCookie</tt> property is essentially a template - you configure the <tt>Cookie</tt> instance properties, and this template will be used to set the actual HTTP <tt>Cookie</tt> header at runtime with an appropriate session ID value.</td></tr></table></div>
+#info('Cookie as a template', 'The <tt>sessionIdCookie</tt> property is essentially a template - you configure the <tt>Cookie</tt> instance properties, and this template will be used to set the actual HTTP <tt>Cookie</tt> header at runtime with an appropriate session ID value.')
 
 <h6><a name="Web-SessionCookieConfiguration"></a>Session Cookie Configuration</h6>
 
@@ -483,7 +481,7 @@ securityManager.sessionManager.sessionIdCookie.domain = foo.com
 
 <p>The cookie's default name is <tt>JSESSIONID</tt> in accordance with the servlet specification.  Additionally, Shiro's cookie supports the <tt><a class="external-link" href="http://en.wikipedia.org/wiki/HTTP_cookie#HttpOnly_cookie" rel="nofollow">HttpOnly</a></tt> flag.  The <tt>sessionIdCookie</tt> sets <tt>HttpOnly</tt> to <tt>true</tt> by default for extra security.</p>
 
-<div class="panelMacro"><table class="infoMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1">Shiro's <tt>Cookie</tt> concept supports the <tt>HttpOnly</tt> flag even in Servlet 2.4 and 2.5 environments (whereas the Servlet API only supports it natively in 2.6 or later).</td></tr></table></div>
+#info('Note', 'Shiro''s <tt>Cookie</tt> concept supports the <tt>HttpOnly</tt> flag even in Servlet 2.4 and 2.5 environments (whereas the Servlet API only supports it natively in 2.6 or later).')
 
 <h6><a name="Web-DisablingtheSessionCookie"></a>Disabling the Session Cookie</h6>
 
@@ -510,7 +508,7 @@ securityManager.sessionManager.sessionIdCookieEnabled = <span class="code-keywor
 
 <p>If this method returns <tt>true</tt>, Shiro will remember the end-user's identity across sessions.</p>
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>UsernamePasswordToken and RememberMe</b><br clear="none">The frequently-used <tt>UsernamePasswordToken</tt> already implements the <tt>RememberMeAuthenticationToken</tt> interface and supports rememberMe logins.</td></tr></table></div>
+#tip('UsernamePasswordToken and RememberMe', 'The frequently-used <tt>UsernamePasswordToken</tt> already implements the <tt>RememberMeAuthenticationToken</tt> interface and supports rememberMe logins.')
 
 <h3><a name="Web-ProgrammaticSupport"></a>Programmatic Support</h3>
 
@@ -691,7 +689,7 @@ securityManager.rememberMeManager = $rememberMeManager
 <a name="Web-principaltag"></a></p>
 <h3><a name="Web-The%7B%7Bprincipal%7D%7Dtag"></a>The <tt>principal</tt> tag</h3>
 
-<p>The <tt>principal</tt> tag will output the Subject's <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#getPrincipal()">principal</a></tt> (identifying attribute) or a property of that principal.</p>
+<p>The <tt>principal</tt> tag will output the Subject's <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html\#getPrincipal()">principal</a></tt> (identifying attribute) or a property of that principal.</p>
 
 <p>Without any tag attributes, the tag will render the <tt>toString()</tt> value of the principal.  For example (assuming the principal is a String username):</p>
 
@@ -711,7 +709,7 @@ Hello, <span class="code-tag">&lt;%= SecurityUtils.getSubject().getPrincipal().t
 
 <h4><a name="Web-Typedprincipal"></a>Typed principal</h4>
 
-<p>The <tt>principal</tt> tag assumes by default that the principal to print is the <tt>subject.getPrincipal()</tt> value.  But if you wanted to print a value that is <em>not</em> the primary principal, but another in the Subject's {<a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#getPrincipals()">principal collection</a>, you can acquire that principal by type and print that value instead.</p>
+<p>The <tt>principal</tt> tag assumes by default that the principal to print is the <tt>subject.getPrincipal()</tt> value.  But if you wanted to print a value that is <em>not</em> the primary principal, but another in the Subject's {<a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html\#getPrincipals()">principal collection</a>, you can acquire that principal by type and print that value instead.</p>
 
 <p>For example, printing the Subject's user ID (and not the username), assuming the ID was in the principal collection:</p>
 

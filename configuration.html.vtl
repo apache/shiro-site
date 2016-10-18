@@ -5,7 +5,7 @@
 
 <p>Shiro is designed to work in any environment, from simple command-line applications to the largest enterprise clustered applications.  Because of this diversity of environments, there are a number of configuration mechanisms that are suitable for configuration.  This section covers the configuration mechanisms that are supported by Shiro core only.</p>
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Many Configuration Options</b><br clear="none">Shiro's <tt>SecurityManager</tt> implementations and all supporting components are all JavaBeans compatible.  This allows Shiro to be configured with practically any configuration format such as regular Java, XML (Spring, JBoss, Guice, etc), <a class="external-link" href="http://www.yaml.org/" rel="nofollow">YAML</a>, JSON, Groovy Builder markup, and more.</td></tr></table></div>
+#tip('Many Configuration Options', 'Shiro''s <tt>SecurityManager</tt> implementations and all supporting components are all JavaBeans compatible.  This allows Shiro to be configured with practically any configuration format such as regular Java, XML (Spring, JBoss, Guice, etc), <a class="external-link" href="http://www.yaml.org/" rel="nofollow">YAML</a>, JSON, Groovy Builder markup, and more.')
 
 <h2><a name="Configuration-ProgrammaticConfiguration"></a>Programmatic Configuration</h2>
 
@@ -259,7 +259,7 @@ securityManager.getSessionManager().setGlobalSessionTimeout(1800000);
 
 <p>The graph traversal can be as deep as necessary: <tt>object.property1.property2....propertyN.value = blah</tt></p>
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>BeanUtils Property Support</b><br clear="none">Any property assignment operation supported by the BeanUtils.<a class="external-link" href="http://commons.apache.org/beanutils/v1.8.2/apidocs/org/apache/commons/beanutils/BeanUtils.html#setProperty%28java.lang.Object,%20java.lang.String,%20java.lang.Object%29">setProperty</a> method will work in Shiro's [main] section, including set/list/map element assignments.  See the <a class="external-link" href="http://commons.apache.org/beanutils/">Apache Commons BeanUtils Website</a> and documentation for more information.</td></tr></table></div>
+#tip('BeanUtils Property Support', 'Any property assignment operation supported by the BeanUtils.<a class="external-link" href="http://commons.apache.org/beanutils/v1.8.2/apidocs/org/apache/commons/beanutils/BeanUtils.html#setProperty%28java.lang.Object,%20java.lang.String,%20java.lang.Object%29">setProperty</a> method will work in Shiro''s [main] section, including set/list/map element assignments.  See the <a class="external-link" href="http://commons.apache.org/beanutils/">Apache Commons BeanUtils Website</a> and documentation for more information.')
 
 <h6><a name="Configuration-ByteArrayValues"></a>Byte Array Values</h6>
 
@@ -327,9 +327,8 @@ anObject.map = $objectKey1:$objectValue1, $objectKey2:$objectValue2
 
 <p>The INI format and conventions above are very convenient and easy to understand, but it is not as powerful as other text/XML-based configuration mechanisms.  The most important thing to understand when using the above mechanism is that <b>Order Matters!</b></p>
 
-<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Be Careful</b><br clear="none">Each object instantiation and each value assignment is executed <em>in the order they occur in the [main] section</em>.  These lines ultimately translate to a JavaBeans getter/setter method invocation, and so those methods are invoked in the same order!
-
-<p>Keep this in mind when writing your configuration.</p></td></tr></table></div>
+#warning('Be Careful', 'Each object instantiation and each value assignment is executed <em>in the order they occur in the [main] section</em>.  These lines ultimately translate to a JavaBeans getter/setter method invocation, and so those methods are invoked in the same order!
+<p>Keep this in mind when writing your configuration.</p>')
 
 <h6><a name="Configuration-OverridingInstances"></a>Overriding Instances</h6>
 
@@ -387,7 +386,7 @@ darkhelmet = ludicrousspeed, badguy, schwartz
 </pre>
 </div></div>
 
-<div class="panelMacro"><table class="infoMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Automatic IniRealm</b><br clear="none">Just defining non-empty [users] or [roles] sections will automatically trigger the creation of an <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/text/IniRealm.html">org.apache.shiro.realm.text.IniRealm</a></tt> instance and make it available in the [main] section under the name <tt><b>iniRealm</b></tt>.  You can configure it like any other object as described above.</td></tr></table></div>
+#info('Automatic IniRealm', 'Just defining non-empty [users] or [roles] sections will automatically trigger the creation of an <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/text/IniRealm.html">org.apache.shiro.realm.text.IniRealm</a></tt> instance and make it available in the [main] section under the name <tt><b>iniRealm</b></tt>.  You can configure it like any other object as described above.')
 
 <h5><a name="Configuration-LineFormat"></a>Line Format</h5>
 
@@ -402,7 +401,7 @@ darkhelmet = ludicrousspeed, badguy, schwartz
 
 <p>If you don't want the [users] section passwords to be in plain-text, you can encrypt them using your favorite hash algorithm (MD5, Sha1, Sha256, etc) however you like and use the resulting string as the password value.  By default, the password string is expected to be Hex encoded, but can be configured to be Base64 encoded instead (see below).</p>
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Easy Secure Passwords</b><br clear="none">To save time and use best-practices, you might want to use Shiro's <a href="command-line-hasher.html" title="Command Line Hasher">Command Line Hasher</a>, which will hash passwords as well as any other type of resource.  It is especially convenient for encrypting INI <tt>[users]</tt> passwords.</td></tr></table></div>
+#tip('Easy Secure Passwords', 'To save time and use best-practices, you might want to use Shiro''s <a href="command-line-hasher.html" title="Command Line Hasher">Command Line Hasher</a>, which will hash passwords as well as any other type of resource.  It is especially convenient for encrypting INI <tt>[users]</tt> passwords.')
 
 <p>Once you've specified the hashed text password values, you have to tell Shiro that these are encrypted.  You do that by configuring the implicitly created <tt>iniRealm</tt> in the [main] section to use an appropriate <tt>CredentialsMatcher</tt> implementation corresponding to the hash algorithm you've specified:</p>
 
@@ -460,10 +459,9 @@ goodguy = winnebago:drive:eagle5
 <p>where <em>permissionDefinition</em> is an arbitrary String, but most people will want to use strings that conform<br clear="none">
 to the <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/authz/permission/WildcardPermission.html">org.apache.shiro.authz.permission.WildcardPermission</a></tt> format for ease of use and flexibility.  See the <a href="permissions.html" title="Permissions">Permissions</a> documentation for more information on Permissions and how you can benefit from them. </p>
 
-<div class="panelMacro"><table class="infoMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Internal commas</b><br clear="none">Note that if an individual <em>permissionDefinition</em> needs to be internally comma-delimited (e.g. <tt>printer:5thFloor:print,info</tt>), you will need to surround that definition with double quotes (") to avoid parsing errors:<br clear="none">
-<tt>"printer:5thFloor:print,info"</tt></td></tr></table></div>
+#info('Internal commas', 'Note that if an individual <em>permissionDefinition</em> needs to be internally comma-delimited (e.g. <tt>printer:5thFloor:print,info</tt>), you will need to surround that definition with double quotes (") to avoid parsing errors:<br clear="none"><tt>"printer:5thFloor:print,info"</tt>')
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Roles without Permissions</b><br clear="none">If you have roles that don't require permission associations, you don't need to list them in the [roles] section if you don't want to.  Just defining the role names in the [users] section is enough to create the role if it does not exist yet.</td></tr></table></div>
+#tip('Roles without Permissions', 'If you have roles that don''t require permission associations, you don''t need to list them in the [roles] section if you don''t want to.  Just defining the role names in the [users] section is enough to create the role if it does not exist yet.')
 
 <h4><a name="Configuration-%5Curls%5C"></a>[urls]</h4>
 

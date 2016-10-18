@@ -1,0 +1,11 @@
+#macro(redirect $newHref, $title)
+<p>This page has been moved.  You are being redirected.</p>
+
+#warning('Redirection Notice', "This page should redirect to <a href=""$newHref"" title=""$title"">$title</a>.")
+
+<script type="text/javascript">
+    <!--
+    window.location = "$newHref"
+    //-->
+</script>
+#end

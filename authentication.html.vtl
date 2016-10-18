@@ -12,9 +12,10 @@
 <ul><li><b>Principals</b> are a Subject's 'identifying attributes'.  Principals can be anything that identifies a Subject, such as a first name (given name), last name (surname or family name), a username, Social Security Number, etc.  Of course things like family names are not very good at uniquely identifying a <tt>Subject</tt>, so the best principals to use for authentication are unique for an application - typically a username or email address.
 <br clear="none" class="atl-forced-newline">
 <br clear="none" class="atl-forced-newline">
-<div class="panelMacro"><table class="infoMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Primary Principal</b><br clear="none">While Shiro can represent any number of principals, Shiro expects an application to have exactly one 'Primary' principal - a single value that uniquely identifies the <tt>Subject</tt> within the application. This is typically a username, email address or globally unique user id in most applications.</td></tr></table></div>
-<p><br clear="none" class="atl-forced-newline">
-<br clear="none" class="atl-forced-newline"></p></li><li><b>Credentials</b> are usually secret values known only by the <tt>Subject</tt> which are used as supporting evidence that they in fact 'own' the claimed identity.  Some common examples of credentials are passwords, biometric data such as fingerprints and retina scans, and X.509 certificates.</li></ul>
+
+#info("Primary Principal", "While Shiro can represent any number of principals, Shiro expects an application to have exactly one 'Primary' principal - a single value that uniquely identifies the <tt>Subject</tt> within the application. This is typically a username, email address or globally unique user id in most applications.")
+
+</li><li><b>Credentials</b> are usually secret values known only by the <tt>Subject</tt> which are used as supporting evidence that they in fact 'own' the claimed identity.  Some common examples of credentials are passwords, biometric data such as fingerprints and retina scans, and X.509 certificates.</li></ul>
 
 
 <p>The most common example of a principal/credential pairing is that of a username and password.  The username is the claimed identity, and the password is the proof matching the claimed identity.  If a submitted password matches what is expected by the application, the application can largely assume that the user really is who they say they are because no-one else should know the same password.</p>
@@ -60,13 +61,13 @@ currentUser.login(token);
 </pre>
 </div></div>
 
-<p>After acquiring the currently-executing <tt>Subject</tt>, we make a single <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#login(org.apache.shiro.authc.AuthenticationToken)">login</a></tt> call, passing in the <tt>AuthenticationToken</tt> instance we created earlier.</p>
+<p>After acquiring the currently-executing <tt>Subject</tt>, we make a single <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html\#login(org.apache.shiro.authc.AuthenticationToken)">login</a></tt> call, passing in the <tt>AuthenticationToken</tt> instance we created earlier.</p>
 
 <p>An invocation to the <tt>login</tt> method effectively represents an authentication attempt.</p>
 
 <h3><a name="Authentication-Step3%3AHandlingSuccessorFailure"></a>Step 3: Handling Success or Failure</h3>
 
-<p>If the <tt>login</tt> method returns quietly, that's it - we're done!  The <tt>Subject</tt> has been authenticated.  The application thread can continue uninterrupted and all further calls to <tt>SecurityUtils.getSubject()</tt> will return the authenticated <tt>Subject</tt> instance, and any calls to <tt>subject.</tt><tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#isAuthenticated()">isAuthenticated()</a></tt> will return <tt>true</tt>.</p>
+<p>If the <tt>login</tt> method returns quietly, that's it - we're done!  The <tt>Subject</tt> has been authenticated.  The application thread can continue uninterrupted and all further calls to <tt>SecurityUtils.getSubject()</tt> will return the authenticated <tt>Subject</tt> instance, and any calls to <tt>subject.</tt><tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html\#isAuthenticated()">isAuthenticated()</a></tt> will return <tt>true</tt>.</p>
 
 <p>But what happens if the login attempt failed?  For example, what if the end-user supplied an incorrect password, or accessed the system too many times and maybe their account is locked?</p>
 
@@ -91,18 +92,18 @@ currentUser.login(token);
 
 <p>If one of the existing exception classes do not meet your needs, custom <tt>AuthenticationExceptions</tt> can be created to represent specific failure scenarios.</p>
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Login Failure Tip</b><br clear="none">While your code can react to specific exceptions and execute logic as necessary, a security best practice is to only show a generic failure message to an end user in the event of a failure, for example, "Incorrect username or password.".  This ensures no specific information is available to hackers that may be attempting an attack vector.</td></tr></table></div>
+#tip("Login Failure Tip", 'While your code can react to specific exceptions and execute logic as necessary, a security best practice is to only show a generic failure message to an end user in the event of a failure, for example, "Incorrect username or password.".  This ensures no specific information is available to hackers that may be attempting an attack vector.')
 
 <h2><a name="Authentication-Rememberedvs.Authenticated"></a>Remembered vs. Authenticated</h2>
 
 <p>As shown in the example above, Shiro supports the notion of "remember me" in addition to the normal login process.  It is worth pointing out at this time that Shiro makes a very precise distinction between a <em>remembered</em> Subject and an actual <em>authenticated</em> Subject:  </p>
 
-<ul><li><b>Remembered</b>: A remembered <tt>Subject</tt> is not anonymous and has a known identity (i.e. <tt>subject.</tt><tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#getPrincipals()">getPrincipals()</a></tt> is non-empty).  But this identity is remembered from a previous authentication during a <b>previous</b> session.  A subject is considered remembered if <tt>subject.</tt><tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#isRemembered()">isRemembered()</a></tt> returns <tt>true</tt>.
+<ul><li><b>Remembered</b>: A remembered <tt>Subject</tt> is not anonymous and has a known identity (i.e. <tt>subject.</tt><tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html\#getPrincipals()">getPrincipals()</a></tt> is non-empty).  But this identity is remembered from a previous authentication during a <b>previous</b> session.  A subject is considered remembered if <tt>subject.</tt><tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html\#isRemembered()">isRemembered()</a></tt> returns <tt>true</tt>.
 <br clear="none" class="atl-forced-newline">
-<br clear="none" class="atl-forced-newline"></li><li><b>Authenticated</b>: An authenticated <tt>Subject</tt> is one that has been successfully authenticated (i.e. the <tt>login</tt> method was invoked without throwing an exception) <em>during the Subject's current session</em>.  A subject is considered authenticated if <tt>subject.</tt><tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#isAuthenticated()">isAuthenticated()</a></tt> returns <tt>true</tt>.</li></ul>
+<br clear="none" class="atl-forced-newline"></li><li><b>Authenticated</b>: An authenticated <tt>Subject</tt> is one that has been successfully authenticated (i.e. the <tt>login</tt> method was invoked without throwing an exception) <em>during the Subject's current session</em>.  A subject is considered authenticated if <tt>subject.</tt><tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html\#isAuthenticated()">isAuthenticated()</a></tt> returns <tt>true</tt>.</li></ul>
 
 
-<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Mutually Exclusive</b><br clear="none">Remembered and authenticated states are mutually exclusive - a <tt>true</tt> value for one indicates a <tt>false</tt> value for the other and vice versa.</td></tr></table></div>
+#warning('Mutually Exclusive', 'Remembered and authenticated states are mutually exclusive - a <tt>true</tt> value for one indicates a <tt>false</tt> value for the other and vice versa.')
 
 <h3><a name="Authentication-Whythedistinction%3F"></a>Why the distinction?</h3>
 
@@ -130,7 +131,7 @@ currentUser.login(token);
 
 <h2><a name="Authentication-LoggingOut"></a>Logging Out</h2>
 
-<p>The opposite of authenticating is releasing all known identifying state.  When the <tt>Subject</tt> is done interacting with the application, you can call <tt>subject.</tt><tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#logout()">logout()</a></tt> to relinquish all identifying information:</p>
+<p>The opposite of authenticating is releasing all known identifying state.  When the <tt>Subject</tt> is done interacting with the application, you can call <tt>subject.</tt><tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html\#logout()">logout()</a></tt> to relinquish all identifying information:</p>
 
 <div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
 <pre class="code-java">
@@ -142,7 +143,7 @@ currentUser.logout(); <span class="code-comment">//removes all identifying infor
 
 <p>After a <tt>Subject</tt> logs-out, the <tt>Subject</tt> instance is considered anonymous again and, except for web applications, can be re-used for <tt>login</tt> again if desired.</p>
 
-<div class="panelMacro"><table class="warningMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/forbidden.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Web Application Notice</b><br clear="none">Because remembered identity in web applications is often persisted with cookies, and cookies can only be deleted before a Response body is committed, it is highly recommended to redirect the end-user to a new view or page immediately after calling <tt>subject.logout()</tt>.  This guarantees that any security-related cookies are deleted as expected. This is a limitation of how HTTP cookies function and not a limitation of Shiro.</td></tr></table></div>
+#danger('Web Application Notice', 'Because remembered identity in web applications is often persisted with cookies, and cookies can only be deleted before a Response body is committed, it is highly recommended to redirect the end-user to a new view or page immediately after calling <tt>subject.logout()</tt>.  This guarantees that any security-related cookies are deleted as expected. This is a limitation of how HTTP cookies function and not a limitation of Shiro.')
 <p><a name="Authentication-sequence"></a></p>
 <h2><a name="Authentication-AuthenticationSequence"></a>Authentication Sequence</h2>
 
@@ -162,12 +163,12 @@ currentUser.logout(); <span class="code-comment">//removes all identifying infor
 <b>Step 2</b>: The <tt>Subject</tt> instance, typically a <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/support/DelegatingSubject.html">DelegatingSubject</a></tt> (or a subclass) delegates to the application's <tt>SecurityManager</tt> by calling <tt>securityManager.login(token)</tt>, where the actual authentication work begins.
 <br clear="none" class="atl-forced-newline">
 <br clear="none" class="atl-forced-newline">
-<b>Step 3</b>: The <tt>SecurityManager</tt>, being a basic 'umbrella' component, receives the token and simply delegates to its internal <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/Authenticator.html">Authenticator</a></tt> instance by calling <tt>authenticator.</tt><tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/Authenticator.html#authenticate(org.apache.shiro.authc.AuthenticationToken)">authenticate(token)</a></tt>.  This is almost always a <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/pam/ModularRealmAuthenticator.html">ModularRealmAuthenticator</a></tt> instance, which supports coordinating one or more <tt>Realm</tt> instances during authentication.  The <tt>ModularRealmAuthenticator</tt> essentially provides a <a class="external-link" href="http://en.wikipedia.org/wiki/Pluggable_Authentication_Modules" rel="nofollow">PAM</a>-style paradigm for Apache Shiro (where each <tt>Realm</tt> is a 'module' in PAM terminology).
+<b>Step 3</b>: The <tt>SecurityManager</tt>, being a basic 'umbrella' component, receives the token and simply delegates to its internal <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/Authenticator.html">Authenticator</a></tt> instance by calling <tt>authenticator.</tt><tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/Authenticator.html\#authenticate(org.apache.shiro.authc.AuthenticationToken)">authenticate(token)</a></tt>.  This is almost always a <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/pam/ModularRealmAuthenticator.html">ModularRealmAuthenticator</a></tt> instance, which supports coordinating one or more <tt>Realm</tt> instances during authentication.  The <tt>ModularRealmAuthenticator</tt> essentially provides a <a class="external-link" href="http://en.wikipedia.org/wiki/Pluggable_Authentication_Modules" rel="nofollow">PAM</a>-style paradigm for Apache Shiro (where each <tt>Realm</tt> is a 'module' in PAM terminology).
 <br clear="none" class="atl-forced-newline">
 <br clear="none" class="atl-forced-newline">
 <b>Step 4</b>: If more than one <tt>Realm</tt> is configured for the application, the <tt>ModularRealmAuthenticator</tt> instance will initiate a multi-<tt>Realm</tt> authentication attempt utilizing its configured <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/pam/AuthenticationStrategy.html">AuthenticationStrategy</a></tt>.  Before, during and after the <tt>Realms</tt> are invoked for authentication, the <tt>AuthenticationStrategy</tt> will be called to allow it to react to each Realm's results.  We will cover <tt>AuthenticationStrategies</tt> soon.</p>
-<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Single-Realm Application</b><br clear="none">If only a single Realm is configured, it is called directly - there is no need for an <tt>AuthenticationStrategy</tt> in a single-Realm application.</td></tr></table></div> 
-<p><b>Step 5</b>: Each configured <tt>Realm</tt> is consulted to see if it <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/Realm.html#supports(org.apache.shiro.authc.AuthenticationToken)">supports</a></tt> the submitted <tt>AuthenticationToken</tt>.  If so, the supporting Realm's <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/Realm.html#getAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken)">getAuthenticationInfo</a></tt> method will be invoked with the submitted <tt>token</tt>.  The <tt>getAuthenticationInfo</tt> method effectively represents a single authentication attempt for that particular <tt>Realm</tt>.  We will cover the <tt>Realm</tt> authentication behavior shortly.</p>
+#warning('Single-Realm Application', 'If only a single Realm is configured, it is called directly - there is no need for an <tt>AuthenticationStrategy</tt> in a single-Realm application.')
+<p><b>Step 5</b>: Each configured <tt>Realm</tt> is consulted to see if it <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/Realm.html\#supports(org.apache.shiro.authc.AuthenticationToken)">supports</a></tt> the submitted <tt>AuthenticationToken</tt>.  If so, the supporting Realm's <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/Realm.html\#getAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken)">getAuthenticationInfo</a></tt> method will be invoked with the submitted <tt>token</tt>.  The <tt>getAuthenticationInfo</tt> method effectively represents a single authentication attempt for that particular <tt>Realm</tt>.  We will cover the <tt>Realm</tt> authentication behavior shortly.</p>
 
 <h3><a name="Authentication-%7B%7BAuthenticator%7D%7D"></a><tt>Authenticator</tt></h3>
 
@@ -201,7 +202,7 @@ securityManager.authenticator = $authenticator
 
 <p>Also an <tt>AuthenticationStrategy</tt> is responsible for aggregating the results from each successful Realm and 'bundling' them into a single <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/AuthenticationInfo.html">AuthenticationInfo</a></tt> representation.  This final aggregate <tt>AuthenticatinoInfo</tt> instance is what is returned by the <tt>Authenticator</tt> instance and is what Shiro uses to represent the <tt>Subject</tt>'s final identity (aka Principals).</p>
 
-<div class="panelMacro"><table class="infoMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/information.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Subject Identity 'View'</b><br clear="none">If you use more than one Realm in your application to acquire account data from multiple data sources, the <tt>AuthenticationStrategy</tt> is ultimately responsible for the final 'merged' view of the Subject's identity that is seen by the application.</td></tr></table></div>
+#info("Subject Identity 'View'", "If you use more than one Realm in your application to acquire account data from multiple data sources, the <tt>AuthenticationStrategy</tt> is ultimately responsible for the final 'merged' view of the Subject's identity that is seen by the application.")
 
 <p>Shiro has 3 concrete <tt>AuthenticationStrategy</tt> implementations:</p>
 
@@ -224,7 +225,7 @@ securityManager.authenticator.authenticationStrategy = $authcStrategy
 </pre>
 </div></div>
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Custom AuthenticationStrategy</b><br clear="none">If you wanted to create your own <tt>AuthenticationStrategy</tt> implementation yourself, you could use the <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/pam/AbstractAuthenticationStrategy.html">org.apache.shiro.authc.pam.AbstractAuthenticationStrategy</a></tt> as a starting point.  The <tt>AbstractAuthenticationStrategy</tt> class automatically implements the 'bundling'/aggregation behavior of merging the results from each Realm into a single <tt>AuthenticationInfo</tt> instance.</td></tr></table></div>
+#tip('Custom AuthenticationStrategy', 'If you wanted to create your own <tt>AuthenticationStrategy</tt> implementation yourself, you could use the <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/pam/AbstractAuthenticationStrategy.html">org.apache.shiro.authc.pam.AbstractAuthenticationStrategy</a></tt> as a starting point.  The <tt>AbstractAuthenticationStrategy</tt> class automatically implements the ''bundling''/aggregation behavior of merging the results from each Realm into a single <tt>AuthenticationInfo</tt> instance.')
 
 <h3><a name="Authentication-RealmAuthenticationOrder"></a>Realm Authentication Order</h3>
 
@@ -278,11 +279,11 @@ securityManager.realms = $fooRealm, $barRealm, $blahRealm
 </pre>
 </div></div>
 
-<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Explicit Realm Inclusion</b><br clear="none">When you explicitly configure the <tt>securityManager.realms</tt> property, <em>only</em> the referenced realms will be configured on the <tt>SecurityManager</tt>.  This means you could define 5 realms in INI, but only actually use 3 if 3 are referenced for the <tt>realms</tt> property.  This is different than implicit realm ordering where all available realms will be used.</td></tr></table></div>
+#warning('Explicit Realm Inclusion', 'When you explicitly configure the <tt>securityManager.realms</tt> property, <em>only</em> the referenced realms will be configured on the <tt>SecurityManager</tt>.  This means you could define 5 realms in INI, but only actually use 3 if 3 are referenced for the <tt>realms</tt> property.  This is different than implicit realm ordering where all available realms will be used.')
 
 <h2><a name="Authentication-RealmAuthentication"></a>Realm Authentication</h2>
 
-<p>This chapter covers Shiro's master workflow explaining how an authentication attempt occurs.  The internal workflow of what happens in a single realm as it is consulted during authentication (i.e. 'Step 5' above) is covered in the <a href="realm.html" title="Realm">Realm</a> chapter's <a href="realm.html#Realm-authentication">Realm Authentication</a> section.</p>
+<p>This chapter covers Shiro's master workflow explaining how an authentication attempt occurs.  The internal workflow of what happens in a single realm as it is consulted during authentication (i.e. 'Step 5' above) is covered in the <a href="realm.html" title="Realm">Realm</a> chapter's <a href="realm.html\#Realm-authentication">Realm Authentication</a> section.</p>
 
 <h2><a name="Authentication-Lendahandwithdocumentation"></a>Lend a hand with documentation </h2>
 

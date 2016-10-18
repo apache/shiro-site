@@ -11,7 +11,7 @@
 <ol><li>A <tt>Subject</tt> instance must be created</li><li>The <tt>Subject</tt> instance must be <em>bound</em> to the currently executing thread.</li><li>After the thread is finished executing (or if the thread's execution results in a <tt>Throwable</tt>), the <tt>Subject</tt> must be <em>unbound</em> to ensure that the thread remains 'clean' in any thread-pooled environment.</li></ol>
 
 
-<p>Shiro has architectural components that perform this bind/unbind logic automatically for a running application.  For example, in a web application, the root Shiro Filter performs this logic when <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/servlet/AbstractShiroFilter.html#doFilterInternal(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)">filtering a request</a>.  But as test environments and frameworks differ, we need to perform this bind/unbind logic ourselves for our chosen test framework.</p>
+<p>Shiro has architectural components that perform this bind/unbind logic automatically for a running application.  For example, in a web application, the root Shiro Filter performs this logic when <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/servlet/AbstractShiroFilter.html\#doFilterInternal(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)">filtering a request</a>.  But as test environments and frameworks differ, we need to perform this bind/unbind logic ourselves for our chosen test framework.</p>
 
 <h2><a name="Testing-TestSetup"></a>Test Setup</h2>
 
@@ -101,9 +101,8 @@
 </pre>
 </div></div>
 
-<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Testing &amp; Frameworks</b><br clear="none">The code in the <tt>AbstractShiroTest</tt> class uses Shiro's <tt>ThreadState</tt> concept and a static SecurityManager.  These techniques are useful in tests and in framework code, but rarely ever used in application code.  
-
-<p>Most end-users working with Shiro who need to ensure thread-state consistency will almost always use Shiro's automatic management mechanisms, namely the <tt>Subject.associateWith</tt> and the <tt>Subject.execute</tt> methods.  These methods are covered in the reference on <a href="subject.html#Subject-ThreadAssociation">Subject thread association</a>.</p></td></tr></table></div>
+#warning('Testing &amp; Frameworks', 'The code in the <tt>AbstractShiroTest</tt> class uses Shiro''s <tt>ThreadState</tt> concept and a static SecurityManager.  These techniques are useful in tests and in framework code, but rarely ever used in application code.
+<p>Most end-users working with Shiro who need to ensure thread-state consistency will almost always use Shiro''s automatic management mechanisms, namely the <tt>Subject.associateWith</tt> and the <tt>Subject.execute</tt> methods.  These methods are covered in the reference on <a href="subject.html\#Subject-ThreadAssociation">Subject thread association</a>.</p>')
 
 <h2><a name="Testing-UnitTesting"></a>Unit Testing</h2>
 

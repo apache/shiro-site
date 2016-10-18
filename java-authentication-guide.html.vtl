@@ -75,7 +75,7 @@ UsernamePasswordToken token =
 
 <p>We use this token to bundle the username and password we acquired in someway in our Java application.  Maybe they were submitted via a user web form, an HTTP header, or a command line. In Shiro, it does not matter how you acquire them-- it is protocol agnostic.</p>
 
-<p>In this example, we have decided that we want the application to remember users when they return.  So once the token is created, we use Shiro's built-in "Remember-me" feature by setting it to true on the token.  This is done using the token's <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/UsernamePasswordToken.html#setRememberMe(boolean)">setRememberMe()</a></tt> method</p>
+<p>In this example, we have decided that we want the application to remember users when they return.  So once the token is created, we use Shiro's built-in "Remember-me" feature by setting it to true on the token.  This is done using the token's <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/UsernamePasswordToken.html\#setRememberMe(boolean)">setRememberMe()</a></tt> method</p>
 
 <h3><a name="JavaAuthenticationGuide-Step2Submittheprincipalsandcredentialstoanauthenticationsystem."></a>Step 2 - Submit the principals and credentials to an authentication system.</h3>
 <p>So we&#8217;ve collected the information in a token and set it to remember returning users. The next step is in the Authentication process is to submit the token to an authentication system. Your authentication system is represented in Shiro by security-specific DAOs, that are referred to as <a class="external-link" href="static/current/apidocs/">Realms</a>.  For more information on realms please check out the <a class="external-link" href="realm.html">Shiro Realm Guide</a>.</p>
@@ -94,11 +94,11 @@ UsernamePasswordToken token =
 </pre>
 </div></div>
 
-<p>First, we need to acquire the currently executing user, referred to as the subject.   A subject is just a security specific view of the user----it can be a human, a process, cron job, doesn&#8217;t matter. In Shiro, there is always a subject instance available to the currently executing thread.  The concept of a subject is core to Shiro and most of the framework is centered around working with subjects. In this example, we will name this instance of subject currentUser.</p>
+<p>First, we need to acquire the currently executing user, referred to as the subject.   A subject is just a security specific view of the user----it can be a human, a process, cron job, doesn&\#8217;t matter. In Shiro, there is always a subject instance available to the currently executing thread.  The concept of a subject is core to Shiro and most of the framework is centered around working with subjects. In this example, we will name this instance of subject currentUser.</p>
 
-<p>To acquire the subject, we use the <a class="external-link" href="static/current/apidocs/org/apache/shiro/SecurityUtils.html">SecurityUtils</a> class which is also a core pat of Shiro's API.  It will acquire the currently executing user via the <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/SecurityUtils.html#getSubject()">getsubject()</a></tt> method call.  And we get back a subject instance that is representing who the current user is who is interacting with the system.  At this point in the example, the subject currentUser is anonymous.  There is no identity associated with them.</p>
+<p>To acquire the subject, we use the <a class="external-link" href="static/current/apidocs/org/apache/shiro/SecurityUtils.html">SecurityUtils</a> class which is also a core pat of Shiro's API.  It will acquire the currently executing user via the <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/SecurityUtils.html\#getSubject()">getsubject()</a></tt> method call.  And we get back a subject instance that is representing who the current user is who is interacting with the system.  At this point in the example, the subject currentUser is anonymous.  There is no identity associated with them.</p>
 
-<p>Now with the user representation in hand, we authenticate them by just calling the <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#login(org.apache.shiro.authc.AuthenticationToken))">login()</a></tt> method and submit the token we just constructed a second ago.</p>
+<p>Now with the user representation in hand, we authenticate them by just calling the <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html\#login(org.apache.shiro.authc.AuthenticationToken))">login()</a></tt> method and submit the token we just constructed a second ago.</p>
 
 <h3><a name="JavaAuthenticationGuide-Step3Allowaccess%2Cretryauthentication%2Corblockaccess"></a>Step 3 - Allow access, retry authentication, or block access</h3>
 <p>Again really, really easy, single method call.  If the <tt>login()</tt> method call is successful, then the user is logged in and associated with a user account or identity.  From here, the user can go about using your application and retain their identity through their session or longer since we have set the "Remember Me" in our example.</p>
@@ -123,19 +123,19 @@ UsernamePasswordToken token =
 
 <p>You can take that method call and wrap it in a try/catch block and you can catch all sort of exceptions if you want to handle them and react accordingly.  In addition to a rich set of exceptions that Shiro offers, you can create your own if you need custom functionality.  For more information, follow this link documentation on <a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html">AuthenticationException</a>.</p>
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Security Tip</b><br clear="none">Security best practice is to give generic login failure messages to users because you do not want to aid an attacker trying to break into your system.</td></tr></table></div>
+#tip('Security Tip', 'Security best practice is to give generic login failure messages to users because you do not want to aid an attacker trying to break into your system.')
 
 <h2><a name="JavaAuthenticationGuide-%22RememberMe%22Support"></a>"Remember Me" Support</h2>
 
 <p>As shown in the example above, Shiro supports the notion of "remember me" in adition to the normal login process. &#160;</p>
 
-<p>In Shiro, the Subject object supports two methods : <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#isRemembered()">isRemembered()</a></tt> and <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#isAuthenticated()">isAuthenticated()</a></tt>.</p>
+<p>In Shiro, the Subject object supports two methods : <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html\#isRemembered()">isRemembered()</a></tt> and <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html\#isAuthenticated()">isAuthenticated()</a></tt>.</p>
 
 <p>A "remembered" subject has an identity (it is not anonymous) and their identifying attributes,referred to as principals, are remembered from a successful authentication during a previous session.</p>
 
 <p>An authenticated subject has proved their identity <em>during their current session</em>.</p>
 
-<div class="panelMacro"><table class="warningMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/forbidden.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Warning</b><br clear="none">If a subject is remembered, it DOES NOT mean they are authenticated.</td></tr></table></div>
+#danger('Warning', 'If a subject is remembered, it DOES NOT mean they are authenticated.')
 
 <h3><a name="JavaAuthenticationGuide-RememberedvsAuthenticated"></a>Remembered vs Authenticated</h3>
 <p>In shiro it is very important to note that a remembered subject is not an authenticated subject. A check against <tt>isAuthenticated()</tt> is a much more strict check because authentication is the process of proving you are who you say you are. When a user is only remembered, the remembered identity gives the system an idea who that user probably is, but in reality, has no way of absolutely guaranteeing if the remembered Subject represents the user currently using the application. Once the subject is authenticated, they are no longer considered only remembered because their identity would have been verified during the current session.</p>

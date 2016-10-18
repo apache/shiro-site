@@ -147,8 +147,7 @@ currentUser.logout(); <span class="code-comment">//removes all identifying infor
 
 <p>A new feature added in Shiro 1.0 is the ability to construct custom/ad-hoc subject instances for use in special situations.</p>
 
-<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Special Use Only!</b><br clear="none">You should almost always acquire the currently executing Subject by calling <tt>SecurityUtils.getSubject();</tt><br clear="none">
-Creating custom <tt>Subject</tt> instances should only be done in special cases.</td></tr></table></div>
+#warning('Special Use Only!', 'You should almost always acquire the currently executing Subject by calling <tt>SecurityUtils.getSubject();</tt><br clear="none">Creating custom <tt>Subject</tt> instances should only be done in special cases.')
 
 <p>Some 'special cases' when this can be useful:</p>
 
@@ -162,7 +161,7 @@ This practice is encouraged because it ensures that utility/system code executes
 <br clear="none" class="atl-forced-newline"></li><li>Daemon/background process work - when a daemon or background process executes, it might need to execute as a particular user.</li></ul>
 
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1">If you already have access to a <tt>Subject</tt> instance and want it to be available to other threads, you should use the <tt>Subject.associateWith</tt>* methods instead of creating a new Subject instance.</td></tr></table></div> 
+#tip('Tip', 'If you already have access to a <tt>Subject</tt> instance and want it to be available to other threads, you should use the <tt>Subject.associateWith</tt>* methods instead of creating a new Subject instance.')
 
 <p>Ok, so assuming you still need to create custom subject instances, let's see how to do it:</p>
 
@@ -292,7 +291,7 @@ Subject subject = builder.buildSubject();
 
 <p>While the <tt>Subject.execute</tt>* methods automatically clean up the thread state after they return, there might be some scenarios where you want to manage the <tt>ThreadState</tt> yourself.  This is almost always done in framework-level development when integrating w/ Shiro and is rarely used even in bootstrap/daemon scenarios (where the <tt>Subject.execute(callable)</tt> example above is more frequent).</p>
 
-<div class="panelMacro"><table class="noteMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/warning.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Guarantee Cleanup</b><br clear="none">The most important thing about this mechanism is that you must <em>always</em> guarantee the current thread is cleaned up after logic is executed to ensure there is no thread state corruption in a reusable or pooled thread environment.</td></tr></table></div>
+#warning('Guarantee Cleanup', 'The most important thing about this mechanism is that you must <em>always</em> guarantee the current thread is cleaned up after logic is executed to ensure there is no thread state corruption in a reusable or pooled thread environment.')
 
 <p>Guaranteeing cleanup is best done in a <tt>try/finally</tt> block:</p>
 
@@ -313,7 +312,7 @@ threadState.bind();
 
 <p>Interestingly enough, this is exactly what the <tt>Subject.execute</tt>* methods do - they just perform this logic automatically before and after <tt>Callable</tt> or <tt>Runnable</tt> execution.  It is also nearly identical logic performed by Shiro's <tt>ShiroFilter</tt> for web applications (<tt>ShiroFilter</tt> uses web-specific <tt>ThreadState</tt> implementations outside the scope of this section).</p>
 
-<div class="panelMacro"><table class="warningMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/forbidden.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Web Use</b><br clear="none">Don't use the above <tt>ThreadState</tt> code example in a thread that is processing a web request.  Web-specific ThreadState implementations are used during web requests instead.  Instead, ensure the <tt>ShiroFilter</tt> intercepts web requests to ensure Subject building/binding/cleanup is done properly.</td></tr></table></div>
+#danger('Web Use', 'Don''t use the above <tt>ThreadState</tt> code example in a thread that is processing a web request.  Web-specific ThreadState implementations are used during web requests instead.  Instead, ensure the <tt>ShiroFilter</tt> intercepts web requests to ensure Subject building/binding/cleanup is done properly.')
 
 <h4><a name="Subject-ADifferentThread"></a>A Different Thread</h4>
 
@@ -347,7 +346,7 @@ Executor executor = <span class="code-keyword">new</span> java.util.concurrent.E
 </pre>
 </div></div>
 
-<div class="panelMacro"><table class="tipMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/check.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1"><b>Automatic Cleanup</b><br clear="none">The <tt>associateWith</tt>* methods perform necessary thread cleanup automatically to ensure threads remain clean in a pooled environment.</td></tr></table></div>
+#tip('Automatic Cleanup', 'The <tt>associateWith</tt>* methods perform necessary thread cleanup automatically to ensure threads remain clean in a pooled environment.')
 
 <h2><a name="Subject-Lendahandwithdocumentation"></a>Lend a hand with documentation </h2>
 
