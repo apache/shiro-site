@@ -1,4 +1,4 @@
-#parse("templates/macros.vtl")
+#parse("templates/includes.vtl")
 
 <h1><a name="10MinuteTutorial-10MinuteTutorialonApacheShiro"></a>10 Minute Tutorial on Apache Shiro</h1>
 
@@ -51,13 +51,13 @@
 <ol>
     <li>Ensure you have JDK 1.6+ and Maven 3.0.3+ installed.</li>
     <li>Download the lastest "Source Code Distribution" from the <a href="download.html" title="Download">Download</a>
-        page. In this example, we're using the 1.3.2 release distribution.
+        page. In this example, we're using the ${latestRelease} release distribution.
     </li>
     <li>Unzip the source package:
         <div class="code panel" style="border-width: 1px;">
             <div class="codeContent panelContent">
 <pre class="code-java">
-&gt; unzip shiro-root-1.3.2-source-release.zip
+&gt; unzip shiro-root-${latestRelease}-source-release.zip
 </pre>
             </div>
         </div>
@@ -66,7 +66,7 @@
         <div class="code panel" style="border-width: 1px;">
             <div class="codeContent panelContent">
 <pre class="code-java">
-&gt; cd shiro-root-1.3.2/samples/quickstart
+&gt; cd shiro-root-${latestRelease}/samples/quickstart
 </pre>
             </div>
         </div>
