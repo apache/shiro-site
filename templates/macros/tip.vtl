@@ -1,7 +1,21 @@
 #macro(tip $title, $message)
-<div markdown="span" class="alert alert-success" role="alert">
-    <i class="fa fa-check-square-o"></i>
-    <b>${title}</b><br/>
-    ${message}
+<div class="panelMacro">
+    <table class="tipMacro">
+        <colgroup span="1">
+            <col span="1" width="24">
+            <col span="1">
+        </colgroup>
+        <tbody><tr>
+            <td colspan="1" rowspan="1" valign="top">
+                <i class="fa fa-check-square-o"></i>
+            </td>
+            <td colspan="1" rowspan="1">
+                <b>${title}</b>
+                <br clear="none">
+                ${message}
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 #end

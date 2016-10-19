@@ -1,7 +1,23 @@
 #macro(danger $title, $message)
-<div markdown="span" class="alert alert-danger" role="alert">
-    <i class="fa fa-exclamation-circle"></i>
-    <b>${title}</b><br/>
-    ${message}
+<div class="panelMacro">
+    <table class="warningMacro">
+        <colgroup span="1">
+            <col span="1" width="24">
+            <col span="1">
+        </colgroup>
+        <tbody>
+        <tr>
+            <td colspan="1" rowspan="1" valign="top">
+                <i class="fa fa-exclamation-circle"></i>
+            </td>
+
+            <td colspan="1" rowspan="1">
+                <b>${title}</b>
+                <br clear="none">
+                ${message}
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 #end

@@ -1,7 +1,25 @@
 #macro(info $title, $message)
-<div markdown="span" class="alert alert-info" role="alert">
-    <i class="fa fa-info-circle"></i>
-    <b>${title}</b><br/>
-    ${message}
+<div class="panelMacro">
+    <table class="infoMacro">
+        <colgroup span="1">
+            <col span="1" width="24">
+            <col span="1">
+        </colgroup>
+
+
+        <tbody>
+        <tr>
+            <td colspan="1" rowspan="1" valign="top">
+                <i class="fa fa-info-circle"></i>
+            </td>
+
+            <td colspan="1" rowspan="1">
+                <b>${title}</b>
+                <br clear="none">
+                ${message}
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 #end
