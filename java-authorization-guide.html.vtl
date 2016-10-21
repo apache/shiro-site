@@ -85,7 +85,7 @@ Authorization, or access control, is the function of specifying access rights to
 <h4><a name="JavaAuthorizationGuide-RoleCheck"></a>Role Check</h4>
 <p>This is an example of how you do a role check programmatically in your application.  We want to check if a user has the <em>administrator</em> role and if they do, then we'll show a special button, otherwise we won't show it.</p>
 
-<p>First we get access to the current user, the <a href="subject.html" title="Subject">Subject</a>. Then we pass the <em>adminstrator</em> to the Subject's <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html\#hasRole(java.lang.String)">.hasRole()</a></tt> method.  It will return <tt>TRUE</tt> or <tt>FALSE</tt>.  </p>
+<p>First we get access to the current user, the <a href="subject.html" title="Subject">Subject</a>. Then we pass the <em>adminstrator</em> to the Subject's <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#[[#]]#hasRole(java.lang.String)">.hasRole()</a></tt> method.  It will return <tt>TRUE</tt> or <tt>FALSE</tt>.  </p>
 
 <div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
 <pre class="code-java">
@@ -110,7 +110,7 @@ Authorization, or access control, is the function of specifying access rights to
 <h4><a name="JavaAuthorizationGuide-PermissionCheck"></a>Permission Check</h4>
 <p>This is an example of how you do security checks by permission. We want to check if a user has permission to print to laserjet3000n and if they do, then we'll show a print button, otherwise we won't show it. This is an example of an instance level permission or instance level authorization.</p>
 
-<p>Again, first you get access to the current user, the <a href="subject.html" title="Subject">Subject</a>.  Then you construct a <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/authz/Permission.html">Permission</a></tt> object or an instance that represents an action on a resource. In this case, the instance is named <tt>printerPermission</tt>, the resource is <em>laserjet3000n</em>, and the action is <em>print</em>.   Then we pass <tt>printerPermission</tt> to the Subject's <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html\#isPermitted(java.util.List)">.isPermitted()</a></tt> method.  It will return true or false.  </p>
+<p>Again, first you get access to the current user, the <a href="subject.html" title="Subject">Subject</a>.  Then you construct a <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/authz/Permission.html">Permission</a></tt> object or an instance that represents an action on a resource. In this case, the instance is named <tt>printerPermission</tt>, the resource is <em>laserjet3000n</em>, and the action is <em>print</em>.   Then we pass <tt>printerPermission</tt> to the Subject's <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#[[#]]#isPermitted(java.util.List)">.isPermitted()</a></tt> method.  It will return true or false.  </p>
 
 <div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
 <pre class="code-java">

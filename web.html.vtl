@@ -13,11 +13,11 @@
   <h3><a href="webapp-tutorial.html">Web App Tutorial</a></h3>
   <p>Step-by-step tutorial for securing a web application with Shiro. </br><span style="font-size:11"><a href="webapp-tutorial.html">Read More &gt;&gt;</a></span></p>
 	
-  <h3><a href="/session-management-features.html">Session Management</a></h3>
-  <p>Shiro enables sessions for any application environment. Learn more! </br><span style="font-size:11"><a href="/session-management-features.html">Read More &gt;&gt;</a></span></p>
+  <h3><a href="session-management-features.html">Session Management</a></h3>
+  <p>Shiro enables sessions for any application environment. Learn more! </br><span style="font-size:11"><a href="session-management-features.html">Read More &gt;&gt;</a></span></p>
 	
-  <h3><a href="//permissions.html">Permissions</a></h3>
-  <p>Learn more about Shiro's powerful and intuitive permission syntax. </br><span style="font-size:11"><a href="/permissions.html">Read More &gt;&gt;</a></span></p>
+  <h3><a href="permissions.html">Permissions</a></h3>
+  <p>Learn more about Shiro's powerful and intuitive permission syntax. </br><span style="font-size:11"><a href="permissions.html">Read More &gt;&gt;</a></span></p>
 	
   <h3><a href="java-authentication-guide.html">Java Authentication Guide</a></h3>
   <p>Learn how Authentication in Java is performed in Shiro. </br><span style="font-size:11"><a href="java-authentication-guide.html">Read More &gt;&gt;</a></span></p>	
@@ -35,9 +35,9 @@
 <p><a name="Web-configuration"></a></p>
 <h2><a name="Web-Configuration"></a>Configuration</h2>
 
-<p>The simplest way to integrate Shiro into any web application is to configure a Servlet ContextListener and Filter in web.xml that understands how to read Shiro's INI configuration.  The bulk of the INI config format itself is defined in the Configuration pages's <a href="configuration.html\#Configuration-INISections">INI Sections</a> section, but we'll cover some additional web-specific sections here.</p>
+<p>The simplest way to integrate Shiro into any web application is to configure a Servlet ContextListener and Filter in web.xml that understands how to read Shiro's INI configuration.  The bulk of the INI config format itself is defined in the Configuration pages's <a href="configuration.html#[[#]]#Configuration-INISections">INI Sections</a> section, but we'll cover some additional web-specific sections here.</p>
 
-#info('Using Spring?', 'Spring Framework users will not perform this setup.  If you use Spring, you will want to read about <a href="spring.html\#Spring-WebApplications">Spring-specific web configuration</a> instead.')
+#info('Using Spring?', 'Spring Framework users will not perform this setup.  If you use Spring, you will want to read about <a href="spring.html#[[#]]#Spring-WebApplications">Spring-specific web configuration</a> instead.')
 
 <h3><a name="Web-%7B%7Bweb.xml%7D%7D"></a><tt>web.xml</tt></h3>
 
@@ -119,10 +119,10 @@
 </pre>
 </div></div>
 
-<p>By default, the <tt>param-value</tt> is expected to be resolvable by the rules defined by <tt>ServletContext.</tt><tt><a class="external-link" href="http://download.oracle.com/javaee/6/api/javax/servlet/ServletContext.html\#getResource(java.lang.String)" rel="nofollow">getResource</a></tt> method.  For example, <tt>/WEB-INF/some/path/shiro.ini</tt>  </p>
+<p>By default, the <tt>param-value</tt> is expected to be resolvable by the rules defined by <tt>ServletContext.</tt><tt><a class="external-link" href="http://docs.oracle.com/javaee/6/api/javax/servlet/ServletContext.html#[[#]]#getResource(java.lang.String)" rel="nofollow">getResource</a></tt> method.  For example, <tt>/WEB-INF/some/path/shiro.ini</tt>  </p>
 
 <p>But you may also specify specific file-system, classpath or URL locations by using an appropriate resource prefix supported by Shiro's <a class="external-link" href="static/current/apidocs/org/apache/shiro/io/ResourceUtils.html">ResourceUtils class</a>, for example:</p>
-<ul><li><tt><a class="external-link" href="file:/home/foobar/myapp/shiro.ini" rel="nofollow">file:/home/foobar/myapp/shiro.ini</a></tt></li><li><tt>classpath:com/foo/bar/shiro.ini</tt></li><li><tt>url:<a class="external-link" href="http://confighost.mycompany.com/myapp/shiro.ini" rel="nofollow">http://confighost.mycompany.com/myapp/shiro.ini</a></tt></li></ul>
+<ul><li><tt>file:/home/foobar/myapp/shiro.ini</tt></li><li><tt>classpath:com/foo/bar/shiro.ini</tt></li><li><tt>url:http://confighost.mycompany.com/myapp/shiro.ini</tt></li></ul>
 
 
 <h4><a name="Web-Shiro1.1andearlier"></a>Shiro 1.1 and earlier</h4>
@@ -174,7 +174,7 @@
 </div></div>
 
 <p>Unqualified (schemeless or 'non-prefixed') <tt>configPath</tt> values are assumed to be <tt>ServletContext</tt> resource paths, resolvable via the rules defined by the<br clear="none">
-<tt>ServletContext.</tt><tt><a class="external-link" href="http://download.oracle.com/javaee/6/api/javax/servlet/ServletContext.html\#getResource(java.lang.String)" rel="nofollow">getResource</a></tt> method.</p>
+<tt>ServletContext.</tt><tt><a class="external-link" href="http://docs.oracle.com/javaee/6/api/javax/servlet/ServletContext.html#[[#]]#getResource(java.lang.String)" rel="nofollow">getResource</a></tt> method.</p>
 
 #warning('ServletContext resource paths - Shiro 1.2+', 'ServletContext resource paths are available in Shiro 1.2 and later.  In 1.1 and earlier, all <tt>configPath</tt> definitions must specify a <tt>classpath:</tt>, <tt>file:</tt> or <tt>url:</tt> prefix.')
 
@@ -273,7 +273,7 @@
 
 <p>This line states that "Any request to my application's path of <tt>/account</tt> or any of it's sub paths (<tt>/account/foo</tt>, <tt>/account/bar/baz</tt>, etc) will trigger the 'ssl, authc' filter chain".  We'll cover filter chains below.</p>
 
-<p>Note that all path expressions are relative to your application's context root.  This means that if you deploy your application one day to, say, <tt>www.somehost.com/myapp</tt> and then later deploy it to <tt>www.anotherhost.com</tt> (no 'myapp' sub-path), the pattern matching will still work.  All paths are relative to the <a class="external-link" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api/javax/servlet/http/HttpServletRequest.html\#getContextPath()" rel="nofollow">HttpServletRequest.getContextPath()</a> value.</p>
+<p>Note that all path expressions are relative to your application's context root.  This means that if you deploy your application one day to, say, <tt>www.somehost.com/myapp</tt> and then later deploy it to <tt>www.anotherhost.com</tt> (no 'myapp' sub-path), the pattern matching will still work.  All paths are relative to the <a class="external-link" href="http://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#[[#]]#getContextPath()" rel="nofollow">HttpServletRequest.getContextPath()</a> value.</p>
 
 
 #warning('Order Matters!', 'URL path expressions are evaluated against an incoming request in the order they are defined and the <em>FIRST MATCH WINS</em>.  For example, let''s asume that there are the following chain definitions:
@@ -454,7 +454,7 @@ securityManager.sessionManager = $sessionManager
 
 <h5><a name="Web-NativeSessionTimeout"></a>Native Session Timeout</h5>
 
-<p>After configuring the <tt>DefaultWebSessionManager</tt> instance, session timeout is configured as described in <a href="session-management.html\#SessionManagement-sessionTimeout">Session Management: Session Timeout</a></p>
+<p>After configuring the <tt>DefaultWebSessionManager</tt> instance, session timeout is configured as described in <a href="session-management.html#[[#]]#SessionManagement-sessionTimeout">Session Management: Session Timeout</a></p>
 
 <h5><a name="Web-SessionCookie"></a>Session Cookie</h5>
 
@@ -479,7 +479,7 @@ securityManager.sessionManager.sessionIdCookie.domain = foo.com
 
 <p>See the <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html">SimpleCookie JavaDoc</a> for additional properties.</p>
 
-<p>The cookie's default name is <tt>JSESSIONID</tt> in accordance with the servlet specification.  Additionally, Shiro's cookie supports the <tt><a class="external-link" href="http://en.wikipedia.org/wiki/HTTP_cookie#HttpOnly_cookie" rel="nofollow">HttpOnly</a></tt> flag.  The <tt>sessionIdCookie</tt> sets <tt>HttpOnly</tt> to <tt>true</tt> by default for extra security.</p>
+<p>The cookie's default name is <tt>JSESSIONID</tt> in accordance with the servlet specification.  Additionally, Shiro's cookie supports the <tt><a class="external-link" href="https://en.wikipedia.org/wiki/HTTP_cookie#HttpOnly_cookie" rel="nofollow">HttpOnly</a></tt> flag.  The <tt>sessionIdCookie</tt> sets <tt>HttpOnly</tt> to <tt>true</tt> by default for extra security.</p>
 
 #info('Note', 'Shiro''s <tt>Cookie</tt> concept supports the <tt>HttpOnly</tt> flag even in Servlet 2.4 and 2.5 environments (whereas the Servlet API only supports it natively in 2.6 or later).')
 
@@ -689,7 +689,7 @@ securityManager.rememberMeManager = $rememberMeManager
 <a name="Web-principaltag"></a></p>
 <h3><a name="Web-The%7B%7Bprincipal%7D%7Dtag"></a>The <tt>principal</tt> tag</h3>
 
-<p>The <tt>principal</tt> tag will output the Subject's <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html\#getPrincipal()">principal</a></tt> (identifying attribute) or a property of that principal.</p>
+<p>The <tt>principal</tt> tag will output the Subject's <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#[[#]]#getPrincipal()">principal</a></tt> (identifying attribute) or a property of that principal.</p>
 
 <p>Without any tag attributes, the tag will render the <tt>toString()</tt> value of the principal.  For example (assuming the principal is a String username):</p>
 
@@ -709,7 +709,7 @@ Hello, <span class="code-tag">&lt;%= SecurityUtils.getSubject().getPrincipal().t
 
 <h4><a name="Web-Typedprincipal"></a>Typed principal</h4>
 
-<p>The <tt>principal</tt> tag assumes by default that the principal to print is the <tt>subject.getPrincipal()</tt> value.  But if you wanted to print a value that is <em>not</em> the primary principal, but another in the Subject's {<a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html\#getPrincipals()">principal collection</a>, you can acquire that principal by type and print that value instead.</p>
+<p>The <tt>principal</tt> tag assumes by default that the principal to print is the <tt>subject.getPrincipal()</tt> value.  But if you wanted to print a value that is <em>not</em> the primary principal, but another in the Subject's {<a class="external-link" href="static/current/apidocs/org/apache/shiro/subject/Subject.html#[[#]]#getPrincipals()">principal collection</a>, you can acquire that principal by type and print that value instead.</p>
 
 <p>For example, printing the Subject's user ID (and not the username), assuming the ID was in the principal collection:</p>
 

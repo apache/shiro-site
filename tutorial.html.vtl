@@ -184,7 +184,7 @@ OS name: <span class="code-quote">"mac os x"</span> version: <span class="code-q
 
 <p>While we could instantiate a <tt>SecurityManager</tt> class directly, Shiro's <tt>SecurityManager</tt> implementations have enough configuration options and internal components that make this a pain to do in Java source code - it would be much easier to configure the <tt>SecurityManager</tt> with a flexible text-based configuration format. </p>
 
-<p>To that end, Shiro provides a default &#8216;common denominator&#8217; solution via text-based <a class="external-link" href="http://en.wikipedia.org/wiki/INI_file" rel="nofollow">INI</a> configuration. People are pretty tired of using bulky XML files these days, and INI is easy to read, simple to use, and requires very few dependencies. You&#8217;ll also see later that with a simple understanding of object graph navigation, INI can be used effectively to configure simple object graphs like the SecurityManager. </p>
+<p>To that end, Shiro provides a default &#8216;common denominator&#8217; solution via text-based <a class="external-link" href="https://en.wikipedia.org/wiki/INI_file" rel="nofollow">INI</a> configuration. People are pretty tired of using bulky XML files these days, and INI is easy to read, simple to use, and requires very few dependencies. You&#8217;ll also see later that with a simple understanding of object graph navigation, INI can be used effectively to configure simple object graphs like the SecurityManager. </p>
 
 #tip('Many Configuration Options', 'Shiro''s <tt>SecurityManager</tt> implementations and all supporting components are all JavaBeans compatible.  This allows Shiro to be configured with practically any configuration format such as XML (Spring, JBoss, Guice, etc), <a class="external-link" href="http://www.yaml.org/" rel="nofollow">YAML</a>, JSON, Groovy Builder markup, and more.  INI is just Shiro''s ''common denominator'' format that allows configuration in any environment in case other options are not available.')
 
@@ -254,7 +254,7 @@ goodguy = winnebago:drive:eagle5
 
 <p>Here is what the above additions are doing:</p>
 
-<ol><li>We use Shiro's <tt>IniSecurityManagerFactory</tt> implementation to ingest our <tt>shiro.ini</tt> file which is located at the root of the classpath.  This implementation reflects Shiro's support of the <a class="external-link" href="http://en.wikipedia.org/wiki/Factory_method_pattern" rel="nofollow">Factory Method Design Pattern</a>.  The <tt>classpath:</tt> prefix is an resource indicator that tells shiro where to load the ini file from (other prefixes, like <tt>url:</tt> and <tt>file:</tt> are supported as well).
+<ol><li>We use Shiro's <tt>IniSecurityManagerFactory</tt> implementation to ingest our <tt>shiro.ini</tt> file which is located at the root of the classpath.  This implementation reflects Shiro's support of the <a class="external-link" href="https://en.wikipedia.org/wiki/Factory_method_pattern" rel="nofollow">Factory Method Design Pattern</a>.  The <tt>classpath:</tt> prefix is an resource indicator that tells shiro where to load the ini file from (other prefixes, like <tt>url:</tt> and <tt>file:</tt> are supported as well).
 <br clear="none" class="atl-forced-newline">
 <br clear="none" class="atl-forced-newline"></li><li>The <tt>factory.getInstance()</tt> method is called, which parses the INI file and returns a <tt>SecurityManager</tt> instance reflecting the configuration.
 <br clear="none" class="atl-forced-newline">

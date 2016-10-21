@@ -21,7 +21,7 @@
 </table>
 
 
-<p>The <em>shiro-cas</em> module is made to protect a web application with a <a class="external-link" href="http://www.jasig.org/cas" rel="nofollow">Jasig CAS</a> SSO server. It enables a Shiro-enabled application to be a CAS client.</p>
+<p>The <em>shiro-cas</em> module is made to protect a web application with a <a class="external-link" href="https://wiki.jasig.org/display/CAS/Home" rel="nofollow">Jasig CAS</a> SSO server. It enables a Shiro-enabled application to be a CAS client.</p>
 
 <h2><a name="CAS-BasicunderstandingoftheCASprotocol"></a>Basic understanding of the CAS protocol</h2>
 
@@ -102,7 +102,7 @@ casRealm.casServerUrlPrefix =&#160;https:<span class="code-comment">//server.cas
 <p>The <em>casServerUrlPrefix</em> is the url of the CAS server (for example&#160;: <a class="external-link" href="https://server.cas.com" rel="nofollow">https://server.cas.com</a>).<br clear="none">
 The <em>casService</em> is the application service url, the url on wich the application receives CAS service ticket (for example&#160;: <a class="external-link" href="http://application.examples.com/shiro-cas" rel="nofollow">http://application.examples.com/shiro-cas</a>).<br clear="none">
 The <em>validationProcol</em> can be SAML or CAS (default)&#160;: attributes and remember me information are only pushed throught the SAML validation procotol (except specific customizations). It depends on the version of the CAS server&#160;: SAML protocol can be used with CAS server version &gt;= 3.1.</p>
-<div class="panelMacro"><table class="warningMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/forbidden.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1">If you choose SAML validation, you need some more specific dependencies :</td></tr></table></div>
+<div class="panelMacro"><table class="warningMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/forbidden.png" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1">If you choose SAML validation, you need some more specific dependencies :</td></tr></table></div>
 <div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
 <pre class="code-xml">
 <span class="code-tag">&lt;dependency&gt;</span>
@@ -123,7 +123,7 @@ The <em>validationProcol</em> can be SAML or CAS (default)&#160;: attributes and
 <p>The <em>defaultRoles</em> is the default roles given to the authenticated user after CAS authentication success.<br clear="none">
 The <em>defaultPermissions</em> is the default permissions given to the authenticated user after CAS authentication success.<br clear="none">
 The <em>roleAttributeNames</em> defines the names of the attributes received from CAS response which define roles to give to the authenticated user (the roles are separated by comas).<br clear="none">
-The <em>permissionAttributeNames</em> defines the names of the attributes received from CAS response which define permissions to give to the authenticated user (the permissions are separated by comas).</p>
+The <em>permissionAttributeNames</em> defines the names of the attributes received from CAS response which define permissions to give to the autnewhenticated user (the permissions are separated by comas).</p>
 
 <h3><a name="CAS-CasSubjectFactory"></a>CasSubjectFactory</h3>
 

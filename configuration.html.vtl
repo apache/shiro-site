@@ -62,7 +62,7 @@ SessionDAO sessionDAO = <span class="code-keyword">new</span> CustomSessionDAO()
 
 <p>Most applications instead benefit from text-based configuration that could be modified independently of source code and even make things easier to understand for those not intimately familiar with Shiro's APIs.</p>
 
-<p>To ensure a common-denominator text-based configuration mechanism that can work in all environments with minimal 3rd party dependencies, Shiro supports the <a class="external-link" href="http://en.wikipedia.org/wiki/INI_file" rel="nofollow">INI format</a> to build the <tt>SecurityManager</tt> object graph and its supporting components.  INI is easy to read, easy to configure, and is simple to set-up and suits most applications well.</p>
+<p>To ensure a common-denominator text-based configuration mechanism that can work in all environments with minimal 3rd party dependencies, Shiro supports the <a class="external-link" href="https://en.wikipedia.org/wiki/INI_file" rel="nofollow">INI format</a> to build the <tt>SecurityManager</tt> object graph and its supporting components.  INI is easy to read, easy to configure, and is simple to set-up and suits most applications well.</p>
 
 <h3><a name="Configuration-CreatingaSecurityManagerfromINI"></a>Creating a SecurityManager from INI</h3>
 
@@ -217,9 +217,9 @@ myRealm.setUsername(<span class="code-quote">"jsmith"</span>);
 </pre>
 </div></div>
 
-<p>How is this possible?  It assumes that all objects are <a class="external-link" href="http://en.wikipedia.org/wiki/JavaBean" rel="nofollow">Java Beans</a>-compatible <a class="external-link" href="http://en.wikipedia.org/wiki/Plain_Old_Java_Object" rel="nofollow">POJO</a>s.</p>
+<p>How is this possible?  It assumes that all objects are <a class="external-link" href="https://en.wikipedia.org/wiki/JavaBean" rel="nofollow">Java Beans</a>-compatible <a class="external-link" href="https://en.wikipedia.org/wiki/Plain_Old_Java_Object" rel="nofollow">POJO</a>s.</p>
 
-<p>Under the covers, Shiro by default uses Apache Commons <a class="external-link" href="http://commons.apache.org/beanutils/">BeanUtils</a> to do all the heavy lifting when setting these properties.  So although INI values are text, BeanUtils knows how to convert the string values to the proper primitive types and then invoke the corresponding JavaBeans setter method.</p>
+<p>Under the covers, Shiro by default uses Apache Commons <a class="external-link" href="http://commons.apache.org/proper/commons-beanutils/">BeanUtils</a> to do all the heavy lifting when setting these properties.  So although INI values are text, BeanUtils knows how to convert the string values to the proper primitive types and then invoke the corresponding JavaBeans setter method.</p>
 
 <h6><a name="Configuration-ReferenceValues"></a>Reference Values</h6>
 
@@ -259,7 +259,7 @@ securityManager.getSessionManager().setGlobalSessionTimeout(1800000);
 
 <p>The graph traversal can be as deep as necessary: <tt>object.property1.property2....propertyN.value = blah</tt></p>
 
-#tip('BeanUtils Property Support', 'Any property assignment operation supported by the BeanUtils.<a class="external-link" href="http://commons.apache.org/beanutils/v1.8.2/apidocs/org/apache/commons/beanutils/BeanUtils.html#setProperty%28java.lang.Object,%20java.lang.String,%20java.lang.Object%29">setProperty</a> method will work in Shiro''s [main] section, including set/list/map element assignments.  See the <a class="external-link" href="http://commons.apache.org/beanutils/">Apache Commons BeanUtils Website</a> and documentation for more information.')
+#tip('BeanUtils Property Support', 'Any property assignment operation supported by the BeanUtils.<a class="external-link" href="https://commons.apache.org/proper/commons-beanutils/apidocs/org/apache/commons/beanutils/BeanUtils.html#setProperty-java.lang.Object-java.lang.String-java.lang.Object-">setProperty</a> method will work in Shiro''s [main] section, including set/list/map element assignments.  See the <a class="external-link" href="http://commons.apache.org/proper/commons-beanutils/">Apache Commons BeanUtils Website</a> and documentation for more information.')
 
 <h6><a name="Configuration-ByteArrayValues"></a>Byte Array Values</h6>
 

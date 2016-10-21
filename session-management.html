@@ -154,7 +154,7 @@ securityManager.sessionManager.sessionListeners = $aSessionListener, $anotherSes
 <p><a name="SessionManagement-sessionstorage"></a></p>
 <h3><a name="SessionManagement-SessionStorage"></a>Session Storage</h3>
 
-<p>Whenever a session is created or updated, its data needs to persisted to a storage location so it is accessible by the application at a later time.  Similarly, when a session is invalid and longer being used, it needs to be deleted from storage so the session data store space is not exhausted.  The <tt>SessionManager</tt> implementations delegate these Create/Read/Update/Delete (CRUD) operations to an internal component, the <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/session/mgt/eis/SessionDAO.html">SessionDAO</a></tt>, which reflects the <a class="external-link" href="http://en.wikipedia.org/wiki/Data_access_object" rel="nofollow">Data Access Object (DAO)</a> design pattern.</p>
+<p>Whenever a session is created or updated, its data needs to persisted to a storage location so it is accessible by the application at a later time.  Similarly, when a session is invalid and longer being used, it needs to be deleted from storage so the session data store space is not exhausted.  The <tt>SessionManager</tt> implementations delegate these Create/Read/Update/Delete (CRUD) operations to an internal component, the <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/session/mgt/eis/SessionDAO.html">SessionDAO</a></tt>, which reflects the <a class="external-link" href="https://en.wikipedia.org/wiki/Data_access_object" rel="nofollow">Data Access Object (DAO)</a> design pattern.</p>
 
 <p>The power of the SessionDAO is that you can implement this interface to communicate with <em>any</em> data store you wish.  This means your session data can reside in memory, on the file system, in a relational database or NoSQL data store, or any other location you need.  You have control over persistence behavior.</p>
 
@@ -222,11 +222,11 @@ securityManager.cacheManager = $cacheManager
 <p><a name="SessionManagement-ehcachesessioncacheconfiguration"></a></p>
 <h5><a name="SessionManagement-EHCacheSessionCacheConfiguration"></a>EHCache Session Cache Configuration</h5>
 
-<p>By default, the <tt>EhCacheManager</tt> uses a Shiro-specific <tt><a class="external-link" href="https://github.com/apache/shiro/tree/master/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml">ehcache.xml</a></tt> file that sets up the Session cache region and the necessary settings to ensure Sessions are stored and retrieved properly.</p>
+<p>By default, the <tt>EhCacheManager</tt> uses a Shiro-specific <tt><a class="external-link" href="https://github.com/apache/shiro/blob/master/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml">ehcache.xml</a></tt> file that sets up the Session cache region and the necessary settings to ensure Sessions are stored and retrieved properly.</p>
 
 <p>However, if you wish to change the cache settings, or configure your own <tt>ehcache.xml</tt> or EHCache <tt>net.sf.ehcache.CacheManager</tt> instance, you will need to configure the cache region to ensure that Sessions are handled correctly.</p>
 
-<p>If you look at the default <tt><a class="external-link" href="https://github.com/apache/shiro/tree/master/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml">ehcache.xml</a></tt> file, you will see the following <tt>shiro-activeSessionCache</tt> cache configuration:</p>
+<p>If you look at the default <tt><a class="external-link" href="https://github.com/apache/shiro/blob/master/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml">ehcache.xml</a></tt> file, you will see the following <tt>shiro-activeSessionCache</tt> cache configuration:</p>
 
 <div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
 <pre class="code-xml">
@@ -294,7 +294,7 @@ securityManager.sessionManager.sessionDAO.sessionIdGenerator = $sessionIdGenerat
 
 <h4><a name="SessionManagement-DefaultSessionValidationScheduler"></a>Default SessionValidationScheduler</h4>
 
-<p>The default <tt>SessionValidationScheduler</tt> usable in all environments is the <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/session/mgt/ExecutorServiceSessionValidationScheduler.html">ExecutorServiceSessionValidationScheduler</a></tt> which uses a JDK <tt><a class="external-link" href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/ScheduledExecutorService.html" rel="nofollow">ScheduledExecutorService</a></tt> to control how often the validation should occur.</p>
+<p>The default <tt>SessionValidationScheduler</tt> usable in all environments is the <tt><a class="external-link" href="static/current/apidocs/org/apache/shiro/session/mgt/ExecutorServiceSessionValidationScheduler.html">ExecutorServiceSessionValidationScheduler</a></tt> which uses a JDK <tt><a class="external-link" href="http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/ScheduledExecutorService.html" rel="nofollow">ScheduledExecutorService</a></tt> to control how often the validation should occur.</p>
 
 <p>By default, this implementation will perform validation once per hour.  You can change the rate at which validation occurs by specifying a <b>new</b> instance of <tt>ExecutorServiceSessionValidationScheduler</tt> and specifying a different interval (in milliseconds):</p>
 
@@ -365,7 +365,7 @@ securityManager.sessionManager.deleteInvalidSessions = <span class="code-keyword
 
 <p>Note also that even if you prevent Shiro from deleting invalid sessions, you still should enable session validation somehow - either via Shiro's existing validation mechanisms or via a custom mechanism you provide yourself (see the above "Disabling Session Validation" section above for more).  The validation mechanism will update your session records to reflect the invalid state (e.g. when it was invalidated, when it was last accessed, etc), even if you will delete them manually yourself at some other time.</p>
 
-<div class="panelMacro"><table class="warningMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/forbidden.gif" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1">If you configure Shiro so it does not delete invalid sessions, you are responsible for ensuring that your session data store doesn't exhaust its space.  You must delete invalid sessions from you data store yourself!  
+<div class="panelMacro"><table class="warningMacro"><colgroup span="1"><col span="1" width="24"><col span="1"></colgroup><tr><td colspan="1" rowspan="1" valign="top"><img align="middle" src="https://cwiki.apache.org/confluence/images/icons/emoticons/forbidden.png" width="16" height="16" alt="" border="0"></td><td colspan="1" rowspan="1">If you configure Shiro so it does not delete invalid sessions, you are responsible for ensuring that your session data store doesn't exhaust its space.  You must delete invalid sessions from you data store yourself!
 
 <p>Also note that disabling session deletion is <b>not</b> the same as disabling session validation scheduling.  You should almost always use a session validation scheduling mechanism - either one supported by Shiro directly or your own.</p></td></tr></table></div>
 
@@ -379,7 +379,7 @@ securityManager.sessionManager.deleteInvalidSessions = <span class="code-keyword
 
 <p><b>Distributed Caches</b></p>
 
-<p>Distributed Caches such as <a class="external-link" href="http://ehcache.org/documentation/get-started/about-distributed-cache" rel="nofollow">Ehcache+TerraCotta</a>, <a class="external-link" href="http://www.gigaspaces.com/" rel="nofollow">GigaSpaces</a> <a class="external-link" href="http://www.oracle.com/technetwork/middleware/coherence/overview/index.html" rel="nofollow">Oracle Coherence</a>, and <a class="external-link" href="http://memcached.org/" rel="nofollow">Memcached</a> (and many others) already solve the distributed-data-at-the-persistence-level problem.  Therefore enabling Session clustering in Shiro is as simple as configuring Shiro to use a distributed cache.</p>
+<p>Distributed Caches such as <a class="external-link" href="http://www.ehcache.org/documentation/2.7/configuration/distributed-cache-configuration.html" rel="nofollow">Ehcache+TerraCotta</a>, <a class="external-link" href="http://www.gigaspaces.com/" rel="nofollow">GigaSpaces</a> <a class="external-link" href="http://www.oracle.com/technetwork/middleware/coherence/overview/index.html" rel="nofollow">Oracle Coherence</a>, and <a class="external-link" href="http://memcached.org/" rel="nofollow">Memcached</a> (and many others) already solve the distributed-data-at-the-persistence-level problem.  Therefore enabling Session clustering in Shiro is as simple as configuring Shiro to use a distributed cache.</p>
 
 <p>This gives you the flexibility of choosing the exact clustering mechanism that is suitable for <em>your</em> environment.</p>
 
@@ -441,7 +441,7 @@ securityManager.cacheManager = $cacheManager
 
 <h3><a name="SessionManagement-EhcacheTerracotta"></a>Ehcache + Terracotta</h3>
 
-<p>One such distributed caching solution that people have had success with while using Shiro is the Ehcache + Terracotta pairing.  See the Ehcache-hosted <a class="external-link" href="http://ehcache.org/documentation/get-started/about-distributed-cache" rel="nofollow">Distributed Caching With Terracotta</a> documentation for full details of how to enable distributed caching with Ehcache.</p>
+<p>One such distributed caching solution that people have had success with while using Shiro is the Ehcache + Terracotta pairing.  See the Ehcache-hosted <a class="external-link" href="http://www.ehcache.org/documentation/get-started/about-distributed-cache" rel="nofollow">Distributed Caching With Terracotta</a> documentation for full details of how to enable distributed caching with Ehcache.</p>
 
 <p>Once you've got Terracotta clustering working with Ehcache, the Shiro-specific parts are very simple.  Read and follow the <a href="#SessionManagement-ehcachesessiondao">Ehcache SessionDAO</a> documentation, but we'll need to make a few changes</p>
 

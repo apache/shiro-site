@@ -11,7 +11,7 @@
 <ol><li>A <tt>Subject</tt> instance must be created</li><li>The <tt>Subject</tt> instance must be <em>bound</em> to the currently executing thread.</li><li>After the thread is finished executing (or if the thread's execution results in a <tt>Throwable</tt>), the <tt>Subject</tt> must be <em>unbound</em> to ensure that the thread remains 'clean' in any thread-pooled environment.</li></ol>
 
 
-<p>Shiro has architectural components that perform this bind/unbind logic automatically for a running application.  For example, in a web application, the root Shiro Filter performs this logic when <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/servlet/AbstractShiroFilter.html\#doFilterInternal(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)">filtering a request</a>.  But as test environments and frameworks differ, we need to perform this bind/unbind logic ourselves for our chosen test framework.</p>
+<p>Shiro has architectural components that perform this bind/unbind logic automatically for a running application.  For example, in a web application, the root Shiro Filter performs this logic when <a class="external-link" href="static/current/apidocs/org/apache/shiro/web/servlet/AbstractShiroFilter.html#[[#]]#doFilterInternal(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)">filtering a request</a>.  But as test environments and frameworks differ, we need to perform this bind/unbind logic ourselves for our chosen test framework.</p>
 
 <h2><a name="Testing-TestSetup"></a>Test Setup</h2>
 
@@ -102,7 +102,7 @@
 </div></div>
 
 #warning('Testing &amp; Frameworks', 'The code in the <tt>AbstractShiroTest</tt> class uses Shiro''s <tt>ThreadState</tt> concept and a static SecurityManager.  These techniques are useful in tests and in framework code, but rarely ever used in application code.
-<p>Most end-users working with Shiro who need to ensure thread-state consistency will almost always use Shiro''s automatic management mechanisms, namely the <tt>Subject.associateWith</tt> and the <tt>Subject.execute</tt> methods.  These methods are covered in the reference on <a href="subject.html\#Subject-ThreadAssociation">Subject thread association</a>.</p>')
+<p>Most end-users working with Shiro who need to ensure thread-state consistency will almost always use Shiro''s automatic management mechanisms, namely the <tt>Subject.associateWith</tt> and the <tt>Subject.execute</tt> methods.  These methods are covered in the reference on <a href="subject.html#[[#]]#Subject-ThreadAssociation">Subject thread association</a>.</p>')
 
 <h2><a name="Testing-UnitTesting"></a>Unit Testing</h2>
 
@@ -112,7 +112,7 @@
 
 <h3><a name="Testing-ExampleShiroUnitTest"></a>ExampleShiroUnitTest</h3>
 
-<p>Because unit tests are better suited for testing your own logic (and not any implementations your logic might call), it is a great idea to <em>mock</em> any APIs that your logic depends on.  This works very well with Shiro - you can mock the <tt>Subject</tt> interface and have it reflect whatever conditions you want your code under test to react to.  We can leverage modern mock frameworks like <a class="external-link" href="http://easymock.org/" rel="nofollow">EasyMock</a> and <a class="external-link" href="http://mockito.org/" rel="nofollow">Mockito</a> to do this for us.  </p>
+<p>Because unit tests are better suited for testing your own logic (and not any implementations your logic might call), it is a great idea to <em>mock</em> any APIs that your logic depends on.  This works very well with Shiro - you can mock the <tt>Subject</tt> interface and have it reflect whatever conditions you want your code under test to react to.  We can leverage modern mock frameworks like <a class="external-link" href="http://easymock.org/" rel="nofollow">EasyMock</a> and <a class="external-link" href="http://site.mockito.org" rel="nofollow">Mockito</a> to do this for us.  </p>
 
 <p>But as stated above, the key in Shiro tests is to remember that any Subject instance (mock or real) must be bound to the thread during test execution.  So all we need to do is bind the mock Subject to ensure things work as expected.</p>
 

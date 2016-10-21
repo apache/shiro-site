@@ -17,7 +17,7 @@
 </tr>
 </table>
 
-<p>This page covers the ways to integrate Shiro into <a class="external-link" href="http://www.springframework.org" rel="nofollow">Spring</a>-based applications.</p>
+<p>This page covers the ways to integrate Shiro into <a class="external-link" href="http://spring.io" rel="nofollow">Spring</a>-based applications.</p>
 
 <p>Shiro's JavaBeans compatibility makes it perfectly suited to be configured via Spring XML or other Spring-based configuration mechanisms.  Shiro applications need an application singleton <tt>SecurityManager</tt> instance.  Note that this does not have to be a <em>static</em> singleton, but there should only be a single instance used by the application, whether its a static singleton or not.</p>
 
@@ -180,7 +180,7 @@ all of its configuration properties in web.xml but define the <tt>SecurityManage
 </pre>
 </div></div>
 
-<p>Once you have defined this bean, you must plug it in to whatever remoting <tt>Exporter</tt> you are using to export/expose your services.  <tt>Exporter</tt> implementations are defined according to the remoting mechanism/protocol in use.  See Spring's <a class="external-link" href="http://static.springsource.org/spring/docs/2.5.x/reference/remoting.html" rel="nofollow">Remoting chapter</a> on defining <tt>Exporter</tt> beans.</p>
+<p>Once you have defined this bean, you must plug it in to whatever remoting <tt>Exporter</tt> you are using to export/expose your services.  <tt>Exporter</tt> implementations are defined according to the remoting mechanism/protocol in use.  See Spring's <a class="external-link" href="http://docs.spring.io/spring/docs/2.5.x/reference/remoting.html" rel="nofollow">Remoting chapter</a> on defining <tt>Exporter</tt> beans.</p>
 
 <p>For example, if using HTTP-based remoting (notice the property reference to the <tt>secureRemoteInvocationExecutor</tt> bean):</p>
 

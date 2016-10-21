@@ -17,10 +17,10 @@ These integrations are supported by the Apache Shiro Development team. Want to h
 
 ## Open Source Community Integrations
 
-* **[Stormpath User Management](http://www.stormpath.com/blog/user-management-java-web-apps-stormpath-and-apache-shiro)** from [Stormpath](http://www.stormpath.com/)
+* **[Stormpath User Management](https://stormpath.com/blog/user-management-java-web-apps-stormpath-and-apache-shiro)** from [Stormpath](https://stormpath.com/)
 Pairing Apache Shiro with Stormpath gives you a full application security and user management system, with little to no coding.
 
-* **[Grails](http://grails.org/plugins/shiro)** from [Pivotal](http://grails.org/) and [@pledbrook](https://twitter.com/@pledbrook)
+* **[Grails](https://grails.org/plugins/shiro)** from [Pivotal](https://grails.org/) and [@pledbrook](https://twitter.com/@pledbrook)
 Very up-to-date Grails/Shiro Integration, including Grails 2.0 and Shiro 1.2. Adds easy authentication and access control to Grails applications. 
 
 * **[Apache Isis](http://isis.apache.org)** from [Apache](http://apache.org/) 
@@ -35,7 +35,7 @@ Demo of one way to integrate Shiro with App Engine and Google Guice, plus front-
 * **[Play!](https://github.com/wsargent/play-shiro)** from [@will_sargent](https://twitter.com/@will_sargent)
 A very simple integration between Apache Shiro and Play 2.0. If you want to play with Play, this project could use an update handling statelessness since the Shiro 1.2 release. 
 
-* **[55Wicket](https://github.com/55minutes/fiftyfive-wicket)** from [55 Minutes](http://www.55minutes.com/)
+* **[55Wicket](https://github.com/55minutes/fiftyfive-wicket)** from [55 Minutes](http://55minutes.com)
 A nifty set of tools and libraries for enhancing productivity with the Apache Wicket Java web framework, including Shiro Integration.
 
 * **[Lift](https://github.com/timperrett/lift-shiro)** from [@timperrett](https://twitter.com/@timperrett)

@@ -1,6 +1,6 @@
 <h1><a name="Guice-IntegratingApacheShirointoGuicebasedApplication"></a>Integrating Apache Shiro into Guice based Application</h1>
 
-<p>Shiro <a class="external-link" href="http://code.google.com/p/google-guice/" rel="nofollow">Guice</a> integration was added in Shiro 1.2.  This page covers the ways to integrate Shiro into Guice-based applications using standard Guice conventions and mechanisms.  Prior to reading this integration document, you should be a least somewhat familiar with Guice.</p>
+<p>Shiro <a class="external-link" href="https://github.com/google/guice" rel="nofollow">Guice</a> integration was added in Shiro 1.2.  This page covers the ways to integrate Shiro into Guice-based applications using standard Guice conventions and mechanisms.  Prior to reading this integration document, you should be a least somewhat familiar with Guice.</p>
 
 <h2><a name="Guice-Overview"></a>Overview</h2>
 
@@ -12,12 +12,12 @@
 
 
 <ul><li>ShiroWebModule
-	<ul><li>Extension of <tt>ShiroModule</tt> that sets up the web environment and also allows for filter chain configuration.  This uses the <a class="external-link" href="http://code.google.com/p/google-guice/wiki/ServletModule" rel="nofollow">Guice Servlet Module</a> to configure the filters, and so requires that to be setup.</li><li>Like the <tt>ShiroModule</tt>, this module is used by extending it and adding your own custom configuration.</li></ul>
+	<ul><li>Extension of <tt>ShiroModule</tt> that sets up the web environment and also allows for filter chain configuration.  This uses the <a class="external-link" href="https://github.com/google/guice/wiki/ServletModule" rel="nofollow">Guice Servlet Module</a> to configure the filters, and so requires that to be setup.</li><li>Like the <tt>ShiroModule</tt>, this module is used by extending it and adding your own custom configuration.</li></ul>
 	</li></ul>
 
 
 <ul><li>ShiroAopModule
-	<ul><li>Uses <a class="external-link" href="http://code.google.com/p/google-guice/wiki/AOP" rel="nofollow">Guice AOP</a> to implement the Shiro AOP annotations.  This module is primarily concerned with adapting Shiro <tt>AnnotationMethodInterceptors</tt> to the Guice method interceptor model.</li><li>This module is typically used by simply installing it.  However, if you have your own <tt>AnnotationMethodInterceptors</tt> written for Shiro, they can be easily incorporated by extending it.</li></ul>
+	<ul><li>Uses <a class="external-link" href="https://github.com/google/guice/wiki/AOP" rel="nofollow">Guice AOP</a> to implement the Shiro AOP annotations.  This module is primarily concerned with adapting Shiro <tt>AnnotationMethodInterceptors</tt> to the Guice method interceptor model.</li><li>This module is typically used by simply installing it.  However, if you have your own <tt>AnnotationMethodInterceptors</tt> written for Shiro, they can be easily incorporated by extending it.</li></ul>
 	</li></ul>
 
 
