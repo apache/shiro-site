@@ -4,7 +4,7 @@ title: Securing Web Applications with Apache Shiro
 
 This document is an introductory step-by-step tutorial to securing a web application with Apache Shiro.  It assumes an introductory knowledge of Shiro, and assumes familiarity with at least the following two introductory documents:
 
-- [Application Security with Apache Shiro](http://www.infoq.com/articles/apache-shiro)
+- [Application Security with Apache Shiro](https://www.infoq.com/articles/apache-shiro)
 - [Apache Shiro 10 Minute Tutorial](http://shiro.apache.org/10-minute-tutorial.html)
 
 This step-by-step tutorial should take ~ 45 minutes to 1 hour to complete.  When you are finished, you will have a very good idea of how Shiro works in a web application.
@@ -24,7 +24,7 @@ This step-by-step tutorial should take ~ 45 minutes to 1 hour to complete.  When
 <a id="overview"></a>
 ## Overview
 
-While Apache Shiro's core design goals allow it to be used to secure _any_ JVM-based application, such as command line applications, server daemons, web apps, etc, this guide will focus on the most common use case: securing a web application running in a [Servlet](http://en.wikipedia.org/wiki/Java_Servlet) container, such as Tomcat or Jetty.
+While Apache Shiro's core design goals allow it to be used to secure _any_ JVM-based application, such as command line applications, server daemons, web apps, etc, this guide will focus on the most common use case: securing a web application running in a [Servlet](https://en.wikipedia.org/wiki/Java_servlet) container, such as Tomcat or Jetty.
 
 ### Prerequisites
 
@@ -60,18 +60,23 @@ On GitHub, visit the [tutorial project](https://github.com/lhazlewood/apache-shi
 
 Now that you have forked the repository to your own GitHub account, clone it on your local machine:
 
-    $ git clone git@github.com:$YOUR_GITHUB_USERNAME/apache-shiro-tutorial-webapp.git    
+``` bash
+$ git clone git@github.com:$YOUR_GITHUB_USERNAME/apache-shiro-tutorial-webapp.git    
+```
 
 (where `$YOUR_GITHUB_USERNAME` is your own GitHub username of course)
 
 You can now `cd` into the cloned directory and see the project structure:
 
-    $ cd apache-shiro-tutorial-webapp
+``` bash
+$ cd apache-shiro-tutorial-webapp
+```
 
 ### 3. Review project structure
 
 After cloning the repo, your current `master` branch will have the following structure:
 
+``` nohighlight
     apache-shiro-tutorial-webapp/
       |-- src/
       |  |-- main/
@@ -88,6 +93,7 @@ After cloning the repo, your current `master` branch will have the following str
       |-- LICENSE
       |-- README.md
       |-- pom.xml
+```
 
 Here is what each means:
 
@@ -106,7 +112,9 @@ Here is what each means:
 
 Now that you've cloned the project, you can run the web application by executing the following on the command line:
 
-    $ mvn jetty:run 
+``` bash
+$ mvn jetty:run
+```
 
 Next, open your web browser to [localhost:8080](http://localhost:8080), and you'll see the home page with a **Hello, World!** greeting.  
 
@@ -119,7 +127,9 @@ Our initial repository `master` branch is just a simple generic web application 
 
 Perform the following git checkout command to load the `step1` branch:
 
-    $ git checkout step1
+``` bash
+$ git checkout step1
+```
 
 Checking out this branch, you will find two changes:
 
@@ -134,15 +144,17 @@ To keep things simple for now, we'll start a Shiro environment by using Shiro's 
 
 If you checked out the `step1` branch, you'll see the contents of this new `src/main/webapp/WEB-INF/shiro.ini` file (header comments removed for brevity):
 
-    [main]
-    
-    # Let's use some in-memory caching to reduce the number of runtime lookups against a remote user store.
-    # A real application might want to use a more robust caching solution (e.g. ehcache or a
-    # distributed cache).  When using such caches, be aware of your cache TTL settings: too high
-    # a TTL and the cache won't reflect any potential changes in Stormpath fast enough.  Too low
-    # and the cache could evict too often, reducing performance.
-    cacheManager = org.apache.shiro.cache.MemoryConstrainedCacheManager
-    securityManager.cacheManager = $cacheManager
+``` ini
+[main]
+
+# Let's use some in-memory caching to reduce the number of runtime lookups against a remote user store.
+# A real application might want to use a more robust caching solution (e.g. ehcache or a
+# distributed cache).  When using such caches, be aware of your cache TTL settings: too high
+# a TTL and the cache won't reflect any potential changes in Stormpath fast enough.  Too low
+# and the cache could evict too often, reducing performance.
+cacheManager = org.apache.shiro.cache.MemoryConstrainedCacheManager
+securityManager.cacheManager = $cacheManager
+```
 
 This .ini contains simply a `[main]` section with some minimal configuration:
 
@@ -155,23 +167,25 @@ While we have a `shiro.ini` configuration, we need to actually _load_ it and sta
 
 We do all of this by adding a few things to the existing `src/main/webapp/WEB-INF/web.xml` file:
 
-    <listener>
-        <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
-    </listener>
-    
-    <filter>
-        <filter-name>ShiroFilter</filter-name>
-        <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
-    </filter>
-    
-    <filter-mapping>
-        <filter-name>ShiroFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
-        <dispatcher>ERROR</dispatcher>
-    </filter-mapping>
+``` xml
+<listener>
+    <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
+</listener>
+
+<filter>
+    <filter-name>ShiroFilter</filter-name>
+    <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
+</filter>
+
+<filter-mapping>
+    <filter-name>ShiroFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+</filter-mapping>
+```
 
 * The `<listener>` declaration defines a [`ServletContextListener`](http://docs.oracle.com/javaee/6/api/javax/servlet/ServletContextListener.html) that starts up the Shiro environment (including the Shiro `SecurityManager`) upon web application startup.  By default, this listener automatically knows to look for our `WEB-INF/shiro.ini` file for Shiro configuration.
 
@@ -183,12 +197,16 @@ We do all of this by adding a few things to the existing `src/main/webapp/WEB-IN
 
 After checking out the `step1` branch, go ahead and run the web app:
 
-    $ mvn jetty:run
+``` bash
+$ mvn jetty:run
+```
 
 This time, you will see log output similar to the following, indicating that Shiro is indeed running in your webapp:
 
-    16:04:19.807 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Starting Shiro environment initialization.
-    16:04:19.904 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Shiro environment initialized in 95 ms.
+``` nohighlight
+16:04:19.807 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Starting Shiro environment initialization.
+16:04:19.904 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Shiro environment initialized in 95 ms.
+```
 
 Hit `ctl-C` to shut down the web app.
 
@@ -197,7 +215,9 @@ Hit `ctl-C` to shut down the web app.
 
 Perform the following git checkout command to load the `step2` branch:
 
-    $ git checkout step2
+``` bash
+$ git checkout step2
+```
 
 Now we have Shiro integrated and running within a webapp.  But we haven't actually told Shiro to do anything yet!
 
@@ -209,7 +229,7 @@ Shiro does this via what it calls a [`Realm`](http://shiro.apache.org/architectu
 
 > Realms act as the ‘bridge’ or ‘connector’ between Shiro and your application’s security data. When it comes time to actually interact with security-related data like user accounts to perform authentication (login) and authorization (access control), Shiro looks up many of these things from one or more Realms configured for an application. 
 >
-> In this sense a Realm is essentially a security-specific [DAO](http://en.wikipedia.org/wiki/Data_access_object): it encapsulates connection details for data sources and makes the associated data available to Shiro as needed. When configuring Shiro, you must specify at least one Realm to use for authentication and/or authorization. The SecurityManager may be configured with multiple Realms, but at least one is required. 
+> In this sense a Realm is essentially a security-specific [DAO](https://en.wikipedia.org/wiki/Data_access_object): it encapsulates connection details for data sources and makes the associated data available to Shiro as needed. When configuring Shiro, you must specify at least one Realm to use for authentication and/or authorization. The SecurityManager may be configured with multiple Realms, but at least one is required. 
 >
 > Shiro provides out-of-the-box Realms to connect to a number of security data sources (aka directories) such as LDAP, relational databases (JDBC), text configuration sources like INI and properties files, and more. You can plug-in your own Realm implementations to represent custom data sources if the default Realms do not meet your needs. 
 
@@ -219,7 +239,7 @@ So, we need to configure a Realm so we can access users.
 
 In the spirit of keeping this tutorial as simple as possible, without introducing complexity or scope that distracts us from the purpose of learning Shiro, we'll use one of the simplest realms we can: a Stormpath realm.
 
-[Stormpath](http://stormpath.com/) is a cloud hosted user management service, totally free for development purposes.  This means that after enabling Stormpath, you'll have the following ready to go:
+[Stormpath](https://stormpath.com/) is a cloud hosted user management service, totally free for development purposes.  This means that after enabling Stormpath, you'll have the following ready to go:
 
 * A user interface for managing Applications, Directories, Accounts and Groups.  Shiro does not provide this at all, so this will be convenient and save time while you go through this tutorial.
 * A secure storage mechanism for user passwords.  Your application never needs to worry about password security, password comparisons or storing passwords.  While Shiro can do these things, you would have to configure them and be aware of cryptographic concepts.  Stormpath automates password security so you (and Shiro) don't need to worry about it or be on the hook for 'getting it right'.
@@ -247,19 +267,25 @@ A Stormpath API Key is required for the Stormpath Realm to communicate with Stor
 
     This will generate your API Key and download it to your computer as an `apiKey.properties` file. If you open the file in a text editor, you will see something similar to the following:
 
-         apiKey.id = 144JVZINOF5EBNCMG9EXAMPLE
-         apiKey.secret = lWxOiKqKPNwJmSldbiSkEbkNjgh2uRSNAb+AEXAMPLE
+    ``` ini
+    apiKey.id = 144JVZINOF5EBNCMG9EXAMPLE
+    apiKey.secret = lWxOiKqKPNwJmSldbiSkEbkNjgh2uRSNAb+AEXAMPLE
+    ```
 
 4. Save this file in a secure location, such as your home directory in a hidden `.stormpath` directory. For example:
 
-        $HOME/.stormpath/apiKey.properties
+    ```bash
+    $HOME/.stormpath/apiKey.properties
+    ```
     
 5. Also change the file permissions to ensure only you can read this file. For example, on *nix operating systems:
 
-        $ chmod go-rwx $HOME/.stormpath/apiKey.properties
-        $ chmod u-w $HOME/.stormpath/apiKey.properties
+    ```bash
+    $ chmod go-rwx $HOME/.stormpath/apiKey.properties
+    $ chmod u-w $HOME/.stormpath/apiKey.properties
+    ```
 
-On Windows, you can [set file permissions similarly](http://msdn.microsoft.com/en-us/library/bb727008.aspx).
+On Windows, you can [set file permissions similarly](https://msdn.microsoft.com/en-us/library/bb727008.aspx).
 
 #### Retrieve the default Stormpath Application
 
@@ -269,9 +295,11 @@ We have to register our web application with Stormpath to allow the app to use S
 
 First, we need the location of your tenant from Stormpath. Here's how you get that:
 
-    curl -i --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
-        'https://api.stormpath.com/v1/tenants/current'
-        
+```bash
+curl -i --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
+'https://api.stormpath.com/v1/tenants/current'
+```
+
 where:
 
 * $YOUR_API_KEY_ID is the apiKey.id value in apiKey.properties and
@@ -279,20 +307,24 @@ where:
 
 You'll get a response like this:
 
-    HTTP/1.1 302 Found
-    Date: Fri, 28 Aug 2015 18:34:51 GMT
-    Location: https://api.stormpath.com/v1/tenants/sOmELoNgRaNDoMIdHeRe
-    Server: Apache
-    Set-Cookie: rememberMe=deleteMe; Path=/; Max-Age=0; Expires=Thu, 27-Aug-2015 18:34:52 GMT
-    Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-    Content-Length: 0
-    Connection: keep-alive
+``` nohighlight
+HTTP/1.1 302 Found
+Date: Fri, 28 Aug 2015 18:34:51 GMT
+Location: https://api.stormpath.com/v1/tenants/sOmELoNgRaNDoMIdHeRe
+Server: Apache
+Set-Cookie: rememberMe=deleteMe; Path=/; Max-Age=0; Expires=Thu, 27-Aug-2015 18:34:52 GMT
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+Content-Length: 0
+Connection: keep-alive
+```
     
 Notice the `Location` header. This is the location of your Stormpath tenant. Now, we can retrieve the location of the `My Application` Stormpath application, again using the API:
 
-    curl -u $API_KEY_ID:$API_KEY_SECRET \
-        -H "Accept: application/json" \
-        '$TENANT_HREF/applications?name=My%20Application'
+``` bash
+curl -u $API_KEY_ID:$API_KEY_SECRET \
+     -H "Accept: application/json" \
+     '$TENANT_HREF/applications?name=My%20Application'
+```
         
 where: 
 
@@ -302,17 +334,19 @@ where:
 
 The response from this has a lot of information in it. Here’s an example excerpt from the response:
 
-    {
-        ...
-        "href": "https://api.stormpath.com/v1/applications/aLoNGrAnDoMAppIdHeRe",
-        "name": "My Application",
-        "description": "This application was automatically created for you in Stormpath for use with our Quickstart guides(https://docs.stormpath.com). It does apply to your subscription's number of reserved applications and can be renamed or reused for your own purposes.",
-        "status": "ENABLED",
-        "tenant": {
-            "href": "https://api.stormpath.com/v1/tenants/sOmELoNgRaNDoMIdHeRe"
-        },
-        ...
-    }
+``` json
+{
+    ...
+    "href": "https://api.stormpath.com/v1/applications/aLoNGrAnDoMAppIdHeRe",
+    "name": "My Application",
+    "description": "This application was automatically created for you in Stormpath for use with our Quickstart guides(https://docs.stormpath.com). It does apply to your subscription's number of reserved applications and can be renamed or reused for your own purposes.",
+    "status": "ENABLED",
+    "tenant": {
+        "href": "https://api.stormpath.com/v1/tenants/sOmELoNgRaNDoMIdHeRe"
+    },
+    ...
+}
+```
 
 Make note of your top-level `href` from above - we will use this href in the `shiro.ini` configuration next.
 
@@ -320,18 +354,20 @@ Make note of your top-level `href` from above - we will use this href in the `sh
 
 Now that we have an application, we'll want to create a sample/test user for that application:
 
-    curl --request POST --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
-        -H "Accept: application/json" \
-        -H "Content-Type: application/json" \
-        -d '{
-               "givenName": "Jean-Luc",
-               "surname": "Picard",
-               "username": "jlpicard",
-               "email": "capt@enterprise.com",
-               "password":"Changeme1"
-            }' \
-     "$YOUR_APPLICATION_HREF/accounts"
-     
+```bash
+curl --request POST --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
+    -H "Accept: application/json" \
+    -H "Content-Type: application/json" \
+    -d '{
+           "givenName": "Jean-Luc",
+           "surname": "Picard",
+           "username": "jlpicard",
+           "email": "capt@enterprise.com",
+           "password":"Changeme1"
+        }' \
+ "$YOUR_APPLICATION_HREF/accounts"
+```
+  
 where:
 
 * $YOUR_API_KEY_ID is the apiKey.id value in apiKey.properties and
@@ -346,7 +382,7 @@ Once you choose at least one user store to connect to for Shiro's needs, we'll n
 
 If you've checked out the `step2` branch, you'll notice the `src/main/webapp/WEB-INF/shiro.ini` file's `[main]` section now has the following additions:
 
-<pre style="white-space: pre;"><code>
+<pre style="white-space: pre;"><code class="ini">
 # Configure a Realm to connect to a user datastore.  In this simple tutorial, we'll just point to Stormpath since it
 # takes 5 minutes to set up:
 stormpathClient = com.stormpath.shiro.client.ClientFactory
@@ -374,13 +410,17 @@ Note the optional lines:
 
 After making the changes as specified in Step 2b and 2c, go ahead and run the web app:
 
-    $ mvn jetty:run
+``` bash
+$ mvn jetty:run
+```
 
 This time, you will see log output similar to the following, indicating that Shiro and the new Realm are configured properly in your webapp:
 
-    16:08:25.466 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Starting Shiro environment initialization.
-    16:08:26.201 [main] INFO  o.a.s.c.IniSecurityManagerFactory - Realms have been explicitly set on the SecurityManager instance - auto-setting of realms will not occur.
-    16:08:26.201 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Shiro environment initialized in 731 ms.
+``` nohighlight
+16:08:25.466 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Starting Shiro environment initialization.
+16:08:26.201 [main] INFO  o.a.s.c.IniSecurityManagerFactory - Realms have been explicitly set on the SecurityManager instance - auto-setting of realms will not occur.
+16:08:26.201 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Shiro environment initialized in 731 ms.
+```
 
 Hit `ctl-C` to shut down the web app.
 
@@ -391,7 +431,9 @@ Now we have users, and we can add, remove and disable them easily in a UI.  Now 
 
 Perform the following git checkout command to load the `step3` branch:
 
-    $ git checkout step3
+``` bash
+$ git checkout step3
+```
 
 This checkout will load the following 2 additions:
 
@@ -402,21 +444,25 @@ This checkout will load the following 2 additions:
 
 The `step3` branch's `src/main/webapp/WEB-INF/shiro.ini` file contains the following 2 additions:
 
-    [main]
-    
-    shiro.loginUrl = /login.jsp
-    
-    # Stuff we've configured here previously is omitted for brevity
-    
-    [urls]
-    /login.jsp = authc
-    /logout = logout
+``` ini
+[main]
+
+shiro.loginUrl = /login.jsp
+
+# Stuff we've configured here previously is omitted for brevity
+
+[urls]
+/login.jsp = authc
+/logout = logout
+```
 
 #### `shiro.*` lines
 
 At the top of the `[main]` section, there is a new line:
 
-    shiro.loginUrl = /login.jsp
+``` ini
+shiro.loginUrl = /login.jsp
+```
 
 This is a special configuration directive that tells Shiro "For any of Shiro's [default filters](http://shiro.apache.org/web.html#Web-DefaultFilters) that have a `loginUrl` property, I want that property value to be set to `/login.jsp`."
 
@@ -426,14 +472,16 @@ This allows Shiro's default `authc` filter (by default, a [`FormAuthenticationFi
 
 The `[urls]` section is a new [web-specific INI section](http://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D).
 
-This section allows you to use a very succinct name/value pair syntax to tell shiro how to filter request for any given URL path.  All paths in `[urls]` are relative to the web application's [`HttpServletRequest.getContextPath()`](http://java.sun.com/j2ee/sdk_1.3/techdocs/api/javax/servlet/http/HttpServletRequest.html#getContextPath()) value.
+This section allows you to use a very succinct name/value pair syntax to tell shiro how to filter request for any given URL path.  All paths in `[urls]` are relative to the web application's [`HttpServletRequest.getContextPath()`](http://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#getContextPath()) value.
 
 These name/value pairs offer an extremely powerful way to filter requests, allowing for all sorts of security rules.  A deeper coverage of urls and filter chains is outside the scope of this document, but please do [read more about it](http://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D) if you're interested.
 
 For now, we'll cover the two lines that were added:
 
-    /login.jsp = authc
-    /logout = logout
+``` ini
+/login.jsp = authc
+/logout = logout
+```
 
 * The first line indicates "Whenever Shiro sees a request to the `/login.jsp` url, enable the Shiro `authc` filter during the request".
 * The second line means "whenever Shiro sees a request to the `/logout` url, enable the Shiro `logout` filter during the request."
@@ -457,7 +505,9 @@ Our login.jsp form just uses the default `username`, `password`, and `rememberMe
 
 After making the changes as specified in Step 2b and 2c, go ahead and run the web app:
 
-    $ mvn jetty:run
+``` bash
+$ mvn jetty:run
+```
 
 ### Step 3d: Try to Login
 
@@ -476,7 +526,9 @@ It's usually a requirement to change a web user interface based on who the user 
 
 Perform the following git checkout command to load the `step4` branch:
 
-    $ git checkout step4
+``` bash
+$ git checkout step4
+```
    
 This step makes some additions to our `home.jsp` page:
 
@@ -489,28 +541,32 @@ This type of UI customization is very common for a navigation bar, with user con
 
 The `home.jsp` file was modified to include two lines at the top:
 
-    <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+``` html
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+```
 
 These two JSP page directives allow the Core (`c:`) and Shiro (`shiro:`) taglibraries in the page.
 
 ### Step 4b: Add Shiro Guest and User tags
 
 The `home.jsp` file was further modified in the page body (right after the `<h1>` welcome message) to include _both_ the `<shiro:guest>` and `<shiro:user>` tags:
-    
-    <p>Hi <shiro:guest>Guest</shiro:guest><shiro:user>
-    <%
-        //This should never be done in a normal page and should exist in a proper MVC controller of some sort, but for this
-        //tutorial, we'll just pull out Stormpath Account data from Shiro's PrincipalCollection to reference in the
-        //<c:out/> tag next:
 
-        request.setAttribute("account", org.apache.shiro.SecurityUtils.getSubject().getPrincipals().oneByType(java.util.Map.class));
+``` html
+<p>Hi <shiro:guest>Guest</shiro:guest><shiro:user>
+<%
+    //This should never be done in a normal page and should exist in a proper MVC controller of some sort, but for this
+    //tutorial, we'll just pull out Stormpath Account data from Shiro's PrincipalCollection to reference in the
+    //<c:out/> tag next:
 
-    %>
-    <c:out value="${account.givenName}"/></shiro:user>!
-        ( <shiro:user><a href="<c:url value="/logout"/>">Log out</a></shiro:user>
-        <shiro:guest><a href="<c:url value="/login.jsp"/>">Log in</a></shiro:guest> )
-    </p>
+    request.setAttribute("account", org.apache.shiro.SecurityUtils.getSubject().getPrincipals().oneByType(java.util.Map.class));
+
+%>
+<c:out value="${account.givenName}"/></shiro:user>!
+    ( <shiro:user><a href="<c:url value="/logout"/>">Log out</a></shiro:user>
+    <shiro:guest><a href="<c:url value="/login.jsp"/>">Log in</a></shiro:guest> )
+</p>
+```
 
 It's a little hard to read given the formatting, but two tags are used here:
 
@@ -519,14 +575,18 @@ It's a little hard to read given the formatting, but two tags are used here:
 
 The above code snippet will render the following if the Subject is a guest:
 
-    Hi Guest! (Log in)
+``` html
+Hi Guest! (Log in)
+```
 
 where 'Log in' is a hyperlink to `/login.jsp`
 
 It will render the following if the Subject is a 'user':
 
-    Hi jsmith! (Log out)
- 
+``` html
+Hi jsmith! (Log out)
+```
+
 Assuming 'jsmith' is the username of the account logged in.  'Log out' is a hyperlink to the '/logout' url handled by the Shiro `logout` filter.
 
 As you can see, you can turn off or on entire page sections, features and UI components.  In addition to `<shiro:guest>` and `<shiro:user>`, Shiro supports [many other useful JSP tags](http://shiro.apache.org/web.html#Web-taglibrary) that you can use to customize the UI based on various things known about the current `Subject`.
@@ -535,7 +595,9 @@ As you can see, you can turn off or on entire page sections, features and UI com
 
 After checking out the `step4` branch, go ahead and run the web app:
 
-    $ mvn jetty:run
+``` bash
+$ mvn jetty:run
+```
 
 Try visiting [localhost:8080](http://localhost:8080) as a guest, and then login.  After successful login, you will see the page content change to reflect that you're now a known user!
 
@@ -550,7 +612,9 @@ This is especially important if a user-only section of a webapp shows sensitive 
 
 Perform the following git checkout command to load the `step5` branch:
 
-    $ git checkout step5
+``` bash
+$ git checkout step5
+```
 
 Step 5 introduces the following 3 changes:
 
@@ -567,7 +631,9 @@ A new `src/main/webapp/account` directory was added.  This directory (and all pa
 
 `shiro.ini` was modified by adding the following line at the end of the `[urls]` section:
 
-    /account/** = authc
+``` ini
+/account/** = authc
+```
 
 This [Shiro filter chain definition](http://shiro.apache.org/web.html#Web-FilterChainDefinitions) means "Any requests to `/account` (or any of its sub-paths) must be authenticated".
 
@@ -575,7 +641,9 @@ But what happens if someone tries to access that path or any of its children pat
 
 Do you remember in Step 3 when we added the following line to the `[main]` section:
 
-    shiro.loginUrl = /login.jsp
+``` ini
+shiro.loginUrl = /login.jsp
+```
 
 This line automatically configured the `authc` filter with our webapp's login URL.
 
@@ -587,9 +655,12 @@ The final change for Step 5 is to update the `/home.jsp` page to let the user kn
 
 These lines were added below the welcome message:
 
-    <shiro:authenticated><p>Visit your <a href="<c:url value="/account"/>">account page</a>.</p></shiro:authenticated>
-    <shiro:notAuthenticated><p>If you want to access the authenticated-only <a href="<c:url value="/account"/>">account page</a>,
-        you will need to log-in first.</p></shiro:notAuthenticated>
+``` html
+<shiro:authenticated><p>Visit your <a href="<c:url value="/account"/>">account page</a>.</p></shiro:authenticated>
+<shiro:notAuthenticated>
+  <p>If you want to access the authenticated-only <a href="<c:url value="/account"/>">account page</a>, you will need to log-in first.</p>
+</shiro:notAuthenticated>
+```
 
 The `<shiro:authenticated>` tag will only display the contents if the current Subject has already logged in (authenticated) during their current session.  This is how the `Subject` knows they can go visit a new part of the website.
 
@@ -603,7 +674,9 @@ Fire up the webapp with the new changes and try it out!
 
 After checking out the `step5` branch, go ahead and run the web app:
 
-    $ mvn jetty:run
+``` bash
+$ mvn jetty:run
+```
 
 Try visiting [localhost:8080](http://localhost:8080).  Once there, click the new `/account` link and watch it redirect you to force you to log in.  Once logged in, return to the home page and see the content change again now that you're authenticated.  You can visit the account page and the home page as often as you want, until you log out. Nice!
 
@@ -616,7 +689,9 @@ In addition to controlling access based on authentication, it is often a require
 
 Perform the following git checkout command to load the `step5` branch:
 
-    $ git checkout step6
+``` bash
+$ git checkout step6
+```
 
 ### Step 6a: Add Roles
 
@@ -642,26 +717,28 @@ Once you've created the groups, add the `Jean-Luc Picard` account to the `Captai
 
 We update the `/home.jsp` page to let the user know what roles they have and which ones they don't.  These messages are added in a new `<h2>Roles</h2>` section of the home page:
 
-    <h2>Roles</h2>
+``` html
+<h2>Roles</h2>
+
+<p>Here are the roles you have and don't have. Log out and log back in under different user
+    accounts to see different roles.</p>
     
-    <p>Here are the roles you have and don't have. Log out and log back in under different user
-        accounts to see different roles.</p>
-        
-    <h3>Roles you have:</h3>
-    
-    <p>
-        <shiro:hasRole name="Captains">Captains<br/></shiro:hasRole>
-        <shiro:hasRole name="Officers">Bad Guys<br/></shiro:hasRole>
-        <shiro:hasRole name="Enlisted">Enlisted<br/></shiro:hasRole>
-    </p>
-    
-    <h3>Roles you DON'T have:</h3>
-    
-    <p>
-        <shiro:lacksRole name="Captains">Captains<br/></shiro:lacksRole>
-        <shiro:lacksRole name="Officers">Officers<br/></shiro:lacksRole>
-        <shiro:lacksRole name="Enlisted">Enlisted<br/></shiro:lacksRole>
-    </p>
+<h3>Roles you have:</h3>
+
+<p>
+    <shiro:hasRole name="Captains">Captains<br/></shiro:hasRole>
+    <shiro:hasRole name="Officers">Bad Guys<br/></shiro:hasRole>
+    <shiro:hasRole name="Enlisted">Enlisted<br/></shiro:hasRole>
+</p>
+
+<h3>Roles you DON'T have:</h3>
+
+<p>
+    <shiro:lacksRole name="Captains">Captains<br/></shiro:lacksRole>
+    <shiro:lacksRole name="Officers">Officers<br/></shiro:lacksRole>
+    <shiro:lacksRole name="Enlisted">Enlisted<br/></shiro:lacksRole>
+</p>
+```
 
 The `<shiro:hasRole>` tag will only display the contents if the current Subject has been assigned the specified role.
 
@@ -677,7 +754,9 @@ Hint: Create a [filter chain definition](http://shiro.apache.org/web.html#Web-Fi
 
 After checking out the `step6` branch, go ahead and run the web app:
 
-    $ mvn jetty:run
+``` bash
+$ mvn jetty:run
+```
 
 Try visiting [localhost:8080](http://localhost:8080) and log in with different user accounts that are assigned different roles and watch the home page's **Roles** section content change!
 
@@ -698,18 +777,20 @@ Shiro `Realm`s are read-only components: every data store models roles, groups, 
 
 As such, since we're using Stormpath in this sample app, we'll assign permissions to an account and group in a Stormpath API-specific way.
 
-Let's execute a cURL request to add some permissions to our previously created Jean-Luc Picard account.  Using that account's `href` URL, we'll post some `apacheShiroPermissions` to the account via [custom data](http://docs.stormpath.com/rest/product-guide/#custom-data):
+Let's execute a cURL request to add some permissions to our previously created Jean-Luc Picard account.  Using that account's `href` URL, we'll post some `apacheShiroPermissions` to the account via [custom data](https://docs.stormpath.com/rest/product-guide/latest/reference.html#custom-data):
 
-    curl -X POST --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
-        -H "Accept: application/json" \
-        -H "Content-Type: application/json" \
-        -d '{
-                "apacheShiroPermissions": [
-                    "ship:NCC-1701-D:command",
-                    "user:jlpicard:edit"
-                ]
-            }' \
-    "https://api.stormpath.com/v1/accounts/$JLPICARD_ACCOUNT_ID/customData"
+``` bash
+curl -X POST --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
+    -H "Accept: application/json" \
+    -H "Content-Type: application/json" \
+    -d '{
+            "apacheShiroPermissions": [
+                "ship:NCC-1701-D:command",
+                "user:jlpicard:edit"
+            ]
+        }' \
+"https://api.stormpath.com/v1/accounts/$JLPICARD_ACCOUNT_ID/customData"
+```
    
 where `$JLPICARD_ACCOUNT_ID` matches the uid of the Jean-Luc Picard you created at the beginning of this tutorial.
 
@@ -728,22 +809,28 @@ How permissions are stored in Stormpath, as well as how to customize storage and
 
 Just as we have JSP tags for role checks, parallel tags exist for permission checks as well.  We update the `/home.jsp` page to let the user know if they're allowed to do something or not based on the permissions that are assigned to them.  These messages are added in a new `<h2>Permissions</h2>` section of the home page:
 
-    <h2>Permissions</h2>
-    
-    <ul>
-        <li>You may <shiro:lacksPermission name="ship:NCC-1701-D:command"><b>NOT</b> </shiro:lacksPermission> command the <code>NCC-1701-D</code> Starship!</li>
-        <li>You may <shiro:lacksPermission name="user:${account.username}:edit"><b>NOT</b> </shiro:lacksPermission> edit the ${account.username} user!</li>
-    </ul>
+``` html
+<h2>Permissions</h2>
+
+<ul>
+    <li>You may <shiro:lacksPermission name="ship:NCC-1701-D:command"><b>NOT</b> </shiro:lacksPermission> command the <code>NCC-1701-D</code> Starship!</li>
+    <li>You may <shiro:lacksPermission name="user:${account.username}:edit"><b>NOT</b> </shiro:lacksPermission> edit the ${account.username} user!</li>
+</ul>
+```
 
 When you visit the home page the first time, before you log in, you will see the following output:
 
-    You may NOT command the NCC-1701-D Starship!
-    You may NOT edit the user!
+``` html
+You may NOT command the NCC-1701-D Starship!
+You may NOT edit the user!
+```
 
 But after you log in with your Jean-Luc Picard account, you will see this instead:
 
-    You may command the NCC-1701-D Starship!
-    You may edit the user!
+``` html
+You may command the NCC-1701-D Starship!
+You may edit the user!
+```
 
 You can see that Shiro resolved that the authenticated user had permissions, and the output was rendered in an appropriate way.
 
@@ -751,7 +838,9 @@ You can also use the `<shiro:hasPermission>` tag for affirmative permission chec
 
 Finally, we'll call to attention an extremely powerful feature with permission checks.  Did you see how the second permission check used a _runtime_ generated permission value?
 
-    <shiro:lacksPermission name="user:${account.username}:edit"> ...
+``` html
+<shiro:lacksPermission name="user:${account.username}:edit"> ...
+```
 
 The `${account.username}` value is interpreted at runtime and forms the final `user:aUsername:edit` value, and then the final String value is used for the permission check.
 
@@ -761,7 +850,9 @@ This is _extremely_ powerful: you can perform permission checks based on who the
 
 After checking out the `step7` branch, go ahead and run the web app:
 
-    $ mvn jetty:run
+``` bash
+$ mvn jetty:run
+```
 
 Try visiting [localhost:8080](http://localhost:8080) and log in and out of the UI with your Jean-Luc Picard account (and other accounts), and see the page output change based on what permissions are assigned (or not)!
 
@@ -775,4 +866,4 @@ We hope you have found this introductory tutorial for Shiro-enabled webapps usef
 
 ### Fixes and Pull Requests
 
-Please send any fixes for errata as a [GitHub Pull Request](https://help.github.com/articles/creating-a-pull-request) to the `https://github.com/lhazlewood/apache-shiro-tutorial-webapp` repository.  We appreciate it!!!
+Please send any fixes for errata as a [GitHub Pull Request](https://help.github.com/articles/creating-a-pull-request/) to the `https://github.com/lhazlewood/apache-shiro-tutorial-webapp` repository.  We appreciate it!!!
