@@ -37,6 +37,14 @@ scms {
                 year = Calendar.getInstance().get(Calendar.YEAR)
             }
         }
+
+        '**/*.md.vtl' {
+            template = 'templates/default.vtl'
+            model {
+                //the above template uses the year for a copyright notice:
+                year = Calendar.getInstance().get(Calendar.YEAR)
+            }
+        }
     }
 
 }
