@@ -1,0 +1,188 @@
+<a name="CAS-IntegratingApacheShirowithCASSSOserver"></a>
+Integrating Apache Shiro with CAS SSO server
+============================================
+
+#warning('NOTE:', 'Shiro-CAS support is deprecated, support has been moved to the Apache Shiro based <a href="https://github.com/bujiio/buji-pac4j">buji-pac4j</a> project.')
+
+<table align="right" width="275" style="margin-left: 20px; margin-bottom: 20px; border-style: solid; border-width: 2px; border-color: navy" cellpadding="10px"><tbody><tr><td>
+<div id="border">
+	
+  <h2>Related Content</h2>
+  <h3><a href="web-features.html">Web Apps with Shiro</a></h3>
+  <p>Learn more about integrating Shiro into web applications. <br><span style="font-size:11"><a href="web-features.html">Read More &gt;&gt;</a></span></p>
+	
+</div>
+</td></tr></tbody></table>
+
+The _shiro-cas_ module is made to protect a web application with a [Jasig CAS](https://wiki.jasig.org/display/CAS/Home) SSO server. It enables a Shiro-enabled application to be a CAS client.
+
+<a name="CAS-BasicunderstandingoftheCASprotocol"></a>
+Basic understanding of the CAS protocol
+---------------------------------------
+
+1. If you want to access an application protected by a CAS client and if you are not authenticated in this application, you are redirected by the CAS client to the CAS server login page. A service parameter in the CAS login url defines the application the user wants to login.
+
+``` nohighlight
+http://application.examples.com/protected/index.jsp → HTTP 302 → https://server.cas.com/login?service=http://application.examples.com/shiro-cas
+```
+
+2. You fill the login and password and authenticate in CAS server which then redirects the user to the application (the service url) with a service ticket in url. The service ticket is a short-lived one-time-use token redeemable at the CAS server for a user identifier (and optionally, user attributes).
+
+``` nohighlight
+https://server.cas.com/login?service=http://application.examples.com/shiro-cas → HTTP 302 → http://application.examples.com/shiro-cas?ticket=ST-4545454542121-cas
+```
+
+3. The application asks directly the CAS server if the service ticket is valid and the CAS server responds by the identity of the authenticated user. Generally, the CAS client forwards the user to the originally called protected page.
+
+``` nohighlight
+http://application.examples.com/shiro-cas?ticket=ST-4545454542121-cas → HTTP 302 → http://application.examples.com/protected/index.jsp
+```
+
+<a name="CAS-HowtoconfigureshirotoworkwithCASserver%3F"></a>
+How to configure shiro to work with CAS server ?
+------------------------------------------------
+
+<a name="CAS-Dependency"></a>
+#[[###Dependency]]#
+
+You need to add the _shiro-cas_ Maven dependency in your application :
+
+``` xml
+<dependency>
+    <groupId>org.apache.shiro</groupId>
+    <artifactId>shiro-cas</artifactId>
+    <version>version</version>
+</dependency>
+```
+
+(_version_ >= 1.2.0).
+
+<a name="CAS-CasFilter"></a>
+#[[###CasFilter]]#
+
+You have to define the service url of your application (which has to be declared also in the CAS server). This url will be used to receive CAS service ticket. For example : [http://application.examples.com/shiro-cas](http://application.examples.com/shiro-cas)
+
+In your shiro configuration, you have to define the <tt>CasFilter</tt> :
+
+``` ini
+[main]
+casFilter = org.apache.shiro.cas.CasFilter
+casFilter.failureUrl = /error.jsp
+```
+
+(the failure url is called when the service ticket validation fails).
+
+And the url on which it is available :
+
+``` ini
+[urls]
+/shiro-cas = casFilter
+```
+
+This way, when the user is redirected to the application service url (_/shiro-cas_) by the CAS server with a valid service ticket (after authentication), this filter receives the service ticket and creates a <tt>CasToken</tt> which can be used by the <tt>CasRealm</tt>.
+
+<a name="CAS-CasRealm"></a>
+#[[###CasRealm]]#
+
+The <tt>CasRealm</tt> uses the <tt>CasToken</tt> created by the <tt>CasFilter</tt> to authenticate the user by validating the CAS service ticket against the CAS server.
+
+In your shiro configuration, you have to add the <tt>CasRealm</tt> :
+
+``` ini
+[main]
+casRealm = org.apache.shiro.cas.CasRealm
+casRealm.defaultRoles = ROLE_USER
+#casRealm.defaultPermissions
+#casRealm.roleAttributeNames
+#casRealm.permissionAttributeNames
+#casRealm.validationProtocol = SAML
+casRealm.casServerUrlPrefix = https://server.cas.com/ casRealm.casService = http://application.examples.com/shiro-cas
+```
+
+The _casServerUrlPrefix_ is the url of the CAS server (for example : [https://server.cas.com](https://server.cas.com)).
+The _casService_ is the application service url, the url on wich the application receives CAS service ticket (for example : [http://application.examples.com/shiro-cas](http://application.examples.com/shiro-cas)).
+The _validationProcol_ can be SAML or CAS (default) : attributes and remember me information are only pushed throught the SAML validation procotol (except specific customizations). It depends on the version of the CAS server : SAML protocol can be used with CAS server version >= 3.1.
+
+#danger('NOTE:' 'If you choose SAML validation, you need some more specific dependencies :')
+
+``` xml
+<dependency>
+    <groupId>commons-codec</groupId>
+    <artifactId>commons-codec</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.opensaml</groupId>
+    <artifactId>opensaml</artifactId>
+    <version>1.1</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.santuario</groupId>
+    <artifactId>xmlsec</artifactId>
+    <version>1.4.3</version>
+</dependency>
+```
+
+The _defaultRoles_ is the default roles given to the authenticated user after CAS authentication success.
+The _defaultPermissions_ is the default permissions given to the authenticated user after CAS authentication success.
+The _roleAttributeNames_ defines the names of the attributes received from CAS response which define roles to give to the authenticated user (the roles are separated by comas).
+The _permissionAttributeNames_ defines the names of the attributes received from CAS response which define permissions to give to the autnewhenticated user (the permissions are separated by comas).
+
+<a name="CAS-CasSubjectFactory"></a>
+#[[###CasSubjectFactory]]#
+
+In CAS server, you can have "remember me" support. This information is pushed through SAML validation or CAS customized validation.
+To reflect the CAS-remember me status in Shiro, you have to define a specific <tt>CasSubjectFactory</tt> in your Shiro configuration :
+
+``` ini
+[main]
+casSubjectFactory = org.apache.shiro.cas.CasSubjectFactory
+securityManager.subjectFactory = $casSubjectFactory
+```
+
+<a name="CAS-Security%C2%A0oftheapplication"></a>
+#[[###Security of the application]]#
+
+Finally, you have to define the security of your application.
+
+In your Shiro configuration, you have to protect url with roles (for example) :
+
+``` ini
+[urls]
+/protected/** = roles[ROLE_USER]
+/** = anon
+```
+
+And the login url if the user is not authenticated is to be defined on the CAS server with the application service url :
+
+``` ini
+[main]
+roles.loginUrl = https://server.cas.com/login?service=http://application.examples.com/shiro-cas
+```
+
+This way, if you are not authenticated and try to acces a _/protected/**_ url, you are redirected to the CAS server for authentication.
+
+<a name="CAS-Completeconfigurationsample"></a>
+#[[###Complete configuration sample]]#
+
+``` ini
+[main]
+casFilter = org.apache.shiro.cas.CasFilter
+casFilter.failureUrl = /error.jsp
+
+casRealm = org.apache.shiro.cas.CasRealm
+casRealm.defaultRoles = ROLE_USER
+casRealm.casServerUrlPrefix = https://server.cas.com/ casRealm.casService = http://application.examples.com/shiro-cas 
+casSubjectFactory = org.apache.shiro.cas.CasSubjectFactory
+securityManager.subjectFactory = $casSubjectFactory
+
+roles.loginUrl = https://server.cas.com/login?service=http://application.examples.com/shiro-cas 
+[urls]
+/shiro-cas = casFilter
+/protected/** = roles[ROLE_USER]
+/** = anon
+```
+
+<a name="CAS-History"></a>
+#[[##History]]#
+
+_Version 1.2.0_ : first release of the _shiro-cas_ module.
