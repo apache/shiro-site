@@ -1,4 +1,13 @@
-<h1><a name="MailingLists-ApacheShiroMailingLists"></a>Apache Shiro Mailing Lists</h1>
+<a name="MailingLists-ApacheShiroMailingLists"></a>
+#Apache Shiro Mailing Lists
+
+<!-- Markdown tables need some style before switchig
+| List Name            | List Address                      | Subscribe                                              | Unsubscribe                                                | ASF Archive                                                            | Nabble (Online Forums)                                                   |
+|----------------------|-----------------------------------|--------------------------------------------------------|------------------------------------------------------------|------------------------------------------------------------------------|--------------------------------------------------------------------------|
+| Shiro User List      | [mailto:user@shiro.apache.org]    | [Subscribe](mailto:user-subscribe@shiro.apache.org)    | [Unsubscribe](mailto:user-unsubscribe@shiro.apache.org)    | [ASF Archive](http://mail-archives.apache.org/mod_mbox/shiro-user/)    | [Nabble Forum and Archive](http://shiro-user.582556.n2.nabble.com/)      |
+| Shiro Developer List | [mailto:dev@shiro.apache.org]     | [Subscribe](mailto:dev-subscribe@shiro.apache.org)     | [Unsubscribe](mailto:dev-unsubscribe@shiro.apache.org)     | [ASF Archive](http://mail-archives.apache.org/mod_mbox/shiro-dev)      | [Nabble Forum and Archive](http://shiro-developer.582600.n2.nabble.com/) |
+| Shiro SCM List       | [mailto:commits@shiro.apache.org] | [Subscribe](mailto:commits-subscribe@shiro.apache.org) | [Unsubscribe](mailto:commits-unsubscribe@shiro.apache.org) | [ASF Archive](http://mail-archives.apache.org/mod_mbox/shiro-commits/) |                                                                          |
+-->
 
 <div class="table-wrap">
     <table class="confluenceTable">
@@ -41,6 +50,7 @@
 </div>
 
 
-<h3><a name="MailingLists-DiscussionForums"></a>Discussion Forums</h3>
+<a name="MailingLists-DiscussionForums"></a>
+###Discussion Forums
 
-<p>If you prefer you could use our discussion <a href="forums.html" title="Forums">Forums</a> which are sync'd with the above mailing lists.</p>
+If you prefer you could use our discussion [Forums](forums.html "Forums") which are sync'd with the above mailing lists.

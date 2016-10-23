@@ -1,7 +1,8 @@
-<h1><a name="GraduationResolution-ApacheShiroGraduationResolution"></a>Apache Shiro Graduation Resolution</h1>
+<a name="GraduationResolution-ApacheShiroGraduationResolution"></a>
+#Apache Shiro Graduation Resolution
 
-<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
-<pre>Establish Apache Shiro Project
+``` nohighlight
+Establish Apache Shiro Project
 
 WHEREAS, the Board of Directors deems it to be in the best
 interests of the Foundation and consistent with the Foundation's
@@ -51,5 +52,4 @@ Incubator Shiro podling; and be it further
 RESOLVED, that all responsibility pertaining to the Apache
 Incubator Shiro podling encumbered upon the Apache Incubator
 PMC are hereafter discharged.
-</pre>
-</div></div>
+```
