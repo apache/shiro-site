@@ -1,0 +1,195 @@
+#parse("templates/includes.vtl")
+
+<h1><a name="10MinuteTutorial-10MinuteTutorialonApacheShiro"></a>10 Minute Tutorial on Apache Shiro</h1>
+
+<div class="addthis_toolbox addthis_default_style">
+    <a class="addthis_button_compact" href="http://www.addthis.com/bookmark.php?v=250&amp;pubid=ra-4d66ef016022c3bd">Share</a>
+    <span class="addthis_separator">|</span>
+    <a class="addthis_button_preferred_1"></a>
+    <a class="addthis_button_preferred_2"></a>
+    <a class="addthis_button_preferred_3"></a>
+    <a class="addthis_button_preferred_4"></a>
+</div>
+<script type="text/javascript">var addthis_config = {"data_track_clickback": true};</script>
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4d66ef016022c3bd"></script>
+
+<a name="10MinuteTutorial-Introduction"></a>
+Introduction
+------------
+
+Welcome to Apache Shiro's 10 Minute Tutoral!
+
+By going through this quick and simple tutorial you should fully understand how a developer uses Shiro in their application. And you should be able to do it in under 10 minutes.
+
+<a name="10MinuteTutorial-Overview"></a>
+Overview
+--------
+
+What is Apache Shiro?
+
+Apache Shiro is a powerful and easy to use Java security framework that offers developers an intuitive yet comprehensive solution to authentication, authorization, cryptography, and session management.
+
+In practical terms, it achieves to manage all facets of your application's security, while keeping out of the way as much as possible. It is built on sound interface-driven design and OO principles, enabling custom behavior wherever you can imagine it. But with sensible defaults for everything, it is as "hands off" as application security can be. At least that's what we strive for.
+
+What can Apache Shiro do?
+
+A lot ![](https://cwiki.apache.org/confluence/images/icons/emoticons/smile.png). But we don't want to bloat the QuickStart. Please check out our [Features](features.html "Features") page if you'd like to see what it can do for you. Also, if you're curious on how we got started and why we exist, please see the [Shiro History and Mission](what-is-shiro.html "What is Shiro") page.
+
+Ok. Now let's actually do something!
+
+#info('Note', 'Shiro can be run in any environment, from the simplest command line application to the biggest enterprise web and clustered applications, but we''ll use the simplest possible example in a simple `main` method for this QuickStart so you can get a feel for the API.')
+
+<a name="10MinuteTutorial-Download"></a>
+Download
+--------
+
+1.  Ensure you have JDK 1.6+ and Maven 3.0.3+ installed.
+2.  Download the lastest "Source Code Distribution" from the [Download](download.html "Download") page. In this example, we're using the ${latestRelease} release distribution.
+3.  Unzip the source package:
+
+    ``` bash
+    $ unzip shiro-root-${latestRelease}-source-release.zip
+    ```
+
+4.  Enter the quickstart directory:
+
+    ``` bash
+    $ cd shiro-root-${latestRelease}/samples/quickstart
+    ```
+
+5.  Run the QuickStart:
+
+    ``` bash
+    $ mvn compile exec:java
+    ```
+
+This target will just print out some log messages to let you know what is going on and then exit. While reading this quickstart, feel free to look at the code found under `samples/quickstart/src/main/java/Quickstart.java`. Change that file and run the above `mvn compile exec:java` command as often as you like.
+
+<a name="10MinuteTutorial-Quickstart.java"></a>
+Quickstart.java
+---------------
+
+The `Quickstart.java` file referenced above contains all the code that will get you familiar with the API. Now lets break it down in chunks here so you can easily understand what is going on.
+
+In almost all environments, you can obtain the currently executing user via the following call:
+
+``` java
+Subject currentUser = SecurityUtils.getSubject();
+```
+
+Using [`SecurityUtils`](static/current/apidocs/org/apache/shiro/SecurityUtils.html).[getSubject()](static/current/apidocs/org/apache/shiro/SecurityUtils.html#getSubject()), we can obtain the currently executing [`Subject`](static/current/apidocs/org/apache/shiro/subject/Subject.html). A _Subject_ is just a security-specific "view" of an application User. We actually wanted to call it 'User' since that "just makes sense", but we decided against it: too many applications have existing APIs that already have their own User classes/frameworks, and we didn't want to conflict with those. Also, in the security world, the term `Subject` is actually the recognized nomenclature. Ok, moving on...
+
+The `getSubject()` call in a standalone application might return a `Subject` based on user data in an application-specific location, and in a server environment (e.g. web app), it acquires the `Subject` based on user data associated with current thread or incoming request.
+
+Now that you have a `Subject`, what can you do with it?
+
+If you want to make things available to the user during their current session with the application, you can get their session:
+
+``` java
+Session session = currentUser.getSession();
+session.setAttribute( "someKey", "aValue" );
+```
+
+The `Session` is a Shiro-specific instance that provides most of what you're used to with regular HttpSessions but with some extra goodies and one **big** difference: it does not require an HTTP environment!
+
+If deploying inside a web application, by default the `Session` will be `HttpSession` based. But, in a non-web environment, like this simple Quickstart, Shiro will automatically use its Enterprise Session Management by default. This means you get to use the same API in your applications, in any tier, regardless of deployment environment. This opens a whole new world of applications since any application requiring sessions does not need to be forced to use the `HttpSession` or EJB Stateful Session Beans. And, any client technology can now share session data.
+
+So now you can acquire a `Subject` and their `Session`. What about the _really_ useful stuff like checking if they are allowed to do things, like checking against roles and permissions?
+
+Well, we can only do those checks for a known user. Our `Subject` instance above represents the current user, but _who_ is the current user? Well, they're anonymous - that is, until they log in at least once. So, let's do that:
+
+``` java
+if ( !currentUser.isAuthenticated() ) {
+    //collect user principals and credentials in a gui specific manner
+    //such as username/password html form, X509 certificate, OpenID, etc.
+    //We'll use the username/password example here since it is the most common.
+    //(do you know what movie this is from? ;)
+    UsernamePasswordToken token = new UsernamePasswordToken("lonestarr", "vespa");
+    //this is all you have to do to support 'remember me' (no config - built in!):
+    token.setRememberMe(true);
+    currentUser.login(token);
+}
+```
+
+That's it! It couldn't be easier.
+
+But what if their login attempt fails? You can catch all sorts of specific exceptions that tell you exactly what happened and allows you to handle and react accordingly:
+
+``` java
+try {
+    currentUser.login( token );
+    //if no exception, that's it, we're done!
+} catch ( UnknownAccountException uae ) {
+    //username wasn't in the system, show them an error message?
+} catch ( IncorrectCredentialsException ice ) {
+    //password didn't match, try again?
+} catch ( LockedAccountException lae ) {
+    //account for that username is locked - can't login.  Show them a message?
+}
+    ... more types exceptions to check if you want ...
+} catch ( AuthenticationException ae ) {
+    //unexpected condition - error?
+}
+```
+
+There are many different types of exceptions you can check, or throw your own for custom conditions Shiro might not account for. See the [AuthenticationException JavaDoc](static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html) for more.
+
+#tip('Handy Hint', 'Security best practice is to give generic login failure messages to users because you do not want to aid an attacker trying to break into your system.')
+
+Ok, so by now, we have a logged in user. What else can we do?
+
+Let's say who they are:
+
+``` java
+//print their identifying principal (in this case, a username): 
+log.info( "User [" + currentUser.getPrincipal() + "] logged in successfully." );
+```
+
+We can also test to see if they have specific role or not:
+
+``` java
+if ( currentUser.hasRole( "schwartz" ) ) {
+    log.info("May the Schwartz be with you!" );
+} else {
+    log.info( "Hello, mere mortal." );
+}
+```
+
+We can also see if they have a permission to act on a certain type of entity:
+
+``` java
+if ( currentUser.isPermitted( "lightsaber:weild" ) ) {
+    log.info("You may use a lightsaber ring.  Use it wisely.");
+} else {
+    log.info("Sorry, lightsaber rings are for schwartz masters only.");
+}
+```
+
+Also, we can perform an extremely powerful _instance-level_ permission check - the ability to see if the user has the ability to access a specific instance of a type:
+
+``` java
+if ( currentUser.isPermitted( "winnebago:drive:eagle5" ) ) {
+    log.info("You are permitted to 'drive' the 'winnebago' with license plate (id) 'eagle5'.  " +
+                "Here are the keys - have fun!");
+} else {
+    log.info("Sorry, you aren't allowed to drive the 'eagle5' winnebago!");
+}
+```
+
+Piece of cake, right?
+
+Finally, when the user is done using the application, they can log out:
+
+``` java
+currentUser.logout(); //removes all identifying information and invalidates their session too.
+```
+
+Well, that's the core to using Apache Shiro at the application-developer level. And although there is some pretty sophisticated stuff going on under the hood to make this work so elegantly, that's really all there is to it.
+
+But you might ask yourself, "But who is responsible for getting the user data during a login (usernames and passwords, role and permissions, etc), and who actually performs those security checks during runtime?" Well, you do, by implementing what Shiro calls a [Realm](realm.html "Realm") and plugging that `Realm` into Shiro's configuration.
+
+However, how you configure a [Realm](realm.html "Realm") is largely dependent upon your runtime environment. For example, if you run a standalone application, or if you have a web based application, or a Spring or JEE container-based application, or combination thereof. That type of configuration is outside the scope of this QuickStart, since its aim is to get you comfortable with the API and Shiro's concepts.
+
+When you're ready to jump in with a little more detail, you'll definitely want to read the [Authentication Guide](java-authentication-guide.html "Java Authentication Guide") and [Authorization Guide](java-authorization-guide.html "Java Authorization Guide"). Then can move onto other [Documentation](documentation.html "Documentation"), in particularly the [Reference Manual](reference.html "Reference"), to answer any other questions. You'll also probably want to join the user [mailing list](mailing-lists.html "Mailing Lists") - you'll find that we have a great community with people willing to help whenever possible.
+
+Thanks for following along. We hope you enjoy using Apache Shiro!
