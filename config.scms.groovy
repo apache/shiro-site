@@ -97,7 +97,26 @@ scms {
             authzGuideLink
     ]
 
+    downloadRelatedLinks = [
+            gettingStartedLink,
+            tenMinuiteTutorialLink,
+            webAppTutorialLink,
+            authcGuideLink,
+            authzGuideLink,
+    ]
+
     patterns {
+
+        '**/download.html.vtl' {
+            template = 'templates/default.vtl'
+            model {
+                //the above template uses the year for a copyright notice:
+                year = Calendar.getInstance().get(Calendar.YEAR)
+                layout = 'templates/layouts/related.vtl'
+                relatedLinks = downloadRelatedLinks
+                topSpacing = '60px'
+            }
+        }
 
         '**/web.md.vtl' {
             template = 'templates/default.vtl'
