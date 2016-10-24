@@ -54,3 +54,5 @@ While we hope this documentation helps you with the work you're doing with Apach
 
 The easiest way to contribute your documentation is to send it to the [User Forum](http://shiro-user.582556.n2.nabble.com/) or the [User Mailing List](mailing-lists.html).
 
+
+<input type="hidden" id="ghEditPage" value="reference.md"></input>

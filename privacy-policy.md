@@ -14,3 +14,4 @@ Part of this information is gathered using a tracking cookie set by the Google A
 We use the gathered information to help us make our site more useful to visitors and to better understand how and when our site is used. We do not track or collect personally identifiable information or associate gathered data with any personally identifying information from other sources.
 
 By using this website, you consent to the collection of this data in the manner and for the purpose described above.
+<input type="hidden" id="ghEditPage" value="privacy-policy.md"></input>

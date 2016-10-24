@@ -79,3 +79,5 @@ A <em>Subject</em> is just fancy security term that basically means a security-s
 While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time.  If you'd like to help the Shiro project, please consider corrected, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro.
 
 The easiest way to contribute your documentation is to send it to the <a class="external-link" href="http://shiro-user.582556.n2.nabble.com/" rel="nofollow">User Forum</a> or the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.
+
+<input type="hidden" id="ghEditPage" value="terminology.md"></input>

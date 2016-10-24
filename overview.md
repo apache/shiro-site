@@ -108,3 +108,4 @@ In this sense a Realm is essentially a security-specific [DAO](https://en.wikipe
 Shiro provides out-of-the-box Realms to connect to a number of security data sources (aka directories) such as LDAP, relational databases (JDBC), text configuration sources like INI and properties files, and more. You can plug-in your own Realm implementations to represent custom data sources if the default Realms do not meet your needs.
 
 Like other internal components, the Shiro `SecurityManager` manages how Realms are used to acquire security data and then represented as `Subject` instances.
+<input type="hidden" id="ghEditPage" value="overview.md"></input>

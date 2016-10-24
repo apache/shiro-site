@@ -46,3 +46,4 @@ The website files are maintained on `people.apache.org` in `/www/shiro.apache.or
 ```
 
 Changes made to any files under this directory are synced and published to a set of mirrored Apache web servers that we can't access. So note: **Any changes to files under this directory will be propagated to the public Shiro site**. Be careful!
+<input type="hidden" id="ghEditPage" value="developers.md"></input>

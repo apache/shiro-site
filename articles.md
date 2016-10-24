@@ -58,3 +58,4 @@ Once you've gotten your feet wet, you might find these useful too:
 *   **[Apache Shiro tags for JSF - Securing Your JSF Pages](http://techbeats.deluan.com/apache-shiro-tags-for-jsffacelets)** by Deluan Quintão on 1 November 2010.
 
 *   **Shiro DevNexus 2009 Presentation** by Jeremy Haile: ([PDF](assets/images/articles/Ki-DevNexus-2009.pdf?version=1&modificationDate=1246602947000)) ([Keynote](assets/images/articles/Ki-DevNexus-2009.key.zip?version=1&modificationDate=1246602947000)) ([Powerpoint](assets/images/articles/Ki-DevNexus-2009.ppt.zip?version=1&modificationDate=1246602947000))
+<input type="hidden" id="ghEditPage" value="articles.md"></input>

@@ -30,3 +30,5 @@
     * [Issue & Bug Tracking](issues.html)
 
 * [Commercial Support](commercial-support.html)
+
+<input type="hidden" id="ghEditPage" value="navigation.md"></input>

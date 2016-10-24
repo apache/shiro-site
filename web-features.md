@@ -41,3 +41,4 @@ The JSP tags allow you to easily control page output based on the current user's
 
 * **Transparent HttpSession support**
 If you are using Shiro's native sessions, we have implemented HTTP Session API and the Servlet 2.5 API so you don't have to change any of your existing web code to use Shiro.
+<input type="hidden" id="ghEditPage" value="web-features.md"></input>

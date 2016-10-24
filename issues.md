@@ -18,3 +18,4 @@ Jira is provided as a Shiro software development resource. It is meant to be for
 
 <a name="Issues-ClickheretovisittheApacheShiroJiraissuetrackerhttps%3A%2F%2Fissues.apache.org%2Fjira%2Fbrowse%2FSHIRO"></a>
 ##[Click here to visit the Apache Shiro Jira issue tracker](https://issues.apache.org/jira/browse/SHIRO)
+<input type="hidden" id="ghEditPage" value="issues.md"></input>

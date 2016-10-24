@@ -53,3 +53,4 @@ RESOLVED, that all responsibility pertaining to the Apache
 Incubator Shiro podling encumbered upon the Apache Incubator
 PMC are hereafter discharged.
 ```
+<input type="hidden" id="ghEditPage" value="graduation-resolution.md"></input>

@@ -203,3 +203,4 @@ Captcha support would assist in human being verification (during login, during f
 The Web module is largely Servlet-specific at the moment. As such, its packaging should reflect this, in the same way that all other support modules are named, e.g.  
 module name: `shiro-servlet`  
 package base: `org.apache.shiro.servlet.*`
+<input type="hidden" id="ghEditPage" value="version-2-brainstorming.md"></input>

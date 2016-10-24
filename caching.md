@@ -68,3 +68,4 @@ TBD
 ##Authorization Cache Invalidation
 
 Finally note that [`AuthorizingRealm`](static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html) has a [clearCachedAuthorizationInfo method](static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html#clearCachedAuthorizationInfo-org.apache.shiro.subject.PrincipalCollection-) that can be called by subclasses to evict the cached authzInfo for a particular account. It is usually called by custom logic if the corresponding account's authz data has changed (to ensure the next authz check will pick up the new data).
+<input type="hidden" id="ghEditPage" value="caching.md"></input>

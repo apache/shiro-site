@@ -14,3 +14,5 @@ If you'd like to learn more about Shiro please visit the links below
 * [Events](events.html) - See what Apache Shiro events are coming that you should consider attending
 
 * [License](license.html) - Review the license under which Shiro is released - Apache Software License, Version 2.0
+
+<input type="hidden" id="ghEditPage" value="about.md"></input>

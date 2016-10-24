@@ -64,3 +64,4 @@ Well, that's how the JSecurity project and then Apache Shiro was started. We're 
 Best regards,
 
 Les Hazlewood
+<input type="hidden" id="ghEditPage" value="what-is-shiro.md"></input>

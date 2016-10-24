@@ -10,3 +10,4 @@ For users that prefer to use forums over mailing lists, we use the [Nabble](http
 ##Mailing Lists
 
 For those that may prefer mailing lists, please see the [Mailing Lists](mailing-lists.html) information.
+<input type="hidden" id="ghEditPage" value="forums.md"></input>

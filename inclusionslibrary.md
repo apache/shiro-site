@@ -18,3 +18,5 @@ To include the entire contents of a page"
 ```
 {include:page name|nopanel=true} 
 ```
+
+<input type="hidden" id="ghEditPage" value="inclusionslibrary.md"></input>

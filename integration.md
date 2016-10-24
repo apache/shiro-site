@@ -69,3 +69,4 @@ Krail provides a framework for rapid Java web development by combining Vaadin, G
 
 ##Got An Integration?
 Have an integration you want listed? Send us a pull request of [this page](https://github.com/apache/shiro-site/blob/master/integration.md), and participate in Shiro development! [Learn more about contributing to Apache Shiro](how-to-contribute.html).
+<input type="hidden" id="ghEditPage" value="integration.md"></input>

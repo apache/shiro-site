@@ -9,3 +9,4 @@ We encourage everyone to participate and use the available community support too
 * [Mailing Lists](mailing-lists.html "Mailing Lists")
 * [Forums](forums.html "Forums")
 * [Issues and Bug Tracking](issues.html)
+<input type="hidden" id="ghEditPage" value="support.md"></input>

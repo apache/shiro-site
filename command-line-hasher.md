@@ -88,3 +88,4 @@ Some examples:
 <command> -r /usr/local/logs/absolutePathFile.log
 <command> -r url:http://foo.com/page.html <command> -r classpath:/WEB-INF/lib/something.jar
 ```
+<input type="hidden" id="ghEditPage" value="command-line-hasher.md"></input>

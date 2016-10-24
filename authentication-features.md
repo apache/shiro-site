@@ -45,3 +45,5 @@ The Shiro framework is designed to make authentication as clean and intuitive as
 
 *   **Login with one or more realms** - Using Shiro, you can easily authenticate a user against one or more realms and return one unified view of their identity.  In addition, you can customize the authentication process with Shiro's notion of an authentication strategy. The strategies can be setup in configuration files so changes don't require source code modifications-- reducing complexity and maintenance effort.
 
+
+<input type="hidden" id="ghEditPage" value="authentication-features.md"></input>

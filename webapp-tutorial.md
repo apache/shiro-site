@@ -867,3 +867,5 @@ We hope you have found this introductory tutorial for Shiro-enabled webapps usef
 ### Fixes and Pull Requests
 
 Please send any fixes for errata as a [GitHub Pull Request](https://help.github.com/articles/creating-a-pull-request/) to the `https://github.com/lhazlewood/apache-shiro-tutorial-webapp` repository.  We appreciate it!!!
+
+<input type="hidden" id="ghEditPage" value="webapp-tutorial.md"></input>

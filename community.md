@@ -29,3 +29,4 @@ At the Shiro project we make it easy for anyone to join our great community and 
 *   **[Issue Tracker](https://issues.apache.org/jira/issues/?jql=project%20%3D%20SHIRO%20AND%20status%20%3D%20Open%20ORDER%20BY%20priority%20DESC)** - Once you're ready to contribute, this is a good place to see what needs to get done
 
 *   **[Donate to ASF](http://www.apache.org/foundation/sponsorship.html)** - Shiro is a project under the Apache Software Foundation, a non-profit that relies on donations and community support
+<input type="hidden" id="ghEditPage" value="community.md"></input>

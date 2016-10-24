@@ -26,3 +26,4 @@ Articles and Guides written by and for members of the Apache Shiro community.
 
 * **[Apache Shiro Project Background](what-is-shiro.html)**
 Apache Shiro, like most useful tools, was created out of necessity. Learn more about the project history and mission statement.
+<input type="hidden" id="ghEditPage" value="get-started.md"></input>

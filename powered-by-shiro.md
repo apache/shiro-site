@@ -33,3 +33,5 @@ The company behind <a class="external-link" href="http://maven.apache.org">Maven
 <h2><a name="PoweredbyShiro-Template"></a>Template</h2>
 <p><a class="external-link" href="http://www.apache.org">Your Company Name</a> - Your company description</p>
 <ul><li>Any details you can share</li><li>...</li></ul>
+
+<input type="hidden" id="ghEditPage" value="powered-by-shiro.md"></input>

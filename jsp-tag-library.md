@@ -20,3 +20,4 @@
 *   **<shiro:authenticated/>** - Displays body content only if the current user has successfully authenticated _during their current session_. It is more restrictive than the 'user' tag. It is logically opposite to the 'notAuthenticated' tag.
 
 *   **<shiro:notAuthenticated/>** - Displays body content only if the current user has NOT succesfully authenticated _during their current session_. It is logically opposite to the 'authenticated' tag.
+<input type="hidden" id="ghEditPage" value="jsp-tag-library.md"></input>

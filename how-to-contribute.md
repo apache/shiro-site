@@ -174,3 +174,4 @@ This is a collection of tips for contributing to the project in a manner that is
 *   When sending a patch, you usually do not need to worry about which Git branch it should be applied to. The maintainers of the repository will decide.
 *   Keep all project-related discussion on the mailing list. It is much better to utilise the wider audience, rather than to break off into private discussion groups. You never know who else will have the answer to your issues, and anyway other people are interested in the outcome.
 *   Become familiar with the mailing lists. As you browse and search, you will see the way other people do things. Follow the leading examples.
+<input type="hidden" id="ghEditPage" value="how-to-contribute.md"></input>

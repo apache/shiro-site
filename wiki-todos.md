@@ -10,3 +10,4 @@
     - Add more terminology where needed
 
 Complete Reference Manual
+<input type="hidden" id="ghEditPage" value="wiki-todos.md"></input>

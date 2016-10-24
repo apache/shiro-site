@@ -25,3 +25,4 @@ October 12, 2010, San Francisco, CA
 ###SDForum: Securing Applications with Apache Shiro
 
 June 1, 2010, Palo Alto, CA
+<input type="hidden" id="ghEditPage" value="events.md"></input>

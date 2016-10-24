@@ -54,3 +54,4 @@
 ###Discussion Forums
 
 If you prefer you could use our discussion [Forums](forums.html "Forums") which are sync'd with the above mailing lists.
+<input type="hidden" id="ghEditPage" value="mailing-lists.md"></input>

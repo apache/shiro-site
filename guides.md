@@ -10,3 +10,4 @@ Please post any errata to the user or dev mailing lists.
 *   **[Authentication Guide](java-authentication-guide.html "Java Authentication Guide")**
 
 *   **[Authorization Guide](java-authorization-guide.html "Java Authorization Guide")**
+<input type="hidden" id="ghEditPage" value="guides.md"></input>

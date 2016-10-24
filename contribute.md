@@ -14,3 +14,5 @@ Below are helpful links on how you can contribute to the Apache Shiro project.
 * [Donate to ASF](http://www.apache.org/foundation/sponsorship.html) - Shiro is a project under the Apache Software Foundation, a non-profit that relies on donations and community support
 
 * [Developer Resources](developer-resources.html) - Helpful information for anyone providing project help as a committer or contributor
+
+<input type="hidden" id="ghEditPage" value="contribute.md"></input>

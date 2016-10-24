@@ -17,3 +17,4 @@ Shiro commercial support and consulting services are available from Stormpath, a
 [Learn More >>>](https://www.stormpath.com/apache-shiro-support "Stormpath Support for Apache Shiro")
 
 **Providing Shiro services? Get listed on this page by posting to the [Dev Mailing list](mailing-lists.html "Shiro Mailing Lists")**
+<input type="hidden" id="ghEditPage" value="commercial-support.md"></input>

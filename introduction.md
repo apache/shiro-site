@@ -49,3 +49,4 @@ There are also additional features to support and reinforce these concerns in di
 *   Testing: Test support exists to help you write unit and integration tests and ensure your code will be secured as expected.
 *   "Run As": A feature that allows users to assume the identity of another user (if they are allowed), sometimes useful in administrative scenarios.
 *   "Remember Me": Remember users' identities across sessions so they only need to log in when mandatory.
+<input type="hidden" id="ghEditPage" value="introduction.md"></input>
