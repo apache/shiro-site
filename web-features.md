@@ -8,24 +8,6 @@ Although Apache Shiro is designed to be used to secure _any_ JVM-based applicati
 	
 ##Features
 
-<table align="right" width="275" style="margin-left: 15px; margin-bottom: 20px; border-style: solid; border-width: 2px; border-color: navy" cellpadding="10px">
-
-<tr>
-<td>
-<div id="border">
-  <h2>Related Content</h2>
-	
-  <h3><a href="webapp-tutorial.html">Web App Tutorial</a></h3>
-  <p>Step-by-step tutorial for securing a web application with Shiro. </br><span style="font-size:11"><a href="webapp-tutorial.html">Read More &gt;&gt;</a></span></p>
-	
-  <h3><a href="web.html">Web Support Docs</a></h3>
-  <p>Detailed support for integrating Shiro into web applications. </br><span style="font-size:11"><a href="web.html">Read More &gt;&gt;</a></span></p>
-	
-</div>
-</td>
-</tr>
-</table>
-
 * **Simple ShiroFilter web.xml definition** 
 You can enable Shiro for a web application with one simple filter definition in web.xml.
 

@@ -7,10 +7,10 @@ function addPageEditLink() {
     var ghEditPageElement = $( "#ghEditPage" );
     var editThisPageElement = $(".editThisPage");
 
-        if (ghEditPageElement && ghEditPageElement.val() && editThisPageElement) {
-            var relGHPage = ghEditPageElement.val();
+    if (ghEditPageElement && ghEditPageElement.val() && editThisPageElement) {
+        var relGHPage = ghEditPageElement.val();
 
-            var ghEditHref = ghRelHref + relGHPage;
-            editThisPageElement.append("<a href='" + ghEditHref + "'>Edit this Page on Github</a>");
-        }
+        var ghEditHref = ghRelHref + relGHPage;
+        editThisPageElement.append("<a href='" + ghEditHref + "'>Edit this Page on Github</a>");
+    }
 }

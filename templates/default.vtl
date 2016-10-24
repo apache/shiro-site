@@ -94,7 +94,11 @@
 
         <div id="content">
 
-            $content
+            #if ($layout)
+                #parse($layout)
+            #else
+                $content
+            #end
 
         </div>
 

@@ -1,18 +1,6 @@
 <a name="Spring-IntegratingApacheShirointoSpringbasedApplications"></a>
 #Integrating Apache Shiro into Spring-based Applications
 
-<table align="right" width="275" style="margin-left: 20px; margin-bottom: 20px; border-style: solid; border-width: 2px; border-color: navy" cellpadding="10px"><tbody><tr><td>
-<div id="border">
-        
-  <h3><a href="web.html">Web Apps with Shiro</a></h3>
-  <p>Detailed support for integrating Shiro into web applications. <br><span style="font-size:11"><a href="web.html">Read More &gt;&gt;</a></span></p>
-    
-  <h3><a href="webapp-tutorial.html">Web App Tutorial</a></h3>
-  <p>Step-by-step tutorial for securing a web application with Shiro. <br><span style="font-size:11"><a href="webapp-tutorial.html">Read More &gt;&gt;</a></span></p>
-
-</div>
-</td></tr></tbody></table>
-
 This page covers the ways to integrate Shiro into [Spring](http://spring.io)-based applications.
 
 Shiro's JavaBeans compatibility makes it perfectly suited to be configured via Spring XML or other Spring-based configuration mechanisms. Shiro applications need an application singleton `SecurityManager` instance. Note that this does not have to be a _static_ singleton, but there should only be a single instance used by the application, whether its a static singleton or not.

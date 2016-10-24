@@ -8,30 +8,6 @@ Authorization is a critical element of any application but it can quickly become
 
 ## Features
 
-<table align="right" width="275" style="margin-left: 20px; margin-bottom: 20px; border-style: solid; border-width: 2px; border-color: navy" cellpadding="10px">
-
-<tr>
-<td>
-<div id="border">
-  <h2>Related Content</h2>
- 
-  <h3><a href="java-authorization-guide.html">Java Authorization Guide</a></h3>
-  <p>Learn how Shiro handles access control in Java. </br><span style="font-size:11"><a href="java-authorization-guide.html">Read More &gt;&gt;</a></span></p>	
-	
-  <h3><a href="authorization.html">Authorization Docs</a></h3>
-  <p>Full documentation on Apache Shiro's Authorization functionality. </br><span style="font-size:11"><a href="authorization.html">Read More &gt;&gt;</a></span></p>
-  
-	<h3><a href="get-started.html">Getting Started</a></h3>
-  <p>Resources, guides and tutorials for new Shiro users. </br><span style="font-size:11"><a href="get-started.html">Read More &gt;&gt;</a></span></p>	
-
-	<h3><a href="webapp-tutorial.html">Web App Tutorial</a></h3>
-  <p>Step-by-step tutorial for securing a web application with Shiro. </br><span style="font-size:11"><a href="webapp-tutorial.html">Read More &gt;&gt;</a></span></p>
-	
-</div>
-</td>
-</tr>
-</table>
-
 *   **Subject-based** - Almost everything you do in Shiro is based on the currently executing user, called a Subject.  And you can easily access the subject retrieve the Subject and checks its roles, permissions, or other relevant attributes anywhere in your code.  This makes it easier for you to understand and work with Shiro in your applications.
 
 *   **Checks based on roles or permissions** - Since the complexity of authorization differs greatly between applications, Shiro is designed to be flexible, supporting both role-based security and permission-based security based on your projects needs.

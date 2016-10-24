@@ -1,0 +1,19 @@
+
+#if (!$topSpacing)
+    #set($topSpacing = '200px')
+#end
+
+<!-- spacer allows enough room to display the header -->
+<div id="spacer" style="width: 0; height: $topSpacing; float: left"></div>
+
+<!-- related content (if any) -->
+  #if ($relatedLinks)
+  <div style="border-style: solid; border-width: 2px; border-color: navy; padding: 5px; margin-left: 20px; margin-bottom: 20px; width:275px; float: right; clear: both; ">
+      <h2>Related Content</h2>
+        #foreach( $item in $relatedLinks )
+            <h3><a href="$item.href">$item.title</a></h3>
+            <p>$item.brief</br><span style="font-size:11"><a href="$item.href">Read More &gt;&gt;</a></span></p>
+        #end
+  </div>
+  #end
+$content
