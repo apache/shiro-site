@@ -1,0 +1,255 @@
+<a name="JavaAuthorizationGuide-JavaAuthorizationGuidewithApacheShiro"></a>
+Java Authorization Guide with Apache Shiro
+==========================================
+
+Authorization, or access control, is the function of specifying access rights to resources. In other words, _who_ has access to _what_.
+
+Examples of authorization checks are: Is the user allowed to look at this webpage, edit this data, view this button, or print to this printer? Those are all decisions determining what a user has access to.
+
+<a name="JavaAuthorizationGuide-ElementsofAuthorization"></a>
+Elements of Authorization
+-------------------------
+
+Authorization has three core elements that we reference quite a bit in Shiro-- permissions, roles, and users.
+
+<a name="JavaAuthorizationGuide-PermissionsDefined"></a>
+#[[###Permissions Defined]]#
+
+<table align="right" width="275" style="margin-left: 20px; margin-bottom: 20px; border-style: solid; border-width: 2px; border-color: navy" cellpadding="10px"><tr><td>
+<div id="border">
+  <h2>Related Content</h2>
+	
+  <h3><a href="authorization-features.html">Authorization Features</a></h3>
+  <p>Quick overview of permissions, roles, and users in Shiro. </br><span style="font-size:11"><a href="authorization-features.html">Read More &gt;&gt;</a></span></p>
+	
+  <h3><a href="authorization.html">Authorization Docs</a></h3>
+  <p>Full documentation on Apache Shiro's Authorization functionality. </br><span style="font-size:11"><a href="authorization.html">Read More &gt;&gt;</a></span></p>
+	
+  <h3><a href="get-started.html">Getting Started</a></h3>
+  <p>Resources, guides and tutorials for new Shiro users. </br><span style="font-size:11"><a href="get-started.html">Read More &gt;&gt;</a></span></p>	
+	
+  <h3><a href="10-minute-tutorial.html">10-Minute Shiro Tutorial</a></h3>
+  <p>Try Apache Shiro for yourself in under 10 minutes. </br><span style="font-size:11"><a href="10-minute-tutorial.html">Read More &gt;&gt;</a></span></p>
+	
+  <h3><a href="webapp-tutorial.html">Web App Tutorial</a></h3>
+  <p>Step-by-step tutorial for securing a web application with Shiro. </br><span style="font-size:11"><a href="webapp-tutorial.html">Read More &gt;&gt;</a></span></p>
+	
+</div>
+</td></tr></table>
+
+Permissions are the most atomic level of a security policy and they are statements of functionality. Permissions represent what can be done in your application. A well formed permission describes a resource types and what actions are possible when you interact with those resources. Can you _open_ a _door_? Can you _read_ a _file_? Can you _delete_ a _customer record_? Can you _push_ a _button_?
+
+Common actions for data-related resources are create, read, update, and delete, commonly referred to as CRUD.
+
+It is important to understand that permissions do not have knowledge of _who_ can perform the actions-- they are just statements of _what_ actions can be performed.
+
+<a name="JavaAuthorizationGuide-Levelsofpermissiongranularity"></a>
+#[[####Levels of permission granularity]]#
+
+The permissions above all specify an actions (open, read, delete, etc) on a resource (door, file, customer record, etc). In Shiro, you can define a permission to any depth you like. Here are a few common permission levels in order of granularity.
+
+*   Resource Level - This is the broadest and easiest to build. A user can edit customer records or open doors. The resource is specified but not a specific instance of that resource.
+*   Instance Level - The permission specifies the instance of a resource. A user can edit the customer record for IBM or open the kitchen door.
+*   Attribute Level - The permission now specifies an attribute of an instance or resource. A user can edit the address on the IBM customer record.
+
+For more information on Permissions please check out the [Permissions Documentation](permissions.html "Permissions")
+
+<a name="JavaAuthorizationGuide-RolesDefined"></a>
+#[[###Roles Defined]]#
+
+In the context of Authorization, Roles are effectively a collection of permissions used to simplify the management of permissions and users. So users can be assigned roles instead of being assigned permissions directly, which can get complicated with larger user bases and more complex applications. So, for example, a bank application might have an _administrator_ role or a _bank teller_ role.
+
+There are two types of roles that you need to be aware of and Shiro will support both.
+
+<a name="JavaAuthorizationGuide-ImplicitRoles"></a>
+#[[####Implicit Roles]]#
+
+Most people view roles as what we define as an implicit role where your application _implies_ a set of permissions because a user has a particular role as opposed to the role explicitly being assigned permissions or your application checking for those permissions. Role checks in code are generally a reflection of an implicit role. You can view patient data because you have the _administrator_ role. You can create an account because you have the _bank teller_ role. The fact that these names exist does not have a correlation to what the software can actually do. Most people use roles in this manner. It is easiest but it can create a lot of maintenance and management problems for all the but the simplest application.
+
+<a name="JavaAuthorizationGuide-ExplicitRoles"></a>
+#[[####Explicit Roles]]#
+
+An explicit role has permissions _explicitly_ assigned to it and therefore is an _explicit_ collection of permissions. Permission checks in code are a reflection of an explicit role. You can view patient data because because you have the _view patient data_ permission as part of your _administrator_ role. You can create an account because you have the _create account_ permission as part of your _bank teller_ role. You can perform these actions, not because of some implicit role name based on a string but because the corresponding permission was explicitly assigned to your role.
+
+The big benefits of explicit roles are easier manageability and lower maintenance of your application. If you ever need to add, remove, or change a role, you can do so without touching your source code. And in Shiro, you'll also be able to dynamically add, remove, or change roles at runtime and your authorization checks will always have up to date values. This means you won't have to force users to log out and log back in order to get their new permissions.
+
+<a name="JavaAuthorizationGuide-UsersDefined"></a>
+#[[###Users Defined]]#
+
+A user is the "who" of an application. In Shiro, though, the concept of a user is really the [Subject](subject.html "Subject") instance. We use word Subject instead of user because user usually implies a human being and in Shiro a Subject can be anything interacting with your application-- whether it be a human or a service.
+
+Users are allowed to perform certain actions in your application through their association with roles or direct permissions. So you are able to open a customer record because you've been assigned the _open customer record_ permission, either through a role you've been assigned or through a direct permission assignment.
+
+For more information on Users, aka Subjects, please check out the [Subject Documentation](subject.html "Subject").
+
+#info('Note', 'Ultimately, your <a href="realm.html" title="Realm">Realm</a> implementation is what communicates with your data source (RDBMS, LDAP, etc). So your realm is what will tell Shiro whether or not roles or permissions exist. You have full control over how your authorization model works.')
+
+<a name="JavaAuthorizationGuide-HowtoperformAuthorizationinJavawithShiro"></a>
+How to perform Authorization in Java with Shiro
+-----------------------------------------------
+
+Authorization in Shiro can be handled in four ways.
+
+*   Programmatically - You can perform authorization checks in your java code with structures like `if` and `else` blocks.
+*   JDK annotations - You can attach an authorization annotation to your Java methods
+*   JSP/GSP TagLibs - You can control jsp or gsp page output based on roles and permissions
+
+<a name="JavaAuthorizationGuide-ProgrammaticAuthorization"></a>
+#[[###Programmatic Authorization]]#
+
+Checking for permissions and roles, programmatically in your Java code is the traditional way of handling authorization. Here's how you can perform a permission check or role check in Shiro.
+
+<a name="JavaAuthorizationGuide-RoleCheck"></a>
+#[[####Role Check]]#
+
+This is an example of how you do a role check programmatically in your application. We want to check if a user has the _administrator_ role and if they do, then we'll show a special button, otherwise we won't show it.
+
+First we get access to the current user, the [Subject](subject.html "Subject"). Then we pass the _adminstrator_ to the Subject's [`.hasRole()`](static/current/apidocs/org/apache/shiro/subject/Subject.html#[[#]]#hasRole-java.lang.String-) method. It will return `TRUE` or `FALSE`.
+
+``` java
+//get the current Subject 
+Subject currentUser = SecurityUtils.getSubject();
+
+if (currentUser.hasRole("administrator")) {
+    //show a special button‏
+} else {
+    //don’t show the button?)‏
+}
+```
+
+Now a role based check is quick and easy to implement but it has a major drawback. It is implicit.
+
+What if you just want to add, remove, or redefine a role later? You'll have to crack open your source code and change all your role checks to reflect the change in your security model. You'll have to shut down the application, crack open the code, test it, and then restart it everytime.
+
+In very simple applications this is probably good enough but for larger apps this can be a major problem throughout the life of your application and drive a large maintenance cost for your software.
+
+<a name="JavaAuthorizationGuide-PermissionCheck"></a>
+#[[####Permission Check]]#
+
+This is an example of how you do security checks by permission. We want to check if a user has permission to print to laserjet3000n and if they do, then we'll show a print button, otherwise we won't show it. This is an example of an instance level permission or instance level authorization.
+
+Again, first you get access to the current user, the [Subject](subject.html "Subject"). Then you construct a [`Permission`](static/current/apidocs/org/apache/shiro/authz/Permission.html) object or an instance that represents an action on a resource. In this case, the instance is named `printerPermission`, the resource is _laserjet3000n_, and the action is _print_. Then we pass `printerPermission` to the Subject's [`.isPermitted()`](static/current/apidocs/org/apache/shiro/subject/Subject.html#[[#]]#isPermitted-java.util.List-) method. It will return true or false.
+
+``` java
+Subject currentUser = SecurityUtils.getSubject();
+
+Permission printPermission = new PrinterPermission("laserjet3000n","print");
+
+If (currentUser.isPermitted(printPermission)) {
+    //do one thing (show the print button?)‏
+} else {
+    //don’t show the button?
+}
+```
+
+<a name="JavaAuthorizationGuide-PermissionCheck%28Stringbased%29"></a>
+#[[####Permission Check (String-based)]]#
+
+You can also a permission check using a simple string instead of a permission class.
+
+So, if you don't want to implement our [permission interface](static/current/apidocs/org/apache/shiro/authz/Permission.html) then you just pass in a String. In this example, we pass the `.isPermitted()` method a string, `printer:print:LaserJet4400n`
+
+``` java
+String perm = "printer:print:laserjet4400n";
+
+if(currentUser.isPermitted(perm)){
+    //show the print button?
+} else {
+    //don’t show the button?
+}
+```
+
+You can construct the permission string the way you want so long as your [Realm](realm.html "Realm") knows how to work with it. In this example we use Shiro's optional permission syntax, [WildCardPermissions](permissions.html "Permissions"). WildCardPermissions are powerful and intuitive. If you'd like to learn more about them then check out the [Permissions Documentation](static/current/apidocs/org/apache/shiro/authz/Permission.html).
+
+With string-based permission checks, you get the same functionality as the example before. The benefit is that you are not forced to implement a permission interface and you can construct the permission via a simple string. The downside is that you don't have type safety and if you needed more complicated permission capabilitues that are outside the scope of what this represents, you're going to want to implement your own permission objects based on the permission interface.
+
+<a name="JavaAuthorizationGuide-AnnotationAuthorization"></a>
+#[[###Annotation Authorization]]#
+
+If you don't want to do code level authorization checks, then you can use Java Annotations as well. Shiro offers a number of [Java annotations](java-annotations-list.html "Java Annotations List") that allow you to annotate methods.
+
+<a name="JavaAuthorizationGuide-EnablingAnnotationSupport"></a>
+#[[####Enabling Annotation Support]]#
+
+Before you can use Java annotations, you'll need to enable AOP support in your application. There are a number of different AOP frameworks so, unfortunately, there is no standard way to enable AOP in an application.
+
+For AspectJ, you can review our [AspectJ sample application](https://github.com/apache/shiro/tree/master/samples/aspectj).
+
+For Spring, you can look into our [Spring Integration](spring.html "Spring") documentation.
+
+For Guice, you can look into our [Guice Integration](guice.html "Guice") documentation.
+
+<a name="JavaAuthorizationGuide-PermissionCheck"></a>
+#[[####Permission Check]]#
+
+In this example, we want to check that a user has the `account:create` permission before they can invoke the `openAccount` method. If they do, then the method is called as expected, and if they don't, then an exception is thrown.
+
+Like programmatic checks, you can use the [Permission](static/current/apidocs/org/apache/shiro/authz/Permission.html) objects or the simple string methods with this annotation.
+
+``` java
+//Will throw an AuthorizationException if none
+//of the caller’s roles imply the Account
+//'create' permission
+@RequiresPermissions("account:create")‏
+public void openAccount( Account acct ) {
+    //create the account
+}
+```
+
+<a name="JavaAuthorizationGuide-RoleCheck"></a>
+#[[####Role Check]]#
+
+In this example, we want to check that a user has the `teller` role before they can invoke the `openAccount` method. If they do, then the method is called as expected, and if they don't, then an exception is thrown.
+
+``` java
+//Throws an AuthorizationException if the caller
+//doesn’t have the ‘teller’ role:
+@RequiresRoles( "teller" )
+public void openAccount( Account acct ) {
+    //do something in here that only a teller
+    //should do
+}
+```
+
+<a name="JavaAuthorizationGuide-JSPTagLibAuthorization"></a>
+#[[###JSP TagLib Authorization]]#
+
+For JSP/GSP based web applications, Shiro also offers a [tag library](jsp-tag-library.html "JSP Tag Library") for you to use.
+
+In this example, we're going to show users with the _users:manage_ permission a link to the Manage Users page. If they do not have the permission, then we'll show them a nice message.
+
+First, we'll need to add the Shiro taglib to our web application. Next, we add the `<shiro:hasPermission>` tag with a check for _users:manage_. Within the `<shiro:hasPermission>` tags we will place the code we want to execute if the user has the permission we're checking for. If we want to take an action if the user lacks the permission, then we need to also add the `<shiro:lacksPermission>` tag, again checking for _users:manage_. And any code we want to excute if the user lacks the permission will need to be placed within the `<shiro:lacksPermission>` tags.
+
+``` html
+<%@ taglib prefix="shiro" uri=http://shiro.apache.org/tags %>
+<html>
+<body>
+    <shiro:hasPermission name="users:manage">
+        <a href="manageUsers.jsp">
+            Click here to manage users
+        </a>
+    </shiro:hasPermission>
+    <shiro:lacksPermission name="users:manage">
+        No user management for you!
+    </shiro:lacksPermission>
+</body>
+</html>
+```
+
+Of course, there also tags for checking roles and other user data and states.
+
+For more information on JSP/GSP Tags please check out the [JSP Tag Library](jsp-tag-library.html "JSP Tag Library") and for more information on integration your application in your web application, please read the [Web Integration Documentation](web.html "Web")
+
+<a name="JavaAuthorizationGuide-CachingAuthorization"></a>
+Caching Authorization
+---------------------
+
+TBD
+
+<a name="JavaAuthorizationGuide-Lendahandwithdocumentation"></a>
+Lend a hand with documentation
+------------------------------
+
+While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time. If you'd like to help the Shiro project, please consider corrected, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro.
+
+The easiest way to contribute your documentation is to send it to the [User Forum](http://shiro-user.582556.n2.nabble.com/) or the [User Mailing List](mailing-lists.html "Mailing Lists").

@@ -1,0 +1,109 @@
+<a name="JavaCryptographyGuide-JavaCryptographyGuidewithApacheShiro"></a>
+Java Cryptography Guide with Apache Shiro
+=========================================
+
+<div class="addthis_toolbox addthis_default_style">
+<a class="addthis_button_compact" href="http://www.addthis.com/bookmark.php?v=250&amp;pubid=ra-4d66ef016022c3bd">Share</a>
+<span class="addthis_separator">|</span>
+<a class="addthis_button_preferred_1"></a>
+<a class="addthis_button_preferred_2"></a>
+<a class="addthis_button_preferred_3"></a>
+<a class="addthis_button_preferred_4"></a>
+</div>
+<script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4d66ef016022c3bd"></script>
+
+
+Cryptography is the protecting of information from undesired access by hiding it or converting it into nonsense so that no one can read it.
+
+Shiro is a major part of Shiro because we wanted to provide you with simplicity on what is typically a very complex topic. For example, the Java Cryptophay Environments (JCE) already handles cryptogrpahy in a Java environment but is very difficult to learn and use. So we grabbed the concepts made available by the JCE API and make them available to us mortals. In addition, all of the calls in the JCE are procedural which doesn't fit in Java's Object Oriented paradigm. So in Shiro, our cryptography features are all object oriented.
+
+<a name="JavaCryptographyGuide-ElementsofCryptography"></a>
+Elements of Cryptography
+------------------------
+
+Cryptogrpahy has two core elements in Shiro-- ciphers and hashes.
+
+<a name="JavaCryptographyGuide-CiphersDefined"></a>
+#[[###Ciphers Defined]]#
+
+Ciphers are algorightms that can either encrypt or decrypt based on public or private key pair. And there are two different types of ciphers:
+
+*   Symmetric Cipher - encrypts and decrypts using the same key.
+
+*   Asymmetric Cipher - uses different keys for encryption and decryption.
+
+Both cipher type are support in Shiro.
+
+<a name="JavaCryptographyGuide-HashesDefined"></a>
+#[[###Hashes Defined]]#
+
+A hash is a one-way irreversible conversion of an input source. In the JDK, a hash is referred to as a message digest. A cryptographic hash and a message digests are the same thing and both terms or correct.
+
+<a name="JavaCryptographyGuide-CommonusesforHashes"></a>
+#[[####Common uses for Hashes]]#
+
+Hashes are often used to transforms credentials like passwords or biometric data. It's a one way transformation so you can never see what the original value was. This is a very safe way of storing passwords so that no one other than the user will ever know a password, even if your system is compromised.
+
+In addition, Shiro's hashes can be used with any type of data with an underlying byte array. Examples of this data include files, streams, byte arrays, strings, and character arrays.
+
+<a name="JavaCryptographyGuide-CipherFeatures"></a>
+Cipher Features
+---------------
+
+<a name="JavaCryptographyGuide-Shiro%27sCipherServiceInterface"></a>
+#[[###Shiro's CipherService Interface]]#
+
+``` java
+public interface CipherService {
+
+   ByteSource encrypt( byte[] raw, byte[] key);
+
+   void encrypt(InputStream in, OutputStream out, byte[] key);
+
+   ByteSource decrypt( byte[] cipherText, byte[] key);
+
+   void decrypt(InputStream in, OutputStream out, byte[] key);
+}
+```
+
+<a name="JavaCryptographyGuide-HashFeatures"></a>
+Hash Features
+-------------
+
+#tip('Tip', 'Salts are important when hashing ...')
+
+#tip('Tip', 'Repeated hashes are important when hashing ...')
+
+<a name="JavaCryptographyGuide-Shiro%27sHashInterface"></a>
+#[[###Shiro's Hash Interface]]#
+
+``` java
+public interface Hash {
+   byte[] getBytes();
+   String toHex();
+   String toBase64();
+}
+```
+
+<a name="JavaCryptographyGuide-ExamplesofhowtouseHashesinyourcode"></a>
+#[[###Examples of how to use Hashes in your code]]#
+
+``` java
+//some examples: 
+new Md5Hash(“foo”).toHex();
+
+//File MD5 Hash value for checksum: 
+new MD5Hash( aFile ).toHex();
+
+//store a password, but not raw: 
+new Sha256(aPassword, salt, 1024).toBase64();
+```
+
+<a name="JavaCryptographyGuide-Lendahandwithdocumentation"></a>
+Lend a hand with documentation
+------------------------------
+
+While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time. If you'd like to help the Shiro project, please consider corrected, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro.
+
+The easiest way to contribute your documentation is to send it to the [User Forum](http://shiro-user.582556.n2.nabble.com/) or the [User Mailing List](mailing-lists.html "Mailing Lists").
