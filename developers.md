@@ -16,6 +16,10 @@ Version 2 has no timeline yet, but if you're interested in seeing what the major
 <a name="Developers-Website"></a>
 ##Website
 
+**NOTE:** This section is out of date. The site is basically just markdown, and you can edit / pull request via Github via the links at the bottom of the page.
+
+More on this soon!
+
 The Shiro website is automatically generated based on the content maintained in the [Apache Shiro Confluence Wiki Space](https://cwiki.apache.org/confluence/display/SHIRO), with a few notable exceptions that we'll cover in a bit. Here's how it works:
 
 1.  Shiro committers and approved contributors modify the Confluence wiki pages as necessary. The left navigation panel is controlled by the [Navigation wiki page](https://cwiki.apache.org/confluence/display/SHIRO/Navigation).
