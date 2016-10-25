@@ -1,2 +1,92 @@
 #set( $latestRelease = "1.3.2" )
 #set( $versionInfo = {"1.3.2": { "releaseDate": "2016-09-12" } } )
+
+#set( $shiroCore = {"g":"org.apache.shiro", "a": "shiro-core", "type": "jar",
+                    "description": 'Required in all environments. <a class="external-link" href="http://slf4j.org/">Slf4j</a>''s
+                     <code>slf4j-api</code> jar and one of its binding jars is required. <code>commons-beanutils</code> is
+                     required only if using INI config.'})
+
+#set ($shiroWeb = {"g": "org.apache.shiro", "a": "shiro-web", "type": "jar",
+                "description": "Enables support for web-based applications."})
+
+#set ($shiroAspectJ = {"g": "org.apache.shiro", "a": "shiro-aspectj", "type": "jar",
+    "description": 'Enables <a class="external-link" href="http://www.eclipse.org/aspectj/">AspectJ</a> support for Shiro AOP and Annotations.'})
+
+#set ($shiroCas = {"g": "org.apache.shiro", "a": "shiro-cas", "type": "jar",
+    "description": 'Enables Jasig <a class="external-link" href="https://wiki.jasig.org/display/CAS/Home">CAS</a> support.
+                    <div class="warning">
+                        <span>NOTE:</span>
+                        Shiro-CAS support is deprecated, support has been moved to the Apache Shiro based <a href="https://github.com/bujiio/buji-pac4j">buji-pac4j</a> project.
+                    </div>'})
+
+#set ($shiroEhCache = {"g": "org.apache.shiro", "a": "shiro-ehcache", "type": "jar",
+    "description": 'Enables <a class="external-link" href="http://www.ehcache.org">Ehcache</a>-based famework caching.'})
+
+#set ($shiroHazelcast = {"g": "org.apache.shiro", "a": "shiro-hazelcast", "type": "jar",
+    "description": 'Enables <a class="external-link" href="https://hazelcast.org">Hazelcast</a>-based famework caching.'})
+
+#set ($shiroFeatures = {"g": "org.apache.shiro", "a": "shiro-features", "type": "xml",
+    "description": 'OSGi / <a class="external-link" href="http://karaf.apache.org/">Apache Karaf</a> integration.'})
+
+#set ($shiroGuice = {"g": "org.apache.shiro", "a": "shiro-guice", "type": "jar",
+    "description": 'Enables <a class="external-link" href="https://github.com/google/guice">Google Guice</a> integration.'})
+
+#set ($shiroQuartz = {"g": "org.apache.shiro", "a": "shiro-quartz", "type": "jar",
+    "description": 'Enables <a class="external-link" href="http://www.quartz-scheduler.org/">Quartz</a>-based scheduling for Shiro native session validation.'})
+
+#set ($shiroSpring = {"g": "org.apache.shiro", "a": "shiro-spring", "type": "jar",
+    "description": 'Enables <a class="external-link" href="https://spring.io/">Spring Framework</a> integration.'})
+
+#set ($shiroHasher = {"g": "org.apache.shiro.tools", "a": "shiro-tools-hasher", "c": "cli", "type": "jar", "gavAlt": '<b>Not Relevant</b>',
+    "description": "A command-line program to perform hashing (MD5, SHA, etc) for files, streams and passwords.
+                    Note that this is a command line program and not intended to be used as a Maven/program
+                    dependency. It is intended to be downloaded and executed:
+                    <pre><code class='bash'> java -jar shiro-tools-hasher-%version%-cli.jar</code></pre>"})
+
+#set ($shiroAll = {"g": "org.apache.shiro", "a": "shiro-all", "type": "jar", "gavAlt": '<b>Not Recommended</b>',
+    "description": 'Includes all binary functionality for Shiro (without dependencies), useful in certain build
+                    environments (e.g. Ant). However, this is <b>NOT</b> recommended in Maven builds as it does not
+                    retain correct dependency metadata, which can lead to Maven working incorrectly. For Maven builds,
+                    it is <b>highly</b> recommended to specify individual modules listed below as you require them.'})
+
+
+#set( $shiro11x = {"version": "1.1.0", "artifacts": [
+    $shiroAll,
+    $shiroCore,
+    $shiroWeb,
+    $shiroAspectJ,
+    $shiroEhCache,
+    $shiroQuartz,
+    $shiroSpring
+]} )
+
+#set( $shiro12x = {"version": "1.2.6", "artifacts": [
+    $shiroAll,
+    $shiroCore,
+    $shiroWeb,
+    $shiroAspectJ,
+    $shiroCas,
+    $shiroEhCache,
+    $shiroFeatures,
+    $shiroGuice,
+    $shiroQuartz,
+    $shiroSpring,
+    $shiroHasher
+]} )
+
+#set( $shiro13x = {"version": $latestRelease, "artifacts": [
+    $shiroAll,
+    $shiroCore,
+    $shiroWeb,
+    $shiroAspectJ,
+    $shiroCas,
+    $shiroEhCache,
+    $shiroHazelcast,
+    $shiroFeatures,
+    $shiroGuice,
+    $shiroQuartz,
+    $shiroSpring,
+    $shiroHasher
+]} )
+
+
