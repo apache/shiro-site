@@ -320,8 +320,7 @@ Note that all path expressions are relative to your application's context root. 
 
 #warning('Order Matters!', 'URL path expressions are evaluated against an incoming request in the order they are defined and the <em>FIRST MATCH WINS</em>.  For example, let''s asume that there are the following chain definitions:
 
-<pre><code class="ini">
-/account/** = ssl, authc
+<pre><code class="ini">/account/** = ssl, authc
 /account/signup = anon
 </code></pre>
 <p>If an incoming request is intended to reach <code>/account/signup/index.html</code> (accessible by all ''anon''ymous users), <em>it will never be handled!</em>.  The reason is that the <code>/account/**</code> pattern matched the incoming request first and ''short-circuited'' all remaining definitions.</p>

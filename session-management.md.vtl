@@ -192,18 +192,15 @@ However, as you might expect, Shiro already has some good `SessionDAO` implement
 
 #warning('Web Applications', 'The above <code>securityManager.sessionManager.sessionDAO = $sessionDAO</code> assignment only works when using a Shiro native session manager. Web applications by default do not use a native session manager and instead retain the Servlet Container''s default session manager which does not support a SessionDAO. If you would like to enable a SessionDAO in a web-based application for custom session storage or session clustering, you will have to first configure a native web session manager. For example:
 
-<div><pre><code class="ini">
-[main]
+<div><pre><code class="ini">[main]
 ...
 sessionManager = org.apache.shiro.web.session.mgt.DefaultWebSessionManager
 securityManager.sessionManager = $sessionManager
 
-; Configure a SessionDAO and then set it:
+# Configure a SessionDAO and then set it:
 securityManager.sessionManager.sessionDAO = $sessionDAO
-
-')
 </code></pre></div>
-
+')
 #danger('Configure a SessionDAO!', 'Shiro''s default configuration native SessionManagers use <strong>in-memory-only</strong> Session storage. This is unsuitable for most production applications. Most production applications will want to either configure the provided EHCache support (see below) or provide their own <code>SessionDAO</code> implementation.
 
 Note that web applications use a servlet-container-based SessionManager by default and do not have this issue. This is only an issue when using a Shiro native SessionManager.')

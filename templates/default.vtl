@@ -17,6 +17,7 @@
 <html>
 #parse("templates/includes.vtl")
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="description" content="Apache Shiro is a powerful and easy-to-use Java security framework that performs authentication, authorization, cryptography, and session management.">
     <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
@@ -43,29 +44,44 @@
     <link rel="icon" type="image/vnd.microsoft.icon" href="$root/assets/images/favicon.ico">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
-    <link rel="stylesheet" type="text/css" href="$root/assets/css/normalize.css">
-    <link rel="stylesheet" type="text/css" href="$root/assets/css/confluence.css" media="screen">
+    <!-- site styles and  -->
     <link rel="stylesheet" type="text/css" href="$root/assets/css/style.css">
+    <script type="text/javascript" src="$root/assets/js/shiro-site.js"></script>
 
+    <!-- github ribbon -->
     <link rel="stylesheet" href="$root/assets/css/gh-pages/gh-fork-ribbon.css" />
     <!--[if lt IE 9]>
       <link rel="stylesheet" href="$root/assets/css/gh-pages/gh-fork-ribbon.ie.css" />
     <![endif]-->
 
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="$root/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="$root/assets/bootstrap/css/bootstrap-theme.min.css">
+    <script src="$root/assets/bootstrap/js/bootstrap.min.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXX-Y', 'auto');
+    ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics -->
+
+
+
     <!-- syntax highlighting -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css" integrity="sha256-Zd1icfZ72UBmsId/mUcagrmN7IN5Qkrvh75ICHIQVTk=" crossorigin="anonymous" />
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js" integrity="sha256-s63qpgPYoQk+wv3U6WZqioVJrwFNBTgD4dkeegLuwvo=" crossorigin="anonymous"></script>
-
-    <script type="text/javascript" src="$root/assets/js/shiro-site.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-    <script type="text/javascript" src="$root/assets/js/jquery_googleanalytics/jquery.google-analytics.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+
     <script type="text/javascript">
-        // initialize plugins
-        jQuery(function() {
-            //Google Analytics
-            jQuery.trackPage('UA-11551827-1');
-        });
 
         $( document ).ready(function() {
             addPageEditLink();
@@ -74,52 +90,118 @@
 </head>
 
 <body>
-    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
 
     <div id="top-bar"></div>
 
-    <div class="wrapper">
+    <div class="container" style="max-width: 1200px;">
 
-        <div id="header">
-            <a href="$root/index.html"><div id="logo"></div></a>
-            <ul class="navigation">
+    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
+
+
+
+    <div class="masthead">
+        <p class="lead">
+            <a href="$root/index.html">
+                <img src="$root/assets/images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;">
+            </a>
+            <span class="tagline">Simple. Java. Security.</span>
+        </p>
+    </div>
+
+
+
+    <nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="navbar-collapse-1">
+            <ul class="nav navbar-nav">
                 <li><a href="$root/get-started.html">Get Started</a></li>
                 <li><a href="$root/documentation.html">Docs</a></li>
                 <li><a href="$root/web-features.html">Web Apps</a></li>
-                <li><a href="$root/integration.html">Integrations</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Integrations <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="$root/spring.html">Spring</a></li>
+                        <li><a href="$root/guice.html">Guice</a></li>
+                        <li class="divider"></li>
+                        <li><a href="$root/integration.html">Third-Party Integrations</a></li>
+                    </ul>
+                </li>
+
                 <li><a href="$root/features.html">Features</a></li>
-                <li><a href="$root/community.html">Community</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Community <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="$root/forums.html">Community Forums</a></li>
+                        <li><a href="$root/mailing-lists.html">Mailing Lists</a></li>
+                        <li><a href="$root/articles.html">Articles</a></li>
+                        <li><a href="$root/news.html">News</a></li>
+                        <li><a href="$root/events.html">Events</a></li>
+                        <li class="divider"></li>
+                        <li><a href="$root/community.html">More</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="http://www.apache.org/" class="dropdown-toggle" data-toggle="dropdown">
+                        Apache Software Foundation <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="http://www.apache.org/">Apache Homepage</a></li>
+                        <li><a href="http://www.apache.org/licenses/">License</a></li>
+                        <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                        <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                        <li><a href="http://www.apache.org/foundation/sponsorship.html">Donate</a></li>
+                        <li><a href="http://www.apache.org/security/">Security</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
+        <!-- /.navbar-collapse -->
+    </nav>
 
-        <div id="content">
 
-            #if ($layout)
-                #parse($layout)
-            #else
-                $content
-            #end
+    #if ($layout)
+        #parse($layout)
+    #else
+        $content
+    #end
 
-        </div>
+</div>
 
-    </div><!--END WRAPPER-->
-
-    <div id="footer">
+    <div class="footer-padding"></div>
+    <footer class="custom-footer">
 
         <div class="wrapper">
 
             <a href="http://www.apache.org/foundation/contributing.html">Donate to the ASF</a> |
             <a href="http://www.apache.org/licenses/LICENSE-2.0.html">License</a>
             <p>Copyright &copy; 2008-$year The Apache Software Foundation</p>
-
-            <div class="editThisPage">
-            </div>
-
+            <div class="editThisPage"></div>
             <div class="footer-shield"></div>
 
         </div> <!--END FOOTER WRAPPER-->
 
-    </div> <!--END FOOTER-->
+    </footer> <!--END FOOTER-->
 
 </body>
 </html>

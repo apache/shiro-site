@@ -13,11 +13,8 @@
     "description": 'Enables <a class="external-link" href="http://www.eclipse.org/aspectj/">AspectJ</a> support for Shiro AOP and Annotations.'})
 
 #set ($shiroCas = {"g": "org.apache.shiro", "a": "shiro-cas", "type": "jar",
-    "description": 'Enables Jasig <a class="external-link" href="https://wiki.jasig.org/display/CAS/Home">CAS</a> support.
-                    <div class="warning">
-                        <span>NOTE:</span>
-                        Shiro-CAS support is deprecated, support has been moved to the Apache Shiro based <a href="https://github.com/bujiio/buji-pac4j">buji-pac4j</a> project.
-                    </div>'})
+    "description": "Enables Jasig <a class='external-link' href='https://wiki.jasig.org/display/CAS/Home'>CAS</a> support.
+                    #warning('NOTE:', 'Shiro-CAS support is deprecated, support has been moved to the Apache Shiro based <a href=''https://github.com/bujiio/buji-pac4j''>buji-pac4j</a> project.')"})
 
 #set ($shiroEhCache = {"g": "org.apache.shiro", "a": "shiro-ehcache", "type": "jar",
     "description": 'Enables <a class="external-link" href="http://www.ehcache.org">Ehcache</a>-based famework caching.'})
@@ -25,7 +22,7 @@
 #set ($shiroHazelcast = {"g": "org.apache.shiro", "a": "shiro-hazelcast", "type": "jar",
     "description": 'Enables <a class="external-link" href="https://hazelcast.org">Hazelcast</a>-based famework caching.'})
 
-#set ($shiroFeatures = {"g": "org.apache.shiro", "a": "shiro-features", "type": "xml",
+#set ($shiroFeatures = {"g": "org.apache.shiro", "a": "shiro-features", "c": "features", "type": "xml",
     "description": 'OSGi / <a class="external-link" href="http://karaf.apache.org/">Apache Karaf</a> integration.'})
 
 #set ($shiroGuice = {"g": "org.apache.shiro", "a": "shiro-guice", "type": "jar",

@@ -18,57 +18,6 @@
  - under the License.
 */
 
-/* ========================================================
- * Global Styling
- * ======================================================== */
-
-a:link {color:#3254a0; text-decoration:none;}
-a:visited {color:#3254a0; text-decoration:none;}
-a:hover {color: #4068c3; text-decoration:underline;}
-a:active {color: #4377d7; text-decoration:none;}
-
-body {
-	background:url(../images/back.jpg);
-	font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
-	text-shadow: 1px 1px 0 #fff;
-	filter: dropshadow(color=#fff, offx=1, offy=1);
-}
-
-.wrapper {
-	position:relative;
-    width:960px;
-	margin:auto;
-	padding:0 10px 0 10px;
-}
-
-.clearfix {
-	clear:both;
-}
-
-h1 {
-	color:#3254a0;
-}
-
-h2 {
-	color:#3254a0;
-}
-
-menu, ol, ul {
-    padding: 0 0 0 2em;
-}
-
-dl, menu, ol, ul, li {
-    margin: 1em 0;
-}
-
-/* Table of Contents chunks: */
-.toc ol {margin: 0.5em 0;}
-.toc ul {margin: 0.5em 0;}
-.toc li {margin: 0.5em 0;}
-
-/* ========================================================
- * Header Styling
- * ======================================================== */
 
 #top-bar {
 	background:url(../images/topbar.jpg);
@@ -76,295 +25,22 @@ dl, menu, ol, ul, li {
 	width:100%;
 }
 
-#header {
-	height:85px;
-	border-bottom:#dfdfdf 1px solid;
-}
 
-#logo {
-	background:url(../images/apache-shiro-logo.png);
-	width:239px;
-	height:85px;
-	float:left;
-	margin:10px 0 0 0;
-}
-
-ul.navigation {
-    float: right;
-    margin: 4px 10px 0 0;
-    padding: 25px 0 0 0;
-}
-ul.navigation ul {
-    margin: 0;
-}
-ul.navigation li {
-    list-style-type: none;
-    float: left;
-    padding: 0 0 0 27px;
-}
-ul.navigation a {
-    font-size: 1.1em;
-    font-weight: bold;
-}
-
-#content {
-	position:relative;
-	clear:both;
-	margin:25px 0 0 0;
-}
-
-/* ========================================================
- * 2-Column Page Styling (e.g. index.html)
- * ======================================================== */
-
-/* ============ 2-Column Main Content ===================== */
-
-#main-content {
-	float:left;
-	width:640px;
-}
-
-#main-content > h1 {
-    margin: 0.5em 0 0.5em 0;
-}
-
-/* Home page intro paragraph: */
-#main-content > p {
-    font-size: 0.9em;
-    margin: 0 0 2em 0;
-}
-
-#main-content table {margin:20px 0 20px 0;}
-#main-content td {padding:2px;}
-
-/* ============ 2-Column Right Column ===================== */
-
-#right-column {
-	float:right;
-	width:240px;
-}
-
-/* Download button: */
-.download {
-    background:url(../images/download.png) 0px 0px;
-    width:243px;
-    height:42px;
-    clear:both;
-    margin:20px 0 20px 0;
-}
-
-.download:hover {
-    background:url(../images/download.png) 0px -42px;
-}
-
-/* Email (announce@) signup: */
-.email {margin:20px 0 0 0;}
-
-.email-form {
-    width:165px;
-    height:26px;
-    border:#333 1px solid;
-    float:left;
-    padding:0 0 0 3px;
-}
-
-.join-email {
-    background:url(../images/join-email.png) 0px 0px;
-    width:68px;
-    height:28px;
-    float:right;
-}
-
-.join-email:hover {
-    background:url(../images/join-email.png) 0px -28px;
-}
-
-/* NEWS */
-#right-column h2 {
-    background:#3254a0;
-    color:#FFF;
-    font-size:16px;
-    font-weight:bold;
-    width:234px;
-    padding:3px 0 3px 3px;
-    text-shadow:none;
-    display:block;
-    margin:20px 0 5px 0;
-    clear:both;
-}
-
-#right-column h3 {
-    font-size: 0.95em;
-    margin: 12px 0 0 0;
-}
-
-#right-column p {
-    font-size: 0.87em;
-    margin: 0.85em 0;
-}
-
-#right-column .more {
-	position:relative;
-	color:#3254a0;
-	font-size:11px;
-	margin:0 0 0 0;
-	display:block;
-	text-align:right;
-}
-
-/* Communities */
-.communities {
-	width:100%;
-	text-align:center;
-	margin:20px 0 0 0;
-}
-
-/* HOME */
-.service-tabs {
-	-webkit-border-radius:10px;
-	border-radius:10px;
-	width:265px;
-	height:78px;
-	margin:5px 5px 5px 5px;
-	float:left;
-	color:#464646;
-	font-size:12px;
-	position:relative;
-	padding:5px 5px 0 40px;
-	-webkit-box-shadow: 1px 1px 0px 0px #fff;
-	box-shadow: 1px 1px 0px 0px #fff;
-	line-height:14px;
-}
-
-.service-tabs:hover {
-	background-color:#e8e8e8;
-}
-
-.service-tabs h2 {
-    padding: 0;
-    margin: 0;
-	color:#3254a0;
-}
-
-.more {
-	position:absolute;
-	bottom:5px;
-	right:5px;
-	color:#3254a0;
-	font-size:11px;
-}
-
-.authentication {background:url(../images/authentication.png) no-repeat #f2f2f2;}
-.authorization {background:url(../images/authorization.png) no-repeat #f2f2f2;}
-.cryptography {background:url(../images/crypt.png) no-repeat #f2f2f2;}
-.session-management {background:url(../images/session.png) no-repeat #f2f2f2;}
-.web-integration {background:url(../images/web-integration.png) no-repeat #f2f2f2;}
-.integrations {background:url(../images/integration.png) no-repeat #f2f2f2;}
-
-.video-box {
-	margin:50px 0 0 0;
-}
-
-.video-box td {
-    vertical-align: top;
-}
-
-.video-box h1 {
-    margin: 0;
-    padding: 0;
-}
-
-/* ========================================================
- * Single Column (Normal) Page Styling
- * ======================================================== */
-
-.breadcrumbs {
-	font-size:11px;
-}
-
-.number {
-	list-style:decimal;
-	margin:0 0 0 20px;
-	font-weight:normal;
-}
-
-.roman {
-	list-style:upper-roman;
-	margin:0 0 0 20px;
-	font-weight:bold;
-}
-
-.bullet {
-	list-style:inside;
-}
-
-.table-header {
-	background-color:#f0f0f0;
-	text-align:center;
-	font-weight:bold;
-}
-
-.code {
-	border:#333 dashed 1px;
-	background:#f0f0f0;
-	padding:3px;
-}
-
-/* ========================================================
- * Footer Styling
- * ======================================================== */
-
-#footer {
-	width:100%;
-	background:#e8e8e8;
-	height:50px;
-	margin:60px 0 0 0;
-	padding:10px 0 0 0;
-	font-size:12px;
-}
-
-.footer-shield {
-	background:url(../images/footer-shield.png);
-	width:103px;
-	height:113px;
-	position:absolute;
-	right:-100px;
-	top:-80px;
-}
+/** =======================================================  */
+/** Github Ribbon */
+/** ======================================================= **/
 
 .github-fork-ribbon.right-top:before {
 	background-color: #3254a0;
 }
 
-.info, .warning {
-	border: 1px solid;
-	margin: 10px 0px;
-	padding: 15px 10px 15px 50px;
-	background-repeat: no-repeat;
-	background-position: 10px center;
-}
-.info > span, .warning >span {
-	font-weight: bold;
-}
-.info {
-	color: #00529B;
-	background-color: #BDE5F8;
-}
-.info:before, .warning:before {
-	content: '\0026a0';
 
-}
-.warning {
-	color: #9F6000;
-	background-color: #FEEFB3;
-}
+/** =======================================================  */
+/** Yellow smiles! */
+/** ======================================================= **/
 
-.editThisPage {
-	position:absolute; bottom:2%; right:2%;
-	font-size:16px;
-}
 
-/* Yello smiles! */
+/* Yellow smiles! */
 .fa-smile-o {
 	position: relative;
 }
@@ -376,4 +52,106 @@ ul.navigation a {
 	left: 0;
 	position: absolute;
 	content: "\f118";
+}
+
+
+/** =======================================================  */
+/** Footer Styling*/
+/** ======================================================= **/
+
+.wrapper {
+	position:relative;
+	width:960px;
+	margin:auto;
+	padding:0 10px 0 10px;
+}
+
+.footer-shield {
+	position: absolute;
+	width: 103px;
+	height: 113px;
+	right: -100px;
+	top: -80px;
+	background:url(../images/footer-shield.png);
+}
+
+html {
+	position: relative;
+	min-height: 100%;
+}
+body {
+	/* Margin bottom by footer height + image */
+	margin-bottom: 160px;
+}
+
+.footer-padding {
+	height: 160px;
+}
+
+.custom-footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	/* Set the fixed height of the footer here */
+	height: 60px;
+	background: #e8e8e8;
+	padding-top: 10px;
+}
+
+.editThisPage {
+	position:absolute; bottom:2%; right:2%;
+	font-size:16px;
+}
+
+/** =======================================================  */
+/** Main page tiles */
+/** ======================================================= **/
+
+.authentication {
+	background:url(../images/authentication.png) no-repeat #f2f2f2 right 10px top 5px;
+}
+.authorization {
+	background:url(../images/authorization.png) no-repeat #f2f2f2 right 10px top 5px;
+}
+.cryptography {
+	background:url(../images/crypt.png) no-repeat #f2f2f2 right 10px top 5px;
+}
+.session-management {
+	background:url(../images/session.png) no-repeat #f2f2f2 right 10px top 5px;
+}
+.web-integration {
+	background:url(../images/web-integration.png) no-repeat #f2f2f2 right 10px top 5px;
+}
+.integrations {
+	background:url(../images/integration.png) no-repeat #f2f2f2 right 10px top 5px;
+}
+
+
+/** =======================================================  */
+/** News posts */
+/** ======================================================= **/
+.blog-post-listing {
+	margin: 1.8em 0 0 0;
+	padding: 0 0 0.8em 0;
+	border-bottom: 1px solid #d2d2d2;
+}
+.blog-post-listing .logoBlock {
+	display: none;
+}
+
+.blog-post-listing span.blogHeading .page-metadata {
+	font-size: 0.8em;
+}
+
+.blog-post-listing .endsection {
+	display: none;
+}
+
+.blog-post-listing a.blogHeading {
+	font-size: 2em;
+	font-weight: bold;
+}
+
+.news-content {
+	padding-top: 1em;
 }

@@ -3,12 +3,12 @@
 
 #macro(artifactTable, $versionObject)
 
-<table>
+<table style="width: 100%" class="table">
     <thead>
     <tr>
-        <th>Artifact</th>
-        <th>Maven Usage</th>
-        <th>Notes</th>
+        <th class="col-md-1">Artifact</th>
+        <th class="col-md-3">Maven Usage</th>
+        <th class="col-md-3">Notes</th>
     </tr>
     </thead>
     <tbody>
@@ -30,8 +30,7 @@
                 #if($artifact.gavAlt)
                     $artifact.gavAlt
                 #else
-<pre><code class="xml">
-&lt;dependency&gt;
+<pre><code class="xml">&lt;dependency&gt;
   &lt;groupId&gt;$artifact.g&lt;/groupId&gt;
   &lt;artifactId&gt;$artifact.a&lt;/artifactId&gt;
   &lt;version&gt;$version&lt;/version&gt;
@@ -125,14 +124,10 @@
 <h3><a name="latestGit"></a>${latestRelease} Git Source repository</h3>
 
 <p>The source can be cloned anonymously from Git with this command:</p>
-<div class="code panel" style="border-width: 1px;">
-    <div class="codeContent panelContent">
-<pre class="code-java">
-git clone https:<span class="code-comment">//github.com/apache/shiro.git</span>
+<pre><code style="bash">git clone https://github.com/apache/shiro.git
 git checkout shiro-root-${latestRelease} -b shiro-root-${latestRelease}
+</code>
 </pre>
-    </div>
-</div>
 
 <h2><a name="previous"></a>Previous Releases</h2>
 
@@ -165,14 +160,9 @@ git checkout shiro-root-${latestRelease} -b shiro-root-${latestRelease}
 <h3><a name="1.2.xGit"></a>${shiro12x.version} Git Source repository</h3>
 
 <p>The source can be cloned anonymously from Git with this command:</p>
-<div class="code panel" style="border-width: 1px;">
-    <div class="codeContent panelContent">
-<pre class="code-java">
-git clone https:<span class="code-comment">//github.com/apache/shiro.git</span>
+<pre><code class="bash">git clone https://github.com/apache/shiro.git
 git checkout shiro-root-${shiro12x.version} -b shiro-root-${shiro12x.version}
-</pre>
-    </div>
-</div>
+</code></pre>
 
 
 <h3><a name="1.1.0"></a>${shiro11x.version}</h3>
@@ -203,14 +193,9 @@ git checkout shiro-root-${shiro12x.version} -b shiro-root-${shiro12x.version}
 <h4><a name="1.1.0Git"></a>${shiro11x.version} Git Source repository</h4>
 
 <p>The source can be cloned anonymously from Git with this command:</p>
-<div class="code panel" style="border-width: 1px;">
-    <div class="codeContent panelContent">
-<pre class="code-java">
-git clone https:<span class="code-comment">//github.com/apache/shiro.git</span>
+<pre><code class="bash">git clone https://github.com/apache/shiro.git
 git checkout shiro-root-${shiro11x.version} -b shiro-root-${shiro11x.version}
-</pre>
-    </div>
-</div>
+</code></pre>
 
 
 <input type="hidden" id="ghEditPage" value="download.html.vtl"></input>

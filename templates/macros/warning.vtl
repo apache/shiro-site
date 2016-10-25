@@ -1,23 +1,7 @@
 #macro(warning $title, $message)
-<div class="panelMacro">
-    <table class="noteMacro">
-        <colgroup span="1">
-            <col span="1" width="24">
-            <col span="1">
-        </colgroup>
-        <tbody>
-        <tr>
-            <td colspan="1" rowspan="1" valign="top">
-                <i class="fa fa-warning"></i>
-            </td>
-
-            <td colspan="1" rowspan="1">
-                <b>${title}</b>
-                <br clear="none">
-                ${message}
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<div class="alert alert-warning">
+    <span class="glyphicon glyphicon-warning-sign"></span> <strong>${title}</strong>
+    <hr class="message-inner-separator">
+    <p>${message}</p>
 </div>
 #end
