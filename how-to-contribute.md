@@ -164,7 +164,7 @@ This is a collection of tips for contributing to the project in a manner that is
 *   Start new threads with new Subject for new topics, rather than reusing the previous Subject line.
 *   Keep each topic focused. If some new topic arises then start a new discussion. This leaves the original topic to continue uncluttered.  
     Whenever you decide to start a new topic, then start with a fresh new email message window. Do not use the "Reply to" button, because threaded mail-readers get confused (they utilise the In-reply-to header). If so, then your new topic will get lost in the previous thread and go unanswered.
-*   Prepend your email subject line with a marker when that is appropriate, e.g. [Proposal], [RT] (Random Thought which quickly blossom into research topics ![](https://cwiki.apache.org/confluence/images/icons/emoticons/smile.png), [STATUS] (development status of a certain facility).
+*   Prepend your email subject line with a marker when that is appropriate, e.g. [Proposal], [RT] (Random Thought which quickly blossom into research topics <i class="fa fa-smile-o" aria-hidden="true"></i>, [STATUS] (development status of a certain facility).
 *   Remember that most people are participating in development on a volunteer basis and in their "spare time". These enthusiasts will attempt to respond to issues. It may take a little while to get your answers.
 *   Research your topic thoroughly before beginning to discuss a new development issue. Search and browse through the email archives - your issue may have been discussed before. Do not just perceive a problem and then rush out with a question - instead, delve.
 *   Try to at least offer a partial solution and not just a problem statement.
