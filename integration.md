@@ -59,6 +59,9 @@ A [Thymeleaf](http://www.thymeleaf.org/) dialect for [Apache Shiro](https://shir
 * **[Krail](https://github.com/davidsowerby/krail)** from [@davidsowerby](https://github.com/davidsowerby)
 Krail provides a framework for rapid Java web development by combining Vaadin, Guice, Apache Shiro, Apache Commons Configuration and others.
 
+* **[Rewrite Servlet](https://github.com/ocpsoft/rewrite/tree/master/security-integration-shiro)** from [ocpsoft](http://www.ocpsoft.org/rewrite/)
+A highly configurable URL-rewriting tool for Java EE 6+ and Servlet 2.5+ applications
+
 ## Ports
 
 * **[Turnstile](https://github.com/stormpath/Turnstile)** - Swift
