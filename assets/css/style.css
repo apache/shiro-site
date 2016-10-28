@@ -70,15 +70,6 @@
 	padding:0 10px 0 10px;
 }
 
-.footer-shield {
-	position: absolute;
-	width: 103px;
-	height: 113px;
-	right: -100px;
-	top: -80px;
-	background:url(../images/footer-shield.png);
-}
-
 html {
 	position: relative;
 	min-height: 100%;
@@ -97,15 +88,30 @@ body {
 	bottom: 0;
 	width: 100%;
 	/* Set the fixed height of the footer here */
-	height: 60px;
+	min-height: 60px;
 	background: #e8e8e8;
 	padding-top: 10px;
 }
 
 .editThisPage {
-	position:absolute; bottom:2%; right:2%;
 	font-size:16px;
 }
+
+.copyright-footer {
+	margin-left: 50px;
+}
+
+@media screen and (min-width: 1024px) {
+	.footer-shield {
+		position: absolute;
+		width: 103px;
+		height: 113px;
+		right: -80px;
+		top: -80px;
+		background:url(../images/footer-shield.png) no-repeat;
+	}
+}
+
 
 /** =======================================================  */
 /** Main page tiles */
