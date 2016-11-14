@@ -72,6 +72,17 @@
                 <li><a href="#latestGit">${latestRelease} Git Source repository</a></li>
             </ul>
         </li>
+        #if( $earlyRelease )
+        <li>
+            <a href="#early">Early Access Release (${earlyRelease})</a>
+            <ul>
+                <li><a href="#earlyBinary">${latestRelease} Binary Distribution</a></li>
+                <li><a href="#earlySource">${latestRelease} Source Code Distribution</a></li>
+                <li><a href="#earlyGit">${latestRelease} Git Source repository</a></li>
+            </ul>
+        </li>
+        #end
+
         <li><a href="#previous">Previous Releases</a>
             <ul>
                 <li><a href="#1.2.xBinary">$shiro12x.version</a></li>
@@ -128,6 +139,42 @@
 git checkout shiro-root-${latestRelease} -b shiro-root-${latestRelease}
 </code>
 </pre>
+
+
+<h2><a name="early"></a>Early Access Release (${earlyRelease})</h2>
+<h3><a name="earlyBinary"></a>${earlyRelease} Binary Distribution</h3>
+
+<p>Associated documentation can be found <a href="documentation.html" title="Documentation">here</a></p>
+
+<p>To download the files directly as one .jar file just click the link in the "Artifact" column. If you would like
+    acquire Shiro through Maven, then please use the markup listed under "Maven Usage"</p>
+
+<p>
+</p>
+
+#artifactTable($shiro14x)
+
+<h3><a name="earlySource"></a>${earlyRelease} Source Code Distribution</h3>
+
+<p>The source bundle requires JDK 1.6 and Maven 3.0.3+ to build:</p>
+
+<p><a class="external-link" href="http://www.apache.org/dyn/closer.cgi/shiro/${earlyRelease}/shiro-root-${earlyRelease}-source-release.zip">zip</a>
+    (<a class="external-link"
+        href="http://www.apache.org/dyn/closer.cgi/shiro/${earlyRelease}/shiro-root-${earlyRelease}-source-release.zip.asc">pgp</a>, <a
+            class="external-link"
+            href="http://www.apache.org/dyn/closer.cgi/shiro/${earlyRelease}/shiro-root-${earlyRelease}-source-release.zip.md5">md5</a>, <a
+            class="external-link"
+            href="http://www.apache.org/dyn/closer.cgi/shiro/${earlyRelease}/shiro-root-${earlyRelease}-source-release.zip.sha1">sha1</a>)
+</p>
+
+<h3><a name="earlyGit"></a>${earlyRelease} Git Source repository</h3>
+
+<p>The source can be cloned anonymously from Git with this command:</p>
+<pre><code style="bash">git clone https://github.com/apache/shiro.git
+git checkout shiro-root-${earlyRelease} -b shiro-root-${earlyRelease}
+</code>
+</pre>
+
 
 <h2><a name="previous"></a>Previous Releases</h2>
 

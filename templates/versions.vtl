@@ -1,6 +1,8 @@
 #set( $latestRelease = "1.3.2" )
 #set( $versionInfo = {"1.3.2": { "releaseDate": "2016-09-12" } } )
 
+#set( $earlyRelease = "1.4.0-RC2" )
+
 #set( $shiroCore = {"g":"org.apache.shiro", "a": "shiro-core", "type": "jar",
                     "description": 'Required in all environments. <a class="external-link" href="http://slf4j.org/">Slf4j</a>''s
                      <code>slf4j-api</code> jar and one of its binding jars is required. <code>commons-beanutils</code> is
@@ -8,6 +10,12 @@
 
 #set ($shiroWeb = {"g": "org.apache.shiro", "a": "shiro-web", "type": "jar",
                 "description": "Enables support for web-based applications."})
+
+#set ($shiroServletPlugin = {"g": "org.apache.shiro", "a": "shiro-servlet-plugin", "type": "jar",
+    "description": "Servlet Fragment which configures Shiro's servlet filter."})
+
+#set ($shiroJaxrs = {"g": "org.apache.shiro", "a": "shiro-jaxrs", "type": "jar",
+    "description": "Enables support for JAX-RS applications."})
 
 #set ($shiroAspectJ = {"g": "org.apache.shiro", "a": "shiro-aspectj", "type": "jar",
     "description": 'Enables <a class="external-link" href="http://www.eclipse.org/aspectj/">AspectJ</a> support for Shiro AOP and Annotations.'})
@@ -33,6 +41,12 @@
 
 #set ($shiroSpring = {"g": "org.apache.shiro", "a": "shiro-spring", "type": "jar",
     "description": 'Enables <a class="external-link" href="https://spring.io/">Spring Framework</a> integration.'})
+
+#set ($shiroSpringBoot = {"g": "org.apache.shiro", "a": "shiro-spring-boot-starter", "type": "jar",
+    "description": '<a class="external-link" href="https://spring.io/">Spring Boot</a> starter.'})
+
+#set ($shiroSpringBootWeb = {"g": "org.apache.shiro", "a": "shiro-spring-boot-web-starter", "type": "jar",
+    "description": '<a class="external-link" href="https://spring.io/">Spring Boot</a> web starter.'})
 
 #set ($shiroHasher = {"g": "org.apache.shiro.tools", "a": "shiro-tools-hasher", "c": "cli", "type": "jar", "gavAlt": '<b>Not Relevant</b>',
     "description": "A command-line program to perform hashing (MD5, SHA, etc) for files, streams and passwords.
@@ -83,6 +97,25 @@
     $shiroGuice,
     $shiroQuartz,
     $shiroSpring,
+    $shiroHasher
+]} )
+
+#set( $shiro14x = {"version": $earlyRelease, "artifacts": [
+    $shiroAll,
+    $shiroCore,
+    $shiroWeb,
+    $shiroServletPlugin,
+    $shiroJaxrs,
+    $shiroAspectJ,
+    $shiroCas,
+    $shiroEhCache,
+    $shiroHazelcast,
+    $shiroFeatures,
+    $shiroGuice,
+    $shiroQuartz,
+    $shiroSpring,
+    $shiroSpringBoot,
+    $shiroSpringBootWeb,
     $shiroHasher
 ]} )
 

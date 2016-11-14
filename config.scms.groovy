@@ -246,6 +246,11 @@ scms {
             template = 'templates/none.vtl'
         }
 
+        'static/.htaccess.vtl' {
+            template = 'templates/none.vtl'
+            outputFileExtension = 'htaccess'
+        }
+
         '**/*.html' {
             template = 'templates/default.vtl'
             model {
