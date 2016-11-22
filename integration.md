@@ -26,6 +26,9 @@ Very up-to-date Grails/Shiro Integration, including Grails 2.0 and Shiro 1.2. Ad
 * **[Apache Isis](http://isis.apache.org)** from [Apache](http://apache.org/) 
 Apache Isis is a full-stack framework for rapidly developing domain driven apps and RESTful APIs in Java.  [It uses Apache Shiro](http://isis.apache.org/documentation.html#security) 1.2.x for authentication and authorization.
 
+* **[Apache Geode](http://geode.apache.org/)** from [Apache](http://apache.org/)
+Using Apache Shiro to secure Geode endpoints like JMX operations, rest services, web monitoring application, CLI tool, and client server communications.
+
 * **[Oauth](https://github.com/FeedTheCoffers/shiro-oauth)** from [@JimmiDyson](https://twitter.com/@JimmiDyson)
 Source code for an OAuth module for Apache Shiro based on Scribe
 
