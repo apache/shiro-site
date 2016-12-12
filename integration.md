@@ -65,6 +65,9 @@ Krail provides a framework for rapid Java web development by combining Vaadin, G
 * **[Rewrite Servlet](https://github.com/ocpsoft/rewrite/tree/master/security-integration-shiro)** from [ocpsoft](http://www.ocpsoft.org/rewrite/)
 A highly configurable URL-rewriting tool for Java EE 6+ and Servlet 2.5+ applications
 
+* **[Freedomotic](http://freedomotic.com/)** from [Freedomotic.com](http://reedomotic.com)
+Freedomotic is an open source, flexible, secure Internet of Things (IoT) development framework in Java, useful to build and manage modern smart spaces.
+
 ## Ports
 
 * **[Turnstile](https://github.com/stormpath/Turnstile)** - Swift
