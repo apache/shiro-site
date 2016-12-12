@@ -103,7 +103,7 @@ The `ShiroFeature` does three things:
 
 * configures exception mapping from Shiro's `AuthorizationException` to HTTP status codes (401 and 403)
 * exposes Shiro's `Subject` as a `java.security.Principal`
-* Configures processing of Shiro's annotations.
+* Configures processing of Shiro's annotations
 
 In the above example, requests to either `/api/shiro` or `/api/shiro/define` will return an HTTP status of `401` if a user is not currently logged in.  A request to `/api/shiro/define` made by a user without the `hello:define` will return a `403`.
 
