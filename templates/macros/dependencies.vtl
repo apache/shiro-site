@@ -1,0 +1,24 @@
+#macro(dependencies, $anchorId, $deps)
+
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#maven-$anchorId">Apache Maven</a></li>
+    <li><a data-toggle="tab" href="#gradle-$anchorId">Gradle</a></li>
+</ul>
+
+<div class="tab-content">
+    <div id="maven-$anchorId" class="tab-pane fade in active">
+    <pre><code class='xml'>#foreach($item in $deps)&lt;dependency&gt;
+    &lt;groupId&gt;$item[0]&lt;/groupId&gt;
+    &lt;artifactId&gt;$item[1]&lt;/artifactId&gt;
+    &lt;version&gt;$item[2]&lt;/version&gt;
+&lt;/dependency&gt;
+#end
+</code></pre>
+    </div>
+    <div id="gradle-$anchorId" class="tab-pane fade">
+        <pre><code class='groovy'>#foreach($item in $deps)
+compile '$item[0]:$item[1]:$item[2]'
+#end</code></pre>
+    </div>
+</div>
+#end
