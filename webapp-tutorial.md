@@ -687,7 +687,7 @@ Hit `ctl-C` to shut down the web app.
 
 In addition to controlling access based on authentication, it is often a requirement to restrict access to certain parts of the application based on what role(s) are assigned to the current `Subject`.
 
-Perform the following git checkout command to load the `step5` branch:
+Perform the following git checkout command to load the `step6` branch:
 
 ``` bash
 $ git checkout step6
