@@ -1,3 +1,5 @@
+#parse("templates/includes.vtl")
+
 Apache Shiro JAX-RS Support
 ===========================
 
@@ -6,20 +8,9 @@ Apache Shiro's JAX-RS support is built on top of the more general [Servlet](web.
 Dependencies
 ------------
 
-Using the Servlet Fragment is easiest, simply include the dependency in your application, along with `shiro-jaxrs` for Apache Maven, this would be:
+Include the `shiro-servlet-plugin` and `shiro-jaxrs` dependencies in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).
 
-``` xml
-<dependency>
-    <groupId>org.apache.shiro</groupId>
-    <artifactId>shiro-servlet-plugin</artifactId>
-    <version>${latestRelease}</version>
-</dependency>
-<dependency>
-    <groupId>org.apache.shiro</groupId>
-    <artifactId>shiro-jaxrs</artifactId>
-    <version>${latestRelease}</version>
-</dependency>
-```
+#dependencies('cli', [['org.apache.shiro', 'shiro-servlet-plugin', "${earlyRelease}"],['org.apache.shiro', 'shiro-jaxrs', "${earlyRelease}"]])
 
 For information on other ways to set up the Apache Shiro Filter see the [web documentation](web.html).
 
@@ -112,3 +103,4 @@ Want to see more?
 
 You can find portable JAX-RS application that runs with [Jersey](https://jersey.java.net/), [RestEasy](http://resteasy.jboss.org/) or [Apache CXF](https://cxf.apache.org) in the [samples](https://github.com/apache/shiro/tree/master/samples) directory on Github.
 
+<input type="hidden" id="ghEditPage" value="jaxrs.md.vtl"></input>
