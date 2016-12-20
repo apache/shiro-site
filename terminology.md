@@ -27,7 +27,7 @@ A <em>Credential</em> is a piece of information that verifies the identity of a 
 
 <a name="Terminology-cryptography"></a>
 * **Cryptography**
-Cryptography is the practice of protecting information from undesired access by hiding it or converting it into nonsense so know one else can read it. Shiro focuses on two core elements of Cryptography: ciphers that encrypt data like email using a public or private key, and hashes (aka message digests) that irreversibly encrypt data like passwords.
+Cryptography is the practice of protecting information from undesired access by hiding it or converting it into nonsense so no one else can read it. Shiro focuses on two core elements of Cryptography: ciphers that encrypt data like email using a public or private key, and hashes (aka message digests) that irreversibly encrypt data like passwords.
 
 <a name="Terminology-hash"></a>
 * **Hash**
