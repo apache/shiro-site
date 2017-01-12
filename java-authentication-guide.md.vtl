@@ -69,7 +69,7 @@ Subject currentUser = SecurityUtils.getSubject();
 currentUser.login(token);
 ```
 
-First, we need to acquire the currently executing user, referred to as the subject. A subject is just a security specific view of the user----it can be a human, a process, cron job, doesn&\#8217;t matter. In Shiro, there is always a subject instance available to the currently executing thread. The concept of a subject is core to Shiro and most of the framework is centered around working with subjects. In this example, we will name this instance of subject currentUser.
+First, we need to acquire the currently executing user, referred to as the subject. A subject is just a security specific view of the user----it can be a human, a process, cron job, doesn't matter. In Shiro, there is always a subject instance available to the currently executing thread. The concept of a subject is core to Shiro and most of the framework is centered around working with subjects. In this example, we will name this instance of subject currentUser.
 
 To acquire the subject, we use the [SecurityUtils](static/current/apidocs/org/apache/shiro/SecurityUtils.html) class which is also a core pat of Shiro's API. It will acquire the currently executing user via the [`getsubject()`](static/current/apidocs/org/apache/shiro/SecurityUtils.html#[[#]]#getSubject--) method call. And we get back a subject instance that is representing who the current user is who is interacting with the system. At this point in the example, the subject currentUser is anonymous. There is no identity associated with them.
 
