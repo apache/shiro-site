@@ -225,7 +225,7 @@ An AuthenticationStrategy is a stateless component that is consulted 4 times dur
 3.  immediately after an an individual Realm's `getAuthenticationInfo` method is called
 4.  after all of the Realms have been invoked
 
-Also an `AuthenticationStrategy` is responsible for aggregating the results from each successful Realm and 'bundling' them into a single [`AuthenticationInfo`](static/current/apidocs/org/apache/shiro/authc/AuthenticationInfo.html) representation. This final aggregate `AuthenticatinoInfo` instance is what is returned by the `Authenticator` instance and is what Shiro uses to represent the `Subject`'s final identity (aka Principals).
+Also an `AuthenticationStrategy` is responsible for aggregating the results from each successful Realm and 'bundling' them into a single [`AuthenticationInfo`](static/current/apidocs/org/apache/shiro/authc/AuthenticationInfo.html) representation. This final aggregate `AuthenticationInfo` instance is what is returned by the `Authenticator` instance and is what Shiro uses to represent the `Subject`'s final identity (aka Principals).
 
 #info("Subject Identity 'View'", "If you use more than one Realm in your application to acquire account data from multiple data sources, the <code>AuthenticationStrategy</code> is ultimately responsible for the final 'merged' view of the Subject's identity that is seen by the application.")
 
