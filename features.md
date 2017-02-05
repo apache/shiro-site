@@ -26,7 +26,7 @@ Apache Shiro aims to be the most comprehensive, but also the easiest to use Java
 
 ## Want more information on what Shiro can do?  
 
-Check out the specific features for each of Shiro's major components: [Authentication](authentication-features.html), [Authorization](authorization-features.html), [Session Management](session-management-features.html), and [Cryptogrpahy](cryptography-features.html).
+Check out the specific features for each of Shiro's major components: [Authentication](authentication-features.html), [Authorization](authorization-features.html), [Session Management](session-management-features.html), and [Cryptography](cryptography-features.html).
 
 ##Get Started in 10 Minutes with Shiro
 
