@@ -40,7 +40,7 @@ Shiro Cryptography's primary goal is take what has traditionally be an extremely
 <a name="CryptographyFeatures-HashFeatures"></a>
 ##Hash Features
 
-*   **Deault interface implementations** - Shiro provides default Hash (aka Message Digests in the JDK) implementations out-of-the-box, such as MD5, SHA1, SHA-256, et al. This provides a type-safe construction method (e.g. `new Md5Hash(data)`) instead of being forced to use type-unsafe string factory methods in the JDK.
+*   **Default interface implementations** - Shiro provides default Hash (aka Message Digests in the JDK) implementations out-of-the-box, such as MD5, SHA1, SHA-256, et al. This provides a type-safe construction method (e.g. `new Md5Hash(data)`) instead of being forced to use type-unsafe string factory methods in the JDK.
 
 *   **Built-in Hex and Base64 conversion** - Shiro Hash instances can automatically provide Hex and Base-64 encoding of hashed data via their `toHex()` and `toBase64()` methods. So now you do not need to figure out how to correctly encode the data yourself.
 
