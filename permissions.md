@@ -27,9 +27,9 @@ So to enable easy-to-process yet still readable permission statements, Shiro pro
 <a name="Permissions-SimpleUsage"></a>
 ###Simple Usage
 
-Let's you want to protect access to your company's printers such that some people can print to particular printers, while others can query what jobs are currently in the queue.
+Let's say you want to protect access to your company's printers such that some people can print to particular printers, while others can query what jobs are currently in the queue.
 
-An extremely simple approach would be to use grant the user a "queryPrinter" permission. Then you could check to see if the user has the queryPrinter permission by calling:
+An extremely simple approach would be to grant the user a "queryPrinter" permission. Then you could check to see if the user has the queryPrinter permission by calling:
 
 ``` java
 subject.isPermitted("queryPrinter")
