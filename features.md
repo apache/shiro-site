@@ -18,7 +18,7 @@ Apache Shiro aims to be the most comprehensive, but also the easiest to use Java
 
 *   Simple Single Sign-On (SSO) support piggybacking the above Enterprise Session Management.  If sessions are federated across multiple applications, the user's authentication state can be shared too.  Log in once to any application and the others all recognize that log-in.
 
-*   Secure data with the easiest possible [Cryptogrpahy](cryptography-features.html) APIs available, giving you power and simplicity beyond what Java provides by default for ciphers and hashes.
+*   Secure data with the easiest possible [Cryptography](cryptography-features.html) APIs available, giving you power and simplicity beyond what Java provides by default for ciphers and hashes.
 
 *   An incredibly robust yet _low-configuration_ web framework that can secure any url or resource, automatically handle logins and logouts, perform Remember Me services, and more.
 
