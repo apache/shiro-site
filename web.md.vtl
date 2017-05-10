@@ -174,12 +174,12 @@ But you may also specify specific file-system, classpath or URL locations by usi
 <a name="Web-Shiro1.1andearlier"></a>
 #[[####Shiro 1.1 and earlier]]#
 
-The simplest way to enable Shiro in a 1.1 or earlier web application is to define the IniShiroFilter and specify a `filter-mapping`:
+The simplest way to enable Shiro in a 1.1 or earlier web application is to define the `ShiroFilter` and specify a `filter-mapping`:
 
 ``` xml
 <filter>
     <filter-name>ShiroFilter</filter-name>
-    <filter-class>org.apache.shiro.web.servlet.IniShiroFilter</filter-class>
+    <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
 </filter>
 
 ...
@@ -241,12 +241,15 @@ Finally, it is also possible to embed your INI configuration inline in web.xml w
 ``` xml
 <filter>
     <filter-name>ShiroFilter</filter-name>
-    <filter-class>org.apache.shiro.web.servlet.IniShiroFilter</filter-class>
-    <init-param><param-name>config</param-name><param-value>
+    <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
+    <init-param>
+       <param-name>config</param-name>
+       <param-value>
 
     # INI Config Here
 
-    </param-value></init-param>
+      </param-value>
+    </init-param>
 </filter>
 ...
 ```
