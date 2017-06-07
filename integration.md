@@ -68,6 +68,9 @@ A highly configurable URL-rewriting tool for Java EE 6+ and Servlet 2.5+ applica
 * **[Freedomotic](http://freedomotic-developer-manual.readthedocs.io/en/latest/plugins/security.html)** from [freedomotic](http://www.freedomotic.com)
 An open source, flexible, secure Internet of Things (IoT) development framework in Java, useful to build and manage modern smart spaces.
 
+* **[FlowLogix Java EE Library](https://github.com/flowlogix/flowlogix/tree/master/flowlogix-jee)** from [Lenny Primak](https://twitter.com/lprimak)
+Integrates Java EE applications with Shiro Security, specifically makes Shiro Annotations work with Java EE
+
 ## Ports
 
 * **[Turnstile](https://github.com/stormpath/Turnstile)** - Swift
