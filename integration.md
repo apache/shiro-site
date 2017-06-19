@@ -68,6 +68,9 @@ A highly configurable URL-rewriting tool for Java EE 6+ and Servlet 2.5+ applica
 * **[Freedomotic](http://freedomotic-developer-manual.readthedocs.io/en/latest/plugins/security.html)** from [freedomotic](http://www.freedomotic.com)
 An open source, flexible, secure Internet of Things (IoT) development framework in Java, useful to build and manage modern smart spaces.
 
+* **[Bootique Shiro](https://github.com/bootique/bootique-shiro)** from [Bootique](https://github.com/bootique/bootique)
+Bootique is a minimally opinionated platform for modern runnable Java apps.
+
 ## Ports
 
 * **[Turnstile](https://github.com/stormpath/Turnstile)** - Swift
