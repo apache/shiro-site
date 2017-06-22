@@ -87,7 +87,7 @@ Session session = currentUser.getSession();
 session.setAttribute( "someKey", someValue);
 ```
 
-The `currentUser.getSession()` method is a shortcut for calling `currentUser.getSubject(true)`.
+The `currentUser.getSession()` method is a shortcut for calling `currentUser.getSession(true)`.
 
 For those familiar with `HttpServletRequest` API, the `Subject.getSession(boolean create)` method functions the same way as the `HttpServletRequest.getSession(boolean create)` method:
 
