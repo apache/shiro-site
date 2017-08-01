@@ -1,5 +1,14 @@
 title: Securing Web Applications with Apache Shiro
 
+<div class="alert alert-warning">
+    <span class="glyphicon glyphicon-warning-sign"></span> <strong>NOTE: This Page is Out of Date</strong>
+    <hr class="message-inner-separator">
+    <p>See the full list of official Apache Shiro sample apps on <a href="https://github.com/apache/shiro/tree/master/samples">Github</a>.
+Help the project out by updating this page via a <a href="https://github.com/apache/shiro-site/edit/master/webapp-tutorial.md.vtl">Pull Request</a.></p>
+</div>
+
+<!-- TODO: Stormpath has been shutdown, this tutorial needs to be updated to use a different Realm, possibly a JDBC Realm backed by an in memory DB. -->
+
 # Securing Web Applications with Apache Shiro
 
 This document is an introductory step-by-step tutorial to securing a web application with Apache Shiro.  It assumes an introductory knowledge of Shiro, and assumes familiarity with at least the following two introductory documents:
