@@ -95,7 +95,7 @@ If the `login` method returns quietly, that's it - we're done! The `Subject` has
 
 But what happens if the login attempt failed? For example, what if the end-user supplied an incorrect password, or accessed the system too many times and maybe their account is locked?
 
-Shiro has a rich runtime [`AuthenticationException`](static/current/apidocs/org/apache/shiro/authz/AuthorizationException.html) hierarchy that can indicate exactly why the attempt failed. You can wrap `login` in a `try/catch` block and catch any exception you wish and react to them accordingly. For example:
+Shiro has a rich runtime [`AuthenticationException`](static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html) hierarchy that can indicate exactly why the attempt failed. You can wrap `login` in a `try/catch` block and catch any exception you wish and react to them accordingly. For example:
 
 ``` java
 try {
