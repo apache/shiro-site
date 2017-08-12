@@ -58,7 +58,7 @@ A Realm is a component that can access application-specific security data such a
 
 <a name="Terminology-role"></a>
 * **Role**
-The definition of a Role can vary based on who you talk to.  In many applications it is nebulous concept at best that people use to implicitly define security policies.  Shiro prefers to interpret a Role as simply a named collection of Permissions.  That's it - an application unique name aggregating one or more Permission declarations.  
+The definition of a Role can vary based on who you talk to.  In many applications it is a nebulous concept at best that people use to implicitly define security policies.  Shiro prefers to interpret a Role as simply a named collection of Permissions.  That's it - an application unique name aggregating one or more Permission declarations.  
 
     This is a more concrete definition than the implicit one used by many applications.  If you choose to have your data model reflect Shiro's assumption, you'll find you will have much more power in controlling security policies.
 
