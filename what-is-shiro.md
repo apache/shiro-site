@@ -11,7 +11,7 @@ We believe:
 - Java security should be <em>really easy</em> to understand and use in your own applications.
 - Existing Java security mechanisms (like JAAS) are too confusing and fall way short in the area of application-level security.
 - Authentication and Authorization functionality should be as pluggable and flexible as possible.
-- Authentication and Authorization are only half of a robust security framework. Enterprise Session Management and easy Cryptography services are the the other half.
+- Authentication and Authorization are only half of a robust security framework. Enterprise Session Management and easy Cryptography services are the other half.
 - <b>Session Management should not be tied to web or EJB applications</b>.  We believe Sessions are a business-tier concern that should be accessible in any client or server environment.
 - Heterogeneous client mediums (HTTP requests, Applets, Java Web Start, C# applications, etc) should be able to participate in the same Session, regardless of the client technology.
 - Security code should be eliminated as much as possible in favor of a cleaner declarative security model utilizing JDK 1.5 Annotations or XML, whichever you prefer.
