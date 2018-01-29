@@ -243,8 +243,8 @@ Realm Authorization
 
 When one of the overloaded method hasRoles or checkRoles method is called on Subject
 
-1.	`Subject` delegates to `SecurityManger` for identifying if the given Role is assigned
-2.	`SecurityManger` then delegates to `Authorizer`
+1.	`Subject` delegates to `SecurityManager` for identifying if the given Role is assigned
+2.	`SecurityManager` then delegates to `Authorizer`
 3.	[Authorizer](static/current/apidocs/org/apache/shiro/authz/Authorizer.html) then referrers to all the Authorizing Realms one by one until it found given role assigned to the subject. Deny access by returning false if no none of the Realm grants Subject  given Role
 4.	Authorizing Realm [AuthorizationInfo](static/current/apidocs/org/apache/shiro/authz/AuthorizationInfo.html) getRoles() method to get all Roles assigned to Subject
 5.	Grant access if it found the given Role in list of roles returned from AuthorizationInfo.getRoles call.
@@ -254,8 +254,8 @@ When one of the overloaded method hasRoles or checkRoles method is called on Sub
 
 When one of the overloaded method `isPermitted()` or `checkPermission()` method are called on Subject:
 
-1. `Subject` delegates the task to grant or deny Permission to SecurityManger
-2. `SecurityManger` then delegates to Authorizer
+1. `Subject` delegates the task to grant or deny Permission to SecurityManager
+2. `SecurityManager` then delegates to Authorizer
 3. Authorizer then referrers to all of the Authorizer Realms one by one until it Permission is granted
     If Permission is not granted by any of the Authorizing Realm, Subject is denied Permission
 4. Authorizing Realm does the following in order to check if a Subject is permitted:

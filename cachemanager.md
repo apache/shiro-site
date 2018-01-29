@@ -1,4 +1,4 @@
-# Cache Manger
+# Cache Manager
 
 Shiro has three important cache interfaces:
 
@@ -13,7 +13,7 @@ component that implements `CacheManager` will automatically receive a configured
 
 The Shiro [`SecurityManager`](securitymanager.html) implementations and all [`AuthorizingRealm`](static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html) implementations implement CacheManagerAware.  If you set the `CacheManager` on the `SecurityManager`, it will in turn set it on the various Realms that implement CacheManagerAware as well (OO delegation).  For example, in shiro.ini:
 
-**example shiro.ini CacheManger configuration**
+**example shiro.ini CacheManager configuration**
 
 ``` ini
 
