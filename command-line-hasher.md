@@ -15,6 +15,12 @@ Shiro 1.2.0 and later provides a command line program that can hash strings and 
 
 Ensure you have access to the `shiro-tools-hasher-`_version_`-cli.jar` file. You can either find this in a source build in the _buildroot_`/tools/hasher/target` directory or via download through Maven.
 
+``` bash
+# Use the following to download from Maven Central into
+# ~/.m2/repository/org/apache/shiro/tools/shiro-tools-hasher/X.X.X/shiro-tools-hasher-X.X.X-cli.jar
+$ mvn dependency:get -DgroupId=org.apache.shiro.tools -DartifactId=shiro-tools-hasher -Dclassifier=cli -Dversion=X.X.X
+```
+
 Once you have access to the jar, you can run the following command:
 
 ``` bash
