@@ -19,7 +19,7 @@ component that implements `CacheManagerAware` will automatically receive a confi
 
 The Shiro [SecurityManager](securitymanager.html "SecurityManager") implementations and all [`AuthenticatingRealm`](static/current/apidocs/org/apache/shiro/realm/AuthenticatingRealm.html) and [`AuthorizingRealm`](static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html) implementations implement CacheManagerAware. If you set the `CacheManager` on the `SecurityManager`, it will in turn set it on the various Realms that implement CacheManagerAware as well (OO delegation). For example, in shiro.ini:
 
-**example shiro.ini CacheManger configuration**
+**example shiro.ini CacheManager configuration**
 
 ``` ini
 securityManager.realms = $myRealm1, $myRealm2, ..., $myRealmN
@@ -45,7 +45,7 @@ The `MemoryConstrainedCacheManager` manages [`MapCache`](static/current/apidocs/
 
 Because the `MemoryConstrainedCacheManager` can auto-resize itself based on an application's memory profile, it is safe to use in a single-JVM production application as well as for testing needs. However, it does not have more advanced features suche as cache entry Time-to-Live or Time-to-Expire settings. For these more advanced cache management features, you'll likely want to use one of the more advanced `CacheManager` offerings below.
 
-**MemoryConstrainedCacheManger shiro.ini configuration example**
+**MemoryConstrainedCacheManager shiro.ini configuration example**
 
 ``` ini
 ...
