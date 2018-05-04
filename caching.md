@@ -64,6 +64,11 @@ TBD
 
 TBD
 
+<a name="Caching-%7B%7BRedisCacheManager%7D%7D"></a>
+###`RedisCacheManager`
+
+There is a 3rd party Redis Cache Manager implementation: [shiro-redis](https://github.com/alexxiyang/shiro-redis).
+
 <a name="Caching-AuthorizationCacheInvalidation"></a>
 ##Authorization Cache Invalidation
 
