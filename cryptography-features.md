@@ -15,7 +15,7 @@
 
 Cryptography is the practice of protecting information from undesired access by hiding it or converting it into nonsense so no one else can read it. Shiro focuses on two core elements of Cryptography: ciphers that encrypt data like email using a public or private key, and hashes (aka message digests) that irreversibly encrypt data like passwords.
 
-Shiro Cryptography's primary goal is take what has traditionally be an extremely complex field and make it easy for the rest of us while providing a robust set of cryptography features.
+Shiro Cryptography's primary goal is take what has traditionally been an extremely complex field and make it easy for the rest of us while providing a robust set of cryptography features.
 
 <a name="CryptographyFeatures-SimplicityFeatures"></a>
 ##Simplicity Features
