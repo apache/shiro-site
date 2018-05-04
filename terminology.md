@@ -58,7 +58,7 @@ A Realm is a component that can access application-specific security data such a
 
 <a name="Terminology-role"></a>
 * **Role**
-The definition of a Role can vary based on who you talk to.  In many applications it is nebulous concept at best that people use to implicitly define security policies.  Shiro prefers to interpret a Role as simply a named collection of Permissions.  That's it - an application unique name aggregating one or more Permission declarations.  
+The definition of a Role can vary based on who you talk to.  In many applications it is a nebulous concept at best that people use to implicitly define security policies.  Shiro prefers to interpret a Role as simply a named collection of Permissions.  That's it - an application unique name aggregating one or more Permission declarations.  
 
     This is a more concrete definition than the implicit one used by many applications.  If you choose to have your data model reflect Shiro's assumption, you'll find you will have much more power in controlling security policies.
 
@@ -76,7 +76,7 @@ A <em>Subject</em> is just fancy security term that basically means a security-s
 <a name="Terminology-Lendahandwithdocumentation"></a>
 ###Lend a hand with documentation
 
-While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time.  If you'd like to help the Shiro project, please consider corrected, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro.
+While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time.  If you'd like to help the Shiro project, please consider correcting, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro.
 
 The easiest way to contribute your documentation is to send it to the <a class="external-link" href="http://shiro-user.582556.n2.nabble.com/" rel="nofollow">User Forum</a> or the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.
 
