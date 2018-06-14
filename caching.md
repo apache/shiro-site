@@ -64,8 +64,8 @@ TBD
 
 TBD
 
-<a name="Caching-%7B%7BRedisCacheManager%7D%7D"></a>
-###`RedisCacheManager`
+<a name="Caching-%7B%7BOtherCommunitySupportedCacheManagers%7D%7D"></a>
+###`Other Community Supported Cache Managers`
 
 [Integration](integration.html "Integration")
 
