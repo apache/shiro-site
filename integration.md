@@ -44,6 +44,9 @@ A nifty set of tools and libraries for enhancing productivity with the Apache Wi
 * **[Lift](https://github.com/timperrett/lift-shiro)** from [@timperrett](https://twitter.com/@timperrett)
 Integration between Shiro and the Lift Web framework. Uses Lift’s sitemap Locs instead of Shiro’s built in web.xml resource filters to control access to URLs. 
 
+
+### Cache Managers
+
 * **[Redis Cache Manager](https://github.com/alexxiyang/shiro-redis)** from [@alexxiyang](https://github.com/alexxiyang)
 A [Redis](http://redis.io/) Cache Manager implementation.
 

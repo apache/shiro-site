@@ -64,10 +64,9 @@ TBD
 
 TBD
 
-<a name="Caching-%7B%7BOtherCommunitySupportedCacheManagers%7D%7D"></a>
 ###`Other Community Supported Cache Managers`
 
-[Integration](integration.html "Integration")
+[Integration](integration.html#cache-managers "Integration")
 
 <a name="Caching-AuthorizationCacheInvalidation"></a>
 ##Authorization Cache Invalidation
