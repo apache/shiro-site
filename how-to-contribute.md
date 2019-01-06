@@ -117,7 +117,7 @@ $ git config --global user.email you@domain.com
 You'll grab the Shiro source with git:
 
 ``` bash
-$ git clone https://git-wip-us.apache.org/repos/asf/shiro.git
+$ git clone https://gitbox.apache.org/repos/asf/shiro.git
 ```
 
 If you already have the source, make sure you're working with the most recent version. Do a `git pull` if you cloned the source more than a few hours ago. (Apache Shiro development can move pretty fast!)
