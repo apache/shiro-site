@@ -76,14 +76,22 @@
         <li>
             <a href="#early">Early Access Release (${earlyRelease})</a>
             <ul>
-                <li><a href="#earlyBinary">${latestRelease} Binary Distribution</a></li>
-                <li><a href="#earlySource">${latestRelease} Source Code Distribution</a></li>
-                <li><a href="#earlyGit">${latestRelease} Git Source repository</a></li>
+                <li><a href="#earlyBinary">${earlyRelease} Binary Distribution</a></li>
+                <li><a href="#earlySource">${earlyRelease} Source Code Distribution</a></li>
+                <li><a href="#earlyGit">${earlyRelease} Git Source repository</a></li>
             </ul>
         </li>
         #end
 
         <li><a href="#previous">Previous Releases</a>
+            <ul>
+                <li><a href="#1.3.xBinary">$shiro13x.version</a></li>
+                <ul>
+                    <li><a href="#1.3.xBinary">$shiro13x.version Binary Distribution</a></li>
+                    <li><a href="#1.3.xSource">$shiro13x.version Source Code Distribution</a></li>
+                    <li><a href="#1.3.xGit">$shiro13x.version Git Source repository</a></li>
+                </ul>
+            </ul>
             <ul>
                 <li><a href="#1.2.xBinary">$shiro12x.version</a></li>
                 <ul>
@@ -117,7 +125,7 @@
 <p>
 </p>
 
-#artifactTable($shiro13x)
+#artifactTable($shiro14x)
 
 <h3><a name="latestSource"></a>${latestRelease} Source Code Distribution</h3>
 
@@ -152,7 +160,7 @@ git checkout shiro-root-${latestRelease} -b shiro-root-${latestRelease}
 <p>
 </p>
 
-#artifactTable($shiro14x)
+#artifactTable($shiro141)
 
 <h3><a name="earlySource"></a>${earlyRelease} Source Code Distribution</h3>
 
@@ -178,6 +186,37 @@ git checkout shiro-root-${earlyRelease} -b shiro-root-${earlyRelease}
 
 <h2><a name="previous"></a>Previous Releases</h2>
 
+<h3><a name="1.3.xBinary"></a>${shiro13x.version} Binary Distribution</h3>
+
+<p>Associated documentation can be found <a href="documentation.html" title="Documentation">here</a></p>
+
+<p>To download the files directly as one .jar file just click the link in the "Artifact" column. If you would like
+    acquire Shiro through Maven, then please use the markup listed under "Maven Usage"</p>
+
+<p>
+</p>
+
+#artifactTable($shiro13x)
+
+<h3><a name="1.3.xSource"></a>${shiro13x.version} Source Code Distribution</h3>
+
+<p>The source bundle requires JDK 1.6 and Maven 3.0.3+ to build:</p>
+
+<p><a class="external-link" href="http://www.apache.org/dyn/closer.cgi/shiro/${shiro13x.version}/shiro-root-${shiro13x.version}-source-release.zip">zip</a>
+    (<a class="external-link"
+        href="http://www.apache.org/dyn/closer.cgi/shiro/${shiro13x.version}/shiro-root-${shiro13x.version}-source-release.zip.asc">pgp</a>, <a
+            class="external-link"
+            href="http://www.apache.org/dyn/closer.cgi/shiro/${shiro13x.version}/shiro-root-${shiro13x.version}-source-release.zip.md5">md5</a>, <a
+            class="external-link"
+            href="http://www.apache.org/dyn/closer.cgi/shiro/${shiro13x.version}/shiro-root-${shiro13x.version}-source-release.zip.sha1">sha1</a>)
+</p>
+
+<h3><a name="1.3.xGit"></a>${shiro13x.version} Git Source repository</h3>
+
+<p>The source can be cloned anonymously from Git with this command:</p>
+<pre><code class="bash">git clone https://github.com/apache/shiro.git
+git checkout shiro-root-${shiro13x.version} -b shiro-root-${shiro13x.version}
+</code></pre>
 
 <h3><a name="1.2.xBinary"></a>${shiro12x.version} Binary Distribution</h3>
 
