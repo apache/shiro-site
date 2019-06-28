@@ -20,7 +20,7 @@ In this simple example, we'll create a very simple command-line application that
 
 #info('Any Application', 'Apache Shiro was designed from day one to support <em>any</em> application - from the smallest command-line applications to the largest clustered web applications.  Even though we''re creating a simple app for this tutorial, know that the same usage patterns apply no matter how your application is created or where it is deployed.')
 
-This tutorial requires Java 1.5 or later. We'll also be using Apache [Maven](http://maven.apache.org) as our build tool, but of course this is not required to use Apache Shiro. You may acquire Shiro's .jars and incorporate them in any way you like into your application, for example maybe using Apache [Ant](http://ant.apache.org) and [Ivy](http://ant.apache.org/ivy).
+This tutorial requires Java 1.6 or later. We'll also be using Apache [Maven](http://maven.apache.org) as our build tool, but of course this is not required to use Apache Shiro. You may acquire Shiro's .jars and incorporate them in any way you like into your application, for example maybe using Apache [Ant](http://ant.apache.org) and [Ivy](http://ant.apache.org/ivy).
 
 For this tutorial, please ensure that you are using Maven 2.2.1 or later. You should be able to type `mvn --version` in a command prompt and see something similar to the following:
 
@@ -60,10 +60,10 @@ For now, create a new directory on your filesystem, for example, **`shiro-tutori
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
+                <version>3.8.0</version>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
@@ -93,14 +93,20 @@ For now, create a new directory on your filesystem, for example, **`shiro-tutori
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-core</artifactId>
-            <version>1.1.0</version>
+            <version>1.4.1</version>
         </dependency>
         <!-- Shiro uses SLF4J for logging.  We'll use the 'simple' binding
              in this example app.  See http://www.slf4j.org for more info. -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.6.1</version>
+            <version>1.7.21</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>1.7.21</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -214,7 +220,7 @@ schwartz = lightsaber:*
 goodguy = winnebago:drive:eagle5
 ```
 
-As you see, this configuration basically sets up a small set of static user accounts, good enough for our first application. In later chapters, you will see how we can use more complex User data sources like relational databases, LDAP an ActiveDirectory, and more.
+As you see, this configuration basically sets up a small set of static user accounts, good enough for our first application. In later chapters, you will see how we can use more complex User data sources like relational databases, LDAP and ActiveDirectory, and more.
 
 <a name="Tutorial-ReferencingtheConfiguration"></a>
 #[[####Referencing the Configuration]]#
@@ -346,7 +352,7 @@ if ( currentUser.hasRole( "schwartz" ) ) {
 We can also see if they have a permission to act on a certain type of entity:
 
 ``` java
-if ( currentUser.isPermitted( "lightsaber:weild" ) ) {
+if ( currentUser.isPermitted( "lightsaber:wield" ) ) {
     log.info("You may use a lightsaber ring.  Use it wisely.");
 } else {
     log.info("Sorry, lightsaber rings are for schwartz masters only.");
