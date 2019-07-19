@@ -123,7 +123,7 @@ So although many parts of the application can still perform user-specific logic 
 
 For example, a check to see if a subject can access financial information should almost always depend on `isAuthenticated()`, not `isRemembered()`, to guarantee a verified identity.
 
-Here is a scenario to help illustrate why the the distinction between isAuthenticated and isRemembered is important.
+Here is a scenario to help illustrate why the distinction between isAuthenticated and isRemembered is important.
 
 Let's say you're using Amazon.com. You log in and you add some books to your shopping cart. A day goes by. Of course your user session has expired and you've been logged out. But Amazon "remembers" you, greets you by name, and is still giving you personalized book recommendations. To Amazon, `isRemembered()` would return `TRUE`. What happens if you try to use one of the credit cards on file or change your account information? While Amazon "remembers" you, `isRemembered() = TRUE`, it is not certain that you are in fact you, `isAuthenticated()=FALSE`. So before you can perform a sensitive action Amazon needs to verify your identity by forcing an authentication process which it does through a login screen. After the login, your identity has been verified and `isAuthenticated()=TRUE`.
 
