@@ -25,6 +25,9 @@ A [more detailed description of the process](http://www.apache.org/security/comm
 Apache Shiro Vulnerability Reports
 ----------------------------------
 
+###[CVE-2019-12422](http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-12422)
+Apache Shiro before 1.4.2, when using the default "remember me" configuration, cookies could be susceptible to a padding attack.
+
 ###[CVE-2016-6802](http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-6802)
 Apache Shiro before 1.3.2 allows attackers to bypass intended servlet filters and gain access by leveraging use of a non-root servlet context path.
 
