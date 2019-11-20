@@ -222,7 +222,7 @@ An AuthenticationStrategy is a stateless component that is consulted 4 times dur
 
 1.  before any of the Realms are invoked
 2.  immediately before an individual Realm's `getAuthenticationInfo` method is called
-3.  immediately after an an individual Realm's `getAuthenticationInfo` method is called
+3.  immediately after an individual Realm's `getAuthenticationInfo` method is called
 4.  after all of the Realms have been invoked
 
 Also an `AuthenticationStrategy` is responsible for aggregating the results from each successful Realm and 'bundling' them into a single [`AuthenticationInfo`](static/current/apidocs/org/apache/shiro/authc/AuthenticationInfo.html) representation. This final aggregate `AuthenticationInfo` instance is what is returned by the `Authenticator` instance and is what Shiro uses to represent the `Subject`'s final identity (aka Principals).
