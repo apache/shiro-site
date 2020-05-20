@@ -32,8 +32,6 @@ Once you've gotten your feet wet, you might find these useful too:
 
 *   **[Custom Apache Shiro JDBC Realm](https://mehmetceliksoy.wordpress.com/2015/06/28/shiro-jdbc-realm/)** by Mehmet Celiksoy
 
-*   **[Spring MVC + Shiro + myBatis + JSR-303 Validation](https://bubba-h57.github.io/H57_Shiro/)** by Rob Hines et. al. on 2 April 2012.
-
 *   **[Securing ZK Applications with Apache Shiro](https://www.zkoss.org/wiki/Small_Talks/2012/March/Securing_ZK_Applications_With_Apache_Shiro)** by Ashish Dasnurkar on 6 March 2012.
 
 *   **Facebook Login with Apache Shiro** by Mike Warren on 28 November 2011
