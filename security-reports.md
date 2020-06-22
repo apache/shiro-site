@@ -25,6 +25,9 @@ A [more detailed description of the process](http://www.apache.org/security/comm
 Apache Shiro Vulnerability Reports
 ----------------------------------
 
+###[CVE-2020-1957](http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-11989)
+Apache Shiro before 1.5.3, when using Apache Shiro with Spring dynamic controllers, a specially crafted request may cause an authentication bypass.
+
 ###[CVE-2020-1957](http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-1957)
 Apache Shiro before 1.5.2, when using Apache Shiro with Spring dynamic controllers, a specially crafted request may cause an authentication bypass.
 
