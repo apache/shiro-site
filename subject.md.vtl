@@ -301,7 +301,7 @@ Subject subject = new Subject.Builder()...
 Callable work = //build/acquire a Callable instance. 
 //associate the work with the built subject so SecurityUtils.getSubject() calls works properly: 
 work = subject.associateWith(work);
-ExecutorService executorService = new java.util.concurrent.Executors.newCachedThreadPool();
+ExecutorService executor = java.util.concurrent.Executors.newCachedThreadPool();
 //execute the work on a different thread as the built Subject: 
 executor.execute(work);
 ```
@@ -313,8 +313,9 @@ Subject subject = new Subject.Builder()...
 Runnable work = //build/acquire a Runnable instance. 
 //associate the work with the built subject so SecurityUtils.getSubject() calls works properly: 
 work = subject.associateWith(work);
-Executor executor = new java.util.concurrent.Executors.newCachedThreadPool();
-//execute the work on a different thread as the built Subject: executor.execute(work);
+ExecutorService executor = java.util.concurrent.Executors.newCachedThreadPool();
+//execute the work on a different thread as the built Subject:
+executor.execute(work);
 ```
 
 #tip('Automatic Cleanup', 'The <code>associateWith</code>* methods perform necessary thread cleanup automatically to ensure threads remain clean in a pooled environment.')
