@@ -33,6 +33,7 @@ Apache Shiro Web Support
     *   [General Enabling/Disabling](#Web-GeneralEnabling%2FDisabling)
     *   [Request-specific Enabling/Disabling](#Web-RequestspecificEnabling%2FDisabling)
     *   [Path-specific Enabling/Disabling](#Web-PathspecificEnabling%2FDisabling)
+    *   [Global Filters](#Web-globalFilters)
 
 *   [Session Management](#Web-SessionManagement)
 
@@ -395,6 +396,7 @@ The default Filter instances available automatically are defined by the [Default
 | authc | [org.apache.shiro.web.filter.authc.FormAuthenticationFilter](static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html) |
 | authcBasic | [org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter](static/current/apidocs/org/apache/shiro/web/filter/authc/BasicHttpAuthenticationFilter.html) |
 | authcBearer | [org.apache.shiro.web.filter.authc.BearerHttpAuthenticationFilter](static/current/apidocs/org/apache/shiro/web/filter/authc/BearerHttpAuthenticationFilter.html) |
+| invalidRequest | [org.apache.shiro.web.filter.InvalidRequestFilter](static/current/apidocs/org/apache/shiro/web/filter/InvalidRequestFilter.html) |
 | logout | [org.apache.shiro.web.filter.authc.LogoutFilter](static/current/apidocs/org/apache/shiro/web/filter/authc/LogoutFilter.html) |
 | noSessionCreation | [org.apache.shiro.web.filter.session.NoSessionCreationFilter](static/current/apidocs/org/apache/shiro/web/filter/session/NoSessionCreationFilter.html) |
 | perms | [org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter](static/current/apidocs/org/apache/shiro/web/filter/authz/PermissionsAuthorizationFilter.html) |
@@ -455,6 +457,43 @@ This method defaults to returning the value of the `enabled` property, which is 
 Shiro's [PathMatchingFilter](static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html) (a subclass of `OncePerRequestFilter` has the ability to react to configuration based on a _specific path_ being filtered. This means you can enable or disable a filter based on the path and the path-specific configuration in addition to the incoming request and response.
 
 If you need to be able to react to the matching path and the path-specific configuration to determine if a filter is enabled or disabled, instead of overriding `OncePerRequestFilter` `isEnabled(request,response)` method, you would override the `PathMatchingFilter` `isEnabled(request,response,path,pathConfig)` method instead.
+
+<a name="Web-globalFilters"></a>
+#[[###Global Filters]]#
+
+Starting with Shiro 1.6 the ability to define global filters has been added.  Adding "global filters" will add additional filters to ALL routes, this includes previously configured filter chains as well as unconfigured paths.
+
+By default, the global filters contains the `invalidRequest` filter.  This filter blocks known malicious attacks, see below for configuration details.
+
+Global filters can be customized or disabled, for example
+
+``` ini
+[main]
+...
+# disable Global Filters
+filterChainResolver.globalFilters = null
+```
+
+Define the list of global filters:
+
+``` ini
+[main]
+...
+filterChainResolver.globalFilters = invalidRequest, port
+```
+
+The `invalidRequest` filter blocks requests with non-ascii characters, semicolons, and backslashes, each of these can be disabled independently to allow for backward compatibility.
+
+```ini
+[main]
+...
+invalidRequest.blockBackslash = true
+invalidRequest.blockSemicolon = true
+invalidRequest.blockNonAscii = true
+...
+```
+
+#info('Note', 'If you currently allowing URL rewriting to allow for a <code>jsessionid</code> in the URL, you must set <code>blockSemicolon</code> to <code>false</code>.<BR/><BR/>URL rewriting for <code>jsessionid</code> is defined in section "7.1.3" of the Java Servlet Specification, but it is generally NOT recommended.')
 
 <a name="Web-sessionManagement"></a>
 <a name="Web-SessionManagement"></a>
