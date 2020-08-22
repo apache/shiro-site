@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>WebSessionKey.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.session.mgt</a> &gt; <span class="el_source">WebSessionKey.java</span></div><h1>WebSessionKey.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008 Les Hazlewood
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.shiro.web.session.mgt;
+
+import org.apache.shiro.session.mgt.DefaultSessionKey;
+import org.apache.shiro.web.util.RequestPairSource;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import java.io.Serializable;
+
+/**
+ * A {@link org.apache.shiro.session.mgt.SessionKey SessionKey} implementation that also retains the
+ * {@code ServletRequest} and {@code ServletResponse} associated with the web request that is performing the
+ * session lookup.
+ *
+ * @since 1.0
+ */
+public class WebSessionKey extends DefaultSessionKey implements RequestPairSource {
+
+    private final ServletRequest servletRequest;
+    private final ServletResponse servletResponse;
+
+<span class="fc" id="L37">    public WebSessionKey(ServletRequest request, ServletResponse response) {</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">        if (request == null) {</span>
+<span class="nc" id="L39">            throw new NullPointerException(&quot;request argument cannot be null.&quot;);</span>
+        }
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">        if (response == null) {</span>
+<span class="nc" id="L42">            throw new NullPointerException(&quot;response argument cannot be null.&quot;);</span>
+        }
+<span class="fc" id="L44">        this.servletRequest = request;</span>
+<span class="fc" id="L45">        this.servletResponse = response;</span>
+<span class="fc" id="L46">    }</span>
+
+    public WebSessionKey(Serializable sessionId, ServletRequest request, ServletResponse response) {
+<span class="fc" id="L49">        this(request, response);</span>
+<span class="fc" id="L50">        setSessionId(sessionId);</span>
+<span class="fc" id="L51">    }</span>
+
+    public ServletRequest getServletRequest() {
+<span class="fc" id="L54">        return servletRequest;</span>
+    }
+
+    public ServletResponse getServletResponse() {
+<span class="fc" id="L58">        return servletResponse;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

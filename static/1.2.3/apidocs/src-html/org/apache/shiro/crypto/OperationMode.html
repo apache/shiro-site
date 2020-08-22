@@ -1,0 +1,209 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<FONT color="green">007</FONT>     * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<FONT color="green">008</FONT>     * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<FONT color="green">013</FONT>     * software distributed under the License is distributed on an<a name="line.13"></a>
+<FONT color="green">014</FONT>     * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<FONT color="green">015</FONT>     * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<FONT color="green">016</FONT>     * specific language governing permissions and limitations<a name="line.16"></a>
+<FONT color="green">017</FONT>     * under the License.<a name="line.17"></a>
+<FONT color="green">018</FONT>     */<a name="line.18"></a>
+<FONT color="green">019</FONT>    package org.apache.shiro.crypto;<a name="line.19"></a>
+<FONT color="green">020</FONT>    <a name="line.20"></a>
+<FONT color="green">021</FONT>    /**<a name="line.21"></a>
+<FONT color="green">022</FONT>     * A cipher &lt;a href="http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation"&gt;mode of operation&lt;/a&gt;<a name="line.22"></a>
+<FONT color="green">023</FONT>     * directs a cipher algorithm how to convert data during the encryption or decryption process.  This enum represents<a name="line.23"></a>
+<FONT color="green">024</FONT>     * all JDK-standard Cipher operation mode names as defined in<a name="line.24"></a>
+<FONT color="green">025</FONT>     * &lt;a href="http://java.sun.com/javase/6/docs/technotes/guides/security/StandardNames.html"&gt;JDK Security Standard<a name="line.25"></a>
+<FONT color="green">026</FONT>     * Names&lt;/a&gt;, as well as a few more that are well-known and supported by other JCA Providers.<a name="line.26"></a>
+<FONT color="green">027</FONT>     * &lt;p/&gt;<a name="line.27"></a>
+<FONT color="green">028</FONT>     * This {@code enum} exists to provide Shiro end-users type-safety when declaring an operation mode.  This helps reduce<a name="line.28"></a>
+<FONT color="green">029</FONT>     * error by providing a compile-time mechanism to specify a mode and guarantees a valid name that will be<a name="line.29"></a>
+<FONT color="green">030</FONT>     * recognized by an underlying JCA Provider.<a name="line.30"></a>
+<FONT color="green">031</FONT>     * &lt;h2&gt;Standard or Non-Standard?&lt;/h2&gt;<a name="line.31"></a>
+<FONT color="green">032</FONT>     * All modes listed specify whether they are a JDK standard mode or a non-standard mode.  Standard modes are included<a name="line.32"></a>
+<FONT color="green">033</FONT>     * in all JDK distributions.  Non-standard modes can<a name="line.33"></a>
+<FONT color="green">034</FONT>     * sometimes result in better performance or more secure output, but may not be available on the target JDK<a name="line.34"></a>
+<FONT color="green">035</FONT>     * platform and rely on an external JCA Provider to be installed.  Some providers<a name="line.35"></a>
+<FONT color="green">036</FONT>     * (like &lt;a href="http://www.bouncycastle.org"&gt;Bouncy Castle&lt;/a&gt;) may support these modes however.<a name="line.36"></a>
+<FONT color="green">037</FONT>     *<a name="line.37"></a>
+<FONT color="green">038</FONT>     * @see &lt;a href="http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation"&gt;Block Cipher Modes of Operation&lt;a/&gt;<a name="line.38"></a>
+<FONT color="green">039</FONT>     * @since 1.0<a name="line.39"></a>
+<FONT color="green">040</FONT>     */<a name="line.40"></a>
+<FONT color="green">041</FONT>    public enum OperationMode {<a name="line.41"></a>
+<FONT color="green">042</FONT>    <a name="line.42"></a>
+<FONT color="green">043</FONT>        /**<a name="line.43"></a>
+<FONT color="green">044</FONT>         * &lt;a href="http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher-block_chaining_.28CBC.29"&gt;<a name="line.44"></a>
+<FONT color="green">045</FONT>         * Cipher-block Chaining&lt;/a&gt; mode, defined in &lt;a href="http://csrc.nist.gov/publications/fips/index.html"&gt;FIPS<a name="line.45"></a>
+<FONT color="green">046</FONT>         * PUB 81&lt;/a&gt;.<a name="line.46"></a>
+<FONT color="green">047</FONT>         * &lt;p/&gt;<a name="line.47"></a>
+<FONT color="green">048</FONT>         * This is a standard JDK operation mode and should be supported by all JDK environments.<a name="line.48"></a>
+<FONT color="green">049</FONT>         */<a name="line.49"></a>
+<FONT color="green">050</FONT>        CBC,<a name="line.50"></a>
+<FONT color="green">051</FONT>    <a name="line.51"></a>
+<FONT color="green">052</FONT>        /**<a name="line.52"></a>
+<FONT color="green">053</FONT>         * &lt;a href="http://en.wikipedia.org/wiki/CCM_mode"&gt;Counter with CBC-MAC&lt;/a&gt; mode&lt;b&gt;*&lt;/b&gt; - for block ciphers with<a name="line.53"></a>
+<FONT color="green">054</FONT>         * 128 bit block-size only. See &lt;a href="http://www.ietf.org/rfc/rfc3610.txt"&gt;RFC 3610&lt;/a&gt; for AES Ciphers.<a name="line.54"></a>
+<FONT color="green">055</FONT>         * This mode has essentially been replaced by the more-capable {@link #EAX EAX} mode.<a name="line.55"></a>
+<FONT color="green">056</FONT>         * &lt;p/&gt;<a name="line.56"></a>
+<FONT color="green">057</FONT>         * &lt;b&gt;*THIS IS A NON-STANDARD MODE&lt;/b&gt;. It is not guaranteed to be supported across JDK installations.  You must<a name="line.57"></a>
+<FONT color="green">058</FONT>         * ensure you have a JCA Provider that can support this cipher operation mode.<a name="line.58"></a>
+<FONT color="green">059</FONT>         * &lt;a href="http://www.bouncycastle.org"&gt;Bouncy Castle&lt;/a&gt; &lt;em&gt;may&lt;/em&gt; be one such provider.<a name="line.59"></a>
+<FONT color="green">060</FONT>         */<a name="line.60"></a>
+<FONT color="green">061</FONT>        CCM,<a name="line.61"></a>
+<FONT color="green">062</FONT>    <a name="line.62"></a>
+<FONT color="green">063</FONT>        /**<a name="line.63"></a>
+<FONT color="green">064</FONT>         * &lt;a href="http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher_feedback_.28CFB.29"&gt;Cipher<a name="line.64"></a>
+<FONT color="green">065</FONT>         * Feedback&lt;a/&gt; mode, defined in &lt;a href="http://csrc.nist.gov/publications/fips/index.html"&gt;FIPS PUB 81&lt;/a&gt;.<a name="line.65"></a>
+<FONT color="green">066</FONT>         * &lt;p/&gt;<a name="line.66"></a>
+<FONT color="green">067</FONT>         * This is a standard JDK operation mode and should be supported by all JDK environments.<a name="line.67"></a>
+<FONT color="green">068</FONT>         */<a name="line.68"></a>
+<FONT color="green">069</FONT>        CFB,<a name="line.69"></a>
+<FONT color="green">070</FONT>    <a name="line.70"></a>
+<FONT color="green">071</FONT>        /**<a name="line.71"></a>
+<FONT color="green">072</FONT>         * &lt;a href="http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Counter_.28CTR.29"&gt;Counter Mode&lt;/a&gt;, aka<a name="line.72"></a>
+<FONT color="green">073</FONT>         * Integer Counter Mode (ICM) and Segmented Integer Counter (SIC).  Counter is a simplification of {@link #OFB OFB}<a name="line.73"></a>
+<FONT color="green">074</FONT>         * and updates the input block as a counter.<a name="line.74"></a>
+<FONT color="green">075</FONT>         * &lt;p/&gt;<a name="line.75"></a>
+<FONT color="green">076</FONT>         * This is a standard JDK operation mode and should be supported by all JDK environments.<a name="line.76"></a>
+<FONT color="green">077</FONT>         */<a name="line.77"></a>
+<FONT color="green">078</FONT>        CTR,<a name="line.78"></a>
+<FONT color="green">079</FONT>    <a name="line.79"></a>
+<FONT color="green">080</FONT>        /**<a name="line.80"></a>
+<FONT color="green">081</FONT>         * &lt;a href="http://en.wikipedia.org/wiki/EAX_mode"&gt;EAX Mode&lt;/a&gt;&lt;b&gt;*&lt;/b&gt;.  This is a patent-free but less-effecient<a name="line.81"></a>
+<FONT color="green">082</FONT>         * alternative to {@link #OCB OCB} and has capabilities beyond what {@link #CCM CCM} can provide.<a name="line.82"></a>
+<FONT color="green">083</FONT>         * &lt;p/&gt;<a name="line.83"></a>
+<FONT color="green">084</FONT>         * &lt;b&gt;*THIS IS A NON-STANDARD MODE&lt;/b&gt;. It is not guaranteed to be supported across JDK installations.  You must<a name="line.84"></a>
+<FONT color="green">085</FONT>         * ensure you have a JCA Provider that can support this cipher operation mode.<a name="line.85"></a>
+<FONT color="green">086</FONT>         * &lt;a href="http://www.bouncycastle.org"&gt;Bouncy Castle&lt;/a&gt; &lt;em&gt;may&lt;/em&gt; be one such provider.<a name="line.86"></a>
+<FONT color="green">087</FONT>         */<a name="line.87"></a>
+<FONT color="green">088</FONT>        EAX,<a name="line.88"></a>
+<FONT color="green">089</FONT>    <a name="line.89"></a>
+<FONT color="green">090</FONT>        /**<a name="line.90"></a>
+<FONT color="green">091</FONT>         * &lt;a href="http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Electronic_codebook_.28ECB.29"&gt;Electronic<a name="line.91"></a>
+<FONT color="green">092</FONT>         * Codebook&lt;/a&gt; mode, defined in &lt;a href="http://csrc.nist.gov/publications/fips/index.html"&gt;FIPS PUB 81&lt;/a&gt;.<a name="line.92"></a>
+<FONT color="green">093</FONT>         * ECB is the only mode that does &lt;em&gt;not&lt;/em&gt; require an Initialization Vector, but because of this, can be seen<a name="line.93"></a>
+<FONT color="green">094</FONT>         * as less secure than operation modes that require an IV.<a name="line.94"></a>
+<FONT color="green">095</FONT>         * &lt;p/&gt;<a name="line.95"></a>
+<FONT color="green">096</FONT>         * This is a standard JDK operation mode and should be supported by all JDK environments.<a name="line.96"></a>
+<FONT color="green">097</FONT>         */<a name="line.97"></a>
+<FONT color="green">098</FONT>        ECB,<a name="line.98"></a>
+<FONT color="green">099</FONT>    <a name="line.99"></a>
+<FONT color="green">100</FONT>        /**<a name="line.100"></a>
+<FONT color="green">101</FONT>         * &lt;a href="http://en.wikipedia.org/wiki/GCM_mode"&gt;Galois/Counter&lt;/a&gt; mode&lt;b&gt;*&lt;/b&gt; - for block ciphers with 128<a name="line.101"></a>
+<FONT color="green">102</FONT>         * bit block-size only.<a name="line.102"></a>
+<FONT color="green">103</FONT>         * &lt;p/&gt;<a name="line.103"></a>
+<FONT color="green">104</FONT>         * &lt;b&gt;*THIS IS A NON-STANDARD MODE&lt;/b&gt;. It is not guaranteed to be supported across JDK installations.  You must<a name="line.104"></a>
+<FONT color="green">105</FONT>         * ensure you have a JCA Provider that can support this cipher operation mode.<a name="line.105"></a>
+<FONT color="green">106</FONT>         * &lt;a href="http://www.bouncycastle.org"&gt;Bouncy Castle&lt;/a&gt; &lt;em&gt;may&lt;/em&gt; be one such provider.<a name="line.106"></a>
+<FONT color="green">107</FONT>         */<a name="line.107"></a>
+<FONT color="green">108</FONT>        GCM,<a name="line.108"></a>
+<FONT color="green">109</FONT>    <a name="line.109"></a>
+<FONT color="green">110</FONT>        /**<a name="line.110"></a>
+<FONT color="green">111</FONT>         * No mode.<a name="line.111"></a>
+<FONT color="green">112</FONT>         * &lt;p/&gt;<a name="line.112"></a>
+<FONT color="green">113</FONT>         * This is a standard JDK operation mode and should be supported by all JDK environments.<a name="line.113"></a>
+<FONT color="green">114</FONT>         */<a name="line.114"></a>
+<FONT color="green">115</FONT>        NONE,<a name="line.115"></a>
+<FONT color="green">116</FONT>    <a name="line.116"></a>
+<FONT color="green">117</FONT>        /**<a name="line.117"></a>
+<FONT color="green">118</FONT>         * &lt;a href="http://en.wikipedia.org/wiki/OCB_mode"&gt;Offset Codebook&lt;/a&gt; mode&lt;b&gt;*&lt;/b&gt;.  Parallel mode that provides<a name="line.118"></a>
+<FONT color="green">119</FONT>         * both message privacy and authenticity in a single pass.  This is a very efficient mode, but is patent-encumbered.<a name="line.119"></a>
+<FONT color="green">120</FONT>         * A less-efficient (two pass) alternative is available by using {@link #EAX EAX} mode.<a name="line.120"></a>
+<FONT color="green">121</FONT>         * &lt;p/&gt;<a name="line.121"></a>
+<FONT color="green">122</FONT>         * &lt;b&gt;*THIS IS A NON-STANDARD MODE&lt;/b&gt;. It is not guaranteed to be supported across JDK installations.  You must<a name="line.122"></a>
+<FONT color="green">123</FONT>         * ensure you have a JCA Provider that can support this cipher operation mode.<a name="line.123"></a>
+<FONT color="green">124</FONT>         * &lt;a href="http://www.bouncycastle.org"&gt;Bouncy Castle&lt;/a&gt; &lt;em&gt;may&lt;/em&gt; be one such provider.<a name="line.124"></a>
+<FONT color="green">125</FONT>         */<a name="line.125"></a>
+<FONT color="green">126</FONT>        OCB,<a name="line.126"></a>
+<FONT color="green">127</FONT>    <a name="line.127"></a>
+<FONT color="green">128</FONT>        /**<a name="line.128"></a>
+<FONT color="green">129</FONT>         * &lt;a href="http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Output_feedback_.28OFB.29"&gt;Output<a name="line.129"></a>
+<FONT color="green">130</FONT>         * Feedback&lt;/a&gt; mode, defined in &lt;a href="http://csrc.nist.gov/publications/fips/index.html"&gt;FIPS PUB 81&lt;/a&gt;.<a name="line.130"></a>
+<FONT color="green">131</FONT>         * &lt;p/&gt;<a name="line.131"></a>
+<FONT color="green">132</FONT>         * This is a standard JDK operation mode and should be supported by all JDK environments.<a name="line.132"></a>
+<FONT color="green">133</FONT>         */<a name="line.133"></a>
+<FONT color="green">134</FONT>        OFB,<a name="line.134"></a>
+<FONT color="green">135</FONT>    <a name="line.135"></a>
+<FONT color="green">136</FONT>        /**<a name="line.136"></a>
+<FONT color="green">137</FONT>         * &lt;a href="http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Propagating_cipher-block_chaining_.28PCBC.29"&gt;<a name="line.137"></a>
+<FONT color="green">138</FONT>         * Propagating Cipher Block Chaining&lt;/a&gt; mode, defined in &lt;a href="http://web.mit.edu/kerberos/"&gt;Kerberos version 4&lt;a/&gt;.<a name="line.138"></a>
+<FONT color="green">139</FONT>         * &lt;p/&gt;<a name="line.139"></a>
+<FONT color="green">140</FONT>         * This is a standard JDK operation mode and should be supported by all JDK environments.<a name="line.140"></a>
+<FONT color="green">141</FONT>         */<a name="line.141"></a>
+<FONT color="green">142</FONT>        PCBC<a name="line.142"></a>
+<FONT color="green">143</FONT>    }<a name="line.143"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

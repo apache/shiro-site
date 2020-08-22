@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>DefaultWebEnvironment.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: All (aggregate jar)</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.env</a> &gt; <span class="el_source">DefaultWebEnvironment.java</span></div><h1>DefaultWebEnvironment.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.env;
+
+import org.apache.shiro.env.DefaultEnvironment;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.web.filter.mgt.FilterChainResolver;
+import org.apache.shiro.web.mgt.WebSecurityManager;
+
+import javax.servlet.ServletContext;
+import java.util.Map;
+
+/**
+ * Default {@link WebEnvironment} implementation based on a backing {@link Map} instance.
+ *
+ * @since 1.2
+ */
+public class DefaultWebEnvironment extends DefaultEnvironment implements MutableWebEnvironment {
+
+    private static final String DEFAULT_FILTER_CHAIN_RESOLVER_NAME = &quot;filterChainResolver&quot;;
+
+    private ServletContext servletContext;
+
+    public DefaultWebEnvironment() {
+<span class="fc" id="L41">        super();</span>
+<span class="fc" id="L42">    }</span>
+
+    public FilterChainResolver getFilterChainResolver() {
+<span class="nc" id="L45">        return getObject(DEFAULT_FILTER_CHAIN_RESOLVER_NAME, FilterChainResolver.class);</span>
+    }
+
+    public void setFilterChainResolver(FilterChainResolver filterChainResolver) {
+<span class="nc" id="L49">        setObject(DEFAULT_FILTER_CHAIN_RESOLVER_NAME, filterChainResolver);</span>
+<span class="nc" id="L50">    }</span>
+
+    @Override
+    public SecurityManager getSecurityManager() throws IllegalStateException {
+<span class="nc" id="L54">        return getWebSecurityManager();</span>
+    }
+
+    @Override
+    public void setSecurityManager(SecurityManager securityManager) {
+<span class="nc" id="L59">        assertWebSecurityManager(securityManager);</span>
+<span class="nc" id="L60">        super.setSecurityManager(securityManager);</span>
+<span class="nc" id="L61">    }</span>
+
+    public WebSecurityManager getWebSecurityManager() {
+<span class="nc" id="L64">        SecurityManager sm = super.getSecurityManager();</span>
+<span class="nc" id="L65">        assertWebSecurityManager(sm);</span>
+<span class="nc" id="L66">        return (WebSecurityManager)sm;</span>
+    }
+
+    public void setWebSecurityManager(WebSecurityManager wsm) {
+<span class="fc" id="L70">        super.setSecurityManager(wsm);</span>
+<span class="fc" id="L71">    }</span>
+
+    private void assertWebSecurityManager(SecurityManager sm) {
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (!(sm instanceof WebSecurityManager)) {</span>
+<span class="nc" id="L75">            String msg = &quot;SecurityManager instance must be a &quot; + WebSecurityManager.class.getName() + &quot; instance.&quot;;</span>
+<span class="nc" id="L76">            throw new IllegalStateException(msg);</span>
+        }
+<span class="nc" id="L78">    }</span>
+
+    public ServletContext getServletContext() {
+<span class="nc" id="L81">        return this.servletContext;</span>
+    }
+
+    public void setServletContext(ServletContext servletContext) {
+<span class="nc" id="L85">        this.servletContext = servletContext;</span>
+<span class="nc" id="L86">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

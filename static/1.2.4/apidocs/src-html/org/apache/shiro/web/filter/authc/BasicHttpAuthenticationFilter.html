@@ -1,0 +1,435 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<FONT color="green">007</FONT>     * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<FONT color="green">008</FONT>     * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<FONT color="green">013</FONT>     * software distributed under the License is distributed on an<a name="line.13"></a>
+<FONT color="green">014</FONT>     * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<FONT color="green">015</FONT>     * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<FONT color="green">016</FONT>     * specific language governing permissions and limitations<a name="line.16"></a>
+<FONT color="green">017</FONT>     * under the License.<a name="line.17"></a>
+<FONT color="green">018</FONT>     */<a name="line.18"></a>
+<FONT color="green">019</FONT>    package org.apache.shiro.web.filter.authc;<a name="line.19"></a>
+<FONT color="green">020</FONT>    <a name="line.20"></a>
+<FONT color="green">021</FONT>    import org.apache.shiro.authc.AuthenticationToken;<a name="line.21"></a>
+<FONT color="green">022</FONT>    import org.apache.shiro.codec.Base64;<a name="line.22"></a>
+<FONT color="green">023</FONT>    import org.apache.shiro.web.util.WebUtils;<a name="line.23"></a>
+<FONT color="green">024</FONT>    import org.slf4j.Logger;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import org.slf4j.LoggerFactory;<a name="line.25"></a>
+<FONT color="green">026</FONT>    <a name="line.26"></a>
+<FONT color="green">027</FONT>    import javax.servlet.ServletRequest;<a name="line.27"></a>
+<FONT color="green">028</FONT>    import javax.servlet.ServletResponse;<a name="line.28"></a>
+<FONT color="green">029</FONT>    import javax.servlet.http.HttpServletRequest;<a name="line.29"></a>
+<FONT color="green">030</FONT>    import javax.servlet.http.HttpServletResponse;<a name="line.30"></a>
+<FONT color="green">031</FONT>    import java.util.Locale;<a name="line.31"></a>
+<FONT color="green">032</FONT>    <a name="line.32"></a>
+<FONT color="green">033</FONT>    <a name="line.33"></a>
+<FONT color="green">034</FONT>    /**<a name="line.34"></a>
+<FONT color="green">035</FONT>     * Requires the requesting user to be {@link org.apache.shiro.subject.Subject#isAuthenticated() authenticated} for the<a name="line.35"></a>
+<FONT color="green">036</FONT>     * request to continue, and if they're not, requires the user to login via the HTTP Basic protocol-specific challenge.<a name="line.36"></a>
+<FONT color="green">037</FONT>     * Upon successful login, they're allowed to continue on to the requested resource/url.<a name="line.37"></a>
+<FONT color="green">038</FONT>     * &lt;p/&gt;<a name="line.38"></a>
+<FONT color="green">039</FONT>     * This implementation is a 'clean room' Java implementation of Basic HTTP Authentication specification per<a name="line.39"></a>
+<FONT color="green">040</FONT>     * &lt;a href="ftp://ftp.isi.edu/in-notes/rfc2617.txt"&gt;RFC 2617&lt;/a&gt;.<a name="line.40"></a>
+<FONT color="green">041</FONT>     * &lt;p/&gt;<a name="line.41"></a>
+<FONT color="green">042</FONT>     * Basic authentication functions as follows:<a name="line.42"></a>
+<FONT color="green">043</FONT>     * &lt;ol&gt;<a name="line.43"></a>
+<FONT color="green">044</FONT>     * &lt;li&gt;A request comes in for a resource that requires authentication.&lt;/li&gt;<a name="line.44"></a>
+<FONT color="green">045</FONT>     * &lt;li&gt;The server replies with a 401 response status, sets the &lt;code&gt;WWW-Authenticate&lt;/code&gt; header, and the contents of a<a name="line.45"></a>
+<FONT color="green">046</FONT>     * page informing the user that the incoming resource requires authentication.&lt;/li&gt;<a name="line.46"></a>
+<FONT color="green">047</FONT>     * &lt;li&gt;Upon receiving this &lt;code&gt;WWW-Authenticate&lt;/code&gt; challenge from the server, the client then takes a<a name="line.47"></a>
+<FONT color="green">048</FONT>     * username and a password and puts them in the following format:<a name="line.48"></a>
+<FONT color="green">049</FONT>     * &lt;p&gt;&lt;code&gt;username:password&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;<a name="line.49"></a>
+<FONT color="green">050</FONT>     * &lt;li&gt;This token is then base 64 encoded.&lt;/li&gt;<a name="line.50"></a>
+<FONT color="green">051</FONT>     * &lt;li&gt;The client then sends another request for the same resource with the following header:&lt;br/&gt;<a name="line.51"></a>
+<FONT color="green">052</FONT>     * &lt;p&gt;&lt;code&gt;Authorization: Basic &lt;em&gt;Base64_encoded_username_and_password&lt;/em&gt;&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;<a name="line.52"></a>
+<FONT color="green">053</FONT>     * &lt;/ol&gt;<a name="line.53"></a>
+<FONT color="green">054</FONT>     * The {@link #onAccessDenied(javax.servlet.ServletRequest, javax.servlet.ServletResponse)} method will<a name="line.54"></a>
+<FONT color="green">055</FONT>     * only be called if the subject making the request is not<a name="line.55"></a>
+<FONT color="green">056</FONT>     * {@link org.apache.shiro.subject.Subject#isAuthenticated() authenticated}<a name="line.56"></a>
+<FONT color="green">057</FONT>     *<a name="line.57"></a>
+<FONT color="green">058</FONT>     * @see &lt;a href="ftp://ftp.isi.edu/in-notes/rfc2617.txt"&gt;RFC 2617&lt;/a&gt;<a name="line.58"></a>
+<FONT color="green">059</FONT>     * @see &lt;a href="http://en.wikipedia.org/wiki/Basic_access_authentication"&gt;Basic Access Authentication&lt;/a&gt;<a name="line.59"></a>
+<FONT color="green">060</FONT>     * @since 0.9<a name="line.60"></a>
+<FONT color="green">061</FONT>     */<a name="line.61"></a>
+<FONT color="green">062</FONT>    public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {<a name="line.62"></a>
+<FONT color="green">063</FONT>    <a name="line.63"></a>
+<FONT color="green">064</FONT>        /**<a name="line.64"></a>
+<FONT color="green">065</FONT>         * This class's private logger.<a name="line.65"></a>
+<FONT color="green">066</FONT>         */<a name="line.66"></a>
+<FONT color="green">067</FONT>        private static final Logger log = LoggerFactory.getLogger(BasicHttpAuthenticationFilter.class);<a name="line.67"></a>
+<FONT color="green">068</FONT>    <a name="line.68"></a>
+<FONT color="green">069</FONT>        /**<a name="line.69"></a>
+<FONT color="green">070</FONT>         * HTTP Authorization header, equal to &lt;code&gt;Authorization&lt;/code&gt;<a name="line.70"></a>
+<FONT color="green">071</FONT>         */<a name="line.71"></a>
+<FONT color="green">072</FONT>        protected static final String AUTHORIZATION_HEADER = "Authorization";<a name="line.72"></a>
+<FONT color="green">073</FONT>    <a name="line.73"></a>
+<FONT color="green">074</FONT>        /**<a name="line.74"></a>
+<FONT color="green">075</FONT>         * HTTP Authentication header, equal to &lt;code&gt;WWW-Authenticate&lt;/code&gt;<a name="line.75"></a>
+<FONT color="green">076</FONT>         */<a name="line.76"></a>
+<FONT color="green">077</FONT>        protected static final String AUTHENTICATE_HEADER = "WWW-Authenticate";<a name="line.77"></a>
+<FONT color="green">078</FONT>    <a name="line.78"></a>
+<FONT color="green">079</FONT>        /**<a name="line.79"></a>
+<FONT color="green">080</FONT>         * The name that is displayed during the challenge process of authentication, defauls to &lt;code&gt;application&lt;/code&gt;<a name="line.80"></a>
+<FONT color="green">081</FONT>         * and can be overridden by the {@link #setApplicationName(String) setApplicationName} method.<a name="line.81"></a>
+<FONT color="green">082</FONT>         */<a name="line.82"></a>
+<FONT color="green">083</FONT>        private String applicationName = "application";<a name="line.83"></a>
+<FONT color="green">084</FONT>    <a name="line.84"></a>
+<FONT color="green">085</FONT>        /**<a name="line.85"></a>
+<FONT color="green">086</FONT>         * The authcScheme to look for in the &lt;code&gt;Authorization&lt;/code&gt; header, defaults to &lt;code&gt;BASIC&lt;/code&gt;<a name="line.86"></a>
+<FONT color="green">087</FONT>         */<a name="line.87"></a>
+<FONT color="green">088</FONT>        private String authcScheme = HttpServletRequest.BASIC_AUTH;<a name="line.88"></a>
+<FONT color="green">089</FONT>    <a name="line.89"></a>
+<FONT color="green">090</FONT>        /**<a name="line.90"></a>
+<FONT color="green">091</FONT>         * The authzScheme value to look for in the &lt;code&gt;Authorization&lt;/code&gt; header, defaults to &lt;code&gt;BASIC&lt;/code&gt;<a name="line.91"></a>
+<FONT color="green">092</FONT>         */<a name="line.92"></a>
+<FONT color="green">093</FONT>        private String authzScheme = HttpServletRequest.BASIC_AUTH;<a name="line.93"></a>
+<FONT color="green">094</FONT>    <a name="line.94"></a>
+<FONT color="green">095</FONT>        /**<a name="line.95"></a>
+<FONT color="green">096</FONT>         * Returns the name to use in the ServletResponse's &lt;b&gt;&lt;code&gt;WWW-Authenticate&lt;/code&gt;&lt;/b&gt; header.<a name="line.96"></a>
+<FONT color="green">097</FONT>         * &lt;p/&gt;<a name="line.97"></a>
+<FONT color="green">098</FONT>         * Per RFC 2617, this name name is displayed to the end user when they are asked to authenticate.  Unless overridden<a name="line.98"></a>
+<FONT color="green">099</FONT>         * by the {@link #setApplicationName(String) setApplicationName(String)} method, the default value is 'application'.<a name="line.99"></a>
+<FONT color="green">100</FONT>         * &lt;p/&gt;<a name="line.100"></a>
+<FONT color="green">101</FONT>         * Please see {@link #setApplicationName(String) setApplicationName(String)} for an example of how this functions.<a name="line.101"></a>
+<FONT color="green">102</FONT>         *<a name="line.102"></a>
+<FONT color="green">103</FONT>         * @return the name to use in the ServletResponse's 'WWW-Authenticate' header.<a name="line.103"></a>
+<FONT color="green">104</FONT>         */<a name="line.104"></a>
+<FONT color="green">105</FONT>        public String getApplicationName() {<a name="line.105"></a>
+<FONT color="green">106</FONT>            return applicationName;<a name="line.106"></a>
+<FONT color="green">107</FONT>        }<a name="line.107"></a>
+<FONT color="green">108</FONT>    <a name="line.108"></a>
+<FONT color="green">109</FONT>        /**<a name="line.109"></a>
+<FONT color="green">110</FONT>         * Sets the name to use in the ServletResponse's &lt;b&gt;&lt;code&gt;WWW-Authenticate&lt;/code&gt;&lt;/b&gt; header.<a name="line.110"></a>
+<FONT color="green">111</FONT>         * &lt;p/&gt;<a name="line.111"></a>
+<FONT color="green">112</FONT>         * Per RFC 2617, this name name is displayed to the end user when they are asked to authenticate.  Unless overridden<a name="line.112"></a>
+<FONT color="green">113</FONT>         * by this method, the default value is &amp;quot;application&amp;quot;<a name="line.113"></a>
+<FONT color="green">114</FONT>         * &lt;p/&gt;<a name="line.114"></a>
+<FONT color="green">115</FONT>         * For example, setting this property to the value &lt;b&gt;&lt;code&gt;Awesome Webapp&lt;/code&gt;&lt;/b&gt; will result in the<a name="line.115"></a>
+<FONT color="green">116</FONT>         * following header:<a name="line.116"></a>
+<FONT color="green">117</FONT>         * &lt;p/&gt;<a name="line.117"></a>
+<FONT color="green">118</FONT>         * &lt;code&gt;WWW-Authenticate: Basic realm=&amp;quot;&lt;b&gt;Awesome Webapp&lt;/b&gt;&amp;quot;&lt;/code&gt;<a name="line.118"></a>
+<FONT color="green">119</FONT>         * &lt;p/&gt;<a name="line.119"></a>
+<FONT color="green">120</FONT>         * Side note: As you can see from the header text, the HTTP Basic specification calls<a name="line.120"></a>
+<FONT color="green">121</FONT>         * this the authentication 'realm', but we call this the 'applicationName' instead to avoid confusion with<a name="line.121"></a>
+<FONT color="green">122</FONT>         * Shiro's Realm constructs.<a name="line.122"></a>
+<FONT color="green">123</FONT>         *<a name="line.123"></a>
+<FONT color="green">124</FONT>         * @param applicationName the name to use in the ServletResponse's 'WWW-Authenticate' header.<a name="line.124"></a>
+<FONT color="green">125</FONT>         */<a name="line.125"></a>
+<FONT color="green">126</FONT>        public void setApplicationName(String applicationName) {<a name="line.126"></a>
+<FONT color="green">127</FONT>            this.applicationName = applicationName;<a name="line.127"></a>
+<FONT color="green">128</FONT>        }<a name="line.128"></a>
+<FONT color="green">129</FONT>    <a name="line.129"></a>
+<FONT color="green">130</FONT>        /**<a name="line.130"></a>
+<FONT color="green">131</FONT>         * Returns the HTTP &lt;b&gt;&lt;code&gt;Authorization&lt;/code&gt;&lt;/b&gt; header value that this filter will respond to as indicating<a name="line.131"></a>
+<FONT color="green">132</FONT>         * a login request.<a name="line.132"></a>
+<FONT color="green">133</FONT>         * &lt;p/&gt;<a name="line.133"></a>
+<FONT color="green">134</FONT>         * Unless overridden by the {@link #setAuthzScheme(String) setAuthzScheme(String)} method, the<a name="line.134"></a>
+<FONT color="green">135</FONT>         * default value is &lt;code&gt;BASIC&lt;/code&gt;.<a name="line.135"></a>
+<FONT color="green">136</FONT>         *<a name="line.136"></a>
+<FONT color="green">137</FONT>         * @return the Http 'Authorization' header value that this filter will respond to as indicating a login request<a name="line.137"></a>
+<FONT color="green">138</FONT>         */<a name="line.138"></a>
+<FONT color="green">139</FONT>        public String getAuthzScheme() {<a name="line.139"></a>
+<FONT color="green">140</FONT>            return authzScheme;<a name="line.140"></a>
+<FONT color="green">141</FONT>        }<a name="line.141"></a>
+<FONT color="green">142</FONT>    <a name="line.142"></a>
+<FONT color="green">143</FONT>        /**<a name="line.143"></a>
+<FONT color="green">144</FONT>         * Sets the HTTP &lt;b&gt;&lt;code&gt;Authorization&lt;/code&gt;&lt;/b&gt; header value that this filter will respond to as indicating a<a name="line.144"></a>
+<FONT color="green">145</FONT>         * login request.<a name="line.145"></a>
+<FONT color="green">146</FONT>         * &lt;p/&gt;<a name="line.146"></a>
+<FONT color="green">147</FONT>         * Unless overridden by this method, the default value is &lt;code&gt;BASIC&lt;/code&gt;<a name="line.147"></a>
+<FONT color="green">148</FONT>         *<a name="line.148"></a>
+<FONT color="green">149</FONT>         * @param authzScheme the HTTP &lt;code&gt;Authorization&lt;/code&gt; header value that this filter will respond to as<a name="line.149"></a>
+<FONT color="green">150</FONT>         *                    indicating a login request.<a name="line.150"></a>
+<FONT color="green">151</FONT>         */<a name="line.151"></a>
+<FONT color="green">152</FONT>        public void setAuthzScheme(String authzScheme) {<a name="line.152"></a>
+<FONT color="green">153</FONT>            this.authzScheme = authzScheme;<a name="line.153"></a>
+<FONT color="green">154</FONT>        }<a name="line.154"></a>
+<FONT color="green">155</FONT>    <a name="line.155"></a>
+<FONT color="green">156</FONT>        /**<a name="line.156"></a>
+<FONT color="green">157</FONT>         * Returns the HTTP &lt;b&gt;&lt;code&gt;WWW-Authenticate&lt;/code&gt;&lt;/b&gt; header scheme that this filter will use when sending<a name="line.157"></a>
+<FONT color="green">158</FONT>         * the HTTP Basic challenge response.  The default value is &lt;code&gt;BASIC&lt;/code&gt;.<a name="line.158"></a>
+<FONT color="green">159</FONT>         *<a name="line.159"></a>
+<FONT color="green">160</FONT>         * @return the HTTP &lt;code&gt;WWW-Authenticate&lt;/code&gt; header scheme that this filter will use when sending the HTTP<a name="line.160"></a>
+<FONT color="green">161</FONT>         *         Basic challenge response.<a name="line.161"></a>
+<FONT color="green">162</FONT>         * @see #sendChallenge<a name="line.162"></a>
+<FONT color="green">163</FONT>         */<a name="line.163"></a>
+<FONT color="green">164</FONT>        public String getAuthcScheme() {<a name="line.164"></a>
+<FONT color="green">165</FONT>            return authcScheme;<a name="line.165"></a>
+<FONT color="green">166</FONT>        }<a name="line.166"></a>
+<FONT color="green">167</FONT>    <a name="line.167"></a>
+<FONT color="green">168</FONT>        /**<a name="line.168"></a>
+<FONT color="green">169</FONT>         * Sets the HTTP &lt;b&gt;&lt;code&gt;WWW-Authenticate&lt;/code&gt;&lt;/b&gt; header scheme that this filter will use when sending the<a name="line.169"></a>
+<FONT color="green">170</FONT>         * HTTP Basic challenge response.  The default value is &lt;code&gt;BASIC&lt;/code&gt;.<a name="line.170"></a>
+<FONT color="green">171</FONT>         *<a name="line.171"></a>
+<FONT color="green">172</FONT>         * @param authcScheme the HTTP &lt;code&gt;WWW-Authenticate&lt;/code&gt; header scheme that this filter will use when<a name="line.172"></a>
+<FONT color="green">173</FONT>         *                    sending the Http Basic challenge response.<a name="line.173"></a>
+<FONT color="green">174</FONT>         * @see #sendChallenge<a name="line.174"></a>
+<FONT color="green">175</FONT>         */<a name="line.175"></a>
+<FONT color="green">176</FONT>        public void setAuthcScheme(String authcScheme) {<a name="line.176"></a>
+<FONT color="green">177</FONT>            this.authcScheme = authcScheme;<a name="line.177"></a>
+<FONT color="green">178</FONT>        }<a name="line.178"></a>
+<FONT color="green">179</FONT>    <a name="line.179"></a>
+<FONT color="green">180</FONT>        /**<a name="line.180"></a>
+<FONT color="green">181</FONT>         * Processes unauthenticated requests. It handles the two-stage request/challenge authentication protocol.<a name="line.181"></a>
+<FONT color="green">182</FONT>         *<a name="line.182"></a>
+<FONT color="green">183</FONT>         * @param request  incoming ServletRequest<a name="line.183"></a>
+<FONT color="green">184</FONT>         * @param response outgoing ServletResponse<a name="line.184"></a>
+<FONT color="green">185</FONT>         * @return true if the request should be processed; false if the request should not continue to be processed<a name="line.185"></a>
+<FONT color="green">186</FONT>         */<a name="line.186"></a>
+<FONT color="green">187</FONT>        protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {<a name="line.187"></a>
+<FONT color="green">188</FONT>            boolean loggedIn = false; //false by default or we wouldn't be in this method<a name="line.188"></a>
+<FONT color="green">189</FONT>            if (isLoginAttempt(request, response)) {<a name="line.189"></a>
+<FONT color="green">190</FONT>                loggedIn = executeLogin(request, response);<a name="line.190"></a>
+<FONT color="green">191</FONT>            }<a name="line.191"></a>
+<FONT color="green">192</FONT>            if (!loggedIn) {<a name="line.192"></a>
+<FONT color="green">193</FONT>                sendChallenge(request, response);<a name="line.193"></a>
+<FONT color="green">194</FONT>            }<a name="line.194"></a>
+<FONT color="green">195</FONT>            return loggedIn;<a name="line.195"></a>
+<FONT color="green">196</FONT>        }<a name="line.196"></a>
+<FONT color="green">197</FONT>    <a name="line.197"></a>
+<FONT color="green">198</FONT>        /**<a name="line.198"></a>
+<FONT color="green">199</FONT>         * Determines whether the incoming request is an attempt to log in.<a name="line.199"></a>
+<FONT color="green">200</FONT>         * &lt;p/&gt;<a name="line.200"></a>
+<FONT color="green">201</FONT>         * The default implementation obtains the value of the request's<a name="line.201"></a>
+<FONT color="green">202</FONT>         * {@link #AUTHORIZATION_HEADER AUTHORIZATION_HEADER}, and if it is not &lt;code&gt;null&lt;/code&gt;, delegates<a name="line.202"></a>
+<FONT color="green">203</FONT>         * to {@link #isLoginAttempt(String) isLoginAttempt(authzHeaderValue)}. If the header is &lt;code&gt;null&lt;/code&gt;,<a name="line.203"></a>
+<FONT color="green">204</FONT>         * &lt;code&gt;false&lt;/code&gt; is returned.<a name="line.204"></a>
+<FONT color="green">205</FONT>         *<a name="line.205"></a>
+<FONT color="green">206</FONT>         * @param request  incoming ServletRequest<a name="line.206"></a>
+<FONT color="green">207</FONT>         * @param response outgoing ServletResponse<a name="line.207"></a>
+<FONT color="green">208</FONT>         * @return true if the incoming request is an attempt to log in based, false otherwise<a name="line.208"></a>
+<FONT color="green">209</FONT>         */<a name="line.209"></a>
+<FONT color="green">210</FONT>        protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {<a name="line.210"></a>
+<FONT color="green">211</FONT>            String authzHeader = getAuthzHeader(request);<a name="line.211"></a>
+<FONT color="green">212</FONT>            return authzHeader != null &amp;&amp; isLoginAttempt(authzHeader);<a name="line.212"></a>
+<FONT color="green">213</FONT>        }<a name="line.213"></a>
+<FONT color="green">214</FONT>    <a name="line.214"></a>
+<FONT color="green">215</FONT>        /**<a name="line.215"></a>
+<FONT color="green">216</FONT>         * Delegates to {@link #isLoginAttempt(javax.servlet.ServletRequest, javax.servlet.ServletResponse) isLoginAttempt}.<a name="line.216"></a>
+<FONT color="green">217</FONT>         */<a name="line.217"></a>
+<FONT color="green">218</FONT>        @Override<a name="line.218"></a>
+<FONT color="green">219</FONT>        protected final boolean isLoginRequest(ServletRequest request, ServletResponse response) {<a name="line.219"></a>
+<FONT color="green">220</FONT>            return this.isLoginAttempt(request, response);<a name="line.220"></a>
+<FONT color="green">221</FONT>        }<a name="line.221"></a>
+<FONT color="green">222</FONT>    <a name="line.222"></a>
+<FONT color="green">223</FONT>        /**<a name="line.223"></a>
+<FONT color="green">224</FONT>         * Returns the {@link #AUTHORIZATION_HEADER AUTHORIZATION_HEADER} from the specified ServletRequest.<a name="line.224"></a>
+<FONT color="green">225</FONT>         * &lt;p/&gt;<a name="line.225"></a>
+<FONT color="green">226</FONT>         * This implementation merely casts the request to an &lt;code&gt;HttpServletRequest&lt;/code&gt; and returns the header:<a name="line.226"></a>
+<FONT color="green">227</FONT>         * &lt;p/&gt;<a name="line.227"></a>
+<FONT color="green">228</FONT>         * &lt;code&gt;HttpServletRequest httpRequest = {@link WebUtils#toHttp(javax.servlet.ServletRequest) toHttp(reaquest)};&lt;br/&gt;<a name="line.228"></a>
+<FONT color="green">229</FONT>         * return httpRequest.getHeader({@link #AUTHORIZATION_HEADER AUTHORIZATION_HEADER});&lt;/code&gt;<a name="line.229"></a>
+<FONT color="green">230</FONT>         *<a name="line.230"></a>
+<FONT color="green">231</FONT>         * @param request the incoming &lt;code&gt;ServletRequest&lt;/code&gt;<a name="line.231"></a>
+<FONT color="green">232</FONT>         * @return the &lt;code&gt;Authorization&lt;/code&gt; header's value.<a name="line.232"></a>
+<FONT color="green">233</FONT>         */<a name="line.233"></a>
+<FONT color="green">234</FONT>        protected String getAuthzHeader(ServletRequest request) {<a name="line.234"></a>
+<FONT color="green">235</FONT>            HttpServletRequest httpRequest = WebUtils.toHttp(request);<a name="line.235"></a>
+<FONT color="green">236</FONT>            return httpRequest.getHeader(AUTHORIZATION_HEADER);<a name="line.236"></a>
+<FONT color="green">237</FONT>        }<a name="line.237"></a>
+<FONT color="green">238</FONT>    <a name="line.238"></a>
+<FONT color="green">239</FONT>        /**<a name="line.239"></a>
+<FONT color="green">240</FONT>         * Default implementation that returns &lt;code&gt;true&lt;/code&gt; if the specified &lt;code&gt;authzHeader&lt;/code&gt;<a name="line.240"></a>
+<FONT color="green">241</FONT>         * starts with the same (case-insensitive) characters specified by the<a name="line.241"></a>
+<FONT color="green">242</FONT>         * {@link #getAuthzScheme() authzScheme}, &lt;code&gt;false&lt;/code&gt; otherwise.<a name="line.242"></a>
+<FONT color="green">243</FONT>         * &lt;p/&gt;<a name="line.243"></a>
+<FONT color="green">244</FONT>         * That is:<a name="line.244"></a>
+<FONT color="green">245</FONT>         * &lt;p/&gt;<a name="line.245"></a>
+<FONT color="green">246</FONT>         * &lt;code&gt;String authzScheme = getAuthzScheme().toLowerCase();&lt;br/&gt;<a name="line.246"></a>
+<FONT color="green">247</FONT>         * return authzHeader.toLowerCase().startsWith(authzScheme);&lt;/code&gt;<a name="line.247"></a>
+<FONT color="green">248</FONT>         *<a name="line.248"></a>
+<FONT color="green">249</FONT>         * @param authzHeader the 'Authorization' header value (guaranteed to be non-null if the<a name="line.249"></a>
+<FONT color="green">250</FONT>         *                    {@link #isLoginAttempt(javax.servlet.ServletRequest, javax.servlet.ServletResponse)} method is not overriden).<a name="line.250"></a>
+<FONT color="green">251</FONT>         * @return &lt;code&gt;true&lt;/code&gt; if the authzHeader value matches that configured as defined by<a name="line.251"></a>
+<FONT color="green">252</FONT>         *         the {@link #getAuthzScheme() authzScheme}.<a name="line.252"></a>
+<FONT color="green">253</FONT>         */<a name="line.253"></a>
+<FONT color="green">254</FONT>        protected boolean isLoginAttempt(String authzHeader) {<a name="line.254"></a>
+<FONT color="green">255</FONT>            //SHIRO-415: use English Locale:<a name="line.255"></a>
+<FONT color="green">256</FONT>            String authzScheme = getAuthzScheme().toLowerCase(Locale.ENGLISH);<a name="line.256"></a>
+<FONT color="green">257</FONT>            return authzHeader.toLowerCase(Locale.ENGLISH).startsWith(authzScheme);<a name="line.257"></a>
+<FONT color="green">258</FONT>        }<a name="line.258"></a>
+<FONT color="green">259</FONT>    <a name="line.259"></a>
+<FONT color="green">260</FONT>        /**<a name="line.260"></a>
+<FONT color="green">261</FONT>         * Builds the challenge for authorization by setting a HTTP &lt;code&gt;401&lt;/code&gt; (Unauthorized) status as well as the<a name="line.261"></a>
+<FONT color="green">262</FONT>         * response's {@link #AUTHENTICATE_HEADER AUTHENTICATE_HEADER}.<a name="line.262"></a>
+<FONT color="green">263</FONT>         * &lt;p/&gt;<a name="line.263"></a>
+<FONT color="green">264</FONT>         * The header value constructed is equal to:<a name="line.264"></a>
+<FONT color="green">265</FONT>         * &lt;p/&gt;<a name="line.265"></a>
+<FONT color="green">266</FONT>         * &lt;code&gt;{@link #getAuthcScheme() getAuthcScheme()} + " realm=\"" + {@link #getApplicationName() getApplicationName()} + "\"";&lt;/code&gt;<a name="line.266"></a>
+<FONT color="green">267</FONT>         *<a name="line.267"></a>
+<FONT color="green">268</FONT>         * @param request  incoming ServletRequest, ignored by this implementation<a name="line.268"></a>
+<FONT color="green">269</FONT>         * @param response outgoing ServletResponse<a name="line.269"></a>
+<FONT color="green">270</FONT>         * @return false - this sends the challenge to be sent back<a name="line.270"></a>
+<FONT color="green">271</FONT>         */<a name="line.271"></a>
+<FONT color="green">272</FONT>        protected boolean sendChallenge(ServletRequest request, ServletResponse response) {<a name="line.272"></a>
+<FONT color="green">273</FONT>            if (log.isDebugEnabled()) {<a name="line.273"></a>
+<FONT color="green">274</FONT>                log.debug("Authentication required: sending 401 Authentication challenge response.");<a name="line.274"></a>
+<FONT color="green">275</FONT>            }<a name="line.275"></a>
+<FONT color="green">276</FONT>            HttpServletResponse httpResponse = WebUtils.toHttp(response);<a name="line.276"></a>
+<FONT color="green">277</FONT>            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);<a name="line.277"></a>
+<FONT color="green">278</FONT>            String authcHeader = getAuthcScheme() + " realm=\"" + getApplicationName() + "\"";<a name="line.278"></a>
+<FONT color="green">279</FONT>            httpResponse.setHeader(AUTHENTICATE_HEADER, authcHeader);<a name="line.279"></a>
+<FONT color="green">280</FONT>            return false;<a name="line.280"></a>
+<FONT color="green">281</FONT>        }<a name="line.281"></a>
+<FONT color="green">282</FONT>    <a name="line.282"></a>
+<FONT color="green">283</FONT>        /**<a name="line.283"></a>
+<FONT color="green">284</FONT>         * Creates an AuthenticationToken for use during login attempt with the provided credentials in the http header.<a name="line.284"></a>
+<FONT color="green">285</FONT>         * &lt;p/&gt;<a name="line.285"></a>
+<FONT color="green">286</FONT>         * This implementation:<a name="line.286"></a>
+<FONT color="green">287</FONT>         * &lt;ol&gt;&lt;li&gt;acquires the username and password based on the request's<a name="line.287"></a>
+<FONT color="green">288</FONT>         * {@link #getAuthzHeader(javax.servlet.ServletRequest) authorization header} via the<a name="line.288"></a>
+<FONT color="green">289</FONT>         * {@link #getPrincipalsAndCredentials(String, javax.servlet.ServletRequest) getPrincipalsAndCredentials} method&lt;/li&gt;<a name="line.289"></a>
+<FONT color="green">290</FONT>         * &lt;li&gt;The return value of that method is converted to an &lt;code&gt;AuthenticationToken&lt;/code&gt; via the<a name="line.290"></a>
+<FONT color="green">291</FONT>         * {@link #createToken(String, String, javax.servlet.ServletRequest, javax.servlet.ServletResponse) createToken} method&lt;/li&gt;<a name="line.291"></a>
+<FONT color="green">292</FONT>         * &lt;li&gt;The created &lt;code&gt;AuthenticationToken&lt;/code&gt; is returned.&lt;/li&gt;<a name="line.292"></a>
+<FONT color="green">293</FONT>         * &lt;/ol&gt;<a name="line.293"></a>
+<FONT color="green">294</FONT>         *<a name="line.294"></a>
+<FONT color="green">295</FONT>         * @param request  incoming ServletRequest<a name="line.295"></a>
+<FONT color="green">296</FONT>         * @param response outgoing ServletResponse<a name="line.296"></a>
+<FONT color="green">297</FONT>         * @return the AuthenticationToken used to execute the login attempt<a name="line.297"></a>
+<FONT color="green">298</FONT>         */<a name="line.298"></a>
+<FONT color="green">299</FONT>        protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) {<a name="line.299"></a>
+<FONT color="green">300</FONT>            String authorizationHeader = getAuthzHeader(request);<a name="line.300"></a>
+<FONT color="green">301</FONT>            if (authorizationHeader == null || authorizationHeader.length() == 0) {<a name="line.301"></a>
+<FONT color="green">302</FONT>                // Create an empty authentication token since there is no<a name="line.302"></a>
+<FONT color="green">303</FONT>                // Authorization header.<a name="line.303"></a>
+<FONT color="green">304</FONT>                return createToken("", "", request, response);<a name="line.304"></a>
+<FONT color="green">305</FONT>            }<a name="line.305"></a>
+<FONT color="green">306</FONT>    <a name="line.306"></a>
+<FONT color="green">307</FONT>            if (log.isDebugEnabled()) {<a name="line.307"></a>
+<FONT color="green">308</FONT>                log.debug("Attempting to execute login with headers [" + authorizationHeader + "]");<a name="line.308"></a>
+<FONT color="green">309</FONT>            }<a name="line.309"></a>
+<FONT color="green">310</FONT>    <a name="line.310"></a>
+<FONT color="green">311</FONT>            String[] prinCred = getPrincipalsAndCredentials(authorizationHeader, request);<a name="line.311"></a>
+<FONT color="green">312</FONT>            if (prinCred == null || prinCred.length &lt; 2) {<a name="line.312"></a>
+<FONT color="green">313</FONT>                // Create an authentication token with an empty password,<a name="line.313"></a>
+<FONT color="green">314</FONT>                // since one hasn't been provided in the request.<a name="line.314"></a>
+<FONT color="green">315</FONT>                String username = prinCred == null || prinCred.length == 0 ? "" : prinCred[0];<a name="line.315"></a>
+<FONT color="green">316</FONT>                return createToken(username, "", request, response);<a name="line.316"></a>
+<FONT color="green">317</FONT>            }<a name="line.317"></a>
+<FONT color="green">318</FONT>    <a name="line.318"></a>
+<FONT color="green">319</FONT>            String username = prinCred[0];<a name="line.319"></a>
+<FONT color="green">320</FONT>            String password = prinCred[1];<a name="line.320"></a>
+<FONT color="green">321</FONT>    <a name="line.321"></a>
+<FONT color="green">322</FONT>            return createToken(username, password, request, response);<a name="line.322"></a>
+<FONT color="green">323</FONT>        }<a name="line.323"></a>
+<FONT color="green">324</FONT>    <a name="line.324"></a>
+<FONT color="green">325</FONT>        /**<a name="line.325"></a>
+<FONT color="green">326</FONT>         * Returns the username obtained from the<a name="line.326"></a>
+<FONT color="green">327</FONT>         * {@link #getAuthzHeader(javax.servlet.ServletRequest) authorizationHeader}.<a name="line.327"></a>
+<FONT color="green">328</FONT>         * &lt;p/&gt;<a name="line.328"></a>
+<FONT color="green">329</FONT>         * Once the {@code authzHeader} is split per the RFC (based on the space character ' '), the resulting split tokens<a name="line.329"></a>
+<FONT color="green">330</FONT>         * are translated into the username/password pair by the<a name="line.330"></a>
+<FONT color="green">331</FONT>         * {@link #getPrincipalsAndCredentials(String, String) getPrincipalsAndCredentials(scheme,encoded)} method.<a name="line.331"></a>
+<FONT color="green">332</FONT>         *<a name="line.332"></a>
+<FONT color="green">333</FONT>         * @param authorizationHeader the authorization header obtained from the request.<a name="line.333"></a>
+<FONT color="green">334</FONT>         * @param request             the incoming ServletRequest<a name="line.334"></a>
+<FONT color="green">335</FONT>         * @return the username (index 0)/password pair (index 1) submitted by the user for the given header value and request.<a name="line.335"></a>
+<FONT color="green">336</FONT>         * @see #getAuthzHeader(javax.servlet.ServletRequest)<a name="line.336"></a>
+<FONT color="green">337</FONT>         */<a name="line.337"></a>
+<FONT color="green">338</FONT>        protected String[] getPrincipalsAndCredentials(String authorizationHeader, ServletRequest request) {<a name="line.338"></a>
+<FONT color="green">339</FONT>            if (authorizationHeader == null) {<a name="line.339"></a>
+<FONT color="green">340</FONT>                return null;<a name="line.340"></a>
+<FONT color="green">341</FONT>            }<a name="line.341"></a>
+<FONT color="green">342</FONT>            String[] authTokens = authorizationHeader.split(" ");<a name="line.342"></a>
+<FONT color="green">343</FONT>            if (authTokens == null || authTokens.length &lt; 2) {<a name="line.343"></a>
+<FONT color="green">344</FONT>                return null;<a name="line.344"></a>
+<FONT color="green">345</FONT>            }<a name="line.345"></a>
+<FONT color="green">346</FONT>            return getPrincipalsAndCredentials(authTokens[0], authTokens[1]);<a name="line.346"></a>
+<FONT color="green">347</FONT>        }<a name="line.347"></a>
+<FONT color="green">348</FONT>    <a name="line.348"></a>
+<FONT color="green">349</FONT>        /**<a name="line.349"></a>
+<FONT color="green">350</FONT>         * Returns the username and password pair based on the specified &lt;code&gt;encoded&lt;/code&gt; String obtained from<a name="line.350"></a>
+<FONT color="green">351</FONT>         * the request's authorization header.<a name="line.351"></a>
+<FONT color="green">352</FONT>         * &lt;p/&gt;<a name="line.352"></a>
+<FONT color="green">353</FONT>         * Per RFC 2617, the default implementation first Base64 decodes the string and then splits the resulting decoded<a name="line.353"></a>
+<FONT color="green">354</FONT>         * string into two based on the ":" character.  That is:<a name="line.354"></a>
+<FONT color="green">355</FONT>         * &lt;p/&gt;<a name="line.355"></a>
+<FONT color="green">356</FONT>         * &lt;code&gt;String decoded = Base64.decodeToString(encoded);&lt;br/&gt;<a name="line.356"></a>
+<FONT color="green">357</FONT>         * return decoded.split(":");&lt;/code&gt;<a name="line.357"></a>
+<FONT color="green">358</FONT>         *<a name="line.358"></a>
+<FONT color="green">359</FONT>         * @param scheme  the {@link #getAuthcScheme() authcScheme} found in the request<a name="line.359"></a>
+<FONT color="green">360</FONT>         *                {@link #getAuthzHeader(javax.servlet.ServletRequest) authzHeader}.  It is ignored by this implementation,<a name="line.360"></a>
+<FONT color="green">361</FONT>         *                but available to overriding implementations should they find it useful.<a name="line.361"></a>
+<FONT color="green">362</FONT>         * @param encoded the Base64-encoded username:password value found after the scheme in the header<a name="line.362"></a>
+<FONT color="green">363</FONT>         * @return the username (index 0)/password (index 1) pair obtained from the encoded header data.<a name="line.363"></a>
+<FONT color="green">364</FONT>         */<a name="line.364"></a>
+<FONT color="green">365</FONT>        protected String[] getPrincipalsAndCredentials(String scheme, String encoded) {<a name="line.365"></a>
+<FONT color="green">366</FONT>            String decoded = Base64.decodeToString(encoded);<a name="line.366"></a>
+<FONT color="green">367</FONT>            return decoded.split(":", 2);<a name="line.367"></a>
+<FONT color="green">368</FONT>        }<a name="line.368"></a>
+<FONT color="green">369</FONT>    }<a name="line.369"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

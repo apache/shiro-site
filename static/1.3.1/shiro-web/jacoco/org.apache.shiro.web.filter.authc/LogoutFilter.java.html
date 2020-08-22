@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LogoutFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Shiro :: Web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.filter.authc</a> &gt; <span class="el_source">LogoutFilter.java</span></div><h1>LogoutFilter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.filter.authc;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.SessionException;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.servlet.AdviceFilter;
+import org.apache.shiro.web.util.WebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
+/**
+ * Simple Filter that, upon receiving a request, will immediately log-out the currently executing
+ * {@link #getSubject(javax.servlet.ServletRequest, javax.servlet.ServletResponse) subject}
+ * and then redirect them to a configured {@link #getRedirectUrl() redirectUrl}.
+ *
+ * @since 1.2
+ */
+<span class="fc" id="L39">public class LogoutFilter extends AdviceFilter {</span>
+    
+<span class="fc" id="L41">    private static final Logger log = LoggerFactory.getLogger(LogoutFilter.class);</span>
+
+    /**
+     * The default redirect URL to where the user will be redirected after logout.  The value is {@code &quot;/&quot;}, Shiro's
+     * representation of the web application's context root.
+     */
+    public static final String DEFAULT_REDIRECT_URL = &quot;/&quot;;
+
+    /**
+     * The URL to where the user will be redirected after logout.
+     */
+<span class="fc" id="L52">    private String redirectUrl = DEFAULT_REDIRECT_URL;</span>
+
+    /**
+     * Acquires the currently executing {@link #getSubject(javax.servlet.ServletRequest, javax.servlet.ServletResponse) subject},
+     * a potentially Subject or request-specific
+     * {@link #getRedirectUrl(javax.servlet.ServletRequest, javax.servlet.ServletResponse, org.apache.shiro.subject.Subject) redirectUrl},
+     * and redirects the end-user to that redirect url.
+     *
+     * @param request  the incoming ServletRequest
+     * @param response the outgoing ServletResponse
+     * @return {@code false} always as typically no further interaction should be done after user logout.
+     * @throws Exception if there is any error.
+     */
+    @Override
+    protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
+<span class="nc" id="L67">        Subject subject = getSubject(request, response);</span>
+<span class="nc" id="L68">        String redirectUrl = getRedirectUrl(request, response, subject);</span>
+        //try/catch added for SHIRO-298:
+        try {
+<span class="nc" id="L71">            subject.logout();</span>
+<span class="nc" id="L72">        } catch (SessionException ise) {</span>
+<span class="nc" id="L73">            log.debug(&quot;Encountered session exception during logout.  This can generally safely be ignored.&quot;, ise);</span>
+<span class="nc" id="L74">        }</span>
+<span class="nc" id="L75">        issueRedirect(request, response, redirectUrl);</span>
+<span class="nc" id="L76">        return false;</span>
+    }
+
+    /**
+     * Returns the currently executing {@link Subject}.  This implementation merely defaults to calling
+     * {@code SecurityUtils.}{@link org.apache.shiro.SecurityUtils#getSubject() getSubject()}, but can be overridden
+     * by subclasses for different retrieval strategies.
+     *
+     * @param request  the incoming Servlet request
+     * @param response the outgoing Servlet response
+     * @return the currently executing {@link Subject}.
+     */
+    protected Subject getSubject(ServletRequest request, ServletResponse response) {
+<span class="nc" id="L89">        return SecurityUtils.getSubject();</span>
+    }
+
+    /**
+     * Issues an HTTP redirect to the specified URL after subject logout.  This implementation simply calls
+     * {@code WebUtils.}{@link WebUtils#issueRedirect(javax.servlet.ServletRequest, javax.servlet.ServletResponse, String) issueRedirect(request,response,redirectUrl)}.
+     *
+     * @param request  the incoming Servlet request
+     * @param response the outgoing Servlet response
+     * @param redirectUrl the URL to where the browser will be redirected immediately after Subject logout.
+     * @throws Exception if there is any error.
+     */
+    protected void issueRedirect(ServletRequest request, ServletResponse response, String redirectUrl) throws Exception {
+<span class="nc" id="L102">        WebUtils.issueRedirect(request, response, redirectUrl);</span>
+<span class="nc" id="L103">    }</span>
+
+    /**
+     * Returns the redirect URL to send the user after logout.  This default implementation ignores the arguments and
+     * returns the static configured {@link #getRedirectUrl() redirectUrl} property, but this method may be overridden
+     * by subclasses to dynamically construct the URL based on the request or subject if necessary.
+     * &lt;p/&gt;
+     * Note: the Subject is &lt;em&gt;not&lt;/em&gt; yet logged out at the time this method is invoked.  You may access the Subject's
+     * session if one is available and if necessary.
+     * &lt;p/&gt;
+     * Tip: if you need to access the Subject's session, consider using the
+     * {@code Subject.}{@link Subject#getSession(boolean) getSession(false)} method to ensure a new session isn't created unnecessarily.
+     * If a session would be created, it will be immediately stopped after logout, not providing any value and
+     * unnecessarily taxing session infrastructure/resources.
+     *
+     * @param request the incoming Servlet request
+     * @param response the outgoing ServletResponse
+     * @param subject the not-yet-logged-out currently executing Subject
+     * @return the redirect URL to send the user after logout.
+     */
+    protected String getRedirectUrl(ServletRequest request, ServletResponse response, Subject subject) {
+<span class="nc" id="L124">        return getRedirectUrl();</span>
+    }
+
+    /**
+     * Returns the URL to where the user will be redirected after logout.  Default is the web application's context
+     * root, i.e. {@code &quot;/&quot;}
+     *
+     * @return the URL to where the user will be redirected after logout.
+     */
+    public String getRedirectUrl() {
+<span class="nc" id="L134">        return redirectUrl;</span>
+    }
+
+    /**
+     * Sets the URL to where the user will be redirected after logout.  Default is the web application's context
+     * root, i.e. {@code &quot;/&quot;}
+     *
+     * @param redirectUrl the url to where the user will be redirected after logout
+     */
+    public void setRedirectUrl(String redirectUrl) {
+<span class="nc" id="L144">        this.redirectUrl = redirectUrl;</span>
+<span class="nc" id="L145">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

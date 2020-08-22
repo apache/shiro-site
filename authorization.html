@@ -1,0 +1,863 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-  2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="Apache Shiro is a powerful and easy-to-use Java security framework that performs authentication, authorization, cryptography, and session management.">
+    <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
+    <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
+    <meta name="y_key" content="e47896cd6bae4920">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+
+    <title>
+                    Apache Shiro | Simple. Java. Security.
+        </title>
+
+
+    <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+    <!-- site styles and  -->
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+    <script type="text/javascript" src="./assets/js/shiro-site.js"></script>
+
+    <!-- github ribbon -->
+    <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.css" />
+    <!--[if lt IE 9]>
+      <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.ie.css" />
+    <![endif]-->
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap-theme.min.css">
+    <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="./assets/css/bootstrap-social.css">
+
+    <!-- Google Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXX-Y', 'auto');
+    ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics -->
+
+
+
+    <!-- syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css" integrity="sha256-Zd1icfZ72UBmsId/mUcagrmN7IN5Qkrvh75ICHIQVTk=" crossorigin="anonymous" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js" integrity="sha256-s63qpgPYoQk+wv3U6WZqioVJrwFNBTgD4dkeegLuwvo=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script type="text/javascript">
+
+        $( document ).ready(function() {
+            addPageEditLink();
+        });
+    </script>
+</head>
+
+<body>
+
+    <div id="top-bar"></div>
+
+    <div class="container" style="max-width: 1200px;">
+
+    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
+
+
+
+    <div class="masthead">
+        <p class="lead">
+            <a href="./index.html">
+                <img src="./assets/images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;">
+            </a>
+            <span class="tagline">Simple. Java. Security.</span>
+            <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+                <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png"/>
+            </a>
+        </p>
+    </div>
+
+
+
+    <nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="./get-started.html">Get Started</a></li>
+                <li><a href="./documentation.html">Docs</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Web Apps <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="./web.html">General</a></li>
+                        <li class="divider"></li>
+                        <li><a href="./web-features.html">Features</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Integrations <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="./spring.html">Spring</a></li>
+                        <li><a href="./guice.html">Guice</a></li>
+                        <li class="divider"></li>
+                        <li><a href="./integration.html">Third-Party Integrations</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="./features.html">Features</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Community <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="./forums.html">Community Forums</a></li>
+                        <li><a href="./mailing-lists.html">Mailing Lists</a></li>
+                        <li><a href="./articles.html">Articles</a></li>
+                        <li><a href="./news.html">News</a></li>
+                        <li><a href="./events.html">Events</a></li>
+                        <li class="divider"></li>
+                        <li><a href="./community.html">More</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        About <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="./about.html">About</a></li>
+                        <li><a href="./security-reports.html">Vulnerability Reports</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="http://www.apache.org/" class="dropdown-toggle" data-toggle="dropdown">
+                        Apache Software Foundation <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="http://www.apache.org/">Apache Homepage</a></li>
+                        <li><a href="http://www.apache.org/licenses/">License</a></li>
+                        <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                        <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                        <li><a href="http://www.apache.org/security/">Security</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+
+
+            <!-- Work around for table styling until, all pages are updated. -->
+<style>
+
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        border-color: #ccc;
+    }
+    th {
+        background-color: #f0f0f0
+    }
+    th, td {
+        padding: 8px;
+    }
+</style>
+<a name="Authorization-ApacheShiroAuthorization"></a>
+<h1><a href="#apache-shiro-authorization" name="apache-shiro-authorization">Apache Shiro Authorization</a></h1>
+<ul>
+  <li>
+    <p><a href="#Authorization-ElementsofAuthorization">Elements of Authorization</a></p>
+    <ul>
+      <li>
+        <p><a href="#Authorization-Permissions">Permissions</a></p>
+        <ul>
+          <li>
+          <p><a href="#Authorization-PermissionGranularity">Permission Granularity</a></p></li>
+        </ul>
+      </li>
+      <li>
+      <p><a href="#Authorization-Roles">Roles</a></p></li>
+      <li><a href="#Authorization-Users">Users</a></li>
+    </ul>
+  </li>
+  <li>
+    <p><a href="#Authorization-AuthorizingSubjects">Authorizing Subjects</a></p>
+    <ul>
+      <li>
+        <p><a href="#Authorization-ProgrammaticAuthorization">Programmatic Authorization</a></p>
+        <ul>
+          <li>
+            <p><a href="#Authorization-RoleBasedAuthorization">Role-Based Authorization</a></p>
+            <ul>
+              <li><a href="#Authorization-RoleChecks">Role Checks</a></li>
+              <li><a href="#Authorization-RoleAssertions">Role Assertions</a></li>
+            </ul>
+          </li>
+          <li>
+            <p><a href="#Authorization-PermissionBasedAuthorization">Permission-Based Authorization</a></p>
+            <ul>
+              <li>
+                <p><a href="#Authorization-PermissionChecks">Permission Checks</a></p>
+                <ul>
+                  <li><a href="#Authorization-ObjectbasedPermissionChecks">Object-based Permission Checks</a></li>
+                  <li><a href="#Authorization-Stringbasedpermissionchecks">String-based permission checks</a></li>
+                </ul>
+              </li>
+              <li>
+              <p><a href="#Authorization-PermissionAssertions">Permission Assertions</a></p></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p><a href="#Authorization-AnnotationbasedAuthorization">Annotation-based Authorization</a></p>
+        <ul>
+          <li><a href="#Authorization-Configuration">Configuration</a></li>
+          <li><a href="#Authorization-The%7B%7BRequiresAuthentication%7D%7Dannotation">The <code>RequiresAuthentication</code> annotation</a></li>
+          <li><a href="#Authorization-The%7B%7BRequiresGuest%7D%7Dannotation">The <code>RequiresGuest</code> annotation</a></li>
+          <li><a href="#Authorization-The%7B%7BRequiresPermissions%7D%7Dannotation">The <code>RequiresPermissions</code> annotation</a></li>
+          <li><a href="#Authorization-The%7B%7BRequiresRoles%7D%7Dpermission">The <code>RequiresRoles</code> permission</a></li>
+          <li><a href="#Authorization-The%7B%7BRequiresUser%7D%7Dannotation">The <code>RequiresUser</code> annotation</a></li>
+        </ul>
+      </li>
+      <li>
+      <p><a href="#Authorization-JSPTagLibAuthorization">JSP TagLib Authorization</a></p></li>
+    </ul>
+  </li>
+  <li>
+    <p><a href="#Authorization-AuthorizationSequence">Authorization Sequence</a></p>
+    <ul>
+      <li>
+        <p><a href="#Authorization-%7B%7BModularRealmAuthorizer%7D%7D"><code>ModularRealmAuthorizer</code></a></p>
+        <ul>
+          <li><a href="#Authorization-RealmAuthorizationOrder">Realm Authorization Order</a></li>
+          <li><a href="#Authorization-Configuringaglobal%7B%7BPermissionResolver%7D%7D">Configuring a global <code>PermissionResolver</code></a></li>
+          <li><a href="#Authorization-Configuringaglobal%7B%7BRolePermissionResolver%7D%7D">Configuring a global <code>RolePermissionResolver</code></a></li>
+        </ul>
+      </li>
+      <li>
+      <p><a href="#Authorization-CustomAuthorizer">Custom Authorizer</a></p></li>
+    </ul>
+  </li>
+</ul>
+<img style="margin:0px auto;display:block" src="assets/images/ShiroFeatures_Authorization.png"/>
+<p>Authorization, also known as <em>access control</em>, is the process of managing access to resources. In other words, controlling <em>who</em> has access to <em>what</em> in an application.</p>
+<p>Examples of authorization checks are: Is the user allowed to look at this webpage, edit this data, view this button, or print to this printer? Those are all decisions determining what a user has access to.</p>
+<a name="Authorization-ElementsofAuthorization"></a>
+<h2><a href="#elements-of-authorization" name="elements-of-authorization">Elements of Authorization</a></h2>
+<p>Authorization has three core elements that we reference quite a bit in Shiro: permissions, roles, and users.</p>
+<a name="Authorization-Permissions"></a>
+<h3><a href="#permissions" name="permissions">Permissions</a></h3>
+<p>Permissions in Apache Shiro represent the most atomic element of a security policy. They are fundamentally statements about behavior and represent explicitly what can be done in an application. A well-formed permission statement essentially describes resources and what actions are possible when a <code>Subject</code> interacts with those resources.</p>
+<p>Some examples of permission statements:</p>
+<ul>
+  <li>Open a file</li>
+  <li>View the &lsquo;/user/list&rsquo; web page</li>
+  <li>Print documents</li>
+  <li>Delete the &lsquo;jsmith&rsquo; user</li>
+</ul>
+<p>Most resources will support the typical CRUD (create, read, update, delete) actions, but any action that makes sense for a particular resource type is ok. The fundamental idea is that permission statements at a minimum are based on <em>Resources</em> and <em>Actions</em>.</p>
+<p>When looking at permissions, probably the most important thing to realize is that permission statements have no representation of <em>who</em> can perform the represented behavior. They are only statements of <em>what</em> can be done in an application.</p>
+<div class="alert alert-info">
+    <span class="glyphicon glyphicon-info-sign"></span> <strong>Permissions represent behavior only</strong>
+    <hr class="message-inner-separator">
+    <p>Permission statements reflect behavior (actions associated with resource types) <em>only</em>.  They do not reflect <em>who</em> is able to perform such behavior.</p>
+</div>
+<p>Defining <em>who</em> (users) is allowed to do <em>what</em> (permissions) is an exercise of assigning permissions to users in some way. This is always done by the application&rsquo;s data model and can vary greatly across applications.</p>
+<p>For example, permissions can be grouped in a Role and that Role could be associated with one or more User objects. Or some applications can have a Group of users and a Group can be assigned a Role, which by transitive association would mean that all the Users in that Group are implicitly granted the permissions in the Role.</p>
+<p>There are many variations for how permissions could be granted to users - the application determines how to model this based on the application requirements.</p>
+<p>We&rsquo;ll cover how Shiro determines if a <code>Subject</code> is permitted to do something or not later.</p>
+<a name="Authorization-PermissionGranularity"></a>
+<h4><a href="#permission-granularity" name="permission-granularity">Permission Granularity</a></h4>
+<p>The permission examples above all specify actions (open, read, delete, etc) on a resource type (door, file, customer, etc). In some cases, they even specify very fine-grained <em>instance-level</em> behavior - for example, &lsquo;delete&rsquo; (action) the &lsquo;user&rsquo; (resource type) with username &lsquo;jsmith&rsquo; (instance identifier). In Shiro, you have the ability to define exactly how granular those statements can be.</p>
+<p>We cover permission granularity and &lsquo;levels&rsquo; of permission statements in much more detail in Shiro&rsquo;s <a href="permissions.html" title="Permissions">Permissions Documentation</a>.</p>
+<a name="Authorization-Roles"></a>
+<h3><a href="#roles" name="roles">Roles</a></h3>
+<p>A Role is a named entity that typically represents a set of behaviors or responsibilities. Those behaviors translate to things you can or can&rsquo;t do with a software application. Roles are typically assigned to user accounts, so by association, users can &lsquo;do&rsquo; the things attributed to various roles.</p>
+<p>There are effectively two types of Roles, and Shiro supports both concepts:</p>
+<ul>
+  <li><strong>Implicit Roles</strong>: Most people use roles as an <em>implicit</em> construct: where your application <em>implies</em> a set of behaviors (i.e. permissions) based on a role name only. With implicit roles, there is nothing at the software level that says &ldquo;role X is allowed to perform behavior A, B and C&rdquo;. Behavior is implied by a name alone.</li>
+</ul>
+<div class="alert alert-warning">
+    <span class="glyphicon glyphicon-warning-sign"></span> <strong>Potentially Brittle Security</strong>
+    <hr class="message-inner-separator">
+    <p>While the simpler and most common approach, implicit roles potentially impose a lot of software maintenance and management problems.
+
+<p>For example, what if you just want to add or remove a role, or redefine a role's behavior later?  You'll have to go back into your source code and change all your role checks to reflect the change in your security model, every time such a change is required!  Not to mention the operational costs this would incur (re-test, go through QA, shut down the app, upgrade the software with the new role checks, restart the app, etc).</p>
+<p>This is probably ok for very simple applications (e.g. maybe there is an 'admin' role and 'everyone else').  But for more complicated or configurable applications, this can be a major major problem throughout the life of your application and drive a large maintenance cost for your software.</p></p>
+</div>
+<ul>
+  <li><strong>Explicit Roles</strong>: An explicit role however is essentially a named collection of actual permission statements. In this form, the application (and Shiro) knows <em>exactly</em> what it means to have a particular role or not. Because it is known the <em>exact</em> behavior that can be performed or not, there is no guessing or implying what a particular role can or can not do.</li>
+</ul>
+<p>The Shiro team advocates using permissions and explicit roles instead of the older implicit approach. You will have much greater control over your application&rsquo;s security experience.</p>
+<div class="alert alert-success">
+    <span class="glyphicon glyphicon-ok"></span> <strong>Resource-Based Access Control</strong>
+    <hr class="message-inner-separator">
+    <p>Be sure to read Les Hazlewood's article, <a class="external-link" href="https://stormpath.com/blog/new-rbac-resource-based-access-control" rel="nofollow">The New RBAC: Resource-Based Access Control</a>, which covers in-depth the benefits of using permissions and explicit roles (and their positive impact on source code) instead of the older implicit role approach.</p>
+</div>
+<a name="Authorization-Users"></a>
+<h3><a href="#users" name="users">Users</a></h3>
+<p>A user essentially is the &lsquo;who&rsquo; of an application. As we&rsquo;ve covered previously however, the <code>Subject</code> is really Shiro&rsquo;s &lsquo;User&rsquo; concept.</p>
+<p>Users (Subjects) are allowed to perform certain actions in your application through their association with roles or direct permissions. Your application&rsquo;s data model defines exactly how a <code>Subject</code> is allowed to do something or not.</p>
+<p>For example, in your data model, perhaps you have an actual <code>User</code> class and you assign permissions directly to <code>User</code> instances. Or maybe you assign permissions only to <code>Roles</code> directly, and then assign Roles to <code>Users</code>, so by association, <code>Users</code> transitively &lsquo;have&rsquo; the permissions assigned to their roles. Or you could represent these things with a &lsquo;Group&rsquo; concept. It is up to you - use what makes sense for your application.</p>
+<p>Your data model defines exactly how authorization will function. Shiro relies on a <a href="realm.html" title="Realm">Realm</a> implementation to translate your data model association details into a format Shiro understands. We&rsquo;ll cover how Realms do this a little later.</p>
+<div class="alert alert-info">
+    <span class="glyphicon glyphicon-info-sign"></span> <strong>Note</strong>
+    <hr class="message-inner-separator">
+    <p>Ultimately, your <a href="realm.html" title="Realm">Realm</a> implementation is what communicates with your data source (RDBMS, LDAP, etc). So your realm is what will tell Shiro whether or not roles or permissions exist. You have full control over how your authorization model is structured and defined.</p>
+</div>
+<a name="Authorization-AuthorizingSubjects"></a>
+<h2><a href="#authorizing-subjects" name="authorizing-subjects">Authorizing Subjects</a></h2>
+<p>Performing authorization in Shiro can be done in 3 ways:</p>
+<ul>
+  <li>Programmatically - You can perform authorization checks in your java code with structures like <code>if</code> and <code>else</code> blocks.</li>
+  <li>JDK annotations - You can attach an authorization annotation to your Java methods</li>
+  <li>JSP/GSP TagLibs - You can control JSP or GSP page output based on roles and permissions</li>
+</ul>
+<a name="Authorization-ProgrammaticAuthorization"></a>
+<h3><a href="#programmatic-authorization" name="programmatic-authorization">Programmatic Authorization</a></h3>
+<p>Probably the easiest and most common way to perform authorization is to programatically interact with the current <code>Subject</code> instance directly.</p>
+<a name="Authorization-RoleBasedAuthorization"></a>
+<h4>Role-Based Authorization</h4>
+<p>If you want to control access based on simpler/traditional implicit role names, you can execute role checks:</p>
+<a name="Authorization-RoleChecks"></a>
+<h5><a href="#role-checks" name="role-checks">Role Checks</a></h5>
+<p>If you want to simply check to see if the current <code>Subject</code> has a role or not, you can call the variant <code>hasRole*</code> methods on the <code>Subject</code> instance.</p>
+<p>For example, to see if a <code>Subject</code> has a particular (single) role, you can call the <code>subject.</code> <a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRole-java.lang.String-"><code>hasRole(roleName)</code></a> method, and react accordingly:</p>
+<pre><code class="java">Subject currentUser = SecurityUtils.getSubject();
+
+if (currentUser.hasRole(&quot;administrator&quot;)) {
+    //show the admin button 
+} else {
+    //don&#39;t show the button?  Grey it out? 
+}
+</code></pre>
+<p>There are few role-oriented <code>Subject</code> methods you can call, depending on your needs:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Subject Method </th>
+      <th>Description </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRolejava.lang.String-"><code>hasRole(String roleName)</code></a> </td>
+      <td>Returns <code>true</code> if the <code>Subject</code> is assigned the specified role, <code>false</code> otherwise. </td>
+    </tr>
+    <tr>
+      <td><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRoles-java.util.List-"><code>hasRoles(List&lt;String&gt; roleNames)</code></a> </td>
+      <td>Returns a array of <code>hasRole</code> results corresponding to the indices in the method argument. Useful as a performance enhancement if many role checks need to be performed (e.g. when customizing a complex view) </td>
+    </tr>
+    <tr>
+      <td><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#hasAllRoles-java.util.Collection-"><code>hasAllRoles(Collection&lt;String&gt; roleNames)</code></a> </td>
+      <td>Returns <code>true</code> if the <code>Subject</code> is assigned <em>all</em> of the specified roles, <code>false</code> otherwise. </td>
+    </tr>
+  </tbody>
+</table>
+<a name="Authorization-RoleAssertions"></a>
+<h5><a href="#role-assertions" name="role-assertions">Role Assertions</a></h5>
+<p>An alternative to checking a <code>boolean</code> to see if the <code>Subject</code> has a role or not, you can simply assert that they have an expected role before logic is executed. If the <code>Subject</code> does not have the expected role, an <a href="static/current/apidocs/org/apache/shiro/authz/AuthorizationException.html"><code>AuthorizationException</code></a> will be thrown. If they do have the expected role, the assertion will execute quietly and logic will continue as expected.</p>
+<p>For example:</p>
+<pre><code class="java">Subject currentUser = SecurityUtils.getSubject();
+
+//guarantee that the current user is a bank teller and 
+//therefore allowed to open the account: 
+currentUser.checkRole(&quot;bankTeller&quot;);
+openBankAccount();
+</code></pre>
+<p>A benefit of this approach over the <code>hasRole*</code> methods is that code can be a bit cleaner in that you don&rsquo;t have to construct your own <code>AuthorizationExceptions</code> if the current <code>Subject</code> does not meet expected conditions (if you don&rsquo;t want to).</p>
+<p>There are few role-oriented <code>Subject</code> assertion methods you can call, depending on your needs:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Subject Method </th>
+      <th>Description </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRole-java.lang.String-"><code>checkRole(String roleName)</code></a> </td>
+      <td>Returns quietly if the <code>Subject</code> is assigned the specified role or throws an <code>AuthorizationException</code> if not. </td>
+    </tr>
+    <tr>
+      <td><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRoles-java.util.Collection-"><code>checkRoles(Collection&lt;String&gt; roleNames)</code></a> </td>
+      <td>Returns quietly if the <code>Subject</code> is assigned <em>all</em> of the specified role or throws an <code>AuthorizationException</code> if not. </td>
+    </tr>
+    <tr>
+      <td><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRoles-java.lang.String...-"><code>checkRoles(String... roleNames)</code></a> </td>
+      <td>Same effect as the <code>checkRoles</code> method above, but allows Java 5 var-args style arguments. </td>
+    </tr>
+  </tbody>
+</table>
+<a name="Authorization-PermissionBasedAuthorization"></a>
+<h4>Permission-Based Authorization</h4>
+<p>As stated above in our overview of Roles, often a better way of performing access control is through permission-based authorization. Permission-based authorization, because it is strongly associated with your application&rsquo;s raw functionality (and the behavior on an application&rsquo;s core resources), permission-based authorization source code changes when your functionality changes, not when there is a security policy change. This means code is impacted much-less frequently than similar role-based authorization code.</p>
+<a name="Authorization-PermissionChecks"></a>
+<h5><a href="#permission-checks" name="permission-checks">Permission Checks</a></h5>
+<p>If you want to check to see if a <code>Subject</code> is permitted to do something or not, you can call any of the various <code>isPermitted*</code> method variants. There are two primary means of checking permissions - with object-based <code>Permission</code> instances or with Strings that represent <code>Permissions</code></p>
+<a name="Authorization-ObjectbasedPermissionChecks"></a>
+<h6>Object-based Permission Checks</h6>
+<p>One possible way of performing permission checks is to instantiate an instance of Shiro&rsquo;s <a href="static/current/apidocs/org/apache/shiro/authz/Permission.html"><code>org.apache.shiro.authz.Permission</code></a> interface and pass it to the <code>*isPermitted</code> methods that accept permission instances.</p>
+<p>For example, consider the following scenario: There is a <code>Printer</code> in an office with a unique identifier <code>laserjet4400n</code>. Our software needs to check to see if the current user is allowed print documents on that printer before we allow them to press a &lsquo;print&rsquo; button. The permission check to see if this possible could be formulated like this:</p>
+<pre><code class="java">Permission printPermission = new PrinterPermission(&quot;laserjet4400n&quot;, &quot;print&quot;);
+
+Subject currentUser = SecurityUtils.getSubject();
+
+if (currentUser.isPermitted(printPermission)) {
+    //show the Print button 
+} else {
+    //don&#39;t show the button?  Grey it out?
+}
+</code></pre>
+<p>In this example, we also see an example of a very powerful <em>instance-level</em> access control check - the ability to restrict behavior based on <em>individual data instances</em>.</p>
+<p>Object-based <code>Permissions</code> are useful if:</p>
+<ul>
+  <li>You want compile-time type-safety</li>
+  <li>You want to guarantee permissions are represented and used correctly</li>
+  <li>You want explicit control of how permission resolution logic (called permission implication logic, based on the Permission interface&rsquo;s <a href="static/current/apidocs/org/apache/shiro/authz/Permission.html#implies-org.apache.shiro.authz.Permission-"><code>implies</code></a> method) executes.</li>
+  <li>You want to guarantee Permissions reflect application resources accurately (for example, maybe Permission classes can be auto-generated during a project&rsquo;s build based on a project&rsquo;s domain model).</li>
+</ul>
+<p>There are few Object permission-oriented <code>Subject</code> methods you can call, depending on your needs:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Subject Method </th>
+      <th>Description </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted-org.apache.shiro.authz.Permission-"><code>isPermitted(Permission p)</code></a> </td>
+      <td>Returns <code>true</code> if the <code>Subject</code> is permitted to perform an action or access a resource summarized by the specified <code>Permission</code> instance, <code>false</code> otherwise. </td>
+    </tr>
+    <tr>
+      <td><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted-java.util.List-"><code>isPermitted(List&lt;Permission&gt; perms)</code></a> </td>
+      <td>Returns an array of <code>isPermitted</code> results corresponding to the indices in the method argument. Useful as a performance enhancement if many permission checks need to be performed (e.g. when customizing a complex view) </td>
+    </tr>
+    <tr>
+      <td><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermittedAll-java.util.Collection-"><code>isPermittedAll(Collection&lt;Permission&gt; perms)</code></a> </td>
+      <td>Returns <code>true</code> if the <code>Subject</code> is permitted <em>all</em> of the specified permissions, <code>false</code> otherwise. </td>
+    </tr>
+  </tbody>
+</table>
+<a name="Authorization-Stringbasedpermissionchecks"></a>
+<h6>String-based permission checks</h6>
+<p>While Object-based permissions can be useful (compile-time type-safety, guaranteed behavior, customized implication logic, etc), they can sometimes feel a bit &lsquo;heavy handed&rsquo; for many applications. An alternative is to use normal <code>Strings</code> to represent a permission instance.</p>
+<p>For example, based on the print permission example above, we can re-formulate that same check as a <code>String</code>-based permission check:</p>
+<pre><code class="java">Subject currentUser = SecurityUtils.getSubject();
+
+if (currentUser.isPermitted(&quot;printer:print:laserjet4400n&quot;)) {
+    //show the Print button
+} else {
+    //don&#39;t show the button?  Grey it out? 
+}
+</code></pre>
+<p>This example still shows the same instance-level permission check, but important parts of the permission - <code>printer</code> (resource type), <code>print</code> (action), and <code>laserjet4400n</code> (instance id) - were all represented in a String.</p>
+<p>This particular example shows a special colon-delimited format defined by Shiro&rsquo;s default <a href="static/current/apidocs/org/apache/shiro/authz/permission/WildcardPermission.html"><code>org.apache.shiro.authz.permission.WildcardPermission</code></a> implementation, which most people will find suitable.</p>
+<p>That is, the above code block is (mostly) a shortcut for the following:</p>
+<pre><code class="java">Subject currentUser = SecurityUtils.getSubject();
+
+Permission p = new WildcardPermission(&quot;printer:print:laserjet4400n&quot;);
+
+if (currentUser.isPermitted(p) {
+    //show the Print button
+} else {
+    //don&#39;t show the button?  Grey it out?
+}
+</code></pre>
+<p>The <code>WildcardPermission</code> token format and formation options are covered in-depth in Shiro&rsquo;s <a href="permissions.html" title="Permissions">Permission documentation</a>.</p>
+<p>And while the above String defaults to the <code>WildcardPermission</code> format, you can actually invent your own String format and use that if you prefer. We&rsquo;ll cover how to do this as part of the Realm Authorization section below.</p>
+<p>String-based permissions are beneficial in that you are not forced to implement an interface and simple strings are often easy to read. The downside is that you don&rsquo;t have type safety and if you needed more complicated behavior that are outside the scope of what the Strings represent, you&rsquo;re going to want to implement your own permission objects based on the permission interface. In practice, most Shiro end-users choose the String-based approach for their simplicity, but ultimately your application&rsquo;s requirements will dictate which is better.</p>
+<p>Like the Object-based permission check methods, there are String variants to support String-based permission checks:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Subject Method </th>
+      <th>Description </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted-java.lang.String-"><code>isPermitted(String perm)</code></a> </td>
+      <td>Returns <code>true</code> if the <code>Subject</code> is permitted to perform an action or access a resource summarized by the specified <code>String</code> permission, <code>false</code> otherwise. </td>
+    </tr>
+    <tr>
+      <td><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted-java.util.List-"><code>isPermitted(String... perms)</code></a> </td>
+      <td>Returns an array of <code>isPermitted</code> results corresponding to the indices in the method argument. Useful as a performance enhancement if many <code>String</code> permission checks need to be performed (e.g. when customizing a complex view) </td>
+    </tr>
+    <tr>
+      <td><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermittedAll-java.lang.String...-"><code>isPermittedAll(String... perms)</code></a> </td>
+      <td>Returns <code>true</code> if the <code>Subject</code> is permitted <em>all</em> of the specified <code>String</code> permissions, <code>false</code> otherwise. </td>
+    </tr>
+  </tbody>
+</table>
+<a name="Authorization-PermissionAssertions"></a>
+<h5><a href="#permission-assertions" name="permission-assertions">Permission Assertions</a></h5>
+<p>As an alternative to checking a <code>boolean</code> to see if the <code>Subject</code> is permitted to do something or not, you can simply assert that they have an expected permission before logic is executed. If the <code>Subject</code> is not permitted, an <a href="static/current/apidocs/org/apache/shiro/authz/AuthorizationException.html"><code>AuthorizationException</code></a> will be thrown. If they are permitted as expected, the assertion will execute quietly and logic will continue as expected.</p>
+<p>For example:</p>
+<pre><code class="java">Subject currentUser = SecurityUtils.getSubject();
+
+//guarantee that the current user is permitted 
+//to open a bank account: 
+Permission p = new AccountPermission(&quot;open&quot;);
+currentUser.checkPermission(p);
+openBankAccount();
+</code></pre>
+<p>or, the same check, using a String permission:</p>
+<pre><code class="java">Subject currentUser = SecurityUtils.getSubject();
+
+//guarantee that the current user is permitted 
+//to open a bank account: 
+currentUser.checkPermission(&quot;account:open&quot;);
+openBankAccount();
+</code></pre>
+<p>A benefit of this approach over the <code>isPermitted*</code> methods is that code can be a bit cleaner in that you don&rsquo;t have to construct your own <code>AuthorizationExceptions</code> if the current <code>Subject</code> does not meet expected conditions (if you don&rsquo;t want to).</p>
+<p>There are few permission-oriented <code>Subject</code> assertion methods you can call, depending on your needs:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Subject Method </th>
+      <th>Description </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#checkPermission-org.apache.shiro.authz.Permission-"><code>checkPermission(Permission p)</code></a> </td>
+      <td>Returns quietly if the <code>Subject</code> is permitted to perform an action or access a resource summarized by the specified <code>Permission</code> instance, or throws an <code>AuthorizationException</code> if not. </td>
+    </tr>
+    <tr>
+      <td><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#checkPermission-java.lang.String-"><code>checkPermission(String perm)</code></a> </td>
+      <td>Returns quietly if the <code>Subject</code> is is permitted to perform an action or access a resource summarized by the specified <code>String</code> permission, or throws an <code>AuthorizationException</code> if not. </td>
+    </tr>
+    <tr>
+      <td><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#checkPermissions-java.util.Collection-"><code>checkPermissions(Collection&lt;Permission&gt; perms)</code></a> </td>
+      <td>Returns quietly if the <code>Subject</code> is permitted <em>all</em> the specified permissions, or throws an <code>AuthorizationException</code> if not. </td>
+    </tr>
+    <tr>
+      <td><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#checkPermissions-java.lang.String...-"><code>checkPermissions(String... perms)</code></a> </td>
+      <td>Same effect as the <code>checkPermissions</code> method above, but using <code>String</code>-based permissions. </td>
+    </tr>
+  </tbody>
+</table>
+<a name="Authorization-AnnotationbasedAuthorization"></a>
+<h3>Annotation-based Authorization</h3>
+<p>In addition to the <code>Subject</code> API calls, Shiro provides a collection of Java 5+ annotations if you prefer meta-based authorization control.</p>
+<a name="Authorization-Configuration"></a>
+<h4><a href="#configuration" name="configuration">Configuration</a></h4>
+<p>Before you can use Java annotations, you&rsquo;ll need to enable AOP support in your application. There are a number of different AOP frameworks so, unfortunately, there is no standard way to enable AOP in an application.</p>
+<p>For AspectJ, you can review our <a href="https://github.com/apache/shiro/tree/master/samples/aspectj">AspectJ sample application</a>.</p>
+<p>For Spring applications, you can look into our <a href="spring.html" title="Spring">Spring Integration</a> documentation.</p>
+<p>For Guice applications, you can look into our <a href="guice.html" title="Guice">Guice Integration</a> documentation.</p>
+<a name="Authorization-The%7B%7BRequiresAuthentication%7D%7Dannotation"></a>
+<h4>The <code>RequiresAuthentication</code> annotation</h4>
+<p>The <a href="static/current/apidocs/org/apache/shiro/authz/annotation/RequiresAuthentication.html">RequiresAuthentication</a> annotation requires the current <code>Subject</code> to have been authenticated during their current session for the annotated class/instance/method to be accessed or invoked.</p>
+<p>For example:</p>
+<pre><code class="java">@RequiresAuthentication
+public void updateAccount(Account userAccount) {
+    //this method will only be invoked by a
+    //Subject that is guaranteed authenticated
+    ...
+}
+</code></pre>
+<p>This is mostly equivalent to the following Subject-based logic:</p>
+<pre><code class="java">public void updateAccount(Account userAccount) {
+    if (!SecurityUtils.getSubject().isAuthenticated()) {
+        throw new AuthorizationException(...);
+    }
+
+    //Subject is guaranteed authenticated here
+    ...
+}
+</code></pre>
+<a name="Authorization-The%7B%7BRequiresGuest%7D%7Dannotation"></a>
+<h4>The <code>RequiresGuest</code> annotation</h4>
+<p>The <a href="static/current/apidocs/org/apache/shiro/authz/annotation/RequiresGuest.html">RequiresGuest</a> annotation requires the current Subject to be a &ldquo;guest&rdquo;, that is, they are not authenticated or remembered from a previous session for the annotated class/instance/method to be accessed or invoked.</p>
+<p>For example:</p>
+<pre><code class="java">@RequiresGuest
+public void signUp(User newUser) {
+    //this method will only be invoked by a
+    //Subject that is unknown/anonymous
+    ...
+}
+</code></pre>
+<p>This is mostly equivalent to the following Subject-based logic:</p>
+<pre><code class="java">public void signUp(User newUser) {
+    Subject currentUser = SecurityUtils.getSubject();
+    PrincipalCollection principals = currentUser.getPrincipals();
+    if (principals != null &amp;&amp; !principals.isEmpty()) {
+        //known identity - not a guest:
+        throw new AuthorizationException(...);
+    }
+
+    //Subject is guaranteed to be a &#39;guest&#39; here
+    ...
+}
+</code></pre>
+<a name="Authorization-The%7B%7BRequiresPermissions%7D%7Dannotation"></a>
+<h4>The <code>RequiresPermissions</code> annotation</h4>
+<p>The <a href="static/current/apidocs/org/apache/shiro/authz/annotation/RequiresPermissions.html">RequiresPermissions</a> annotation requires the current Subject be permitted one or more permissions in order to execute the annotated method.</p>
+<p>For example:</p>
+<pre><code class="java">@RequiresPermissions(&quot;account:create&quot;)
+public void createAccount(Account account) {
+    //this method will only be invoked by a Subject
+    //that is permitted to create an account
+    ...
+}
+</code></pre>
+<p>This is mostly equivalent to the following Subject-based logic:</p>
+<pre><code class="java">public void createAccount(Account account) {
+    Subject currentUser = SecurityUtils.getSubject();
+    if (!subject.isPermitted(&quot;account:create&quot;)) {
+        throw new AuthorizationException(...);
+    }
+
+    //Subject is guaranteed to be permitted here
+    ...
+}
+</code></pre>
+<a name="Authorization-The%7B%7BRequiresRoles%7D%7Dpermission"></a>
+<h4>The <code>RequiresRoles</code> permission</h4>
+<p>The <a href="static/current/apidocs/org/apache/shiro/authz/annotation/RequiresRoles.html">RequiresRoles</a> annotation requires the current Subject to have all of the specified roles. If they do not have the role(s), the method will not be executed and an AuthorizationException is thrown.</p>
+<p>For example:</p>
+<pre><code class="java">@RequiresRoles(&quot;administrator&quot;)
+public void deleteUser(User user) {
+    //this method will only be invoked by an administrator
+    ...
+}
+</code></pre>
+<p>This is mostly equivalent to the following Subject-based logic:</p>
+<pre><code class="java">public void deleteUser(User user) {
+    Subject currentUser = SecurityUtils.getSubject();
+    if (!subject.hasRole(&quot;administrator&quot;)) {
+        throw new AuthorizationException(...);
+    }
+
+    //Subject is guaranteed to be an &#39;administrator&#39; here
+    ...
+}
+</code></pre>
+<a name="Authorization-The%7B%7BRequiresUser%7D%7Dannotation"></a>
+<h4>The <code>RequiresUser</code> annotation</h4>
+<p>The <a href="static/current/apidocs/org/apache/shiro/authz/annotation/RequiresUser.html">RequiresUser</a>* annotation requires the current Subject to be an application user for the annotated class/instance/method to be accessed or invoked. An &lsquo;application user&rsquo; is defined as a <code>Subject</code> that has a known identity, either known due to being authenticated during the current session or remembered from &lsquo;RememberMe&rsquo; services from a previous session.</p>
+<pre><code class="java">@RequiresUser
+public void updateAccount(Account account) {
+    //this method will only be invoked by a &#39;user&#39;
+    //i.e. a Subject with a known identity
+    ...
+}
+</code></pre>
+<p>This is mostly equivalent to the following Subject-based logic:</p>
+<pre><code class="java">public void updateAccount(Account account) {
+    Subject currentUser = SecurityUtils.getSubject();
+    PrincipalCollection principals = currentUser.getPrincipals();
+    if (principals == null || principals.isEmpty()) {
+        //no identity - they&#39;re anonymous, not allowed:
+        throw new AuthorizationException(...);
+    }
+
+    //Subject is guaranteed to have a known identity here
+    ...
+}
+</code></pre>
+<a name="Authorization-JSPTagLibAuthorization"></a>
+<h3><a href="#jsp-taglib-authorization" name="jsp-taglib-authorization">JSP TagLib Authorization</a></h3>
+<p>Shiro offers a Tag Library for controlling JSP/GSP page output based on <code>Subject</code> state. This is covered in the <a href="web.html" title="Web">Web</a> chapter&rsquo;s <a href="web.html#Web-taglibrary">JSP/GSP Tag Library</a> section.</p>
+<a name="Authorization-AuthorizationSequence"></a>
+<h2><a href="#authorization-sequence" name="authorization-sequence">Authorization Sequence</a></h2>
+<p>Now that we&rsquo;ve seen how to perform authorization based on the current <code>Subject</code>, let&rsquo;s take a look at what happens inside Shiro whenever an authorization call is made.</p>
+<p>We&rsquo;ve taken our previous architecture diagram from the <a href="architecture.html" title="Architecture">Architecture</a> chapter, and left only the components relevant to authorization highlighted. Each number represents a step during an authorization operation:</p>
+<img style="margin:0px auto;display:block" src="assets/images/ShiroAuthorizationSequence.png"/>
+<p><strong>Step 1</strong>: Application or framework code invokes any of the <code>Subject</code> <code>hasRole*</code>, <code>checkRole*</code>, <code>isPermitted*</code>, or <code>checkPermission*</code> method variants, passing in whatever permission or role representation is required.</p>
+<p><strong>Step 2</strong>: The <code>Subject</code> instance, typically a <a href="static/current/apidocs/org/apache/shiro/subject/support/DelegatingSubject.html"><code>DelegatingSubject</code></a> (or a subclass) delegates to the application&rsquo;s <code>SecurityManager</code> by calling the <code>securityManager</code>&rsquo;s nearly identical respective <code>hasRole*</code>, <code>checkRole*</code>, <code>isPermitted*</code>, or <code>checkPermission*</code> method variants (the <code>securityManager</code> implements the <a href="static/current/apidocs/org/apache/shiro/authz/Authorizer.html"><code>org.apache.shiro.authz.Authorizer</code></a> interface, which defines all Subject-specific authorization methods).</p>
+<p><strong>Step 3</strong>: The <code>SecurityManager</code>, being a basic &lsquo;umbrella&rsquo; component, relays/delegates to its internal <a href="static/current/apidocs/org/apache/shiro/authz/Authorizer.html"><code>org.apache.shiro.authz.Authorizer</code></a> instance by calling the <code>authorizer</code>&rsquo;s respective <code>hasRole*</code>, <code>checkRole*</code>, <code>isPermitted*</code>, or <code>checkPermission*</code> method. The <code>authorizer</code> instance is by default a <a href="static/current/apidocs/org/apache/shiro/authz/ModularRealmAuthorizer.html"><code>ModularRealmAuthorizer</code></a> instance, which supports coordinating one or more <code>Realm</code> instances during any authorization operation.</p>
+<p><strong>Step 4</strong>: Each configured <code>Realm</code> is checked to see if it implements the same <a href="static/current/apidocs/org/apache/shiro/authz/Authorizer.html"><code>Authorizer</code></a> interface. If so, the Realm&rsquo;s own respective <code>hasRole*</code>, <code>checkRole*</code>, <code>isPermitted*</code>, or <code>checkPermission*</code> method is called.</p>
+<a name="Authorization-%7B%7BModularRealmAuthorizer%7D%7D"></a>
+<h3><a href="#modularrealmauthorizer" name="modularrealmauthorizer">ModularRealmAuthorizer</a></h3>
+<p>As mentioned earlier, the Shiro <code>SecurityManager</code> implementations default to using a <a href="static/current/apidocs/org/apache/shiro/authz/ModularRealmAuthorizer.html"><code>ModularRealmAuthorizer</code></a> instance. The <code>ModularRealmAuthorizer</code> equally supports applications with single Realm as well as those with multiple realms.</p>
+<p>For any authorization operation, the <code>ModularRealmAuthorizer</code> will iterate over its internal collection of <code>Realms</code> and interact with each one in iteration order. Each <code>Realm</code> interaction functions as follows:</p>
+<ol>
+  <li>
+    <p>If the <code>Realm</code> itself implements the <a href="static/current/apidocs/org/apache/shiro/authz/Authorizer.html"><code>Authorizer</code></a> interface, its respective <code>Authorizer</code> method (<code>hasRole*</code>, <code>checkRole*</code>, <code>isPermitted*</code>, or <code>checkPermission*</code>) is called.</p>
+    <ol>
+      <li>
+      <p>If the Realm&rsquo;s method results in an exception, the exception is propagated as an <a href="static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html"><code>AuthorizationException</code></a> to the <code>Subject</code> caller. This short-circuits the authorization process and any remaining Realms will not be consulted for that authorization operation.</p></li>
+      <li>
+      <p>If the Realm&rsquo;s method is a <code>hasRole*</code> or <code>isPermitted*</code> variant that returns a boolean and that return value is <code>true</code>, the <code>true</code> value is returned immediately and any remaining Realms are short circuited. This behavior exists as a performance enhancement, as typically if permitted by one Realm, it is implied that the Subject is permitted. This favors security policies where everything is prohibited by default and things are explicitly allowed, the most secure type of security policy.</p></li>
+    </ol>
+  </li>
+  <li>
+  <p>If the Realm does not implement the <code>Authorizer</code> interface, it is ignored.</p></li>
+</ol>
+<a name="Authorization-RealmAuthorizationOrder"></a>
+<h4><a href="#realm-authorization-order" name="realm-authorization-order">Realm Authorization Order</a></h4>
+<p>It is important to point out that, exactly like authentication, the <code>ModularRealmAuthorizer</code> will interact with Realm instances in <em>iteration</em> order.</p>
+<p>The <code>ModularRealmAuthorizer</code> has access to the <code>Realm</code> instances configured on the <code>SecurityManager</code>. When executing an authorization operation, it will iterate over that collection, and for each <code>Realm</code> that implements the <code>Authorizer</code> interface itself, invoke the Realm&rsquo;s respective <code>Authorizer</code> method (e.g. <code>hasRole*</code>, <code>checkRole*</code>, <code>isPermitted*</code>, or <code>checkPermission*</code>).</p>
+<a name="Authorization-Configuringaglobal%7B%7BPermissionResolver%7D%7D"></a>
+<h4>Configuring a global <code>PermissionResolver</code></h4>
+<p>When performing a <code>String</code>-based permission check, most of Shiro&rsquo;s default <code>Realm</code> implementations convert this String into an actual <a href="static/current/apidocs/org/apache/shiro/authz/Permission.html"><code>Permission</code></a> instance first before performing permission <em>implication</em> logic.</p>
+<p>This is because Permissions are evaluated based on implication logic and not a direct equality check (see the <a href="permissions.html" title="Permissions">Permission</a> documentation for more about implication vs. equality). Implication logic is better represented in code than via String comparisons. Therefore, most Realms need to convert, or <em>resolve</em> a submitted permission string into a corresponding representative <code>Permission</code> instance.</p>
+<p>To aid in this conversion, Shiro supports the notion of a <a href="static/current/apidocs/org/apache/shiro/authz/permission/PermissionResolver.html"><code>PermissionResolver</code></a>. Most <code>Shiro</code> Realm implementations use a <code>PermissionResolver</code> to support their implementation of the <code>Authorizer</code> interface&rsquo;s <code>String</code>-based permission methods: when one of these methods is invoked on the Realm, it will use the <code>PermissionResolver</code> to convert the string into a Permission instance, and perform the check that way.</p>
+<p>All Shiro <code>Realm</code> implementations default to an internal <a href="static/current/apidocs/org/apache/shiro/authz/permission/WildcardPermissionResolver.html">WildcardPermissionResolver</a> which assumes Shiro&rsquo;s <a href="static/current/apidocs/org/apache/shiro/authz/permission/WildcardPermission.html"><code>WildcardPermission</code></a> String format.</p>
+<p>If you want to create your own <code>PermissionResolver</code> implementation, perhaps to support your own Permission string syntax, and you want all configured <code>Realm</code> instances to support that syntax, you can set your <code>PermissionResolver</code> globally for all <code>Realms</code> that can be configured with one.</p>
+<p>For example, in <code>shiro.ini</code>:</p>
+<p><strong>shiro.ini</strong></p>
+<pre><code class="java">globalPermissionResolver = com.foo.bar.authz.MyPermissionResolver
+...
+securityManager.authorizer.permissionResolver = $globalPermissionResolver
+...
+</code></pre>
+<div class="alert alert-warning">
+    <span class="glyphicon glyphicon-warning-sign"></span> <strong>PermissionResolverAware</strong>
+    <hr class="message-inner-separator">
+    <p>If you want to configure a global <code>PermissionResolver</code>, each <code>Realm</code> that is to receive the configured <code>PermissionResolver</code> <b><em>must</em></b> implement the <a class="external-link" href="static/current/apidocs/src-html/org/apache/shiro/authz/permission/PermissionResolverAware.html"><code>PermisionResolverAware</code></a> interface.  This guarantees that the configured instance can be relayed to each <code>Realm</code> that supports such configuration.</p>
+</div>
+<p>If you don&rsquo;t want to use a global <code>PermissionResolver</code> or you don&rsquo;t want to be bothered with the <code>PermissionResolverAware</code> interface, you can always configure a realm with a <code>PermissionResolver</code> instance explicitly (assuming there is a JavaBeans-compatible setPermissionResolver method):</p>
+<pre><code class="java">permissionResolver = com.foo.bar.authz.MyPermissionResolver
+
+realm = com.foo.bar.realm.MyCustomRealm
+realm.permissionResolver = $permissionResolver
+...
+</code></pre>
+<a name="Authorization-Configuringaglobal%7B%7BRolePermissionResolver%7D%7D"></a>
+<h4>Configuring a global <code>RolePermissionResolver</code></h4>
+<p>Similar in concept to a <code>PermissionResolver</code>, a <a href="static/current/apidocs/org/apache/shiro/authz/permission/RolePermissionResolver.html"><code>RolePermissionResolver</code></a> has the ability to represent <code>Permission</code> instances needed by a <code>Realm</code> to perform permission checks.</p>
+<p>The key difference with a <code>RolePermissionResolver</code> however is that the input <code>String</code> is a <em>role name</em>, and <em>not</em> a permission string.</p>
+<p>A <code>RolePermissionResolver</code> can be used by a <code>Realm</code> internally when needing to translate a role name into a concrete set of <code>Permission</code> instances.</p>
+<p>This is a particularly useful feature for supporting legacy or inflexible data sources that may have no notion of permissions.</p>
+<p>For example, many LDAP directories store role names (or group names) but do not support association of role names to concrete permissions because they have no &lsquo;permission&rsquo; concept. A Shiro-based application can use the role names stored in LDAP, but implement a <code>RolePermissionResolver</code> to convert the LDAP name into a set of explicit permissions to perform preferred explicit access control. The permission associations would be stored in another data store, probably a local database.</p>
+<p>Because this notion of converting role names to permissions is very application specific, Shiro&rsquo;s default <code>Realm</code> implementations do not use them.</p>
+<p>However, if you want to create your own <code>RolePermissionResolver</code> and have more than one <code>Realm</code> implementation that you want to configure with it, you can set your <code>RolePermissionResolver</code> globally for all <code>Realms</code> that can be configured with one.</p>
+<p><strong>shiro.ini</strong></p>
+<pre><code class="java">globalRolePermissionResolver = com.foo.bar.authz.MyPermissionResolver
+...
+securityManager.authorizer.rolePermissionResolver = $globalRolePermissionResolver
+...
+</code></pre>
+<div class="alert alert-warning">
+    <span class="glyphicon glyphicon-warning-sign"></span> <strong>RolePermissionResolverAware</strong>
+    <hr class="message-inner-separator">
+    <p>If you want to configure a global <code>RolePermissionResolver</code>, each <code>Realm</code> that is to receive the configured <code>RolePermissionResolver</code> <b><em>must</em></b> implement the <a class="external-link" href="static/current/apidocs/org/apache/shiro/authz/permission/RolePermissionResolverAware.html"><code>RolePermisionResolverAware</code></a> interface.  This guarantees that the configured global <code>RolePermissionResolver</code> instance can be relayed to each <code>Realm</code> that supports such configuration.</p>
+</div>
+<p>If you don&rsquo;t want to use a global <code>RolePermissionResolver</code> or you don&rsquo;t want to be bothered with the <code>RolePermissionResolverAware</code> interface, you can always configure a realm with a <code>RolePermissionResolver</code> instance explicitly (assuming there is a JavaBeans-compatible setRolePermissionResolver method):</p>
+<pre><code class="ini">rolePermissionResolver = com.foo.bar.authz.MyRolePermissionResolver
+
+realm = com.foo.bar.realm.MyCustomRealm
+realm.rolePermissionResolver = $rolePermissionResolver
+...
+</code></pre>
+<a name="Authorization-CustomAuthorizer"></a>
+<h3><a href="#custom-authorizer" name="custom-authorizer">Custom Authorizer</a></h3>
+<p>If your application uses more than one realm to perform authorization and the <code>ModularRealmAuthorizer</code>&rsquo;s default simple iteration-based, short-circuiting authorization behavior does not suit your needs, you will probably want to create a custom <code>Authorizer</code> and configure the <code>SecurityManager</code> accordingly.</p>
+<p>For example, in <code>shiro.ini</code>:</p>
+<pre><code class="ini">[main]
+...
+authorizer = com.foo.bar.authz.CustomAuthorizer
+
+securityManager.authorizer = $authorizer
+</code></pre>
+<input type="hidden" id="ghEditPage" value="authorization.md.vtl"></input>
+    
+</div>
+
+    <div class="footer-padding"></div>
+    <footer class="custom-footer">
+
+        <div class="col-md-5">
+            <div class="copyright-footer">
+            <a href="http://www.apache.org/foundation/contributing.html">Donate to the ASF</a> |
+            <a href="http://www.apache.org/licenses/LICENSE-2.0.html">License</a>
+            <p>Copyright &copy; 2008-2020 The Apache Software Foundation</p>
+                </div>
+        </div>
+
+        <div class="social col-md-2">
+            <a class="btn btn-social-icon btn-sm btn-twitter" target="_blank" href="https://twitter.com/ApacheShiro"><span class="fa fa-twitter"></span></a>
+            <a class="btn btn-social-icon btn-sm btn-facebook" target="_blank" href="https://www.facebook.com/ApacheShiro"><span class="fa fa-facebook"></span></a>
+            <a class="btn btn-social-icon btn-sm btn-linkedin" target="_blank" href="https://www.linkedin.com/groups/4382576"><span class="fa fa-linkedin"></span></a>
+        </div>
+
+
+        <div class="col-md-2"></div>
+        <div class="col-md-2 editThisPage">
+            <div class="footer-shield"></div>
+        </div>
+
+    </footer> <!--END FOOTER-->
+
+</body>
+</html>

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>AbstractAuthenticator.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: All (aggregate jar)</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.authc</a> &gt; <span class="el_source">AbstractAuthenticator.java</span></div><h1>AbstractAuthenticator.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.authc;
+
+import org.apache.shiro.subject.PrincipalCollection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+
+/**
+ * Superclass for almost all {@link Authenticator} implementations that performs the common work around authentication
+ * attempts.
+ * &lt;p/&gt;
+ * This class delegates the actual authentication attempt to subclasses but supports notification for
+ * successful and failed logins as well as logouts. Notification is sent to one or more registered
+ * {@link AuthenticationListener AuthenticationListener}s to allow for custom processing logic
+ * when these conditions occur.
+ * &lt;p/&gt;
+ * In most cases, the only thing a subclass needs to do (via its {@link #doAuthenticate} implementation)
+ * is perform the actual principal/credential verification process for the submitted {@code AuthenticationToken}.
+ *
+ * @since 0.1
+ */
+public abstract class AbstractAuthenticator implements Authenticator, LogoutAware {
+
+    /*-------------------------------------------
+    |             C O N S T A N T S             |
+    ============================================*/
+    /**
+     * Private class log instance.
+     */
+<span class="fc" id="L51">    private static final Logger log = LoggerFactory.getLogger(AbstractAuthenticator.class);</span>
+
+    /*-------------------------------------------
+    |    I N S T A N C E   V A R I A B L E S    |
+    ============================================*/
+    /**
+     * Any registered listeners that wish to know about things during the authentication process.
+     */
+    private Collection&lt;AuthenticationListener&gt; listeners;
+
+    /*-------------------------------------------
+    |         C O N S T R U C T O R S           |
+    ============================================*/
+
+    /**
+     * Default no-argument constructor. Ensures the internal
+     * {@link AuthenticationListener AuthenticationListener} collection is a non-null {@code ArrayList}.
+     */
+<span class="fc" id="L69">    public AbstractAuthenticator() {</span>
+<span class="fc" id="L70">        listeners = new ArrayList&lt;AuthenticationListener&gt;();</span>
+<span class="fc" id="L71">    }</span>
+
+    /*--------------------------------------------
+    |  A C C E S S O R S / M O D I F I E R S    |
+    ============================================*/
+
+    /**
+     * Sets the {@link AuthenticationListener AuthenticationListener}s that should be notified during authentication
+     * attempts.
+     *
+     * @param listeners one or more {@code AuthenticationListener}s that should be notified due to an
+     *                  authentication attempt.
+     */
+    @SuppressWarnings({&quot;UnusedDeclaration&quot;})
+    public void setAuthenticationListeners(Collection&lt;AuthenticationListener&gt; listeners) {
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (listeners == null) {</span>
+<span class="nc" id="L87">            this.listeners = new ArrayList&lt;AuthenticationListener&gt;();</span>
+        } else {
+<span class="nc" id="L89">            this.listeners = listeners;</span>
+        }
+<span class="nc" id="L91">    }</span>
+
+    /**
+     * Returns the {@link AuthenticationListener AuthenticationListener}s that should be notified during authentication
+     * attempts.
+     *
+     * @return the {@link AuthenticationListener AuthenticationListener}s that should be notified during authentication
+     *         attempts.
+     */
+    @SuppressWarnings({&quot;UnusedDeclaration&quot;})
+    public Collection&lt;AuthenticationListener&gt; getAuthenticationListeners() {
+<span class="fc" id="L102">        return this.listeners;</span>
+    }
+
+    /*-------------------------------------------
+    |               M E T H O D S               |
+    ============================================*/
+
+    /**
+     * Notifies any registered {@link AuthenticationListener AuthenticationListener}s that
+     * authentication was successful for the specified {@code token} which resulted in the specified
+     * {@code info}.  This implementation merely iterates over the internal {@code listeners} collection and
+     * calls {@link AuthenticationListener#onSuccess(AuthenticationToken, AuthenticationInfo) onSuccess}
+     * for each.
+     *
+     * @param token the submitted {@code AuthenticationToken} that resulted in a successful authentication.
+     * @param info  the returned {@code AuthenticationInfo} resulting from the successful authentication.
+     */
+    protected void notifySuccess(AuthenticationToken token, AuthenticationInfo info) {
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        for (AuthenticationListener listener : this.listeners) {</span>
+<span class="fc" id="L121">            listener.onSuccess(token, info);</span>
+<span class="fc" id="L122">        }</span>
+<span class="fc" id="L123">    }</span>
+
+    /**
+     * Notifies any registered {@link AuthenticationListener AuthenticationListener}s that
+     * authentication failed for the
+     * specified {@code token} which resulted in the specified {@code ae} exception.  This implementation merely
+     * iterates over the internal {@code listeners} collection and calls
+     * {@link AuthenticationListener#onFailure(AuthenticationToken, AuthenticationException) onFailure}
+     * for each.
+     *
+     * @param token the submitted {@code AuthenticationToken} that resulted in a failed authentication.
+     * @param ae    the resulting {@code AuthenticationException} that caused the authentication to fail.
+     */
+    protected void notifyFailure(AuthenticationToken token, AuthenticationException ae) {
+<span class="fc bfc" id="L137" title="All 2 branches covered.">        for (AuthenticationListener listener : this.listeners) {</span>
+<span class="fc" id="L138">            listener.onFailure(token, ae);</span>
+<span class="fc" id="L139">        }</span>
+<span class="fc" id="L140">    }</span>
+
+    /**
+     * Notifies any registered {@link AuthenticationListener AuthenticationListener}s that a
+     * {@code Subject} has logged-out.  This implementation merely
+     * iterates over the internal {@code listeners} collection and calls
+     * {@link AuthenticationListener#onLogout(org.apache.shiro.subject.PrincipalCollection) onLogout}
+     * for each.
+     *
+     * @param principals the identifying principals of the {@code Subject}/account logging out.
+     */
+    protected void notifyLogout(PrincipalCollection principals) {
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">        for (AuthenticationListener listener : this.listeners) {</span>
+<span class="nc" id="L153">            listener.onLogout(principals);</span>
+<span class="nc" id="L154">        }</span>
+<span class="fc" id="L155">    }</span>
+
+    /**
+     * This implementation merely calls
+     * {@link #notifyLogout(org.apache.shiro.subject.PrincipalCollection) notifyLogout} to allow any registered listeners
+     * to react to the logout.
+     *
+     * @param principals the identifying principals of the {@code Subject}/account logging out.
+     */
+    public void onLogout(PrincipalCollection principals) {
+<span class="fc" id="L165">        notifyLogout(principals);</span>
+<span class="fc" id="L166">    }</span>
+
+    /**
+     * Implementation of the {@link Authenticator} interface that functions in the following manner:
+     * &lt;ol&gt;
+     * &lt;li&gt;Calls template {@link #doAuthenticate doAuthenticate} method for subclass execution of the actual
+     * authentication behavior.&lt;/li&gt;
+     * &lt;li&gt;If an {@code AuthenticationException} is thrown during {@code doAuthenticate},
+     * {@link #notifyFailure(AuthenticationToken, AuthenticationException) notify} any registered
+     * {@link AuthenticationListener AuthenticationListener}s of the exception and then propagate the exception
+     * for the caller to handle.&lt;/li&gt;
+     * &lt;li&gt;If no exception is thrown (indicating a successful login),
+     * {@link #notifySuccess(AuthenticationToken, AuthenticationInfo) notify} any registered
+     * {@link AuthenticationListener AuthenticationListener}s of the successful attempt.&lt;/li&gt;
+     * &lt;li&gt;Return the {@code AuthenticationInfo}&lt;/li&gt;
+     * &lt;/ol&gt;
+     *
+     * @param token the submitted token representing the subject's (user's) login principals and credentials.
+     * @return the AuthenticationInfo referencing the authenticated user's account data.
+     * @throws AuthenticationException if there is any problem during the authentication process - see the
+     *                                 interface's JavaDoc for a more detailed explanation.
+     */
+    public final AuthenticationInfo authenticate(AuthenticationToken token) throws AuthenticationException {
+
+<span class="fc bfc" id="L190" title="All 2 branches covered.">        if (token == null) {</span>
+<span class="fc" id="L191">            throw new IllegalArgumentException(&quot;Method argument (authentication token) cannot be null.&quot;);</span>
+        }
+
+<span class="fc" id="L194">        log.trace(&quot;Authentication attempt received for token [{}]&quot;, token);</span>
+
+        AuthenticationInfo info;
+        try {
+<span class="fc" id="L198">            info = doAuthenticate(token);</span>
+<span class="fc bfc" id="L199" title="All 2 branches covered.">            if (info == null) {</span>
+<span class="fc" id="L200">                String msg = &quot;No account information found for authentication token [&quot; + token + &quot;] by this &quot; +</span>
+                        &quot;Authenticator instance.  Please check that it is configured correctly.&quot;;
+<span class="fc" id="L202">                throw new AuthenticationException(msg);</span>
+            }
+<span class="fc" id="L204">        } catch (Throwable t) {</span>
+<span class="fc" id="L205">            AuthenticationException ae = null;</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">            if (t instanceof AuthenticationException) {</span>
+<span class="fc" id="L207">                ae = (AuthenticationException) t;</span>
+            }
+<span class="fc bfc" id="L209" title="All 2 branches covered.">            if (ae == null) {</span>
+                //Exception thrown was not an expected AuthenticationException.  Therefore it is probably a little more
+                //severe or unexpected.  So, wrap in an AuthenticationException, log to warn, and propagate:
+<span class="fc" id="L212">                String msg = &quot;Authentication failed for token submission [&quot; + token + &quot;].  Possible unexpected &quot; +</span>
+                        &quot;error? (Typical or expected login exceptions should extend from AuthenticationException).&quot;;
+<span class="fc" id="L214">                ae = new AuthenticationException(msg, t);</span>
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">                if (log.isWarnEnabled())</span>
+<span class="fc" id="L216">                    log.warn(msg, t);</span>
+            }
+            try {
+<span class="fc" id="L219">                notifyFailure(token, ae);</span>
+<span class="nc" id="L220">            } catch (Throwable t2) {</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">                if (log.isWarnEnabled()) {</span>
+<span class="nc" id="L222">                    String msg = &quot;Unable to send notification for failed authentication attempt - listener error?.  &quot; +</span>
+                            &quot;Please check your AuthenticationListener implementation(s).  Logging sending exception &quot; +
+                            &quot;and propagating original AuthenticationException instead...&quot;;
+<span class="nc" id="L225">                    log.warn(msg, t2);</span>
+                }
+<span class="fc" id="L227">            }</span>
+
+
+<span class="fc" id="L230">            throw ae;</span>
+<span class="fc" id="L231">        }</span>
+
+<span class="fc" id="L233">        log.debug(&quot;Authentication successful for token [{}].  Returned account [{}]&quot;, token, info);</span>
+
+<span class="fc" id="L235">        notifySuccess(token, info);</span>
+
+<span class="fc" id="L237">        return info;</span>
+    }
+
+    /**
+     * Template design pattern hook for subclasses to implement specific authentication behavior.
+     * &lt;p/&gt;
+     * Common behavior for most authentication attempts is encapsulated in the
+     * {@link #authenticate} method and that method invokes this one for custom behavior.
+     * &lt;p/&gt;
+     * &lt;b&gt;N.B.&lt;/b&gt; Subclasses &lt;em&gt;should&lt;/em&gt; throw some kind of
+     * {@code AuthenticationException} if there is a problem during
+     * authentication instead of returning {@code null}.  A {@code null} return value indicates
+     * a configuration or programming error, since {@code AuthenticationException}s should
+     * indicate any expected problem (such as an unknown account or username, or invalid password, etc).
+     *
+     * @param token the authentication token encapsulating the user's login information.
+     * @return an {@code AuthenticationInfo} object encapsulating the user's account information
+     *         important to Shiro.
+     * @throws AuthenticationException if there is a problem logging in the user.
+     */
+    protected abstract AuthenticationInfo doAuthenticate(AuthenticationToken token)
+            throws AuthenticationException;
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

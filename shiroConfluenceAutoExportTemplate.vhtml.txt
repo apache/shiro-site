@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+ 
+        http://www.apache.org/licenses/LICENSE-2.0
+ 
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+##
+#set ($assets = "http://incubator.apache.org/shiro/static/assets")
+#set ($images = "http://incubator.apache.org/shiro/static/assets/images")
+#set ($siteroot = "http://incubator.apache.org/shiro/")
+#set ($pageContentHeaderEnabled = false)
+#set ($globalHelper = $action.getHelper())
+#set ($renderer = $globalHelper.getWikiStyleRenderer())
+##
+#if ( $page.title.equals("Index") )
+    #set ($title = "Simple Application Security Framework")
+#else
+    #set ($title = $page.title)
+#end
+##
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Apache Shiro - $title</title>
+    <link href="$assets/common_20100327.css" rel="stylesheet" type="text/css">
+    <link href="$assets/color_20100327.css" rel="stylesheet" type="text/css">
+    <!-- <link rel="shortcut icon" href="$assets/images/shiro-icon_16x16.png"> -->
+    <link rel="alternate" type="application/rss+xml" title="RSS"
+          href="http://cwiki.apache.org/shiro/createrssfeed.action?types=blogpost&statuses=created&statuses=modified&spaces=SHIRO&labelString=&rssType=rss2&maxResults=5&timeSpan=99&publicFeed=true&title=Apache+Shiro+News+RSS+Feed">
+
+    <!-- JQuery inclusion -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
+    <!-- Loading the script for the edit button -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $("#editZone").hover(function() {
+                $("#editZoneLink").stop().animate({opacity: 1}, 1000, function() {
+                    $("#editZoneLink").fadeIn();
+                });
+            },
+            function () {
+                $("#editZoneLink").stop().fadeOut();
+            });
+        });
+    </script>
+    <!-- END JQuery inclusion -->
+
+</head>
+<body>
+<div id="editZone">
+    <div id="editZoneLink" style="display: none; height: 60px; width: 60px;">
+        <a href="$confluenceUri/pages/editpage.action?pageId=$page.id" title="Edit this page" alt="Edit this page">
+            <img style="position: absolute; right:5px; top:5px;" src="$assets/images/edit_20091029.png"
+                 height="52" width="39" border="0"/>
+        </a>
+    </div>
+</div>
+<a name="top"></a>
+
+<div id="container">
+    
+    <div id="header">
+        <div id="subProjectsNavBar">
+        </div>
+        <!-- end subProjectsNavBar -->
+    </div>
+    <!-- end header -->
+
+    <div id="content">
+
+        <div id="leftColumn">
+            <div id="navigation">
+                #set($child = $pageManager.getPage($page.space.key,"Navigation"))
+                #set($content = $renderer.convertWikiToXHtml($child.toPageContext(), $child.content).trim())
+                #set($content = $content.replaceAll("^<[pP]>|</[pP]>$", "") )
+                $content
+            </div>
+            <!-- end navigation -->
+        </div>
+        <!-- end leftColumn -->
+
+        <div id="rightColumn">
+            $body
+        </div>
+        <!-- end rightColumn -->
+
+        <div id="endContent">
+        </div>
+        <!-- end endContent -->
+
+    </div>
+    <!-- end content -->
+
+    <div id="footer">&copy; 2003-2010, <a href="http://www.apache.org">The Apache Software Foundation</a> -
+        <a href="$siteroot/privacy-policy.html">Privacy Policy</a>
+    </div>
+    <!-- end footer -->
+</div>
+<!-- end container -->
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-11551827-1");
+        pageTracker._trackPageview();
+    } catch(err) {
+    }
+</script>
+<!-- END Google Analytics -->
+</body>
+</html>

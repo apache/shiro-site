@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<span class="sourceLineNo">004</span> * distributed with this work for additional information<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<span class="sourceLineNo">009</span> *<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<span class="sourceLineNo">011</span> *<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * software distributed under the License is distributed on an<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<span class="sourceLineNo">016</span> * specific language governing permissions and limitations<a name="line.16"></a>
+<span class="sourceLineNo">017</span> * under the License.<a name="line.17"></a>
+<span class="sourceLineNo">018</span> */<a name="line.18"></a>
+<span class="sourceLineNo">019</span>package org.apache.shiro.session.mgt;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>import java.io.Serializable;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import java.util.Map;<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>/**<a name="line.24"></a>
+<span class="sourceLineNo">025</span> * A {@code SessionContext} is a 'bucket' of data presented to a {@link SessionFactory SessionFactory} which interprets<a name="line.25"></a>
+<span class="sourceLineNo">026</span> * this data to construct {@link org.apache.shiro.session.Session Session} instances.  It is essentially a Map of data<a name="line.26"></a>
+<span class="sourceLineNo">027</span> * with a few additional type-safe methods for easy retrieval of objects commonly used to construct Subject instances.<a name="line.27"></a>
+<span class="sourceLineNo">028</span> * &lt;p/&gt;<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * While this interface contains type-safe setters and getters for common data types, the map can contain anything<a name="line.29"></a>
+<span class="sourceLineNo">030</span> * additional that might be needed by the {@code SessionFactory} implementation to construct {@code Session} instances.<a name="line.30"></a>
+<span class="sourceLineNo">031</span> * &lt;p/&gt;<a name="line.31"></a>
+<span class="sourceLineNo">032</span> * &lt;b&gt;USAGE&lt;/b&gt;: Most Shiro end-users will never use a {@code SubjectContext} instance directly and instead will call<a name="line.32"></a>
+<span class="sourceLineNo">033</span> * the {@code Subject.}{@link org.apache.shiro.subject.Subject#getSession() getSession()} or<a name="line.33"></a>
+<span class="sourceLineNo">034</span> * {@code Subject.}{@link org.apache.shiro.subject.Subject#getSession(boolean) getSession(boolean)} methods (which<a name="line.34"></a>
+<span class="sourceLineNo">035</span> * will usually use {@code SessionContext} instances to start a session with the application's<a name="line.35"></a>
+<span class="sourceLineNo">036</span> * {@link SessionManager SessionManager}.<a name="line.36"></a>
+<span class="sourceLineNo">037</span> *<a name="line.37"></a>
+<span class="sourceLineNo">038</span> * @see org.apache.shiro.session.mgt.SessionManager#start SessionManager.start(SessionContext)<a name="line.38"></a>
+<span class="sourceLineNo">039</span> * @see org.apache.shiro.session.mgt.SessionFactory SessionFactory<a name="line.39"></a>
+<span class="sourceLineNo">040</span> * @since 1.0<a name="line.40"></a>
+<span class="sourceLineNo">041</span> */<a name="line.41"></a>
+<span class="sourceLineNo">042</span>public interface SessionContext extends Map&lt;String, Object&gt; {<a name="line.42"></a>
+<span class="sourceLineNo">043</span><a name="line.43"></a>
+<span class="sourceLineNo">044</span>    /**<a name="line.44"></a>
+<span class="sourceLineNo">045</span>     * Sets the originating host name or IP address (as a String) from where the {@code Subject} is initiating the<a name="line.45"></a>
+<span class="sourceLineNo">046</span>     * {@code Session}.<a name="line.46"></a>
+<span class="sourceLineNo">047</span>     * &lt;p/&gt;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>     * In web-based systems, this host can be inferred from the incoming request, e.g.<a name="line.48"></a>
+<span class="sourceLineNo">049</span>     * {@code javax.servlet.ServletRequest#getRemoteAddr()} or {@code javax.servlet.ServletRequest#getRemoteHost()}<a name="line.49"></a>
+<span class="sourceLineNo">050</span>     * methods, or in socket-based systems, it can be obtained via inspecting the socket<a name="line.50"></a>
+<span class="sourceLineNo">051</span>     * initiator's host IP.<a name="line.51"></a>
+<span class="sourceLineNo">052</span>     * &lt;p/&gt;<a name="line.52"></a>
+<span class="sourceLineNo">053</span>     * Most secure environments &lt;em&gt;should&lt;/em&gt; specify a valid, non-{@code null} {@code host}, since knowing the<a name="line.53"></a>
+<span class="sourceLineNo">054</span>     * {@code host} allows for more flexibility when securing a system: by requiring an host, access control policies<a name="line.54"></a>
+<span class="sourceLineNo">055</span>     * can also ensure access is restricted to specific client &lt;em&gt;locations&lt;/em&gt; in addition to {@code Subject}<a name="line.55"></a>
+<span class="sourceLineNo">056</span>     * principals, if so desired.<a name="line.56"></a>
+<span class="sourceLineNo">057</span>     * &lt;p/&gt;<a name="line.57"></a>
+<span class="sourceLineNo">058</span>     * &lt;b&gt;Caveat&lt;/b&gt; - if clients to your system are on a<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     * public network (as would be the case for a public web site), odds are high the clients can be<a name="line.59"></a>
+<span class="sourceLineNo">060</span>     * behind a NAT (Network Address Translation) router or HTTP proxy server.  If so, all clients<a name="line.60"></a>
+<span class="sourceLineNo">061</span>     * accessing your system behind that router or proxy will have the same originating host.<a name="line.61"></a>
+<span class="sourceLineNo">062</span>     * If your system is configured to allow only one session per host, then the next request from a<a name="line.62"></a>
+<span class="sourceLineNo">063</span>     * different NAT or proxy client will fail and access will be denied for that client.  Just be<a name="line.63"></a>
+<span class="sourceLineNo">064</span>     * aware that host-based security policies are best utilized in LAN or private WAN environments<a name="line.64"></a>
+<span class="sourceLineNo">065</span>     * when you can be ensure clients will not share IPs or be behind such NAT routers or<a name="line.65"></a>
+<span class="sourceLineNo">066</span>     * proxy servers.<a name="line.66"></a>
+<span class="sourceLineNo">067</span>     *<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     * @param host the originating host name or IP address (as a String) from where the {@code Subject} is<a name="line.68"></a>
+<span class="sourceLineNo">069</span>     *             initiating the {@code Session}.<a name="line.69"></a>
+<span class="sourceLineNo">070</span>     * @since 1.0<a name="line.70"></a>
+<span class="sourceLineNo">071</span>     */<a name="line.71"></a>
+<span class="sourceLineNo">072</span>    void setHost(String host);<a name="line.72"></a>
+<span class="sourceLineNo">073</span><a name="line.73"></a>
+<span class="sourceLineNo">074</span>    /**<a name="line.74"></a>
+<span class="sourceLineNo">075</span>     * Returns the originating host name or IP address (as a String) from where the {@code Subject} is initiating the<a name="line.75"></a>
+<span class="sourceLineNo">076</span>     * {@code Session}.<a name="line.76"></a>
+<span class="sourceLineNo">077</span>     * &lt;p/&gt;<a name="line.77"></a>
+<span class="sourceLineNo">078</span>     * See the {@link #setHost(String) setHost(String)} JavaDoc for more about security policies based on the<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     * {@code Session} host.<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     *<a name="line.80"></a>
+<span class="sourceLineNo">081</span>     * @return the originating host name or IP address (as a String) from where the {@code Subject} is initiating the<a name="line.81"></a>
+<span class="sourceLineNo">082</span>     *         {@code Session}.<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     * @see #setHost(String) setHost(String)<a name="line.83"></a>
+<span class="sourceLineNo">084</span>     */<a name="line.84"></a>
+<span class="sourceLineNo">085</span>    String getHost();<a name="line.85"></a>
+<span class="sourceLineNo">086</span><a name="line.86"></a>
+<span class="sourceLineNo">087</span>    Serializable getSessionId();<a name="line.87"></a>
+<span class="sourceLineNo">088</span><a name="line.88"></a>
+<span class="sourceLineNo">089</span>    void setSessionId(Serializable sessionId);<a name="line.89"></a>
+<span class="sourceLineNo">090</span><a name="line.90"></a>
+<span class="sourceLineNo">091</span>}<a name="line.91"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

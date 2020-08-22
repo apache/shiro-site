@@ -1,0 +1,511 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-  2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="Apache Shiro is a powerful and easy-to-use Java security framework that performs authentication, authorization, cryptography, and session management.">
+    <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
+    <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
+    <meta name="y_key" content="e47896cd6bae4920">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+
+    <title>
+                    Apache Shiro | Simple. Java. Security.
+        </title>
+
+
+    <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+    <!-- site styles and  -->
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+    <script type="text/javascript" src="./assets/js/shiro-site.js"></script>
+
+    <!-- github ribbon -->
+    <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.css" />
+    <!--[if lt IE 9]>
+      <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.ie.css" />
+    <![endif]-->
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap-theme.min.css">
+    <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="./assets/css/bootstrap-social.css">
+
+    <!-- Google Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXX-Y', 'auto');
+    ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics -->
+
+
+
+    <!-- syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css" integrity="sha256-Zd1icfZ72UBmsId/mUcagrmN7IN5Qkrvh75ICHIQVTk=" crossorigin="anonymous" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js" integrity="sha256-s63qpgPYoQk+wv3U6WZqioVJrwFNBTgD4dkeegLuwvo=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script type="text/javascript">
+
+        $( document ).ready(function() {
+            addPageEditLink();
+        });
+    </script>
+</head>
+
+<body>
+
+    <div id="top-bar"></div>
+
+    <div class="container" style="max-width: 1200px;">
+
+    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
+
+
+
+    <div class="masthead">
+        <p class="lead">
+            <a href="./index.html">
+                <img src="./assets/images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;">
+            </a>
+            <span class="tagline">Simple. Java. Security.</span>
+            <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+                <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png"/>
+            </a>
+        </p>
+    </div>
+
+
+
+    <nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="./get-started.html">Get Started</a></li>
+                <li><a href="./documentation.html">Docs</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Web Apps <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="./web.html">General</a></li>
+                        <li class="divider"></li>
+                        <li><a href="./web-features.html">Features</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Integrations <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="./spring.html">Spring</a></li>
+                        <li><a href="./guice.html">Guice</a></li>
+                        <li class="divider"></li>
+                        <li><a href="./integration.html">Third-Party Integrations</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="./features.html">Features</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Community <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="./forums.html">Community Forums</a></li>
+                        <li><a href="./mailing-lists.html">Mailing Lists</a></li>
+                        <li><a href="./articles.html">Articles</a></li>
+                        <li><a href="./news.html">News</a></li>
+                        <li><a href="./events.html">Events</a></li>
+                        <li class="divider"></li>
+                        <li><a href="./community.html">More</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        About <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="./about.html">About</a></li>
+                        <li><a href="./security-reports.html">Vulnerability Reports</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="http://www.apache.org/" class="dropdown-toggle" data-toggle="dropdown">
+                        Apache Software Foundation <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="http://www.apache.org/">Apache Homepage</a></li>
+                        <li><a href="http://www.apache.org/licenses/">License</a></li>
+                        <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                        <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                        <li><a href="http://www.apache.org/security/">Security</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+
+
+            <a name="Spring-IntegratingApacheShirointoSpringbasedApplications"></a>
+<h1>Integrating Apache Shiro into Spring-Boot Applications</h1>
+<p>Shiro&rsquo;s Spring-Boot integration is the easiest way to integrate Shiro into a Spring-base application, for more general Spring Framework integration, take a the <a href="spring-framework.html">annotation</a> or <a href="spring-xml.html">XML</a> guides. </p>
+<a name="Spring-StandaloneApplications"></a>
+<h2><a href="#standalone-applications" name="standalone-applications">Standalone Applications</a></h2>
+<p>Include the Shiro Spring starter dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).</p>
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#maven-cli">Apache Maven</a></li>
+    <li><a data-toggle="tab" href="#gradle-cli">Gradle</a></li>
+</ul>
+<div class="tab-content">
+    <div id="maven-cli" class="tab-pane fade in active">
+    <pre><code class='xml'>&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+    &lt;artifactId&gt;shiro-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.6.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+    </div>
+    <div id="gradle-cli" class="tab-pane fade">
+        <pre><code class='groovy'>compile 'org.apache.shiro:shiro-spring-boot-starter:1.6.0'
+</code></pre>
+    </div>
+</div>
+<p>The only thing that is left is to configure a <a href="realm.html">realm</a>:</p>
+<pre><code class="java">@Bean
+public Realm realm() {
+  ...
+}
+</code></pre>
+<p>The easiest way to setup Shiro, so that all SecurityUtils.* methods work in all cases, is to make the <code>SecurityManager</code> bean a static singleton. DO NOT do this in web applications - see the <a href="#Spring-WebApplications">Web Applications</a> section below instead.</p>
+<pre><code class="java">@Autowired
+private SecurityManager securityManager;
+    
+ @PostConstruct
+ private void initStaticSecurityManager() {
+     SecurityUtils.setSecurityManager(securityManager);
+ }
+</code></pre>
+<p>That is it, now you can get the current <code>Subject</code> using:</p>
+<pre><code class="java">SecurityUtils.getSubject();
+</code></pre>
+<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/master/samples/spring-boot">samples on Github</a>.</p>
+<a name="Spring-WebApplications"></a>
+<h2><a href="#web-applications" name="web-applications">Web Applications</a></h2>
+<p>Shiro has first-class support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a master Shiro Filter. This filter itself is extremely powerful, allowing for ad-hoc custom filter chains to be executed based on any URL path expression.</p>
+<p>First include the Shiro Spring web starter dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).</p>
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#maven-web">Apache Maven</a></li>
+    <li><a data-toggle="tab" href="#gradle-web">Gradle</a></li>
+</ul>
+<div class="tab-content">
+    <div id="maven-web" class="tab-pane fade in active">
+    <pre><code class='xml'>&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+    &lt;artifactId&gt;shiro-spring-boot-web-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.6.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+    </div>
+    <div id="gradle-web" class="tab-pane fade">
+        <pre><code class='groovy'>compile 'org.apache.shiro:shiro-spring-boot-web-starter:1.6.0'
+</code></pre>
+    </div>
+</div>
+<p>Provide a Realm implementation:</p>
+<pre><code class="java">@Bean
+public Realm realm() {
+  ...
+}
+</code></pre>
+<p>And finally a <code>ShiroFilterChainDefinition</code> which will map any application specific paths to a given filter, in order to allow different paths different levels of access. </p>
+<pre><code class="java">@Bean
+public ShiroFilterChainDefinition shiroFilterChainDefinition() {
+    DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
+    
+    // logged in users with the &#39;admin&#39; role
+    chainDefinition.addPathDefinition(&quot;/admin/**&quot;, &quot;authc, roles[admin]&quot;);
+    
+    // logged in users with the &#39;document:read&#39; permission
+    chainDefinition.addPathDefinition(&quot;/docs/**&quot;, &quot;authc, perms[document:read]&quot;);
+    
+    // all other paths require a logged in user
+    chainDefinition.addPathDefinition(&quot;/**&quot;, &quot;authc&quot;);
+    return chainDefinition;
+}
+</code></pre>
+<p>If you are using Shiro&rsquo;s annotations see the <a href="#Spring-annotations-web">annotation</a> section below.</p>
+<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/master/samples/spring-boot-web">samples on Github</a>.</p>
+<a name="Spring-annotations"></a>
+<h2><a href="#enabling-shiro-annotations" name="enabling-shiro-annotations">Enabling Shiro Annotations</a></h2>
+<p>In both standalone and web applications, you might want to use Shiro&rsquo;s Annotations for security checks (for example, <code>@RequiresRoles</code>, <code>@RequiresPermissions</code>, etc.) These annotations are enabled automatically in both starters listed above.</p>
+<p>Simply annotate your methods in order to use them:</p>
+<pre><code class="java">@RequiresPermissions(&quot;document:read&quot;)
+public void readDocument() {
+    ...
+}
+</code></pre>
+<a name="Spring-annotations-web"></a>
+<h3><a href="#annotations-and-web-applications" name="annotations-and-web-applications">Annotations and Web Applications</a></h3>
+<p>Shiro annotations are fully supported for use in <code>@Controller</code> classes, for example:</p>
+<pre><code class="java">@Controller
+public class AccountInfoController {
+
+    @RequiresRoles(&quot;admin&quot;)
+    @RequestMapping(&quot;/admin/config&quot;)
+    public String adminConfig(Model model) {
+        return &quot;view&quot;;
+    }
+}
+</code></pre>
+<p>A <code>ShiroFilterChainDefinition</code> bean with at least one definition is still required for this to work, either configure all paths to be accessable via the <code>anon</code> filter or a filter in &lsquo;permissive&rsquo; mode, for example: <code>authcBasic[permissive]</code>.</p>
+<pre><code class="java">@Bean
+public ShiroFilterChainDefinition shiroFilterChainDefinition() {
+    DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
+    chainDefinition.addPathDefinition(&quot;/**&quot;, &quot;anon&quot;); // all paths are managed via annotations
+    
+    // or allow basic authentication, but NOT require it.
+    // chainDefinition.addPathDefinition(&quot;/**&quot;, &quot;authcBasic[permissive]&quot;); 
+    return chainDefinition;
+}
+</code></pre>
+<a name="Spring-caching"></a>
+<h1><a href="#caching" name="caching">Caching</a></h1>
+<p>Enabling caching is as simple as providing a <a href="http://shiro.apache.org/caching.html">CacheManager</a> bean:</p>
+<pre><code class="java">@Bean
+protected CacheManager cacheManager() {
+    return new MemoryConstrainedCacheManager();
+}
+</code></pre>
+<!-- Work around for table styling until, all pages are updated. -->
+<style>
+
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        border-color: #ccc;
+    }
+    th {
+        background-color: #f0f0f0
+    }
+    th, td {
+        padding: 8px;
+    }
+</style>
+<h1><a href="#configuration-properties" name="configuration-properties">Configuration Properties</a></h1>
+<table>
+  <thead>
+    <tr>
+      <th>Key </th>
+      <th>Default Value </th>
+      <th>Description </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>shiro.enabled </td>
+      <td><code>true</code> </td>
+      <td>Enables Shiro&rsquo;s Spring module </td>
+    </tr>
+    <tr>
+      <td>shiro.web.enabled </td>
+      <td><code>true</code> </td>
+      <td>Enables Shiro&rsquo;s Spring web module </td>
+    </tr>
+    <tr>
+      <td>shiro.annotations.enabled </td>
+      <td><code>true</code> </td>
+      <td>Enables Spring support for Shiro&rsquo;s annotations </td>
+    </tr>
+    <tr>
+      <td>shiro.sessionManager.deleteInvalidSessions </td>
+      <td><code>true</code> </td>
+      <td>Remove invalid session from session storage </td>
+    </tr>
+    <tr>
+      <td>shiro.sessionManager.sessionIdCookieEnabled </td>
+      <td><code>true</code> </td>
+      <td>Enable session ID to cookie, for session tracking </td>
+    </tr>
+    <tr>
+      <td>shiro.sessionManager.sessionIdUrlRewritingEnabled </td>
+      <td><code>true</code> </td>
+      <td>Enable session URL rewriting support </td>
+    </tr>
+    <tr>
+      <td>shiro.userNativeSessionManager </td>
+      <td><code>false</code> </td>
+      <td>If enabled Shiro will manage the HTTP sessions instead of the container </td>
+    </tr>
+    <tr>
+      <td>shiro.sessionManager.cookie.name </td>
+      <td><code>JSESSIONID</code> </td>
+      <td>Session cookie name </td>
+    </tr>
+    <tr>
+      <td>shiro.sessionManager.cookie.maxAge </td>
+      <td><code>-1</code> </td>
+      <td>Session cookie max age </td>
+    </tr>
+    <tr>
+      <td>shiro.sessionManager.cookie.domain </td>
+      <td>null </td>
+      <td>Session cookie domain </td>
+    </tr>
+    <tr>
+      <td>shiro.sessionManager.cookie.path </td>
+      <td>null </td>
+      <td>Session cookie path </td>
+    </tr>
+    <tr>
+      <td>shiro.sessionManager.cookie.secure </td>
+      <td><code>false</code> </td>
+      <td>Session cookie secure flag </td>
+    </tr>
+    <tr>
+      <td>shiro.rememberMeManager.cookie.name </td>
+      <td><code>rememberMe</code> </td>
+      <td>RememberMe cookie name </td>
+    </tr>
+    <tr>
+      <td>shiro.rememberMeManager.cookie.maxAge </td>
+      <td>one year </td>
+      <td>RememberMe cookie max age </td>
+    </tr>
+    <tr>
+      <td>shiro.rememberMeManager.cookie.domain </td>
+      <td>null </td>
+      <td>RememberMe cookie domain</td>
+    </tr>
+    <tr>
+      <td>shiro.rememberMeManager.cookie.path </td>
+      <td>null </td>
+      <td>RememberMe cookie path</td>
+    </tr>
+    <tr>
+      <td>shiro.rememberMeManager.cookie.secure </td>
+      <td><code>false</code> </td>
+      <td>RememberMe cookie secure flag</td>
+    </tr>
+    <tr>
+      <td>shiro.loginUrl </td>
+      <td><code>/login.jsp</code> </td>
+      <td>Login URL used when unauthenticated users are redirected to login page </td>
+    </tr>
+    <tr>
+      <td>shiro.successUrl </td>
+      <td><code>/</code> </td>
+      <td>Default landing page after a user logs in (if alternative cannot be found in the current session) </td>
+    </tr>
+    <tr>
+      <td>shiro.unauthorizedUrl </td>
+      <td>null </td>
+      <td>Page to redirect user to if they are unauthorized (403 page) </td>
+    </tr>
+  </tbody>
+</table>
+<input type="hidden" id="ghEditPage" value="spring-boot.md.vtl"></input>
+    
+</div>
+
+    <div class="footer-padding"></div>
+    <footer class="custom-footer">
+
+        <div class="col-md-5">
+            <div class="copyright-footer">
+            <a href="http://www.apache.org/foundation/contributing.html">Donate to the ASF</a> |
+            <a href="http://www.apache.org/licenses/LICENSE-2.0.html">License</a>
+            <p>Copyright &copy; 2008-2020 The Apache Software Foundation</p>
+                </div>
+        </div>
+
+        <div class="social col-md-2">
+            <a class="btn btn-social-icon btn-sm btn-twitter" target="_blank" href="https://twitter.com/ApacheShiro"><span class="fa fa-twitter"></span></a>
+            <a class="btn btn-social-icon btn-sm btn-facebook" target="_blank" href="https://www.facebook.com/ApacheShiro"><span class="fa fa-facebook"></span></a>
+            <a class="btn btn-social-icon btn-sm btn-linkedin" target="_blank" href="https://www.linkedin.com/groups/4382576"><span class="fa fa-linkedin"></span></a>
+        </div>
+
+
+        <div class="col-md-2"></div>
+        <div class="col-md-2 editThisPage">
+            <div class="footer-shield"></div>
+        </div>
+
+    </footer> <!--END FOOTER-->
+
+</body>
+</html>

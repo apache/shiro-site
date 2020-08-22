@@ -1,0 +1,479 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-  2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="Apache Shiro is a powerful and easy-to-use Java security framework that performs authentication, authorization, cryptography, and session management.">
+    <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
+    <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
+    <meta name="y_key" content="e47896cd6bae4920">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+
+    <title>
+                    Apache Shiro | Simple. Java. Security.
+        </title>
+
+
+    <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+    <!-- site styles and  -->
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+    <script type="text/javascript" src="./assets/js/shiro-site.js"></script>
+
+    <!-- github ribbon -->
+    <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.css" />
+    <!--[if lt IE 9]>
+      <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.ie.css" />
+    <![endif]-->
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap-theme.min.css">
+    <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="./assets/css/bootstrap-social.css">
+
+    <!-- Google Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXX-Y', 'auto');
+    ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics -->
+
+
+
+    <!-- syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css" integrity="sha256-Zd1icfZ72UBmsId/mUcagrmN7IN5Qkrvh75ICHIQVTk=" crossorigin="anonymous" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js" integrity="sha256-s63qpgPYoQk+wv3U6WZqioVJrwFNBTgD4dkeegLuwvo=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script type="text/javascript">
+
+        $( document ).ready(function() {
+            addPageEditLink();
+        });
+    </script>
+</head>
+
+<body>
+
+    <div id="top-bar"></div>
+
+    <div class="container" style="max-width: 1200px;">
+
+    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
+
+
+
+    <div class="masthead">
+        <p class="lead">
+            <a href="./index.html">
+                <img src="./assets/images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;">
+            </a>
+            <span class="tagline">Simple. Java. Security.</span>
+            <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+                <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png"/>
+            </a>
+        </p>
+    </div>
+
+
+
+    <nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="./get-started.html">Get Started</a></li>
+                <li><a href="./documentation.html">Docs</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Web Apps <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="./web.html">General</a></li>
+                        <li class="divider"></li>
+                        <li><a href="./web-features.html">Features</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Integrations <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="./spring.html">Spring</a></li>
+                        <li><a href="./guice.html">Guice</a></li>
+                        <li class="divider"></li>
+                        <li><a href="./integration.html">Third-Party Integrations</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="./features.html">Features</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Community <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="./forums.html">Community Forums</a></li>
+                        <li><a href="./mailing-lists.html">Mailing Lists</a></li>
+                        <li><a href="./articles.html">Articles</a></li>
+                        <li><a href="./news.html">News</a></li>
+                        <li><a href="./events.html">Events</a></li>
+                        <li class="divider"></li>
+                        <li><a href="./community.html">More</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        About <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="./about.html">About</a></li>
+                        <li><a href="./security-reports.html">Vulnerability Reports</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="http://www.apache.org/" class="dropdown-toggle" data-toggle="dropdown">
+                        Apache Software Foundation <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="http://www.apache.org/">Apache Homepage</a></li>
+                        <li><a href="http://www.apache.org/licenses/">License</a></li>
+                        <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                        <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                        <li><a href="http://www.apache.org/security/">Security</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+
+
+            <h1><a name="Realm-ApacheShiroRealms"></a>Apache Shiro Realms</h1>
+<ul>
+  <li>
+    <p><a href="#Realm-RealmConfiguration">Realm Configuration</a></p>
+    <ul>
+      <li><a href="#Realm-ExplicitAssignment">Explicit Assignment</a></li>
+      <li><a href="#Realm-ImplicitAssignment">Implicit Assignment</a></li>
+    </ul>
+  </li>
+  <li>
+    <p><a href="#Realm-RealmAuthentication">Realm Authentication</a></p>
+    <ul>
+      <li><a href="#Realm-Supporting%7B%7BAuthenticationTokens%7D%7D">Supporting <code>AuthenticationTokens</code></a></li>
+      <li><a href="#Realm-Handlingsupported%7B%7BAuthenticationTokens%7D%7D">Handling supported <code>AuthenticationTokens</code></a></li>
+      <li><a href="#Realm-CredentialsMatching">Credentials Matching</a>
+        <ul>
+          <li><a href="#Realm-SimpleEqualityCheck">Simple Equality Check</a></li>
+          <li><a href="#Realm-HashingCredentials">Hashing Credentials</a>
+            <ul>
+              <li>
+                <p><a href="#Realm-HashingandCorrespondingMatchers">Hashing and Corresponding Matchers</a></p>
+                <ul>
+                  <li>
+                  <p><a href="#Realm-%7B%7BSaltedAuthenticationInfo%7D%7D"><code>SaltedAuthenticationInfo</code></a></p></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>
+      <p><a href="#Realm-DisablingAuthentication">Disabling Authentication</a></p></li>
+    </ul>
+  </li>
+  <li>
+    <p><a href="#Realm-RealmAuthorization">Realm Authorization</a></p>
+    <ul>
+      <li><a href="#Realm-RoleBasedAuthorization">Role based Authorization</a></li>
+      <li><a href="#Realm-PermissionBasedAuthorization">Permission based Authorization</a></li>
+    </ul>
+  </li>
+</ul>
+<p>A <code>Realm</code> is a component that can access application-specific security data such as users, roles, and permissions. The <code>Realm</code> translates this application-specific data into a format that Shiro understands so Shiro can in turn provide a single easy-to-understand <a href="subject.html" title="Subject">Subject</a> programming API no matter how many data sources exist or how application-specific your data might be.</p>
+<p>Realms usually have a 1-to-1 correlation with a data source such as a relational database, LDAP directory, file system, or other similar resource. As such, implementations of the <code>Realm</code> interface use data source-specific APIs to discover authorization data (roles, permissions, etc), such as JDBC, File IO, Hibernate or JPA, or any other Data Access API.</p>
+<div class="alert alert-success">
+    <span class="glyphicon glyphicon-ok"></span> <strong>Tip</strong>
+    <hr class="message-inner-separator">
+    <p>A Realm is essentially a security-specific <a class="external-link" href="http://en.wikipedia.org/wiki/Data_Access_Object" rel="nofollow">DAO</a></p>
+</div>
+<p>Because most of these data sources usually store both authentication data (credentials such as passwords) as well as authorization data (such as roles or permissions), every Shiro <code>Realm</code> can perform <em>both</em> authentication and authorization operations.</p>
+<a name="Realm-RealmConfiguration"></a>
+<h2><a href="#realm-configuration" name="realm-configuration">Realm Configuration</a></h2>
+<p>If using Shiro&rsquo;s INI configuration, you define and reference <code>Realms</code> like any other object in the <code>[main]</code> section, but they are configured on the <code>securityManager</code> in one of two ways: explicitly or implicitly.</p>
+<a name="Realm-ExplicitAssignment"></a>
+<h3><a href="#explicit-assignment" name="explicit-assignment">Explicit Assignment</a></h3>
+<p>Based on knowledge of INI configuration thus far, this is an obvious configuration approach. After defining one or more Realms, you set them as a collection property on the <code>securityManager</code> object.</p>
+<p>For example:</p>
+<pre><code class="ini">fooRealm = com.company.foo.Realm
+barRealm = com.company.another.Realm
+bazRealm = com.company.baz.Realm
+
+securityManager.realms = $fooRealm, $barRealm, $bazRealm
+</code></pre>
+<p>Explicit assignment is deterministic - you control exactly which realms are used as well as <em>the order</em> that they will be used for authentication and authorization. Realm ordering effects are described in detail in the Authentication chapter&rsquo;s <a href="authentication.html#Authentication-sequence">Authentication Sequence</a> section.</p>
+<a name="Realm-ImplicitAssignment"></a>
+<h3><a href="#implicit-assignment" name="implicit-assignment">Implicit Assignment</a></h3>
+<div class="alert alert-danger">
+    <span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Not Preferred</strong>
+    <hr class="message-inner-separator">
+    <p>Implicit assignment can cause unexpected behavior if you change the order in which realms are defined.  It is recommended that you avoid this approach and use Explicit Assignment, which has deterministic behavior.  It is likely Implicit Assignment will be deprecated/removed from a future Shiro release.</p>
+</div>
+<p>If for some reason you don&rsquo;t want to explicitly configure the <code>securityManager.realms</code> property, you can allow Shiro to detect all configured realms and assign them to the <code>securityManager</code> directly.</p>
+<p>Using this approach, realms are assigned to the <code>securityManager</code> instance in the <em>order that they are defined</em>.</p>
+<p>That is, for the following <code>shiro.ini</code> example:</p>
+<pre><code class="ini">blahRealm = com.company.blah.Realm
+fooRealm = com.company.foo.Realm
+barRealm = com.company.another.Realm
+
+# no securityManager.realms assignment here
+</code></pre>
+<p>basically has the same effect as if the following line were appended:</p>
+<pre><code class="java">securityManager.realms = $blahRealm, $fooRealm, $barRealm
+</code></pre>
+<p>However, realize that with implicit assignment, just the order that the realms are defined directly affects how they are consulted during authentication and authorization attempts. If you change their definition order, you will change how the master <code>Authenticator</code>&rsquo;s <a href="authentication.html#Authentication-sequence">Authentication Sequence</a> functions.</p>
+<p>For this reason, and to ensure deterministic behavior, we recommend using Explicit Assignment instead of Implicit Assignment.</p>
+<a name="Realm-authentication"></a>
+<a name="Realm-RealmAuthentication"></a>
+<h2><a href="#realm-authentication" name="realm-authentication">Realm Authentication</a></h2>
+<p>Once you understand Shiro&rsquo;s master <a href="authentication.html#Authentication-sequence">Authentication workflow</a>, it is important to know exactly what happens when the <code>Authenticator</code> interacts with a <code>Realm</code> during an authentication attempt.</p>
+<a name="Realm-Supporting%7B%7BAuthenticationTokens%7D%7D"></a>
+<h3>Supporting <code>AuthenticationTokens</code></h3>
+<p>As mentioned in the <a href="authentication.html#Authentication-sequence">authentication sequence</a>, just before a <code>Realm</code> is consulted to perform an authentication attempt, its <a href="static/current/apidocs/org/apache/shiro/realm/Realm.html#supports-org.apache.shiro.authc.AuthenticationToken-"><code>supports</code></a> method is called. If the return value is <code>true</code>, only then will its <code>getAuthenticationInfo(token)</code> method be invoked.</p>
+<p>Typically a realm will check the type (interface or class) of the submitted token to see if it can process it. For example, a Realm that processes biometric data may not understand <code>UsernamePasswordTokens</code> at all, in which case it would return <code>false</code> from the <code>supports</code> method.</p>
+<a name="Realm-Handlingsupported%7B%7BAuthenticationTokens%7D%7D"></a>
+<h3>Handling supported <code>AuthenticationTokens</code></h3>
+<p>If a <code>Realm</code> <code>supports</code> a submitted <code>AuthenticationToken</code>, the <code>Authenticator</code> will call the Realm&rsquo;s <a href="static/current/apidocs/org/apache/shiro/realm/Realm.html#getAuthenticationInfo-org.apache.shiro.authc.AuthenticationToken-">getAuthenticationInfo(token)</a> method. This effectively represents an authentication attempt with the <code>Realm&#39;s</code> backing data source. The method, in order:</p>
+<ol>
+  <li>Inspects the <code>token</code> for the identifying principal (account identifying information)</li>
+  <li>Based on the <code>principal</code>, looks up corresponding account data in the data source</li>
+  <li>Ensures that the token&rsquo;s supplied <code>credentials</code> matches those stored in the data store</li>
+  <li>If the credentials match, an <a href="static/current/apidocs/org/apache/shiro/authc/AuthenticationInfo.html">AuthenticationInfo</a> instance is returned that encapsulates the account data in a format Shiro understands</li>
+  <li>If the credentials DO NOT match, an <a href="static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html">AuthenticationException</a> is thrown</li>
+</ol>
+<p>This is the highest-level workflow for all Realm <code>getAuthenticationInfo</code> implementations. Realms are free to do whatever they want during this method, such as record the attempt in an audit log, update data records, or anything else that makes sense for the authentication attempt for that data store.</p>
+<p>The only thing required is that, if the credentials match for the given principal(s), that a non-null <code>AuthenticationInfo</code> instance is returned that represents Subject account information from that data source.</p>
+<div class="alert alert-info">
+    <span class="glyphicon glyphicon-info-sign"></span> <strong>Save Time</strong>
+    <hr class="message-inner-separator">
+    <p>Implementing `<a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/Realm.html">Realm</a>` interface directly might be time consuming and error prone.  Most people choose to subclass the <a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html">AuthorizingRealm</a> abstract class instead of starting from scratch.  This class implements common authentication and authorization workflow to save you time and effort.</p>
+</div>
+<a name="Realm-CredentialsMatching"></a>
+<h3><a href="#credentials-matching" name="credentials-matching">Credentials Matching</a></h3>
+<p>In the above realm authentication workflow, a Realm has to verify that the <a href="subject.html" title="Subject">Subject</a>&rsquo;s submitted credentials (e.g. password) must match the credentials stored in the data store. If they match, authentication is considered successful, and the system has verified the end-user&rsquo;s identity.</p>
+<div class="alert alert-warning">
+    <span class="glyphicon glyphicon-warning-sign"></span> <strong>Realm Credentials Matching</strong>
+    <hr class="message-inner-separator">
+    <p>It is each Realm's responsibility to match submitted credentials with those stored in the Realm's backing data store, and not the `Authenticator's` responsibility.  Each `Realm` has intimate knowledge of credentials format and storage and can perform detailed credentials matching, whereas the `Authenticator` is a generic workflow component.</p>
+</div>
+<p>The credentials matching process is nearly identical in all applications and usually only differs by the data compared. To ensure this process is pluggable and customizable if necessary, the <a href="static/current/apidocs/org/apache/shiro/realm/AuthenticatingRealm.html">AuthenticatingRealm</a> and its subclasses support the concept of a <a href="static/current/apidocs/org/apache/shiro/authc/credential/CredentialsMatcher.html">CredentialsMatcher</a> to perform the credentials comparison.</p>
+<p>After discovering account data, it and the submitted <code>AuthenticationToken</code> are presented to a <code>CredentialsMatcher</code> to see if what was submitted matches what is stored in the data store.</p>
+<p>Shiro has some <code>CredentialsMatcher</code> implementations to get you started out of the box, such as the <a href="static/current/apidocs/org/apache/shiro/authc/credential/SimpleCredentialsMatcher.html">SimpleCredentialsMatcher</a> and <a href="static/current/apidocs/org/apache/shiro/authc/credential/HashedCredentialsMatcher.html">HashedCredentialsMatcher</a> implementations, but if you wanted to configure a custom implementation for custom matching logic, you could do so directly:</p>
+<pre><code class="java">Realm myRealm = new com.company.shiro.realm.MyRealm();
+CredentialsMatcher customMatcher = new com.company.shiro.realm.CustomCredentialsMatcher();
+myRealm.setCredentialsMatcher(customMatcher);
+</code></pre>
+<p>Or, if using Shiro&rsquo;s INI <a href="configuration.html" title="Configuration">configuration</a>:</p>
+<pre><code class="ini">[main]
+...
+customMatcher = com.company.shiro.realm.CustomCredentialsMatcher
+myRealm = com.company.shiro.realm.MyRealm
+myRealm.credentialsMatcher = $customMatcher
+...
+</code></pre>
+<a name="Realm-SimpleEqualityCheck"></a>
+<h4><a href="#simple-equality-check" name="simple-equality-check">Simple Equality Check</a></h4>
+<p>All of Shiro&rsquo;s out-of-the-box <code>Realm</code> implementations default to using a <a href="static/current/apidocs/org/apache/shiro/authc/credential/SimpleCredentialsMatcher.html">SimpleCredentialsMatcher</a>. The <code>SimpleCredentialsMatcher</code> performs a plain direct equality check of the stored account credentials with what was submitted in the <code>AuthenticationToken</code>.</p>
+<p>For example, if a <a href="static/current/apidocs/org/apache/shiro/authc/UsernamePasswordToken.html">UsernamePasswordToken</a> was submitted, the <code>SimpleCredentialsMatcher</code> verifies that the password submitted is exactly equal to the password stored in the database.</p>
+<p>The <code>SimpleCredentialsMatcher</code> performs direct equality comparisons for more than just Strings though. It can work with most common byte sources, such as Strings, character arrays, byte arrays, Files and InputStreams. See its JavaDoc for more.</p>
+<a name="Realm-HashingCredentials"></a>
+<h4><a href="#hashing-credentials" name="hashing-credentials">Hashing Credentials</a></h4>
+<p>Instead of storing credentials in their raw form and performing raw/plain comparisons, a much more secure way of storing end-user&rsquo;s credentials (e.g. passwords) is to one-way hash them first before storing them in the data store.</p>
+<p>This ensures that end-users&rsquo; credentials are never stored in their raw form and that no one can know the original/raw value. This is a much more secure mechanism than plain-text or raw comparisons, and all security-conscious applications should favor this approach over non-hashed storage.</p>
+<p>To support these preferred cryptographic hashing strategies, Shiro provides <a href="static/current/apidocs/org/apache/shiro/authc/credential/HashedCredentialsMatcher.html">HashedCredentialsMatcher</a> implementations to be configured on realms instead of the aforementioned <code>SimpleCredentialsMatcher</code>.</p>
+<p>Hashing credentials and the benefits of salting and multiple hash iterations are outside the scope of this <code>Realm</code> documentation, but definitely read the <a href="static/current/apidocs/org/apache/shiro/authc/credential/HashedCredentialsMatcher.html">HashedCredentialsMatcher JavaDoc</a> which covers these principles in detail.</p>
+<a name="Realm-HashingandCorrespondingMatchers"></a>
+<h5><a href="#hashing-and-corresponding-matchers" name="hashing-and-corresponding-matchers">Hashing and Corresponding Matchers</a></h5>
+<p>So how do you configure a Shiro-enabled application to do this easily?</p>
+<p>Shiro provides multiple <code>HashedCredentialsMatcher</code> subclass implementations. You must configure the specific implementation on your realm to match the hashing algorithm you use to hash your users&rsquo; credentials.</p>
+<p>For example, let&rsquo;s say your application uses username/password pairs for authentication. And due to the benefits of hashing credentials described above, let&rsquo;s say you want to one-way hash a user&rsquo;s password using the <a href="https://en.wikipedia.org/wiki/SHA_hash_functions">SHA-256</a> algorithm when you create a user account. You would hash the user&rsquo;s entered plain-text password and save that value:</p>
+<pre><code class="java">import org.apache.shiro.crypto.hash.Sha256Hash;
+import org.apache.shiro.crypto.RandomNumberGenerator;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+...
+
+//We&#39;ll use a Random Number Generator to generate salts.  This 
+//is much more secure than using a username as a salt or not 
+//having a salt at all.  Shiro makes this easy. 
+//
+//Note that a normal app would reference an attribute rather 
+//than create a new RNG every time: 
+RandomNumberGenerator rng = new SecureRandomNumberGenerator();
+Object salt = rng.nextBytes();
+
+//Now hash the plain-text password with the random salt and multiple 
+//iterations and then Base64-encode the value (requires less space than Hex): 
+String hashedPasswordBase64 = new Sha256Hash(plainTextPassword, salt, 1024).toBase64();
+
+User user = new User(username, hashedPasswordBase64);
+//save the salt with the new account.  The HashedCredentialsMatcher 
+//will need it later when handling login attempts: 
+user.setPasswordSalt(salt);
+userDAO.create(user);
+</code></pre>
+<p>Since you&rsquo;re <code>SHA-256</code> hashing your user&rsquo;s passwords, you need to tell Shiro to use the appropriate <code>HashedCredentialsMatcher</code> to match your hashing preferences. In this example, we create a random salt and perform 1024 hash iterations for strong security (see the <code>HashedCredentialsMatcher</code> JavaDoc for why). Here is the Shiro INI configuration to make this work:</p>
+<pre><code class="ini">[main]
+...
+credentialsMatcher = org.apache.shiro.authc.credential.Sha256CredentialsMatcher
+# base64 encoding, not hex in this example:
+credentialsMatcher.storedCredentialsHexEncoded = false
+credentialsMatcher.hashIterations = 1024
+# This next property is only needed in Shiro 1.0\.  Remove it in 1.1 and later:
+credentialsMatcher.hashSalted = true
+
+...
+myRealm = com.company.....
+myRealm.credentialsMatcher = $credentialsMatcher
+...
+</code></pre>
+<a name="Realm-%7B%7BSaltedAuthenticationInfo%7D%7D"></a>
+<h6><a href="#saltedauthenticationinfo" name="saltedauthenticationinfo">SaltedAuthenticationInfo</a></h6>
+<p>The last thing to do to ensure this works is that your <code>Realm</code> implementation must return a <a href="static/current/apidocs/org/apache/shiro/authc/SaltedAuthenticationInfo.html">SaltedAuthenticationInfo</a> instance instead of a normal <code>AuthenticationInfo</code> one. The <code>SaltedAuthenticationInfo</code> interface ensures that the salt that you used when you created the user account (e.g. the <code>user.setPasswordSalt(salt);</code> call above) can be referenced by the <code>HashedCredentialsMatcher</code>.</p>
+<p>The <code>HashedCredentialsMatcher</code> needs the salt in order to perform the same hashing technique on the submitted <code>AuthenticationToken</code> to see if the token matches what you saved in the data store. So if you use salting for user passwords (and you should!!!), ensure your <code>Realm</code> implementation represents that by returning <code>SaltedAuthenticationInfo</code> instances.</p>
+<a name="Realm-DisablingAuthentication"></a>
+<h3><a href="#disabling-authentication" name="disabling-authentication">Disabling Authentication</a></h3>
+<p>If for some reason, you don&rsquo;t want a Realm to perform authentication for a data source (maybe because you only want the Realm to perform authorization), you can disable a Realm&rsquo;s support for authentication entirely by always returning <code>false</code> from the Realm&rsquo;s <code>supports</code> method. Then your realm will never be consulted during an authentication attempt.</p>
+<p>Of course at least one configured <code>Realm</code> needs to be able to support AuthenticationTokens if you want to authenticate Subjects.</p>
+<a name="Realm-RealmAuthorization"></a>
+<h2><a href="#realm-authorization" name="realm-authorization">Realm Authorization</a></h2>
+<p><code>SecurityManager</code> delegates the task of <code>Permission</code> or <code>Role</code> checking to <a href="static/current/apidocs/org/apache/shiro/authz/Authorizer.html">Authorizer</a>, defaulted to <a href="static/current/apidocs/org/apache/shiro/authz/ModularRealmAuthorizer.html">ModularRealmAuthorizer</a>. </p>
+<a name="Realm-RoleBasedAuthorization"></a>
+<h5><a href="#role-based-authorization" name="role-based-authorization">Role based Authorization</a></h5>
+<p>When one of the overloaded method hasRoles or checkRoles method is called on Subject</p>
+<ol>
+  <li><code>Subject</code> delegates to <code>SecurityManager</code> for identifying if the given Role is assigned</li>
+  <li><code>SecurityManager</code> then delegates to <code>Authorizer</code></li>
+  <li><a href="static/current/apidocs/org/apache/shiro/authz/Authorizer.html">Authorizer</a> then referrers to all the Authorizing Realms one by one until it found given role assigned to the subject. Deny access by returning false if no none of the Realm grants Subject given Role</li>
+  <li>Authorizing Realm <a href="static/current/apidocs/org/apache/shiro/authz/AuthorizationInfo.html">AuthorizationInfo</a> getRoles() method to get all Roles assigned to Subject</li>
+  <li>Grant access if it found the given Role in list of roles returned from AuthorizationInfo.getRoles call.</li>
+</ol>
+<a name="Realm-PermissionBasedAuthorization"></a>
+<h5><a href="#permission-based-authorization" name="permission-based-authorization">Permission based Authorization</a></h5>
+<p>When one of the overloaded method <code>isPermitted()</code> or <code>checkPermission()</code> method are called on Subject:</p>
+<ol>
+  <li><code>Subject</code> delegates the task to grant or deny Permission to SecurityManager</li>
+  <li><code>SecurityManager</code> then delegates to Authorizer</li>
+  <li>Authorizer then referrers to all of the Authorizer Realms one by one until it Permission is granted<br/>If Permission is not granted by any of the Authorizing Realm, Subject is denied Permission</li>
+  <li>Authorizing Realm does the following in order to check if a Subject is permitted:
+    <p>a. First it gets identify all Permissions assigned to Subject directly by calling getObjectPermissions() and getStringPermissions methods on <a href="static/current/apidocs/org/apache/shiro/authz/AuthorizationInfo.html">AuthorizationInfo</a> and aggregating the results.</p>
+    <p>b. If a <a href="static/current/apidocs/org/apache/shiro/authz/permission/RolePermissionResolver.html">RolePermissionResolver</a> is registered, it is used to retrieve Permissions based on all of the roles assigned to Subject by calling the <code>RolePermissionResolver.resolvePermissionsInRole()</code></p>
+    <p>c. For aggregated Permissions from a. and b. the implies() method is called to check if any of these permission are implied the checked permission. See <a href="permissions.html#Permissions-WildcardPermissions">WildcardPermission</a></p>
+  </li>
+</ol>
+<h2><a name="Lendahandwithdocumentation"></a>Lend a hand with documentation </h2>
+<p>While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time.  If you'd like to help the Shiro project, please consider correcting, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro. </p>
+<p>The easiest way to contribute your documentation is to submit a pull-request by clicking on the <code>Edit</code> link below, send it to the <a class="external-link" href="http://shiro-user.582556.n2.nabble.com/" rel="nofollow">User Forum</a> or the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.</p>
+<input type="hidden" id="ghEditPage" value="realm.md.vtl"></input>
+    
+</div>
+
+    <div class="footer-padding"></div>
+    <footer class="custom-footer">
+
+        <div class="col-md-5">
+            <div class="copyright-footer">
+            <a href="http://www.apache.org/foundation/contributing.html">Donate to the ASF</a> |
+            <a href="http://www.apache.org/licenses/LICENSE-2.0.html">License</a>
+            <p>Copyright &copy; 2008-2020 The Apache Software Foundation</p>
+                </div>
+        </div>
+
+        <div class="social col-md-2">
+            <a class="btn btn-social-icon btn-sm btn-twitter" target="_blank" href="https://twitter.com/ApacheShiro"><span class="fa fa-twitter"></span></a>
+            <a class="btn btn-social-icon btn-sm btn-facebook" target="_blank" href="https://www.facebook.com/ApacheShiro"><span class="fa fa-facebook"></span></a>
+            <a class="btn btn-social-icon btn-sm btn-linkedin" target="_blank" href="https://www.linkedin.com/groups/4382576"><span class="fa fa-linkedin"></span></a>
+        </div>
+
+
+        <div class="col-md-2"></div>
+        <div class="col-md-2 editThisPage">
+            <div class="footer-shield"></div>
+        </div>
+
+    </footer> <!--END FOOTER-->
+
+</body>
+</html>

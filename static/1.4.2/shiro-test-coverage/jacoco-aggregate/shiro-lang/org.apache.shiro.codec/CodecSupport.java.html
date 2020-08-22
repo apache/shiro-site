@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>CodecSupport.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-lang</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.codec</a> &gt; <span class="el_source">CodecSupport.java</span></div><h1>CodecSupport.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.codec;
+
+import org.apache.shiro.util.ByteSource;
+
+import java.io.*;
+
+/**
+ * Base abstract class that provides useful encoding and decoding operations, especially for character data.
+ *
+ * @since 0.9
+ */
+<span class="fc" id="L30">public abstract class CodecSupport {</span>
+
+    /**
+     * Shiro's default preferred character encoding, equal to &lt;b&gt;&lt;code&gt;UTF-8&lt;/code&gt;&lt;/b&gt;.
+     */
+    public static final String PREFERRED_ENCODING = &quot;UTF-8&quot;;
+
+    /**
+     * Converts the specified character array to a byte array using the Shiro's preferred encoding (UTF-8).
+     * &lt;p/&gt;
+     * This is a convenience method equivalent to calling the {@link #toBytes(String,String)} method with a
+     * a wrapping String and {@link CodecSupport#PREFERRED_ENCODING PREFERRED_ENCODING}, i.e.
+     * &lt;p/&gt;
+     * &lt;code&gt;toBytes( new String(chars), {@link CodecSupport#PREFERRED_ENCODING PREFERRED_ENCODING} );&lt;/code&gt;
+     *
+     * @param chars the character array to be converted to a byte array.
+     * @return the byte array of the UTF-8 encoded character array.
+     */
+    public static byte[] toBytes(char[] chars) {
+<span class="fc" id="L49">        return toBytes(new String(chars), PREFERRED_ENCODING);</span>
+    }
+
+    /**
+     * Converts the specified character array into a byte array using the specified character encoding.
+     * &lt;p/&gt;
+     * This is a convenience method equivalent to calling the {@link #toBytes(String,String)} method with a
+     * a wrapping String and the specified encoding, i.e.
+     * &lt;p/&gt;
+     * &lt;code&gt;toBytes( new String(chars), encoding );&lt;/code&gt;
+     *
+     * @param chars    the character array to be converted to a byte array
+     * @param encoding the character encoding to use to when converting to bytes.
+     * @return the bytes of the specified character array under the specified encoding.
+     * @throws CodecException if the JVM does not support the specified encoding.
+     */
+    public static byte[] toBytes(char[] chars, String encoding) throws CodecException {
+<span class="nc" id="L66">        return toBytes(new String(chars), encoding);</span>
+    }
+
+    /**
+     * Converts the specified source argument to a byte array with Shiro's
+     * {@link CodecSupport#PREFERRED_ENCODING PREFERRED_ENCODING}.
+     *
+     * @param source the string to convert to a byte array.
+     * @return the bytes representing the specified string under the {@link CodecSupport#PREFERRED_ENCODING PREFERRED_ENCODING}.
+     * @see #toBytes(String, String)
+     */
+    public static byte[] toBytes(String source) {
+<span class="fc" id="L78">        return toBytes(source, PREFERRED_ENCODING);</span>
+    }
+
+    /**
+     * Converts the specified source to a byte array via the specified encoding, throwing a
+     * {@link CodecException CodecException} if the encoding fails.
+     *
+     * @param source   the source string to convert to a byte array.
+     * @param encoding the encoding to use to use.
+     * @return the byte array of the specified source with the given encoding.
+     * @throws CodecException if the JVM does not support the specified encoding.
+     */
+    public static byte[] toBytes(String source, String encoding) throws CodecException {
+        try {
+<span class="fc" id="L92">            return source.getBytes(encoding);</span>
+<span class="nc" id="L93">        } catch (UnsupportedEncodingException e) {</span>
+<span class="nc" id="L94">            String msg = &quot;Unable to convert source [&quot; + source + &quot;] to byte array using &quot; +</span>
+                    &quot;encoding '&quot; + encoding + &quot;'&quot;;
+<span class="nc" id="L96">            throw new CodecException(msg, e);</span>
+        }
+    }
+
+    /**
+     * Converts the specified byte array to a String using the {@link CodecSupport#PREFERRED_ENCODING PREFERRED_ENCODING}.
+     *
+     * @param bytes the byte array to turn into a String.
+     * @return the specified byte array as an encoded String ({@link CodecSupport#PREFERRED_ENCODING PREFERRED_ENCODING}).
+     * @see #toString(byte[], String)
+     */
+    public static String toString(byte[] bytes) {
+<span class="fc" id="L108">        return toString(bytes, PREFERRED_ENCODING);</span>
+    }
+
+    /**
+     * Converts the specified byte array to a String using the specified character encoding.  This implementation
+     * does the same thing as &lt;code&gt;new {@link String#String(byte[], String) String(byte[], encoding)}&lt;/code&gt;, but will
+     * wrap any {@link UnsupportedEncodingException} with a nicer runtime {@link CodecException}, allowing you to
+     * decide whether or not you want to catch the exception or let it propagate.
+     *
+     * @param bytes    the byte array to convert to a String
+     * @param encoding the character encoding used to encode the String.
+     * @return the specified byte array as an encoded String
+     * @throws CodecException if the JVM does not support the specified encoding.
+     */
+    public static String toString(byte[] bytes, String encoding) throws CodecException {
+        try {
+<span class="fc" id="L124">            return new String(bytes, encoding);</span>
+<span class="nc" id="L125">        } catch (UnsupportedEncodingException e) {</span>
+<span class="nc" id="L126">            String msg = &quot;Unable to convert byte array to String with encoding '&quot; + encoding + &quot;'.&quot;;</span>
+<span class="nc" id="L127">            throw new CodecException(msg, e);</span>
+        }
+    }
+
+    /**
+     * Returns the specified byte array as a character array using the
+     * {@link CodecSupport#PREFERRED_ENCODING PREFERRED_ENCODING}.
+     *
+     * @param bytes the byte array to convert to a char array
+     * @return the specified byte array encoded as a character array ({@link CodecSupport#PREFERRED_ENCODING PREFERRED_ENCODING}).
+     * @see #toChars(byte[], String)
+     */
+    public static char[] toChars(byte[] bytes) {
+<span class="nc" id="L140">        return toChars(bytes, PREFERRED_ENCODING);</span>
+    }
+
+    /**
+     * Converts the specified byte array to a character array using the specified character encoding.
+     * &lt;p/&gt;
+     * Effectively calls &lt;code&gt;{@link #toString(byte[], String) toString(bytes,encoding)}.{@link String#toCharArray() toCharArray()};&lt;/code&gt;
+     *
+     * @param bytes    the byte array to convert to a String
+     * @param encoding the character encoding used to encode the bytes.
+     * @return the specified byte array as an encoded char array
+     * @throws CodecException if the JVM does not support the specified encoding.
+     */
+    public static char[] toChars(byte[] bytes, String encoding) throws CodecException {
+<span class="nc" id="L154">        return toString(bytes, encoding).toCharArray();</span>
+    }
+
+    /**
+     * Returns {@code true} if the specified object can be easily converted to bytes by instances of this class,
+     * {@code false} otherwise.
+     * &lt;p/&gt;
+     * The default implementation returns {@code true} IFF the specified object is an instance of one of the following
+     * types:
+     * &lt;ul&gt;
+     * &lt;li&gt;{@code byte[]}&lt;/li&gt;
+     * &lt;li&gt;{@code char[]}&lt;/li&gt;
+     * &lt;li&gt;{@link ByteSource}&lt;/li&gt;
+     * &lt;li&gt;{@link String}&lt;/li&gt;
+     * &lt;li&gt;{@link File}&lt;/li&gt;
+     * &lt;/li&gt;{@link InputStream}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param o the object to test to see if it can be easily converted to a byte array
+     * @return {@code true} if the specified object can be easily converted to bytes by instances of this class,
+     *         {@code false} otherwise.
+     * @since 1.0
+     */
+    protected boolean isByteSource(Object o) {
+<span class="pc bpc" id="L178" title="6 of 12 branches missed.">        return o instanceof byte[] || o instanceof char[] || o instanceof String ||</span>
+                o instanceof ByteSource || o instanceof File || o instanceof InputStream;
+    }
+
+    /**
+     * Converts the specified Object into a byte array.
+     * &lt;p/&gt;
+     * If the argument is a {@code byte[]}, {@code char[]}, {@link ByteSource}, {@link String}, {@link File}, or
+     * {@link InputStream}, it will be converted automatically and returned.}
+     * &lt;p/&gt;
+     * If the argument is anything other than these types, it is passed to the
+     * {@link #objectToBytes(Object) objectToBytes} method which must be overridden by subclasses.
+     *
+     * @param o the Object to convert into a byte array
+     * @return a byte array representation of the Object argument.
+     */
+    protected byte[] toBytes(Object o) {
+<span class="pc bpc" id="L195" title="1 of 2 branches missed.">        if (o == null) {</span>
+<span class="nc" id="L196">            String msg = &quot;Argument for byte conversion cannot be null.&quot;;</span>
+<span class="nc" id="L197">            throw new IllegalArgumentException(msg);</span>
+        }
+<span class="fc bfc" id="L199" title="All 2 branches covered.">        if (o instanceof byte[]) {</span>
+<span class="fc" id="L200">            return (byte[]) o;</span>
+<span class="fc bfc" id="L201" title="All 2 branches covered.">        } else if (o instanceof ByteSource) {</span>
+<span class="fc" id="L202">            return ((ByteSource) o).getBytes();</span>
+<span class="fc bfc" id="L203" title="All 2 branches covered.">        } else if (o instanceof char[]) {</span>
+<span class="fc" id="L204">            return toBytes((char[]) o);</span>
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">        } else if (o instanceof String) {</span>
+<span class="fc" id="L206">            return toBytes((String) o);</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">        } else if (o instanceof File) {</span>
+<span class="nc" id="L208">            return toBytes((File) o);</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">        } else if (o instanceof InputStream) {</span>
+<span class="nc" id="L210">            return toBytes((InputStream) o);</span>
+        } else {
+<span class="nc" id="L212">            return objectToBytes(o);</span>
+        }
+    }
+
+    /**
+     * Converts the specified Object into a String.
+     * &lt;p/&gt;
+     * If the argument is a {@code byte[]} or {@code char[]} it will be converted to a String using the
+     * {@link #PREFERRED_ENCODING}.  If a String, it will be returned as is.
+     * &lt;p/&gt;
+     * If the argument is anything other than these three types, it is passed to the
+     * {@link #objectToString(Object) objectToString} method.
+     *
+     * @param o the Object to convert into a byte array
+     * @return a byte array representation of the Object argument.
+     */
+    protected String toString(Object o) {
+<span class="nc bnc" id="L229" title="All 2 branches missed.">        if (o == null) {</span>
+<span class="nc" id="L230">            String msg = &quot;Argument for String conversion cannot be null.&quot;;</span>
+<span class="nc" id="L231">            throw new IllegalArgumentException(msg);</span>
+        }
+<span class="nc bnc" id="L233" title="All 2 branches missed.">        if (o instanceof byte[]) {</span>
+<span class="nc" id="L234">            return toString((byte[]) o);</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">        } else if (o instanceof char[]) {</span>
+<span class="nc" id="L236">            return new String((char[]) o);</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">        } else if (o instanceof String) {</span>
+<span class="nc" id="L238">            return (String) o;</span>
+        } else {
+<span class="nc" id="L240">            return objectToString(o);</span>
+        }
+    }
+
+    protected byte[] toBytes(File file) {
+<span class="nc bnc" id="L245" title="All 2 branches missed.">        if (file == null) {</span>
+<span class="nc" id="L246">            throw new IllegalArgumentException(&quot;File argument cannot be null.&quot;);</span>
+        }
+        try {
+<span class="nc" id="L249">            return toBytes(new FileInputStream(file));</span>
+<span class="nc" id="L250">        } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L251">            String msg = &quot;Unable to acquire InputStream for file [&quot; + file + &quot;]&quot;;</span>
+<span class="nc" id="L252">            throw new CodecException(msg, e);</span>
+        }
+    }
+
+    /**
+     * Converts the specified {@link InputStream InputStream} into a byte array.
+     *
+     * @param in the InputStream to convert to a byte array
+     * @return the bytes of the input stream
+     * @throws IllegalArgumentException if the {@code InputStream} argument is {@code null}.
+     * @throws CodecException           if there is any problem reading from the {@link InputStream}.
+     * @since 1.0
+     */
+    protected byte[] toBytes(InputStream in) {
+<span class="nc bnc" id="L266" title="All 2 branches missed.">        if (in == null) {</span>
+<span class="nc" id="L267">            throw new IllegalArgumentException(&quot;InputStream argument cannot be null.&quot;);</span>
+        }
+<span class="nc" id="L269">        final int BUFFER_SIZE = 512;</span>
+<span class="nc" id="L270">        ByteArrayOutputStream out = new ByteArrayOutputStream(BUFFER_SIZE);</span>
+<span class="nc" id="L271">        byte[] buffer = new byte[BUFFER_SIZE];</span>
+        int bytesRead;
+        try {
+<span class="nc bnc" id="L274" title="All 2 branches missed.">            while ((bytesRead = in.read(buffer)) != -1) {</span>
+<span class="nc" id="L275">                out.write(buffer, 0, bytesRead);</span>
+            }
+<span class="nc" id="L277">            return out.toByteArray();</span>
+<span class="nc" id="L278">        } catch (IOException ioe) {</span>
+<span class="nc" id="L279">            throw new CodecException(ioe);</span>
+        } finally {
+            try {
+<span class="nc" id="L282">                in.close();</span>
+<span class="nc" id="L283">            } catch (IOException ignored) {</span>
+<span class="nc" id="L284">            }</span>
+            try {
+<span class="nc" id="L286">                out.close();</span>
+<span class="nc" id="L287">            } catch (IOException ignored) {</span>
+<span class="nc" id="L288">            }</span>
+        }
+    }
+
+    /**
+     * Default implementation throws a CodecException immediately since it can't infer how to convert the Object
+     * to a byte array.  This method must be overridden by subclasses if anything other than the three default
+     * types (listed in the {@link #toBytes(Object) toBytes(Object)} JavaDoc) are to be converted to a byte array.
+     *
+     * @param o the Object to convert to a byte array.
+     * @return a byte array representation of the Object argument.
+     */
+    protected byte[] objectToBytes(Object o) {
+<span class="nc" id="L301">        String msg = &quot;The &quot; + getClass().getName() + &quot; implementation only supports conversion to &quot; +</span>
+<span class="nc" id="L302">                &quot;byte[] if the source is of type byte[], char[], String, &quot; + ByteSource.class.getName() +</span>
+                &quot; File or InputStream.  The instance provided as a method &quot; +
+<span class="nc" id="L304">                &quot;argument is of type [&quot; + o.getClass().getName() + &quot;].  If you would like to convert &quot; +</span>
+                &quot;this argument type to a byte[], you can 1) convert the argument to one of the supported types &quot; +
+<span class="nc" id="L306">                &quot;yourself and then use that as the method argument or 2) subclass &quot; + getClass().getName() +</span>
+                &quot;and override the objectToBytes(Object o) method.&quot;;
+<span class="nc" id="L308">        throw new CodecException(msg);</span>
+    }
+
+    /**
+     * Default implementation merely returns &lt;code&gt;objectArgument.toString()&lt;/code&gt;.  Subclasses can override this
+     * method for different mechanisms of converting an object to a String.
+     *
+     * @param o the Object to convert to a byte array.
+     * @return a String representation of the Object argument.
+     */
+    protected String objectToString(Object o) {
+<span class="nc" id="L319">        return o.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

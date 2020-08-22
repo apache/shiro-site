@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>CachingRealm.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.realm</a> &gt; <span class="el_source">CachingRealm.java</span></div><h1>CachingRealm.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.realm;
+
+import org.apache.shiro.authc.LogoutAware;
+import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.cache.CacheManagerAware;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.CollectionUtils;
+import org.apache.shiro.util.Nameable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
+import java.util.concurrent.atomic.AtomicInteger;
+
+
+/**
+ * A very basic abstract extension point for the {@link Realm} interface that provides caching support for subclasses.
+ * &lt;p/&gt;
+ * It also provides a convenience method,
+ * {@link #getAvailablePrincipal(org.apache.shiro.subject.PrincipalCollection)}, which is useful across all
+ * realm subclasses for obtaining a realm-specific principal/identity.
+ * &lt;p/&gt;
+ * All actual Realm method implementations are left to subclasses.
+ *
+ * @see #clearCache(org.apache.shiro.subject.PrincipalCollection)
+ * @see #onLogout(org.apache.shiro.subject.PrincipalCollection)
+ * @see #getAvailablePrincipal(org.apache.shiro.subject.PrincipalCollection)
+ * @since 0.9
+ */
+public abstract class CachingRealm implements Realm, Nameable, CacheManagerAware, LogoutAware {
+
+<span class="fc" id="L50">    private static final Logger log = LoggerFactory.getLogger(CachingRealm.class);</span>
+
+    //TODO - complete JavaDoc
+
+<span class="fc" id="L54">    private static final AtomicInteger INSTANCE_COUNT = new AtomicInteger();</span>
+
+    /*--------------------------------------------
+    |    I N S T A N C E   V A R I A B L E S    |
+    ============================================*/
+    private String name;
+    private boolean cachingEnabled;
+    private CacheManager cacheManager;
+
+    /**
+     * Default no-argument constructor that defaults
+     * {@link #isCachingEnabled() cachingEnabled} (for general caching) to {@code true} and sets a
+     * default {@link #getName() name} based on the class name.
+     * &lt;p/&gt;
+     * Note that while in general, caching may be enabled by default, subclasses have control over
+     * if specific caching is enabled.
+     */
+<span class="fc" id="L71">    public CachingRealm() {</span>
+<span class="fc" id="L72">        this.cachingEnabled = true;</span>
+<span class="fc" id="L73">        this.name = getClass().getName() + &quot;_&quot; + INSTANCE_COUNT.getAndIncrement();</span>
+<span class="fc" id="L74">    }</span>
+
+    /**
+     * Returns the &lt;tt&gt;CacheManager&lt;/tt&gt; used for data caching to reduce EIS round trips, or &lt;tt&gt;null&lt;/tt&gt; if
+     * caching is disabled.
+     *
+     * @return the &lt;tt&gt;CacheManager&lt;/tt&gt; used for data caching to reduce EIS round trips, or &lt;tt&gt;null&lt;/tt&gt; if
+     *         caching is disabled.
+     */
+    public CacheManager getCacheManager() {
+<span class="fc" id="L84">        return this.cacheManager;</span>
+    }
+
+    /**
+     * Sets the &lt;tt&gt;CacheManager&lt;/tt&gt; to be used for data caching to reduce EIS round trips.
+     * &lt;p/&gt;
+     * This property is &lt;tt&gt;null&lt;/tt&gt; by default, indicating that caching is turned off.
+     *
+     * @param cacheManager the &lt;tt&gt;CacheManager&lt;/tt&gt; to use for data caching, or &lt;tt&gt;null&lt;/tt&gt; to disable caching.
+     */
+    public void setCacheManager(CacheManager cacheManager) {
+<span class="fc" id="L95">        this.cacheManager = cacheManager;</span>
+<span class="fc" id="L96">        afterCacheManagerSet();</span>
+<span class="fc" id="L97">    }</span>
+
+    /**
+     * Returns {@code true} if caching should be used if a {@link CacheManager} has been
+     * {@link #setCacheManager(org.apache.shiro.cache.CacheManager) configured}, {@code false} otherwise.
+     * &lt;p/&gt;
+     * The default value is {@code true} since the large majority of Realms will benefit from caching if a CacheManager
+     * has been configured.  However, memory-only realms should set this value to {@code false} since they would
+     * manage account data in memory already lookups would already be as efficient as possible.
+     *
+     * @return {@code true} if caching will be globally enabled if a {@link CacheManager} has been
+     *         configured, {@code false} otherwise
+     */
+    public boolean isCachingEnabled() {
+<span class="fc" id="L111">        return cachingEnabled;</span>
+    }
+
+    /**
+     * Sets whether or not caching should be used if a {@link CacheManager} has been
+     * {@link #setCacheManager(org.apache.shiro.cache.CacheManager) configured}.
+     *
+     * @param cachingEnabled whether or not to globally enable caching for this realm.
+     */
+    public void setCachingEnabled(boolean cachingEnabled) {
+<span class="fc" id="L121">        this.cachingEnabled = cachingEnabled;</span>
+<span class="fc" id="L122">    }</span>
+
+    public String getName() {
+<span class="fc" id="L125">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="fc" id="L129">        this.name = name;</span>
+<span class="fc" id="L130">    }</span>
+
+    /**
+     * Template method that may be implemented by subclasses should they wish to react to a
+     * {@link CacheManager} instance being set on the realm instance via the
+     * {@link #setCacheManager(org.apache.shiro.cache.CacheManager)} mutator.
+     */
+    protected void afterCacheManagerSet() {
+<span class="fc" id="L138">    }</span>
+
+    /**
+     * If caching is enabled, this will clear any cached data associated with the specified account identity.
+     * Subclasses are free to override for additional behavior, but be sure to call {@code super.onLogout} first.
+     * &lt;p/&gt;
+     * This default implementation merely calls {@link #clearCache(org.apache.shiro.subject.PrincipalCollection)}.
+     *
+     * @param principals the application-specific Subject/user identifier that is logging out.
+     * @see #clearCache(org.apache.shiro.subject.PrincipalCollection)
+     * @see #getAvailablePrincipal(org.apache.shiro.subject.PrincipalCollection)
+     * @since 1.2
+     */
+    public void onLogout(PrincipalCollection principals) {
+<span class="fc" id="L152">        clearCache(principals);</span>
+<span class="fc" id="L153">    }</span>
+
+    private static boolean isEmpty(PrincipalCollection pc) {
+<span class="pc bpc" id="L156" title="2 of 4 branches missed.">        return pc == null || pc.isEmpty();</span>
+    }
+
+    /**
+     * Clears out any cached data associated with the specified account identity/identities.
+     * &lt;p/&gt;
+     * This implementation will return quietly if the principals argument is null or empty.  Otherwise it delegates
+     * to {@link #doClearCache(org.apache.shiro.subject.PrincipalCollection)}.
+     *
+     * @param principals the principals of the account for which to clear any cached data.
+     * @since 1.2
+     */
+    protected void clearCache(PrincipalCollection principals) {
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">        if (!isEmpty(principals)) {</span>
+<span class="fc" id="L170">            doClearCache(principals);</span>
+<span class="fc" id="L171">            log.trace(&quot;Cleared cache entries for account with principals [{}]&quot;, principals);</span>
+        }
+<span class="fc" id="L173">    }</span>
+
+    /**
+     * This implementation does nothing - it is a template to be overridden by subclasses if necessary.
+     *
+     * @param principals principals the principals of the account for which to clear any cached data.
+     * @since 1.2
+     */
+    protected void doClearCache(PrincipalCollection principals) {
+<span class="fc" id="L182">    }</span>
+
+    /**
+     * A utility method for subclasses that returns the first available principal of interest to this particular realm.
+     * The heuristic used to acquire the principal is as follows:
+     * &lt;ul&gt;
+     * &lt;li&gt;Attempt to get &lt;em&gt;this particular Realm's&lt;/em&gt; 'primary' principal in the {@code PrincipalCollection} via a
+     * &lt;code&gt;principals.{@link PrincipalCollection#fromRealm(String) fromRealm}({@link #getName() getName()})&lt;/code&gt;
+     * call.&lt;/li&gt;
+     * &lt;li&gt;If the previous call does not result in any principals, attempt to get the overall 'primary' principal
+     * from the PrincipalCollection via {@link org.apache.shiro.subject.PrincipalCollection#getPrimaryPrincipal()}.&lt;/li&gt;
+     * &lt;li&gt;If there are no principals from that call (or the PrincipalCollection argument was null to begin with),
+     * return {@code null}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param principals the PrincipalCollection holding all principals (from all realms) associated with a single Subject.
+     * @return the 'primary' principal attributed to this particular realm, or the fallback 'master' principal if it
+     *         exists, or if not {@code null}.
+     * @since 1.2
+     */
+    protected Object getAvailablePrincipal(PrincipalCollection principals) {
+<span class="fc" id="L203">        Object primary = null;</span>
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">        if (!isEmpty(principals)) {</span>
+<span class="fc" id="L205">            Collection thisPrincipals = principals.fromRealm(getName());</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">            if (!CollectionUtils.isEmpty(thisPrincipals)) {</span>
+<span class="fc" id="L207">                primary = thisPrincipals.iterator().next();</span>
+            } else {
+                //no principals attributed to this particular realm.  Fall back to the 'master' primary:
+<span class="fc" id="L210">                primary = principals.getPrimaryPrincipal();</span>
+            }
+        }
+
+<span class="fc" id="L214">        return primary;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

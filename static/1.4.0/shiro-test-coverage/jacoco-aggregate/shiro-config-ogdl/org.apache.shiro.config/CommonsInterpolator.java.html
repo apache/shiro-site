@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>CommonsInterpolator.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-config-ogdl</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.config</a> &gt; <span class="el_source">CommonsInterpolator.java</span></div><h1>CommonsInterpolator.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.config;
+
+import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration2.interpol.ConstantLookup;
+import org.apache.commons.configuration2.interpol.EnvironmentLookup;
+import org.apache.commons.configuration2.interpol.SystemPropertiesLookup;
+
+/**
+ * Commons-Config interpolation wrapper. This implementation uses a {@link ConfigurationInterpolator} with the default
+ * lookup: &lt;code&gt;sys&lt;/code&gt; (system properties), &lt;code&gt;env&lt;/code&gt; (environment variables&gt;, and &lt;code&gt;const&lt;/code&gt; (constants).
+ *
+ * &lt;table&gt;
+ *     &lt;tr&gt;
+ *         &lt;th&gt;lookup&lt;/th&gt;
+ *         &lt;th&gt;example&lt;/th&gt;
+ *         &lt;th&gt;value&lt;/th&gt;
+ *     &lt;/tr&gt;
+ *     &lt;tr&gt;
+ *         &lt;td&gt;sys&lt;/td&gt;
+ *         &lt;td&gt;${sys:os.name}&lt;/td&gt;
+ *         &lt;td&gt;mac os x&lt;/td&gt;
+ *     &lt;/tr&gt;
+ *     &lt;tr&gt;
+ *         &lt;td&gt;env&lt;/td&gt;
+ *         &lt;td&gt;${env:EDITOR}&lt;/td&gt;
+ *         &lt;td&gt;vi&lt;/td&gt;
+ *     &lt;/tr&gt;
+ *     &lt;tr&gt;
+ *         &lt;td&gt;const&lt;/td&gt;
+ *         &lt;td&gt;${const:java.awt.event.KeyEvent.VK_ENTER}&lt;/td&gt;
+ *         &lt;td&gt;\n&lt;/td&gt;
+ *     &lt;/tr&gt;
+ * &lt;/table&gt;
+ *
+ * @see ConfigurationInterpolator
+ * @since 1.4
+ */
+public class CommonsInterpolator implements Interpolator {
+
+    final private ConfigurationInterpolator interpolator;
+
+<span class="fc" id="L60">    public CommonsInterpolator() {</span>
+<span class="fc" id="L61">        this.interpolator = new ConfigurationInterpolator();</span>
+
+<span class="fc" id="L63">        interpolator.registerLookup(&quot;const&quot;, new ConstantLookup());</span>
+<span class="fc" id="L64">        interpolator.addDefaultLookup(new SystemPropertiesLookup());</span>
+<span class="fc" id="L65">        interpolator.addDefaultLookup(new EnvironmentLookup());</span>
+<span class="fc" id="L66">    }</span>
+
+    @Override
+    public String interpolate(String value) {
+<span class="fc" id="L70">        return (String) interpolator.interpolate(value);</span>
+    }
+
+    public ConfigurationInterpolator getConfigurationInterpolator() {
+<span class="nc" id="L74">        return interpolator;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

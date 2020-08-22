@@ -1,0 +1,655 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-  2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="Apache Shiro is a powerful and easy-to-use Java security framework that performs authentication, authorization, cryptography, and session management.">
+    <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
+    <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
+    <meta name="y_key" content="e47896cd6bae4920">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+
+    <title>
+                    Apache Shiro | Simple. Java. Security.
+        </title>
+
+
+    <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+    <!-- site styles and  -->
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+    <script type="text/javascript" src="./assets/js/shiro-site.js"></script>
+
+    <!-- github ribbon -->
+    <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.css" />
+    <!--[if lt IE 9]>
+      <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.ie.css" />
+    <![endif]-->
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap-theme.min.css">
+    <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="./assets/css/bootstrap-social.css">
+
+    <!-- Google Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXX-Y', 'auto');
+    ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics -->
+
+
+
+    <!-- syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css" integrity="sha256-Zd1icfZ72UBmsId/mUcagrmN7IN5Qkrvh75ICHIQVTk=" crossorigin="anonymous" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js" integrity="sha256-s63qpgPYoQk+wv3U6WZqioVJrwFNBTgD4dkeegLuwvo=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script type="text/javascript">
+
+        $( document ).ready(function() {
+            addPageEditLink();
+        });
+    </script>
+</head>
+
+<body>
+
+    <div id="top-bar"></div>
+
+    <div class="container" style="max-width: 1200px;">
+
+    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
+
+
+
+    <div class="masthead">
+        <p class="lead">
+            <a href="./index.html">
+                <img src="./assets/images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;">
+            </a>
+            <span class="tagline">Simple. Java. Security.</span>
+            <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+                <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png"/>
+            </a>
+        </p>
+    </div>
+
+
+
+    <nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="./get-started.html">Get Started</a></li>
+                <li><a href="./documentation.html">Docs</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Web Apps <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="./web.html">General</a></li>
+                        <li class="divider"></li>
+                        <li><a href="./web-features.html">Features</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Integrations <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="./spring.html">Spring</a></li>
+                        <li><a href="./guice.html">Guice</a></li>
+                        <li class="divider"></li>
+                        <li><a href="./integration.html">Third-Party Integrations</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="./features.html">Features</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Community <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="./forums.html">Community Forums</a></li>
+                        <li><a href="./mailing-lists.html">Mailing Lists</a></li>
+                        <li><a href="./articles.html">Articles</a></li>
+                        <li><a href="./news.html">News</a></li>
+                        <li><a href="./events.html">Events</a></li>
+                        <li class="divider"></li>
+                        <li><a href="./community.html">More</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        About <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="./about.html">About</a></li>
+                        <li><a href="./security-reports.html">Vulnerability Reports</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="http://www.apache.org/" class="dropdown-toggle" data-toggle="dropdown">
+                        Apache Software Foundation <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="http://www.apache.org/">Apache Homepage</a></li>
+                        <li><a href="http://www.apache.org/licenses/">License</a></li>
+                        <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                        <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                        <li><a href="http://www.apache.org/security/">Security</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+
+
+            <a name="Configuration-ApacheShiroConfiguration"></a>
+<h1><a href="#apache-shiro-configuration" name="apache-shiro-configuration">Apache Shiro Configuration</a></h1>
+<ul>
+  <li>
+    <p><a href="#Configuration-ProgrammaticConfiguration">Programmatic Configuration</a></p>
+    <ul>
+      <li>
+      <p><a href="#Configuration-SecurityManagerObjectGraph">SecurityManager Object Graph</a></p></li>
+    </ul>
+  </li>
+  <li>
+    <p><a href="#Configuration-INIConfiguration">INI Configuration</a></p>
+    <ul>
+      <li>
+        <p><a href="#Configuration-CreatingaSecurityManagerfromINI">Creating a SecurityManager from INI</a></p>
+        <ul>
+          <li><a href="#Configuration-SecurityManagerfromanINIresource">SecurityManager from an INI resource</a></li>
+          <li><a href="#Configuration-SecurityManagerfromanINIinstance">SecurityManager from an INI instance</a></li>
+        </ul>
+      </li>
+      <li>
+        <p><a href="#Configuration-INISections">INI Sections</a></p>
+        <ul>
+          <li>
+            <p><a href="#Configuration-%5Cmain%5C"><code>[main]</code></a></p>
+            <ul>
+              <li><a href="#Configuration-Defininganobject">Defining an object</a></li>
+              <li><a href="#Configuration-Settingobjectproperties">Setting object properties</a>
+                <ul>
+                  <li><a href="#Configuration-PrimitiveValues">Primitive Values</a></li>
+                  <li><a href="#Configuration-ReferenceValues">Reference Values</a></li>
+                  <li><a href="#Configuration-NestedProperties">Nested Properties</a></li>
+                  <li><a href="#Configuration-ByteArrayValues">Byte Array Values</a></li>
+                  <li><a href="#Configuration-CollectionProperties">Collection Properties</a></li>
+                </ul>
+              </li>
+              <li>
+                <p><a href="#Configuration-Considerations">Considerations</a></p>
+                <ul>
+                  <li><a href="#Configuration-OrderMatters">Order Matters</a></li>
+                  <li><a href="#Configuration-OverridingInstances">Overriding Instances</a></li>
+                  <li><a href="#Configuration-DefaultSecurityManager">Default SecurityManager</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <p><a href="#Configuration-%5Cusers%5C"><code>[users]</code></a></p>
+            <ul>
+              <li><a href="#Configuration-LineFormat">Line Format</a></li>
+              <li><a href="#Configuration-EncryptingPasswords">Encrypting Passwords</a></li>
+            </ul>
+          </li>
+          <li>
+            <p><a href="#Configuration-%5Croles%5C"><code>[roles]</code></a></p>
+            <ul>
+              <li>
+              <p><a href="#Configuration-LineFormat">Line Format</a></p></li>
+            </ul>
+          </li>
+          <li>
+          <p><a href="#Configuration-%5Curls%5C"><code>[urls]</code></a></p></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<p>Shiro is designed to work in any environment, from simple command-line applications to the largest enterprise clustered applications. Because of this diversity of environments, there are a number of configuration mechanisms that are suitable for configuration. This section covers the configuration mechanisms that are supported by Shiro core only.</p>
+<div class="alert alert-success">
+    <span class="glyphicon glyphicon-ok"></span> <strong>Many Configuration Options</strong>
+    <hr class="message-inner-separator">
+    <p>Shiro's <code>SecurityManager</code> implementations and all supporting components are all JavaBeans compatible.  This allows Shiro to be configured with practically any configuration format such as regular Java, XML (Spring, JBoss, Guice, etc), <a class="external-link" href="http://www.yaml.org/" rel="nofollow">YAML</a>, JSON, Groovy Builder markup, and more.</p>
+</div>
+<a name="Configuration-ProgrammaticConfiguration"></a>
+<h2><a href="#programmatic-configuration" name="programmatic-configuration">Programmatic Configuration</a></h2>
+<p>The absolute simplest way to create a SecurityManager and make it available to the application is to create an <code>org.apache.shiro.mgt.DefaultSecurityManager</code> and wire it up in code. For example:</p>
+<pre><code class="java">Realm realm = //instantiate or acquire a Realm instance.  We&#39;ll discuss Realms later.
+SecurityManager securityManager = new DefaultSecurityManager(realm);
+
+//Make the SecurityManager instance available to the entire application via static memory: 
+SecurityUtils.setSecurityManager(securityManager);
+</code></pre>
+<p>Surprisingly, after only 3 lines of code, you now have a fully functional Shiro environment suitable for many applications. How easy was that!?</p>
+<a name="Configuration-SecurityManagerObjectGraph"></a>
+<h3><a href="#securitymanager-object-graph" name="securitymanager-object-graph">SecurityManager Object Graph</a></h3>
+<p>As discussed in the <a href="architecture.html" title="Architecture">Architecture</a> chapter, Shiro&rsquo;s <code>SecurityManager</code> implementations are essentially a modular object graph of nested security-specific components. Because they are also JavaBeans-compatible, you can call any of the nested components <code>getter</code> and <code>setter</code> methods to configure the <code>SecurityManager</code> and its internal object graph.</p>
+<p>For example, if you wanted to configure the <code>SecurityManager</code> instance to use a custom <code>SessionDAO</code> to customize <a href="session-management.html" title="Session Management">Session Management</a>, you could set the <code>SessionDAO</code> directly with the nested SessionManager&rsquo;s <code>setSessionDAO</code> method:</p>
+<pre><code class="java">...
+
+DefaultSecurityManager securityManager = new DefaultSecurityManager(realm);
+
+SessionDAO sessionDAO = new CustomSessionDAO();
+
+((DefaultSessionManager)securityManager.getSessionManager()).setSessionDAO(sessionDAO);
+...
+</code></pre>
+<p>Using direct method invocations, you can configure any part of the <code>SecurityManager</code>&rsquo;s object graph.</p>
+<p>But, as simple as programmatic customization is, it does not represent the ideal configuration for most real world applications. There are a few reasons why programmatic configuration may not be suitable for your application:</p>
+<ul>
+  <li>
+  <p>It requires you to know about and instantiate a direct implementation. It would be nicer if you didn&rsquo;t have to know about concrete implementations and where to find them.</p></li>
+  <li>
+  <p>Because of Java&rsquo;s type-safe nature, you&rsquo;re required to cast objects obtained via <code>get*</code> methods to their specific implementation. So much casting is ugly, verbose, and tightly-couples you to implementation classes.</p></li>
+  <li>
+  <p>The <code>SecurityUtils.setSecurityManager</code> method call makes the instantiated <code>SecurityManager</code> instance a VM static singleton, which, while fine for many applications, would cause problems if more than one Shiro-enabled application was running on the same JVM. It could be better if the instance was an application singleton, but not a static memory reference.</p></li>
+  <li>
+  <p>It requires you to recompile your application every time you want to make a Shiro configuration change.</p></li>
+</ul>
+<p>However, even with these caveats, the direct programmatic manipulation approach could still be valuable in memory-constrained environments, like smart-phone applications. If your application does not run in a memory-constrained environment, you&rsquo;ll find text-based configuration to be easier to use and read.</p>
+<a name="Configuration-INIConfiguration"></a>
+<h2><a href="#ini-configuration" name="ini-configuration">INI Configuration</a></h2>
+<p>Most applications instead benefit from text-based configuration that could be modified independently of source code and even make things easier to understand for those not intimately familiar with Shiro&rsquo;s APIs.</p>
+<p>To ensure a common-denominator text-based configuration mechanism that can work in all environments with minimal 3rd party dependencies, Shiro supports the <a href="https://en.wikipedia.org/wiki/INI_file">INI format</a> to build the <code>SecurityManager</code> object graph and its supporting components. INI is easy to read, easy to configure, and is simple to set-up and suits most applications well.</p>
+<a name="Configuration-CreatingaSecurityManagerfromINI"></a>
+<h3><a href="#creating-a-securitymanager-from-ini" name="creating-a-securitymanager-from-ini">Creating a SecurityManager from INI</a></h3>
+<p>Here are two examples of how to build a SecurityManager based on INI configuration.</p>
+<a name="Configuration-SecurityManagerfromanINIresource"></a>
+<h4><a href="#securitymanager-from-an-ini-resource" name="securitymanager-from-an-ini-resource">SecurityManager from an INI resource</a></h4>
+<p>We can create the SecurityManager instance from an INI resource path. Resources can be acquired from the file system, classpath, or URLs when prefixed with <code>file:</code>, <code>classpath:</code>, or <code>url:</code> respectively. This example uses a <code>Factory</code> to ingest a <code>shiro.ini</code> file from the root of the classpath and return the <code>SecurityManager</code> instance:</p>
+<pre><code class="java">import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.util.Factory;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.config.IniSecurityManagerFactory;
+
+...
+
+Factory&lt;SecurityManager&gt; factory = new IniSecurityManagerFactory(&quot;classpath:shiro.ini&quot;);
+SecurityManager securityManager = factory.getInstance();
+SecurityUtils.setSecurityManager(securityManager);
+</code></pre>
+<a name="Configuration-SecurityManagerfromanINIinstance"></a>
+<h4><a href="#securitymanager-from-an-ini-instance" name="securitymanager-from-an-ini-instance">SecurityManager from an INI instance</a></h4>
+<p>The INI configuration can be constructed programmatically as well if desired via the <a href="static/current/apidocs/org/apache/shiro/config/Ini.html"><code>org.apache.shiro.config.Ini</code></a> class. The Ini class functions similarly to the JDK <a href="http://download.oracle.com/javase/6/docs/api/java/util/Properties.html"><code>java.util.Properties</code></a> class, but additionally supports segmentation by section name.</p>
+<p>For example:</p>
+<pre><code class="java">import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.util.Factory;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.config.Ini;
+import org.apache.shiro.config.IniSecurityManagerFactory;
+
+...
+
+Ini ini = new Ini();
+//populate the Ini instance as necessary
+...
+Factory&lt;SecurityManager&gt; factory = new IniSecurityManagerFactory(ini);
+SecurityManager securityManager = factory.getInstance();
+SecurityUtils.setSecurityManager(securityManager);
+</code></pre>
+<p>Now that we know how to construct a <code>SecurityManager</code> from INI configuration, let&rsquo;s take a look at exactly how to define a Shiro INI configuration.</p>
+<a name="Configuration-INISections"></a>
+<h3><a href="#ini-sections" name="ini-sections">INI Sections</a></h3>
+<p>INI is basically a text configuration consisting of key/value pairs organized by uniquely-named sections. Keys are unique per section only, not over the entire configuration (unlike the JDK <a href="http://java.sun.com/javase/6/docs/api/java/util/Properties.html">Properties</a>). Each section may be viewed like a single <code>Properties</code> definition however.</p>
+<p>Commented lines can start with either with an Octothorpe (# - aka the &lsquo;hash&rsquo;, &lsquo;pound&rsquo; or &lsquo;number&rsquo; sign) or a Semi-colon (&lsquo;;&rsquo;)</p>
+<p>Here is an example of the sections understood by Shiro:</p>
+<pre><code class="ini"># =======================
+# Shiro INI configuration
+# =======================
+
+[main]
+# Objects and their properties are defined here,
+# Such as the securityManager, Realms and anything
+# else needed to build the SecurityManager
+
+[users]
+# The &#39;users&#39; section is for simple deployments
+# when you only need a small number of statically-defined
+# set of User accounts.
+
+[roles]
+# The &#39;roles&#39; section is for simple deployments
+# when you only need a small number of statically-defined
+# roles.
+
+[urls]
+# The &#39;urls&#39; section is used for url-based security
+# in web applications.  We&#39;ll discuss this section in the
+# Web documentation
+</code></pre>
+<a name="Configuration-%5Cmain%5C"></a>
+<h4>[main]</h4>
+<p>The <strong><code>[main]</code></strong> section is where you configure the application&rsquo;s <code>SecurityManager</code> instance and any of its dependencies, such as <a href="realm.html" title="Realm">Realm</a>s.</p>
+<p>Configuring object instances like the SecurityManager or any of its dependencies sounds like a difficult thing to do with INI, where we can only use name/value pairs. But through a little bit of convention and understanding of object graphs, you&rsquo;ll find that you can do quite a lot. Shiro uses these assumptions to enable a simple yet fairly concise configuration mechanism.</p>
+<p>We often like to refer to this approach as &ldquo;poor man&rsquo;s&rdquo; Dependency Injection, and although not as powerful as full-blown Spring/Guice/JBoss XML files, you&rsquo;ll find it gets quite a lot done without much complexity. Of course those other configuration mechanism are available as well, but they&rsquo;re not required to use Shiro.</p>
+<p>Just to whet your appetite, here is an example of a valid <code>[main]</code> configuration. We&rsquo;ll cover it in detail below, but you might find that you understand quite a bit of what is going on already by intuition alone:</p>
+<pre><code class="ini">[main]
+sha256Matcher = org.apache.shiro.authc.credential.Sha256CredentialsMatcher
+
+myRealm = com.company.security.shiro.DatabaseRealm
+myRealm.connectionTimeout = 30000
+myRealm.username = jsmith
+myRealm.password = secret
+myRealm.credentialsMatcher = $sha256Matcher
+
+securityManager.sessionManager.globalSessionTimeout = 1800000
+</code></pre>
+<a name="Configuration-Defininganobject"></a>
+<h5><a href="#defining-an-object" name="defining-an-object">Defining an object</a></h5>
+<p>Consider the following <code>[main]</code> section snippet:</p>
+<pre><code class="ini">[main]
+myRealm = com.company.shiro.realm.MyRealm
+...
+</code></pre>
+<p>This line instantiates a new object instance of type <code>com.company.shiro.realm.MyRealm</code> and makes that object available under the <strong>myRealm</strong> name for further reference and configuration.</p>
+<p>If the object instantiated implements the <code>org.apache.shiro.util.Nameable</code> interface, then the the <code>Nameable.setName</code> method will be invoked on the object with the name value ( <strong><code>myRealm</code></strong> in this example).</p>
+<a name="Configuration-Settingobjectproperties"></a>
+<h5><a href="#setting-object-properties" name="setting-object-properties">Setting object properties</a></h5>
+<a name="Configuration-PrimitiveValues"></a>
+<h6><a href="#primitive-values" name="primitive-values">Primitive Values</a></h6>
+<p>Simple primitive properties can be assigned just by using the equals sign:</p>
+<pre><code class="ini">...
+myRealm.connectionTimeout = 30000
+myRealm.username = jsmith
+...
+</code></pre>
+<p>these lines of configuration translate into method calls:</p>
+<pre><code class="ini">...
+myRealm.setConnectionTimeout(30000);
+myRealm.setUsername(&quot;jsmith&quot;);
+...
+</code></pre>
+<p>How is this possible? It assumes that all objects are <a href="https://en.wikipedia.org/wiki/JavaBean">Java Beans</a>-compatible <a href="https://en.wikipedia.org/wiki/Plain_Old_Java_Object">POJO</a>s.</p>
+<p>Under the covers, Shiro by default uses Apache Commons <a href="http://commons.apache.org/proper/commons-beanutils/">BeanUtils</a> to do all the heavy lifting when setting these properties. So although INI values are text, BeanUtils knows how to convert the string values to the proper primitive types and then invoke the corresponding JavaBeans setter method.</p>
+<a name="Configuration-ReferenceValues"></a>
+<h6><a href="#reference-values" name="reference-values">Reference Values</a></h6>
+<p>What if the value you need to set is not a primitive, but another object? Well, you can use a dollar sign ($) to reference a previously-defined instance. For example:</p>
+<pre><code class="java">...
+sha256Matcher = org.apache.shiro.authc.credential.Sha256CredentialsMatcher
+...
+myRealm.credentialsMatcher = $sha256Matcher
+...
+</code></pre>
+<p>This simply locates the object defined by the name <strong>sha256Matcher</strong> and then uses BeanUtils to set that object on the <strong>myRealm</strong> instance (by calling the <code>myRealm.setCredentialsMatcher(sha256Matcher)</code> method).</p>
+<a name="Configuration-NestedProperties"></a>
+<h6><a href="#nested-properties" name="nested-properties">Nested Properties</a></h6>
+<p>Using dotted notation on the left side of the INI line&rsquo;s equals sign, you can traverse an object graph to get to the final object/property that you want set. For example, this config line:</p>
+<pre><code class="java">...
+securityManager.sessionManager.globalSessionTimeout = 1800000
+...
+</code></pre>
+<p>Translates (by BeanUtils) into the following logic:</p>
+<pre><code class="java">securityManager.getSessionManager().setGlobalSessionTimeout(1800000);
+</code></pre>
+<p>The graph traversal can be as deep as necessary: <code>object.property1.property2....propertyN.value = blah</code></p>
+<div class="alert alert-success">
+    <span class="glyphicon glyphicon-ok"></span> <strong>BeanUtils Property Support</strong>
+    <hr class="message-inner-separator">
+    <p>Any property assignment operation supported by the BeanUtils.<a class="external-link" href="https://commons.apache.org/proper/commons-beanutils/apidocs/org/apache/commons/beanutils/BeanUtils.html#setProperty-java.lang.Object-java.lang.String-java.lang.Object-">setProperty</a> method will work in Shiro's [main] section, including set/list/map element assignments.  See the <a class="external-link" href="http://commons.apache.org/proper/commons-beanutils/">Apache Commons BeanUtils Website</a> and documentation for more information.</p>
+</div>
+<a name="Configuration-ByteArrayValues"></a>
+<h6><a href="#byte-array-values" name="byte-array-values">Byte Array Values</a></h6>
+<p>Because raw byte arrays can&rsquo;t be specified natively in a text format, we must use a text encoding of the byte array. The values can be specified either as a Base64 encoded string (the default) or as a Hex encoded string. The default is Base64 because Base64 encoding requires less actual text to represent values - it has a larger encoding alphabet, meaning your tokens are shorter (a bit nicer for text config).</p>
+<pre><code class="ini"># The &#39;cipherKey&#39; attribute is a byte array.    By default, text values
+# for all byte array properties are expected to be Base64 encoded:
+
+securityManager.rememberMeManager.cipherKey = kPH+bIxk5D2deZiIxcaaaA==
+...
+</code></pre>
+<p>However, if you prefer to use Hex encoding instead, you must prefix the String token with <code>0x</code> (&lsquo;zero&rsquo; &lsquo;x&rsquo;):</p>
+<pre><code class="ini">securityManager.rememberMeManager.cipherKey = 0x3707344A4093822299F31D008
+</code></pre>
+<a name="Configuration-CollectionProperties"></a>
+<h6><a href="#collection-properties" name="collection-properties">Collection Properties</a></h6>
+<p>Lists, Sets and Maps can be set like any other property - either directly or as a nested property. For sets and lists, just specify a comma-delimited set of values or object references.</p>
+<p>For example, some SessionListeners:</p>
+<pre><code class="ini">sessionListener1 = com.company.my.SessionListenerImplementation
+...
+sessionListener2 = com.company.my.other.SessionListenerImplementation
+...
+securityManager.sessionManager.sessionListeners = $sessionListener1, $sessionListener2
+</code></pre>
+<p>For Maps, you specify a comma-delimited list of key-value pairs, where each key-value pair is delimited by a colon &lsquo;:&rsquo;</p>
+<pre><code class="ini">object1 = com.company.some.Class
+object2 = com.company.another.Class
+...
+anObject = some.class.with.a.Map.property
+
+anObject.mapProperty = key1:$object1, key2:$object2
+</code></pre>
+<p>In the above example, the object referenced by <code>$object1</code> will be in the map under the String key <code>key1</code>, i.e. <code>map.get(&quot;key1&quot;)</code> returns <code>object1</code>. You can also use other objects as the keys:</p>
+<pre><code class="ini">anObject.map = $objectKey1:$objectValue1, $objectKey2:$objectValue2
+...
+</code></pre>
+<a name="Configuration-Considerations"></a>
+<h5><a href="#considerations" name="considerations">Considerations</a></h5>
+<a name="Configuration-OrderMatters"></a>
+<h6><a href="#order-matters" name="order-matters">Order Matters</a></h6>
+<p>The INI format and conventions above are very convenient and easy to understand, but it is not as powerful as other text/XML-based configuration mechanisms. The most important thing to understand when using the above mechanism is that <strong>Order Matters!</strong></p>
+<div class="alert alert-warning">
+    <span class="glyphicon glyphicon-warning-sign"></span> <strong>Be Careful</strong>
+    <hr class="message-inner-separator">
+    <p>Each object instantiation and each value assignment is executed <em>in the order they occur in the [main] section</em>.  These lines ultimately translate to a JavaBeans getter/setter method invocation, and so those methods are invoked in the same order!
+<p>Keep this in mind when writing your configuration.</p></p>
+</div>
+<a name="Configuration-OverridingInstances"></a>
+<h6><a href="#overriding-instances" name="overriding-instances">Overriding Instances</a></h6>
+<p>Any object can be overridden by a new instance defined later in the configuration. So for example, the 2nd <code>myRealm</code> definition would overwrite the first:</p>
+<pre><code class="ini">...
+myRealm = com.company.security.MyRealm
+...
+myRealm = com.company.security.DatabaseRealm
+...
+</code></pre>
+<p>This would result in <code>myRealm</code> being a <code>com.company.security.DatabaseRealm</code> instance and the previous instance will never be used (and garbage collected).</p>
+<a name="Configuration-DefaultSecurityManager"></a>
+<h6><a href="#default-securitymanager" name="default-securitymanager">Default SecurityManager</a></h6>
+<p>You may have noticed in the complete example above that the SecurityManager instance&rsquo;s class isn&rsquo;t defined, and we jumped right in to just setting a nested property:</p>
+<pre><code class="ini">myRealm = ...
+
+securityManager.sessionManager.globalSessionTimeout = 1800000
+...
+</code></pre>
+<p>This is because the <code>securityManager</code> instance is a special one - it is already instantiated for you and ready to go so you don&rsquo;t need to know the specific <code>SecurityManager</code> implementation class to instantiate.</p>
+<p>Of course, if you actually <em>want</em> to specify your own implementation, you can, just define your implementation as specified in the &ldquo;Overriding Instances&rdquo; section above:</p>
+<pre><code class="ini">...
+securityManager = com.company.security.shiro.MyCustomSecurityManager
+...
+</code></pre>
+<p>Of course, this is rarely needed - Shiro&rsquo;s SecurityManager implementations are very customizable and can typically be configured with anything necessary. You might want to ask yourself (or the user list) if you really need to do this.<br/><a href="#Configuration-users">users</a></p>
+<a name="Configuration-%5Cusers%5C"></a>
+<h4>[users]</h4>
+<p>The <strong><code>[users]</code></strong> section allows you to define a static set of user accounts. This is mostly useful in environments with a very small number of user accounts or where user accounts don&rsquo;t need to be created dynamically at runtime. Here&rsquo;s an example:</p>
+<pre><code class="ini">[users]
+admin = secret
+lonestarr = vespa, goodguy, schwartz
+darkhelmet = ludicrousspeed, badguy, schwartz
+</code></pre>
+<div class="alert alert-info">
+    <span class="glyphicon glyphicon-info-sign"></span> <strong>Automatic IniRealm</strong>
+    <hr class="message-inner-separator">
+    <p>Just defining non-empty [users] or [roles] sections will automatically trigger the creation of an <a class="external-link" href="static/current/apidocs/org/apache/shiro/realm/text/IniRealm.html"><code>org.apache.shiro.realm.text.IniRealm</code></a> instance and make it available in the [main] section under the name <b><code>iniRealm</code></b>.  You can configure it like any other object as described above.</p>
+</div>
+<a name="Configuration-LineFormat"></a>
+<h5><a href="#line-format" name="line-format">Line Format</a></h5>
+<p>Each line in the [users] section must conform to the following format:</p>
+<p><code>username</code> = <code>password</code>, <em>roleName1</em>, <em>roleName2</em>, &hellip;, <em>roleNameN</em></p>
+<ul>
+  <li>The value on the left of the equals sign is the username</li>
+  <li>The first value on the right of the equals sign is the user&rsquo;s password. A password is required.</li>
+  <li>Any comma-delimited values after the password are the names of roles assigned to that user. Role names are optional.</li>
+</ul>
+<a name="Configuration-EncryptingPasswords"></a>
+<h5><a href="#encrypting-passwords" name="encrypting-passwords">Encrypting Passwords</a></h5>
+<p>If you don&rsquo;t want the [users] section passwords to be in plain-text, you can encrypt them using your favorite hash algorithm (MD5, Sha1, Sha256, etc) however you like and use the resulting string as the password value. By default, the password string is expected to be Hex encoded, but can be configured to be Base64 encoded instead (see below).</p>
+<div class="alert alert-success">
+    <span class="glyphicon glyphicon-ok"></span> <strong>Easy Secure Passwords</strong>
+    <hr class="message-inner-separator">
+    <p>To save time and use best-practices, you might want to use Shiro's <a href="command-line-hasher.html" title="Command Line Hasher">Command Line Hasher</a>, which will hash passwords as well as any other type of resource.  It is especially convenient for encrypting INI <code>[users]</code> passwords.</p>
+</div>
+<p>Once you&rsquo;ve specified the hashed text password values, you have to tell Shiro that these are encrypted. You do that by configuring the implicitly created <code>iniRealm</code> in the [main] section to use an appropriate <code>CredentialsMatcher</code> implementation corresponding to the hash algorithm you&rsquo;ve specified:</p>
+<pre><code class="ini">[main]
+...
+sha256Matcher = org.apache.shiro.authc.credential.Sha256CredentialsMatcher
+...
+iniRealm.credentialsMatcher = $sha256Matcher
+...
+
+[users]
+# user1 = sha256-hashed-hex-encoded password, role1, role2, ...
+user1 = 2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b, role1, role2, ...
+</code></pre>
+<p>You can configure any properties on the <code>CredentialsMatcher</code> like any other object to reflect your hashing strategy, for example, to specify if salting is used or how many hash iterations to execute. See the <a href="static/current/apidocs/org/apache/shiro/authc/credential/HashedCredentialsMatcher.html"><code>org.apache.shiro.authc.credential.HashedCredentialsMatcher</code></a> JavaDoc to better understand hashing strategies and if they might be useful to you.</p>
+<p>For example, if your users&rsquo; password strings were Base64 encoded instead of the default Hex, you could specify:</p>
+<pre><code class="ini">[main]
+...
+# true = hex, false = base64:
+sha256Matcher.storedCredentialsHexEncoded = false
+</code></pre>
+<a name="Configuration-%5Croles%5C"></a>
+<h4>[roles]</h4>
+<p>The <strong><code>[roles]</code></strong> section allows you to associate <a href="permissions.html" title="Permissions">Permissions</a> with the roles defined in the [users] section. Again, this is useful in environments with a small number of roles or where roles don&rsquo;t need to be created dynamically at runtime. Here&rsquo;s an example:</p>
+<pre><code class="ini">[roles]
+# &#39;admin&#39; role has all permissions, indicated by the wildcard &#39;*&#39;
+admin = *
+# The &#39;schwartz&#39; role can do anything (*) with any lightsaber:
+schwartz = lightsaber:*
+# The &#39;goodguy&#39; role is allowed to &#39;drive&#39; (action) the winnebago (type) with
+# license plate &#39;eagle5&#39; (instance specific id)
+goodguy = winnebago:drive:eagle5
+</code></pre>
+<a name="Configuration-LineFormat"></a>
+<h5><a href="#line-format" name="line-format">Line Format</a></h5>
+<p>Each line in the [roles] section must must define a role-to-permission(s) key/value mapping with in the following format:</p>
+<p><code>rolename</code> = <em>permissionDefinition1</em>, <em>permissionDefinition2</em>, &hellip;, <em>permissionDefinitionN</em></p>
+<p>where <em>permissionDefinition</em> is an arbitrary String, but most people will want to use strings that conform<br/>to the <a href="static/current/apidocs/org/apache/shiro/authz/permission/WildcardPermission.html"><code>org.apache.shiro.authz.permission.WildcardPermission</code></a> format for ease of use and flexibility. See the <a href="permissions.html" title="Permissions">Permissions</a> documentation for more information on Permissions and how you can benefit from them.</p>
+<div class="alert alert-info">
+    <span class="glyphicon glyphicon-info-sign"></span> <strong>Internal commas</strong>
+    <hr class="message-inner-separator">
+    <p>Note that if an individual <em>permissionDefinition</em> needs to be internally comma-delimited (e.g. <code>printer:5thFloor:print,info</code>), you will need to surround that definition with double quotes (") to avoid parsing errors:<code>"printer:5thFloor:print,info"</code></p>
+</div>
+<div class="alert alert-success">
+    <span class="glyphicon glyphicon-ok"></span> <strong>Roles without Permissions</strong>
+    <hr class="message-inner-separator">
+    <p>If you have roles that don't require permission associations, you don't need to list them in the [roles] section if you don't want to.  Just defining the role names in the [users] section is enough to create the role if it does not exist yet.</p>
+</div>
+<a name="Configuration-%5Curls%5C"></a>
+<h4>[urls]</h4>
+<p>This section and its options is described in the <a href="web.html" title="Web">Web</a> chapter.</p>
+<h2><a name="Lendahandwithdocumentation"></a>Lend a hand with documentation </h2>
+<p>While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time.  If you'd like to help the Shiro project, please consider correcting, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro. </p>
+<p>The easiest way to contribute your documentation is to submit a pull-request by clicking on the <code>Edit</code> link below, send it to the <a class="external-link" href="http://shiro-user.582556.n2.nabble.com/" rel="nofollow">User Forum</a> or the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.</p>
+<input type="hidden" id="ghEditPage" value="configuration.md.vtl"></input>
+    
+</div>
+
+    <div class="footer-padding"></div>
+    <footer class="custom-footer">
+
+        <div class="col-md-5">
+            <div class="copyright-footer">
+            <a href="http://www.apache.org/foundation/contributing.html">Donate to the ASF</a> |
+            <a href="http://www.apache.org/licenses/LICENSE-2.0.html">License</a>
+            <p>Copyright &copy; 2008-2020 The Apache Software Foundation</p>
+                </div>
+        </div>
+
+        <div class="social col-md-2">
+            <a class="btn btn-social-icon btn-sm btn-twitter" target="_blank" href="https://twitter.com/ApacheShiro"><span class="fa fa-twitter"></span></a>
+            <a class="btn btn-social-icon btn-sm btn-facebook" target="_blank" href="https://www.facebook.com/ApacheShiro"><span class="fa fa-facebook"></span></a>
+            <a class="btn btn-social-icon btn-sm btn-linkedin" target="_blank" href="https://www.linkedin.com/groups/4382576"><span class="fa fa-linkedin"></span></a>
+        </div>
+
+
+        <div class="col-md-2"></div>
+        <div class="col-md-2 editThisPage">
+            <div class="footer-shield"></div>
+        </div>
+
+    </footer> <!--END FOOTER-->
+
+</body>
+</html>

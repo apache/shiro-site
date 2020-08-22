@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>AccessControlFilter.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.filter</a> &gt; <span class="el_source">AccessControlFilter.java</span></div><h1>AccessControlFilter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.filter;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.WebUtils;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import java.io.IOException;
+
+/**
+ * Superclass for any filter that controls access to a resource and may redirect the user to the login page
+ * if they are not authenticated.  This superclass provides the method
+ * {@link #saveRequestAndRedirectToLogin(javax.servlet.ServletRequest, javax.servlet.ServletResponse)}
+ * which is used by many subclasses as the behavior when a user is unauthenticated.
+ *
+ * @since 0.9
+ */
+<span class="fc" id="L37">public abstract class AccessControlFilter extends PathMatchingFilter {</span>
+
+    /**
+     * Simple default login URL equal to &lt;code&gt;/login.jsp&lt;/code&gt;, which can be overridden by calling the
+     * {@link #setLoginUrl(String) setLoginUrl} method.
+     */
+    public static final String DEFAULT_LOGIN_URL = &quot;/login.jsp&quot;;
+
+    /**
+     * Constant representing the HTTP 'GET' request method, equal to &lt;code&gt;GET&lt;/code&gt;.
+     */
+    public static final String GET_METHOD = &quot;GET&quot;;
+
+    /**
+     * Constant representing the HTTP 'POST' request method, equal to &lt;code&gt;POST&lt;/code&gt;.
+     */
+    public static final String POST_METHOD = &quot;POST&quot;;
+
+    /**
+     * The login url to used to authenticate a user, used when redirecting users if authentication is required.
+     */
+<span class="fc" id="L58">    private String loginUrl = DEFAULT_LOGIN_URL;</span>
+
+    /**
+     * Returns the login URL used to authenticate a user.
+     * &lt;p/&gt;
+     * Most Shiro filters use this url
+     * as the location to redirect a user when the filter requires authentication.  Unless overridden, the
+     * {@link #DEFAULT_LOGIN_URL DEFAULT_LOGIN_URL} is assumed, which can be overridden via
+     * {@link #setLoginUrl(String) setLoginUrl}.
+     *
+     * @return the login URL used to authenticate a user, used when redirecting users if authentication is required.
+     */
+    public String getLoginUrl() {
+<span class="fc" id="L71">        return loginUrl;</span>
+    }
+
+    /**
+     * Sets the login URL used to authenticate a user.
+     * &lt;p/&gt;
+     * Most Shiro filters use this url as the location to redirect a user when the filter requires
+     * authentication.  Unless overridden, the {@link #DEFAULT_LOGIN_URL DEFAULT_LOGIN_URL} is assumed.
+     *
+     * @param loginUrl the login URL used to authenticate a user, used when redirecting users if authentication is required.
+     */
+    public void setLoginUrl(String loginUrl) {
+<span class="fc" id="L83">        this.loginUrl = loginUrl;</span>
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * Convenience method that acquires the Subject associated with the request.
+     * &lt;p/&gt;
+     * The default implementation simply returns
+     * {@link org.apache.shiro.SecurityUtils#getSubject() SecurityUtils.getSubject()}.
+     *
+     * @param request  the incoming &lt;code&gt;ServletRequest&lt;/code&gt;
+     * @param response the outgoing &lt;code&gt;ServletResponse&lt;/code&gt;
+     * @return the Subject associated with the request.
+     */
+    protected Subject getSubject(ServletRequest request, ServletResponse response) {
+<span class="fc" id="L97">        return SecurityUtils.getSubject();</span>
+    }
+
+    /**
+     * Returns &lt;code&gt;true&lt;/code&gt; if the request is allowed to proceed through the filter normally, or &lt;code&gt;false&lt;/code&gt;
+     * if the request should be handled by the
+     * {@link #onAccessDenied(ServletRequest,ServletResponse,Object) onAccessDenied(request,response,mappedValue)}
+     * method instead.
+     *
+     * @param request     the incoming &lt;code&gt;ServletRequest&lt;/code&gt;
+     * @param response    the outgoing &lt;code&gt;ServletResponse&lt;/code&gt;
+     * @param mappedValue the filter-specific config value mapped to this filter in the URL rules mappings.
+     * @return &lt;code&gt;true&lt;/code&gt; if the request should proceed through the filter normally, &lt;code&gt;false&lt;/code&gt; if the
+     *         request should be processed by this filter's
+     *         {@link #onAccessDenied(ServletRequest,ServletResponse,Object)} method instead.
+     * @throws Exception if an error occurs during processing.
+     */
+    protected abstract boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception;
+
+    /**
+     * Processes requests where the subject was denied access as determined by the
+     * {@link #isAccessAllowed(javax.servlet.ServletRequest, javax.servlet.ServletResponse, Object) isAccessAllowed}
+     * method, retaining the {@code mappedValue} that was used during configuration.
+     * &lt;p/&gt;
+     * This method immediately delegates to {@link #onAccessDenied(ServletRequest,ServletResponse)} as a
+     * convenience in that most post-denial behavior does not need the mapped config again.
+     *
+     * @param request     the incoming &lt;code&gt;ServletRequest&lt;/code&gt;
+     * @param response    the outgoing &lt;code&gt;ServletResponse&lt;/code&gt;
+     * @param mappedValue the config specified for the filter in the matching request's filter chain.
+     * @return &lt;code&gt;true&lt;/code&gt; if the request should continue to be processed; false if the subclass will
+     *         handle/render the response directly.
+     * @throws Exception if there is an error processing the request.
+     * @since 1.0
+     */
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
+<span class="fc" id="L133">        return onAccessDenied(request, response);</span>
+    }
+
+    /**
+     * Processes requests where the subject was denied access as determined by the
+     * {@link #isAccessAllowed(javax.servlet.ServletRequest, javax.servlet.ServletResponse, Object) isAccessAllowed}
+     * method.
+     *
+     * @param request  the incoming &lt;code&gt;ServletRequest&lt;/code&gt;
+     * @param response the outgoing &lt;code&gt;ServletResponse&lt;/code&gt;
+     * @return &lt;code&gt;true&lt;/code&gt; if the request should continue to be processed; false if the subclass will
+     *         handle/render the response directly.
+     * @throws Exception if there is an error processing the request.
+     */
+    protected abstract boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception;
+
+    /**
+     * Returns &lt;code&gt;true&lt;/code&gt; if
+     * {@link #isAccessAllowed(ServletRequest,ServletResponse,Object) isAccessAllowed(Request,Response,Object)},
+     * otherwise returns the result of
+     * {@link #onAccessDenied(ServletRequest,ServletResponse,Object) onAccessDenied(Request,Response,Object)}.
+     *
+     * @return &lt;code&gt;true&lt;/code&gt; if
+     *         {@link #isAccessAllowed(javax.servlet.ServletRequest, javax.servlet.ServletResponse, Object) isAccessAllowed},
+     *         otherwise returns the result of
+     *         {@link #onAccessDenied(javax.servlet.ServletRequest, javax.servlet.ServletResponse) onAccessDenied}.
+     * @throws Exception if an error occurs.
+     */
+    public boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
+<span class="fc bfc" id="L162" title="All 4 branches covered.">        return isAccessAllowed(request, response, mappedValue) || onAccessDenied(request, response, mappedValue);</span>
+    }
+
+    /**
+     * Returns &lt;code&gt;true&lt;/code&gt; if the incoming request is a login request, &lt;code&gt;false&lt;/code&gt; otherwise.
+     * &lt;p/&gt;
+     * The default implementation merely returns &lt;code&gt;true&lt;/code&gt; if the incoming request matches the configured
+     * {@link #getLoginUrl() loginUrl} by calling
+     * &lt;code&gt;{@link #pathsMatch(String, String) pathsMatch(loginUrl, request)}&lt;/code&gt;.
+     *
+     * @param request  the incoming &lt;code&gt;ServletRequest&lt;/code&gt;
+     * @param response the outgoing &lt;code&gt;ServletResponse&lt;/code&gt;
+     * @return &lt;code&gt;true&lt;/code&gt; if the incoming request is a login request, &lt;code&gt;false&lt;/code&gt; otherwise.
+     */
+    protected boolean isLoginRequest(ServletRequest request, ServletResponse response) {
+<span class="fc" id="L177">        return pathsMatch(getLoginUrl(), request);</span>
+    }
+
+    /**
+     * Convenience method for subclasses to use when a login redirect is required.
+     * &lt;p/&gt;
+     * This implementation simply calls {@link #saveRequest(javax.servlet.ServletRequest) saveRequest(request)}
+     * and then {@link #redirectToLogin(javax.servlet.ServletRequest, javax.servlet.ServletResponse) redirectToLogin(request,response)}.
+     *
+     * @param request  the incoming &lt;code&gt;ServletRequest&lt;/code&gt;
+     * @param response the outgoing &lt;code&gt;ServletResponse&lt;/code&gt;
+     * @throws IOException if an error occurs.
+     */
+    protected void saveRequestAndRedirectToLogin(ServletRequest request, ServletResponse response) throws IOException {
+<span class="fc" id="L191">        saveRequest(request);</span>
+<span class="fc" id="L192">        redirectToLogin(request, response);</span>
+<span class="fc" id="L193">    }</span>
+
+    /**
+     * Convenience method merely delegates to
+     * {@link WebUtils#saveRequest(javax.servlet.ServletRequest) WebUtils.saveRequest(request)} to save the request
+     * state for reuse later.  This is mostly used to retain user request state when a redirect is issued to
+     * return the user to their originally requested url/resource.
+     * &lt;p/&gt;
+     * If you need to save and then immediately redirect the user to login, consider using
+     * {@link #saveRequestAndRedirectToLogin(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
+     * saveRequestAndRedirectToLogin(request,response)} directly.
+     *
+     * @param request the incoming ServletRequest to save for re-use later (for example, after a redirect).
+     */
+    protected void saveRequest(ServletRequest request) {
+<span class="fc" id="L208">        WebUtils.saveRequest(request);</span>
+<span class="fc" id="L209">    }</span>
+
+    /**
+     * Convenience method for subclasses that merely acquires the {@link #getLoginUrl() getLoginUrl} and redirects
+     * the request to that url.
+     * &lt;p/&gt;
+     * &lt;b&gt;N.B.&lt;/b&gt;  If you want to issue a redirect with the intention of allowing the user to then return to their
+     * originally requested URL, don't use this method directly.  Instead you should call
+     * {@link #saveRequestAndRedirectToLogin(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
+     * saveRequestAndRedirectToLogin(request,response)}, which will save the current request state so that it can
+     * be reconstructed and re-used after a successful login.
+     *
+     * @param request  the incoming &lt;code&gt;ServletRequest&lt;/code&gt;
+     * @param response the outgoing &lt;code&gt;ServletResponse&lt;/code&gt;
+     * @throws IOException if an error occurs.
+     */
+    protected void redirectToLogin(ServletRequest request, ServletResponse response) throws IOException {
+<span class="fc" id="L226">        String loginUrl = getLoginUrl();</span>
+<span class="fc" id="L227">        WebUtils.issueRedirect(request, response, loginUrl);</span>
+<span class="fc" id="L228">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

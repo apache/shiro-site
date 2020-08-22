@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>ShiroWebAutoConfiguration.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-spring-boot-web-starter</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.spring.config.web.autoconfigure</a> &gt; <span class="el_source">ShiroWebAutoConfiguration.java</span></div><h1>ShiroWebAutoConfiguration.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.spring.config.web.autoconfigure;
+
+import org.apache.shiro.authc.Authenticator;
+import org.apache.shiro.authc.pam.AuthenticationStrategy;
+import org.apache.shiro.authz.Authorizer;
+import org.apache.shiro.mgt.*;
+import org.apache.shiro.realm.Realm;
+import org.apache.shiro.session.mgt.SessionFactory;
+import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
+import org.apache.shiro.spring.web.config.AbstractShiroWebConfiguration;
+import org.apache.shiro.web.servlet.Cookie;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+import java.util.List;
+
+/**
+ * @since 1.4.0
+ */
+@Configuration
+@ConditionalOnProperty(name = &quot;shiro.web.enabled&quot;, matchIfMissing = true)
+<span class="fc" id="L45">public class ShiroWebAutoConfiguration extends AbstractShiroWebConfiguration {</span>
+
+    @Bean
+    @ConditionalOnMissingBean
+    @Override
+    protected AuthenticationStrategy authenticationStrategy() {
+<span class="fc" id="L51">        return super.authenticationStrategy();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @Override
+    protected Authenticator authenticator() {
+<span class="fc" id="L58">        return super.authenticator();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @Override
+    protected Authorizer authorizer() {
+<span class="fc" id="L65">        return super.authorizer();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @Override
+    protected SubjectDAO subjectDAO() {
+<span class="fc" id="L72">        return super.subjectDAO();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @Override
+    protected SessionStorageEvaluator sessionStorageEvaluator() {
+<span class="fc" id="L79">        return super.sessionStorageEvaluator();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @Override
+    protected SessionFactory sessionFactory() {
+<span class="fc" id="L86">        return super.sessionFactory();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @Override
+    protected SessionDAO sessionDAO() {
+<span class="fc" id="L93">        return super.sessionDAO();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;sessionCookieTemplate&quot;)
+    @Override
+    protected Cookie sessionCookieTemplate() {
+<span class="fc" id="L100">        return super.sessionCookieTemplate();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @Override
+    protected RememberMeManager rememberMeManager() {
+<span class="fc" id="L107">        return super.rememberMeManager();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = &quot;rememberMeCookieTemplate&quot;)
+    @Override
+    protected Cookie rememberMeCookieTemplate() {
+<span class="fc" id="L114">        return super.rememberMeCookieTemplate();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @Override
+    protected SubjectFactory subjectFactory() {
+<span class="fc" id="L121">        return super.subjectFactory();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @Override
+    protected SessionManager sessionManager() {
+<span class="fc" id="L128">        return super.sessionManager();</span>
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @Override
+    protected SessionsSecurityManager securityManager(List&lt;Realm&gt; realms) {
+<span class="fc" id="L135">        return super.securityManager(realms);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

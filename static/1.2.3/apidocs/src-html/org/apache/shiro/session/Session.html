@@ -1,0 +1,276 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<FONT color="green">007</FONT>     * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<FONT color="green">008</FONT>     * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<FONT color="green">013</FONT>     * software distributed under the License is distributed on an<a name="line.13"></a>
+<FONT color="green">014</FONT>     * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<FONT color="green">015</FONT>     * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<FONT color="green">016</FONT>     * specific language governing permissions and limitations<a name="line.16"></a>
+<FONT color="green">017</FONT>     * under the License.<a name="line.17"></a>
+<FONT color="green">018</FONT>     */<a name="line.18"></a>
+<FONT color="green">019</FONT>    package org.apache.shiro.session;<a name="line.19"></a>
+<FONT color="green">020</FONT>    <a name="line.20"></a>
+<FONT color="green">021</FONT>    import java.io.Serializable;<a name="line.21"></a>
+<FONT color="green">022</FONT>    import java.util.Collection;<a name="line.22"></a>
+<FONT color="green">023</FONT>    import java.util.Date;<a name="line.23"></a>
+<FONT color="green">024</FONT>    <a name="line.24"></a>
+<FONT color="green">025</FONT>    /**<a name="line.25"></a>
+<FONT color="green">026</FONT>     * A {@code Session} is a stateful data context associated with a single Subject (user, daemon process,<a name="line.26"></a>
+<FONT color="green">027</FONT>     * etc) who interacts with a software system over a period of time.<a name="line.27"></a>
+<FONT color="green">028</FONT>     * &lt;p/&gt;<a name="line.28"></a>
+<FONT color="green">029</FONT>     * A {@code Session} is intended to be managed by the business tier and accessible via other<a name="line.29"></a>
+<FONT color="green">030</FONT>     * tiers without being tied to any given client technology.  This is a &lt;em&gt;great&lt;/em&gt; benefit to Java<a name="line.30"></a>
+<FONT color="green">031</FONT>     * systems, since until now, the only viable session mechanisms were the<a name="line.31"></a>
+<FONT color="green">032</FONT>     * {@code javax.servlet.http.HttpSession} or Stateful Session EJB's, which many times<a name="line.32"></a>
+<FONT color="green">033</FONT>     * unnecessarily coupled applications to web or ejb technologies.<a name="line.33"></a>
+<FONT color="green">034</FONT>     *<a name="line.34"></a>
+<FONT color="green">035</FONT>     * @since 0.1<a name="line.35"></a>
+<FONT color="green">036</FONT>     */<a name="line.36"></a>
+<FONT color="green">037</FONT>    public interface Session {<a name="line.37"></a>
+<FONT color="green">038</FONT>    <a name="line.38"></a>
+<FONT color="green">039</FONT>        /**<a name="line.39"></a>
+<FONT color="green">040</FONT>         * Returns the unique identifier assigned by the system upon session creation.<a name="line.40"></a>
+<FONT color="green">041</FONT>         * &lt;p/&gt;<a name="line.41"></a>
+<FONT color="green">042</FONT>         * All return values from this method are expected to have proper {@code toString()},<a name="line.42"></a>
+<FONT color="green">043</FONT>         * {@code equals()}, and {@code hashCode()} implementations. Good candidates for such<a name="line.43"></a>
+<FONT color="green">044</FONT>         * an identifier are {@link java.util.UUID UUID}s, {@link java.lang.Integer Integer}s, and<a name="line.44"></a>
+<FONT color="green">045</FONT>         * {@link java.lang.String String}s.<a name="line.45"></a>
+<FONT color="green">046</FONT>         *<a name="line.46"></a>
+<FONT color="green">047</FONT>         * @return The unique identifier assigned to the session upon creation.<a name="line.47"></a>
+<FONT color="green">048</FONT>         */<a name="line.48"></a>
+<FONT color="green">049</FONT>        Serializable getId();<a name="line.49"></a>
+<FONT color="green">050</FONT>    <a name="line.50"></a>
+<FONT color="green">051</FONT>        /**<a name="line.51"></a>
+<FONT color="green">052</FONT>         * Returns the time the session was started; that is, the time the system created the instance.<a name="line.52"></a>
+<FONT color="green">053</FONT>         *<a name="line.53"></a>
+<FONT color="green">054</FONT>         * @return The time the system created the session.<a name="line.54"></a>
+<FONT color="green">055</FONT>         */<a name="line.55"></a>
+<FONT color="green">056</FONT>        Date getStartTimestamp();<a name="line.56"></a>
+<FONT color="green">057</FONT>    <a name="line.57"></a>
+<FONT color="green">058</FONT>        /**<a name="line.58"></a>
+<FONT color="green">059</FONT>         * Returns the last time the application received a request or method invocation from the user associated<a name="line.59"></a>
+<FONT color="green">060</FONT>         * with this session.  Application calls to this method do not affect this access time.<a name="line.60"></a>
+<FONT color="green">061</FONT>         *<a name="line.61"></a>
+<FONT color="green">062</FONT>         * @return The time the user last interacted with the system.<a name="line.62"></a>
+<FONT color="green">063</FONT>         * @see #touch()<a name="line.63"></a>
+<FONT color="green">064</FONT>         */<a name="line.64"></a>
+<FONT color="green">065</FONT>        Date getLastAccessTime();<a name="line.65"></a>
+<FONT color="green">066</FONT>    <a name="line.66"></a>
+<FONT color="green">067</FONT>        /**<a name="line.67"></a>
+<FONT color="green">068</FONT>         * Returns the time in milliseconds that the session session may remain idle before expiring.<a name="line.68"></a>
+<FONT color="green">069</FONT>         * &lt;ul&gt;<a name="line.69"></a>
+<FONT color="green">070</FONT>         * &lt;li&gt;A negative return value means the session will never expire.&lt;/li&gt;<a name="line.70"></a>
+<FONT color="green">071</FONT>         * &lt;li&gt;A non-negative return value (0 or greater) means the session expiration will occur if idle for that<a name="line.71"></a>
+<FONT color="green">072</FONT>         * length of time.&lt;/li&gt;<a name="line.72"></a>
+<FONT color="green">073</FONT>         * &lt;/ul&gt;<a name="line.73"></a>
+<FONT color="green">074</FONT>         * &lt;b&gt;*Note:&lt;/b&gt; if you are used to the {@code HttpSession}'s {@code getMaxInactiveInterval()} method, the scale on<a name="line.74"></a>
+<FONT color="green">075</FONT>         * this method is different: Shiro Sessions use millisecond values for timeout whereas<a name="line.75"></a>
+<FONT color="green">076</FONT>         * {@code HttpSession.getMaxInactiveInterval} uses seconds.  Always use millisecond values with Shiro sessions.<a name="line.76"></a>
+<FONT color="green">077</FONT>         *<a name="line.77"></a>
+<FONT color="green">078</FONT>         * @return the time in milliseconds the session may remain idle before expiring.<a name="line.78"></a>
+<FONT color="green">079</FONT>         * @throws InvalidSessionException if the session has been stopped or expired prior to calling this method.<a name="line.79"></a>
+<FONT color="green">080</FONT>         * @since 0.2<a name="line.80"></a>
+<FONT color="green">081</FONT>         */<a name="line.81"></a>
+<FONT color="green">082</FONT>        long getTimeout() throws InvalidSessionException;<a name="line.82"></a>
+<FONT color="green">083</FONT>    <a name="line.83"></a>
+<FONT color="green">084</FONT>        /**<a name="line.84"></a>
+<FONT color="green">085</FONT>         * Sets the time in milliseconds that the session may remain idle before expiring.<a name="line.85"></a>
+<FONT color="green">086</FONT>         * &lt;ul&gt;<a name="line.86"></a>
+<FONT color="green">087</FONT>         * &lt;li&gt;A negative value means the session will never expire.&lt;/li&gt;<a name="line.87"></a>
+<FONT color="green">088</FONT>         * &lt;li&gt;A non-negative value (0 or greater) means the session expiration will occur if idle for that<a name="line.88"></a>
+<FONT color="green">089</FONT>         * length of time.&lt;/li&gt;<a name="line.89"></a>
+<FONT color="green">090</FONT>         * &lt;/ul&gt;<a name="line.90"></a>
+<FONT color="green">091</FONT>         * &lt;p/&gt;<a name="line.91"></a>
+<FONT color="green">092</FONT>         * &lt;b&gt;*Note:&lt;/b&gt; if you are used to the {@code HttpSession}'s {@code getMaxInactiveInterval()} method, the scale on<a name="line.92"></a>
+<FONT color="green">093</FONT>         * this method is different: Shiro Sessions use millisecond values for timeout whereas<a name="line.93"></a>
+<FONT color="green">094</FONT>         * {@code HttpSession.getMaxInactiveInterval} uses seconds.  Always use millisecond values with Shiro sessions.<a name="line.94"></a>
+<FONT color="green">095</FONT>         *<a name="line.95"></a>
+<FONT color="green">096</FONT>         * @param maxIdleTimeInMillis the time in milliseconds that the session may remain idle before expiring.<a name="line.96"></a>
+<FONT color="green">097</FONT>         * @throws InvalidSessionException if the session has been stopped or expired prior to calling this method.<a name="line.97"></a>
+<FONT color="green">098</FONT>         * @since 0.2<a name="line.98"></a>
+<FONT color="green">099</FONT>         */<a name="line.99"></a>
+<FONT color="green">100</FONT>        void setTimeout(long maxIdleTimeInMillis) throws InvalidSessionException;<a name="line.100"></a>
+<FONT color="green">101</FONT>    <a name="line.101"></a>
+<FONT color="green">102</FONT>        /**<a name="line.102"></a>
+<FONT color="green">103</FONT>         * Returns the host name or IP string of the host that originated this session, or {@code null}<a name="line.103"></a>
+<FONT color="green">104</FONT>         * if the host is unknown.<a name="line.104"></a>
+<FONT color="green">105</FONT>         *<a name="line.105"></a>
+<FONT color="green">106</FONT>         * @return the host name or IP string of the host that originated this session, or {@code null}<a name="line.106"></a>
+<FONT color="green">107</FONT>         *         if the host address is unknown.<a name="line.107"></a>
+<FONT color="green">108</FONT>         */<a name="line.108"></a>
+<FONT color="green">109</FONT>        String getHost();<a name="line.109"></a>
+<FONT color="green">110</FONT>    <a name="line.110"></a>
+<FONT color="green">111</FONT>        /**<a name="line.111"></a>
+<FONT color="green">112</FONT>         * Explicitly updates the {@link #getLastAccessTime() lastAccessTime} of this session to the current time when<a name="line.112"></a>
+<FONT color="green">113</FONT>         * this method is invoked.  This method can be used to ensure a session does not time out.<a name="line.113"></a>
+<FONT color="green">114</FONT>         * &lt;p/&gt;<a name="line.114"></a>
+<FONT color="green">115</FONT>         * Most programmers won't use this method directly and will instead rely on the last access time to be updated<a name="line.115"></a>
+<FONT color="green">116</FONT>         * automatically as a result of an incoming web request or remote procedure call/method invocation.<a name="line.116"></a>
+<FONT color="green">117</FONT>         * &lt;p/&gt;<a name="line.117"></a>
+<FONT color="green">118</FONT>         * However, this method is particularly useful when supporting rich-client applications such as<a name="line.118"></a>
+<FONT color="green">119</FONT>         * Java Web Start appp, Java or Flash applets, etc.  Although rare, it is possible in a rich-client<a name="line.119"></a>
+<FONT color="green">120</FONT>         * environment that a user continuously interacts with the client-side application without a<a name="line.120"></a>
+<FONT color="green">121</FONT>         * server-side method call ever being invoked.  If this happens over a long enough period of<a name="line.121"></a>
+<FONT color="green">122</FONT>         * time, the user's server-side session could time-out.  Again, such cases are rare since most<a name="line.122"></a>
+<FONT color="green">123</FONT>         * rich-clients frequently require server-side method invocations.<a name="line.123"></a>
+<FONT color="green">124</FONT>         * &lt;p/&gt;<a name="line.124"></a>
+<FONT color="green">125</FONT>         * In this example though, the user's session might still be considered valid because<a name="line.125"></a>
+<FONT color="green">126</FONT>         * the user is actively &amp;quot;using&amp;quot; the application, just not communicating with the<a name="line.126"></a>
+<FONT color="green">127</FONT>         * server. But because no server-side method calls are invoked, there is no way for the server<a name="line.127"></a>
+<FONT color="green">128</FONT>         * to know if the user is sitting idle or not, so it must assume so to maintain session<a name="line.128"></a>
+<FONT color="green">129</FONT>         * integrity.  This {@code touch()} method could be invoked by the rich-client application code during those<a name="line.129"></a>
+<FONT color="green">130</FONT>         * times to ensure that the next time a server-side method is invoked, the invocation will not<a name="line.130"></a>
+<FONT color="green">131</FONT>         * throw an {@link ExpiredSessionException ExpiredSessionException}.  In short terms, it could be used periodically<a name="line.131"></a>
+<FONT color="green">132</FONT>         * to ensure a session does not time out.<a name="line.132"></a>
+<FONT color="green">133</FONT>         * &lt;p/&gt;<a name="line.133"></a>
+<FONT color="green">134</FONT>         * How often this rich-client &amp;quot;maintenance&amp;quot; might occur is entirely dependent upon<a name="line.134"></a>
+<FONT color="green">135</FONT>         * the application and would be based on variables such as session timeout configuration,<a name="line.135"></a>
+<FONT color="green">136</FONT>         * usage characteristics of the client application, network utilization and application server<a name="line.136"></a>
+<FONT color="green">137</FONT>         * performance.<a name="line.137"></a>
+<FONT color="green">138</FONT>         *<a name="line.138"></a>
+<FONT color="green">139</FONT>         * @throws InvalidSessionException if this session has stopped or expired prior to calling this method.<a name="line.139"></a>
+<FONT color="green">140</FONT>         */<a name="line.140"></a>
+<FONT color="green">141</FONT>        void touch() throws InvalidSessionException;<a name="line.141"></a>
+<FONT color="green">142</FONT>    <a name="line.142"></a>
+<FONT color="green">143</FONT>        /**<a name="line.143"></a>
+<FONT color="green">144</FONT>         * Explicitly stops (invalidates) this session and releases all associated resources.<a name="line.144"></a>
+<FONT color="green">145</FONT>         * &lt;p/&gt;<a name="line.145"></a>
+<FONT color="green">146</FONT>         * If this session has already been authenticated (i.e. the {@code Subject} that<a name="line.146"></a>
+<FONT color="green">147</FONT>         * owns this session has logged-in), calling this method explicitly might have undesired side effects:<a name="line.147"></a>
+<FONT color="green">148</FONT>         * &lt;p/&gt;<a name="line.148"></a>
+<FONT color="green">149</FONT>         * It is common for a {@code Subject} implementation to retain authentication state in the<a name="line.149"></a>
+<FONT color="green">150</FONT>         * {@code Session}.  If the session<a name="line.150"></a>
+<FONT color="green">151</FONT>         * is explicitly stopped by application code by calling this method directly, it could clear out any<a name="line.151"></a>
+<FONT color="green">152</FONT>         * authentication state that might exist, thereby effectively &amp;quot;unauthenticating&amp;quot; the {@code Subject}.<a name="line.152"></a>
+<FONT color="green">153</FONT>         * &lt;p/&gt;<a name="line.153"></a>
+<FONT color="green">154</FONT>         * As such, you might consider {@link org.apache.shiro.subject.Subject#logout logging-out} the 'owning'<a name="line.154"></a>
+<FONT color="green">155</FONT>         * {@code Subject} instead of manually calling this method, as a log out is expected to stop the<a name="line.155"></a>
+<FONT color="green">156</FONT>         * corresponding session automatically, and also allows framework code to execute additional cleanup logic.<a name="line.156"></a>
+<FONT color="green">157</FONT>         *<a name="line.157"></a>
+<FONT color="green">158</FONT>         * @throws InvalidSessionException if this session has stopped or expired prior to calling this method.<a name="line.158"></a>
+<FONT color="green">159</FONT>         */<a name="line.159"></a>
+<FONT color="green">160</FONT>        void stop() throws InvalidSessionException;<a name="line.160"></a>
+<FONT color="green">161</FONT>    <a name="line.161"></a>
+<FONT color="green">162</FONT>        /**<a name="line.162"></a>
+<FONT color="green">163</FONT>         * Returns the keys of all the attributes stored under this session.  If there are no<a name="line.163"></a>
+<FONT color="green">164</FONT>         * attributes, this returns an empty collection.<a name="line.164"></a>
+<FONT color="green">165</FONT>         *<a name="line.165"></a>
+<FONT color="green">166</FONT>         * @return the keys of all attributes stored under this session, or an empty collection if<a name="line.166"></a>
+<FONT color="green">167</FONT>         *         there are no session attributes.<a name="line.167"></a>
+<FONT color="green">168</FONT>         * @throws InvalidSessionException if this session has stopped or expired prior to calling this method.<a name="line.168"></a>
+<FONT color="green">169</FONT>         * @since 0.2<a name="line.169"></a>
+<FONT color="green">170</FONT>         */<a name="line.170"></a>
+<FONT color="green">171</FONT>        Collection&lt;Object&gt; getAttributeKeys() throws InvalidSessionException;<a name="line.171"></a>
+<FONT color="green">172</FONT>    <a name="line.172"></a>
+<FONT color="green">173</FONT>        /**<a name="line.173"></a>
+<FONT color="green">174</FONT>         * Returns the object bound to this session identified by the specified key.  If there is no<a name="line.174"></a>
+<FONT color="green">175</FONT>         * object bound under the key, {@code null} is returned.<a name="line.175"></a>
+<FONT color="green">176</FONT>         *<a name="line.176"></a>
+<FONT color="green">177</FONT>         * @param key the unique name of the object bound to this session<a name="line.177"></a>
+<FONT color="green">178</FONT>         * @return the object bound under the specified {@code key} name or {@code null} if there is<a name="line.178"></a>
+<FONT color="green">179</FONT>         *         no object bound under that name.<a name="line.179"></a>
+<FONT color="green">180</FONT>         * @throws InvalidSessionException if this session has stopped or expired prior to calling<a name="line.180"></a>
+<FONT color="green">181</FONT>         *                                 this method.<a name="line.181"></a>
+<FONT color="green">182</FONT>         */<a name="line.182"></a>
+<FONT color="green">183</FONT>        Object getAttribute(Object key) throws InvalidSessionException;<a name="line.183"></a>
+<FONT color="green">184</FONT>    <a name="line.184"></a>
+<FONT color="green">185</FONT>        /**<a name="line.185"></a>
+<FONT color="green">186</FONT>         * Binds the specified {@code value} to this session, uniquely identified by the specifed<a name="line.186"></a>
+<FONT color="green">187</FONT>         * {@code key} name.  If there is already an object bound under the {@code key} name, that<a name="line.187"></a>
+<FONT color="green">188</FONT>         * existing object will be replaced by the new {@code value}.<a name="line.188"></a>
+<FONT color="green">189</FONT>         * &lt;p/&gt;<a name="line.189"></a>
+<FONT color="green">190</FONT>         * If the {@code value} parameter is null, it has the same effect as if<a name="line.190"></a>
+<FONT color="green">191</FONT>         * {@link #removeAttribute(Object) removeAttribute} was called.<a name="line.191"></a>
+<FONT color="green">192</FONT>         *<a name="line.192"></a>
+<FONT color="green">193</FONT>         * @param key   the name under which the {@code value} object will be bound in this session<a name="line.193"></a>
+<FONT color="green">194</FONT>         * @param value the object to bind in this session.<a name="line.194"></a>
+<FONT color="green">195</FONT>         * @throws InvalidSessionException if this session has stopped or expired prior to calling<a name="line.195"></a>
+<FONT color="green">196</FONT>         *                                 this method.<a name="line.196"></a>
+<FONT color="green">197</FONT>         */<a name="line.197"></a>
+<FONT color="green">198</FONT>        void setAttribute(Object key, Object value) throws InvalidSessionException;<a name="line.198"></a>
+<FONT color="green">199</FONT>    <a name="line.199"></a>
+<FONT color="green">200</FONT>        /**<a name="line.200"></a>
+<FONT color="green">201</FONT>         * Removes (unbinds) the object bound to this session under the specified {@code key} name.<a name="line.201"></a>
+<FONT color="green">202</FONT>         *<a name="line.202"></a>
+<FONT color="green">203</FONT>         * @param key the name uniquely identifying the object to remove<a name="line.203"></a>
+<FONT color="green">204</FONT>         * @return the object removed or {@code null} if there was no object bound under the name<a name="line.204"></a>
+<FONT color="green">205</FONT>         *         {@code key}.<a name="line.205"></a>
+<FONT color="green">206</FONT>         * @throws InvalidSessionException if this session has stopped or expired prior to calling<a name="line.206"></a>
+<FONT color="green">207</FONT>         *                                 this method.<a name="line.207"></a>
+<FONT color="green">208</FONT>         */<a name="line.208"></a>
+<FONT color="green">209</FONT>        Object removeAttribute(Object key) throws InvalidSessionException;<a name="line.209"></a>
+<FONT color="green">210</FONT>    }<a name="line.210"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

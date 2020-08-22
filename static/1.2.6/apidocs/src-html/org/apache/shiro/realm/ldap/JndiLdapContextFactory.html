@@ -1,0 +1,621 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<span class="sourceLineNo">004</span> * distributed with this work for additional information<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<span class="sourceLineNo">009</span> *<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<span class="sourceLineNo">011</span> *<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * software distributed under the License is distributed on an<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<span class="sourceLineNo">016</span> * specific language governing permissions and limitations<a name="line.16"></a>
+<span class="sourceLineNo">017</span> * under the License.<a name="line.17"></a>
+<span class="sourceLineNo">018</span> */<a name="line.18"></a>
+<span class="sourceLineNo">019</span>package org.apache.shiro.realm.ldap;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>import org.apache.shiro.util.StringUtils;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import org.slf4j.Logger;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>import org.slf4j.LoggerFactory;<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span>import javax.naming.AuthenticationException;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>import javax.naming.Context;<a name="line.26"></a>
+<span class="sourceLineNo">027</span>import javax.naming.NamingException;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>import javax.naming.ldap.InitialLdapContext;<a name="line.28"></a>
+<span class="sourceLineNo">029</span>import javax.naming.ldap.LdapContext;<a name="line.29"></a>
+<span class="sourceLineNo">030</span>import java.util.HashMap;<a name="line.30"></a>
+<span class="sourceLineNo">031</span>import java.util.Hashtable;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>import java.util.Map;<a name="line.32"></a>
+<span class="sourceLineNo">033</span><a name="line.33"></a>
+<span class="sourceLineNo">034</span>/**<a name="line.34"></a>
+<span class="sourceLineNo">035</span> * {@link LdapContextFactory} implementation using the default Sun/Oracle JNDI Ldap API, utilizing JNDI<a name="line.35"></a>
+<span class="sourceLineNo">036</span> * environment properties and an {@link javax.naming.InitialContext}.<a name="line.36"></a>
+<span class="sourceLineNo">037</span> * &lt;h2&gt;Configuration&lt;/h2&gt;<a name="line.37"></a>
+<span class="sourceLineNo">038</span> * This class basically wraps a default template JNDI environment properties Map.  This properties map is the base<a name="line.38"></a>
+<span class="sourceLineNo">039</span> * configuration template used to acquire JNDI {@link LdapContext} connections at runtime.  The<a name="line.39"></a>
+<span class="sourceLineNo">040</span> * {@link #getLdapContext(Object, Object)} method implementation merges this default template with other properties<a name="line.40"></a>
+<span class="sourceLineNo">041</span> * accessible at runtime only (for example per-method principals and credentials).  The constructed runtime map is the<a name="line.41"></a>
+<span class="sourceLineNo">042</span> * one used to acquire the {@link LdapContext}.<a name="line.42"></a>
+<span class="sourceLineNo">043</span> * &lt;p/&gt;<a name="line.43"></a>
+<span class="sourceLineNo">044</span> * The template can be configured directly via the {@link #getEnvironment()}/{@link #setEnvironment(java.util.Map)}<a name="line.44"></a>
+<span class="sourceLineNo">045</span> * properties directly if necessary, but it is usually more convenient to use the supporting wrapper get/set methods<a name="line.45"></a>
+<span class="sourceLineNo">046</span> * for various environment properties.  These wrapper methods interact with the environment<a name="line.46"></a>
+<span class="sourceLineNo">047</span> * template on your behalf, leaving your configuration cleaner and easier to understand.<a name="line.47"></a>
+<span class="sourceLineNo">048</span> * &lt;p/&gt;<a name="line.48"></a>
+<span class="sourceLineNo">049</span> * For example, consider the following two identical configurations:<a name="line.49"></a>
+<span class="sourceLineNo">050</span> * &lt;pre&gt;<a name="line.50"></a>
+<span class="sourceLineNo">051</span> * [main]<a name="line.51"></a>
+<span class="sourceLineNo">052</span> * ldapRealm = org.apache.shiro.realm.ldap.JndiLdapRealm<a name="line.52"></a>
+<span class="sourceLineNo">053</span> * ldapRealm.contextFactory.url = ldap://localhost:389<a name="line.53"></a>
+<span class="sourceLineNo">054</span> * ldapRealm.contextFactory.authenticationMechanism = DIGEST-MD5<a name="line.54"></a>
+<span class="sourceLineNo">055</span> * &lt;/pre&gt;<a name="line.55"></a>
+<span class="sourceLineNo">056</span> * and<a name="line.56"></a>
+<span class="sourceLineNo">057</span> * &lt;pre&gt;<a name="line.57"></a>
+<span class="sourceLineNo">058</span> * [main]<a name="line.58"></a>
+<span class="sourceLineNo">059</span> * ldapRealm = org.apache.shiro.realm.ldap.JndiLdapRealm<a name="line.59"></a>
+<span class="sourceLineNo">060</span> * ldapRealm.contextFactory.environment[java.naming.provider.url] = ldap://localhost:389<a name="line.60"></a>
+<span class="sourceLineNo">061</span> * ldapRealm.contextFactory.environment[java.naming.security.authentication] = DIGEST-MD5<a name="line.61"></a>
+<span class="sourceLineNo">062</span> * &lt;/pre&gt;<a name="line.62"></a>
+<span class="sourceLineNo">063</span> * As you can see, the 2nd configuration block is a little more difficult to read and also requires knowledge<a name="line.63"></a>
+<span class="sourceLineNo">064</span> * of the underlying JNDI Context property keys.  The first is easier to read and understand.<a name="line.64"></a>
+<span class="sourceLineNo">065</span> * &lt;p/&gt;<a name="line.65"></a>
+<span class="sourceLineNo">066</span> * Note that occasionally it will be necessary to use the latter configuration style to set environment properties<a name="line.66"></a>
+<span class="sourceLineNo">067</span> * where no corresponding wrapper method exists.  In this case, the hybrid approach is still a little easier to read.<a name="line.67"></a>
+<span class="sourceLineNo">068</span> * For example:<a name="line.68"></a>
+<span class="sourceLineNo">069</span> * &lt;pre&gt;<a name="line.69"></a>
+<span class="sourceLineNo">070</span> * [main]<a name="line.70"></a>
+<span class="sourceLineNo">071</span> * ldapRealm = org.apache.shiro.realm.ldap.JndiLdapRealm<a name="line.71"></a>
+<span class="sourceLineNo">072</span> * ldapRealm.contextFactory.url = ldap://localhost:389<a name="line.72"></a>
+<span class="sourceLineNo">073</span> * ldapRealm.contextFactory.authenticationMechanism = DIGEST-MD5<a name="line.73"></a>
+<span class="sourceLineNo">074</span> * ldapRealm.contextFactory.environment[some.other.obscure.jndi.key] = some value<a name="line.74"></a>
+<span class="sourceLineNo">075</span> * &lt;/pre&gt;<a name="line.75"></a>
+<span class="sourceLineNo">076</span> *<a name="line.76"></a>
+<span class="sourceLineNo">077</span> * @since 1.1<a name="line.77"></a>
+<span class="sourceLineNo">078</span> */<a name="line.78"></a>
+<span class="sourceLineNo">079</span>public class JndiLdapContextFactory implements LdapContextFactory {<a name="line.79"></a>
+<span class="sourceLineNo">080</span><a name="line.80"></a>
+<span class="sourceLineNo">081</span>    /*-------------------------------------------<a name="line.81"></a>
+<span class="sourceLineNo">082</span>     |             C O N S T A N T S            |<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     ===========================================*/<a name="line.83"></a>
+<span class="sourceLineNo">084</span>    /**<a name="line.84"></a>
+<span class="sourceLineNo">085</span>     * The Sun LDAP property used to enable connection pooling.  This is used in the default implementation<a name="line.85"></a>
+<span class="sourceLineNo">086</span>     * to enable LDAP connection pooling.<a name="line.86"></a>
+<span class="sourceLineNo">087</span>     */<a name="line.87"></a>
+<span class="sourceLineNo">088</span>    protected static final String SUN_CONNECTION_POOLING_PROPERTY = "com.sun.jndi.ldap.connect.pool";<a name="line.88"></a>
+<span class="sourceLineNo">089</span>    protected static final String DEFAULT_CONTEXT_FACTORY_CLASS_NAME = "com.sun.jndi.ldap.LdapCtxFactory";<a name="line.89"></a>
+<span class="sourceLineNo">090</span>    protected static final String SIMPLE_AUTHENTICATION_MECHANISM_NAME = "simple";<a name="line.90"></a>
+<span class="sourceLineNo">091</span>    protected static final String DEFAULT_REFERRAL = "follow";<a name="line.91"></a>
+<span class="sourceLineNo">092</span><a name="line.92"></a>
+<span class="sourceLineNo">093</span>    private static final Logger log = LoggerFactory.getLogger(JndiLdapContextFactory.class);<a name="line.93"></a>
+<span class="sourceLineNo">094</span><a name="line.94"></a>
+<span class="sourceLineNo">095</span>    /*-------------------------------------------<a name="line.95"></a>
+<span class="sourceLineNo">096</span>     |    I N S T A N C E   V A R I A B L E S   |<a name="line.96"></a>
+<span class="sourceLineNo">097</span>     ============================================*/<a name="line.97"></a>
+<span class="sourceLineNo">098</span>    private Map&lt;String, Object&gt; environment;<a name="line.98"></a>
+<span class="sourceLineNo">099</span>    private boolean poolingEnabled;<a name="line.99"></a>
+<span class="sourceLineNo">100</span>    private String systemPassword;<a name="line.100"></a>
+<span class="sourceLineNo">101</span>    private String systemUsername;<a name="line.101"></a>
+<span class="sourceLineNo">102</span><a name="line.102"></a>
+<span class="sourceLineNo">103</span>    /*-------------------------------------------<a name="line.103"></a>
+<span class="sourceLineNo">104</span>     |         C O N S T R U C T O R S          |<a name="line.104"></a>
+<span class="sourceLineNo">105</span>     ===========================================*/<a name="line.105"></a>
+<span class="sourceLineNo">106</span><a name="line.106"></a>
+<span class="sourceLineNo">107</span>    /**<a name="line.107"></a>
+<span class="sourceLineNo">108</span>     * Default no-argument constructor that initializes the backing {@link #getEnvironment() environment template} with<a name="line.108"></a>
+<span class="sourceLineNo">109</span>     * the {@link #setContextFactoryClassName(String) contextFactoryClassName} equal to<a name="line.109"></a>
+<span class="sourceLineNo">110</span>     * {@code com.sun.jndi.ldap.LdapCtxFactory} (the Sun/Oracle default) and the default<a name="line.110"></a>
+<span class="sourceLineNo">111</span>     * {@link #setReferral(String) referral} behavior to {@code follow}.<a name="line.111"></a>
+<span class="sourceLineNo">112</span>     */<a name="line.112"></a>
+<span class="sourceLineNo">113</span>    public JndiLdapContextFactory() {<a name="line.113"></a>
+<span class="sourceLineNo">114</span>        this.environment = new HashMap&lt;String, Object&gt;();<a name="line.114"></a>
+<span class="sourceLineNo">115</span>        setContextFactoryClassName(DEFAULT_CONTEXT_FACTORY_CLASS_NAME);<a name="line.115"></a>
+<span class="sourceLineNo">116</span>        setReferral(DEFAULT_REFERRAL);<a name="line.116"></a>
+<span class="sourceLineNo">117</span>        poolingEnabled = true;<a name="line.117"></a>
+<span class="sourceLineNo">118</span>    }<a name="line.118"></a>
+<span class="sourceLineNo">119</span><a name="line.119"></a>
+<span class="sourceLineNo">120</span>    /*-------------------------------------------<a name="line.120"></a>
+<span class="sourceLineNo">121</span>     |  A C C E S S O R S / M O D I F I E R S   |<a name="line.121"></a>
+<span class="sourceLineNo">122</span>     ===========================================*/<a name="line.122"></a>
+<span class="sourceLineNo">123</span><a name="line.123"></a>
+<span class="sourceLineNo">124</span>    /**<a name="line.124"></a>
+<span class="sourceLineNo">125</span>     * Sets the type of LDAP authentication mechanism to use when connecting to the LDAP server.<a name="line.125"></a>
+<span class="sourceLineNo">126</span>     * This is a wrapper method for setting the JNDI {@link #getEnvironment() environment template}'s<a name="line.126"></a>
+<span class="sourceLineNo">127</span>     * {@link Context#SECURITY_AUTHENTICATION} property.<a name="line.127"></a>
+<span class="sourceLineNo">128</span>     * &lt;p/&gt;<a name="line.128"></a>
+<span class="sourceLineNo">129</span>     * "none" (i.e. anonymous) and "simple" authentications are supported automatically and don't need to be configured<a name="line.129"></a>
+<span class="sourceLineNo">130</span>     * via this property.  However, if you require a different mechanism, such as a SASL or External mechanism, you<a name="line.130"></a>
+<span class="sourceLineNo">131</span>     * must configure that explicitly via this property.  See the<a name="line.131"></a>
+<span class="sourceLineNo">132</span>     * &lt;a href="http://download-llnw.oracle.com/javase/tutorial/jndi/ldap/auth_mechs.html"&gt;JNDI LDAP<a name="line.132"></a>
+<span class="sourceLineNo">133</span>     * Authentication Mechanisms&lt;/a&gt; for more information.<a name="line.133"></a>
+<span class="sourceLineNo">134</span>     *<a name="line.134"></a>
+<span class="sourceLineNo">135</span>     * @param authenticationMechanism the type of LDAP authentication to perform.<a name="line.135"></a>
+<span class="sourceLineNo">136</span>     * @see &lt;a href="http://download-llnw.oracle.com/javase/tutorial/jndi/ldap/auth_mechs.html"&gt;<a name="line.136"></a>
+<span class="sourceLineNo">137</span>     *      http://download-llnw.oracle.com/javase/tutorial/jndi/ldap/auth_mechs.html&lt;/a&gt;<a name="line.137"></a>
+<span class="sourceLineNo">138</span>     */<a name="line.138"></a>
+<span class="sourceLineNo">139</span>    public void setAuthenticationMechanism(String authenticationMechanism) {<a name="line.139"></a>
+<span class="sourceLineNo">140</span>        setEnvironmentProperty(Context.SECURITY_AUTHENTICATION, authenticationMechanism);<a name="line.140"></a>
+<span class="sourceLineNo">141</span>    }<a name="line.141"></a>
+<span class="sourceLineNo">142</span><a name="line.142"></a>
+<span class="sourceLineNo">143</span>    /**<a name="line.143"></a>
+<span class="sourceLineNo">144</span>     * Returns the type of LDAP authentication mechanism to use when connecting to the LDAP server.<a name="line.144"></a>
+<span class="sourceLineNo">145</span>     * This is a wrapper method for getting the JNDI {@link #getEnvironment() environment template}'s<a name="line.145"></a>
+<span class="sourceLineNo">146</span>     * {@link Context#SECURITY_AUTHENTICATION} property.<a name="line.146"></a>
+<span class="sourceLineNo">147</span>     * &lt;p/&gt;<a name="line.147"></a>
+<span class="sourceLineNo">148</span>     * If this property remains un-configured (i.e. {@code null} indicating the<a name="line.148"></a>
+<span class="sourceLineNo">149</span>     * {@link #setAuthenticationMechanism(String)} method wasn't used), this indicates that the default JNDI<a name="line.149"></a>
+<span class="sourceLineNo">150</span>     * "none" (anonymous) and "simple" authentications are supported automatically.  Any non-null value returned<a name="line.150"></a>
+<span class="sourceLineNo">151</span>     * represents an explicitly configured mechanism (e.g. a SASL or external mechanism). See the<a name="line.151"></a>
+<span class="sourceLineNo">152</span>     * &lt;a href="http://download-llnw.oracle.com/javase/tutorial/jndi/ldap/auth_mechs.html"&gt;JNDI LDAP<a name="line.152"></a>
+<span class="sourceLineNo">153</span>     * Authentication Mechanisms&lt;/a&gt; for more information.<a name="line.153"></a>
+<span class="sourceLineNo">154</span>     *<a name="line.154"></a>
+<span class="sourceLineNo">155</span>     * @return the type of LDAP authentication mechanism to use when connecting to the LDAP server.<a name="line.155"></a>
+<span class="sourceLineNo">156</span>     * @see &lt;a href="http://download-llnw.oracle.com/javase/tutorial/jndi/ldap/auth_mechs.html"&gt;<a name="line.156"></a>
+<span class="sourceLineNo">157</span>     *      http://download-llnw.oracle.com/javase/tutorial/jndi/ldap/auth_mechs.html&lt;/a&gt;<a name="line.157"></a>
+<span class="sourceLineNo">158</span>     */<a name="line.158"></a>
+<span class="sourceLineNo">159</span>    public String getAuthenticationMechanism() {<a name="line.159"></a>
+<span class="sourceLineNo">160</span>        return (String) getEnvironmentProperty(Context.SECURITY_AUTHENTICATION);<a name="line.160"></a>
+<span class="sourceLineNo">161</span>    }<a name="line.161"></a>
+<span class="sourceLineNo">162</span><a name="line.162"></a>
+<span class="sourceLineNo">163</span>    /**<a name="line.163"></a>
+<span class="sourceLineNo">164</span>     * The name of the ContextFactory class to use. This defaults to the SUN LDAP JNDI implementation<a name="line.164"></a>
+<span class="sourceLineNo">165</span>     * but can be overridden to use custom LDAP factories.<a name="line.165"></a>
+<span class="sourceLineNo">166</span>     * &lt;p/&gt;<a name="line.166"></a>
+<span class="sourceLineNo">167</span>     * This is a wrapper method for setting the JNDI environment's {@link Context#INITIAL_CONTEXT_FACTORY} property.<a name="line.167"></a>
+<span class="sourceLineNo">168</span>     *<a name="line.168"></a>
+<span class="sourceLineNo">169</span>     * @param contextFactoryClassName the context factory that should be used.<a name="line.169"></a>
+<span class="sourceLineNo">170</span>     */<a name="line.170"></a>
+<span class="sourceLineNo">171</span>    public void setContextFactoryClassName(String contextFactoryClassName) {<a name="line.171"></a>
+<span class="sourceLineNo">172</span>        setEnvironmentProperty(Context.INITIAL_CONTEXT_FACTORY, contextFactoryClassName);<a name="line.172"></a>
+<span class="sourceLineNo">173</span>    }<a name="line.173"></a>
+<span class="sourceLineNo">174</span><a name="line.174"></a>
+<span class="sourceLineNo">175</span>    /**<a name="line.175"></a>
+<span class="sourceLineNo">176</span>     * Sets the name of the ContextFactory class to use. This defaults to the SUN LDAP JNDI implementation<a name="line.176"></a>
+<span class="sourceLineNo">177</span>     * but can be overridden to use custom LDAP factories.<a name="line.177"></a>
+<span class="sourceLineNo">178</span>     * &lt;p/&gt;<a name="line.178"></a>
+<span class="sourceLineNo">179</span>     * This is a wrapper method for getting the JNDI environment's {@link Context#INITIAL_CONTEXT_FACTORY} property.<a name="line.179"></a>
+<span class="sourceLineNo">180</span>     *<a name="line.180"></a>
+<span class="sourceLineNo">181</span>     * @return the name of the ContextFactory class to use.<a name="line.181"></a>
+<span class="sourceLineNo">182</span>     */<a name="line.182"></a>
+<span class="sourceLineNo">183</span>    public String getContextFactoryClassName() {<a name="line.183"></a>
+<span class="sourceLineNo">184</span>        return (String) getEnvironmentProperty(Context.INITIAL_CONTEXT_FACTORY);<a name="line.184"></a>
+<span class="sourceLineNo">185</span>    }<a name="line.185"></a>
+<span class="sourceLineNo">186</span><a name="line.186"></a>
+<span class="sourceLineNo">187</span>    /**<a name="line.187"></a>
+<span class="sourceLineNo">188</span>     * Returns the base JNDI environment template to use when acquiring an LDAP connection (an {@link LdapContext}).<a name="line.188"></a>
+<span class="sourceLineNo">189</span>     * This property is the base configuration template to use for all connections.  This template is then<a name="line.189"></a>
+<span class="sourceLineNo">190</span>     * merged with appropriate runtime values as necessary in the<a name="line.190"></a>
+<span class="sourceLineNo">191</span>     * {@link #getLdapContext(Object, Object)} implementation.  The merged environment instance is what is used to<a name="line.191"></a>
+<span class="sourceLineNo">192</span>     * acquire the {@link LdapContext} at runtime.<a name="line.192"></a>
+<span class="sourceLineNo">193</span>     * &lt;p/&gt;<a name="line.193"></a>
+<span class="sourceLineNo">194</span>     * Most other get/set methods in this class act as thin proxy wrappers that interact with this property.  The<a name="line.194"></a>
+<span class="sourceLineNo">195</span>     * benefit of using them is you have an easier-to-use configuration mechanism compared to setting map properties<a name="line.195"></a>
+<span class="sourceLineNo">196</span>     * based on JNDI context keys.<a name="line.196"></a>
+<span class="sourceLineNo">197</span>     *<a name="line.197"></a>
+<span class="sourceLineNo">198</span>     * @return the base JNDI environment template to use when acquiring an LDAP connection (an {@link LdapContext})<a name="line.198"></a>
+<span class="sourceLineNo">199</span>     */<a name="line.199"></a>
+<span class="sourceLineNo">200</span>    public Map getEnvironment() {<a name="line.200"></a>
+<span class="sourceLineNo">201</span>        return this.environment;<a name="line.201"></a>
+<span class="sourceLineNo">202</span>    }<a name="line.202"></a>
+<span class="sourceLineNo">203</span><a name="line.203"></a>
+<span class="sourceLineNo">204</span>    /**<a name="line.204"></a>
+<span class="sourceLineNo">205</span>     * Sets the base JNDI environment template to use when acquiring LDAP connections.  It is typically more common<a name="line.205"></a>
+<span class="sourceLineNo">206</span>     * to use the other get/set methods in this class to set individual environment settings rather than use<a name="line.206"></a>
+<span class="sourceLineNo">207</span>     * this method, but it is available for advanced users that want full control over the base JNDI environment<a name="line.207"></a>
+<span class="sourceLineNo">208</span>     * settings.<a name="line.208"></a>
+<span class="sourceLineNo">209</span>     * &lt;p/&gt;<a name="line.209"></a>
+<span class="sourceLineNo">210</span>     * Note that this template only represents the base/default environment settings.  It is then merged with<a name="line.210"></a>
+<span class="sourceLineNo">211</span>     * appropriate runtime values as necessary in the {@link #getLdapContext(Object, Object)} implementation.<a name="line.211"></a>
+<span class="sourceLineNo">212</span>     * The merged environment instance is what is used to acquire the connection ({@link LdapContext}) at runtime.<a name="line.212"></a>
+<span class="sourceLineNo">213</span>     *<a name="line.213"></a>
+<span class="sourceLineNo">214</span>     * @param env the base JNDI environment template to use when acquiring LDAP connections.<a name="line.214"></a>
+<span class="sourceLineNo">215</span>     */<a name="line.215"></a>
+<span class="sourceLineNo">216</span>    @SuppressWarnings({"unchecked"})<a name="line.216"></a>
+<span class="sourceLineNo">217</span>    public void setEnvironment(Map env) {<a name="line.217"></a>
+<span class="sourceLineNo">218</span>        this.environment = env;<a name="line.218"></a>
+<span class="sourceLineNo">219</span>    }<a name="line.219"></a>
+<span class="sourceLineNo">220</span><a name="line.220"></a>
+<span class="sourceLineNo">221</span>    /**<a name="line.221"></a>
+<span class="sourceLineNo">222</span>     * Returns the environment property value bound under the specified key.<a name="line.222"></a>
+<span class="sourceLineNo">223</span>     *<a name="line.223"></a>
+<span class="sourceLineNo">224</span>     * @param name the name of the environment property<a name="line.224"></a>
+<span class="sourceLineNo">225</span>     * @return the property value or {@code null} if the value has not been set.<a name="line.225"></a>
+<span class="sourceLineNo">226</span>     */<a name="line.226"></a>
+<span class="sourceLineNo">227</span>    private Object getEnvironmentProperty(String name) {<a name="line.227"></a>
+<span class="sourceLineNo">228</span>        return this.environment.get(name);<a name="line.228"></a>
+<span class="sourceLineNo">229</span>    }<a name="line.229"></a>
+<span class="sourceLineNo">230</span><a name="line.230"></a>
+<span class="sourceLineNo">231</span>    /**<a name="line.231"></a>
+<span class="sourceLineNo">232</span>     * Will apply the value to the environment attribute if and only if the value is not null or empty.  If it is<a name="line.232"></a>
+<span class="sourceLineNo">233</span>     * null or empty, the corresponding environment attribute will be removed.<a name="line.233"></a>
+<span class="sourceLineNo">234</span>     *<a name="line.234"></a>
+<span class="sourceLineNo">235</span>     * @param name  the environment property key<a name="line.235"></a>
+<span class="sourceLineNo">236</span>     * @param value the environment property value.  A null/empty value will trigger removal.<a name="line.236"></a>
+<span class="sourceLineNo">237</span>     */<a name="line.237"></a>
+<span class="sourceLineNo">238</span>    private void setEnvironmentProperty(String name, String value) {<a name="line.238"></a>
+<span class="sourceLineNo">239</span>        if (StringUtils.hasText(value)) {<a name="line.239"></a>
+<span class="sourceLineNo">240</span>            this.environment.put(name, value);<a name="line.240"></a>
+<span class="sourceLineNo">241</span>        } else {<a name="line.241"></a>
+<span class="sourceLineNo">242</span>            this.environment.remove(name);<a name="line.242"></a>
+<span class="sourceLineNo">243</span>        }<a name="line.243"></a>
+<span class="sourceLineNo">244</span>    }<a name="line.244"></a>
+<span class="sourceLineNo">245</span><a name="line.245"></a>
+<span class="sourceLineNo">246</span>    /**<a name="line.246"></a>
+<span class="sourceLineNo">247</span>     * Returns whether or not connection pooling should be used when possible and appropriate.  This property is NOT<a name="line.247"></a>
+<span class="sourceLineNo">248</span>     * backed by the {@link #getEnvironment() environment template} like most other properties in this class.  It<a name="line.248"></a>
+<span class="sourceLineNo">249</span>     * is a flag to indicate that pooling is preferred.  The default value is {@code true}.<a name="line.249"></a>
+<span class="sourceLineNo">250</span>     * &lt;p/&gt;<a name="line.250"></a>
+<span class="sourceLineNo">251</span>     * However, pooling will only actually be enabled if this property is {@code true} &lt;em&gt;and&lt;/em&gt; the connection<a name="line.251"></a>
+<span class="sourceLineNo">252</span>     * being created is for the {@link #getSystemUsername() systemUsername} user.  Connection pooling is not used for<a name="line.252"></a>
+<span class="sourceLineNo">253</span>     * general authentication attempts by application end-users because the probability of re-use for that same<a name="line.253"></a>
+<span class="sourceLineNo">254</span>     * user-specific connection after an authentication attempt is extremely low.<a name="line.254"></a>
+<span class="sourceLineNo">255</span>     * &lt;p/&gt;<a name="line.255"></a>
+<span class="sourceLineNo">256</span>     * If this attribute is {@code true} and it has been determined that the connection is being made with the<a name="line.256"></a>
+<span class="sourceLineNo">257</span>     * {@link #getSystemUsername() systemUsername}, the<a name="line.257"></a>
+<span class="sourceLineNo">258</span>     * {@link #getLdapContext(Object, Object)} implementation will set the Sun/Oracle-specific<a name="line.258"></a>
+<span class="sourceLineNo">259</span>     * {@code com.sun.jndi.ldap.connect.pool} environment property to &amp;quot;{@code true}&amp;quot;.  This means setting<a name="line.259"></a>
+<span class="sourceLineNo">260</span>     * this property is only likely to work if using the Sun/Oracle default context factory class (i.e. not using<a name="line.260"></a>
+<span class="sourceLineNo">261</span>     * a custom {@link #getContextFactoryClassName() contextFactoryClassName}).<a name="line.261"></a>
+<span class="sourceLineNo">262</span>     *<a name="line.262"></a>
+<span class="sourceLineNo">263</span>     * @return whether or not connection pooling should be used when possible and appropriate<a name="line.263"></a>
+<span class="sourceLineNo">264</span>     */<a name="line.264"></a>
+<span class="sourceLineNo">265</span>    public boolean isPoolingEnabled() {<a name="line.265"></a>
+<span class="sourceLineNo">266</span>        return poolingEnabled;<a name="line.266"></a>
+<span class="sourceLineNo">267</span>    }<a name="line.267"></a>
+<span class="sourceLineNo">268</span><a name="line.268"></a>
+<span class="sourceLineNo">269</span>    /**<a name="line.269"></a>
+<span class="sourceLineNo">270</span>     * Sets whether or not connection pooling should be used when possible and appropriate.  This property is NOT<a name="line.270"></a>
+<span class="sourceLineNo">271</span>     * a wrapper to the {@link #getEnvironment() environment template} like most other properties in this class.  It<a name="line.271"></a>
+<span class="sourceLineNo">272</span>     * is a flag to indicate that pooling is preferred.  The default value is {@code true}.<a name="line.272"></a>
+<span class="sourceLineNo">273</span>     * &lt;p/&gt;<a name="line.273"></a>
+<span class="sourceLineNo">274</span>     * However, pooling will only actually be enabled if this property is {@code true} &lt;em&gt;and&lt;/em&gt; the connection<a name="line.274"></a>
+<span class="sourceLineNo">275</span>     * being created is for the {@link #getSystemUsername() systemUsername} user.  Connection pooling is not used for<a name="line.275"></a>
+<span class="sourceLineNo">276</span>     * general authentication attempts by application end-users because the probability of re-use for that same<a name="line.276"></a>
+<span class="sourceLineNo">277</span>     * user-specific connection after an authentication attempt is extremely low.<a name="line.277"></a>
+<span class="sourceLineNo">278</span>     * &lt;p/&gt;<a name="line.278"></a>
+<span class="sourceLineNo">279</span>     * If this attribute is {@code true} and it has been determined that the connection is being made with the<a name="line.279"></a>
+<span class="sourceLineNo">280</span>     * {@link #getSystemUsername() systemUsername}, the<a name="line.280"></a>
+<span class="sourceLineNo">281</span>     * {@link #getLdapContext(Object, Object)} implementation will set the Sun/Oracle-specific<a name="line.281"></a>
+<span class="sourceLineNo">282</span>     * {@code com.sun.jndi.ldap.connect.pool} environment property to &amp;quot;{@code true}&amp;quot;.  This means setting<a name="line.282"></a>
+<span class="sourceLineNo">283</span>     * this property is only likely to work if using the Sun/Oracle default context factory class (i.e. not using<a name="line.283"></a>
+<span class="sourceLineNo">284</span>     * a custom {@link #getContextFactoryClassName() contextFactoryClassName}).<a name="line.284"></a>
+<span class="sourceLineNo">285</span>     *<a name="line.285"></a>
+<span class="sourceLineNo">286</span>     * @param poolingEnabled whether or not connection pooling should be used when possible and appropriate<a name="line.286"></a>
+<span class="sourceLineNo">287</span>     */<a name="line.287"></a>
+<span class="sourceLineNo">288</span>    public void setPoolingEnabled(boolean poolingEnabled) {<a name="line.288"></a>
+<span class="sourceLineNo">289</span>        this.poolingEnabled = poolingEnabled;<a name="line.289"></a>
+<span class="sourceLineNo">290</span>    }<a name="line.290"></a>
+<span class="sourceLineNo">291</span><a name="line.291"></a>
+<span class="sourceLineNo">292</span>    /**<a name="line.292"></a>
+<span class="sourceLineNo">293</span>     * Sets the LDAP referral behavior when creating a connection.  Defaults to {@code follow}.  See the Sun/Oracle LDAP<a name="line.293"></a>
+<span class="sourceLineNo">294</span>     * &lt;a href="http://java.sun.com/products/jndi/tutorial/ldap/referral/jndi.html"&gt;referral documentation&lt;/a&gt; for more.<a name="line.294"></a>
+<span class="sourceLineNo">295</span>     *<a name="line.295"></a>
+<span class="sourceLineNo">296</span>     * @param referral the referral property.<a name="line.296"></a>
+<span class="sourceLineNo">297</span>     * @see &lt;a href="http://java.sun.com/products/jndi/tutorial/ldap/referral/jndi.html"&gt;Referrals in JNDI&lt;/a&gt;<a name="line.297"></a>
+<span class="sourceLineNo">298</span>     */<a name="line.298"></a>
+<span class="sourceLineNo">299</span>    public void setReferral(String referral) {<a name="line.299"></a>
+<span class="sourceLineNo">300</span>        setEnvironmentProperty(Context.REFERRAL, referral);<a name="line.300"></a>
+<span class="sourceLineNo">301</span>    }<a name="line.301"></a>
+<span class="sourceLineNo">302</span><a name="line.302"></a>
+<span class="sourceLineNo">303</span>    /**<a name="line.303"></a>
+<span class="sourceLineNo">304</span>     * Returns the LDAP referral behavior when creating a connection.  Defaults to {@code follow}.<a name="line.304"></a>
+<span class="sourceLineNo">305</span>     * See the Sun/Oracle LDAP<a name="line.305"></a>
+<span class="sourceLineNo">306</span>     * &lt;a href="http://java.sun.com/products/jndi/tutorial/ldap/referral/jndi.html"&gt;referral documentation&lt;/a&gt; for more.<a name="line.306"></a>
+<span class="sourceLineNo">307</span>     *<a name="line.307"></a>
+<span class="sourceLineNo">308</span>     * @return the LDAP referral behavior when creating a connection.<a name="line.308"></a>
+<span class="sourceLineNo">309</span>     * @see &lt;a href="http://java.sun.com/products/jndi/tutorial/ldap/referral/jndi.html"&gt;Referrals in JNDI&lt;/a&gt;<a name="line.309"></a>
+<span class="sourceLineNo">310</span>     */<a name="line.310"></a>
+<span class="sourceLineNo">311</span>    public String getReferral() {<a name="line.311"></a>
+<span class="sourceLineNo">312</span>        return (String) getEnvironmentProperty(Context.REFERRAL);<a name="line.312"></a>
+<span class="sourceLineNo">313</span>    }<a name="line.313"></a>
+<span class="sourceLineNo">314</span><a name="line.314"></a>
+<span class="sourceLineNo">315</span>    /**<a name="line.315"></a>
+<span class="sourceLineNo">316</span>     * The LDAP url to connect to. (e.g. ldap://&amp;lt;ldapDirectoryHostname&amp;gt;:&amp;lt;port&amp;gt;).  This must be configured.<a name="line.316"></a>
+<span class="sourceLineNo">317</span>     *<a name="line.317"></a>
+<span class="sourceLineNo">318</span>     * @param url the LDAP url to connect to. (e.g. ldap://&amp;lt;ldapDirectoryHostname&amp;gt;:&amp;lt;port&amp;gt;)<a name="line.318"></a>
+<span class="sourceLineNo">319</span>     */<a name="line.319"></a>
+<span class="sourceLineNo">320</span>    public void setUrl(String url) {<a name="line.320"></a>
+<span class="sourceLineNo">321</span>        setEnvironmentProperty(Context.PROVIDER_URL, url);<a name="line.321"></a>
+<span class="sourceLineNo">322</span>    }<a name="line.322"></a>
+<span class="sourceLineNo">323</span><a name="line.323"></a>
+<span class="sourceLineNo">324</span>    /**<a name="line.324"></a>
+<span class="sourceLineNo">325</span>     * Returns the LDAP url to connect to. (e.g. ldap://&amp;lt;ldapDirectoryHostname&amp;gt;:&amp;lt;port&amp;gt;).<a name="line.325"></a>
+<span class="sourceLineNo">326</span>     * This must be configured.<a name="line.326"></a>
+<span class="sourceLineNo">327</span>     *<a name="line.327"></a>
+<span class="sourceLineNo">328</span>     * @return the LDAP url to connect to. (e.g. ldap://&amp;lt;ldapDirectoryHostname&amp;gt;:&amp;lt;port&amp;gt;)<a name="line.328"></a>
+<span class="sourceLineNo">329</span>     */<a name="line.329"></a>
+<span class="sourceLineNo">330</span>    public String getUrl() {<a name="line.330"></a>
+<span class="sourceLineNo">331</span>        return (String) getEnvironmentProperty(Context.PROVIDER_URL);<a name="line.331"></a>
+<span class="sourceLineNo">332</span>    }<a name="line.332"></a>
+<span class="sourceLineNo">333</span><a name="line.333"></a>
+<span class="sourceLineNo">334</span>    /**<a name="line.334"></a>
+<span class="sourceLineNo">335</span>     * Sets the password of the {@link #setSystemUsername(String) systemUsername} that will be used when creating an<a name="line.335"></a>
+<span class="sourceLineNo">336</span>     * LDAP connection used for authorization queries.<a name="line.336"></a>
+<span class="sourceLineNo">337</span>     * &lt;p/&gt;<a name="line.337"></a>
+<span class="sourceLineNo">338</span>     * Note that setting this property is not required if the calling LDAP Realm does not perform authorization<a name="line.338"></a>
+<span class="sourceLineNo">339</span>     * checks.<a name="line.339"></a>
+<span class="sourceLineNo">340</span>     *<a name="line.340"></a>
+<span class="sourceLineNo">341</span>     * @param systemPassword the password of the {@link #setSystemUsername(String) systemUsername} that will be used<a name="line.341"></a>
+<span class="sourceLineNo">342</span>     *                       when creating an LDAP connection used for authorization queries.<a name="line.342"></a>
+<span class="sourceLineNo">343</span>     */<a name="line.343"></a>
+<span class="sourceLineNo">344</span>    public void setSystemPassword(String systemPassword) {<a name="line.344"></a>
+<span class="sourceLineNo">345</span>        this.systemPassword = systemPassword;<a name="line.345"></a>
+<span class="sourceLineNo">346</span>    }<a name="line.346"></a>
+<span class="sourceLineNo">347</span><a name="line.347"></a>
+<span class="sourceLineNo">348</span>    /**<a name="line.348"></a>
+<span class="sourceLineNo">349</span>     * Returns the password of the {@link #setSystemUsername(String) systemUsername} that will be used when creating an<a name="line.349"></a>
+<span class="sourceLineNo">350</span>     * LDAP connection used for authorization queries.<a name="line.350"></a>
+<span class="sourceLineNo">351</span>     * &lt;p/&gt;<a name="line.351"></a>
+<span class="sourceLineNo">352</span>     * Note that setting this property is not required if the calling LDAP Realm does not perform authorization<a name="line.352"></a>
+<span class="sourceLineNo">353</span>     * checks.<a name="line.353"></a>
+<span class="sourceLineNo">354</span>     *<a name="line.354"></a>
+<span class="sourceLineNo">355</span>     * @return the password of the {@link #setSystemUsername(String) systemUsername} that will be used when creating an<a name="line.355"></a>
+<span class="sourceLineNo">356</span>     *         LDAP connection used for authorization queries.<a name="line.356"></a>
+<span class="sourceLineNo">357</span>     */<a name="line.357"></a>
+<span class="sourceLineNo">358</span>    public String getSystemPassword() {<a name="line.358"></a>
+<span class="sourceLineNo">359</span>        return this.systemPassword;<a name="line.359"></a>
+<span class="sourceLineNo">360</span>    }<a name="line.360"></a>
+<span class="sourceLineNo">361</span><a name="line.361"></a>
+<span class="sourceLineNo">362</span>    /**<a name="line.362"></a>
+<span class="sourceLineNo">363</span>     * Sets the system username that will be used when creating an LDAP connection used for authorization queries.<a name="line.363"></a>
+<span class="sourceLineNo">364</span>     * The user must have the ability to query for authorization data for any application user.<a name="line.364"></a>
+<span class="sourceLineNo">365</span>     * &lt;p/&gt;<a name="line.365"></a>
+<span class="sourceLineNo">366</span>     * Note that setting this property is not required if the calling LDAP Realm does not perform authorization<a name="line.366"></a>
+<span class="sourceLineNo">367</span>     * checks.<a name="line.367"></a>
+<span class="sourceLineNo">368</span>     *<a name="line.368"></a>
+<span class="sourceLineNo">369</span>     * @param systemUsername the system username that will be used when creating an LDAP connection used for<a name="line.369"></a>
+<span class="sourceLineNo">370</span>     *                       authorization queries.<a name="line.370"></a>
+<span class="sourceLineNo">371</span>     */<a name="line.371"></a>
+<span class="sourceLineNo">372</span>    public void setSystemUsername(String systemUsername) {<a name="line.372"></a>
+<span class="sourceLineNo">373</span>        this.systemUsername = systemUsername;<a name="line.373"></a>
+<span class="sourceLineNo">374</span>    }<a name="line.374"></a>
+<span class="sourceLineNo">375</span><a name="line.375"></a>
+<span class="sourceLineNo">376</span>    /**<a name="line.376"></a>
+<span class="sourceLineNo">377</span>     * Returns the system username that will be used when creating an LDAP connection used for authorization queries.<a name="line.377"></a>
+<span class="sourceLineNo">378</span>     * The user must have the ability to query for authorization data for any application user.<a name="line.378"></a>
+<span class="sourceLineNo">379</span>     * &lt;p/&gt;<a name="line.379"></a>
+<span class="sourceLineNo">380</span>     * Note that setting this property is not required if the calling LDAP Realm does not perform authorization<a name="line.380"></a>
+<span class="sourceLineNo">381</span>     * checks.<a name="line.381"></a>
+<span class="sourceLineNo">382</span>     *<a name="line.382"></a>
+<span class="sourceLineNo">383</span>     * @return the system username that will be used when creating an LDAP connection used for authorization queries.<a name="line.383"></a>
+<span class="sourceLineNo">384</span>     */<a name="line.384"></a>
+<span class="sourceLineNo">385</span>    public String getSystemUsername() {<a name="line.385"></a>
+<span class="sourceLineNo">386</span>        return systemUsername;<a name="line.386"></a>
+<span class="sourceLineNo">387</span>    }<a name="line.387"></a>
+<span class="sourceLineNo">388</span><a name="line.388"></a>
+<span class="sourceLineNo">389</span>    /*--------------------------------------------<a name="line.389"></a>
+<span class="sourceLineNo">390</span>    |               M E T H O D S               |<a name="line.390"></a>
+<span class="sourceLineNo">391</span>    ============================================*/<a name="line.391"></a>
+<span class="sourceLineNo">392</span><a name="line.392"></a>
+<span class="sourceLineNo">393</span>    /**<a name="line.393"></a>
+<span class="sourceLineNo">394</span>     * This implementation delegates to {@link #getLdapContext(Object, Object)} using the<a name="line.394"></a>
+<span class="sourceLineNo">395</span>     * {@link #getSystemUsername() systemUsername} and {@link #getSystemPassword() systemPassword} properties as<a name="line.395"></a>
+<span class="sourceLineNo">396</span>     * arguments.<a name="line.396"></a>
+<span class="sourceLineNo">397</span>     *<a name="line.397"></a>
+<span class="sourceLineNo">398</span>     * @return the system LdapContext<a name="line.398"></a>
+<span class="sourceLineNo">399</span>     * @throws NamingException if there is a problem connecting to the LDAP directory<a name="line.399"></a>
+<span class="sourceLineNo">400</span>     */<a name="line.400"></a>
+<span class="sourceLineNo">401</span>    public LdapContext getSystemLdapContext() throws NamingException {<a name="line.401"></a>
+<span class="sourceLineNo">402</span>        return getLdapContext((Object)getSystemUsername(), getSystemPassword());<a name="line.402"></a>
+<span class="sourceLineNo">403</span>    }<a name="line.403"></a>
+<span class="sourceLineNo">404</span><a name="line.404"></a>
+<span class="sourceLineNo">405</span>    /**<a name="line.405"></a>
+<span class="sourceLineNo">406</span>     * Deprecated - use {@link #getLdapContext(Object, Object)} instead.  This will be removed before Apache Shiro 2.0.<a name="line.406"></a>
+<span class="sourceLineNo">407</span>     *<a name="line.407"></a>
+<span class="sourceLineNo">408</span>     * @param username the username to use when creating the connection.<a name="line.408"></a>
+<span class="sourceLineNo">409</span>     * @param password the password to use when creating the connection.<a name="line.409"></a>
+<span class="sourceLineNo">410</span>     * @return a {@code LdapContext} bound using the given username and password.<a name="line.410"></a>
+<span class="sourceLineNo">411</span>     * @throws javax.naming.NamingException if there is an error creating the context.<a name="line.411"></a>
+<span class="sourceLineNo">412</span>     * @deprecated the {@link #getLdapContext(Object, Object)} method should be used in all cases to ensure more than<a name="line.412"></a>
+<span class="sourceLineNo">413</span>     *             String principals and credentials can be used.  Shiro no longer calls this method - it will be<a name="line.413"></a>
+<span class="sourceLineNo">414</span>     *             removed before the 2.0 release.<a name="line.414"></a>
+<span class="sourceLineNo">415</span>     */<a name="line.415"></a>
+<span class="sourceLineNo">416</span>    @Deprecated<a name="line.416"></a>
+<span class="sourceLineNo">417</span>    public LdapContext getLdapContext(String username, String password) throws NamingException {<a name="line.417"></a>
+<span class="sourceLineNo">418</span>        return getLdapContext((Object) username, password);<a name="line.418"></a>
+<span class="sourceLineNo">419</span>    }<a name="line.419"></a>
+<span class="sourceLineNo">420</span><a name="line.420"></a>
+<span class="sourceLineNo">421</span>    /**<a name="line.421"></a>
+<span class="sourceLineNo">422</span>     * Returns {@code true} if LDAP connection pooling should be used when acquiring a connection based on the specified<a name="line.422"></a>
+<span class="sourceLineNo">423</span>     * account principal, {@code false} otherwise.<a name="line.423"></a>
+<span class="sourceLineNo">424</span>     * &lt;p/&gt;<a name="line.424"></a>
+<span class="sourceLineNo">425</span>     * This implementation returns {@code true} only if {@link #isPoolingEnabled()} and the principal equals the<a name="line.425"></a>
+<span class="sourceLineNo">426</span>     * {@link #getSystemUsername()}.  The reasoning behind this is that connection pooling is not desirable for<a name="line.426"></a>
+<span class="sourceLineNo">427</span>     * general authentication attempts by application end-users because the probability of re-use for that same<a name="line.427"></a>
+<span class="sourceLineNo">428</span>     * user-specific connection after an authentication attempt is extremely low.<a name="line.428"></a>
+<span class="sourceLineNo">429</span>     *<a name="line.429"></a>
+<span class="sourceLineNo">430</span>     * @param principal the principal under which the connection will be made<a name="line.430"></a>
+<span class="sourceLineNo">431</span>     * @return {@code true} if LDAP connection pooling should be used when acquiring a connection based on the specified<a name="line.431"></a>
+<span class="sourceLineNo">432</span>     *         account principal, {@code false} otherwise.<a name="line.432"></a>
+<span class="sourceLineNo">433</span>     */<a name="line.433"></a>
+<span class="sourceLineNo">434</span>    protected boolean isPoolingConnections(Object principal) {<a name="line.434"></a>
+<span class="sourceLineNo">435</span>        return isPoolingEnabled() &amp;&amp; principal != null &amp;&amp; principal.equals(getSystemUsername());<a name="line.435"></a>
+<span class="sourceLineNo">436</span>    }<a name="line.436"></a>
+<span class="sourceLineNo">437</span><a name="line.437"></a>
+<span class="sourceLineNo">438</span>    /**<a name="line.438"></a>
+<span class="sourceLineNo">439</span>     * This implementation returns an LdapContext based on the configured JNDI/LDAP environment configuration.<a name="line.439"></a>
+<span class="sourceLineNo">440</span>     * The environnmet (Map) used at runtime is created by merging the default/configured<a name="line.440"></a>
+<span class="sourceLineNo">441</span>     * {@link #getEnvironment() environment template} with some runtime values as necessary (e.g. a principal and<a name="line.441"></a>
+<span class="sourceLineNo">442</span>     * credential available at runtime only).<a name="line.442"></a>
+<span class="sourceLineNo">443</span>     * &lt;p/&gt;<a name="line.443"></a>
+<span class="sourceLineNo">444</span>     * After the merged Map instance is created, the LdapContext connection is<a name="line.444"></a>
+<span class="sourceLineNo">445</span>     * {@link #createLdapContext(java.util.Hashtable) created} and returned.<a name="line.445"></a>
+<span class="sourceLineNo">446</span>     *<a name="line.446"></a>
+<span class="sourceLineNo">447</span>     * @param principal   the principal to use when acquiring a connection to the LDAP directory<a name="line.447"></a>
+<span class="sourceLineNo">448</span>     * @param credentials the credentials (password, X.509 certificate, etc) to use when acquiring a connection to the<a name="line.448"></a>
+<span class="sourceLineNo">449</span>     *                    LDAP directory<a name="line.449"></a>
+<span class="sourceLineNo">450</span>     * @return the acquired {@code LdapContext} connection bound using the specified principal and credentials.<a name="line.450"></a>
+<span class="sourceLineNo">451</span>     * @throws NamingException<a name="line.451"></a>
+<span class="sourceLineNo">452</span>     * @throws IllegalStateException<a name="line.452"></a>
+<span class="sourceLineNo">453</span>     */<a name="line.453"></a>
+<span class="sourceLineNo">454</span>    public LdapContext getLdapContext(Object principal, Object credentials) throws NamingException,<a name="line.454"></a>
+<span class="sourceLineNo">455</span>            IllegalStateException {<a name="line.455"></a>
+<span class="sourceLineNo">456</span><a name="line.456"></a>
+<span class="sourceLineNo">457</span>        String url = getUrl();<a name="line.457"></a>
+<span class="sourceLineNo">458</span>        if (url == null) {<a name="line.458"></a>
+<span class="sourceLineNo">459</span>            throw new IllegalStateException("An LDAP URL must be specified of the form ldap://&lt;hostname&gt;:&lt;port&gt;");<a name="line.459"></a>
+<span class="sourceLineNo">460</span>        }<a name="line.460"></a>
+<span class="sourceLineNo">461</span><a name="line.461"></a>
+<span class="sourceLineNo">462</span>        //copy the environment template into the runtime instance that will be further edited based on<a name="line.462"></a>
+<span class="sourceLineNo">463</span>        //the method arguments and other class attributes.<a name="line.463"></a>
+<span class="sourceLineNo">464</span>        Hashtable&lt;String, Object&gt; env = new Hashtable&lt;String, Object&gt;(this.environment);<a name="line.464"></a>
+<span class="sourceLineNo">465</span><a name="line.465"></a>
+<span class="sourceLineNo">466</span>        Object authcMech = getAuthenticationMechanism();<a name="line.466"></a>
+<span class="sourceLineNo">467</span>        if (authcMech == null &amp;&amp; (principal != null || credentials != null)) {<a name="line.467"></a>
+<span class="sourceLineNo">468</span>            //authenticationMechanism has not been set, but either a principal and/or credentials were<a name="line.468"></a>
+<span class="sourceLineNo">469</span>            //supplied, indicating that at least a 'simple' authentication attempt is indeed occurring - the Shiro<a name="line.469"></a>
+<span class="sourceLineNo">470</span>            //end-user just didn't configure it explicitly.  So we set it to be 'simple' here as a convenience;<a name="line.470"></a>
+<span class="sourceLineNo">471</span>            //the Sun provider implementation already does this same logic, but by repeating that logic here, we ensure<a name="line.471"></a>
+<span class="sourceLineNo">472</span>            //this convenience exists regardless of provider implementation):<a name="line.472"></a>
+<span class="sourceLineNo">473</span>            env.put(Context.SECURITY_AUTHENTICATION, SIMPLE_AUTHENTICATION_MECHANISM_NAME);<a name="line.473"></a>
+<span class="sourceLineNo">474</span>        }<a name="line.474"></a>
+<span class="sourceLineNo">475</span>        if (principal != null) {<a name="line.475"></a>
+<span class="sourceLineNo">476</span>            env.put(Context.SECURITY_PRINCIPAL, principal);<a name="line.476"></a>
+<span class="sourceLineNo">477</span>        }<a name="line.477"></a>
+<span class="sourceLineNo">478</span>        if (credentials != null) {<a name="line.478"></a>
+<span class="sourceLineNo">479</span>            env.put(Context.SECURITY_CREDENTIALS, credentials);<a name="line.479"></a>
+<span class="sourceLineNo">480</span>        }<a name="line.480"></a>
+<span class="sourceLineNo">481</span><a name="line.481"></a>
+<span class="sourceLineNo">482</span>        boolean pooling = isPoolingConnections(principal);<a name="line.482"></a>
+<span class="sourceLineNo">483</span>        if (pooling) {<a name="line.483"></a>
+<span class="sourceLineNo">484</span>            env.put(SUN_CONNECTION_POOLING_PROPERTY, "true");<a name="line.484"></a>
+<span class="sourceLineNo">485</span>        }<a name="line.485"></a>
+<span class="sourceLineNo">486</span><a name="line.486"></a>
+<span class="sourceLineNo">487</span>        if (log.isDebugEnabled()) {<a name="line.487"></a>
+<span class="sourceLineNo">488</span>            log.debug("Initializing LDAP context using URL [{}] and principal [{}] with pooling {}",<a name="line.488"></a>
+<span class="sourceLineNo">489</span>                    new Object[]{url, principal, (pooling ? "enabled" : "disabled")});<a name="line.489"></a>
+<span class="sourceLineNo">490</span>        }<a name="line.490"></a>
+<span class="sourceLineNo">491</span><a name="line.491"></a>
+<span class="sourceLineNo">492</span>        // validate the config before creating the context<a name="line.492"></a>
+<span class="sourceLineNo">493</span>        validateAuthenticationInfo(env);<a name="line.493"></a>
+<span class="sourceLineNo">494</span><a name="line.494"></a>
+<span class="sourceLineNo">495</span>        return createLdapContext(env);<a name="line.495"></a>
+<span class="sourceLineNo">496</span>    }<a name="line.496"></a>
+<span class="sourceLineNo">497</span><a name="line.497"></a>
+<span class="sourceLineNo">498</span>    /**<a name="line.498"></a>
+<span class="sourceLineNo">499</span>     * Creates and returns a new {@link javax.naming.ldap.InitialLdapContext} instance.  This method exists primarily<a name="line.499"></a>
+<span class="sourceLineNo">500</span>     * to support testing where a mock LdapContext can be returned instead of actually creating a connection, but<a name="line.500"></a>
+<span class="sourceLineNo">501</span>     * subclasses are free to provide a different implementation if necessary.<a name="line.501"></a>
+<span class="sourceLineNo">502</span>     *<a name="line.502"></a>
+<span class="sourceLineNo">503</span>     * @param env the JNDI environment settings used to create the LDAP connection<a name="line.503"></a>
+<span class="sourceLineNo">504</span>     * @return an LdapConnection<a name="line.504"></a>
+<span class="sourceLineNo">505</span>     * @throws NamingException if a problem occurs creating the connection<a name="line.505"></a>
+<span class="sourceLineNo">506</span>     */<a name="line.506"></a>
+<span class="sourceLineNo">507</span>    protected LdapContext createLdapContext(Hashtable env) throws NamingException {<a name="line.507"></a>
+<span class="sourceLineNo">508</span>        return new InitialLdapContext(env, null);<a name="line.508"></a>
+<span class="sourceLineNo">509</span>    }<a name="line.509"></a>
+<span class="sourceLineNo">510</span><a name="line.510"></a>
+<span class="sourceLineNo">511</span><a name="line.511"></a>
+<span class="sourceLineNo">512</span>    /**<a name="line.512"></a>
+<span class="sourceLineNo">513</span>     * Validates the configuration in the JNDI &lt;code&gt;environment&lt;/code&gt; settings and throws an exception if a problem<a name="line.513"></a>
+<span class="sourceLineNo">514</span>     * exists.<a name="line.514"></a>
+<span class="sourceLineNo">515</span>     * &lt;p/&gt;<a name="line.515"></a>
+<span class="sourceLineNo">516</span>     * This implementation will throw a {@link AuthenticationException} if the authentication mechanism is set to<a name="line.516"></a>
+<span class="sourceLineNo">517</span>     * 'simple', the principal is non-empty, and the credentials are empty (as per<a name="line.517"></a>
+<span class="sourceLineNo">518</span>     * &lt;a href="http://tools.ietf.org/html/rfc4513#section-5.1.2"&gt;rfc4513 section-5.1.2&lt;/a&gt;).<a name="line.518"></a>
+<span class="sourceLineNo">519</span>     *<a name="line.519"></a>
+<span class="sourceLineNo">520</span>     * @param environment the JNDI environment settings to be validated<a name="line.520"></a>
+<span class="sourceLineNo">521</span>     * @throws AuthenticationException if a configuration problem is detected<a name="line.521"></a>
+<span class="sourceLineNo">522</span>     */<a name="line.522"></a>
+<span class="sourceLineNo">523</span>    protected void validateAuthenticationInfo(Hashtable&lt;String, Object&gt; environment)<a name="line.523"></a>
+<span class="sourceLineNo">524</span>        throws AuthenticationException<a name="line.524"></a>
+<span class="sourceLineNo">525</span>    {<a name="line.525"></a>
+<span class="sourceLineNo">526</span>        // validate when using Simple auth both principal and credentials are set<a name="line.526"></a>
+<span class="sourceLineNo">527</span>        if(SIMPLE_AUTHENTICATION_MECHANISM_NAME.equals(environment.get(Context.SECURITY_AUTHENTICATION))) {<a name="line.527"></a>
+<span class="sourceLineNo">528</span><a name="line.528"></a>
+<span class="sourceLineNo">529</span>            // only validate credentials if we have a non-empty principal<a name="line.529"></a>
+<span class="sourceLineNo">530</span>            if( environment.get(Context.SECURITY_PRINCIPAL) != null &amp;&amp;<a name="line.530"></a>
+<span class="sourceLineNo">531</span>                StringUtils.hasText( String.valueOf( environment.get(Context.SECURITY_PRINCIPAL) ))) {<a name="line.531"></a>
+<span class="sourceLineNo">532</span><a name="line.532"></a>
+<span class="sourceLineNo">533</span>                Object credentials = environment.get(Context.SECURITY_CREDENTIALS);<a name="line.533"></a>
+<span class="sourceLineNo">534</span><a name="line.534"></a>
+<span class="sourceLineNo">535</span>                // from the FAQ, we need to check for empty credentials:<a name="line.535"></a>
+<span class="sourceLineNo">536</span>                // http://docs.oracle.com/javase/tutorial/jndi/ldap/faq.html<a name="line.536"></a>
+<span class="sourceLineNo">537</span>                if( credentials == null ||<a name="line.537"></a>
+<span class="sourceLineNo">538</span>                    (credentials instanceof byte[] &amp;&amp; ((byte[])credentials).length &lt;= 0) || // empty byte[]<a name="line.538"></a>
+<span class="sourceLineNo">539</span>                    (credentials instanceof char[] &amp;&amp; ((char[])credentials).length &lt;= 0) || // empty char[]<a name="line.539"></a>
+<span class="sourceLineNo">540</span>                    (String.class.isInstance(credentials) &amp;&amp; !StringUtils.hasText(String.valueOf(credentials)))) {<a name="line.540"></a>
+<span class="sourceLineNo">541</span><a name="line.541"></a>
+<span class="sourceLineNo">542</span>                    throw new javax.naming.AuthenticationException("LDAP Simple authentication requires both a "<a name="line.542"></a>
+<span class="sourceLineNo">543</span>                                                                       + "principal and credentials.");<a name="line.543"></a>
+<span class="sourceLineNo">544</span>                }<a name="line.544"></a>
+<span class="sourceLineNo">545</span>            }<a name="line.545"></a>
+<span class="sourceLineNo">546</span>        }<a name="line.546"></a>
+<span class="sourceLineNo">547</span>    }<a name="line.547"></a>
+<span class="sourceLineNo">548</span><a name="line.548"></a>
+<span class="sourceLineNo">549</span>}<a name="line.549"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

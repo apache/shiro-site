@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>EnvironmentLoaderListener.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.env</a> &gt; <span class="el_source">EnvironmentLoaderListener.java</span></div><h1>EnvironmentLoaderListener.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.env;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+/**
+ * Bootstrap listener to startup and shutdown the web application's Shiro
+ * {@link WebEnvironment} at ServletContext startup and shutdown respectively.  This class exists only to
+ * implement the {@link ServletContextListener} interface. All 'real' logic is done in the parent
+ * {@link EnvironmentLoader} class.
+ * &lt;h2&gt;Usage&lt;/h2&gt;
+ * Define the following in {@code web.xml}:
+ * &lt;pre&gt;
+ * &amp;lt;listener&amp;gt;
+ *     &amp;lt;listener-class&amp;gt;&lt;code&gt;org.apache.shiro.web.env.EnvironmentLoaderListener&lt;/code&gt;&amp;lt;/listener-class&amp;gt;
+ * &amp;lt;/listener&amp;gt;
+ * &lt;/pre&gt;
+ * Configuration options, such as the {@code WebEnvironment} class to instantiate as well as Shiro configuration
+ * resource locations are specified as {@code ServletContext} {@code context-param}s and are documented in the
+ * {@link EnvironmentLoader} JavaDoc.
+ * &lt;h2&gt;Shiro Filter&lt;/h2&gt;
+ * This listener is almost always defined in conjunction with the
+ * {@link org.apache.shiro.web.servlet.ShiroFilter ShiroFilter} to ensure security operations for web requests.  Please
+ * see the {@link org.apache.shiro.web.servlet.ShiroFilter ShiroFilter} JavaDoc for more.
+ *
+ *
+ * @see EnvironmentLoader
+ * @see org.apache.shiro.web.servlet.ShiroFilter ShiroFilter
+ * @since 1.2
+ */
+<span class="fc" id="L49">public class EnvironmentLoaderListener extends EnvironmentLoader implements ServletContextListener {</span>
+
+    /**
+     * Initializes the Shiro {@code WebEnvironment} and binds it to the {@code ServletContext} at application
+     * startup for future reference.
+     *
+     * @param sce the ServletContextEvent triggered upon application startup
+     */
+    public void contextInitialized(ServletContextEvent sce) {
+<span class="fc" id="L58">        initEnvironment(sce.getServletContext());</span>
+<span class="fc" id="L59">    }</span>
+
+    /**
+     * Destroys any previously created/bound {@code WebEnvironment} instance created by
+     * the {@link #contextInitialized(javax.servlet.ServletContextEvent)} method.
+     *
+     * @param sce the ServletContextEvent triggered upon application shutdown
+     */
+    public void contextDestroyed(ServletContextEvent sce) {
+<span class="fc" id="L68">        destroyEnvironment(sce.getServletContext());</span>
+<span class="fc" id="L69">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

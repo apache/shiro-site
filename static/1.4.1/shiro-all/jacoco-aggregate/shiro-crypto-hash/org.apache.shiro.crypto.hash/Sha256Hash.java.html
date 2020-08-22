@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>Sha256Hash.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: All (aggregate jar)</a> &gt; <a href="../index.html" class="el_bundle">shiro-crypto-hash</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.crypto.hash</a> &gt; <span class="el_source">Sha256Hash.java</span></div><h1>Sha256Hash.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.crypto.hash;
+
+import org.apache.shiro.codec.Base64;
+import org.apache.shiro.codec.Hex;
+
+/**
+ * Generates an SHA-256 Hash from a given input &lt;tt&gt;source&lt;/tt&gt; with an optional &lt;tt&gt;salt&lt;/tt&gt; and hash iterations.
+ * &lt;p/&gt;
+ * See the {@link SimpleHash SimpleHash} parent class JavaDoc for a detailed explanation of Hashing
+ * techniques and how the overloaded constructors function.
+ * &lt;p/&gt;
+ * &lt;b&gt;JDK Version Note&lt;/b&gt; - Attempting to instantiate this class on JREs prior to version 1.4.0 will throw
+ * an {@link IllegalStateException IllegalStateException}
+ *
+ * @since 0.9
+ */
+public class Sha256Hash extends SimpleHash {
+
+    //TODO - complete JavaDoc
+
+    public static final String ALGORITHM_NAME = &quot;SHA-256&quot;;
+
+    public Sha256Hash() {
+<span class="nc" id="L42">        super(ALGORITHM_NAME);</span>
+<span class="nc" id="L43">    }</span>
+
+    public Sha256Hash(Object source) {
+<span class="fc" id="L46">        super(ALGORITHM_NAME, source);</span>
+<span class="fc" id="L47">    }</span>
+
+    public Sha256Hash(Object source, Object salt) {
+<span class="fc" id="L50">        super(ALGORITHM_NAME, source, salt);</span>
+<span class="fc" id="L51">    }</span>
+
+    public Sha256Hash(Object source, Object salt, int hashIterations) {
+<span class="fc" id="L54">        super(ALGORITHM_NAME, source, salt, hashIterations);</span>
+<span class="fc" id="L55">    }</span>
+
+    public static Sha256Hash fromHexString(String hex) {
+<span class="nc" id="L58">        Sha256Hash hash = new Sha256Hash();</span>
+<span class="nc" id="L59">        hash.setBytes(Hex.decode(hex));</span>
+<span class="nc" id="L60">        return hash;</span>
+    }
+
+    public static Sha256Hash fromBase64String(String base64) {
+<span class="nc" id="L64">        Sha256Hash hash = new Sha256Hash();</span>
+<span class="nc" id="L65">        hash.setBytes(Base64.decode(base64));</span>
+<span class="nc" id="L66">        return hash;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

@@ -1,0 +1,665 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-  2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="Apache Shiro is a powerful and easy-to-use Java security framework that performs authentication, authorization, cryptography, and session management.">
+    <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
+    <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
+    <meta name="y_key" content="e47896cd6bae4920">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+
+    <title>
+                    Apache Shiro | Simple. Java. Security.
+        </title>
+
+
+    <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+    <!-- site styles and  -->
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+    <script type="text/javascript" src="./assets/js/shiro-site.js"></script>
+
+    <!-- github ribbon -->
+    <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.css" />
+    <!--[if lt IE 9]>
+      <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.ie.css" />
+    <![endif]-->
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap-theme.min.css">
+    <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="./assets/css/bootstrap-social.css">
+
+    <!-- Google Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXX-Y', 'auto');
+    ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics -->
+
+
+
+    <!-- syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css" integrity="sha256-Zd1icfZ72UBmsId/mUcagrmN7IN5Qkrvh75ICHIQVTk=" crossorigin="anonymous" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js" integrity="sha256-s63qpgPYoQk+wv3U6WZqioVJrwFNBTgD4dkeegLuwvo=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script type="text/javascript">
+
+        $( document ).ready(function() {
+            addPageEditLink();
+        });
+    </script>
+</head>
+
+<body>
+
+    <div id="top-bar"></div>
+
+    <div class="container" style="max-width: 1200px;">
+
+    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
+
+
+
+    <div class="masthead">
+        <p class="lead">
+            <a href="./index.html">
+                <img src="./assets/images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;">
+            </a>
+            <span class="tagline">Simple. Java. Security.</span>
+            <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+                <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png"/>
+            </a>
+        </p>
+    </div>
+
+
+
+    <nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="./get-started.html">Get Started</a></li>
+                <li><a href="./documentation.html">Docs</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Web Apps <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="./web.html">General</a></li>
+                        <li class="divider"></li>
+                        <li><a href="./web-features.html">Features</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Integrations <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="./spring.html">Spring</a></li>
+                        <li><a href="./guice.html">Guice</a></li>
+                        <li class="divider"></li>
+                        <li><a href="./integration.html">Third-Party Integrations</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="./features.html">Features</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Community <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="./forums.html">Community Forums</a></li>
+                        <li><a href="./mailing-lists.html">Mailing Lists</a></li>
+                        <li><a href="./articles.html">Articles</a></li>
+                        <li><a href="./news.html">News</a></li>
+                        <li><a href="./events.html">Events</a></li>
+                        <li class="divider"></li>
+                        <li><a href="./community.html">More</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        About <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="./about.html">About</a></li>
+                        <li><a href="./security-reports.html">Vulnerability Reports</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="http://www.apache.org/" class="dropdown-toggle" data-toggle="dropdown">
+                        Apache Software Foundation <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="http://www.apache.org/">Apache Homepage</a></li>
+                        <li><a href="http://www.apache.org/licenses/">License</a></li>
+                        <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                        <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                        <li><a href="http://www.apache.org/security/">Security</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+
+
+            
+
+<!-- spacer allows enough room to display the header -->
+<div id="spacer" style="width: 0; height: 60px; float: left"></div>
+
+<!-- related content (if any) -->
+    <div style="border-style: solid; border-width: 2px; border-color: navy; padding: 5px; margin-left: 20px; margin-bottom: 20px; width:275px; float: right; clear: both; ">
+      <h2>Related Content</h2>
+                    <h3><a href="get-started.html">Getting Started</a></h3>
+            <p>Resources, guides and tutorials for new Shiro users.</br><span style="font-size:11"><a href="get-started.html">Read More &gt;&gt;</a></span></p>
+                    <h3><a href="10-minute-tutorial.html">10-Minute Shiro Tutorial</a></h3>
+            <p>Try Apache Shiro for yourself in under 10 minutes.</br><span style="font-size:11"><a href="10-minute-tutorial.html">Read More &gt;&gt;</a></span></p>
+                    <h3><a href="webapp-tutorial.html">Web App Tutorial</a></h3>
+            <p>Step-by-step tutorial for securing a web application with Shiro.</br><span style="font-size:11"><a href="webapp-tutorial.html">Read More &gt;&gt;</a></span></p>
+          </div>
+  <a name="Tutorial-ApacheShiroTutorial"></a>
+<h1><a href="#apache-shiro-tutorial" name="apache-shiro-tutorial">Apache Shiro Tutorial</a></h1>
+<a name="Tutorial-YourFirstApacheShiroApplication"></a>
+<h2><a href="#your-first-apache-shiro-application" name="your-first-apache-shiro-application">Your First Apache Shiro Application</a></h2>
+<p>If you&rsquo;re new to Apache Shiro, this short tutorial will show you how to set up an initial and very simple application secured by Apache Shiro. We&rsquo;ll discuss Shiro&rsquo;s core concepts along the way to help familiarize you with Shiro&rsquo;s design and API.</p>
+<p>If you don&rsquo;t want to actually edit files as you follow this tutorial, you can obtain a nearly identical sample application and reference it as you go. Choose a location:</p>
+<ul>
+  <li>In Apache Shiro&rsquo;s Git repository: <a href="https://github.com/apache/shiro/tree/master/samples/quickstart">https://github.com/apache/shiro/tree/master/samples/quickstart</a></li>
+  <li>In Apache Shiro&rsquo;s source distribution&rsquo;s <code>samples/quickstart</code> directory. The source distribution is available from the <a href="download.html" title="Download">Download</a> page.</li>
+</ul>
+<a name="Tutorial-Setup"></a>
+<h3><a href="#setup" name="setup">Setup</a></h3>
+<p>In this simple example, we&rsquo;ll create a very simple command-line application that will run and quickly exit, just so you can get a feel for Shiro&rsquo;s API.</p>
+<div class="alert alert-info">
+    <span class="glyphicon glyphicon-info-sign"></span> <strong>Any Application</strong>
+    <hr class="message-inner-separator">
+    <p>Apache Shiro was designed from day one to support <em>any</em> application - from the smallest command-line applications to the largest clustered web applications.  Even though we're creating a simple app for this tutorial, know that the same usage patterns apply no matter how your application is created or where it is deployed.</p>
+</div>
+<p>This tutorial requires Java 1.6 or later. We&rsquo;ll also be using Apache <a href="http://maven.apache.org">Maven</a> as our build tool, but of course this is not required to use Apache Shiro. You may acquire Shiro&rsquo;s .jars and incorporate them in any way you like into your application, for example maybe using Apache <a href="http://ant.apache.org">Ant</a> and <a href="http://ant.apache.org/ivy">Ivy</a>.</p>
+<p>For this tutorial, please ensure that you are using Maven 2.2.1 or later. You should be able to type <code>mvn --version</code> in a command prompt and see something similar to the following:</p>
+<p><strong>Testing Maven Installation</strong></p>
+<pre><code class="bash">hazlewood:~/shiro-tutorial$ mvn --version
+Apache Maven 2.2.1 (r801777; 2009-08-06 12:16:01-0700)
+Java version: 1.6.0_24
+Java home: /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home
+Default locale: en_US, platform encoding: MacRoman
+OS name: &quot;mac os x&quot; version: &quot;10.6.7&quot; arch: &quot;x86_64&quot; Family: &quot;mac&quot;
+</code></pre>
+<p>For now, create a new directory on your filesystem, for example, <strong><code>shiro-tutorial</code></strong> and save the following Maven <strong><code>pom.xml</code></strong> file in that directory:</p>
+<p><strong>pom.xml</strong></p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;&gt;
+
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;org.apache.shiro.tutorials&lt;/groupId&gt;
+    &lt;artifactId&gt;shiro-tutorial&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;First Apache Shiro Application&lt;/name&gt;
+    &lt;packaging&gt;jar&lt;/packaging&gt;
+
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+    &lt;/properties&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                &lt;version&gt;3.8.0&lt;/version&gt;
+                &lt;configuration&gt;
+                    &lt;source&gt;1.6&lt;/source&gt;
+                    &lt;target&gt;1.6&lt;/target&gt;
+                    &lt;encoding&gt;${project.build.sourceEncoding}&lt;/encoding&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+
+        &lt;!-- This plugin is only to test run our little application.  It is not
+             needed in most Shiro-enabled applications: --&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
+                &lt;artifactId&gt;exec-maven-plugin&lt;/artifactId&gt;
+                &lt;version&gt;1.1&lt;/version&gt;
+                &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;java&lt;/goal&gt;
+                        &lt;/goals&gt;
+                    &lt;/execution&gt;
+                &lt;/executions&gt;
+                &lt;configuration&gt;
+                    &lt;classpathScope&gt;test&lt;/classpathScope&gt;
+                    &lt;mainClass&gt;Tutorial&lt;/mainClass&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+            &lt;artifactId&gt;shiro-core&lt;/artifactId&gt;
+            &lt;version&gt;1.4.1&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;!-- Shiro uses SLF4J for logging.  We&#39;ll use the &#39;simple&#39; binding
+             in this example app.  See http://www.slf4j.org for more info. --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+            &lt;artifactId&gt;slf4j-simple&lt;/artifactId&gt;
+            &lt;version&gt;1.7.21&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+            &lt;artifactId&gt;jcl-over-slf4j&lt;/artifactId&gt;
+            &lt;version&gt;1.7.21&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+&lt;/project&gt;
+</code></pre>
+<a name="Tutorial-TheTutorialclass"></a>
+<h4><a href="#the-tutorial-class" name="the-tutorial-class">The Tutorial class</a></h4>
+<p>We&rsquo;ll be running a simple command-line application, so we&rsquo;ll need to create a Java class with a <code>public static void main(String[] args)</code> method.</p>
+<p>In the same directory containing your <code>pom.xml</code> file, create a *<code>src/main/java</code> sub directory. In <code>src/main/java</code> create a <code>Tutorial.java</code> file with the following contents:</p>
+<p><strong>src/main/java/Tutorial.java</strong></p>
+<pre><code class="java">import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.Factory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Tutorial {
+
+    private static final transient Logger log = LoggerFactory.getLogger(Tutorial.class);
+
+    public static void main(String[] args) {
+        log.info(&quot;My First Apache Shiro Application&quot;);
+        System.exit(0);
+    }
+}
+</code></pre>
+<p>Don&rsquo;t worry about the import statements for now - we&rsquo;ll get to them shortly. But for now, we&rsquo;ve got a typical command line program &lsquo;shell&rsquo;. All this program will do is print out the text &ldquo;My First Apache Shiro Application&rdquo; and exit.</p>
+<a name="Tutorial-TestRun"></a>
+<h3><a href="#test-run" name="test-run">Test Run</a></h3>
+<p>To try our Tutorial application, execute the following in a command prompt in your tutorial project&rsquo;s root dirctory (e.g. <code>shiro-tutorial</code>), and type the following:</p>
+<p><code>mvn compile exec:java</code></p>
+<p>And you will see our little Tutorial &lsquo;application&rsquo; run and exit. You should see something similar to the following (notice the bold text, indicating our output):</p>
+<p><strong>Run the Application</strong></p>
+<code>
+lhazlewood:~/projects/shiro-tutorial$ mvn compile exec:java</br>
+</br>
+... a bunch of Maven output ...</br>
+</br>
+<strong>1 [Tutorial.main()] INFO Tutorial - My First Apache Shiro Application</strong></br>
+lhazlewood:~/projects/shiro-tutorial\$
+</code>
+<p>We&rsquo;ve verified the application runs successfully - now let&rsquo;s enable Apache Shiro. As we continue with the tutorial, you can run <code>mvn compile exec:java</code> after each time we add some more code to see the results of our changes.</p>
+<a name="Tutorial-EnableShiro"></a>
+<h3><a href="#enable-shiro" name="enable-shiro">Enable Shiro</a></h3>
+<p>The first thing to understand in enabling Shiro in an application is that almost everything in Shiro is related to a central/core component called the <code>SecurityManager</code>. For those familiar with Java security, this is Shiro&rsquo;s notion of a SecurityManager - it is <em>NOT</em> the same thing as the <code>java.lang.SecurityManager</code>.</p>
+<p>While we will cover Shiro&rsquo;s design in detail in the <a href="architecture.html" title="Architecture">Architecture</a> chapter, it is good enough for now to know that the Shiro <code>SecurityManager</code> is the core of a Shiro environment for an application and one <code>SecurityManager</code> must exist per application. So, the first thing we must do in our Tutorial application is set-up the <code>SecurityManager</code> instance.</p>
+<a name="Tutorial-Configuration"></a>
+<h4><a href="#configuration" name="configuration">Configuration</a></h4>
+<p>While we could instantiate a <code>SecurityManager</code> class directly, Shiro&rsquo;s <code>SecurityManager</code> implementations have enough configuration options and internal components that make this a pain to do in Java source code - it would be much easier to configure the <code>SecurityManager</code> with a flexible text-based configuration format.</p>
+<p>To that end, Shiro provides a default ‘common denominator’ solution via text-based <a href="https://en.wikipedia.org/wiki/INI_file">INI</a> configuration. People are pretty tired of using bulky XML files these days, and INI is easy to read, simple to use, and requires very few dependencies. You’ll also see later that with a simple understanding of object graph navigation, INI can be used effectively to configure simple object graphs like the SecurityManager.</p>
+<div class="alert alert-success">
+    <span class="glyphicon glyphicon-ok"></span> <strong>Many Configuration Options</strong>
+    <hr class="message-inner-separator">
+    <p>Shiro's <code>SecurityManager</code> implementations and all supporting components are all JavaBeans compatible.  This allows Shiro to be configured with practically any configuration format such as XML (Spring, JBoss, Guice, etc), <a class="external-link" href="http://www.yaml.org/" rel="nofollow">YAML</a>, JSON, Groovy Builder markup, and more.  INI is just Shiro's 'common denominator' format that allows configuration in any environment in case other options are not available.</p>
+</div>
+<a name="Tutorial-%7B%7Bshiro.ini%7D%7D"></a>
+<h5><a href="#shiro-ini" name="shiro-ini">shiro.ini</a></h5>
+<p>So we&rsquo;ll use an INI file to configure the Shiro <code>SecurityManager</code> for this simple application. First, create a <strong><code>src/main/resources</code></strong> directory starting in the same directory where the <code>pom.xml</code> is. Then create a <code>shiro.ini</code> file in that new directory with the following contents:</p>
+<p><strong>src/main/resources/shiro.ini</strong></p>
+<pre><code class="ini"># =============================================================================
+# Tutorial INI configuration
+#
+# Usernames/passwords are based on the classic Mel Brooks&#39; film &quot;Spaceballs&quot; :)
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Users and their (optional) assigned roles
+# username = password, role1, role2, ..., roleN
+# -----------------------------------------------------------------------------
+[users]
+root = secret, admin
+guest = guest, guest
+presidentskroob = 12345, president
+darkhelmet = ludicrousspeed, darklord, schwartz
+lonestarr = vespa, goodguy, schwartz
+
+# -----------------------------------------------------------------------------
+# Roles with assigned permissions
+# roleName = perm1, perm2, ..., permN
+# -----------------------------------------------------------------------------
+[roles]
+admin = *
+schwartz = lightsaber:*
+goodguy = winnebago:drive:eagle5
+</code></pre>
+<p>As you see, this configuration basically sets up a small set of static user accounts, good enough for our first application. In later chapters, you will see how we can use more complex User data sources like relational databases, LDAP and ActiveDirectory, and more.</p>
+<a name="Tutorial-ReferencingtheConfiguration"></a>
+<h4><a href="#referencing-the-configuration" name="referencing-the-configuration">Referencing the Configuration</a></h4>
+<p>Now that we have an INI file defined, we can create the <code>SecurityManager</code> instance in our Tutorial application class. Change the <code>main</code> method to reflect the following updates:</p>
+<pre><code class="java">public static void main(String[] args) {
+
+    log.info(&quot;My First Apache Shiro Application&quot;);
+
+    //1.
+    Factory&lt;SecurityManager&gt; factory = new IniSecurityManagerFactory(&quot;classpath:shiro.ini&quot;);
+
+    //2.
+    SecurityManager securityManager = factory.getInstance();
+
+    //3.
+    SecurityUtils.setSecurityManager(securityManager);
+
+    System.exit(0);
+}
+</code></pre>
+<p>And there we go - Shiro is enabled in our sample application after adding only 3 lines of code! How easy was that?</p>
+<p>Feel free to run <code>mvn compile exec:java</code> and see that everything still runs successfully (due to Shiro&rsquo;s default logging of debug or lower, you won&rsquo;t see any Shiro log messages - if it starts and runs without error, then you know everything is still ok).</p>
+<p>Here is what the above additions are doing:</p>
+<ol>
+  <li>
+  <p>We use Shiro&rsquo;s <code>IniSecurityManagerFactory</code> implementation to ingest our <code>shiro.ini</code> file which is located at the root of the classpath. This implementation reflects Shiro&rsquo;s support of the <a href="https://en.wikipedia.org/wiki/Factory_method_pattern">Factory Method Design Pattern</a>. The <code>classpath:</code> prefix is an resource indicator that tells shiro where to load the ini file from (other prefixes, like <code>url:</code> and <code>file:</code> are supported as well).</p></li>
+  <li>
+  <p>The <code>factory.getInstance()</code> method is called, which parses the INI file and returns a <code>SecurityManager</code> instance reflecting the configuration.</p></li>
+  <li>
+  <p>In this simple example, we set the <code>SecurityManager</code> to be a <em>static</em> (memory) singleton, accessible across the JVM. Note however that this is not desireable if you will ever have more than one Shiro-enabled application in a single JVM. For this simple example, it is ok, but more sophisticated application environments will usually place the <code>SecurityManager</code> in application-specific memory (such as in a web app&rsquo;s <code>ServletContext</code> or a Spring, Guice or JBoss DI container instance).</p></li>
+</ol>
+<a name="Tutorial-UsingShiro"></a>
+<h3><a href="#using-shiro" name="using-shiro">Using Shiro</a></h3>
+<p>Now that our SecurityManager is set-up and ready-to go, now we can start doing the things we really care about - performing security operations.</p>
+<p>When securing our applications, probably the most relevant questions we ask ourselves are “Who is the current user?” or “Is the current user allowed to do X”? It is common to ask these questions as we&rsquo;re writing code or designing user interfaces: applications are usually built based on user stories, and you want functionality represented (and secured) based on a per-user basis. So, the most natural way for us to think about security in our application is based on the current user. Shiro’s API fundamentally represents the notion of &lsquo;the current user&rsquo; with its <code>Subject</code> concept.</p>
+<p>In almost all environments, you can obtain the currently executing user via the following call:</p>
+<pre><code class="java">Subject currentUser = SecurityUtils.getSubject();
+</code></pre>
+<p>Using <a href="static/current/apidocs/org/apache/shiro/SecurityUtils.html"><code>SecurityUtils</code></a>.<a href="static/current/apidocs/org/apache/shiro/SecurityUtils.html#getSubject--">getSubject()</a>, we can obtain the currently executing <a href="static/current/apidocs/org/apache/shiro/subject/Subject.html"><code>Subject</code></a>. <em>Subject</em> is a security term that basically means &ldquo;a security-specific view of the currently executing user&rdquo;. It is not called a &lsquo;User&rsquo; because the word &lsquo;User&rsquo; is usually associated with a human being. In the security world, the term &lsquo;Subject&rsquo; can mean a human being, but also a 3rd party process, cron job, daemon account, or anything similar. It simply means &lsquo;the thing that is currently interacting with the software&rsquo;. For most intents and purposes though, you can think of the <code>Subject</code> as Shiro’s ‘User’ concept.</p>
+<p>The <code>getSubject()</code> call in a standalone application might return a <code>Subject</code> based on user data in an application-specific location, and in a server environment (e.g. web app), it acquires the <code>Subject</code> based on user data associated with current thread or incoming request.</p>
+<p>Now that you have a <code>Subject</code>, what can you do with it?</p>
+<p>If you want to make things available to the user during their current session with the application, you can get their session:</p>
+<pre><code class="java">Session session = currentUser.getSession();
+session.setAttribute( &quot;someKey&quot;, &quot;aValue&quot; );
+</code></pre>
+<p>The <code>Session</code> is a Shiro-specific instance that provides most of what you&rsquo;re used to with regular HttpSessions but with some extra goodies and one <strong>big</strong> difference: it does not require an HTTP environment!</p>
+<p>If deploying inside a web application, by default the <code>Session</code> will be <code>HttpSession</code> based. But, in a non-web environment, like this simple tutorial application, Shiro will automatically use its Enterprise Session Management by default. This means you get to use the same API in your applications, in any tier, regardless of deployment environment! This opens a whole new world of applications since any application requiring sessions does not need to be forced to use the <code>HttpSession</code> or EJB Stateful Session Beans. And, any client technology can now share session data.</p>
+<p>So now you can acquire a <code>Subject</code> and their <code>Session</code>. What about the <em>really</em> useful stuff like checking if they are allowed to do things, like checking against roles and permissions?</p>
+<p>Well, we can only do those checks for a known user. Our <code>Subject</code> instance above represents the current user, but <em>who</em> is the current user? Well, they&rsquo;re anonymous - that is, until they log in at least once. So, let&rsquo;s do that:</p>
+<pre><code class="java">if ( !currentUser.isAuthenticated() ) {
+    //collect user principals and credentials in a gui specific manner
+    //such as username/password html form, X509 certificate, OpenID, etc.
+    //We&#39;ll use the username/password example here since it is the most common.
+    UsernamePasswordToken token = new UsernamePasswordToken(&quot;lonestarr&quot;, &quot;vespa&quot;);
+
+    //this is all you have to do to support &#39;remember me&#39; (no config - built in!):
+    token.setRememberMe(true);
+
+    currentUser.login(token);
+}
+</code></pre>
+<p>That&rsquo;s it! It couldn&rsquo;t be easier.</p>
+<p>But what if their login attempt fails? You can catch all sorts of specific exceptions that tell you exactly what happened and allows you to handle and react accordingly:</p>
+<pre><code class="java">try {
+    currentUser.login( token );
+    //if no exception, that&#39;s it, we&#39;re done!
+} catch ( UnknownAccountException uae ) {
+    //username wasn&#39;t in the system, show them an error message?
+} catch ( IncorrectCredentialsException ice ) {
+    //password didn&#39;t match, try again?
+} catch ( LockedAccountException lae ) {
+    //account for that username is locked - can&#39;t login.  Show them a message?
+}
+    ... more types exceptions to check if you want ...
+} catch ( AuthenticationException ae ) {
+    //unexpected condition - error?
+}
+</code></pre>
+<p>There are many different types of exceptions you can check, or throw your own for custom conditions Shiro might not account for. See the <a href="static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html">AuthenticationException JavaDoc</a> for more.</p>
+<div class="alert alert-success">
+    <span class="glyphicon glyphicon-ok"></span> <strong>Handy Hint</strong>
+    <hr class="message-inner-separator">
+    <p>Security best practice is to give generic login failure messages to users because you do not want to aid an attacker trying to break into your system.</p>
+</div>
+<p>Ok, so by now, we have a logged in user. What else can we do?</p>
+<p>Let&rsquo;s say who they are:</p>
+<pre><code class="java">//print their identifying principal (in this case, a username): 
+log.info( &quot;User [&quot; + currentUser.getPrincipal() + &quot;] logged in successfully.&quot; );
+</code></pre>
+<p>We can also test to see if they have specific role or not:</p>
+<pre><code class="java">if ( currentUser.hasRole( &quot;schwartz&quot; ) ) {
+    log.info(&quot;May the Schwartz be with you!&quot; );
+} else {
+    log.info( &quot;Hello, mere mortal.&quot; );
+}
+</code></pre>
+<p>We can also see if they have a permission to act on a certain type of entity:</p>
+<pre><code class="java">if ( currentUser.isPermitted( &quot;lightsaber:wield&quot; ) ) {
+    log.info(&quot;You may use a lightsaber ring.  Use it wisely.&quot;);
+} else {
+    log.info(&quot;Sorry, lightsaber rings are for schwartz masters only.&quot;);
+}
+</code></pre>
+<p>Also, we can perform an extremely powerful <em>instance-level</em> permission check - the ability to see if the user has the ability to access a specific instance of a type:</p>
+<pre><code class="java">if ( currentUser.isPermitted( &quot;winnebago:drive:eagle5&quot; ) ) {
+    log.info(&quot;You are permitted to &#39;drive&#39; the &#39;winnebago&#39; with license plate (id) &#39;eagle5&#39;.  &quot; +
+                &quot;Here are the keys - have fun!&quot;);
+} else {
+    log.info(&quot;Sorry, you aren&#39;t allowed to drive the &#39;eagle5&#39; winnebago!&quot;);
+}
+</code></pre>
+<p>Piece of cake, right?</p>
+<p>Finally, when the user is done using the application, they can log out:</p>
+<pre><code class="java">currentUser.logout(); //removes all identifying information and invalidates their session too.
+</code></pre>
+<a name="Tutorial-FinalTutorialclass"></a>
+<h4><a href="#final-tutorial-class" name="final-tutorial-class">Final Tutorial class</a></h4>
+<p>After adding in the above code examples, here is our final Tutorial class file. Feel free to edit and play with it and change the security checks (and the INI configuration) as you like:</p>
+<p><strong>Final src/main/java/Tutorial.java</strong></p>
+<pre><code class="java">import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.Factory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Tutorial {
+
+    private static final transient Logger log = LoggerFactory.getLogger(Tutorial.class);
+
+    public static void main(String[] args) {
+        log.info(&quot;My First Apache Shiro Application&quot;);
+
+        Factory&lt;SecurityManager&gt; factory = new IniSecurityManagerFactory(&quot;classpath:shiro.ini&quot;);
+        SecurityManager securityManager = factory.getInstance();
+        SecurityUtils.setSecurityManager(securityManager);
+
+        // get the currently executing user:
+        Subject currentUser = SecurityUtils.getSubject();
+
+        // Do some stuff with a Session (no need for a web or EJB container!!!)
+        Session session = currentUser.getSession();
+        session.setAttribute(&quot;someKey&quot;, &quot;aValue&quot;);
+        String value = (String) session.getAttribute(&quot;someKey&quot;);
+        if (value.equals(&quot;aValue&quot;)) {
+            log.info(&quot;Retrieved the correct value! [&quot; + value + &quot;]&quot;);
+        }
+
+        // let&#39;s login the current user so we can check against roles and permissions:
+        if (!currentUser.isAuthenticated()) {
+            UsernamePasswordToken token = new UsernamePasswordToken(&quot;lonestarr&quot;, &quot;vespa&quot;);
+            token.setRememberMe(true);
+            try {
+                currentUser.login(token);
+            } catch (UnknownAccountException uae) {
+                log.info(&quot;There is no user with username of &quot; + token.getPrincipal());
+            } catch (IncorrectCredentialsException ice) {
+                log.info(&quot;Password for account &quot; + token.getPrincipal() + &quot; was incorrect!&quot;);
+            } catch (LockedAccountException lae) {
+                log.info(&quot;The account for username &quot; + token.getPrincipal() + &quot; is locked.  &quot; +
+                        &quot;Please contact your administrator to unlock it.&quot;);
+            }
+            // ... catch more exceptions here (maybe custom ones specific to your application?
+            catch (AuthenticationException ae) {
+                //unexpected condition?  error?
+            }
+        }
+
+        //say who they are:
+        //print their identifying principal (in this case, a username):
+        log.info(&quot;User [&quot; + currentUser.getPrincipal() + &quot;] logged in successfully.&quot;);
+
+        //test a role:
+        if (currentUser.hasRole(&quot;schwartz&quot;)) {
+            log.info(&quot;May the Schwartz be with you!&quot;);
+        } else {
+            log.info(&quot;Hello, mere mortal.&quot;);
+        }
+
+        //test a typed permission (not instance-level)
+        if (currentUser.isPermitted(&quot;lightsaber:wield&quot;)) {
+            log.info(&quot;You may use a lightsaber ring.  Use it wisely.&quot;);
+        } else {
+            log.info(&quot;Sorry, lightsaber rings are for schwartz masters only.&quot;);
+        }
+
+        //a (very powerful) Instance Level permission:
+        if (currentUser.isPermitted(&quot;winnebago:drive:eagle5&quot;)) {
+            log.info(&quot;You are permitted to &#39;drive&#39; the winnebago with license plate (id) &#39;eagle5&#39;.  &quot; +
+                    &quot;Here are the keys - have fun!&quot;);
+        } else {
+            log.info(&quot;Sorry, you aren&#39;t allowed to drive the &#39;eagle5&#39; winnebago!&quot;);
+        }
+
+        //all done - log out!
+        currentUser.logout();
+
+        System.exit(0);
+    }
+}
+</code></pre>
+<a name="Tutorial-Summary"></a>
+<h3><a href="#summary" name="summary">Summary</a></h3>
+<p>Hopefully this introduction tutorial helped you understand how to set-up Shiro in a basic application as well Shiro&rsquo;s primary design concepts, the <code>Subject</code> and <code>SecurityManager</code>.</p>
+<p>But this was a fairly simple application. You might have asked yourself, &ldquo;What if I don&rsquo;t want to use INI user accounts and instead want to connect to a more complex user data source?&rdquo;</p>
+<p>To answer that question requires a little deeper understanding of Shiro&rsquo;s architecture and supporting configuration mechanisms. We&rsquo;ll cover Shiro&rsquo;s <a href="architecture.html" title="Architecture">Architecture</a> next.</p>
+<input type="hidden" id="ghEditPage" value="tutorial.md.vtl"></input>    
+</div>
+
+    <div class="footer-padding"></div>
+    <footer class="custom-footer">
+
+        <div class="col-md-5">
+            <div class="copyright-footer">
+            <a href="http://www.apache.org/foundation/contributing.html">Donate to the ASF</a> |
+            <a href="http://www.apache.org/licenses/LICENSE-2.0.html">License</a>
+            <p>Copyright &copy; 2008-2020 The Apache Software Foundation</p>
+                </div>
+        </div>
+
+        <div class="social col-md-2">
+            <a class="btn btn-social-icon btn-sm btn-twitter" target="_blank" href="https://twitter.com/ApacheShiro"><span class="fa fa-twitter"></span></a>
+            <a class="btn btn-social-icon btn-sm btn-facebook" target="_blank" href="https://www.facebook.com/ApacheShiro"><span class="fa fa-facebook"></span></a>
+            <a class="btn btn-social-icon btn-sm btn-linkedin" target="_blank" href="https://www.linkedin.com/groups/4382576"><span class="fa fa-linkedin"></span></a>
+        </div>
+
+
+        <div class="col-md-2"></div>
+        <div class="col-md-2 editThisPage">
+            <div class="footer-shield"></div>
+        </div>
+
+    </footer> <!--END FOOTER-->
+
+</body>
+</html>

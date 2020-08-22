@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthorizationAttributeSourceAdvisor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Shiro :: Support :: Spring</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.spring.security.interceptor</a> &gt; <span class="el_source">AuthorizationAttributeSourceAdvisor.java</span></div><h1>AuthorizationAttributeSourceAdvisor.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.spring.security.interceptor;
+
+import org.apache.shiro.authz.annotation.*;
+import org.apache.shiro.mgt.SecurityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
+import org.springframework.core.annotation.AnnotationUtils;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
+
+/**
+ * TODO - complete JavaDoc
+ *
+ * @since 0.1
+ */
+@SuppressWarnings({&quot;unchecked&quot;})
+public class AuthorizationAttributeSourceAdvisor extends StaticMethodMatcherPointcutAdvisor {
+
+<span class="fc" id="L40">    private static final Logger log = LoggerFactory.getLogger(AuthorizationAttributeSourceAdvisor.class);</span>
+
+<span class="fc" id="L42">    private static final Class&lt;? extends Annotation&gt;[] AUTHZ_ANNOTATION_CLASSES =</span>
+            new Class[] {
+                    RequiresPermissions.class, RequiresRoles.class,
+                    RequiresUser.class, RequiresGuest.class, RequiresAuthentication.class
+            };
+
+<span class="fc" id="L48">    protected SecurityManager securityManager = null;</span>
+
+    /**
+     * Create a new AuthorizationAttributeSourceAdvisor.
+     */
+<span class="fc" id="L53">    public AuthorizationAttributeSourceAdvisor() {</span>
+<span class="fc" id="L54">        setAdvice(new AopAllianceAnnotationsAuthorizingMethodInterceptor());</span>
+<span class="fc" id="L55">    }</span>
+
+    public SecurityManager getSecurityManager() {
+<span class="nc" id="L58">        return securityManager;</span>
+    }
+
+    public void setSecurityManager(org.apache.shiro.mgt.SecurityManager securityManager) {
+<span class="fc" id="L62">        this.securityManager = securityManager;</span>
+<span class="fc" id="L63">    }</span>
+
+    /**
+     * Returns &lt;tt&gt;true&lt;/tt&gt; if the method has any Shiro annotations, false otherwise.
+     * The annotations inspected are:
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link org.apache.shiro.authz.annotation.RequiresAuthentication RequiresAuthentication}&lt;/li&gt;
+     * &lt;li&gt;{@link org.apache.shiro.authz.annotation.RequiresUser RequiresUser}&lt;/li&gt;
+     * &lt;li&gt;{@link org.apache.shiro.authz.annotation.RequiresGuest RequiresGuest}&lt;/li&gt;
+     * &lt;li&gt;{@link org.apache.shiro.authz.annotation.RequiresRoles RequiresRoles}&lt;/li&gt;
+     * &lt;li&gt;{@link org.apache.shiro.authz.annotation.RequiresPermissions RequiresPermissions}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param method      the method to check for a Shiro annotation
+     * @param targetClass the class potentially declaring Shiro annotations
+     * @return &lt;tt&gt;true&lt;/tt&gt; if the method has a Shiro annotation, false otherwise.
+     * @see org.springframework.aop.MethodMatcher#matches(java.lang.reflect.Method, Class)
+     */
+    public boolean matches(Method method, Class targetClass) {
+<span class="fc" id="L82">        Method m = method;</span>
+
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if ( isAuthzAnnotationPresent(m) ) {</span>
+<span class="fc" id="L85">            return true;</span>
+        }
+
+        //The 'method' parameter could be from an interface that doesn't have the annotation.
+        //Check to see if the implementation has it.
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if ( targetClass != null) {</span>
+            try {
+<span class="fc" id="L92">                m = targetClass.getMethod(m.getName(), m.getParameterTypes());</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">                if ( isAuthzAnnotationPresent(m) ) {</span>
+<span class="fc" id="L94">                    return true;</span>
+                }
+<span class="nc" id="L96">            } catch (NoSuchMethodException ignored) {</span>
+                //default return value is false.  If we can't find the method, then obviously
+                //there is no annotation, so just use the default return value.
+<span class="fc" id="L99">            }</span>
+        }
+
+<span class="fc" id="L102">        return false;</span>
+    }
+
+    private boolean isAuthzAnnotationPresent(Method method) {
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        for( Class&lt;? extends Annotation&gt; annClass : AUTHZ_ANNOTATION_CLASSES ) {</span>
+<span class="fc" id="L107">            Annotation a = AnnotationUtils.findAnnotation(method, annClass);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">            if ( a != null ) {</span>
+<span class="fc" id="L109">                return true;</span>
+            }
+        }
+<span class="fc" id="L112">        return false;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
