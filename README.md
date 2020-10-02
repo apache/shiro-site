@@ -1,4 +1,5 @@
-# Apache Shiro Website Overview
+# About the website
+
 
 The Apache Shiro website is a static content website accessible at http://shiro.apache.org
 
