@@ -4,7 +4,7 @@ The Apache Shiro website is a static content website accessible at http://shiro.
 
 Site content is authored as Markdown and HTML files.  These files are scanned by a tool that applies a page template to each file's contents as necessary, and the rendered static .html files are output to a `dest_dir` directory.
 
-To publish the site commit changes to the `asf-site` branch of this repository.  ASF infrastructure will see the commit and automatically push the changes to the ASF's production webservers.
+To publish the site commit changes to the `asf-site` branch of this repository.  ASF Infrastructure will see the commit and automatically push the changes to the ASF's production webservers.
 
 ## Generating and Publishing
 
