@@ -1,4 +1,4 @@
-# Apache Shiro Website Overview
+# Apache Shiro Website Overview:---
 
 The Apache Shiro website is a static content website accessible at http://shiro.apache.org
 
@@ -6,7 +6,7 @@ Site content is authored as Markdown and HTML files.  These files are scanned by
 
 To publish the site commit changes to the `asf-site` branch of this repository.  ASF infrastructure will see the commit and automatically push the changes to the ASF's production webservers.
 
-## Generating and Publishing
+## Generating and Publishing it:---
 
 The tool used to generate the static content is [SCMS](https://github.com/lhazlewood/scms).  Once scms is installed and in your `$PATH`, generating and publishing the site on the command line is easy.
  
