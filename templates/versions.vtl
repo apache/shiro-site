@@ -1,5 +1,5 @@
-#set( $latestRelease = "1.6.0" )
-#set( $versionInfo = {"1.6.0": { "releaseDate": "2020-08-17" } } )
+#set( $latestRelease = "1.7.0" )
+#set( $versionInfo = {"1.7.0": { "releaseDate": "2020-10-29" } } )
 
 #set( $shiroCore = {"g":"org.apache.shiro", "a": "shiro-core", "type": "jar",
                     "description": 'Required in all environments. <a class="external-link" href="http://slf4j.org/">Slf4j</a>''s
@@ -136,7 +136,26 @@
     $shiroHasher
 ]} )
 
-#set( $shiro16x = {"version": $latestRelease, "artifacts": [
+#set( $shiro16x = {"version": "1.6.0", "artifacts": [
+    $shiroAll,
+    $shiroCore,
+    $shiroWeb,
+    $shiroServletPlugin,
+    $shiroJaxrs,
+    $shiroAspectJ,
+    $shiroCas,
+    $shiroEhCache,
+    $shiroHazelcast,
+    $shiroFeatures,
+    $shiroGuice,
+    $shiroQuartz,
+    $shiroSpring,
+    $shiroSpringBoot,
+    $shiroSpringBootWeb,
+    $shiroHasher
+]} )
+
+#set( $shiro17x = {"version": $latestRelease, "artifacts": [
     $shiroAll,
     $shiroCore,
     $shiroWeb,
