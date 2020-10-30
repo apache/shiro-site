@@ -9,22 +9,22 @@ Apache Shiro Web Support
     *   [`web.xml`](#Web-%7B%7Bweb.xml%7D%7D)
 
         *   [Shiro 1.2 and later](#Web-Shiro1.2andlater)
-    
+
             *   [Custom `WebEnvironment` Class](#Web-Custom%7B%7BWebEnvironment%7D%7DClass)
             *   [Custom Configuration Locations](#Web-CustomConfigurationLocations)
-    
+
         *   [Shiro 1.1 and earlier](#Web-Shiro1.1andearlier)
-        
+
             *   [Custom Path](#Web-CustomPath)
             *   [Inline Config](#Web-InlineConfig)
-    
+
     *   [Web INI configuration](#Web-WebINIconfiguration)
-    
+
         *   [`[urls]`](#Web-%7B%7B%5Curls%5C%7D%7D)
-    
+
             *   [URL Path Expressions](#Web-URLPathExpressions)
             *   [Filter Chain Definitions](#Web-FilterChainDefinitions)
-    
+
                 *   [Available Filters](#Web-AvailableFilters)
 
 *   [Default Filters](#Web-DefaultFilters)
@@ -34,20 +34,21 @@ Apache Shiro Web Support
     *   [Request-specific Enabling/Disabling](#Web-RequestspecificEnabling%2FDisabling)
     *   [Path-specific Enabling/Disabling](#Web-PathspecificEnabling%2FDisabling)
     *   [Global Filters](#Web-globalFilters)
+    *   [HTTP Strict Transport Security (HSTS)](#Web-HSTS)
 
 *   [Session Management](#Web-SessionManagement)
 
     *   [Servlet Container Sessions](#Web-ServletContainerSessions)
-    
+
         *   [Servlet Container Session Timeout](#Web-ServletContainerSessionTimeout)
-    
+
     *   [Native Sessions](#Web-NativeSessions)
-    
+
         *   [`DefaultWebSessionManager`](#Web-%7B%7BDefaultWebSessionManager%7D%7D)
-        
+
             *   [Native Session Timeout](#Web-NativeSessionTimeout)
             *   [Session Cookie](#Web-SessionCookie)
-        
+
                 *   [Session Cookie Configuration](#Web-SessionCookieConfiguration)
                 *   [Disabling the Session Cookie](#Web-DisablingtheSessionCookie)
 
@@ -66,7 +67,7 @@ Apache Shiro Web Support
     *   [The `authenticated` tag](#Web-The%7B%7Bauthenticated%7D%7Dtag)
     *   [The `notAuthenticated` tag](#Web-The%7B%7BnotAuthenticated%7D%7Dtag)
     *   [The `principal` tag](#Web-The%7B%7Bprincipal%7D%7Dtag)
-    
+
         *   [Typed principal](#Web-Typedprincipal)
         *   [Principal property](#Web-Principalproperty)
 
@@ -494,6 +495,28 @@ invalidRequest.blockNonAscii = true
 ```
 
 #info('Note', 'If you currently allowing URL rewriting to allow for a <code>jsessionid</code> in the URL, you must set <code>blockSemicolon</code> to <code>false</code>.<BR/><BR/>URL rewriting for <code>jsessionid</code> is defined in section "7.1.3" of the Java Servlet Specification, but it is generally NOT recommended.')
+
+<a name="Web-HSTS"></a>
+#[[###HTTP Strict Transport Security (HSTS)]]#
+
+The [SslFilter](static/current/apidocs/org/apache/shiro/web/filter/authz/SslFilter.html) (and all of its subclasses) supports enabling/disabling HTTP Strict Transport Security (HSTS).
+
+For example, in shiro.ini:
+
+``` ini
+[main]
+...
+# configure Shiro's default 'ssl' filter to enabled HSTS:
+ssl.enabled = true
+ssl.hsts.enabled = true
+ssl.hsts.includeSubDomains = true
+
+[urls]
+...
+/some/path = ssl, authc
+/another/path = ssl, roles[admin]
+...
+```
 
 <a name="Web-sessionManagement"></a>
 <a name="Web-SessionManagement"></a>
