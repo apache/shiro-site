@@ -42,6 +42,7 @@
 
 
 
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -223,19 +224,27 @@
 
             <h1><a href="#apache-shiro-website-overview" name="apache-shiro-website-overview">Apache Shiro Website Overview</a></h1>
 <p>The Apache Shiro website is a static content website accessible at <a href="http://shiro.apache.org">http://shiro.apache.org</a></p>
-<p>Site content is authored as Markdown and HTML files. These files are scanned by a tool that applies a page template to each file&rsquo;s contents as necessary, and the rendered static .html files are output to a <code>publish</code> directory.</p>
-<p>Publishing site changes is as simple as committing any changes in the <code>publish</code> directory to version control. ASF infrastructure will see the commit and automatically push the changes to the ASF&rsquo;s production webservers.</p>
+<p>Site content is authored as Markdown and HTML files. These files are scanned by a tool that applies a page template to each file&rsquo;s contents as necessary, and the rendered static .html files are output to a <code>dest_dir</code> directory.</p>
+<p>To publish the site commit changes to the <code>asf-site</code> branch of this repository. ASF infrastructure will see the commit and automatically push the changes to the ASF&rsquo;s production webservers.</p>
 <h2><a href="#generating-and-publishing" name="generating-and-publishing">Generating and Publishing</a></h2>
 <p>The tool used to generate the static content is <a href="https://github.com/lhazlewood/scms">SCMS</a>. Once scms is installed and in your <code>$PATH</code>, generating and publishing the site on the command line is easy.</p>
-<p>The following example assumes you have SVN commit permissions to the <code>publish</code> directory, typically because your are an Apache Shiro project committer:</p>
-<pre><code>cd site
-# This next command will take a few seconds, be patient :)
-scms trunk publish
-# Open up the local publish/index.html file in your web browser.  Ensure the changes reflect what you want. 
-#
-# This next commands will publish changes to live ASF web servers.  Be confident the changes are what you want:
-svn add .
-svn commit -m &quot;my change description&quot;
+<p>The following example assumes you have commit permissions to the <code>apache/shiro-site</code> repository, typically because your are an Apache Shiro project committer:</p>
+<pre><code># clone both repo branches `asf-site` and `master`
+git clone https://github.com/apache/shiro-site -b asf-site shiro-site-publish
+git clone https://github.com/apache/shiro-site
+
+# build the site
+cd shiro-site
+scms . ../shiro-site-publish
+# Open up the local ../shiro-site-publish/index.html file in your web browser.  Ensure the changes reflect what you want. 
+
+# These next commands will publish changes to live ASF web servers.  Be confident the changes are what you want:
+cd ../shiro-site-publish
+git add .
+git commit -am &quot;my change description&quot;
+git push origin asf-site
+
+# It should only take a few minutes until the files are live 
 </code></pre>
     
 </div>

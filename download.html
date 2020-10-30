@@ -42,6 +42,7 @@
 
 
 
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -267,6 +268,7 @@
 
 
 
+
 <style>
 
     table, th, td {
@@ -285,7 +287,7 @@
 
 <h1><a name="Download-DownloadApacheShiro"></a>Download Apache Shiro</h1>
 
-<p>Apache Shiro 1.6.0 is the current stable release (Java 1.8+ JVM).</p>
+<p>Apache Shiro 1.7.0 is the current stable release (Java 1.8+ JVM).</p>
 
 <p>To download Shiro please follow the instructions below.</p>
 
@@ -301,15 +303,23 @@
 <div>
     <ul>
         <li>
-            <a href="#latest">Latest Stable Release (1.6.0)</a>
+            <a href="#latest">Latest Stable Release (1.7.0)</a>
             <ul>
-                <li><a href="#latestBinary">1.6.0 Binary Distribution</a></li>
-                <li><a href="#latestSource">1.6.0 Source Code Distribution</a></li>
-                <li><a href="#latestGit">1.6.0 Git Source repository</a></li>
+                <li><a href="#latestBinary">1.7.0 Binary Distribution</a></li>
+                <li><a href="#latestSource">1.7.0 Source Code Distribution</a></li>
+                <li><a href="#latestGit">1.7.0 Git Source repository</a></li>
             </ul>
         </li>
 
         <li><a href="#previous">Previous Releases</a>
+            <ul>
+                <li><a href="#1.6.xBinary">1.6.0</a></li>
+                <ul>
+                    <li><a href="#1.6.xBinary">1.6.0 Binary Distribution</a></li>
+                    <li><a href="#1.6.xSource">1.6.0 Source Code Distribution</a></li>
+                    <li><a href="#1.6.xGit">1.6.0 Git Source repository</a></li>
+                </ul>
+            </ul>
             <ul>
                 <li><a href="#1.5.xBinary">1.5.3</a></li>
                 <ul>
@@ -355,9 +365,362 @@
 </div>
 
 
-<h2><a name="latest"></a>Latest Stable Release (1.6.0)</h2>
+<h2><a name="latest"></a>Latest Stable Release (1.7.0)</h2>
 
-<h3><a name="latestBinary"></a>1.6.0 Binary Distribution</h3>
+<h3><a name="latestBinary"></a>1.7.0 Binary Distribution</h3>
+
+<p>Associated documentation can be found <a href="documentation.html" title="Documentation">here</a></p>
+
+<p>To download the files directly as one .jar file just click the link in the "Artifact" column. If you would like
+    acquire Shiro through Maven, then please use the markup listed under "Maven Usage"</p>
+
+<p>
+</p>
+
+
+<table style="width: 100%" class="table">
+    <thead>
+    <tr>
+        <th class="col-md-1">Artifact</th>
+        <th class="col-md-3">Maven Usage</th>
+        <th class="col-md-3">Notes</th>
+    </tr>
+    </thead>
+    <tbody>
+                <tr>
+            
+                        
+            <td style="white-space: nowrap;">
+                <a href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-all/1.7.0/shiro-all-1.7.0.jar">shiro-all</a>
+            </td>
+
+            <td>
+                                    <b>Not Recommended</b>
+                            </td>
+
+            <td>Includes all binary functionality for Shiro (without dependencies), useful in certain build
+                    environments (e.g. Ant). However, this is <b>NOT</b> recommended in Maven builds as it does not
+                    retain correct dependency metadata, which can lead to Maven working incorrectly. For Maven builds,
+                    it is <b>highly</b> recommended to specify individual modules listed below as you require them.</td>
+
+        </tr>
+                <tr>
+            
+                        
+            <td style="white-space: nowrap;">
+                <a href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-core/1.7.0/shiro-core-1.7.0.jar">shiro-core</a>
+            </td>
+
+            <td>
+                <pre><code class="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-core&lt;/artifactId&gt;
+  &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+                            </td>
+
+            <td>Required in all environments. <a class="external-link" href="http://slf4j.org/">Slf4j</a>'s
+                     <code>slf4j-api</code> jar and one of its binding jars is required. <code>commons-beanutils</code> is
+                     required only if using INI config.</td>
+
+        </tr>
+                <tr>
+            
+                        
+            <td style="white-space: nowrap;">
+                <a href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-web/1.7.0/shiro-web-1.7.0.jar">shiro-web</a>
+            </td>
+
+            <td>
+                <pre><code class="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-web&lt;/artifactId&gt;
+  &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+                            </td>
+
+            <td>Enables support for web-based applications.</td>
+
+        </tr>
+                <tr>
+            
+                        
+            <td style="white-space: nowrap;">
+                <a href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-servlet-plugin/1.7.0/shiro-servlet-plugin-1.7.0.jar">shiro-servlet-plugin</a>
+            </td>
+
+            <td>
+                <pre><code class="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-servlet-plugin&lt;/artifactId&gt;
+  &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+                            </td>
+
+            <td>Servlet Fragment which configures Shiro's servlet filter.</td>
+
+        </tr>
+                <tr>
+            
+                        
+            <td style="white-space: nowrap;">
+                <a href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-jaxrs/1.7.0/shiro-jaxrs-1.7.0.jar">shiro-jaxrs</a>
+            </td>
+
+            <td>
+                <pre><code class="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-jaxrs&lt;/artifactId&gt;
+  &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+                            </td>
+
+            <td>Enables support for JAX-RS applications.</td>
+
+        </tr>
+                <tr>
+            
+                        
+            <td style="white-space: nowrap;">
+                <a href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-aspectj/1.7.0/shiro-aspectj-1.7.0.jar">shiro-aspectj</a>
+            </td>
+
+            <td>
+                <pre><code class="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-aspectj&lt;/artifactId&gt;
+  &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+                            </td>
+
+            <td>Enables <a class="external-link" href="http://www.eclipse.org/aspectj/">AspectJ</a> support for Shiro AOP and Annotations.</td>
+
+        </tr>
+                <tr>
+            
+                        
+            <td style="white-space: nowrap;">
+                <a href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-cas/1.7.0/shiro-cas-1.7.0.jar">shiro-cas</a>
+            </td>
+
+            <td>
+                <pre><code class="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-cas&lt;/artifactId&gt;
+  &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+                            </td>
+
+            <td>Enables Jasig <a class='external-link' href='https://wiki.jasig.org/display/CAS/Home'>CAS</a> support.
+                    <div class="alert alert-warning">
+    <span class="glyphicon glyphicon-warning-sign"></span> <strong>NOTE:</strong>
+    <hr class="message-inner-separator">
+    <p>Shiro-CAS support is deprecated, support has been moved to the Apache Shiro based <a href='https://github.com/bujiio/buji-pac4j'>buji-pac4j</a> project.</p>
+</div>
+</td>
+
+        </tr>
+                <tr>
+            
+                        
+            <td style="white-space: nowrap;">
+                <a href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-ehcache/1.7.0/shiro-ehcache-1.7.0.jar">shiro-ehcache</a>
+            </td>
+
+            <td>
+                <pre><code class="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-ehcache&lt;/artifactId&gt;
+  &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+                            </td>
+
+            <td>Enables <a class="external-link" href="http://www.ehcache.org">Ehcache</a>-based famework caching.</td>
+
+        </tr>
+                <tr>
+            
+                        
+            <td style="white-space: nowrap;">
+                <a href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-hazelcast/1.7.0/shiro-hazelcast-1.7.0.jar">shiro-hazelcast</a>
+            </td>
+
+            <td>
+                <pre><code class="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-hazelcast&lt;/artifactId&gt;
+  &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+                            </td>
+
+            <td>Enables <a class="external-link" href="https://hazelcast.org">Hazelcast</a>-based famework caching.</td>
+
+        </tr>
+                <tr>
+            
+                        
+            <td style="white-space: nowrap;">
+                <a href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-features/1.7.0/shiro-features-1.7.0-features.xml">shiro-features</a>
+            </td>
+
+            <td>
+                <pre><code class="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-features&lt;/artifactId&gt;
+  &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+                            </td>
+
+            <td>OSGi / <a class="external-link" href="http://karaf.apache.org/">Apache Karaf</a> integration.</td>
+
+        </tr>
+                <tr>
+            
+                        
+            <td style="white-space: nowrap;">
+                <a href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-guice/1.7.0/shiro-guice-1.7.0.jar">shiro-guice</a>
+            </td>
+
+            <td>
+                <pre><code class="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-guice&lt;/artifactId&gt;
+  &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+                            </td>
+
+            <td>Enables <a class="external-link" href="https://github.com/google/guice">Google Guice</a> integration.</td>
+
+        </tr>
+                <tr>
+            
+                        
+            <td style="white-space: nowrap;">
+                <a href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-quartz/1.7.0/shiro-quartz-1.7.0.jar">shiro-quartz</a>
+            </td>
+
+            <td>
+                <pre><code class="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-quartz&lt;/artifactId&gt;
+  &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+                            </td>
+
+            <td>Enables <a class="external-link" href="http://www.quartz-scheduler.org/">Quartz</a>-based scheduling for Shiro native session validation.</td>
+
+        </tr>
+                <tr>
+            
+                        
+            <td style="white-space: nowrap;">
+                <a href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-spring/1.7.0/shiro-spring-1.7.0.jar">shiro-spring</a>
+            </td>
+
+            <td>
+                <pre><code class="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-spring&lt;/artifactId&gt;
+  &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+                            </td>
+
+            <td>Enables <a class="external-link" href="https://spring.io/">Spring Framework</a> integration.</td>
+
+        </tr>
+                <tr>
+            
+                        
+            <td style="white-space: nowrap;">
+                <a href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-spring-boot-starter/1.7.0/shiro-spring-boot-starter-1.7.0.jar">shiro-spring-boot-starter</a>
+            </td>
+
+            <td>
+                <pre><code class="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-spring-boot-starter&lt;/artifactId&gt;
+  &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+                            </td>
+
+            <td><a class="external-link" href="https://spring.io/">Spring Boot</a> starter.</td>
+
+        </tr>
+                <tr>
+            
+                        
+            <td style="white-space: nowrap;">
+                <a href="http://repo1.maven.org/maven2/org/apache/shiro/shiro-spring-boot-web-starter/1.7.0/shiro-spring-boot-web-starter-1.7.0.jar">shiro-spring-boot-web-starter</a>
+            </td>
+
+            <td>
+                <pre><code class="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-spring-boot-web-starter&lt;/artifactId&gt;
+  &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+                            </td>
+
+            <td><a class="external-link" href="https://spring.io/">Spring Boot</a> web starter.</td>
+
+        </tr>
+                <tr>
+            
+                        
+            <td style="white-space: nowrap;">
+                <a href="http://repo1.maven.org/maven2/org/apache/shiro/tools/shiro-tools-hasher/1.7.0/shiro-tools-hasher-1.7.0-cli.jar">shiro-tools-hasher</a>
+            </td>
+
+            <td>
+                                    <b>Not Relevant</b>
+                            </td>
+
+            <td>A command-line program to perform hashing (MD5, SHA, etc) for files, streams and passwords.
+                    Note that this is a command line program and not intended to be used as a Maven/program
+                    dependency. It is intended to be downloaded and executed:
+                    <pre><code class='bash'> java -jar shiro-tools-hasher-1.7.0-cli.jar</code></pre></td>
+
+        </tr>
+            </tbody>
+</table>
+
+<h3><a name="latestSource"></a>1.7.0 Source Code Distribution</h3>
+
+<p>The source bundle requires JDK 1.8 and Maven 3.0.3+ to build:</p>
+
+<p><a class="external-link" href="https://downloads.apache.org/shiro/1.7.0/shiro-root-1.7.0-source-release.zip">zip</a>
+    (<a class="external-link"
+        href="https://downloads.apache.org/shiro/1.7.0/shiro-root-1.7.0-source-release.zip.asc">pgp</a>, <a
+            class="external-link"
+            href="https://downloads.apache.org/1.7.0/shiro-root-1.7.0-source-release.zip.sha512">sha512</a>)
+</p>
+
+<h3><a name="latestGit"></a>1.7.0 Git Source repository</h3>
+
+<p>The source can be cloned anonymously from Git with this command:</p>
+<pre><code style="bash">git clone https://github.com/apache/shiro.git
+git checkout shiro-root-1.7.0 -b shiro-root-1.7.0
+</code>
+</pre>
+
+
+<h2><a name="previous"></a>Previous Releases</h2>
+
+<h3><a name="1.6.xBinary"></a>1.6.0 Binary Distribution</h3>
 
 <p>Associated documentation can be found <a href="documentation.html" title="Documentation">here</a></p>
 
@@ -688,7 +1051,7 @@
             </tbody>
 </table>
 
-<h3><a name="latestSource"></a>1.6.0 Source Code Distribution</h3>
+<h3><a name="1.6.xSource"></a>1.6.0 Source Code Distribution</h3>
 
 <p>The source bundle requires JDK 1.8 and Maven 3.0.3+ to build:</p>
 
@@ -696,21 +1059,19 @@
     (<a class="external-link"
         href="https://downloads.apache.org/shiro/1.6.0/shiro-root-1.6.0-source-release.zip.asc">pgp</a>, <a
             class="external-link"
-            href="https://downloads.apache.org/1.6.0/shiro-root-1.6.0-source-release.zip.sha512">sha512</a>)
+            href="https://downloads.apache.org/shiro/1.6.0/shiro-root-1.6.0-source-release.zip.md5">md5</a>, <a
+            class="external-link"
+            href="https://downloads.apache.org/shiro/1.6.0/shiro-root-1.6.0-source-release.zip.sha512">sha512</a>)
 </p>
 
-<h3><a name="latestGit"></a>1.6.0 Git Source repository</h3>
+<h3><a name="1.6.xGit"></a>1.6.0 Git Source repository</h3>
 
 <p>The source can be cloned anonymously from Git with this command:</p>
-<pre><code style="bash">git clone https://github.com/apache/shiro.git
+<pre><code class="bash">git clone https://github.com/apache/shiro.git
 git checkout shiro-root-1.6.0 -b shiro-root-1.6.0
-</code>
-</pre>
+</code></pre>
 
-
-<h2><a name="previous"></a>Previous Releases</h2>
-
-<h3><a name="1.5.xBinary"></a>1.5.3 Binary Distribution</h3>
+<h3><a name="1.6.xBinary"></a>1.6.0 Binary Distribution</h3>
 
 <p>Associated documentation can be found <a href="documentation.html" title="Documentation">here</a></p>
 
@@ -1045,23 +1406,23 @@ git checkout shiro-root-1.6.0 -b shiro-root-1.6.0
 
 <p>The source bundle requires JDK 1.8 and Maven 3.0.3+ to build:</p>
 
-<p><a class="external-link" href="https://downloads.apache.org/shiro/1.4.2/shiro-root-1.5.3-source-release.zip">zip</a>
+<p><a class="external-link" href="https://downloads.apache.org/shiro/1.5.3/shiro-root-1.5.3-source-release.zip">zip</a>
     (<a class="external-link"
-        href="https://downloads.apache.org/shiro/1.4.2/shiro-root-1.5.3-source-release.zip.asc">pgp</a>, <a
+        href="https://downloads.apache.org/shiro/1.5.3/shiro-root-1.5.3-source-release.zip.asc">pgp</a>, <a
             class="external-link"
-            href="https://downloads.apache.org/shiro/1.4.2/shiro-root-1.5.3-source-release.zip.md5">md5</a>, <a
+            href="https://downloads.apache.org/shiro/1.5.3/shiro-root-1.5.3-source-release.zip.md5">md5</a>, <a
             class="external-link"
-            href="https://downloads.apache.org/shiro/1.4.2/shiro-root-1.5.3-source-release.zip.sha512">sha512</a>)
+            href="https://downloads.apache.org/shiro/1.5.3/shiro-root-1.5.3-source-release.zip.sha512">sha512</a>)
 </p>
 
 <h3><a name="1.5.xGit"></a>1.5.3 Git Source repository</h3>
 
 <p>The source can be cloned anonymously from Git with this command:</p>
 <pre><code class="bash">git clone https://github.com/apache/shiro.git
-git checkout shiro-root-1.5.3 -b shiro-root-1.4.2
+git checkout shiro-root-1.5.3 -b shiro-root-1.5.3
 </code></pre>
 
-<h3><a name="1.4.xBinary"></a>1.4.2 Binary Distribution</h3>
+<h3><a name="1.5.xBinary"></a>1.5.3 Binary Distribution</h3>
 
 <p>Associated documentation can be found <a href="documentation.html" title="Documentation">here</a></p>
 

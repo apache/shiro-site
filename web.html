@@ -42,6 +42,7 @@
 
 
 
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -308,6 +309,7 @@
       <li><a href="#Web-RequestspecificEnabling%2FDisabling">Request-specific Enabling/Disabling</a></li>
       <li><a href="#Web-PathspecificEnabling%2FDisabling">Path-specific Enabling/Disabling</a></li>
       <li><a href="#Web-globalFilters">Global Filters</a></li>
+      <li><a href="#Web-HSTS">HTTP Strict Transport Security (HSTS)</a></li>
     </ul>
   </li>
   <li>
@@ -749,6 +751,23 @@ invalidRequest.blockNonAscii = true
     <hr class="message-inner-separator">
     <p>If you currently allowing URL rewriting to allow for a <code>jsessionid</code> in the URL, you must set <code>blockSemicolon</code> to <code>false</code>.<BR/><BR/>URL rewriting for <code>jsessionid</code> is defined in section "7.1.3" of the Java Servlet Specification, but it is generally NOT recommended.</p>
 </div>
+<a name="Web-HSTS"></a>
+<h3>HTTP Strict Transport Security (HSTS)</h3>
+<p>The <a href="static/current/apidocs/org/apache/shiro/web/filter/authz/SslFilter.html">SslFilter</a> (and all of its subclasses) supports enabling/disabling HTTP Strict Transport Security (HSTS).</p>
+<p>For example, in shiro.ini:</p>
+<pre><code class="ini">[main]
+...
+# configure Shiro&#39;s default &#39;ssl&#39; filter to enabled HSTS:
+ssl.enabled = true
+ssl.hsts.enabled = true
+ssl.hsts.includeSubDomains = true
+
+[urls]
+...
+/some/path = ssl, authc
+/another/path = ssl, roles[admin]
+...
+</code></pre>
 <a name="Web-sessionManagement"></a>
 <a name="Web-SessionManagement"></a>
 <h2><a href="#session-management" name="session-management">Session Management</a></h2>
