@@ -72,6 +72,8 @@ Include the Shiro Spring web dependencies in you application classpath (we recom
 
 #dependencies('web', [['org.apache.shiro', 'shiro-spring', "${latestRelease}"], ['org.apache.shiro', 'shiro-web', "${latestRelease}"],['org.springframework', 'spring-webmvc', '${spring.version}']])
 
+<a name="SpringFramework-WebConfig"></a>
+
 Import the Shiro Spring configurations:
 
 ``` java
@@ -79,7 +81,8 @@ Import the Shiro Spring configurations:
 @Import({ShiroBeanConfiguration.class,
         ShiroAnnotationProcessorConfiguration.class,
         ShiroWebConfiguration.class,
-        ShiroWebFilterConfiguration.class})
+        ShiroWebFilterConfiguration.class,
+        ShiroRequestMappingConfig.class})
 public class ApplicationConfig {
   ...
 }
@@ -93,6 +96,7 @@ The above configurations do the following:
 | org.apache.shiro.spring.config.ShiroAnnotationProcessorConfiguration | Enables Shiro's annotation processing |
 | org.apache.shiro.spring.web.config.ShiroWebConfiguration | Configures Shiro Beans for web usage (SecurityManager, SessionManager, etc)  |
 | org.apache.shiro.spring.web.config.ShiroWebFilterConfiguration | Configures Shiro's web filter |
+| org.apache.shiro.spring.web.config.ShiroRequestMappingConfig | Configures Spring with Shiro's `UrlPathHelper` implementation to ensure URLs are processed the same both frameworks | 
 
 Provide a Realm implementation:
 ``` java
