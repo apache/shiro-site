@@ -28,6 +28,8 @@ Apache Shiro Vulnerability Reports
 ###[CVE-2020-17510](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-17510)
 Apache Shiro before 1.7.0, when using Apache Shiro with Spring, a specially crafted HTTP request may cause an authentication bypass.
 
+If you are NOT Shiro's Spring Boot Starter (`shiro-spring-boot-web-starter`), you must configure add the [`ShiroRequestMappingConfig` auto configuration to your application](/spring-framework.html#SpringFramework-WebConfig) or configure the [equivalent manually](https://github.com/apache/shiro/blob/shiro-root-1.7.0/support/spring/src/main/java/org/apache/shiro/spring/web/config/ShiroRequestMappingConfig.java#L28-L30).
+
 ###[CVE-2020-13933](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-13933)
 Apache Shiro before 1.6.0, when using Apache Shiro, a specially crafted HTTP request may cause an authentication bypass.
 
