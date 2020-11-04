@@ -238,6 +238,7 @@
 <h2><a href="#apache-shiro-vulnerability-reports" name="apache-shiro-vulnerability-reports">Apache Shiro Vulnerability Reports</a></h2>
 <h3><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-17510">CVE-2020-17510</a></h3>
 <p>Apache Shiro before 1.7.0, when using Apache Shiro with Spring, a specially crafted HTTP request may cause an authentication bypass.</p>
+<p>If you are NOT Shiro&rsquo;s Spring Boot Starter (<code>shiro-spring-boot-web-starter</code>), you must configure add the <a href="/spring-framework.html#SpringFramework-WebConfig"><code>ShiroRequestMappingConfig</code> auto configuration to your application</a> or configure the <a href="https://github.com/apache/shiro/blob/shiro-root-1.7.0/support/spring/src/main/java/org/apache/shiro/spring/web/config/ShiroRequestMappingConfig.java#L28-L30">equivalent manually</a>.</p>
 <h3><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-13933">CVE-2020-13933</a></h3>
 <p>Apache Shiro before 1.6.0, when using Apache Shiro, a specially crafted HTTP request may cause an authentication bypass.</p>
 <h3><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-11989">CVE-2020-11989</a></h3>
