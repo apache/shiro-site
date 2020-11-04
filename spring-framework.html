@@ -337,12 +337,14 @@ compile 'org.springframework:spring-webmvc:${spring.version}'
 </code></pre>
     </div>
 </div>
+<a name="SpringFramework-WebConfig"></a>
 <p>Import the Shiro Spring configurations:</p>
 <pre><code class="java">@Configuration
 @Import({ShiroBeanConfiguration.class,
         ShiroAnnotationProcessorConfiguration.class,
         ShiroWebConfiguration.class,
-        ShiroWebFilterConfiguration.class})
+        ShiroWebFilterConfiguration.class,
+        ShiroRequestMappingConfig.class})
 public class ApplicationConfig {
   ...
 }
@@ -371,6 +373,10 @@ public class ApplicationConfig {
     <tr>
       <td>org.apache.shiro.spring.web.config.ShiroWebFilterConfiguration </td>
       <td>Configures Shiro&rsquo;s web filter </td>
+    </tr>
+    <tr>
+      <td>org.apache.shiro.spring.web.config.ShiroRequestMappingConfig </td>
+      <td>Configures Spring with Shiro&rsquo;s <code>UrlPathHelper</code> implementation to ensure URLs are processed the same both frameworks </td>
     </tr>
   </tbody>
 </table>
