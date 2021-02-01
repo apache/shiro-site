@@ -255,7 +255,11 @@
   <li>SubjectFactory(<code>org.apache.shiro.mgt.SubjectFactory</code>)</li>
 </ul>
 <p>The <code>SecurityManager</code> implementations and are also JavaBeans compatible, which allows you (or a configuration mechanism) to easily customize the pluggable components via standard JavaBeans accessor/mutator methods (get*/set*). This means the Shiro&rsquo;s architectural modularity can translate into very easy configuration for custom behavior.</p>
-<h1>tip(&lsquo;Easy Configuration&rsquo;, &lsquo;Because of JavaBeans compatibility, it is very easy to configure the <code>SecurityManager</code> with custom components via any mechanism that supports JavaBeans-style configuration, such as <a href="spring.html" title="Spring">Spring</a>, Guice, JBoss, etc.&rsquo;)</h1>
+<div class="alert alert-success">
+    <span class="glyphicon glyphicon-ok"></span> <strong>Easy Configuration</strong>
+    <hr class="message-inner-separator">
+    <p>Because of JavaBeans compatibility, it is very easy to configure the <code>SecurityManager</code> with custom components via any mechanism that supports JavaBeans-style configuration, such as <a href="spring.html" title="Spring">Spring</a>, Guice, JBoss, etc.</p>
+</div>
 <a name="SecurityManager-ProgrammaticConfiguration"></a>
 <h3><a href="#programmatic-configuration" name="programmatic-configuration">Programmatic Configuration</a></h3>
 <p>The absolute simplest way to create a SecurityManager and make it available to the application is to create a <code>org.apache.shiro.mgt.DefaultSecurityManager</code> and wire it up in code:</p>
@@ -276,7 +280,9 @@ SecurityUtils.setSecurityManager(securityManager);
 <a name="SecurityManager-TextConfiguration"></a>
 <h3><a href="#text-configuration" name="text-configuration">Text Configuration</a></h3>
 <p>Shiro provides a simple INI-based <a href="configuration.html" title="Configuration">configuration</a> that can be used out of the box, but any other JavaBeans-compatible mechanism can be used as well. For example, Shiro has excellent <a href="spring.html" title="Spring">Spring support</a> too. Other similar frameworks (Guice, JBoss, etc) could also be used.</p>
-<h1>lendAHandDoc()</h1>
+<h2><a name="Lendahandwithdocumentation"></a>Lend a hand with documentation </h2>
+<p>While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time.  If you'd like to help the Shiro project, please consider correcting, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro. </p>
+<p>The easiest way to contribute your documentation is to submit a pull-request by clicking on the <code>Edit</code> link below, send it to the <a class="external-link" href="http://shiro-user.582556.n2.nabble.com/" rel="nofollow">User Forum</a> or the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.</p>
 <input type="hidden" id="ghEditPage" value="securitymanager.md.vtl"></input>
     
 </div>
@@ -288,7 +294,7 @@ SecurityUtils.setSecurityManager(securityManager);
             <div class="copyright-footer">
             <a href="http://www.apache.org/foundation/contributing.html">Donate to the ASF</a> |
             <a href="http://www.apache.org/licenses/LICENSE-2.0.html">License</a>
-            <p>Copyright &copy; 2008-2020 The Apache Software Foundation</p>
+            <p>Copyright &copy; 2008-2021 The Apache Software Foundation</p>
                 </div>
         </div>
 
