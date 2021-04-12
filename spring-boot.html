@@ -225,46 +225,6 @@
             <a name="Spring-IntegratingApacheShirointoSpringbasedApplications"></a>
 <h1>Integrating Apache Shiro into Spring-Boot Applications</h1>
 <p>Shiro&rsquo;s Spring-Boot integration is the easiest way to integrate Shiro into a Spring-base application, for more general Spring Framework integration, take a the <a href="spring-framework.html">annotation</a> or <a href="spring-xml.html">XML</a> guides. </p>
-<a name="Spring-StandaloneApplications"></a>
-<h2><a href="#standalone-applications" name="standalone-applications">Standalone Applications</a></h2>
-<p>Include the Shiro Spring starter dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).</p>
-<ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#maven-cli">Apache Maven</a></li>
-    <li><a data-toggle="tab" href="#gradle-cli">Gradle</a></li>
-</ul>
-<div class="tab-content">
-    <div id="maven-cli" class="tab-pane fade in active">
-    <pre><code class='xml'>&lt;dependency&gt;
-    &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
-    &lt;artifactId&gt;shiro-spring-boot-starter&lt;/artifactId&gt;
-    &lt;version&gt;1.7.1&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-    </div>
-    <div id="gradle-cli" class="tab-pane fade">
-        <pre><code class='groovy'>compile 'org.apache.shiro:shiro-spring-boot-starter:1.7.1'
-</code></pre>
-    </div>
-</div>
-<p>The only thing that is left is to configure a <a href="realm.html">realm</a>:</p>
-<pre><code class="java">@Bean
-public Realm realm() {
-  ...
-}
-</code></pre>
-<p>The easiest way to setup Shiro, so that all SecurityUtils.* methods work in all cases, is to make the <code>SecurityManager</code> bean a static singleton. DO NOT do this in web applications - see the <a href="#Spring-WebApplications">Web Applications</a> section below instead.</p>
-<pre><code class="java">@Autowired
-private SecurityManager securityManager;
-    
- @PostConstruct
- private void initStaticSecurityManager() {
-     SecurityUtils.setSecurityManager(securityManager);
- }
-</code></pre>
-<p>That is it, now you can get the current <code>Subject</code> using:</p>
-<pre><code class="java">SecurityUtils.getSubject();
-</code></pre>
-<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/master/samples/spring-boot">samples on Github</a>.</p>
 <a name="Spring-WebApplications"></a>
 <h2><a href="#web-applications" name="web-applications">Web Applications</a></h2>
 <p>Shiro has first-class support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a master Shiro Filter. This filter itself is extremely powerful, allowing for ad-hoc custom filter chains to be executed based on any URL path expression.</p>
@@ -479,6 +439,46 @@ protected CacheManager cacheManager() {
     </tr>
   </tbody>
 </table>
+<a name="Spring-StandaloneApplications"></a>
+<h1><a href="#standalone-applications" name="standalone-applications">Standalone Applications</a></h1>
+<p>Include the Shiro Spring starter dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).</p>
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#maven-cli">Apache Maven</a></li>
+    <li><a data-toggle="tab" href="#gradle-cli">Gradle</a></li>
+</ul>
+<div class="tab-content">
+    <div id="maven-cli" class="tab-pane fade in active">
+    <pre><code class='xml'>&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+    &lt;artifactId&gt;shiro-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.7.1&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+    </div>
+    <div id="gradle-cli" class="tab-pane fade">
+        <pre><code class='groovy'>compile 'org.apache.shiro:shiro-spring-boot-starter:1.7.1'
+</code></pre>
+    </div>
+</div>
+<p>The only thing that is left is to configure a <a href="realm.html">realm</a>:</p>
+<pre><code class="java">@Bean
+public Realm realm() {
+  ...
+}
+</code></pre>
+<p>The easiest way to setup Shiro, so that all SecurityUtils.* methods work in all cases, is to make the <code>SecurityManager</code> bean a static singleton. DO NOT do this in web applications - see the <a href="#Spring-WebApplications">Web Applications</a> section below instead.</p>
+<pre><code class="java">@Autowired
+private SecurityManager securityManager;
+    
+ @PostConstruct
+ private void initStaticSecurityManager() {
+     SecurityUtils.setSecurityManager(securityManager);
+ }
+</code></pre>
+<p>That is it, now you can get the current <code>Subject</code> using:</p>
+<pre><code class="java">SecurityUtils.getSubject();
+</code></pre>
+<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/master/samples/spring-boot">samples on Github</a>.</p>
 <input type="hidden" id="ghEditPage" value="spring-boot.md.vtl"></input>
     
 </div>
