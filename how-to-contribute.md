@@ -91,7 +91,7 @@ Non-committers, however, have to submit patches for review. Apache Shiro accepts
 
 Apache Shiro has a read-only mirror on GitHub that is kept in sync with the canonical Git repo maintained by the Apache Software Foundation. Submitting GitHub pull requests is the easiest way to get your contribution upstream. For detailed instructions see the link below:
 
-[GitHub Contribution Guidelines](https://github.com/apache/shiro/blob/master/CONTRIBUTING.md)
+[GitHub Contribution Guidelines](https://github.com/apache/shiro/blob/main/CONTRIBUTING.md)
 
 <a name="HowtoContribute-submitThroughJIRA"></a>
 ###Submitting a patch through JIRA
@@ -130,7 +130,7 @@ This does two things: One, it creates the branch mybranch and two, it changes yo
 
 ``` bash
 [user@localhost shiro]$ git branch
-master
+main
 * mybranch
 ```
 
@@ -143,7 +143,7 @@ git commit -m "Insert a meaningful summary of changes here."
 Finally, you can create a patch and attach it to the JIRA issue that you created for the bug you are fixing.
 
 ``` bash
-git format-patch master --stdout > ~/patch-name.patch
+git format-patch main --stdout > ~/patch-name.patch
 ```
 
 <a name="HowtoContribute-review"></a>
@@ -170,7 +170,7 @@ This is a collection of tips for contributing to the project in a manner that is
 *   Try to at least offer a partial solution and not just a problem statement.
 *   Take the time to clearly explain your issue and write a concise email message. Less confusion facilitates fast and complete resolution.
 *   Do not bother to send an email reply that simply says "thanks". When the issue is resolved, that is the finish - end of thread. Reduce clutter.
-*   You would usually do any development work against the master branch in Git.
+*   You would usually do any development work against the main branch in Git.
 *   When sending a patch, you usually do not need to worry about which Git branch it should be applied to. The maintainers of the repository will decide.
 *   Keep all project-related discussion on the mailing list. It is much better to utilise the wider audience, rather than to break off into private discussion groups. You never know who else will have the answer to your issues, and anyway other people are interested in the outcome.
 *   Become familiar with the mailing lists. As you browse and search, you will see the way other people do things. Follow the leading examples.

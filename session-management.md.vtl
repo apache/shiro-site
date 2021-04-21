@@ -240,11 +240,11 @@ Then, when the `SessionManager` asks the `EnterpriseCacheSessionDAO` to persist 
 <a name="SessionManagement-EHCacheSessionCacheConfiguration"></a>
 #[[#####EHCache Session Cache Configuration]]#
 
-By default, the `EhCacheManager` uses a Shiro-specific [`ehcache.xml`](https://github.com/apache/shiro/blob/master/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml) file that sets up the Session cache region and the necessary settings to ensure Sessions are stored and retrieved properly.
+By default, the `EhCacheManager` uses a Shiro-specific [`ehcache.xml`](https://github.com/apache/shiro/blob/main/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml) file that sets up the Session cache region and the necessary settings to ensure Sessions are stored and retrieved properly.
 
 However, if you wish to change the cache settings, or configure your own `ehcache.xml` or EHCache `net.sf.ehcache.CacheManager` instance, you will need to configure the cache region to ensure that Sessions are handled correctly.
 
-If you look at the default [`ehcache.xml`](https://github.com/apache/shiro/blob/master/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml) file, you will see the following `shiro-activeSessionCache` cache configuration:
+If you look at the default [`ehcache.xml`](https://github.com/apache/shiro/blob/main/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml) file, you will see the following `shiro-activeSessionCache` cache configuration:
 
 ``` xml
 <cache name="shiro-activeSessionCache"
