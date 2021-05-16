@@ -35,7 +35,7 @@ Here is the simplest way to enable an application singleton `SecurityManager` in
 <a name="SpringXml-WebApplications"></a>
 ## Web Applications
 
-Shiro has first-rate support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a master Shiro Filter. This filter itself is extremely powerful, allowing for
+Shiro has first-rate support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a main Shiro Filter. This filter itself is extremely powerful, allowing for
 ad-hoc custom filter chains to be executed based on any URL path expression.
 
 Prior to Shiro 1.0, you had to use a hybrid approach in Spring web applications, defining the Shiro filter and
@@ -72,7 +72,7 @@ In addition to your other Spring web.xml elements (`ContextLoaderListener`, `Log
 </filter-mapping>
 ```
 
-You can see a full example in our [samples on Github](https://github.com/apache/shiro/tree/master/samples/spring-xml).
+You can see a full example in our [samples on Github](https://github.com/apache/shiro/tree/main/samples/spring-xml).
 
 <a name="SpringXml-applicationContext.xml"></a>
 ###applicationContext.xml

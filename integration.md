@@ -62,7 +62,7 @@ A [Thymeleaf](http://www.thymeleaf.org/) dialect for [Apache Shiro](https://shir
 * **[Krail](https://github.com/davidsowerby/krail)** from [@davidsowerby](https://github.com/davidsowerby)
 Krail provides a framework for rapid Java web development by combining Vaadin, Guice, Apache Shiro, Apache Commons Configuration and others.
 
-* **[Rewrite Servlet](https://github.com/ocpsoft/rewrite/tree/master/security-integration-shiro)** from [ocpsoft](http://www.ocpsoft.org/rewrite/)
+* **[Rewrite Servlet](https://github.com/ocpsoft/rewrite/tree/main/security-integration-shiro)** from [ocpsoft](http://www.ocpsoft.org/rewrite/)
 A highly configurable URL-rewriting tool for Java EE 6+ and Servlet 2.5+ applications
 
 * **[Freedomotic](http://freedomotic-developer-manual.readthedocs.io/en/latest/plugins/security.html)** from [freedomotic](http://www.freedomotic.com)
@@ -84,5 +84,5 @@ Bootique is a minimally opinionated platform for modern runnable Java apps.
 * **[Angular](https://github.com/gnavarro77/angular-shiro)** - Angular
 
 ##Got An Integration?
-Have an integration you want listed? Send us a pull request of [this page](https://github.com/apache/shiro-site/blob/master/integration.md), and participate in Shiro development! [Learn more about contributing to Apache Shiro](how-to-contribute.html).
+Have an integration you want listed? Send us a pull request of [this page](https://github.com/apache/shiro-site/blob/main/integration.md), and participate in Shiro development! [Learn more about contributing to Apache Shiro](how-to-contribute.html).
 <input type="hidden" id="ghEditPage" value="integration.md"></input>

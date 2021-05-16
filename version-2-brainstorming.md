@@ -113,7 +113,7 @@ public class SynchronousEventBus implements Publisher, SubscriberRegistry {
 
 Convert this to be a sub-interface of Map with additional per-Realm utility methods.
 
-See the [PrincipalMap](https://github.com/apache/shiro/blob/master/core/src/main/java/org/apache/shiro/subject/PrincipalMap.java) concept for ideas (experimental, not referenced in Shiro 1.x at the moment).
+See the [PrincipalMap](https://github.com/apache/shiro/blob/main/core/src/main/java/org/apache/shiro/subject/PrincipalMap.java) concept for ideas (experimental, not referenced in Shiro 1.x at the moment).
 
 Maybe rename this to 'attributes'? i.e. `subject.getAttributes()`?
 

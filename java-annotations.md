@@ -3,7 +3,7 @@
 
 Before you can use Java annotations, you'll need to enable AOP support in your application. There are a number of different AOP frameworks so, unfortunately, there is no standard way to enable AOP in an application.
 
-For AspectJ, you can review our [AspectJ sample application](https://github.com/apache/shiro/tree/master/samples/aspectj).
+For AspectJ, you can review our [AspectJ sample application](https://github.com/apache/shiro/tree/main/samples/aspectj).
 
 For Spring, you can look into our [Spring Integration](spring.html "Spring") documentation.
 

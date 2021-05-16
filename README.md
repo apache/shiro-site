@@ -12,7 +12,7 @@ The tool used to generate the static content is [SCMS](https://github.com/lhazle
  
 The following example assumes you have commit permissions to the `apache/shiro-site` repository, typically because your are an Apache Shiro project committer:
     
-    # clone both repo branches `asf-site` and `master`
+    # clone both repo branches `asf-site` and `main`
     git clone https://github.com/apache/shiro-site -b asf-site shiro-site-publish
     git clone https://github.com/apache/shiro-site
     
