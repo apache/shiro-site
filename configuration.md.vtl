@@ -25,6 +25,7 @@ Apache Shiro Configuration
                 *   [Nested Properties](#Configuration-NestedProperties)
                 *   [Byte Array Values](#Configuration-ByteArrayValues)
                 *   [Collection Properties](#Configuration-CollectionProperties)
+                *   [Variable Interpolation](#Configuration-VariableInterpolation)
 
             *   [Considerations](#Configuration-Considerations)
 
@@ -341,6 +342,26 @@ In the above example, the object referenced by `$object1` will be in the map und
 anObject.map = $objectKey1:$objectValue1, $objectKey2:$objectValue2
 ...
 ```
+
+<a name="Configuration-VariableInterpolation"></a>
+#[[######Variable Interpolation]]#
+
+You can use variable interpolation when defining values. Supported types are environment variables, system properties and constants.
+
+For constants, use `${const:com.example.YourClass.CONSTANT_NAME}`, for environment variables and system properties, use `${ENV_VARIABLE_NAME}` or `${system.property}`.
+
+System properties and environment variables are lookup up in that order.
+
+Default values are supported in the form `${const:com.example.YourClass.CONSTANT_NAME:-default_value`}, or `${VARIABLE_NAME:-default_value}`, as in:
+
+``` ini
+myRealm.connectionTimeout = ${REALM_CONNECTION_TIMEOUT:-3000}
+```
+
+Which will be interpreted as `myRealm.connectionTimeout = 3000` if no system property or environment variable `REALM_CONNECTION_TIMEOUT` is defined.
+
+If no replacement is found, the definition will remain unchanged.
+
 
 <a name="Configuration-Considerations"></a>
 #[[#####Considerations]]#
