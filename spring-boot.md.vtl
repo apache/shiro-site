@@ -5,48 +5,11 @@
 
 Shiro's Spring-Boot integration is the easiest way to integrate Shiro into a Spring-base application, for more general Spring Framework integration, take a the [annotation](spring-framework.html) or [XML](spring-xml.html) guides.  
 
-<a name="Spring-StandaloneApplications"></a>
-Standalone Applications
----
-
-Include the Shiro Spring starter dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).
-
-#dependencies('cli', [['org.apache.shiro', 'shiro-spring-boot-starter', "${latestRelease}"]])
-
-The only thing that is left is to configure a [realm](realm.html):
-
-``` java
-@Bean
-public Realm realm() {
-  ...
-}
-```
-
-The easiest way to setup Shiro, so that all SecurityUtils.* methods work in all cases, is to make the `SecurityManager` bean a static singleton.  DO NOT do this in web applications - see the [Web Applications](#Spring-WebApplications) section below instead.
- 
-``` java
-@Autowired
-private SecurityManager securityManager;
-    
- @PostConstruct
- private void initStaticSecurityManager() {
-     SecurityUtils.setSecurityManager(securityManager);
- }
-```
-
-That is it, now you can get the current `Subject` using:
-
-``` java
-SecurityUtils.getSubject();
-```
-
-You can see a full example in our [samples on Github](https://github.com/apache/shiro/tree/master/samples/spring-boot).
-
 <a name="Spring-WebApplications"></a>
 Web Applications
 ---
 
-Shiro has first-class support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a master Shiro Filter. This filter itself is extremely powerful, allowing for ad-hoc custom filter chains to be executed based on any URL path expression.
+Shiro has first-class support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a main Shiro Filter. This filter itself is extremely powerful, allowing for ad-hoc custom filter chains to be executed based on any URL path expression.
 
 First include the Shiro Spring web starter dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).
 
@@ -81,7 +44,7 @@ public ShiroFilterChainDefinition shiroFilterChainDefinition() {
 
 If you are using Shiro's annotations see the [annotation](#Spring-annotations-web) section below.
 
-You can see a full example in our [samples on Github](https://github.com/apache/shiro/tree/master/samples/spring-boot-web).
+You can see a full example in our [samples on Github](https://github.com/apache/shiro/tree/main/samples/spring-boot-web).
 
 <a name="Spring-annotations"></a>
 Enabling Shiro Annotations
@@ -168,5 +131,41 @@ protected CacheManager cacheManager() {
 | shiro.loginUrl | `/login.jsp` | Login URL used when unauthenticated users are redirected to login page |
 | shiro.successUrl | `/` | Default landing page after a user logs in (if alternative cannot be found in the current session) |
 | shiro.unauthorizedUrl | null | Page to redirect user to if they are unauthorized (403 page) |
+
+<a name="Spring-StandaloneApplications"></a>
+# Standalone Applications
+
+Include the Shiro Spring starter dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).
+
+#dependencies('cli', [['org.apache.shiro', 'shiro-spring-boot-starter', "${latestRelease}"]])
+
+The only thing that is left is to configure a [realm](realm.html):
+
+``` java
+@Bean
+public Realm realm() {
+  ...
+}
+```
+
+The easiest way to setup Shiro, so that all SecurityUtils.* methods work in all cases, is to make the `SecurityManager` bean a static singleton.  DO NOT do this in web applications - see the [Web Applications](#Spring-WebApplications) section below instead.
+ 
+``` java
+@Autowired
+private SecurityManager securityManager;
+    
+ @PostConstruct
+ private void initStaticSecurityManager() {
+     SecurityUtils.setSecurityManager(securityManager);
+ }
+```
+
+That is it, now you can get the current `Subject` using:
+
+``` java
+SecurityUtils.getSubject();
+```
+
+You can see a full example in our [samples on Github](https://github.com/apache/shiro/tree/main/samples/spring-boot).
 
 <input type="hidden" id="ghEditPage" value="spring-boot.md.vtl"></input>

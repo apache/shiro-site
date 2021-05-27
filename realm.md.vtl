@@ -80,7 +80,7 @@ basically has the same effect as if the following line were appended:
 securityManager.realms = $blahRealm, $fooRealm, $barRealm
 ```
 
-However, realize that with implicit assignment, just the order that the realms are defined directly affects how they are consulted during authentication and authorization attempts. If you change their definition order, you will change how the master `Authenticator`'s [Authentication Sequence](authentication.html#[[#]]#Authentication-sequence) functions.
+However, realize that with implicit assignment, just the order that the realms are defined directly affects how they are consulted during authentication and authorization attempts. If you change their definition order, you will change how the main `Authenticator`'s [Authentication Sequence](authentication.html#[[#]]#Authentication-sequence) functions.
 
 For this reason, and to ensure deterministic behavior, we recommend using Explicit Assignment instead of Implicit Assignment.
 
@@ -89,7 +89,7 @@ For this reason, and to ensure deterministic behavior, we recommend using Explic
 Realm Authentication
 --------------------
 
-Once you understand Shiro's master [Authentication workflow](authentication.html#[[#]]#Authentication-sequence), it is important to know exactly what happens when the `Authenticator` interacts with a `Realm` during an authentication attempt.
+Once you understand Shiro's main [Authentication workflow](authentication.html#[[#]]#Authentication-sequence), it is important to know exactly what happens when the `Authenticator` interacts with a `Realm` during an authentication attempt.
 
 <a name="Realm-Supporting%7B%7BAuthenticationTokens%7D%7D"></a>
 #[[###Supporting `AuthenticationTokens`]]#

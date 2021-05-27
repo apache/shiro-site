@@ -136,7 +136,7 @@ Running `git branch` will show you which branch you're working on, with an aster
 
 ``` bash
 [user@localhost shiro]$ git branch
-master
+main
 * mybranch
 ```
 
@@ -149,7 +149,7 @@ git commit -m "Insert a meaningful summary of changes here."
 Finally, you can create a patch and attach it to the Jira issue:
 
 ``` bash
-git format-patch master --stdout > ~/patch-name.patch
+git format-patch main --stdout > ~/patch-name.patch
 ```
 
 * When sending a patch, you usually do not need to worry about which Git branch it should be applied to. The maintainers of the repository will decide.

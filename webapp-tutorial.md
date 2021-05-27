@@ -3,8 +3,8 @@ title: Securing Web Applications with Apache Shiro
 <div class="alert alert-warning">
     <span class="glyphicon glyphicon-warning-sign"></span> <strong>NOTE: This Page is Out of Date</strong>
     <hr class="message-inner-separator">
-    <p>See the full list of official Apache Shiro sample apps on <a href="https://github.com/apache/shiro/tree/master/samples">Github</a>.
-Help the project out by updating this page via a <a href="https://github.com/apache/shiro-site/edit/master/webapp-tutorial.md.vtl">Pull Request</a.></p>
+    <p>See the full list of official Apache Shiro sample apps on <a href="https://github.com/apache/shiro/tree/main/samples">Github</a>.
+Help the project out by updating this page via a <a href="https://github.com/apache/shiro-site/edit/main/webapp-tutorial.md.vtl">Pull Request</a.></p>
 </div>
 
 <!-- TODO: Stormpath has been shutdown, this tutorial needs to be updated to use a different Realm, possibly a JDBC Realm backed by an in memory DB. -->
@@ -46,7 +46,7 @@ The following tools are expected to be installed on your local development machi
 
 ### Tutorial Format
 
-This is a step-by-step tutorial.  The tutorial, and all of its steps, exist as a Git repository.  When you clone the git repository, the `master` branch is your starting point.  Each step in the tutorial is a separate branch.  You can follow along simply by checking out the git branch that reflects the tutorial step you are reviewing.
+This is a step-by-step tutorial.  The tutorial, and all of its steps, exist as a Git repository.  When you clone the git repository, the `main` branch is your starting point.  Each step in the tutorial is a separate branch.  You can follow along simply by checking out the git branch that reflects the tutorial step you are reviewing.
 
 ### The Application
 
@@ -83,7 +83,7 @@ $ cd apache-shiro-tutorial-webapp
 
 ### 3. Review project structure
 
-After cloning the repo, your current `master` branch will have the following structure:
+After cloning the repo, your current `main` branch will have the following structure:
 
 ``` nohighlight
     apache-shiro-tutorial-webapp/
@@ -132,7 +132,7 @@ Hit `ctl-C` to shut down the web app.
 <a id="step1"></a>
 ## Step 1: Enable Shiro
 
-Our initial repository `master` branch is just a simple generic web application that could be used as a template for any application.  Let's add the bare minimum to enable Shiro in the web app next.
+Our initial repository `main` branch is just a simple generic web application that could be used as a template for any application.  Let's add the bare minimum to enable Shiro in the web app next.
 
 Perform the following git checkout command to load the `step1` branch:
 
@@ -198,7 +198,7 @@ We do all of this by adding a few things to the existing `src/main/webapp/WEB-IN
 
 * The `<listener>` declaration defines a [`ServletContextListener`](http://docs.oracle.com/javaee/6/api/javax/servlet/ServletContextListener.html) that starts up the Shiro environment (including the Shiro `SecurityManager`) upon web application startup.  By default, this listener automatically knows to look for our `WEB-INF/shiro.ini` file for Shiro configuration.
 
-* The `<filter>` declaration defines the master `ShiroFilter`.  This filter is expected to filter _all_ requests into the web application so Shiro can peform necessary identity and access control operations before allowing a request to reach the application.
+* The `<filter>` declaration defines the main `ShiroFilter`.  This filter is expected to filter _all_ requests into the web application so Shiro can peform necessary identity and access control operations before allowing a request to reach the application.
 
 * The `<filter-mapping>` declaration ensures that _all_ request types are filed by the `ShiroFilter`.  Often `filter-mapping` declarations don't specify `<dispatcher>` elements, but Shiro needs them all defined so it can filter all of the different request types that might execute for a web app.
     
