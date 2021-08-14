@@ -54,8 +54,8 @@
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 
     <title>
-                    Apache Shiro | Simple. Java. Security.
-        </title>
+                Apache Shiro | Simple. Java. Security.
+    </title>
 
 
     <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
@@ -222,26 +222,26 @@
     </nav>
 
 
-            
+
 
 <!-- spacer allows enough room to display the header -->
 <div id="spacer" style="width: 0; height: 60px; float: left"></div>
 
 <!-- related content (if any) -->
-    <div style="border-style: solid; border-width: 2px; border-color: navy; padding: 5px; margin-left: 20px; margin-bottom: 20px; width:275px; float: right; clear: both; ">
+  <div style="border-style: solid; border-width: 2px; border-color: navy; padding: 5px; margin-left: 20px; margin-bottom: 20px; width:275px; float: right; clear: both; ">
       <h2>Related Content</h2>
-                    <h3><a href="get-started.html">Getting Started</a></h3>
+            <h3><a href="get-started.html">Getting Started</a></h3>
             <p>Resources, guides and tutorials for new Shiro users.</br><span style="font-size:11"><a href="get-started.html">Read More &gt;&gt;</a></span></p>
-                    <h3><a href="10-minute-tutorial.html">10-Minute Shiro Tutorial</a></h3>
+            <h3><a href="10-minute-tutorial.html">10-Minute Shiro Tutorial</a></h3>
             <p>Try Apache Shiro for yourself in under 10 minutes.</br><span style="font-size:11"><a href="10-minute-tutorial.html">Read More &gt;&gt;</a></span></p>
-                    <h3><a href="webapp-tutorial.html">Web App Tutorial</a></h3>
+            <h3><a href="webapp-tutorial.html">Web App Tutorial</a></h3>
             <p>Step-by-step tutorial for securing a web application with Shiro.</br><span style="font-size:11"><a href="webapp-tutorial.html">Read More &gt;&gt;</a></span></p>
-                    <h3><a href="java-authentication-guide.html">Java Authentication Guide</a></h3>
+            <h3><a href="java-authentication-guide.html">Java Authentication Guide</a></h3>
             <p>Learn how Authentication in Java is performed in Shiro.</br><span style="font-size:11"><a href="java-authentication-guide.html">Read More &gt;&gt;</a></span></p>
-                    <h3><a href="java-authorization-guide.html">Java Authorization Guide</a></h3>
+            <h3><a href="java-authorization-guide.html">Java Authorization Guide</a></h3>
             <p>Learn how Shiro handles access control in Java.</br><span style="font-size:11"><a href="java-authorization-guide.html">Read More &gt;&gt;</a></span></p>
-          </div>
-  <a name="SessionManagement-SessionManagement"></a>
+  </div>
+<a name="SessionManagement-SessionManagement"></a>
 <h1><a href="#session-management" name="session-management">Session Management</a></h1>
 <ul>
   <li><a href="#SessionManagement-UsingSessions">Using Sessions</a></li>
@@ -481,9 +481,9 @@ securityManager.cacheManager = $cacheManager
 <a name="SessionManagement-ehcachesessioncacheconfiguration"></a>
 <a name="SessionManagement-EHCacheSessionCacheConfiguration"></a>
 <h5><a href="#ehcache-session-cache-configuration" name="ehcache-session-cache-configuration">EHCache Session Cache Configuration</a></h5>
-<p>By default, the <code>EhCacheManager</code> uses a Shiro-specific <a href="https://github.com/apache/shiro/blob/master/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml"><code>ehcache.xml</code></a> file that sets up the Session cache region and the necessary settings to ensure Sessions are stored and retrieved properly.</p>
+<p>By default, the <code>EhCacheManager</code> uses a Shiro-specific <a href="https://github.com/apache/shiro/blob/main/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml"><code>ehcache.xml</code></a> file that sets up the Session cache region and the necessary settings to ensure Sessions are stored and retrieved properly.</p>
 <p>However, if you wish to change the cache settings, or configure your own <code>ehcache.xml</code> or EHCache <code>net.sf.ehcache.CacheManager</code> instance, you will need to configure the cache region to ensure that Sessions are handled correctly.</p>
-<p>If you look at the default <a href="https://github.com/apache/shiro/blob/master/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml"><code>ehcache.xml</code></a> file, you will see the following <code>shiro-activeSessionCache</code> cache configuration:</p>
+<p>If you look at the default <a href="https://github.com/apache/shiro/blob/main/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml"><code>ehcache.xml</code></a> file, you will see the following <code>shiro-activeSessionCache</code> cache configuration:</p>
 <pre><code class="xml">&lt;cache name=&quot;shiro-activeSessionCache&quot;
        maxElementsInMemory=&quot;10000&quot;
        overflowToDisk=&quot;true&quot;
@@ -797,7 +797,7 @@ securityManager.subjectDAO.sessionStorageEvaluator = $sessionStorageEvaluator
 <ul>
   <li><code>httpServletRequest.getSession(false)</code></li>
   <li><code>subject.getSession(false)</code><br/><input type="hidden" id="ghEditPage" value="session-management.md.vtl"></input></li>
-</ul>    
+</ul>
 </div>
 
     <div class="footer-padding"></div>

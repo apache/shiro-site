@@ -54,8 +54,8 @@
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 
     <title>
-                                    Securing Web Applications with Apache Shiro | Apache Shiro
-                </title>
+                Apache Shiro | Simple. Java. Security.
+    </title>
 
 
     <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
@@ -222,11 +222,11 @@
     </nav>
 
 
-            <div class="alert alert-warning">
+        <div class="alert alert-warning">
     <span class="glyphicon glyphicon-warning-sign"></span> <strong>NOTE: This Page is Out of Date</strong>
     <hr class="message-inner-separator">
-    <p>See the full list of official Apache Shiro sample apps on <a href="https://github.com/apache/shiro/tree/master/samples">Github</a>.
-Help the project out by updating this page via a <a href="https://github.com/apache/shiro-site/edit/master/webapp-tutorial.md.vtl">Pull Request</a.></p>
+    <p>See the full list of official Apache Shiro sample apps on <a href="https://github.com/apache/shiro/tree/main/samples">Github</a>.
+Help the project out by updating this page via a <a href="https://github.com/apache/shiro-site/edit/main/webapp-tutorial.md.vtl">Pull Request</a.></p>
 </div>
 <!-- TODO: Stormpath has been shutdown, this tutorial needs to be updated to use a different Realm, possibly a JDBC Realm backed by an in memory DB. -->
 <h1><a href="#securing-web-applications-with-apache-shiro" name="securing-web-applications-with-apache-shiro">Securing Web Applications with Apache Shiro</a></h1>
@@ -260,7 +260,7 @@ Help the project out by updating this page via a <a href="https://github.com/apa
   <li>Your favorite IDE, like IntelliJ IDEA or Eclipse, or even a simple text editor to view files and make changes.</li>
 </ul>
 <h3><a href="#tutorial-format" name="tutorial-format">Tutorial Format</a></h3>
-<p>This is a step-by-step tutorial. The tutorial, and all of its steps, exist as a Git repository. When you clone the git repository, the <code>master</code> branch is your starting point. Each step in the tutorial is a separate branch. You can follow along simply by checking out the git branch that reflects the tutorial step you are reviewing.</p>
+<p>This is a step-by-step tutorial. The tutorial, and all of its steps, exist as a Git repository. When you clone the git repository, the <code>main</code> branch is your starting point. Each step in the tutorial is a separate branch. You can follow along simply by checking out the git branch that reflects the tutorial step you are reviewing.</p>
 <h3><a href="#the-application" name="the-application">The Application</a></h3>
 <p>The web application we will build is a super webapp that can be used as a starting point for your own application. It will demonstrate user login, logout, user-specific welcome messages, access control to certain parts of the web application, and integration with a pluggable security data store.</p>
 <p>We will start by setting up the project, including the build tool and declaring dependencies, as well as configuring the servlet <code>web.xml</code> file to launch the web application and the Shiro environment.</p>
@@ -279,7 +279,7 @@ Help the project out by updating this page via a <a href="https://github.com/apa
 <pre><code class="bash">$ cd apache-shiro-tutorial-webapp
 </code></pre>
 <h3>3. Review project structure</h3>
-<p>After cloning the repo, your current <code>master</code> branch will have the following structure:</p>
+<p>After cloning the repo, your current <code>main</code> branch will have the following structure:</p>
 <pre><code class="nohighlight">    apache-shiro-tutorial-webapp/
       |-- src/
       |  |-- main/
@@ -318,7 +318,7 @@ Help the project out by updating this page via a <a href="https://github.com/apa
 <p>Hit <code>ctl-C</code> to shut down the web app.</p>
 <a id="step1"></a>
 <h2>Step 1: Enable Shiro</h2>
-<p>Our initial repository <code>master</code> branch is just a simple generic web application that could be used as a template for any application. Let&rsquo;s add the bare minimum to enable Shiro in the web app next.</p>
+<p>Our initial repository <code>main</code> branch is just a simple generic web application that could be used as a template for any application. Let&rsquo;s add the bare minimum to enable Shiro in the web app next.</p>
 <p>Perform the following git checkout command to load the <code>step1</code> branch:</p>
 <pre><code class="bash">$ git checkout step1
 </code></pre>
@@ -371,7 +371,7 @@ securityManager.cacheManager = $cacheManager
   <li>
   <p>The <code>&lt;listener&gt;</code> declaration defines a <a href="http://docs.oracle.com/javaee/6/api/javax/servlet/ServletContextListener.html"><code>ServletContextListener</code></a> that starts up the Shiro environment (including the Shiro <code>SecurityManager</code>) upon web application startup. By default, this listener automatically knows to look for our <code>WEB-INF/shiro.ini</code> file for Shiro configuration.</p></li>
   <li>
-  <p>The <code>&lt;filter&gt;</code> declaration defines the master <code>ShiroFilter</code>. This filter is expected to filter <em>all</em> requests into the web application so Shiro can peform necessary identity and access control operations before allowing a request to reach the application.</p></li>
+  <p>The <code>&lt;filter&gt;</code> declaration defines the main <code>ShiroFilter</code>. This filter is expected to filter <em>all</em> requests into the web application so Shiro can peform necessary identity and access control operations before allowing a request to reach the application.</p></li>
   <li>
   <p>The <code>&lt;filter-mapping&gt;</code> declaration ensures that <em>all</em> request types are filed by the <code>ShiroFilter</code>. Often <code>filter-mapping</code> declarations don&rsquo;t specify <code>&lt;dispatcher&gt;</code> elements, but Shiro needs them all defined so it can filter all of the different request types that might execute for a web app.</p></li>
 </ul>
@@ -826,7 +826,7 @@ You may edit the user!
 <h3><a href="#fixes-and-pull-requests" name="fixes-and-pull-requests">Fixes and Pull Requests</a></h3>
 <p>Please send any fixes for errata as a <a href="https://help.github.com/articles/creating-a-pull-request/">GitHub Pull Request</a> to the <code>https://github.com/lhazlewood/apache-shiro-tutorial-webapp</code> repository. We appreciate it!!!</p>
 <input type="hidden" id="ghEditPage" value="webapp-tutorial.md"></input>
-    
+
 </div>
 
     <div class="footer-padding"></div>

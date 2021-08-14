@@ -54,8 +54,8 @@
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 
     <title>
-                    Apache Shiro | Simple. Java. Security.
-        </title>
+                Apache Shiro | Simple. Java. Security.
+    </title>
 
 
     <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
@@ -222,7 +222,7 @@
     </nav>
 
 
-            <ul>
+        <ul>
   <li><a href="#Version2Brainstorming-RenameAuthenticationInfotoAccount">Rename AuthenticationInfo to Account</a></li>
   <li><a href="#Version2Brainstorming-Realmrefactoring">Realm refactoring</a></li>
   <li><a href="#Version2Brainstorming-Splitshirocoreintomodules">Split shiro-core into modules</a></li>
@@ -310,7 +310,7 @@ public class MyListener {
 <a name="Version2Brainstorming-SubjectPrincipalCollection"></a>
 <h3><a href="#subject-principalcollection" name="subject-principalcollection">Subject PrincipalCollection</a></h3>
 <p>Convert this to be a sub-interface of Map with additional per-Realm utility methods.</p>
-<p>See the <a href="https://github.com/apache/shiro/blob/master/core/src/main/java/org/apache/shiro/subject/PrincipalMap.java">PrincipalMap</a> concept for ideas (experimental, not referenced in Shiro 1.x at the moment).</p>
+<p>See the <a href="https://github.com/apache/shiro/blob/main/core/src/main/java/org/apache/shiro/subject/PrincipalMap.java">PrincipalMap</a> concept for ideas (experimental, not referenced in Shiro 1.x at the moment).</p>
 <p>Maybe rename this to &lsquo;attributes&rsquo;? i.e. <code>subject.getAttributes()</code>?</p>
 <a name="Version2Brainstorming-ComponentNames"></a>
 <h3><a href="#component-names" name="component-names">Component Names</a></h3>
@@ -370,7 +370,7 @@ if (response.hasException()) {
 <a name="Version2Brainstorming-Webmodulerepackaging."></a>
 <h3>Web module repackaging.</h3>
 <p>The Web module is largely Servlet-specific at the moment. As such, its packaging should reflect this, in the same way that all other support modules are named, e.g.<br/>module name: <code>shiro-servlet</code><br/>package base: <code>org.apache.shiro.servlet.*</code><br/><input type="hidden" id="ghEditPage" value="version-2-brainstorming.md"></input></p>
-    
+
 </div>
 
     <div class="footer-padding"></div>

@@ -54,8 +54,8 @@
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 
     <title>
-                    Apache Shiro | Simple. Java. Security.
-        </title>
+                Apache Shiro | Simple. Java. Security.
+    </title>
 
 
     <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
@@ -222,7 +222,7 @@
     </nav>
 
 
-            <a name="Configuration-ApacheShiroConfiguration"></a>
+        <a name="Configuration-ApacheShiroConfiguration"></a>
 <h1><a href="#apache-shiro-configuration" name="apache-shiro-configuration">Apache Shiro Configuration</a></h1>
 <ul>
   <li>
@@ -256,6 +256,7 @@
                   <li><a href="#Configuration-NestedProperties">Nested Properties</a></li>
                   <li><a href="#Configuration-ByteArrayValues">Byte Array Values</a></li>
                   <li><a href="#Configuration-CollectionProperties">Collection Properties</a></li>
+                  <li><a href="#Configuration-VariableInterpolation">Variable Interpolation</a></li>
                 </ul>
               </li>
               <li>
@@ -505,6 +506,15 @@ anObject.mapProperty = key1:$object1, key2:$object2
 <pre><code class="ini">anObject.map = $objectKey1:$objectValue1, $objectKey2:$objectValue2
 ...
 </code></pre>
+<a name="Configuration-VariableInterpolation"></a>
+<h6><a href="#variable-interpolation" name="variable-interpolation">Variable Interpolation</a></h6>
+<p>You can use variable interpolation when defining values. Supported types are environment variables, system properties and constants.</p>
+<p>For constants, use <code>$&#123;const:com.example.YourClass.CONSTANT_NAME&#125;</code>, for environment variables and system properties, use <code>${ENV_VARIABLE_NAME}</code> or <code>${system.property}</code>.</p>
+<p>System properties and environment variables are lookup up in that order.</p>
+<p>Default values are supported in the form <code>$&#123;const:com.example.YourClass.CONSTANT_NAME:-default_value&#125;</code>, or <code>$&#123;VARIABLE_NAME:-default_value&#125;</code>, as in:</p>
+<pre><code class="ini">myRealm.connectionTimeout = $&#123;REALM_CONNECTION_TIMEOUT:-3000&#125;</code></pre>
+<p>Which will be interpreted as <code>myRealm.connectionTimeout = 3000</code> if no system property or environment variable <code>REALM_CONNECTION_TIMEOUT</code> is defined.</p>
+<p>If no replacement is found, the definition will remain unchanged.</p>
 <a name="Configuration-Considerations"></a>
 <h5><a href="#considerations" name="considerations">Considerations</a></h5>
 <a name="Configuration-OrderMatters"></a>
@@ -624,7 +634,7 @@ goodguy = winnebago:drive:eagle5
 <p>While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time.  If you'd like to help the Shiro project, please consider correcting, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro. </p>
 <p>The easiest way to contribute your documentation is to submit a pull-request by clicking on the <code>Edit</code> link below, send it to the <a class="external-link" href="http://shiro-user.582556.n2.nabble.com/" rel="nofollow">User Forum</a> or the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.</p>
 <input type="hidden" id="ghEditPage" value="configuration.md.vtl"></input>
-    
+
 </div>
 
     <div class="footer-padding"></div>

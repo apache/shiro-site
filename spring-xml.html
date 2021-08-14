@@ -54,8 +54,8 @@
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 
     <title>
-                    Apache Shiro | Simple. Java. Security.
-        </title>
+                Apache Shiro | Simple. Java. Security.
+    </title>
 
 
     <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
@@ -222,7 +222,7 @@
     </nav>
 
 
-            <a name="SpringXml-IntegratingApacheShirointoSpringbasedApplications"></a>
+        <a name="SpringXml-IntegratingApacheShirointoSpringbasedApplications"></a>
 <h1>Integrating Apache Shiro into Spring-based Applications</h1>
 <p>This page covers the ways to integrate Shiro into <a href="http://spring.io">Spring</a>-based applications.</p>
 <p>Shiro&rsquo;s JavaBeans compatibility makes it perfectly suited to be configured via Spring XML or other Spring-based configuration mechanisms. Shiro applications need an application singleton <code>SecurityManager</code> instance. Note that this does not have to be a <em>static</em> singleton, but there should only be a single instance used by the application, whether its a static singleton or not.</p>
@@ -250,7 +250,7 @@
 </code></pre>
 <a name="SpringXml-WebApplications"></a>
 <h2><a href="#web-applications" name="web-applications">Web Applications</a></h2>
-<p>Shiro has first-rate support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a master Shiro Filter. This filter itself is extremely powerful, allowing for<br/>ad-hoc custom filter chains to be executed based on any URL path expression.</p>
+<p>Shiro has first-rate support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a main Shiro Filter. This filter itself is extremely powerful, allowing for<br/>ad-hoc custom filter chains to be executed based on any URL path expression.</p>
 <p>Prior to Shiro 1.0, you had to use a hybrid approach in Spring web applications, defining the Shiro filter and<br/>all of its configuration properties in web.xml but define the <code>SecurityManager</code> in Spring XML. This was a little frustrating since you couldn&rsquo;t 1) consolidate your configuration in one place and 2) leverage the configuration power of the more advanced Spring features, like the <code>PropertyPlaceholderConfigurer</code> or abstract beans to consolidate common configuration.</p>
 <p>Now in Shiro 1.0 and later, all Shiro configuration is done in Spring XML providing access to the more robust Spring configuration mechanisms.</p>
 <p>Here is how to configure Shiro in a Spring-based web application:</p>
@@ -277,7 +277,7 @@
     &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
 &lt;/filter-mapping&gt;
 </code></pre>
-<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/master/samples/spring-xml">samples on Github</a>.</p>
+<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/main/samples/spring-xml">samples on Github</a>.</p>
 <a name="SpringXml-applicationContext.xml"></a>
 <h3>applicationContext.xml</h3>
 <p>In your applicationContext.xml file, define the web-enabled <code>SecurityManager</code> and the &lsquo;shiroFilter&rsquo; bean that will be referenced from <code>web.xml</code>.</p>
@@ -377,7 +377,7 @@
 <h2><a href="#lend-a-hand-with-documentation" name="lend-a-hand-with-documentation">Lend a hand with documentation</a></h2>
 <p>While we hope this documentation helps you with the work you&rsquo;re doing with Apache Shiro, the community is improving and expanding the documentation all the time. If you&rsquo;d like to help the Shiro project, please consider correcting, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro.</p>
 <p>The easiest way to contribute your documentation is to send it to the <a href="http://shiro-user.582556.n2.nabble.com/">User Forum</a> or the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.<br/><input type="hidden" id="ghEditPage" value="spring-xml.md"></input></p>
-    
+
 </div>
 
     <div class="footer-padding"></div>

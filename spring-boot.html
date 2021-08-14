@@ -54,8 +54,8 @@
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 
     <title>
-                    Apache Shiro | Simple. Java. Security.
-        </title>
+                Apache Shiro | Simple. Java. Security.
+    </title>
 
 
     <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
@@ -222,12 +222,12 @@
     </nav>
 
 
-            <a name="Spring-IntegratingApacheShirointoSpringbasedApplications"></a>
+        <a name="Spring-IntegratingApacheShirointoSpringbasedApplications"></a>
 <h1>Integrating Apache Shiro into Spring-Boot Applications</h1>
 <p>Shiro&rsquo;s Spring-Boot integration is the easiest way to integrate Shiro into a Spring-base application, for more general Spring Framework integration, take a the <a href="spring-framework.html">annotation</a> or <a href="spring-xml.html">XML</a> guides. </p>
 <a name="Spring-WebApplications"></a>
 <h2><a href="#web-applications" name="web-applications">Web Applications</a></h2>
-<p>Shiro has first-class support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a master Shiro Filter. This filter itself is extremely powerful, allowing for ad-hoc custom filter chains to be executed based on any URL path expression.</p>
+<p>Shiro has first-class support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a main Shiro Filter. This filter itself is extremely powerful, allowing for ad-hoc custom filter chains to be executed based on any URL path expression.</p>
 <p>First include the Shiro Spring web starter dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).</p>
 <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#maven-web">Apache Maven</a></li>
@@ -240,6 +240,7 @@
     &lt;artifactId&gt;shiro-spring-boot-web-starter&lt;/artifactId&gt;
     &lt;version&gt;1.7.1&lt;/version&gt;
 &lt;/dependency&gt;
+
 </code></pre>
     </div>
     <div id="gradle-web" class="tab-pane fade">
@@ -270,7 +271,7 @@ public ShiroFilterChainDefinition shiroFilterChainDefinition() {
 }
 </code></pre>
 <p>If you are using Shiro&rsquo;s annotations see the <a href="#Spring-annotations-web">annotation</a> section below.</p>
-<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/master/samples/spring-boot-web">samples on Github</a>.</p>
+<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/main/samples/spring-boot-web">samples on Github</a>.</p>
 <a name="Spring-annotations"></a>
 <h2><a href="#enabling-shiro-annotations" name="enabling-shiro-annotations">Enabling Shiro Annotations</a></h2>
 <p>In both standalone and web applications, you might want to use Shiro&rsquo;s Annotations for security checks (for example, <code>@RequiresRoles</code>, <code>@RequiresPermissions</code>, etc.) These annotations are enabled automatically in both starters listed above.</p>
@@ -453,6 +454,7 @@ protected CacheManager cacheManager() {
     &lt;artifactId&gt;shiro-spring-boot-starter&lt;/artifactId&gt;
     &lt;version&gt;1.7.1&lt;/version&gt;
 &lt;/dependency&gt;
+
 </code></pre>
     </div>
     <div id="gradle-cli" class="tab-pane fade">
@@ -478,9 +480,9 @@ private SecurityManager securityManager;
 <p>That is it, now you can get the current <code>Subject</code> using:</p>
 <pre><code class="java">SecurityUtils.getSubject();
 </code></pre>
-<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/master/samples/spring-boot">samples on Github</a>.</p>
+<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/main/samples/spring-boot">samples on Github</a>.</p>
 <input type="hidden" id="ghEditPage" value="spring-boot.md.vtl"></input>
-    
+
 </div>
 
     <div class="footer-padding"></div>

@@ -54,8 +54,8 @@
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 
     <title>
-                    Apache Shiro | Simple. Java. Security.
-        </title>
+                Apache Shiro | Simple. Java. Security.
+    </title>
 
 
     <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
@@ -222,7 +222,7 @@
     </nav>
 
 
-            <h1><a name="Realm-ApacheShiroRealms"></a>Apache Shiro Realms</h1>
+        <h1><a name="Realm-ApacheShiroRealms"></a>Apache Shiro Realms</h1>
 <ul>
   <li>
     <p><a href="#Realm-RealmConfiguration">Realm Configuration</a></p>
@@ -305,12 +305,12 @@ barRealm = com.company.another.Realm
 <p>basically has the same effect as if the following line were appended:</p>
 <pre><code class="java">securityManager.realms = $blahRealm, $fooRealm, $barRealm
 </code></pre>
-<p>However, realize that with implicit assignment, just the order that the realms are defined directly affects how they are consulted during authentication and authorization attempts. If you change their definition order, you will change how the master <code>Authenticator</code>&rsquo;s <a href="authentication.html#Authentication-sequence">Authentication Sequence</a> functions.</p>
+<p>However, realize that with implicit assignment, just the order that the realms are defined directly affects how they are consulted during authentication and authorization attempts. If you change their definition order, you will change how the main <code>Authenticator</code>&rsquo;s <a href="authentication.html#Authentication-sequence">Authentication Sequence</a> functions.</p>
 <p>For this reason, and to ensure deterministic behavior, we recommend using Explicit Assignment instead of Implicit Assignment.</p>
 <a name="Realm-authentication"></a>
 <a name="Realm-RealmAuthentication"></a>
 <h2><a href="#realm-authentication" name="realm-authentication">Realm Authentication</a></h2>
-<p>Once you understand Shiro&rsquo;s master <a href="authentication.html#Authentication-sequence">Authentication workflow</a>, it is important to know exactly what happens when the <code>Authenticator</code> interacts with a <code>Realm</code> during an authentication attempt.</p>
+<p>Once you understand Shiro&rsquo;s main <a href="authentication.html#Authentication-sequence">Authentication workflow</a>, it is important to know exactly what happens when the <code>Authenticator</code> interacts with a <code>Realm</code> during an authentication attempt.</p>
 <a name="Realm-Supporting%7B%7BAuthenticationTokens%7D%7D"></a>
 <h3>Supporting <code>AuthenticationTokens</code></h3>
 <p>As mentioned in the <a href="authentication.html#Authentication-sequence">authentication sequence</a>, just before a <code>Realm</code> is consulted to perform an authentication attempt, its <a href="static/current/apidocs/org/apache/shiro/realm/Realm.html#supports-org.apache.shiro.authc.AuthenticationToken-"><code>supports</code></a> method is called. If the return value is <code>true</code>, only then will its <code>getAuthenticationInfo(token)</code> method be invoked.</p>
@@ -448,7 +448,7 @@ myRealm.credentialsMatcher = $credentialsMatcher
 <p>While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time.  If you'd like to help the Shiro project, please consider correcting, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro. </p>
 <p>The easiest way to contribute your documentation is to submit a pull-request by clicking on the <code>Edit</code> link below, send it to the <a class="external-link" href="http://shiro-user.582556.n2.nabble.com/" rel="nofollow">User Forum</a> or the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.</p>
 <input type="hidden" id="ghEditPage" value="realm.md.vtl"></input>
-    
+
 </div>
 
     <div class="footer-padding"></div>

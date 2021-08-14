@@ -2,7 +2,7 @@
 function addPageEditLink() {
 
     var ghRepo = "apache/shiro-site";
-    var ghRelHref = "https://github.com/" + ghRepo + "/edit/master/";
+    var ghRelHref = "https://github.com/" + ghRepo + "/edit/main/";
 
     var ghEditPageElement = $( "#ghEditPage" );
     var editThisPageElement = $(".editThisPage");
