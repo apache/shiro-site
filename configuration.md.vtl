@@ -348,15 +348,13 @@ anObject.map = $objectKey1:$objectValue1, $objectKey2:$objectValue2
 
 You can use variable interpolation when defining values. Supported types are environment variables, system properties and constants.
 
-For constants, use `${const:com.example.YourClass.CONSTANT_NAME}`, for environment variables and system properties, use `${ENV_VARIABLE_NAME}` or `${system.property}`.
+For constants, use <code>$&#123;const:com.example.YourClass.CONSTANT_NAME&#125;</code>, for environment variables and system properties, use `${ENV_VARIABLE_NAME}` or `${system.property}`.
 
 System properties and environment variables are lookup up in that order.
 
-Default values are supported in the form `${const:com.example.YourClass.CONSTANT_NAME:-default_value`}, or `${VARIABLE_NAME:-default_value}`, as in:
+Default values are supported in the form <code>$&#123;const:com.example.YourClass.CONSTANT_NAME:-default_value&#125;</code>, or <code>$&#123;VARIABLE_NAME:-default_value&#125;</code>, as in:
 
-``` ini
-myRealm.connectionTimeout = ${REALM_CONNECTION_TIMEOUT:-3000}
-```
+<pre><code class="ini">myRealm.connectionTimeout = $&#123;REALM_CONNECTION_TIMEOUT:-3000&#125;</code></pre>
 
 Which will be interpreted as `myRealm.connectionTimeout = 3000` if no system property or environment variable `REALM_CONNECTION_TIMEOUT` is defined.
 
