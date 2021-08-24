@@ -1,10 +1,12 @@
 <a name="Forums-ApacheShiroCommunityForums"></a>
 #Apache Shiro Community Forums
 
-For users that prefer to use forums over mailing lists, we use the [Nabble](http://www.nabble.com) forum/email/archive service. Nabble ensures that its forums remain synchronized with the mailing lists, so feel free to use whichever mechanism you like.
+For users that prefer to use browse the mailing lists with a browser can use [ASF Lists](https://lists.apache.org/) (Pony Mail). 
 
-*   [Shiro User Forum](http://shiro-user.582556.n2.nabble.com/)
-*   [Shiro Developer Forum](http://shiro-developer.582600.n2.nabble.com/)
+*   [Shiro User Forum](https://lists.apache.org/list.html?user@shiro.apache.org)
+*   [Shiro Developer Forum](https://lists.apache.org/list.html?dev@shiro.apache.org)
+
+> **NOTE:** Previously, `nabble.com` was used as an alternative to the mailing list, this service is not longer hosting the mailing list archive.
 
 <a name="Forums-MailingLists"></a>
 ##Mailing Lists
