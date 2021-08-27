@@ -54,8 +54,8 @@
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 
     <title>
-                Apache Shiro | Simple. Java. Security.
-    </title>
+                    Apache Shiro | Simple. Java. Security.
+        </title>
 
 
     <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
@@ -222,7 +222,7 @@
     </nav>
 
 
-        <a name="Caching-Caching"></a>
+            <a name="Caching-Caching"></a>
 <h1><a href="#caching" name="caching">Caching</a></h1>
 <p>The Shiro development team understands performance is critical in many applications. Caching is a first class feature built into Shiro from day one to ensure that security operations remain as fast as possible.</p>
 <p>However, while Caching as a concept is a fundamental part of Shiro, implementing a full Cache mechanism would be outside the core competency of a security framework. To that end, Shiro&rsquo;s cache support is basically an abstraction (wrapper) API that will &lsquo;sit&rsquo; on top of an underlying production Cache mechanism (e.g. Hazelcast, Ehcache, OSCache, Terracotta, Coherence, GigaSpaces, JBossCache, etc). This allows a Shiro end-user to configure any cache mechanism they prefer.</p>
@@ -268,7 +268,7 @@ securityManager.cacheManager = $cacheManager
 <a name="Caching-AuthorizationCacheInvalidation"></a>
 <h2><a href="#authorization-cache-invalidation" name="authorization-cache-invalidation">Authorization Cache Invalidation</a></h2>
 <p>Finally note that <a href="static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html"><code>AuthorizingRealm</code></a> has a <a href="static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html#clearCachedAuthorizationInfo-org.apache.shiro.subject.PrincipalCollection-">clearCachedAuthorizationInfo method</a> that can be called by subclasses to evict the cached authzInfo for a particular account. It is usually called by custom logic if the corresponding account&rsquo;s authz data has changed (to ensure the next authz check will pick up the new data).<br/><input type="hidden" id="ghEditPage" value="caching.md"></input></p>
-
+    
 </div>
 
     <div class="footer-padding"></div>
