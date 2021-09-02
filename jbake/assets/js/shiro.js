@@ -1,4 +1,3 @@
-
 function addPageEditLink() {
 
     var ghRepo = "apache/shiro-site";
