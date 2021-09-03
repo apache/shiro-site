@@ -4,27 +4,29 @@
 
     <div class="footer-padding"></div>
 
-    <div id="footer" class="footer">
-      <div class="col-md-5">
-        <div class="copyright-footer">
-          <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a> |
-          <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>
-          <p>Copyright &copy; 2008-${.now?string('yyyy')} The Apache Software Foundation</p>
+    <div class="container-fluid" id="custom-footer">
+      <footer class="row justify-content-between align-items-center border-top">
+        <div class=" col-md-5">
+          <div class="copyright-footer d-flex flex-wrap justify-content-start">
+            <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>
+            <p class="text-muted">Copyright &copy; 2008-${.now?string('yyyy')} The Apache Software Foundation</p>
+          </div>
         </div>
-      </div>
 
-      <div class="social col-md-2">
-        <a class="btn btn-primary" style="background-color: #55acee;" href="#!" role="button"><i class="fab fa-twitter">&nbsp;</i></a>
-        <a class="btn btn-primary" style="background-color: #3b5998;" href="#!" role="button"><i class="fab fa-facebook-f">&nbsp;</i></a>
-        <a class="btn btn-primary" style="background-color: #0082ca;" href="#!" role="button"><i class="fab fa-linkedin-in">&nbsp;</i></a>
-      </div>
+        <div class="d-flex col-md-1">
+          <a class="btn"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
+        </div>
 
-      <div class="col-md-2"></div>
-      <div class="col-md-2 editThisPage" id="editThisPage">
-        <#if (content.file)??><input type="hidden" id="ghEditPage" value="${content.file}"></input></#if>
-        <div class="footer-shield"></div>
-      </div>
+        <ul class="d-flex justify-content-end col-md-5" style="position: relative">
+          <#if (content.file)??><input type="hidden" id="ghEditPage" value="${content.file}"></input></#if>
+          <div class="footer-shield"></div>
+        </ul>
+      </footer>
     </div>
+
 
     <!-- Le javascript
     ================================================== -->

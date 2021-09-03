@@ -42,6 +42,7 @@
 
     <!-- Le styles -->
     <link href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>css/bootstrap.min.css" rel="stylesheet">
+    <link href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
     <link href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>css/asciidoctor.css" rel="stylesheet">
     <link href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>css/base.css" rel="stylesheet">
     <link href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>css/prettify.css" rel="stylesheet">
@@ -62,9 +63,7 @@
 
       <div class="masthead">
         <p class="lead">
-          <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>/index.html">
-            <img src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>/img/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;">
-          </a>
+          <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>/index.html"><img src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>img/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;"></a>
           <span class="tagline">Simple. Java. Security.</span>
           <a class="pull-right" href="https://www.apache.org/events/current-event.html">
             <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png"/>
