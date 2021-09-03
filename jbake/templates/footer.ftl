@@ -14,10 +14,10 @@
           </div>
         </div>
 
-        <div class="d-flex col-md-1">
-          <a class="btn"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
-          <a class="btn"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
-          <a class="btn"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
+        <div class="d-flex justify-content-center col-md-1">
+          <a class="btn btn-social"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
         </div>
 
         <ul class="d-flex justify-content-end col-md-5" style="position: relative">
