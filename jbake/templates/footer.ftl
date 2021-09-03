@@ -20,7 +20,7 @@
           <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
         </div>
 
-        <ul class="d-flex justify-content-end col-md-5" style="position: relative">
+        <ul class="d-flex justify-content-end col-md-5" style="position: relative" id="editThisPage">
           <#if (content.file)??><input type="hidden" id="ghEditPage" value="${content.file}"></input></#if>
           <div class="footer-shield"></div>
         </ul>

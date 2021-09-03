@@ -13,6 +13,7 @@ function addPageEditLink() {
         let editPageLink = document.createElement('a');
         editPageLink.setAttribute('href', ghEditHref);
         editPageLink.setAttribute('rel', 'nofollow');
+        editPageLink.text = "Edit this page on GitHub";
         editThisPageElement.append(editPageLink);
     }
 }
