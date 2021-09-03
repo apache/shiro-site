@@ -63,7 +63,7 @@
 
       <div class="masthead">
         <p class="lead">
-          <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>/index.html"><img src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>img/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;"></a>
+          <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>index.html"><img src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>img/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;"></a>
           <span class="tagline">Simple. Java. Security.</span>
           <a class="pull-right" href="https://www.apache.org/events/current-event.html">
             <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png"/>
