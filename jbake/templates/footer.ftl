@@ -20,26 +20,22 @@
       </div>
 
       <div class="col-md-2"></div>
-      <div class="col-md-2 editThisPage">
-        <#if (content.editpage)??><input type="hidden" id="ghEditPage" value="${content.editpage}"></input></#if>
+      <div class="col-md-2 editThisPage" id="editThisPage">
+        <#if (content.file)??><input type="hidden" id="ghEditPage" value="${content.file}"></input></#if>
         <div class="footer-shield"></div>
       </div>
     </div>
 
-    
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>js/jquery-1.11.1.min.js"></script>
     <script src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>js/bootstrap.min.js"></script>
-    <script src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>js/prettify.js"></script>
     <script src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>js/shiro.js"></script>
 
-
     <script type="text/javascript">
-      $( document ).ready(function() {
-          addPageEditLink();
-      });
+        docReady(
+          addPageEditLink()
+      );
     </script>
 
   </body>
