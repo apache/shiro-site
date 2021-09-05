@@ -32,6 +32,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>js/bootstrap.min.js"></script>
+    <script src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>highlight.js-11.2.0/highlight.min.js"></script>
     <script src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>js/shiro.js"></script>
 
     <script type="text/javascript">
@@ -39,6 +40,7 @@
           addPageEditLink()
       );
     </script>
+    <script>hljs.highlightAll();</script>
 
-  </body>
+    </body>
 </html>

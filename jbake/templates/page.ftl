@@ -10,7 +10,7 @@
 
 	<p><em>${content.date?string("dd MMMM yyyy")}</em></p>
 
-	<p>${content.body}</p>
+	<p><@content.body?interpret /></p>
 
 	<hr />
 
