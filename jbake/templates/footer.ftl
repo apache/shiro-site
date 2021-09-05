@@ -9,7 +9,7 @@
         <div class=" col-md-5">
           <div class="copyright-footer d-flex flex-wrap justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
-            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
             <p class="text-muted">Copyright &copy; 2008-${.now?string('yyyy')} The Apache Software Foundation</p>
           </div>
         </div>
@@ -20,10 +20,13 @@
           <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
         </div>
 
-        <ul class="d-flex justify-content-end col-md-5" style="position: relative" id="editThisPage">
+        <div class="d-flex justify-content-end col-md-4" id="editThisPage">
           <#if (content.file)??><input type="hidden" id="ghEditPage" value="${content.file}"></input></#if>
+        </div>
+
+        <div class="d-flex col-md-2 justify-content-end" style="position: relative">
           <div class="footer-shield"></div>
-        </ul>
+        </div>
       </footer>
     </div>
 
