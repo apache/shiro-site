@@ -58,6 +58,103 @@ environments (e.g. Ant). However, this is <b>NOT</b> recommended in Maven builds
 retain correct dependency metadata, which can lead to Maven working incorrectly. For Maven builds,
 it is <b>highly</b> recommended to specify individual modules listed below as you require them.'} />
 
+
+<#assign  shiro11x = {"version": "1.1.0", "artifacts": [
+  shiroAll,
+  shiroCore,
+  shiroWeb,
+  shiroAspectJ,
+  shiroEhCache,
+  shiroQuartz,
+  shiroSpring
+]} />
+
+<#assign  shiro12x = {"version": "1.2.6", "artifacts": [
+  shiroAll,
+  shiroCore,
+  shiroWeb,
+  shiroAspectJ,
+  shiroCas,
+  shiroEhCache,
+  shiroFeatures,
+  shiroGuice,
+  shiroQuartz,
+  shiroSpring,
+  shiroHasher
+]} />
+
+<#assign  shiro13x = {"version": "1.3.2", "artifacts": [
+  shiroAll,
+  shiroCore,
+  shiroWeb,
+  shiroAspectJ,
+  shiroCas,
+  shiroEhCache,
+  shiroHazelcast,
+  shiroFeatures,
+  shiroGuice,
+  shiroQuartz,
+  shiroSpring,
+  shiroHasher
+]} />
+
+<#assign  shiro14x = {"version": "1.4.2", "artifacts": [
+  shiroAll,
+  shiroCore,
+  shiroWeb,
+  shiroServletPlugin,
+  shiroJaxrs,
+  shiroAspectJ,
+  shiroCas,
+  shiroEhCache,
+  shiroHazelcast,
+  shiroFeatures,
+  shiroGuice,
+  shiroQuartz,
+  shiroSpring,
+  shiroSpringBoot,
+  shiroSpringBootWeb,
+  shiroHasher
+]} />
+
+<#assign  shiro15x = {"version": "1.5.3", "artifacts": [
+  shiroAll,
+  shiroCore,
+  shiroWeb,
+  shiroServletPlugin,
+  shiroJaxrs,
+  shiroAspectJ,
+  shiroCas,
+  shiroEhCache,
+  shiroHazelcast,
+  shiroFeatures,
+  shiroGuice,
+  shiroQuartz,
+  shiroSpring,
+  shiroSpringBoot,
+  shiroSpringBootWeb,
+  shiroHasher
+]} />
+
+<#assign  shiro16x = {"version": "1.6.0", "artifacts": [
+  shiroAll,
+  shiroCore,
+  shiroWeb,
+  shiroServletPlugin,
+  shiroJaxrs,
+  shiroAspectJ,
+  shiroCas,
+  shiroEhCache,
+  shiroHazelcast,
+  shiroFeatures,
+  shiroGuice,
+  shiroQuartz,
+  shiroSpring,
+  shiroSpringBoot,
+  shiroSpringBootWeb,
+  shiroHasher
+]} />
+
 <#assign shiro17x = {"version": "1.7.1", "artifacts": [
   shiroAll,
   shiroCore,
