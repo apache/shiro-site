@@ -10,7 +10,9 @@
   </thead>
 
   <tbody>
-  <#list versionObject.artifacts as artifact>
+  <#list versionObject.artifacts as artifactName>
+  <#-- releases.yaml contains the artifactObject's names. We can just resolve them using eval. -->
+  <#assign artifact=artifacts[artifactName]>
   <tr>
     <#assign classifier=artifact.c!"">
     <#assign group=artifact.g?replace('.', '/') >
@@ -26,19 +28,15 @@
       <#if (artifact.gavAlt)?? >
         ${artifact.gavAlt}
       <#else>
+        <pre><code class="xml language-xml">&lt;dependency&gt;
+  &lt;groupId&gt;${artifact.g}&lt;/groupId&gt;
+  &lt;artifactId&gt;${artifact.a}&lt;/artifactId&gt;
+  &lt;version&gt;${version}&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
       </#if>
-      #if($artifact.gavAlt)
-
-      #else
-      <pre><code class="xml">&lt;dependency&gt;
-  &lt;groupId&gt;$artifact.g&lt;/groupId&gt;
-  &lt;artifactId&gt;$artifact.a&lt;/artifactId&gt;
-  &lt;version&gt;$version&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
     </td>
 
-    <td>$artifact.description.replace('%version%', "$version")</td>
+    <td>${(artifact.description)?replace('%version%', version)}</td>
 
   </tr>
   </#list>

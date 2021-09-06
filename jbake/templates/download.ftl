@@ -12,10 +12,17 @@
 
 <p><@content.body?interpret /></p>
 
+<#-- if not releases are given using :jbake-release:, assume oldReleases. -->
+<#if ((content.releases).versions)??>
+    <#assign displayReleases=((content.releases).versions)![] />
+<#else>
+    <#assign displayReleases=oldReleases />
+</#if>
+
 <p>
   <ul>
-  <#list ((content.releases).versions)![] as version>
-    <#assign release=version?eval />
+  <#list displayReleases as version>
+    <#assign release=releases[version] />
     <li><a href="#${release.version?replace(".", "")}">Apache Shiro Release v${release.version}</a></li>
     <ul>
       <li><a href="#${release.version?replace(".", "")}Binary">${release.version} Binary Distribution</a></li>
@@ -28,8 +35,8 @@
 
 
 
-<#list ((content.releases).versions)![] as version>
-  <#assign release=version?eval />
+<#list displayReleases as version>
+  <#assign release=releases[version] />
   <h2>Release ${release.version}</h2>
 
   <h4><a id="#${release.version?replace(".", "")}Binary"></a>${release.version} Binary Distribution</h4>
