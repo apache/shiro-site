@@ -16,6 +16,7 @@
    limitations under the License.
 -->
 <#include "macros/versions.ftl">
+<#include "macros/dependencies.ftl">
 <html lang="en">
   <head>
     <meta charset="utf-8"/>

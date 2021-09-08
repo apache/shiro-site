@@ -1,0 +1,200 @@
+= Integrating Apache Shiro into Spring-Boot Applications
+:jbake-type: page
+:jbake-status: published
+:jbake-tags: documentation, manual, spring
+:idprefix:
+:toc:
+
+Shiro's Spring-Boot integration is the easiest way to integrate Shiro into a Spring-base application, for more general Spring Framework integration, take a the link:spring-framework.html[annotation] or link:spring-xml.html[XML] guides.
+
+== Web Applications
+
+Shiro has first-class support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a main Shiro Filter. This filter itself is extremely powerful, allowing for ad-hoc custom filter chains to be executed based on any URL path expression.
+
+First include the Shiro Spring web starter dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).
+
+++++
+<@dependencies anchorId="web" deps=[{"g":"org.apache.shiro", "a":"shiro-spring-boot-web-starter", "v":"${latestRelease}"}] />
+++++
+
+Provide a Realm implementation:
+[source,java]
+----
+@Bean
+public Realm realm() {
+  ...
+}
+----
+
+And finally a `ShiroFilterChainDefinition` which will map any application specific paths to a given filter, in order to allow different paths different levels of access.
+
+[source,java]
+----
+@Bean
+public ShiroFilterChainDefinition shiroFilterChainDefinition() {
+    DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
+
+    // logged in users with the 'admin' role
+    chainDefinition.addPathDefinition("/admin/**", "authc, roles[admin]");
+
+    // logged in users with the 'document:read' permission
+    chainDefinition.addPathDefinition("/docs/**", "authc, perms[document:read]");
+
+    // all other paths require a logged in user
+    chainDefinition.addPathDefinition("/**", "authc");
+    return chainDefinition;
+}
+----
+
+If you are using Shiro's annotations see the link:#annotations_and_web_applications[annotation] section below.
+
+You can see a full example in our link:https://github.com/apache/shiro/tree/main/samples/spring-boot-web[samples on Github].
+
+=== Enabling Shiro Annotations
+
+In both standalone and web applications, you might want to use Shiro's Annotations for security checks (for example, `@RequiresRoles`, `@RequiresPermissions`, etc.) These annotations are enabled automatically in both starters listed above.
+
+Simply annotate your methods in order to use them:
+
+[source,java]
+----
+@RequiresPermissions("document:read")
+public void readDocument() {
+    ...
+}
+----
+
+=== Annotations and Web Applications
+
+Shiro annotations are fully supported for use in `@Controller` classes, for example:
+
+[source,java]
+----
+@Controller
+public class AccountInfoController {
+
+    @RequiresRoles("admin")
+    @RequestMapping("/admin/config")
+    public String adminConfig(Model model) {
+        return "view";
+    }
+}
+----
+
+A `ShiroFilterChainDefinition` bean with at least one definition is still required for this to work, either configure all paths to be accessable via the `anon` filter or a filter in 'permissive' mode, for example: `authcBasic[permissive]`.
+
+[source,java]
+----
+@Bean
+public ShiroFilterChainDefinition shiroFilterChainDefinition() {
+    DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
+    chainDefinition.addPathDefinition("/**", "anon"); // all paths are managed via annotations
+
+    // or allow basic authentication, but NOT require it.
+    // chainDefinition.addPathDefinition("/**", "authcBasic[permissive]");
+    return chainDefinition;
+}
+----
+
+=== Caching
+
+Enabling caching is as simple as providing a link:caching.html[CacheManager] bean:
+
+[source,java]
+----
+@Bean
+protected CacheManager cacheManager() {
+    return new MemoryConstrainedCacheManager();
+}
+----
+
+=== Configuration Properties
+
+[width="100%",cols="36%,24%,40%",options="header",]
+|===
+|Key |Default Value |Description
+
+|shiro.enabled
+|`true`
+|Enables Shiro’s Spring module
+
+|shiro.web.enabled
+|`true`
+|Enables Shiro’s Spring web module
+
+|shiro.annotations.enabled |`true` |Enables Spring support for Shiro’s annotations
+
+|shiro.sessionManager.deleteInvalidSessions |`true` |Remove invalid session from session storage
+
+|shiro.sessionManager.sessionIdCookieEnabled |`true` |Enable session ID to cookie, for session tracking
+
+|shiro.sessionManager.sessionIdUrlRewritingEnabled |`true` |Enable session URL rewriting support
+
+|shiro.userNativeSessionManager |`false` |If enabled Shiro will manage the HTTP sessions instead of the container
+
+|shiro.sessionManager.cookie.name |`JSESSIONID` |Session cookie name
+
+|shiro.sessionManager.cookie.maxAge |`-1` |Session cookie max age
+
+|shiro.sessionManager.cookie.domain |null |Session cookie domain
+
+|shiro.sessionManager.cookie.path |null |Session cookie path
+
+|shiro.sessionManager.cookie.secure |`false` |Session cookie secure flag
+
+|shiro.rememberMeManager.cookie.name |`rememberMe` |RememberMe cookie name
+
+|shiro.rememberMeManager.cookie.maxAge |one year |RememberMe cookie max age
+
+|shiro.rememberMeManager.cookie.domain |null |RememberMe cookie domain
+
+|shiro.rememberMeManager.cookie.path |null |RememberMe cookie path
+
+|shiro.rememberMeManager.cookie.secure |`false` |RememberMe cookie secure flag
+
+|shiro.loginUrl |`/login.jsp` |Login URL used when unauthenticated users are redirected to login page
+
+|shiro.successUrl |`/` |Default landing page after a user logs in (if alternative cannot be found in the current session)
+
+|shiro.unauthorizedUrl |null |Page to redirect user to if they are unauthorized (403 page)
+|===
+
+== Standalone Applications
+
+Include the Shiro Spring starter dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).
+
+++++
+<@dependencies anchorId="cli" deps=[{"g":"org.apache.shiro", "a":"shiro-spring-boot-starter", "v":"${latestRelease}"}] />
+++++
+
+The only thing that is left is to configure a link:realm.html[realm]:
+
+[source,java]
+----
+@Bean
+public Realm realm() {
+  ...
+}
+----
+
+The easiest way to setup Shiro, so that all SecurityUtils.* methods work in all cases, is to make the `SecurityManager` bean a static singleton.  DO NOT do this in web applications - see the link:#Spring-WebApplications[Web Applications] section below instead.
+
+[source,java]
+----
+@Autowired
+private SecurityManager securityManager;
+
+ @PostConstruct
+ private void initStaticSecurityManager() {
+     SecurityUtils.setSecurityManager(securityManager);
+ }
+----
+
+That is it, now you can get the current `Subject` using:
+
+[source,java]
+----
+SecurityUtils.getSubject();
+----
+
+You can see a full example in our link:https://github.com/apache/shiro/tree/main/samples/spring-boot[samples on Github].

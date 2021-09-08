@@ -1,16 +1,19 @@
-<a name="SpringXml-IntegratingApacheShirointoSpringbasedApplications"></a>
-#Integrating Apache Shiro into Spring-based Applications
+title=Integrating Apache Shiro into Spring-based Applications
+type=page
+tags=documentation, manual
+status=published
+~~~~~~
 
 This page covers the ways to integrate Shiro into [Spring](http://spring.io)-based applications.
 
 Shiro's JavaBeans compatibility makes it perfectly suited to be configured via Spring XML or other Spring-based configuration mechanisms. Shiro applications need an application singleton `SecurityManager` instance. Note that this does not have to be a _static_ singleton, but there should only be a single instance used by the application, whether its a static singleton or not.
 
-## <a name="SpringXml-StandaloneApplications"></a>Standalone Applications
+## Standalone Applications
 
 Here is the simplest way to enable an application singleton `SecurityManager` in Spring applications:
 
 
-``` xml
+```xml
 <!-- Define the realm you want to use to connect to your back-end security datasource: -->
 <bean id="myRealm" class="...">
     ...
@@ -32,7 +35,6 @@ Here is the simplest way to enable an application singleton `SecurityManager` in
 </bean>
 ```
 
-<a name="SpringXml-WebApplications"></a>
 ## Web Applications
 
 Shiro has first-rate support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a main Shiro Filter. This filter itself is extremely powerful, allowing for
@@ -45,12 +47,11 @@ Now in Shiro 1.0 and later, all Shiro configuration is done in Spring XML provid
 
 Here is how to configure Shiro in a Spring-based web application:
 
-<a name="SpringXml-web.xml"></a>
 ### web.xml
 
 In addition to your other Spring web.xml elements (`ContextLoaderListener`, `Log4jConfigListener`, etc), define the following filter and filter mapping:
 
-``` xml
+```xml
 <!-- The filter-name matches name of a 'shiroFilter' bean inside applicationContext.xml -->
 <filter>
     <filter-name>shiroFilter</filter-name>
@@ -74,12 +75,11 @@ In addition to your other Spring web.xml elements (`ContextLoaderListener`, `Log
 
 You can see a full example in our [samples on Github](https://github.com/apache/shiro/tree/main/samples/spring-xml).
 
-<a name="SpringXml-applicationContext.xml"></a>
-###applicationContext.xml
+### applicationContext.xml
 
 In your applicationContext.xml file, define the web-enabled `SecurityManager` and the 'shiroFilter' bean that will be referenced from `web.xml`.
 
-``` xml
+```xml
 <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
     <property name="securityManager" ref="securityManager"/>
     <!-- override these for application-specific URLs if you like:
@@ -129,14 +129,13 @@ In your applicationContext.xml file, define the web-enabled `SecurityManager` an
 </bean>
 ```
 
-<a name="SpringXml-EnablingShiroAnnotations"></a>
-##Enabling Shiro Annotations
+## Enabling Shiro Annotations
 
 In both standalone and web applications, you might want to use Shiro's Annotations for security checks (for example, `@RequiresRoles`, `@RequiresPermissions`, etc. This requires Shiro's Spring AOP integration to scan for the appropriate annotated classes and perform security logic as necessary.
 
 Here is how to enable these annotations. Just add these two bean definitions to `applicationContext.xml`:
 
-``` xml
+```xml
 <!-- Enable Shiro Annotations for Spring-configured beans.  Only run after -->
 <!-- the lifecycleBeanProcessor has run: -->
 <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>
@@ -145,17 +144,15 @@ Here is how to enable these annotations. Just add these two bean definitions to 
 </bean>
 ```
 
-<a name="SpringXml-SecureSpringRemoting"></a>
-##Secure Spring Remoting
+## Secure Spring Remoting
 
 There are two parts to Shiro's Spring remoting support: Configuration for the client making the remoting call and configuration for the server receiving and processing the remoting call.
 
-<a name="SpringXml-ServersideConfiguration"></a>
-###Server-side Configuration
+### Server-side Configuration
 
 When a remote method invocation comes in to a Shiro-enabled server, the [Subject](subject.html "Subject") associated with that RPC call must be bound to the receiving thread for access during the thread's execution. This is done by defining Shiro's `SecureRemoteInvocationExecutor` bean in `applicationContext.xml`:
 
-``` xml
+```xml
 <!-- Secure Spring remoting:  Ensure any Spring Remoting method invocations -->
 <!-- can be associated with a Subject for security checks. -->
 <bean id="secureRemoteInvocationExecutor" class="org.apache.shiro.spring.remoting.SecureRemoteInvocationExecutor">
@@ -167,7 +164,7 @@ Once you have defined this bean, you must plug it in to whatever remoting `Expor
 
 For example, if using HTTP-based remoting (notice the property reference to the `secureRemoteInvocationExecutor` bean):
 
-``` xml
+```xml
 <bean name="/someService" class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
     <property name="service" ref="someService"/>
     <property name="serviceInterface" value="com.pkg.service.SomeService"/>
@@ -175,12 +172,11 @@ For example, if using HTTP-based remoting (notice the property reference to the 
 </bean>
 ```
 
-<a name="SpringXml-ClientsideConfiguration"></a>
-###Client-side Configuration
+### Client-side Configuration
 
 When a remote call is being executed, the `Subject` identifying information must be attached to the remoting payload to let the server know who is making the call. If the client is a Spring-based client, that association is done via Shiro's `SecureRemoteInvocationFactory`:
 
-``` xml
+```xml
 <bean id="secureRemoteInvocationFactory" class="org.apache.shiro.spring.remoting.SecureRemoteInvocationFactory"/>
 ```
 
@@ -188,7 +184,7 @@ Then after you've defined this bean, you need to plug it in to the protocol-spec
 
 For example, if you were using HTTP-based remoting (notice the property reference to the `secureRemoteInvocationFactory` bean defined above):
 
-``` xml
+```xml
 <bean id="someService" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
     <property name="serviceUrl" value="http://host:port/remoting/someService"/>
     <property name="serviceInterface" value="com.pkg.service.SomeService"/>
@@ -196,10 +192,8 @@ For example, if you were using HTTP-based remoting (notice the property referenc
 </bean>
 ```
 
-<a name="SpringXml-Lendahandwithdocumentation"></a>
-##Lend a hand with documentation
+## Lend a hand with documentation
 
 While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time. If you'd like to help the Shiro project, please consider correcting, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro.
 
 The easiest way to contribute your documentation is to send it to the [User Forum](http://shiro-user.582556.n2.nabble.com/) or the [User Mailing List](mailing-lists.html "Mailing Lists").
-<input type="hidden" id="ghEditPage" value="spring-xml.md"></input>
