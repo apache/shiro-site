@@ -26,6 +26,19 @@
       aria-selected="false"
       >Gradle</button>
   </li>
+  <#-- sbt -->
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link"
+      id="sbt-${anchorId}-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#sbt-${anchorId}"
+      type="button"
+      role="tab"
+      aria-controls="sbt-${anchorId}"
+      aria-selected="false"
+    >SBT</button>
+  </li>
   <#-- ivy -->
   <li class="nav-item" role="presentation">
     <button
@@ -53,6 +66,8 @@
     >Leiningen</button>
   </li>
 </ul>
+
+<#-- tab contents -->
 <div class="tab-content" id="dependency-${anchorId}-tab-content">
   <div
     class="tab-pane fade show active"
@@ -75,6 +90,17 @@
     aria-labelledby="gradle-${anchorId}-tab"
     >
     <pre><code class='groovy language-groovy'><#list deps as dep>compile '${dep.g}:${dep.a}:${dep.v}'
+</#list></code></pre>
+  </div>
+  <#-- sbt -->
+
+  <div
+    class="tab-pane fade"
+    id="sbt-${anchorId}"
+    role="tabpanel"
+    aria-labelledby="sbt-${anchorId}-tab"
+  >
+    <pre><code class='scala language-scala'><#list deps as dep>libraryDependencies += "${dep.g}" % "${dep.a}" % "${dep.v}"
 </#list></code></pre>
   </div>
   <#-- ivy -->
