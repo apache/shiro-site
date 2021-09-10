@@ -17,7 +17,7 @@
     * [Articles](articles.html)
     * [API](http://shiro.apache.org/static/current/apidocs)
 
-* [Contribute](contribute.html)
+* [Contribute](how-to-contribute.html)
 
     * [How to Contribute](how-to-contribute.html)
     * [Donate to ASF](http://www.apache.org/foundation/sponsorship.html)
