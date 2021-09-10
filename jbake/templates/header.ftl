@@ -17,6 +17,7 @@
 -->
 <#include "macros/versions.ftl">
 <#include "macros/dependencies.ftl">
+<#include "macros/lend-a-hand.ftl">
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
