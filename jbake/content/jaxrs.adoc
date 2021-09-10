@@ -1,0 +1,111 @@
+= Apache Shiro JAX-RS Support
+:jbake-type: page
+:jbake-status: published
+:jbake-tags: documentation, jax-rs, integrations, web
+:idprefix:
+:icons: font
+
+Apache Shiro's JAX-RS support is built on top of the more general link:web.html[Servlet] support, and requires Shiro's Servlet Filter to be setup. The Servlet Filter can be setup by using Shiro's Servlet fragment, `web.xml` configuration, or programmatically.
+
+== Dependencies
+
+Include the `shiro-servlet-plugin` and `shiro-jaxrs` dependencies in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).
+
+++++
+<@dependencies anchorId="cli" deps=[{'g':'org.apache.shiro', 'a':'shiro-servlet-plugin', "v":"${latestRelease}"},{"g":'org.apache.shiro', "a":'shiro-jaxrs', "v":'${latestRelease}'}] />
+++++
+
+
+For information on other ways to set up the Apache Shiro Filter see the link:web.html[web documentation].
+
+== Configuration
+
+There are two basic approaches used to define the authentication and authorization for your JAX-RS resources: paths defined statically in configuration, or via annotations on your resource.
+
+If you are using link:guice.html[Guice] or link:spring.html[Spring] see those docs on how to configure Shiro.
+
+=== Paths defined in `shiro.ini`
+
+Just like any other web application, your resources paths can be defined in a `shiro.ini` file. For example, to require resources under `/api/secured` to use basic authentication, your `[urls]` section would look like:
+
+[source,ini]
+----
+[urls]
+
+/api/secured/** = authcBaic
+
+----
+
+See the link:web.html[web documentation] for more details.
+
+The other, probably more popular, option is to use Shiro's link:java-annotations-list.html[annotations] along side other JAX-RS annotations on your resources. However you *MUST* still define at least one path in your `shiro.ini` file.
+
+The below code block will allow for basic authentication but NOT require it (via the `permissive` flag). This way all of the resources under `/api` can optional require authentication and authorization based on annotations.
+
+[source,ini]
+----
+[urls]
+
+/api/** = authcBaic[permissive]
+
+----
+
+== Example
+
+To create a simple example we can define a JAX-RS resource `HelloShiro`:
+
+[source,java]
+----
+@Path("/shiro")
+public class HelloShiro {
+
+  @GET
+  @RequiresUser
+  public String sayHelloShiro() {
+      return "Hello!";
+  }
+  
+  @GET
+  @Path("define")
+  @RequiresPermissions("hello:define")
+  public String defineShiro() {
+      return  "Shiro is the Japanese term for a castle";
+  }
+}
+----
+
+This resource has two end points, the first allows access by any logged in user, the second any user with the link:permissions.html[permission] `hello:define`.
+
+The corresponding JAX-RS Application class:
+
+[source,java]
+----
+@ApplicationPath("/api")
+public class ExampleApp extends Application {
+
+@Override
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> classes = new HashSet<>();
+
+        // register the Shiro Feature
+        classes.add(ShiroFeature.class);
+
+        // register resources:
+        classes.add(HelloShiro.class);
+
+        return classes;
+    }
+}
+----
+
+The `ShiroFeature` does three things:
+
+* configures exception mapping from Shiro's `AuthorizationException` to HTTP status codes (401 and 403)
+* exposes Shiro's `Subject` as a `java.security.Principal`
+* Configures processing of Shiro's annotations
+
+In the above example, requests to either `/api/shiro` or `/api/shiro/define` will return an HTTP status of `401` if a user is not currently logged in. A request to `/api/shiro/define` made by a user without the `hello:define` will return a `403`.
+
+== Want to see more?
+
+You can find portable JAX-RS application that runs with https://jersey.java.net/[Jersey], http://resteasy.jboss.org/[RestEasy] or https://cxf.apache.org[Apache CXF] in the https://github.com/apache/shiro/tree/main/samples[samples] directory on Github.

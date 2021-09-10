@@ -36,7 +36,7 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>spring-boot.html">Spring</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>guice.html">Guice</a></li>
-                <li class="divider"></li>
+                <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>integration.html">Third-Party Integrations</a></li>
               </ul>
             </li>
@@ -52,7 +52,7 @@
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>articles.html">Articles</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>news.html">News</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>events.html">Events</a></li>
-                <li class="divider"></li>
+                <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>community.html">More</a></li>
               </ul>
             </li>
