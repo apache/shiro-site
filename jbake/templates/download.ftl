@@ -2,7 +2,7 @@
 
 <#include "menu.ftl">
 
-<#include "macros/artifacttable.ftl">
+<#import "macros/artifacttable.ftl" as artifacttable>
 
 <#if (content.title)??>
   <div class="page-header">
@@ -16,13 +16,13 @@
 <#if ((content.releases).versions)??>
     <#assign displayReleases=((content.releases).versions)![] />
 <#else>
-    <#assign displayReleases=oldReleases />
+    <#assign displayReleases=versions.oldReleases />
 </#if>
 
 <p>
   <ul>
   <#list displayReleases as version>
-    <#assign release=releases[version] />
+    <#assign release=versions.releases[version] />
     <li><a href="#${release.version?replace(".", "")}">Apache Shiro Release v${release.version}</a></li>
     <ul>
       <li><a href="#${release.version?replace(".", "")}Binary">${release.version} Binary Distribution</a></li>
@@ -36,7 +36,7 @@
 
 
 <#list displayReleases as version>
-  <#assign release=releases[version] />
+  <#assign release=versions.releases[version] />
   <h2>Release ${release.version}</h2>
 
   <h4><a id="#${release.version?replace(".", "")}Binary"></a>${release.version} Binary Distribution</h4>
@@ -50,7 +50,7 @@
   <p>
   </p>
 
-  <@artifactTable versionObject=release />
+  <@artifacttable.artifactTable versionObject=release />
 
   <h4><a id=""#${release.version?replace(".", "")}Source"></a>${release.version} Source Code Distribution</h4>
 

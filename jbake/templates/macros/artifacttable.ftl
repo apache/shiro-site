@@ -12,7 +12,7 @@
   <tbody>
   <#list versionObject.artifacts as artifactName>
   <#-- releases.yaml contains the artifactObject's names. We can just resolve them using eval. -->
-  <#assign artifact=artifacts[artifactName]>
+  <#assign artifact=versions.artifacts[artifactName]>
   <tr>
     <#assign classifier=artifact.c!"">
     <#assign group=artifact.g?replace('.', '/') >

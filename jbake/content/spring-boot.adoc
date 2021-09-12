@@ -14,7 +14,7 @@ Shiro has first-class support for Spring web applications. In a web application,
 First include the Shiro Spring web starter dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).
 
 ++++
-<@dependencies anchorId="web" deps=[{"g":"org.apache.shiro", "a":"shiro-spring-boot-web-starter", "v":"${latestRelease}"}] />
+<@dependencies.dependencies anchorId="web" deps=[{"g":"org.apache.shiro", "a":"shiro-spring-boot-web-starter", "v":"${versions.latestRelease}"}] />
 ++++
 
 Provide a Realm implementation:
@@ -164,7 +164,7 @@ protected CacheManager cacheManager() {
 Include the Shiro Spring starter dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).
 
 ++++
-<@dependencies anchorId="cli" deps=[{"g":"org.apache.shiro", "a":"shiro-spring-boot-starter", "v":"${latestRelease}"}] />
+<@dependencies.dependencies anchorId="cli" deps=[{"g":"org.apache.shiro", "a":"shiro-spring-boot-starter", "v":"${versions.latestRelease}"}] />
 ++++
 
 The only thing that is left is to configure a link:realm.html[realm]:

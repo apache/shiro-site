@@ -15,9 +15,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<#include "macros/versions.ftl">
-<#include "macros/dependencies.ftl">
-<#include "macros/lend-a-hand.ftl">
+<#import "macros/versions.ftl" as versions>
+<#import "macros/dependencies.ftl" as dependencies>
+<#import "macros/lend-a-hand.ftl" as lendahand>
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
