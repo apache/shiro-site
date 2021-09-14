@@ -120,7 +120,7 @@
           <#if (post.status == "published")>
           <div>
             <a href="${post.uri}"><small><h4>${post.title}</h4></small></a>
-            <p><small>by ${post.author  } on ${post.date?string("yyyy-MM-dd")}</small></p>
+            <p><small>by ${(post.author)!"The Apache Shiro Team"} on ${post.date?string("yyyy-MM-dd")}</small></p>
           </div>
           </#if>
         </#list>
