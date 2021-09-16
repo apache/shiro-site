@@ -1,7 +1,5 @@
 <#include "header.ftl">
 
-<#include "menu.ftl">
-
 <div class="row">
 
   <div class="col-md-9 col-md-pull-3">
@@ -26,8 +24,10 @@
 
       <div class="col-md-6 col-sm-6 col-padded-top col-center">
         <div style="width: 100%; max-width: 272px; display: inline-block; text-align: center; margin-left: 50px; padding-bottom: 15px;">
-          <iframe frameborder="0" scrolling="auto" width="310" height="233"
-                  src="https://www.youtube.com/embed/YJByiDvOhsc?rel=0" allowfullscreen="true"></iframe>
+          <iframe width="310" height="233"
+                  src="https://www.youtube.com/embed/YJByiDvOhsc?rel=0"
+                  allowfullscreen>
+          </iframe>
         </div>
       </div>
     </div>
@@ -119,7 +119,7 @@
         <#list posts as post>
         <#if (post.status == "published"  && post?index >= (currentPageNumber-1) * config.index_posts_per_page?eval && post?index < currentPageNumber * config.index_posts_per_page?eval)>
           <div>
-            <a href="${post.uri}"><small><h4>${post.title}</h4></small></a>
+            <a href="${post.uri}"><small>${post.title}</small></a>
             <p><small>by ${(post.author)!"The Apache Shiro Team"} on ${post.date?string("yyyy-MM-dd")}</small></p>
           </div>
         </#if>
@@ -157,11 +157,11 @@
             <p><small>Learn how Shiro securely verifies identities.</small></p>
           </div>
           <div>
-            <a href="java-authorization-guide.html">Java Authorization Guide</a></h3>
+            <h3><a href="java-authorization-guide.html">Java Authorization Guide</a></h3>
             <p>Learn how Shiro handles permissions, roles and users.</p>
           </div>
           <div>
-            <a href="webapp-tutorial.html">Web App Tutorial</a></h3>
+            <h3><a href="webapp-tutorial.html">Web App Tutorial</a></h3>
             <p>Step-by-step tutorial for securing a web application with Apache Shiro.</p>
           </div>
           <div>
@@ -171,9 +171,11 @@
         </div>
       </div>
     </div>
+    </div>
   </div>
-
-
 </div>
+<div id="push"></div>
 
+
+<!-- before footer -->
 <#include "footer.ftl">

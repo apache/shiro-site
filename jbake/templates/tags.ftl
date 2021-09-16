@@ -1,6 +1,4 @@
 <#include "header.ftl">
-
-	<#include "menu.ftl">
 	
 	<div class="page-header">
 		<h1>Tag: ${tag}</h1>

@@ -61,14 +61,16 @@
     <div id="top-bar"></div>
     <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
 
-    <div id="wrap">
+    <div id="wrap"><#-- closed in footer -->
 
       <div class="masthead">
         <p class="lead">
-          <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>index.html"><img src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>img/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;"></a>
+          <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>index.html"><img src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>img/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
           <span class="tagline">Simple. Java. Security.</span>
           <a class="pull-right" href="https://www.apache.org/events/current-event.html">
-            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png"/>
+            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
           </a>
         </p>
       </div>
+
+<#include "menu.ftl">

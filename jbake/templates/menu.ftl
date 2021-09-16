@@ -1,5 +1,5 @@
 	<!-- Fixed navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -15,10 +15,10 @@
             </li>
 
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-webapps" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Web Apps
               </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>web.html">General</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>jaxrs.html">JAX-RS</a></li>
                 <li><hr class="dropdown-divider"></li>
@@ -30,10 +30,10 @@
 
             <!-- integrations -->
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-integrations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Integrations
               </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>spring-boot.html">Spring</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>guice.html">Guice</a></li>
                 <li><hr class="dropdown-divider"></li>
@@ -43,10 +43,10 @@
 
             <!-- Community -->
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-community" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Community
               </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>forums.html">Community Forums</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>mailing-lists.html">Mailing Lists</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>articles.html">Articles</a></li>
@@ -59,10 +59,10 @@
 
             <!-- About -->
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-about" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 About
               </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>about.html">About</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>security-reports.html">Vulnerability Reports</a></li>
               </ul>
@@ -72,10 +72,10 @@
           <ul class="d-flex justify-content-end navbar-nav mb-2 mb-lg-0">
             <!-- The ASF -->
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-asf" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Apache Software Foundation
               </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
                 <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
                 <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
                 <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
@@ -93,5 +93,3 @@
         </div>
       </div>
     </nav>
-    <div class="container">
-
