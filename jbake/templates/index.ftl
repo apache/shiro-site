@@ -110,9 +110,9 @@
         </a>
       </div>
 
-      <div class="panel panel-primary">
-        <div class=" panel-heading" style="text-align: center;">
-          <h3>Latest news:</h3>
+      <div class="card border-primary mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white" style="text-align: center;">
+          <h3 class="card-title">Latest news:</h3>
         </div>
 
         <div class="card-body">
@@ -125,31 +125,24 @@
         </#if>
         </#list>
           <hr/>
-          <nav aria-label="News Pagination">
-            <ul class="pagination">
+          <div class="btn-group d-flex justify-content-center" role="group" aria-label="News Pagination">
               <#if (currentPageNumber > 1)>
-              <li class="page-item"><a class="page-link" href="<#if (content.rootpath)??>${content.rootpath}</#if>/${(currentPageNumber==2)?then('', currentPageNumber-1)}">Previous</a></li>
+                <a class="btn btn-outline-primary" href="<#if (content.rootpath)??>${content.rootpath}</#if>/${(currentPageNumber==2)?then('', currentPageNumber-1)}">Previous</a>
               </#if>
               <#if (currentPageNumber > 1 && currentPageNumber != numberOfPages)>
-              <li class="page-item"><a class="page-link" href="${currentPageNumber}">${currentPageNumber}</a></li>
+                <a class="btn btn-outline-primary " href="${currentPageNumber}">${currentPageNumber}</a>
               </#if>
               <#if (currentPageNumber < numberOfPages)>
-              <li class="page-item"><a class="page-link" href="<#if (content.rootpath)??>${content.rootpath}</#if>${currentPageNumber + 1}">Next</a></li>
+                <a class="btn btn-outline-primary" href="<#if (content.rootpath)??>${content.rootpath}</#if>${currentPageNumber + 1}">Next</a>
               </#if>
-              <li class="page-item"><a class="page-link" href="${content.rootpath}${config.archive_file}">archive</a></li>
-            </ul>
-            <#--
-            <div class="container-fluid col-md1 justify-content-center">
-              Page: ${currentPageNumber}/${numberOfPages}
+              <a class="btn btn-outline-primary" href="${content.rootpath}${config.archive_file}">Archive</a>
             </div>
-            -->
-          </nav>
-      </div>
-
-      <div class="panel panel-primary">
-        <div class="panel-heading" style="text-align: center;">
-          <h3>Popular Guides:</h3>
         </div>
+    </div>
+    <div class="card border-primary mb-4 shadow-sm">
+      <div class="card-header bg-primary text-white" style="text-align: center;">
+        <h3 class="card-title">Popular Guides:</h3>
+      </div>
 
         <div class="card-body">
           <div>
@@ -157,20 +150,19 @@
             <p><small>Learn how Shiro securely verifies identities.</small></p>
           </div>
           <div>
-            <h3><a href="java-authorization-guide.html">Java Authorization Guide</a></h3>
-            <p>Learn how Shiro handles permissions, roles and users.</p>
+            <a href="java-authorization-guide.html">Java Authorization Guide</a>
+            <p><small>Learn how Shiro handles permissions, roles and users.</small></p>
           </div>
           <div>
-            <h3><a href="webapp-tutorial.html">Web App Tutorial</a></h3>
-            <p>Step-by-step tutorial for securing a web application with Apache Shiro.</p>
+            <a href="webapp-tutorial.html">Web App Tutorial</a>
+            <p><small>Step-by-step tutorial for securing a web application with Apache Shiro.</small></p>
           </div>
           <div>
             <a href="https://www.infoq.com/minibooks/apache-shiro-ee-7">Apache Shiro Mini Book</a>
-            <p>A free InfoQ mini-book by <small><a href="https://twitter.com/nebrasslamouchi">Nebrass Lamouchi</a></small></p>
+            <p><small>A free InfoQ mini-book by<br/><a href="https://twitter.com/nebrasslamouchi">Nebrass Lamouchi</a></small></p>
           </div>
         </div>
       </div>
-    </div>
     </div>
   </div>
 </div>
