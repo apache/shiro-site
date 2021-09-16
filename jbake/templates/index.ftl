@@ -117,13 +117,33 @@
 
         <div class="panel-body">
         <#list posts as post>
-          <#if (post.status == "published")>
+        <#if (post.status == "published"  && post?index >= (currentPageNumber-1) * config.index_posts_per_page?eval && post?index < currentPageNumber * config.index_posts_per_page?eval)>
           <div>
             <a href="${post.uri}"><small><h4>${post.title}</h4></small></a>
             <p><small>by ${(post.author)!"The Apache Shiro Team"} on ${post.date?string("yyyy-MM-dd")}</small></p>
           </div>
-          </#if>
+        </#if>
         </#list>
+          <hr/>
+          <nav aria-label="News Pagination">
+            <ul class="pagination">
+              <#if (currentPageNumber > 1)>
+              <li class="page-item"><a class="page-link" href="<#if (content.rootpath)??>${content.rootpath}</#if>/${(currentPageNumber==2)?then('', currentPageNumber-1)}">Previous</a></li>
+              </#if>
+              <#if (currentPageNumber > 1 && currentPageNumber != numberOfPages)>
+              <li class="page-item"><a class="page-link" href="${currentPageNumber}">${currentPageNumber}</a></li>
+              </#if>
+              <#if (currentPageNumber < numberOfPages)>
+              <li class="page-item"><a class="page-link" href="<#if (content.rootpath)??>${content.rootpath}</#if>${currentPageNumber + 1}">Next</a></li>
+              </#if>
+              <li class="page-item"><a class="page-link" href="${content.rootpath}${config.archive_file}">archive</a></li>
+            </ul>
+            <#--
+            <div class="container-fluid col-md1 justify-content-center">
+              Page: ${currentPageNumber}/${numberOfPages}
+            </div>
+            -->
+          </nav>
       </div>
 
       <div class="panel panel-primary">
