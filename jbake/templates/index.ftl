@@ -4,7 +4,7 @@
 
   <div class="col-md-9 col-md-pull-3">
 
-    <div class="jumbotron">
+    <div class="p-5 bg-light rounded-3 mb-4 shadow-sm">
       <b>Apache Shiro&trade;</b> is a powerful and easy-to-use Java security framework that performs authentication,
       authorization, cryptography, and session management. With Shiro&#8217;s easy-to-understand API, you can
       quickly and easily secure any application &#8211; from the smallest mobile applications to the largest web
