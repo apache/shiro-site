@@ -6,8 +6,6 @@
 	</div>
 	<#else></#if>
 
-	<p><em>${content.date?string("dd MMMM yyyy")}</em></p>
-
 	<@content.body?interpret />
 
 	<hr />
