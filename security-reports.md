@@ -25,6 +25,9 @@ A [more detailed description of the process](http://www.apache.org/security/comm
 Apache Shiro Vulnerability Reports
 ----------------------------------
 
+###[CVE-2021-41303](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-41303)
+Apache Shiro before 1.8.0, when using Apache Shiro with Spring Boot, a specially crafted HTTP request may cause an authentication bypass.
+
 ###[CVE-2020-17523](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-17523)
 Apache Shiro before 1.7.1, when using Apache Shiro with Spring, a specially crafted HTTP request may cause an authentication bypass.
 
