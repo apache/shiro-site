@@ -119,24 +119,27 @@
         <#list posts as post>
         <#if (post.status == "published"  && post?index >= (currentPageNumber-1) * config.index_posts_per_page?eval && post?index < currentPageNumber * config.index_posts_per_page?eval)>
           <div>
-            <a href="${post.uri}"><small>${post.title}</small></a>
+            <a href="${post.uri}"><h4 class="news-title">${post.title}</h4></a>
             <p><small>by ${(post.author)!"The Apache Shiro Team"} on ${post.date?string("yyyy-MM-dd")}</small></p>
           </div>
         </#if>
         </#list>
           <hr/>
-          <div class="btn-group d-flex justify-content-center" role="group" aria-label="News Pagination">
+
+          <nav class="" aria-label="News Pagination">
+            <ul class="pagination justify-content-center">
               <#if (currentPageNumber > 1)>
-                <a class="btn btn-outline-primary" href="<#if (content.rootpath)??>${content.rootpath}</#if>/${(currentPageNumber==2)?then('', currentPageNumber-1)}">Previous</a>
+              <li class="page-item"><a class="page-link" href="<#if (content.rootpath)??>${content.rootpath}</#if>/${(currentPageNumber==2)?then('', currentPageNumber-1)}">Previous</a></li>
               </#if>
               <#if (currentPageNumber > 1 && currentPageNumber != numberOfPages)>
-                <a class="btn btn-outline-primary " href="${currentPageNumber}">${currentPageNumber}</a>
+              <li class="page-item"><a class="page-link" href="${currentPageNumber}">${currentPageNumber}</a></li>
               </#if>
               <#if (currentPageNumber < numberOfPages)>
-                <a class="btn btn-outline-primary" href="<#if (content.rootpath)??>${content.rootpath}</#if>${currentPageNumber + 1}">Next</a>
+              <li class="page-item"><a class="page-link" href="<#if (content.rootpath)??>${content.rootpath}</#if>${currentPageNumber + 1}">Next</a></li>
               </#if>
-              <a class="btn btn-outline-primary" href="${content.rootpath}${config.archive_file}">Archive</a>
-            </div>
+              <li class="page-item"><a class="page-link" href="${content.rootpath}${config.archive_file}">Archive</a></li>
+            </ul>
+          </nav>
         </div>
     </div>
     <div class="card border-primary mb-4 shadow-sm">
@@ -146,19 +149,19 @@
 
         <div class="card-body">
           <div>
-            <a href="java-authentication-guide.html">Java Authentication Guide</a>
+            <a href="java-authentication-guide.html"><h4 class="popular-guides">Java Authentication Guide</h4></a>
             <p><small>Learn how Shiro securely verifies identities.</small></p>
           </div>
           <div>
-            <a href="java-authorization-guide.html">Java Authorization Guide</a>
+            <a href="java-authorization-guide.html"><h4 class="popular-guides">Java Authorization Guide</h4></a>
             <p><small>Learn how Shiro handles permissions, roles and users.</small></p>
           </div>
           <div>
-            <a href="webapp-tutorial.html">Web App Tutorial</a>
+            <a href="webapp-tutorial.html"><h4 class="popular-guides">Web App Tutorial</h4></a>
             <p><small>Step-by-step tutorial for securing a web application with Apache Shiro.</small></p>
           </div>
           <div>
-            <a href="https://www.infoq.com/minibooks/apache-shiro-ee-7">Apache Shiro Mini Book</a>
+            <a href="https://www.infoq.com/minibooks/apache-shiro-ee-7"><h4 class="popular-guides">Apache Shiro Mini Book</h4></a>
             <p><small>A free InfoQ mini-book by<br/><a href="https://twitter.com/nebrasslamouchi">Nebrass Lamouchi</a></small></p>
           </div>
         </div>
