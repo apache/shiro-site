@@ -1,6 +1,4 @@
-		</div>
-        <div id="push"></div>
-    </div>
+</div> <#-- end 'wrap' from header -->
 
     <div class="footer-padding"></div>
 
@@ -21,7 +19,7 @@
         </div>
 
         <div class="d-flex justify-content-end col-md-4" id="editThisPage">
-          <#if (content.file)??><input type="hidden" id="ghEditPage" value="${content.sourceuri}"></input></#if>
+          <#if (content.file)??><input type="hidden" id="ghEditPage" value="${content.sourceuri}"/></#if>
         </div>
 
         <div class="d-flex col-md-2 justify-content-end" style="position: relative">
@@ -38,7 +36,7 @@
     <script src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>highlight.js-11.2.0/highlight.min.js"></script>
     <script src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>js/shiro.js"></script>
 
-    <script type="text/javascript">
+    <script>
         docReady(
           addPageEditLink()
       );

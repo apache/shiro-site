@@ -1,6 +1,4 @@
 <#include "header.ftl">
-	
-	<#include "menu.ftl">
 
 	<#if (content.title)??>
 	<div class="page-header">
@@ -10,7 +8,7 @@
 
 	<p><em>${content.date?string("dd MMMM yyyy")}</em></p>
 
-	<p>${content.body}</p>
+	${content.body}
 
 	<hr />
 	

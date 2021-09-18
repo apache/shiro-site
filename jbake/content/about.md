@@ -4,7 +4,7 @@ tags=documentation, about
 status=published
 ~~~~~~
 
-Apache Shiro is is a top level open source project under the [Apache Software Foundation](https://www.apache.org). 
+Apache Shiro is a top level open source project under the [Apache Software Foundation](https://www.apache.org). 
 As a project, Shiro is an application security framework that provides application developers very clean and simple ways of supporting four cornerstones of security in their applications: authentication, authorization, enterprise session management and cryptography.
 
 If you'd like to learn more about Shiro please visit the links below
