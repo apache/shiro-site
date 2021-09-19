@@ -129,13 +129,15 @@
           <nav class="" aria-label="News Pagination">
             <ul class="pagination justify-content-center">
               <#if (currentPageNumber > 1)>
-              <li class="page-item"><a class="page-link" href="<#if (content.rootpath)??>${content.rootpath}</#if>/${(currentPageNumber==2)?then('', currentPageNumber-1)}">Previous</a></li>
+              <li class="page-item"><a class="page-link" rel="prev" href="<#if (content.rootpath)??>${content.rootpath}</#if>${(currentPageNumber==2)?then('', currentPageNumber-1)}">Previous</a></li>
+              <#else>
+              <li class="page-item disabled" aria-disabled="true" disabled><a class="page-link" rel="prev" href="#">Previous</a></li>
               </#if>
-              <#if (currentPageNumber > 1 && currentPageNumber != numberOfPages)>
-              <li class="page-item"><a class="page-link" href="${currentPageNumber}">${currentPageNumber}</a></li>
-              </#if>
+              <li class="page-item"><a class="page-link" rel="self" href="<#if (content.rootpath)??>${content.rootpath}</#if>${currentPageNumber}">${currentPageNumber}</a></li>
               <#if (currentPageNumber < numberOfPages)>
-              <li class="page-item"><a class="page-link" href="<#if (content.rootpath)??>${content.rootpath}</#if>${currentPageNumber + 1}">Next</a></li>
+              <li class="page-item"><a class="page-link" rel="next" href="<#if (content.rootpath)??>${content.rootpath}</#if>${currentPageNumber + 1}">Next</a></li>
+              <#else>
+              <li class="page-item disabled" aria-disabled="true" disabled><a class="page-link" rel="prev" href="#">Next</a></li>
               </#if>
               <li class="page-item"><a class="page-link" href="${content.rootpath}${config.archive_file}">Archive</a></li>
             </ul>
