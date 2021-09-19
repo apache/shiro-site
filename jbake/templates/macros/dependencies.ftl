@@ -65,6 +65,19 @@
       aria-selected="false"
     >Leiningen</button>
   </li>
+  <#-- Buildr -->
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link"
+      id="buildr-${anchorId}-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#buildr-${anchorId}"
+      type="button"
+      role="tab"
+      aria-controls="buildr-${anchorId}"
+      aria-selected="false"
+    >Buildr</button>
+  </li>
 </ul>
 
 <#-- tab contents -->
@@ -93,7 +106,6 @@
 </#list></code></pre>
   </div>
   <#-- sbt -->
-
   <div
     class="tab-pane fade"
     id="sbt-${anchorId}"
@@ -121,6 +133,16 @@
     aria-labelledby="leiningen-${anchorId}-tab"
     >
     <pre><code class='clojure language-clojure'><#list deps as dep>[${dep.g}/${dep.a} "${dep.v}"]
+</#list></code></pre>
+  </div>
+  <#-- Buildr -->
+  <div
+    class="tab-pane fade"
+    id="buildr-${anchorId}"
+    role="tabpanel"
+    aria-labelledby="buildr-${anchorId}-tab"
+  >
+    <pre><code class='groovy language-groovy'><#list deps as dep>'${dep.g}:${dep.a}:${(dep.type)!"jar"}:${dep.v}'
 </#list></code></pre>
   </div>
 </div>
