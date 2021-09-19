@@ -1,7 +1,5 @@
 <#include "header.ftl">
 
-<#include "menu.ftl">
-
 <#import "macros/artifacttable.ftl" as artifacttable>
 
 <#if (content.title)??>
