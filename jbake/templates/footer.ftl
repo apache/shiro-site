@@ -2,10 +2,10 @@
 
     <div class="footer-padding"></div>
 
-    <div class="container-fluid" id="custom-footer">
-      <footer class="row justify-content-between align-items-center border-top">
+    <div class="container-fluid pt-2 border-top" id="custom-footer">
+      <footer class="row justify-content-between align-items-center">
         <div class=" col-md-5">
-          <div class="copyright-footer d-flex flex-wrap justify-content-start">
+          <div class="copyright-footer justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
             <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
             <p class="text-muted">Copyright &copy; 2008-${.now?string('yyyy')} The Apache Software Foundation</p>
