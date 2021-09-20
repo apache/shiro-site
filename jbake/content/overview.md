@@ -1,8 +1,11 @@
-<a name="Overview-OverviewofApacheShiro"></a>
-#Overview of Apache Shiro
+title=Overview of Apache Shiro
+type=page
+tags=documentation, manual
+status=published
+~~~~~~
 
 <a name="Overview-Introduction"></a>
-##Introduction
+## Introduction
 
 Apache Shiro is a powerful and flexible open-source security framework that cleanly handles authentication, authorization, enterprise session management and cryptography.
 
@@ -25,11 +28,11 @@ and much more - all integrated into a cohesive easy-to-use API.
 Shiro attempts to achieve these goals for all application environments - from the simplest command line application to the largest enterprise applications, without forcing dependencies on other 3rd party frameworks, containers, or application servers. Of course the project aims to integrate into these environments wherever possible, but it could be used out-of-the-box in any environment.
 
 <a name="Overview-Features"></a>
-##Features
+## Features
 
 Apache Shiro is a comprehensive application security framework with many features. The following diagram shows where Shiro focuses its energy, and this reference manual will be organized similarly:
 
-<img src="assets/images/ShiroFeatures.png" style="margin:0px auto;display:block"></img>
+<img src="/img/ShiroFeatures.png" style="margin:0px auto;display:block"></img>
 
 Shiro targets what the Shiro development team calls "the four cornerstones of application security" - Authentication, Authorization, Session Management, and Cryptography:
 
@@ -51,7 +54,7 @@ There are also additional features to support and reinforce these concerns in di
 *   "Remember Me": Remember users' identities across sessions so they only need to log in when mandatory.
 
 <a name="Overview-AFirstLookatApacheShiro"></a>
-##A First Look at Apache Shiro
+## A First Look at Apache Shiro
 
 Apache Shiro's design goals are to simplify application security by being intuitive and easy to use. Shiro's core design models how most people think about application security - in the context of someone (or something) interacting with an application.
 
@@ -62,14 +65,14 @@ This example statement indicates that applications are largely written to satisf
 Shiro largely reflects these concepts in its own design. By matching what is already intuitive for software developers, Apache Shiro remains intuitive and easy to use in practically any application.
 
 <a name="Overview-BasicDesign"></a>
-###Basic Design
+### Bsic Design
 
 Shiro's architecture has 3 primary concepts: the `Subject`, `SecurityManager` and `Realm` s. The following diagram is a high-level overview of how these concepts interact, and we'll cover each concept below:
 
-<img src="assets/images/ShiroBasicArchitecture.png" style="margin:0px auto;display:block"></img>
+<img src="/img/ShiroBasicArchitecture.png" style="margin:0px auto;display:block"></img>
 
 <a name="Overview-Subject"></a>
-####Subject
+#### Subject
 
 The `Subject` is essentially a security specific 'view' of the the currently executing user. Notice that it is not actually named _User_ however. The name _Subject_ was chosen for two reasons:
 
@@ -88,7 +91,7 @@ Subject currentUser = SecurityUtils.getSubject();
 Once you have a `Subject` instance, you immediately have access to 90% of everything you would ever need to do to perform security for that Subject, such as login and logout, perform role and permission checks, access their session, and more - but more about this later. The most important thing to know is that the `Subject` is your 'security-specific view' of an application 'user' and that you can essentially access this anywhere in application code to perform whatever security operations you need.
 
 <a name="Overview-TheSecurityManager"></a>
-####The SecurityManager
+#### The SecurityManager
 
 While application developers almost exclusively interact with `Subject` instances in their code, Subjects have a 'behind the scenes' counterpart that makes them work - the Shiro `SecurityManager` (note this is _not_ the same thing as the `java.lang.SecurityManager`).
 
@@ -99,7 +102,7 @@ The `SecurityManager` is the heart of Shiro’s architecture and acts as a sort 
 We will talk about the `SecurityManager` in detail later on, but it is important to realize that when you interact with a `Subject`, it is really the `SecurityManager` behind the scenes that does all the heavy lifting for any `Subject` security operation. This is reflected in the basic flow diagram above.
 
 <a name="Overview-Realms"></a>
-####Realms
+#### Realms
 
 The third and final core concept in Shiro is that of a Realm. A Realm acts as the ‘bridge’ or ‘connector’ between Shiro and your application’s security data. That is, when it comes time to actually interact with security-related data like user accounts to perform authentication (login) and authorization (access control), Shiro looks up many of these things from one or more Realms configured for an application.
 
@@ -108,4 +111,3 @@ In this sense a Realm is essentially a security-specific [DAO](https://en.wikipe
 Shiro provides out-of-the-box Realms to connect to a number of security data sources (aka directories) such as LDAP, relational databases (JDBC), text configuration sources like INI and properties files, and more. You can plug-in your own Realm implementations to represent custom data sources if the default Realms do not meet your needs.
 
 Like other internal components, the Shiro `SecurityManager` manages how Realms are used to acquire security data and then represented as `Subject` instances.
-<input type="hidden" id="ghEditPage" value="overview.md"></input>

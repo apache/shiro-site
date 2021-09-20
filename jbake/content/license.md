@@ -1,5 +1,8 @@
-<a name="License-TheApacheSoftwareLicense%2CVersion2.0"></a>
-#The Apache Software License, Version 2.0
+title=Apache License, Version 2.0
+type=page
+tags=documentation, manual
+status=published
+~~~~~~
 
 ``` nohighlight
                                 Apache License

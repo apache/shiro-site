@@ -1,5 +1,8 @@
-<a name="JavaAnnotationsList-JavaAnnotationsList"></a>
-#Java Annotations List
+title=Java Annotations List
+type=page
+tags=documentation, manual
+status=published
+~~~~~~
 
 Below are a list of the different Shiro annotations you can use in your application.
 
@@ -12,5 +15,3 @@ Below are a list of the different Shiro annotations you can use in your applicat
 * **[RequiresRoles](static/current/apidocs/org/apache/shiro/authz/annotation/RequiresRoles.html)** - Requires the currently executing Subject to have all of the specified roles. If they do not have the role(s), the method will not be executed and an AuthorizationException is thrown.
 
 * **[RequiresUser](static/current/apidocs/org/apache/shiro/authz/annotation/RequiresUser.html)** - Requires the current Subject to be an application user for the annotated class/instance/method to be accessed or invoked.
-
-<input type="hidden" id="ghEditPage" value="java-annotations-list.md"></input>
