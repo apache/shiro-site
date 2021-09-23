@@ -1,10 +1,13 @@
-<a name="WhatisShiro-WhatisShiro%3F"></a>
-#What is Shiro?
+title=What is Shiro?
+type=page
+tags=documentation, about
+status=published
+~~~~~~
 
 Apache Shiro is an application security framework that provides application developers very clean and simple ways of supporting four cornerstones of security in their applications: authentication, authorization, enterprise session management and cryptography.
 
 <a name="WhatisShiro-MissionStatement"></a>
-##Mission Statement
+## Mission Statement
 
 We believe:
 
@@ -26,7 +29,7 @@ We will:
 
 
 <a name="WhatisShiro-ProjectHistory"></a>
-##Project History
+## Project History
 
 <em>by Les Hazlewood</em>
 
@@ -64,4 +67,3 @@ Well, that's how the JSecurity project and then Apache Shiro was started. We're 
 Best regards,
 
 Les Hazlewood
-<input type="hidden" id="ghEditPage" value="what-is-shiro.md"></input>
