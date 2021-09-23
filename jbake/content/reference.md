@@ -1,5 +1,8 @@
-<a name="Reference-ApacheShiroReferenceDocumentation"></a>
-#Apache Shiro Reference Documentation
+title=Apache Shiro Reference Documentation
+type=lend_a_hand
+tags=documentation, manual, todo, lend-a-hand
+status=published
+~~~~~~
 
 1. Overview
 
@@ -47,12 +50,3 @@
 1. Index
 
     * [Terminology](terminology.html)
-
-##Lend a hand with documentation
-
-While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time.  If you'd like to help the Shiro project, please consider correcting, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro.
-
-The easiest way to contribute your documentation is to send it to the [User Forum](http://shiro-user.582556.n2.nabble.com/) or the [User Mailing List](mailing-lists.html).
-
-
-<input type="hidden" id="ghEditPage" value="reference.md"></input>

@@ -6,9 +6,9 @@
   </div>
 <#else></#if>
 
-<p><em>${content.date?string("dd MMMM yyyy")}</em></p>
+<@content.body?interpret />
 
-<p>TODO</p>
+<hr />
 
 <h2><a id="Lendahandwithdocumentation"></a>Lend a hand with documentation</h2>
 
