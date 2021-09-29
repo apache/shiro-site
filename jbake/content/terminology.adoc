@@ -1,0 +1,78 @@
+[#Terminology-ApacheShiroTerminology]
+= Apache Shiro Terminology
+:jbake-type: page
+:jbake-status: published
+:jbake-tags: documentation, mailing, contact
+:idprefix:
+:icons: font
+
+Please just take 2 minutes to read and understand this - it is __really__ important. Really. The terms and concepts here are referred to everywhere in the documentation and it will __greatly__ simplify your understanding of Shiro and security in general.
+
+Security can be really confusing because of the terminology used. We'll make life easier by clarifying some core concepts and you'll see how nicely the Shiro API reflects them:
+
+[#Terminology-authentication]
+* *Authentication* +
+Authentication is the process of verifying a Subject's identity - essentially proving that someone really is who they say they are. When an authentication attempt is successful the application can trust that the subject is guaranteed to be who the application expects.
+
+[#Terminology-authorization]
+* *Authorization* +
+Authorization, also known as Access Control, is the process of determining if a user/Subject is allowed to do something or not. It is usually accomplished by inspecting and interpreting a Subject's roles and permissions (see below) and then allowing or denying access to a requested resource or function.
+
+[#Terminology-cipher]
+* *Cipher* +
+A cipher is an algorithm for performing encryption or decryption. The algorithm generally relies on a piece of information called a key. And the encryption varies based on the key so decyrption is extremely difficult without it.
++
+Ciphers come in different variations. Block Ciphers work on blocks of symbols usually of a fixed size while Stream Ciphers work on a continuous stream of symbols. Symmetric Ciphers use the same key for encryption and decryption while Asymmetric Ciphers use different keys. And if a key in an asymmetric cipher cannot be derived from the other, then one can be shared publicly creating public/private key pairs.
+
+[#Terminology-credential]
+* *Credential* +
+A __Credential__ is a piece of information that verifies the identity of a user/Subject. One (or more) credentials are submitted along with Principal(s) during an authentication attempt to verify that the user/Subject submitting them is actually the associated user. Credentials are usually very secret things that only a particular user/Subject would know, such as a password or a PGP key or biometric attribute or similar mechanism.
++
+The idea is that for a principal, only one person would know the correct credential to 'pair' with that principal. If the current user/Subject provides the correct credential matching the one stored in the system, then the system can assume and trust that the current user/Subject is really who they say they are. The degree of trust increases with more secure credential types (e.g. biometric signature &gt; password).
+
+[#Terminology-cryptography]
+* *Cryptography* +
+Cryptography is the practice of protecting information from undesired access by hiding it or converting it into nonsense so no one else can read it. Shiro focuses on two core elements of Cryptography: ciphers that encrypt data like email using a public or private key, and hashes (aka message digests) that irreversibly encrypt data like passwords.
+
+[#Terminology-hash]
+* *Hash* +
+A Hash function is a one-way, irreversible conversion of an input source, sometimes called the message, into an encoded hash value, sometimes called the message digest. It is often used for passwords, digital fingerprints, or data with an underlying byte array.
+
+[#Terminology-permission]
+* *Permission* +
+A Permission, at least as Shiro interprets it, is a statement that describes raw functionality in an application and nothing more. Permissions are the lowest-level constructs in security policies. They define only "What" the application can do. They do not describe "Who" is able to perform the actions. A Permission is only a statement of behavior, nothing more.
++
+Some examples of permissions:
++
+- Open a file
+- View the '/user/list' web page
+- Print documents
+- Delete the 'jsmith' user
+
+[#Terminology-principal]
+* *Principal* +
+A __Principal__ is any identifying attribute of an application user (Subject). An 'identifying attribute' can be anything that makes sense to your application - a username, a surname, a given name, a social security number, a user ID, etc. That's it - nothing crazy.
++
+Shiro also references something we call a `Subject`'s __primary__ principal. A __Primary__ principal is any principal that uniquely identifies the `Subject` across the entire application. Ideal primary principals are things like a username or a user ID that is a RDBMS user table primary key. There is only one primary principal for users (Subjects) in an application.
+
+[#Terminology-realm]
+* *Realm* +
+A Realm is a component that can access application-specific security data such as users, roles, and permissions. It can be thought of as a security-specific DAO (Data Access Object). The Realm translates this application-specific data into a format that Shiro understands so Shiro can in turn provide a single easy-to-understand Subject programming API no matter how many data sources exist or how application-specific your data might be.
++
+Realms usually have a 1-to-1 correlation with a data source such as a relational database, LDAP directory, file system, or other similar resource. As such, implementations of the Realm interface use data source-specific APIs to discover authorization data (roles, permissions, etc), such as JDBC, File IO, Hibernate or JPA, or any other Data Access API.
+
+[#Terminology-role]
+* *Role* +
+The definition of a Role can vary based on who you talk to. In many applications it is a nebulous concept at best that people use to implicitly define security policies. Shiro prefers to interpret a Role as simply a named collection of Permissions. That's it - an application unique name aggregating one or more Permission declarations.
++
+This is a more concrete definition than the implicit one used by many applications. If you choose to have your data model reflect Shiro's assumption, you'll find you will have much more power in controlling security policies.
+
+[#Terminology-session]
+* *Session* +
+A Session is a stateful data context associated with a single user/Subject who interacts with a software system over a period of time. Data can be added/read/removed from the Session while the subject uses the application and the application can use this data later where necessary. Sessions are terminated when the user/Subject logs out of the application or when it times out due to inactivity.
++
+For those familiar with the HttpSession, a Shiro `Session` serves the same purpose, except Shiro sessions can be used in any environment even if there is no Servlet container or EJB container available.
+
+[#Terminology-subject]
+* *Subject* +
+A __Subject__ is just fancy security term that basically means a security-specific 'view' of an application user. A Subject does not always need to reflect a human being though - it can represent an external process calling your application, or perhaps a daemon system account that executes something intermittently over a period of time (such as a cron job). It is basically a representation of any entity that is doing something with the application.
