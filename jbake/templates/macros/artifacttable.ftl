@@ -20,8 +20,14 @@
     <td style="white-space: nowrap;">
       <a href="https://repo1.maven.org/maven2/${group}/${artifact.a}/${version}/${artifact.a}-${version}${classifier}.${artifact.type}">${artifact.a}</a><br/>
       (<a href="https://repo1.maven.org/maven2/${group}/${artifact.a}/${version}/${artifact.a}-${version}${classifier}.${artifact.type}.asc">pgp</a>,
-      <a href="https://repo1.maven.org/maven2/${group}/${artifact.a}/${version}/${artifact.a}-${version}${classifier}.${artifact.type}.md5">md5</a>,
-      <a href="https://repo1.maven.org/maven2/${group}/${artifact.a}/${version}/${artifact.a}-${version}${classifier}.${artifact.type}.sha1">sha1</a>)
+      <#if versionObject.hashes??>
+        <#list versionObject.hashes>
+          <#items as hash><a href="https://repo1.maven.org/maven2/${group}/${artifact.a}/${version}/${artifact.a}-${version}${classifier}.${artifact.type}.${hash}">${hash}</a><#sep>, </#sep></#items>)
+        </#list>
+      <#else>
+       <a href="https://repo1.maven.org/maven2/${group}/${artifact.a}/${version}/${artifact.a}-${version}${classifier}.${artifact.type}.md5">md5</a>,
+       <a href="https://repo1.maven.org/maven2/${group}/${artifact.a}/${version}/${artifact.a}-${version}${classifier}.${artifact.type}.sha1">sha1</a>)
+      </#if>
     </td>
 
     <td>
