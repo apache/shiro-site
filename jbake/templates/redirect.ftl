@@ -42,13 +42,18 @@
   </#if>
 
   <link rel=canonical href="${linktarget}">
-  <meta http-equiv=refresh content="1; url=${linktarget}">
+  <meta http-equiv=refresh content="3; url=${linktarget}">
 </head>
 
 <body>
   <h1>Redirecting...</h1>
+
+  <p>This page has been moved. You are being redirected.</p>
+
   <a href="${linktarget}">Click here if you are not redirected.</a>
   <script> document.location = "${linktarget}";</script>
+
+  <@content.body?interpret />
 </body>
 
 </html>
