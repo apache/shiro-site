@@ -1,5 +1,10 @@
+title=Apache Shiro Privacy Policy
+type=page
+tags=privacy, policy, agreement
+status=published
+~~~~~~
+
 <a name="PrivacyPolicy-ApacheShiroPrivacyPolicy"></a>
-#Apache Shiro Privacy Policy
 
 Information about your use of this website is collected using server access logs and a tracking cookie. The collected information consists of the following:
 
