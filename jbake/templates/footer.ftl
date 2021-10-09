@@ -19,7 +19,13 @@
         </div>
 
         <div class="d-flex justify-content-end col-md-4" id="editThisPage">
-          <#if (content.file)??><input type="hidden" id="ghEditPage" value="${content.sourceuri}"/></#if>
+          <#if (content.sourceuri)??>
+            <#assign
+              extension="${content.file[content.file?last_index_of('.')..]}"
+              sourcefile="${content.sourceuri?replace('.html', extension)}"
+            />
+          <input type="hidden" id="ghEditPage" value="${config.github_editlink_baseurl}/${sourcefile}"/>
+          </#if>
         </div>
 
         <div class="d-flex col-md-2 justify-content-end" style="position: relative">

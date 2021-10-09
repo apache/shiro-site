@@ -1,15 +1,10 @@
 function addPageEditLink() {
 
-    var ghRepo = "apache/shiro-site";
-    var ghRelHref = "https://github.com/" + ghRepo + "/edit/main/";
-
     var ghEditPageElement = document.getElementById('ghEditPage');
     var editThisPageElement = document.getElementById('editThisPage');
 
     if (ghEditPageElement && ghEditPageElement.value && editThisPageElement) {
-        var relGHPage = ghEditPageElement.value;
-
-        var ghEditHref = ghRelHref + relGHPage;
+        var ghEditHref = ghEditPageElement.value;
         let editPageLink = document.createElement('a');
         editPageLink.setAttribute('href', ghEditHref);
         editPageLink.setAttribute('rel', 'nofollow');
