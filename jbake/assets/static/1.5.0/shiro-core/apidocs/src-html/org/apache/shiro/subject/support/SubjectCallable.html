@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html lang="fr">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<main role="main">
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a id="line.1">/*</a>
+<span class="sourceLineNo">002</span><a id="line.2"> * Licensed to the Apache Software Foundation (ASF) under one</a>
+<span class="sourceLineNo">003</span><a id="line.3"> * or more contributor license agreements.  See the NOTICE file</a>
+<span class="sourceLineNo">004</span><a id="line.4"> * distributed with this work for additional information</a>
+<span class="sourceLineNo">005</span><a id="line.5"> * regarding copyright ownership.  The ASF licenses this file</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * to you under the Apache License, Version 2.0 (the</a>
+<span class="sourceLineNo">007</span><a id="line.7"> * "License"); you may not use this file except in compliance</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * with the License.  You may obtain a copy of the License at</a>
+<span class="sourceLineNo">009</span><a id="line.9"> *</a>
+<span class="sourceLineNo">010</span><a id="line.10"> *     http://www.apache.org/licenses/LICENSE-2.0</a>
+<span class="sourceLineNo">011</span><a id="line.11"> *</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * Unless required by applicable law or agreed to in writing,</a>
+<span class="sourceLineNo">013</span><a id="line.13"> * software distributed under the License is distributed on an</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</a>
+<span class="sourceLineNo">015</span><a id="line.15"> * KIND, either express or implied.  See the License for the</a>
+<span class="sourceLineNo">016</span><a id="line.16"> * specific language governing permissions and limitations</a>
+<span class="sourceLineNo">017</span><a id="line.17"> * under the License.</a>
+<span class="sourceLineNo">018</span><a id="line.18"> */</a>
+<span class="sourceLineNo">019</span><a id="line.19">package org.apache.shiro.subject.support;</a>
+<span class="sourceLineNo">020</span><a id="line.20"></a>
+<span class="sourceLineNo">021</span><a id="line.21">import org.apache.shiro.subject.Subject;</a>
+<span class="sourceLineNo">022</span><a id="line.22">import org.apache.shiro.util.ThreadState;</a>
+<span class="sourceLineNo">023</span><a id="line.23"></a>
+<span class="sourceLineNo">024</span><a id="line.24">import java.util.concurrent.Callable;</a>
+<span class="sourceLineNo">025</span><a id="line.25"></a>
+<span class="sourceLineNo">026</span><a id="line.26">/**</a>
+<span class="sourceLineNo">027</span><a id="line.27"> * A {@code SubjectCallable} associates a {@link Subject Subject} with a target/delegate</a>
+<span class="sourceLineNo">028</span><a id="line.28"> * {@link Callable Callable} to ensure proper {@code Subject} thread-state management when the {@code Callable} executes.</a>
+<span class="sourceLineNo">029</span><a id="line.29"> * This ensures that any calls to {@code SecurityUtils.}{@link org.apache.shiro.SecurityUtils#getSubject() getSubject()}</a>
+<span class="sourceLineNo">030</span><a id="line.30"> * during the target {@code Callable}'s execution still work correctly even if the {@code Callable} executes on a</a>
+<span class="sourceLineNo">031</span><a id="line.31"> * different thread than the one that created it.  This allows {@code Subject} access during asynchronous operations.</a>
+<span class="sourceLineNo">032</span><a id="line.32"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">033</span><a id="line.33"> * When instances of this class execute (typically via a {@link java.util.concurrent.ExecutorService ExecutorService}),</a>
+<span class="sourceLineNo">034</span><a id="line.34"> * the following occurs:</a>
+<span class="sourceLineNo">035</span><a id="line.35"> * &lt;ol&gt;</a>
+<span class="sourceLineNo">036</span><a id="line.36"> * &lt;li&gt;The specified Subject any of its associated thread state is first bound to the thread that executes the</a>
+<span class="sourceLineNo">037</span><a id="line.37"> * {@code Callable}.&lt;/li&gt;</a>
+<span class="sourceLineNo">038</span><a id="line.38"> * &lt;li&gt;The delegate/target {@code Callable} is {@link java.util.concurrent.Callable#call() executed}&lt;/li&gt;</a>
+<span class="sourceLineNo">039</span><a id="line.39"> * &lt;li&gt;The previous thread state that might have existed before the {@code Subject} was bound is fully restored&lt;/li&gt;</a>
+<span class="sourceLineNo">040</span><a id="line.40"> * &lt;/ol&gt;</a>
+<span class="sourceLineNo">041</span><a id="line.41"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">042</span><a id="line.42"> * This behavior ensures that the thread that executes this {@code Callable}, which is often a different thread than</a>
+<span class="sourceLineNo">043</span><a id="line.43"> * the one that created the instance, retains a {@code Subject} to support {@code SecurityUtils.getSubject()}</a>
+<span class="sourceLineNo">044</span><a id="line.44"> * invocations. It also guarantees that the running thread remains 'clean' in any thread-pooled environments.</a>
+<span class="sourceLineNo">045</span><a id="line.45"> *</a>
+<span class="sourceLineNo">046</span><a id="line.46"> * &lt;h3&gt;Usage&lt;/h3&gt;</a>
+<span class="sourceLineNo">047</span><a id="line.47"> *</a>
+<span class="sourceLineNo">048</span><a id="line.48"> * This is typically considered a support class and is not often directly referenced.  Most people prefer to use</a>
+<span class="sourceLineNo">049</span><a id="line.49"> * the {@code Subject.}{@link Subject#associateWith(Callable) associateWith} method, which will automatically return</a>
+<span class="sourceLineNo">050</span><a id="line.50"> * an instance of this class.</a>
+<span class="sourceLineNo">051</span><a id="line.51"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">052</span><a id="line.52"> * An even more convenient alternative is to use a</a>
+<span class="sourceLineNo">053</span><a id="line.53"> * {@link org.apache.shiro.concurrent.SubjectAwareExecutorService SubjectAwareExecutorService}, which</a>
+<span class="sourceLineNo">054</span><a id="line.54"> * transparently uses instances of this class.</a>
+<span class="sourceLineNo">055</span><a id="line.55"> *</a>
+<span class="sourceLineNo">056</span><a id="line.56"> * @see Subject#associateWith(Callable)</a>
+<span class="sourceLineNo">057</span><a id="line.57"> * @see org.apache.shiro.concurrent.SubjectAwareExecutorService SubjectAwareExecutorService</a>
+<span class="sourceLineNo">058</span><a id="line.58"> * @since 1.0</a>
+<span class="sourceLineNo">059</span><a id="line.59"> */</a>
+<span class="sourceLineNo">060</span><a id="line.60">public class SubjectCallable&lt;V&gt; implements Callable&lt;V&gt; {</a>
+<span class="sourceLineNo">061</span><a id="line.61"></a>
+<span class="sourceLineNo">062</span><a id="line.62">    protected final ThreadState threadState;</a>
+<span class="sourceLineNo">063</span><a id="line.63">    private final Callable&lt;V&gt; callable;</a>
+<span class="sourceLineNo">064</span><a id="line.64"></a>
+<span class="sourceLineNo">065</span><a id="line.65">    public SubjectCallable(Subject subject, Callable&lt;V&gt; delegate) {</a>
+<span class="sourceLineNo">066</span><a id="line.66">        this(new SubjectThreadState(subject), delegate);</a>
+<span class="sourceLineNo">067</span><a id="line.67">    }</a>
+<span class="sourceLineNo">068</span><a id="line.68"></a>
+<span class="sourceLineNo">069</span><a id="line.69">    protected SubjectCallable(ThreadState threadState, Callable&lt;V&gt; delegate) {</a>
+<span class="sourceLineNo">070</span><a id="line.70">        if (threadState == null) {</a>
+<span class="sourceLineNo">071</span><a id="line.71">            throw new IllegalArgumentException("ThreadState argument cannot be null.");</a>
+<span class="sourceLineNo">072</span><a id="line.72">        }</a>
+<span class="sourceLineNo">073</span><a id="line.73">        this.threadState = threadState;</a>
+<span class="sourceLineNo">074</span><a id="line.74">        if (delegate == null) {</a>
+<span class="sourceLineNo">075</span><a id="line.75">            throw new IllegalArgumentException("Callable delegate instance cannot be null.");</a>
+<span class="sourceLineNo">076</span><a id="line.76">        }</a>
+<span class="sourceLineNo">077</span><a id="line.77">        this.callable = delegate;</a>
+<span class="sourceLineNo">078</span><a id="line.78">    }</a>
+<span class="sourceLineNo">079</span><a id="line.79"></a>
+<span class="sourceLineNo">080</span><a id="line.80">    public V call() throws Exception {</a>
+<span class="sourceLineNo">081</span><a id="line.81">        try {</a>
+<span class="sourceLineNo">082</span><a id="line.82">            threadState.bind();</a>
+<span class="sourceLineNo">083</span><a id="line.83">            return doCall(this.callable);</a>
+<span class="sourceLineNo">084</span><a id="line.84">        } finally {</a>
+<span class="sourceLineNo">085</span><a id="line.85">            threadState.restore();</a>
+<span class="sourceLineNo">086</span><a id="line.86">        }</a>
+<span class="sourceLineNo">087</span><a id="line.87">    }</a>
+<span class="sourceLineNo">088</span><a id="line.88"></a>
+<span class="sourceLineNo">089</span><a id="line.89">    protected V doCall(Callable&lt;V&gt; target) throws Exception {</a>
+<span class="sourceLineNo">090</span><a id="line.90">        return target.call();</a>
+<span class="sourceLineNo">091</span><a id="line.91">    }</a>
+<span class="sourceLineNo">092</span><a id="line.92">}</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</main>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>AnnotationsAuthorizingMethodInterceptor.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: All (aggregate jar)</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.authz.aop</a> &gt; <span class="el_source">AnnotationsAuthorizingMethodInterceptor.java</span></div><h1>AnnotationsAuthorizingMethodInterceptor.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.authz.aop;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.apache.shiro.aop.MethodInvocation;
+import org.apache.shiro.authz.AuthorizationException;
+
+/**
+ * An &lt;tt&gt;AnnotationsAuthorizingMethodInterceptor&lt;/tt&gt; is a MethodInterceptor that asserts a given method is authorized
+ * to execute based on one or more configured &lt;tt&gt;AuthorizingAnnotationMethodInterceptor&lt;/tt&gt;s.
+ *
+ * &lt;p&gt;This allows multiple annotations on a method to be processed before the method
+ * executes, and if any of the &lt;tt&gt;AuthorizingAnnotationMethodInterceptor&lt;/tt&gt;s indicate that the method should not be
+ * executed, an &lt;tt&gt;AuthorizationException&lt;/tt&gt; will be thrown, otherwise the method will be invoked as expected.
+ *
+ * &lt;p&gt;It is essentially a convenience mechanism to allow multiple annotations to be processed in a single method
+ * interceptor.
+ *
+ * @since 0.2
+ */
+public abstract class AnnotationsAuthorizingMethodInterceptor extends AuthorizingMethodInterceptor {
+
+    /**
+     * The method interceptors to execute for the annotated method.
+     */
+    protected Collection&lt;AuthorizingAnnotationMethodInterceptor&gt; methodInterceptors;
+
+    /**
+     * Default no-argument constructor that defaults the 
+     * {@link #methodInterceptors methodInterceptors} attribute to contain two interceptors by default - the
+     * {@link RoleAnnotationMethodInterceptor RoleAnnotationMethodInterceptor} and the
+     * {@link PermissionAnnotationMethodInterceptor PermissionAnnotationMethodInterceptor} to
+     * support role and permission annotations.
+     */
+<span class="fc" id="L54">    public AnnotationsAuthorizingMethodInterceptor() {</span>
+<span class="fc" id="L55">        methodInterceptors = new ArrayList&lt;AuthorizingAnnotationMethodInterceptor&gt;(5);</span>
+<span class="fc" id="L56">        methodInterceptors.add(new RoleAnnotationMethodInterceptor());</span>
+<span class="fc" id="L57">        methodInterceptors.add(new PermissionAnnotationMethodInterceptor());</span>
+<span class="fc" id="L58">        methodInterceptors.add(new AuthenticatedAnnotationMethodInterceptor());</span>
+<span class="fc" id="L59">        methodInterceptors.add(new UserAnnotationMethodInterceptor());</span>
+<span class="fc" id="L60">        methodInterceptors.add(new GuestAnnotationMethodInterceptor());</span>
+<span class="fc" id="L61">    }</span>
+
+    /**
+     * Returns the method interceptors to execute for the annotated method.
+     * &lt;p/&gt;
+     * Unless overridden by the {@link #setMethodInterceptors(java.util.Collection)} method, the default collection
+     * contains a
+     * {@link RoleAnnotationMethodInterceptor RoleAnnotationMethodInterceptor} and a
+     * {@link PermissionAnnotationMethodInterceptor PermissionAnnotationMethodInterceptor} to
+     * support role and permission annotations automatically.
+     * @return the method interceptors to execute for the annotated method.
+     */
+    public Collection&lt;AuthorizingAnnotationMethodInterceptor&gt; getMethodInterceptors() {
+<span class="fc" id="L74">        return methodInterceptors;</span>
+    }
+
+    /**
+     * Sets the method interceptors to execute for the annotated method.
+     * @param methodInterceptors the method interceptors to execute for the annotated method.
+     * @see #getMethodInterceptors()
+     */
+    public void setMethodInterceptors(Collection&lt;AuthorizingAnnotationMethodInterceptor&gt; methodInterceptors) {
+<span class="fc" id="L83">        this.methodInterceptors = methodInterceptors;</span>
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * Iterates over the internal {@link #getMethodInterceptors() methodInterceptors} collection, and for each one,
+     * ensures that if the interceptor
+     * {@link AuthorizingAnnotationMethodInterceptor#supports(org.apache.shiro.aop.MethodInvocation) supports}
+     * the invocation, that the interceptor
+     * {@link AuthorizingAnnotationMethodInterceptor#assertAuthorized(org.apache.shiro.aop.MethodInvocation) asserts}
+     * that the invocation is authorized to proceed.
+     */
+    protected void assertAuthorized(MethodInvocation methodInvocation) throws AuthorizationException {
+        //default implementation just ensures no deny votes are cast:
+<span class="fc" id="L96">        Collection&lt;AuthorizingAnnotationMethodInterceptor&gt; aamis = getMethodInterceptors();</span>
+<span class="pc bpc" id="L97" title="2 of 4 branches missed.">        if (aamis != null &amp;&amp; !aamis.isEmpty()) {</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">            for (AuthorizingAnnotationMethodInterceptor aami : aamis) {</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">                if (aami.supports(methodInvocation)) {</span>
+<span class="fc" id="L100">                    aami.assertAuthorized(methodInvocation);</span>
+                }
+<span class="fc" id="L102">            }</span>
+        }
+<span class="fc" id="L104">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

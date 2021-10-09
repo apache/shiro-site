@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SaltAwareJdbcRealm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Shiro :: Samples :: Spring</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.samples.spring.realm</a> &gt; <span class="el_source">SaltAwareJdbcRealm.java</span></div><h1>SaltAwareJdbcRealm.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.samples.spring.realm;
+
+import org.apache.shiro.authc.*;
+import org.apache.shiro.realm.jdbc.JdbcRealm;
+import org.apache.shiro.util.ByteSource;
+import org.apache.shiro.util.JdbcUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ * Realm that exists to support salted credentials.  The JdbcRealm implementation needs to be updated in a future
+ * Shiro release to handle this.
+ */
+<span class="nc" id="L37">public class SaltAwareJdbcRealm extends JdbcRealm {</span>
+
+<span class="nc" id="L39">    private static final Logger log = LoggerFactory.getLogger(SaltAwareJdbcRealm.class);</span>
+
+    @Override
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+<span class="nc" id="L43">        UsernamePasswordToken upToken = (UsernamePasswordToken) token;</span>
+<span class="nc" id="L44">        String username = upToken.getUsername();</span>
+
+        // Null username is invalid
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (username == null) {</span>
+<span class="nc" id="L48">            throw new AccountException(&quot;Null usernames are not allowed by this realm.&quot;);</span>
+        }
+
+<span class="nc" id="L51">        Connection conn = null;</span>
+<span class="nc" id="L52">        AuthenticationInfo info = null;</span>
+        try {
+<span class="nc" id="L54">            conn = dataSource.getConnection();</span>
+
+<span class="nc" id="L56">            String password = getPasswordForUser(conn, username);</span>
+
+<span class="nc bnc" id="L58" title="All 2 branches missed.">            if (password == null) {</span>
+<span class="nc" id="L59">                throw new UnknownAccountException(&quot;No account found for user [&quot; + username + &quot;]&quot;);</span>
+            }
+
+<span class="nc" id="L62">            SimpleAuthenticationInfo saInfo = new SimpleAuthenticationInfo(username, password, getName());</span>
+            /**
+             * This (very bad) example uses the username as the salt in this sample app.  DON'T DO THIS IN A REAL APP!
+             *
+             * Salts should not be based on anything that a user could enter (attackers can exploit this).  Instead
+             * they should ideally be cryptographically-strong randomly generated numbers.
+             */
+<span class="nc" id="L69">            saInfo.setCredentialsSalt(ByteSource.Util.bytes(username));</span>
+
+<span class="nc" id="L71">            info = saInfo;</span>
+
+<span class="nc" id="L73">        } catch (SQLException e) {</span>
+<span class="nc" id="L74">            final String message = &quot;There was a SQL error while authenticating user [&quot; + username + &quot;]&quot;;</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">            if (log.isErrorEnabled()) {</span>
+<span class="nc" id="L76">                log.error(message, e);</span>
+            }
+
+            // Rethrow any SQL errors as an authentication exception
+<span class="nc" id="L80">            throw new AuthenticationException(message, e);</span>
+        } finally {
+<span class="nc" id="L82">            JdbcUtils.closeConnection(conn);</span>
+<span class="nc" id="L83">        }</span>
+
+<span class="nc" id="L85">        return info;</span>
+    }
+
+    private String getPasswordForUser(Connection conn, String username) throws SQLException {
+
+<span class="nc" id="L90">        PreparedStatement ps = null;</span>
+<span class="nc" id="L91">        ResultSet rs = null;</span>
+<span class="nc" id="L92">        String password = null;</span>
+        try {
+<span class="nc" id="L94">            ps = conn.prepareStatement(authenticationQuery);</span>
+<span class="nc" id="L95">            ps.setString(1, username);</span>
+
+            // Execute query
+<span class="nc" id="L98">            rs = ps.executeQuery();</span>
+
+            // Loop over results - although we are only expecting one result, since usernames should be unique
+<span class="nc" id="L101">            boolean foundResult = false;</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">            while (rs.next()) {</span>
+
+                // Check to ensure only one row is processed
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                if (foundResult) {</span>
+<span class="nc" id="L106">                    throw new AuthenticationException(&quot;More than one user row found for user [&quot; + username + &quot;]. Usernames must be unique.&quot;);</span>
+                }
+
+<span class="nc" id="L109">                password = rs.getString(1);</span>
+
+<span class="nc" id="L111">                foundResult = true;</span>
+            }
+        } finally {
+<span class="nc" id="L114">            JdbcUtils.closeResultSet(rs);</span>
+<span class="nc" id="L115">            JdbcUtils.closeStatement(ps);</span>
+<span class="nc" id="L116">        }</span>
+
+<span class="nc" id="L118">        return password;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SimpleHashRequest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Shiro :: Cryptography :: Hashing</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.crypto.hash</a> &gt; <span class="el_source">SimpleHashRequest.java</span></div><h1>SimpleHashRequest.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.crypto.hash;
+
+import org.apache.shiro.util.ByteSource;
+
+/**
+ * Simple implementation of {@link HashRequest} that can be used when interacting with a {@link HashService}.
+ *
+ * @since 1.2
+ */
+public class SimpleHashRequest implements HashRequest {
+
+    private final ByteSource source; //cannot be null - this is the source to hash.
+    private final ByteSource salt; //null = no salt specified
+    private final int iterations; //0 = not specified by the requestor; let the HashService decide.
+    private final String algorithmName; //null = let the HashService decide.
+
+    /**
+     * Creates a new SimpleHashRequest instance.
+     *
+     * @param algorithmName the name of the hash algorithm to use.  This is often null as the
+     * {@link HashService} implementation is usually configured with an appropriate algorithm name, but this
+     * can be non-null if the hash service's algorithm should be overridden with a specific one for the duration
+     * of the request.
+     *
+     * @param source the source to be hashed
+     * @param salt any public salt which should be used when computing the hash
+     * @param iterations the number of hash iterations to execute.  Zero (0) indicates no iterations were specified
+     * for the request, at which point the number of iterations is decided by the {@code HashService}
+     * @throws NullPointerException if {@code source} is null or empty.
+     */
+<span class="fc" id="L49">    public SimpleHashRequest(String algorithmName, ByteSource source, ByteSource salt, int iterations) {</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (source == null) {</span>
+<span class="fc" id="L51">            throw new NullPointerException(&quot;source argument cannot be null&quot;);</span>
+        }
+<span class="fc" id="L53">        this.source = source;</span>
+<span class="fc" id="L54">        this.salt = salt;</span>
+<span class="fc" id="L55">        this.algorithmName = algorithmName;</span>
+<span class="fc" id="L56">        this.iterations = Math.max(0, iterations);</span>
+<span class="fc" id="L57">    }</span>
+
+    public ByteSource getSource() {
+<span class="fc" id="L60">        return this.source;</span>
+    }
+
+    public ByteSource getSalt() {
+<span class="fc" id="L64">        return this.salt;</span>
+    }
+
+    public int getIterations() {
+<span class="fc" id="L68">        return iterations;</span>
+    }
+
+    public String getAlgorithmName() {
+<span class="fc" id="L72">        return algorithmName;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

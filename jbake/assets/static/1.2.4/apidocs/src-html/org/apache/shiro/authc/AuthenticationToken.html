@@ -1,0 +1,160 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<FONT color="green">007</FONT>     * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<FONT color="green">008</FONT>     * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<FONT color="green">013</FONT>     * software distributed under the License is distributed on an<a name="line.13"></a>
+<FONT color="green">014</FONT>     * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<FONT color="green">015</FONT>     * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<FONT color="green">016</FONT>     * specific language governing permissions and limitations<a name="line.16"></a>
+<FONT color="green">017</FONT>     * under the License.<a name="line.17"></a>
+<FONT color="green">018</FONT>     */<a name="line.18"></a>
+<FONT color="green">019</FONT>    package org.apache.shiro.authc;<a name="line.19"></a>
+<FONT color="green">020</FONT>    <a name="line.20"></a>
+<FONT color="green">021</FONT>    import java.io.Serializable;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    /**<a name="line.23"></a>
+<FONT color="green">024</FONT>     * &lt;p&gt;An &lt;tt&gt;AuthenticationToken&lt;/tt&gt; is a consolidation of an account's principals and supporting<a name="line.24"></a>
+<FONT color="green">025</FONT>     * credentials submitted by a user during an authentication attempt.<a name="line.25"></a>
+<FONT color="green">026</FONT>     * &lt;p/&gt;<a name="line.26"></a>
+<FONT color="green">027</FONT>     * &lt;p&gt;The token is submitted to an {@link Authenticator Authenticator} via the<a name="line.27"></a>
+<FONT color="green">028</FONT>     * {@link Authenticator#authenticate(AuthenticationToken) authenticate(token)} method.  The<a name="line.28"></a>
+<FONT color="green">029</FONT>     * Authenticator then executes the authentication/log-in process.<a name="line.29"></a>
+<FONT color="green">030</FONT>     * &lt;p/&gt;<a name="line.30"></a>
+<FONT color="green">031</FONT>     * &lt;p&gt;Common implementations of an &lt;tt&gt;AuthenticationToken&lt;/tt&gt; would have username/password<a name="line.31"></a>
+<FONT color="green">032</FONT>     * pairs, X.509 Certificate, PGP key, or anything else you can think of.  The token can be<a name="line.32"></a>
+<FONT color="green">033</FONT>     * anything needed by an {@link Authenticator} to authenticate properly.<a name="line.33"></a>
+<FONT color="green">034</FONT>     * &lt;p/&gt;<a name="line.34"></a>
+<FONT color="green">035</FONT>     * &lt;p&gt;Because applications represent user data and credentials in different ways, implementations<a name="line.35"></a>
+<FONT color="green">036</FONT>     * of this interface are application-specific.  You are free to acquire a user's principals and<a name="line.36"></a>
+<FONT color="green">037</FONT>     * credentials however you wish (e.g. web form, Swing form, fingerprint identification, etc) and<a name="line.37"></a>
+<FONT color="green">038</FONT>     * then submit them to the Shiro framework in the form of an implementation of this<a name="line.38"></a>
+<FONT color="green">039</FONT>     * interface.<a name="line.39"></a>
+<FONT color="green">040</FONT>     * &lt;p/&gt;<a name="line.40"></a>
+<FONT color="green">041</FONT>     * &lt;p&gt;If your application's authentication process is  username/password based<a name="line.41"></a>
+<FONT color="green">042</FONT>     * (like most), instead of implementing this interface yourself, take a look at the<a name="line.42"></a>
+<FONT color="green">043</FONT>     * {@link UsernamePasswordToken UsernamePasswordToken} class, as it is probably sufficient for your needs.<a name="line.43"></a>
+<FONT color="green">044</FONT>     * &lt;p/&gt;<a name="line.44"></a>
+<FONT color="green">045</FONT>     * &lt;p&gt;RememberMe services are enabled for a token if they implement a sub-interface of this one, called<a name="line.45"></a>
+<FONT color="green">046</FONT>     * {@link RememberMeAuthenticationToken RememberMeAuthenticationToken}.  Implement that interfac if you need<a name="line.46"></a>
+<FONT color="green">047</FONT>     * RememberMe services (the &lt;tt&gt;UsernamePasswordToken&lt;/tt&gt; already implements this interface).<a name="line.47"></a>
+<FONT color="green">048</FONT>     * &lt;p/&gt;<a name="line.48"></a>
+<FONT color="green">049</FONT>     * &lt;p&gt;If you are familiar with JAAS, an &lt;tt&gt;AuthenticationToken&lt;/tt&gt; replaces the concept of a<a name="line.49"></a>
+<FONT color="green">050</FONT>     * {@link javax.security.auth.callback.Callback}, and  defines meaningful behavior<a name="line.50"></a>
+<FONT color="green">051</FONT>     * (&lt;tt&gt;Callback&lt;/tt&gt; is just a marker interface, and of little use).  We<a name="line.51"></a>
+<FONT color="green">052</FONT>     * also think the name &lt;em&gt;AuthenticationToken&lt;/em&gt; more accurately reflects its true purpose<a name="line.52"></a>
+<FONT color="green">053</FONT>     * in a login framework, whereas &lt;em&gt;Callback&lt;/em&gt; is less obvious.<a name="line.53"></a>
+<FONT color="green">054</FONT>     *<a name="line.54"></a>
+<FONT color="green">055</FONT>     * @see RememberMeAuthenticationToken<a name="line.55"></a>
+<FONT color="green">056</FONT>     * @see HostAuthenticationToken<a name="line.56"></a>
+<FONT color="green">057</FONT>     * @see UsernamePasswordToken<a name="line.57"></a>
+<FONT color="green">058</FONT>     * @since 0.1<a name="line.58"></a>
+<FONT color="green">059</FONT>     */<a name="line.59"></a>
+<FONT color="green">060</FONT>    public interface AuthenticationToken extends Serializable {<a name="line.60"></a>
+<FONT color="green">061</FONT>    <a name="line.61"></a>
+<FONT color="green">062</FONT>        /**<a name="line.62"></a>
+<FONT color="green">063</FONT>         * Returns the account identity submitted during the authentication process.<a name="line.63"></a>
+<FONT color="green">064</FONT>         * &lt;p/&gt;<a name="line.64"></a>
+<FONT color="green">065</FONT>         * &lt;p&gt;Most application authentications are username/password based and have this<a name="line.65"></a>
+<FONT color="green">066</FONT>         * object represent a username.  If this is the case for your application,<a name="line.66"></a>
+<FONT color="green">067</FONT>         * take a look at the {@link UsernamePasswordToken UsernamePasswordToken}, as it is probably<a name="line.67"></a>
+<FONT color="green">068</FONT>         * sufficient for your use.<a name="line.68"></a>
+<FONT color="green">069</FONT>         * &lt;p/&gt;<a name="line.69"></a>
+<FONT color="green">070</FONT>         * &lt;p&gt;Ultimately, the object returned is application specific and can represent<a name="line.70"></a>
+<FONT color="green">071</FONT>         * any account identity (user id, X.509 certificate, etc).<a name="line.71"></a>
+<FONT color="green">072</FONT>         *<a name="line.72"></a>
+<FONT color="green">073</FONT>         * @return the account identity submitted during the authentication process.<a name="line.73"></a>
+<FONT color="green">074</FONT>         * @see UsernamePasswordToken<a name="line.74"></a>
+<FONT color="green">075</FONT>         */<a name="line.75"></a>
+<FONT color="green">076</FONT>        Object getPrincipal();<a name="line.76"></a>
+<FONT color="green">077</FONT>    <a name="line.77"></a>
+<FONT color="green">078</FONT>        /**<a name="line.78"></a>
+<FONT color="green">079</FONT>         * Returns the credentials submitted by the user during the authentication process that verifies<a name="line.79"></a>
+<FONT color="green">080</FONT>         * the submitted {@link #getPrincipal() account identity}.<a name="line.80"></a>
+<FONT color="green">081</FONT>         * &lt;p/&gt;<a name="line.81"></a>
+<FONT color="green">082</FONT>         * &lt;p&gt;Most application authentications are username/password based and have this object<a name="line.82"></a>
+<FONT color="green">083</FONT>         * represent a submitted password.  If this is the case for your application,<a name="line.83"></a>
+<FONT color="green">084</FONT>         * take a look at the {@link UsernamePasswordToken UsernamePasswordToken}, as it is probably<a name="line.84"></a>
+<FONT color="green">085</FONT>         * sufficient for your use.<a name="line.85"></a>
+<FONT color="green">086</FONT>         * &lt;p/&gt;<a name="line.86"></a>
+<FONT color="green">087</FONT>         * &lt;p&gt;Ultimately, the credentials Object returned is application specific and can represent<a name="line.87"></a>
+<FONT color="green">088</FONT>         * any credential mechanism.<a name="line.88"></a>
+<FONT color="green">089</FONT>         *<a name="line.89"></a>
+<FONT color="green">090</FONT>         * @return the credential submitted by the user during the authentication process.<a name="line.90"></a>
+<FONT color="green">091</FONT>         */<a name="line.91"></a>
+<FONT color="green">092</FONT>        Object getCredentials();<a name="line.92"></a>
+<FONT color="green">093</FONT>    <a name="line.93"></a>
+<FONT color="green">094</FONT>    }<a name="line.94"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

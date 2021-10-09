@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>DefaultSerializer.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: All (aggregate jar)</a> &gt; <a href="../index.html" class="el_bundle">shiro-lang</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.io</a> &gt; <span class="el_source">DefaultSerializer.java</span></div><h1>DefaultSerializer.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.io;
+
+import java.io.*;
+
+/**
+ * Serializer implementation that uses the default JVM serialization mechanism (Object Input/Output Streams).
+ *
+ * @since 0.9
+ */
+<span class="fc" id="L28">public class DefaultSerializer&lt;T&gt; implements Serializer&lt;T&gt; {</span>
+
+    /**
+     * This implementation serializes the Object by using an {@link ObjectOutputStream} backed by a
+     * {@link ByteArrayOutputStream}.  The {@code ByteArrayOutputStream}'s backing byte array is returned.
+     *
+     * @param o the Object to convert into a byte[] array.
+     * @return the bytes representing the serialized object using standard JVM serialization.
+     * @throws SerializationException wrapping a {@link IOException} if something goes wrong with the streams.
+     */
+    public byte[] serialize(T o) throws SerializationException {
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (o == null) {</span>
+<span class="nc" id="L40">            String msg = &quot;argument cannot be null.&quot;;</span>
+<span class="nc" id="L41">            throw new IllegalArgumentException(msg);</span>
+        }
+<span class="fc" id="L43">        ByteArrayOutputStream baos = new ByteArrayOutputStream();</span>
+<span class="fc" id="L44">        BufferedOutputStream bos = new BufferedOutputStream(baos);</span>
+
+        try {
+<span class="fc" id="L47">            ObjectOutputStream oos = new ObjectOutputStream(bos);</span>
+<span class="fc" id="L48">            oos.writeObject(o);</span>
+<span class="fc" id="L49">            oos.close();</span>
+<span class="fc" id="L50">            return baos.toByteArray();</span>
+<span class="nc" id="L51">        } catch (IOException e) {</span>
+<span class="nc" id="L52">            String msg = &quot;Unable to serialize object [&quot; + o + &quot;].  &quot; +</span>
+<span class="nc" id="L53">                    &quot;In order for the DefaultSerializer to serialize this object, the [&quot; + o.getClass().getName() + &quot;] &quot; +</span>
+                    &quot;class must implement java.io.Serializable.&quot;;
+<span class="nc" id="L55">            throw new SerializationException(msg, e);</span>
+        }
+    }
+
+    /**
+     * This implementation deserializes the byte array using a {@link ObjectInputStream} using a source
+     * {@link ByteArrayInputStream} constructed with the argument byte array.
+     *
+     * @param serialized the raw data resulting from a previous {@link #serialize(Object) serialize} call.
+     * @return the deserialized/reconstituted object based on the given byte array
+     * @throws SerializationException if anything goes wrong using the streams.
+     */
+    public T deserialize(byte[] serialized) throws SerializationException {
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">        if (serialized == null) {</span>
+<span class="nc" id="L69">            String msg = &quot;argument cannot be null.&quot;;</span>
+<span class="nc" id="L70">            throw new IllegalArgumentException(msg);</span>
+        }
+<span class="fc" id="L72">        ByteArrayInputStream bais = new ByteArrayInputStream(serialized);</span>
+<span class="fc" id="L73">        BufferedInputStream bis = new BufferedInputStream(bais);</span>
+        try {
+<span class="fc" id="L75">            ObjectInputStream ois = new ClassResolvingObjectInputStream(bis);</span>
+            @SuppressWarnings({&quot;unchecked&quot;})
+<span class="fc" id="L77">            T deserialized = (T) ois.readObject();</span>
+<span class="fc" id="L78">            ois.close();</span>
+<span class="fc" id="L79">            return deserialized;</span>
+<span class="nc" id="L80">        } catch (Exception e) {</span>
+<span class="nc" id="L81">            String msg = &quot;Unable to deserialize argument byte array.&quot;;</span>
+<span class="nc" id="L82">            throw new SerializationException(msg, e);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

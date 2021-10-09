@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>SimpleAccount.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.authc</a> &gt; <span class="el_source">SimpleAccount.java</span></div><h1>SimpleAccount.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.authc;
+
+import org.apache.shiro.authz.Permission;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.util.ByteSource;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Set;
+
+
+/**
+ * Simple implementation of the {@link org.apache.shiro.authc.Account} interface that
+ * contains principal and credential and authorization information (roles and permissions) as instance variables and
+ * exposes them via getters and setters using standard JavaBean notation.
+ *
+ * @since 0.1
+ */
+public class SimpleAccount implements Account, MergableAuthenticationInfo, SaltedAuthenticationInfo, Serializable {
+
+    /*--------------------------------------------
+    |    I N S T A N C E   V A R I A B L E S    |
+    ============================================*/
+    /**
+     * The authentication information (principals and credentials) for this account.
+     */
+    private SimpleAuthenticationInfo authcInfo;
+
+    /**
+     * The authorization information for this account.
+     */
+    private SimpleAuthorizationInfo authzInfo;
+
+    /**
+     * Indicates this account is locked.  This isn't honored by all &lt;tt&gt;Realms&lt;/tt&gt; but is honored by
+     * {@link org.apache.shiro.realm.SimpleAccountRealm}.
+     */
+    private boolean locked;
+
+    /**
+     * Indicates credentials on this account are expired.  This isn't honored by all &lt;tt&gt;Realms&lt;/tt&gt; but is honored by
+     * {@link org.apache.shiro.realm.SimpleAccountRealm}.
+     */
+    private boolean credentialsExpired;
+
+    /*--------------------------------------------
+    |         C O N S T R U C T O R S           |
+    ============================================*/
+
+    /**
+     * Default no-argument constructor.
+     */
+<span class="nc" id="L73">    public SimpleAccount() {</span>
+<span class="nc" id="L74">    }</span>
+
+    /**
+     * Constructs a SimpleAccount instance for the specified realm with the given principals and credentials.
+     *
+     * @param principal   the 'primary' identifying attribute of the account, for example, a user id or username.
+     * @param credentials the credentials that verify identity for the account
+     * @param realmName   the name of the realm that accesses this account data
+     */
+    public SimpleAccount(Object principal, Object credentials, String realmName) {
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">        this(principal instanceof PrincipalCollection ? (PrincipalCollection) principal : new SimplePrincipalCollection(principal, realmName), credentials);</span>
+<span class="fc" id="L85">    }</span>
+
+    /**
+     * Constructs a SimpleAccount instance for the specified realm with the given principals, hashedCredentials and
+     * credentials salt used when hashing the credentials.
+     *
+     * @param principal         the 'primary' identifying attribute of the account, for example, a user id or username.
+     * @param hashedCredentials the credentials that verify identity for the account
+     * @param credentialsSalt   the salt used when hashing the credentials
+     * @param realmName         the name of the realm that accesses this account data
+     * @see org.apache.shiro.authc.credential.HashedCredentialsMatcher HashedCredentialsMatcher
+     * @since 1.1
+     */
+    public SimpleAccount(Object principal, Object hashedCredentials, ByteSource credentialsSalt, String realmName) {
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        this(principal instanceof PrincipalCollection ? (PrincipalCollection) principal : new SimplePrincipalCollection(principal, realmName),</span>
+                hashedCredentials, credentialsSalt);
+<span class="nc" id="L101">    }</span>
+
+    /**
+     * Constructs a SimpleAccount instance for the specified realm with the given principals and credentials.
+     *
+     * @param principals  the identifying attributes of the account, at least one of which should be considered the
+     *                    account's 'primary' identifying attribute, for example, a user id or username.
+     * @param credentials the credentials that verify identity for the account
+     * @param realmName   the name of the realm that accesses this account data
+     */
+    public SimpleAccount(Collection principals, Object credentials, String realmName) {
+<span class="nc" id="L112">        this(new SimplePrincipalCollection(principals, realmName), credentials);</span>
+<span class="nc" id="L113">    }</span>
+
+    /**
+     * Constructs a SimpleAccount instance for the specified principals and credentials.
+     *
+     * @param principals  the identifying attributes of the account, at least one of which should be considered the
+     *                    account's 'primary' identifying attribute, for example, a user id or username.
+     * @param credentials the credentials that verify identity for the account
+     */
+<span class="fc" id="L122">    public SimpleAccount(PrincipalCollection principals, Object credentials) {</span>
+<span class="fc" id="L123">        this.authcInfo = new SimpleAuthenticationInfo(principals, credentials);</span>
+<span class="fc" id="L124">        this.authzInfo = new SimpleAuthorizationInfo();</span>
+<span class="fc" id="L125">    }</span>
+
+    /**
+     * Constructs a SimpleAccount instance for the specified principals and credentials.
+     *
+     * @param principals        the identifying attributes of the account, at least one of which should be considered the
+     *                          account's 'primary' identifying attribute, for example, a user id or username.
+     * @param hashedCredentials the hashed credentials that verify identity for the account
+     * @param credentialsSalt   the salt used when hashing the credentials
+     * @see org.apache.shiro.authc.credential.HashedCredentialsMatcher HashedCredentialsMatcher
+     * @since 1.1
+     */
+<span class="nc" id="L137">    public SimpleAccount(PrincipalCollection principals, Object hashedCredentials, ByteSource credentialsSalt) {</span>
+<span class="nc" id="L138">        this.authcInfo = new SimpleAuthenticationInfo(principals, hashedCredentials, credentialsSalt);</span>
+<span class="nc" id="L139">        this.authzInfo = new SimpleAuthorizationInfo();</span>
+<span class="nc" id="L140">    }</span>
+
+    /**
+     * Constructs a SimpleAccount instance for the specified principals and credentials, with the assigned roles.
+     *
+     * @param principals  the identifying attributes of the account, at least one of which should be considered the
+     *                    account's 'primary' identifying attribute, for example, a user id or username.
+     * @param credentials the credentials that verify identity for the account
+     * @param roles       the names of the roles assigned to this account.
+     */
+<span class="nc" id="L150">    public SimpleAccount(PrincipalCollection principals, Object credentials, Set&lt;String&gt; roles) {</span>
+<span class="nc" id="L151">        this.authcInfo = new SimpleAuthenticationInfo(principals, credentials);</span>
+<span class="nc" id="L152">        this.authzInfo = new SimpleAuthorizationInfo(roles);</span>
+<span class="nc" id="L153">    }</span>
+
+    /**
+     * Constructs a SimpleAccount instance for the specified realm with the given principal and credentials, with the
+     * the assigned roles and permissions.
+     *
+     * @param principal   the 'primary' identifying attributes of the account, for example, a user id or username.
+     * @param credentials the credentials that verify identity for the account
+     * @param realmName   the name of the realm that accesses this account data
+     * @param roleNames   the names of the roles assigned to this account.
+     * @param permissions the permissions assigned to this account directly (not those assigned to any of the realms).
+     */
+<span class="nc" id="L165">    public SimpleAccount(Object principal, Object credentials, String realmName, Set&lt;String&gt; roleNames, Set&lt;Permission&gt; permissions) {</span>
+<span class="nc" id="L166">        this.authcInfo = new SimpleAuthenticationInfo(new SimplePrincipalCollection(principal, realmName), credentials);</span>
+<span class="nc" id="L167">        this.authzInfo = new SimpleAuthorizationInfo(roleNames);</span>
+<span class="nc" id="L168">        this.authzInfo.setObjectPermissions(permissions);</span>
+<span class="nc" id="L169">    }</span>
+
+    /**
+     * Constructs a SimpleAccount instance for the specified realm with the given principals and credentials, with the
+     * the assigned roles and permissions.
+     *
+     * @param principals  the identifying attributes of the account, at least one of which should be considered the
+     *                    account's 'primary' identifying attribute, for example, a user id or username.
+     * @param credentials the credentials that verify identity for the account
+     * @param realmName   the name of the realm that accesses this account data
+     * @param roleNames   the names of the roles assigned to this account.
+     * @param permissions the permissions assigned to this account directly (not those assigned to any of the realms).
+     */
+<span class="nc" id="L182">    public SimpleAccount(Collection principals, Object credentials, String realmName, Set&lt;String&gt; roleNames, Set&lt;Permission&gt; permissions) {</span>
+<span class="nc" id="L183">        this.authcInfo = new SimpleAuthenticationInfo(new SimplePrincipalCollection(principals, realmName), credentials);</span>
+<span class="nc" id="L184">        this.authzInfo = new SimpleAuthorizationInfo(roleNames);</span>
+<span class="nc" id="L185">        this.authzInfo.setObjectPermissions(permissions);</span>
+<span class="nc" id="L186">    }</span>
+
+    /**
+     * Constructs a SimpleAccount instance from the given principals and credentials, with the
+     * the assigned roles and permissions.
+     *
+     * @param principals  the identifying attributes of the account, at least one of which should be considered the
+     *                    account's 'primary' identifying attribute, for example, a user id or username.
+     * @param credentials the credentials that verify identity for the account
+     * @param roleNames   the names of the roles assigned to this account.
+     * @param permissions the permissions assigned to this account directly (not those assigned to any of the realms).
+     */
+<span class="nc" id="L198">    public SimpleAccount(PrincipalCollection principals, Object credentials, Set&lt;String&gt; roleNames, Set&lt;Permission&gt; permissions) {</span>
+<span class="nc" id="L199">        this.authcInfo = new SimpleAuthenticationInfo(principals, credentials);</span>
+<span class="nc" id="L200">        this.authzInfo = new SimpleAuthorizationInfo(roleNames);</span>
+<span class="nc" id="L201">        this.authzInfo.setObjectPermissions(permissions);</span>
+<span class="nc" id="L202">    }</span>
+
+    /*--------------------------------------------
+    |  A C C E S S O R S / M O D I F I E R S    |
+    ============================================*/
+
+    /**
+     * Returns the principals, aka the identifying attributes (username, user id, first name, last name, etc) of this
+     * Account.
+     *
+     * @return all the principals, aka the identifying attributes, of this Account.
+     */
+    public PrincipalCollection getPrincipals() {
+<span class="fc" id="L215">        return authcInfo.getPrincipals();</span>
+    }
+
+    /**
+     * Sets the principals, aka the identifying attributes (username, user id, first name, last name, etc) of this
+     * Account.
+     *
+     * @param principals all the principals, aka the identifying attributes, of this Account.
+     * @see Account#getPrincipals()
+     */
+    public void setPrincipals(PrincipalCollection principals) {
+<span class="fc" id="L226">        this.authcInfo.setPrincipals(principals);</span>
+<span class="fc" id="L227">    }</span>
+
+
+    /**
+     * Simply returns &lt;code&gt;this.authcInfo.getCredentials&lt;/code&gt;.  The &lt;code&gt;authcInfo&lt;/code&gt; attribute is constructed
+     * via the constructors to wrap the input arguments.
+     *
+     * @return this Account's credentials.
+     */
+    public Object getCredentials() {
+<span class="fc" id="L237">        return authcInfo.getCredentials();</span>
+    }
+
+    /**
+     * Sets this Account's credentials that verify one or more of the Account's
+     * {@link #getPrincipals() principals}, such as a password or private key.
+     *
+     * @param credentials the credentials associated with this Account that verify one or more of the Account principals.
+     * @see org.apache.shiro.authc.Account#getCredentials()
+     */
+    public void setCredentials(Object credentials) {
+<span class="fc" id="L248">        this.authcInfo.setCredentials(credentials);</span>
+<span class="fc" id="L249">    }</span>
+
+    /**
+     * Returns the salt used to hash this Account's credentials (eg for password hashing), or {@code null} if no salt
+     * was used or credentials were not hashed at all.
+     *
+     * @return the salt used to hash this Account's credentials (eg for password hashing), or {@code null} if no salt
+     *         was used or credentials were not hashed at all.
+     * @since 1.1
+     */
+    public ByteSource getCredentialsSalt() {
+<span class="fc" id="L260">        return this.authcInfo.getCredentialsSalt();</span>
+    }
+
+    /**
+     * Sets the salt to use to hash this Account's credentials (eg for password hashing), or {@code null} if no salt
+     * is used or credentials are not hashed at all.
+     *
+     * @param salt the salt to use to hash this Account's credentials (eg for password hashing), or {@code null} if no
+     *             salt is used or credentials are not hashed at all.
+     * @since 1.1
+     */
+    public void setCredentialsSalt(ByteSource salt) {
+<span class="nc" id="L272">        this.authcInfo.setCredentialsSalt(salt);</span>
+<span class="nc" id="L273">    }</span>
+
+    /**
+     * Returns &lt;code&gt;this.authzInfo.getRoles();&lt;/code&gt;
+     *
+     * @return the Account's assigned roles.
+     */
+    public Collection&lt;String&gt; getRoles() {
+<span class="fc" id="L281">        return authzInfo.getRoles();</span>
+    }
+
+    /**
+     * Sets the Account's assigned roles.  Simply calls &lt;code&gt;this.authzInfo.setRoles(roles)&lt;/code&gt;.
+     *
+     * @param roles the Account's assigned roles.
+     * @see Account#getRoles()
+     */
+    public void setRoles(Set&lt;String&gt; roles) {
+<span class="fc" id="L291">        this.authzInfo.setRoles(roles);</span>
+<span class="fc" id="L292">    }</span>
+
+    /**
+     * Adds a role to this Account's set of assigned roles.  Simply delegates to
+     * &lt;code&gt;this.authzInfo.addRole(role)&lt;/code&gt;.
+     *
+     * @param role a role to assign to this Account.
+     */
+    public void addRole(String role) {
+<span class="fc" id="L301">        this.authzInfo.addRole(role);</span>
+<span class="fc" id="L302">    }</span>
+
+    /**
+     * Adds one or more roles to this Account's set of assigned roles. Simply delegates to
+     * &lt;code&gt;this.authzInfo.addRoles(roles)&lt;/code&gt;.
+     *
+     * @param roles one or more roles to assign to this Account.
+     */
+    public void addRole(Collection&lt;String&gt; roles) {
+<span class="nc" id="L311">        this.authzInfo.addRoles(roles);</span>
+<span class="nc" id="L312">    }</span>
+
+    /**
+     * Returns all String-based permissions assigned to this Account.  Simply delegates to
+     * &lt;code&gt;this.authzInfo.getStringPermissions()&lt;/code&gt;.
+     *
+     * @return all String-based permissions assigned to this Account.
+     */
+    public Collection&lt;String&gt; getStringPermissions() {
+<span class="fc" id="L321">        return authzInfo.getStringPermissions();</span>
+    }
+
+    /**
+     * Sets the String-based permissions assigned to this Account.  Simply delegates to
+     * &lt;code&gt;this.authzInfo.setStringPermissions(permissions)&lt;/code&gt;.
+     *
+     * @param permissions all String-based permissions assigned to this Account.
+     * @see org.apache.shiro.authc.Account#getStringPermissions()
+     */
+    public void setStringPermissions(Set&lt;String&gt; permissions) {
+<span class="nc" id="L332">        this.authzInfo.setStringPermissions(permissions);</span>
+<span class="nc" id="L333">    }</span>
+
+    /**
+     * Assigns a String-based permission directly to this Account (not to any of its realms).
+     *
+     * @param permission the String-based permission to assign.
+     */
+    public void addStringPermission(String permission) {
+<span class="nc" id="L341">        this.authzInfo.addStringPermission(permission);</span>
+<span class="nc" id="L342">    }</span>
+
+    /**
+     * Assigns one or more string-based permissions directly to this Account (not to any of its realms).
+     *
+     * @param permissions one or more String-based permissions to assign.
+     */
+    public void addStringPermissions(Collection&lt;String&gt; permissions) {
+<span class="nc" id="L350">        this.authzInfo.addStringPermissions(permissions);</span>
+<span class="nc" id="L351">    }</span>
+
+    /**
+     * Returns all object-based permissions assigned directly to this Account (not any of its realms).
+     *
+     * @return all object-based permissions assigned directly to this Account (not any of its realms).
+     */
+    public Collection&lt;Permission&gt; getObjectPermissions() {
+<span class="fc" id="L359">        return authzInfo.getObjectPermissions();</span>
+    }
+
+    /**
+     * Sets all object-based permissions assigned directly to this Account (not any of its realms).
+     *
+     * @param permissions the object-based permissions to assign directly to this Account.
+     */
+    public void setObjectPermissions(Set&lt;Permission&gt; permissions) {
+<span class="nc" id="L368">        this.authzInfo.setObjectPermissions(permissions);</span>
+<span class="nc" id="L369">    }</span>
+
+    /**
+     * Assigns an object-based permission directly to this Account (not any of its realms).
+     *
+     * @param permission the object-based permission to assign directly to this Account (not any of its realms).
+     */
+    public void addObjectPermission(Permission permission) {
+<span class="nc" id="L377">        this.authzInfo.addObjectPermission(permission);</span>
+<span class="nc" id="L378">    }</span>
+
+    /**
+     * Assigns one or more object-based permissions directly to this Account (not any of its realms).
+     *
+     * @param permissions one or more object-based permissions to assign directly to this Account (not any of its realms).
+     */
+    public void addObjectPermissions(Collection&lt;Permission&gt; permissions) {
+<span class="fc" id="L386">        this.authzInfo.addObjectPermissions(permissions);</span>
+<span class="fc" id="L387">    }</span>
+
+    /**
+     * Returns &lt;code&gt;true&lt;/code&gt; if this Account is locked and thus cannot be used to login, &lt;code&gt;false&lt;/code&gt; otherwise.
+     *
+     * @return &lt;code&gt;true&lt;/code&gt; if this Account is locked and thus cannot be used to login, &lt;code&gt;false&lt;/code&gt; otherwise.
+     */
+    public boolean isLocked() {
+<span class="fc" id="L395">        return locked;</span>
+    }
+
+    /**
+     * Sets whether or not the account is locked and can be used to login.
+     *
+     * @param locked &lt;code&gt;true&lt;/code&gt; if this Account is locked and thus cannot be used to login, &lt;code&gt;false&lt;/code&gt; otherwise.
+     */
+    public void setLocked(boolean locked) {
+<span class="nc" id="L404">        this.locked = locked;</span>
+<span class="nc" id="L405">    }</span>
+
+    /**
+     * Returns whether or not the Account's credentials are expired.  This usually indicates that the Subject or an application
+     * administrator would need to change the credentials before the account could be used.
+     *
+     * @return whether or not the Account's credentials are expired.
+     */
+    public boolean isCredentialsExpired() {
+<span class="fc" id="L414">        return credentialsExpired;</span>
+    }
+
+    /**
+     * Sets whether or not the Account's credentials are expired.  A &lt;code&gt;true&lt;/code&gt; value indicates that the Subject
+     * or application administrator would need to change their credentials before the account could be used.
+     *
+     * @param credentialsExpired &lt;code&gt;true&lt;/code&gt; if this Account's credentials are expired and need to be changed,
+     *                           &lt;code&gt;false&lt;/code&gt; otherwise.
+     */
+    public void setCredentialsExpired(boolean credentialsExpired) {
+<span class="nc" id="L425">        this.credentialsExpired = credentialsExpired;</span>
+<span class="nc" id="L426">    }</span>
+
+
+    /**
+     * Merges the specified &lt;code&gt;AuthenticationInfo&lt;/code&gt; into this &lt;code&gt;Account&lt;/code&gt;.
+     * &lt;p/&gt;
+     * If the specified argument is also an instance of {@link SimpleAccount SimpleAccount}, the
+     * {@link #isLocked()} and {@link #isCredentialsExpired()} attributes are merged (set on this instance) as well
+     * (only if their values are &lt;code&gt;true&lt;/code&gt;).
+     *
+     * @param info the &lt;code&gt;AuthenticationInfo&lt;/code&gt; to merge into this account.
+     */
+    public void merge(AuthenticationInfo info) {
+<span class="nc" id="L439">        authcInfo.merge(info);</span>
+
+        // Merge SimpleAccount specific info
+<span class="nc bnc" id="L442" title="All 2 branches missed.">        if (info instanceof SimpleAccount) {</span>
+<span class="nc" id="L443">            SimpleAccount otherAccount = (SimpleAccount) info;</span>
+<span class="nc bnc" id="L444" title="All 2 branches missed.">            if (otherAccount.isLocked()) {</span>
+<span class="nc" id="L445">                setLocked(true);</span>
+            }
+
+<span class="nc bnc" id="L448" title="All 2 branches missed.">            if (otherAccount.isCredentialsExpired()) {</span>
+<span class="nc" id="L449">                setCredentialsExpired(true);</span>
+            }
+        }
+<span class="nc" id="L452">    }</span>
+
+    /**
+     * If the {@link #getPrincipals() principals} are not null, returns &lt;code&gt;principals.hashCode()&lt;/code&gt;, otherwise
+     * returns 0 (zero).
+     *
+     * @return &lt;code&gt;principals.hashCode()&lt;/code&gt; if they are not null, 0 (zero) otherwise.
+     */
+    public int hashCode() {
+<span class="nc bnc" id="L461" title="All 2 branches missed.">        return (getPrincipals() != null ? getPrincipals().hashCode() : 0);</span>
+    }
+
+    /**
+     * Returns &lt;code&gt;true&lt;/code&gt; if the specified object is also a {@link SimpleAccount SimpleAccount} and its
+     * {@link #getPrincipals() principals} are equal to this object's &lt;code&gt;principals&lt;/code&gt;, &lt;code&gt;false&lt;/code&gt; otherwise.
+     *
+     * @param o the object to test for equality.
+     * @return &lt;code&gt;true&lt;/code&gt; if the specified object is also a {@link SimpleAccount SimpleAccount} and its
+     *         {@link #getPrincipals() principals} are equal to this object's &lt;code&gt;principals&lt;/code&gt;, &lt;code&gt;false&lt;/code&gt; otherwise.
+     */
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L473" title="All 2 branches missed.">        if (o == this) {</span>
+<span class="nc" id="L474">            return true;</span>
+        }
+<span class="nc bnc" id="L476" title="All 2 branches missed.">        if (o instanceof SimpleAccount) {</span>
+<span class="nc" id="L477">            SimpleAccount sa = (SimpleAccount) o;</span>
+            //principal should be unique across the application, so only check this for equality:
+<span class="nc bnc" id="L479" title="All 4 branches missed.">            return (getPrincipals() != null ? getPrincipals().equals(sa.getPrincipals()) : sa.getPrincipals() == null);</span>
+        }
+<span class="nc" id="L481">        return false;</span>
+    }
+
+    /**
+     * Returns {@link #getPrincipals() principals}.toString() if they are not null, otherwise prints out the string
+     * &amp;quot;empty&amp;quot;
+     *
+     * @return the String representation of this Account object.
+     */
+    public String toString() {
+<span class="pc bpc" id="L491" title="1 of 2 branches missed.">        return getPrincipals() != null ? getPrincipals().toString() : &quot;empty&quot;;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

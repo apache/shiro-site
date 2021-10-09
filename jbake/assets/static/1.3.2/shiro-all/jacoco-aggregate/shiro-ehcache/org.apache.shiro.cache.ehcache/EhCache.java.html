@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>EhCache.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Jar Bundle</a> &gt; <a href="../index.html" class="el_bundle">shiro-ehcache</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.cache.ehcache</a> &gt; <span class="el_source">EhCache.java</span></div><h1>EhCache.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.cache.ehcache;
+
+import net.sf.ehcache.Element;
+import org.apache.shiro.cache.Cache;
+import org.apache.shiro.cache.CacheException;
+import org.apache.shiro.util.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+
+/**
+ * Shiro {@link org.apache.shiro.cache.Cache} implementation that wraps an {@link net.sf.ehcache.Ehcache} instance.
+ *
+ * @since 0.2
+ */
+public class EhCache&lt;K, V&gt; implements Cache&lt;K, V&gt; {
+
+    /**
+     * Private internal log instance.
+     */
+<span class="fc" id="L40">    private static final Logger log = LoggerFactory.getLogger(EhCache.class);</span>
+
+    /**
+     * The wrapped Ehcache instance.
+     */
+    private net.sf.ehcache.Ehcache cache;
+
+    /**
+     * Constructs a new EhCache instance with the given cache.
+     *
+     * @param cache - delegate EhCache instance this Shiro cache instance will wrap.
+     */
+<span class="fc" id="L52">    public EhCache(net.sf.ehcache.Ehcache cache) {</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (cache == null) {</span>
+<span class="nc" id="L54">            throw new IllegalArgumentException(&quot;Cache argument cannot be null.&quot;);</span>
+        }
+<span class="fc" id="L56">        this.cache = cache;</span>
+<span class="fc" id="L57">    }</span>
+
+    /**
+     * Gets a value of an element which matches the given key.
+     *
+     * @param key the key of the element to return.
+     * @return The value placed into the cache with an earlier put, or null if not found or expired
+     */
+    public V get(K key) throws CacheException {
+        try {
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">            if (log.isTraceEnabled()) {</span>
+<span class="fc" id="L68">                log.trace(&quot;Getting object from cache [&quot; + cache.getName() + &quot;] for key [&quot; + key + &quot;]&quot;);</span>
+            }
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">            if (key == null) {</span>
+<span class="nc" id="L71">                return null;</span>
+            } else {
+<span class="fc" id="L73">                Element element = cache.get(key);</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">                if (element == null) {</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">                    if (log.isTraceEnabled()) {</span>
+<span class="fc" id="L76">                        log.trace(&quot;Element for [&quot; + key + &quot;] is null.&quot;);</span>
+                    }
+<span class="fc" id="L78">                    return null;</span>
+                } else {
+                    //noinspection unchecked
+<span class="fc" id="L81">                    return (V) element.getObjectValue();</span>
+                }
+            }
+<span class="nc" id="L84">        } catch (Throwable t) {</span>
+<span class="nc" id="L85">            throw new CacheException(t);</span>
+        }
+    }
+
+    /**
+     * Puts an object into the cache.
+     *
+     * @param key   the key.
+     * @param value the value.
+     */
+    public V put(K key, V value) throws CacheException {
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">        if (log.isTraceEnabled()) {</span>
+<span class="fc" id="L97">            log.trace(&quot;Putting object in cache [&quot; + cache.getName() + &quot;] for key [&quot; + key + &quot;]&quot;);</span>
+        }
+        try {
+<span class="fc" id="L100">            V previous = get(key);</span>
+<span class="fc" id="L101">            Element element = new Element(key, value);</span>
+<span class="fc" id="L102">            cache.put(element);</span>
+<span class="fc" id="L103">            return previous;</span>
+<span class="nc" id="L104">        } catch (Throwable t) {</span>
+<span class="nc" id="L105">            throw new CacheException(t);</span>
+        }
+    }
+
+    /**
+     * Removes the element which matches the key.
+     *
+     * &lt;p&gt;If no element matches, nothing is removed and no Exception is thrown.&lt;/p&gt;
+     *
+     * @param key the key of the element to remove
+     */
+    public V remove(K key) throws CacheException {
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (log.isTraceEnabled()) {</span>
+<span class="nc" id="L118">            log.trace(&quot;Removing object from cache [&quot; + cache.getName() + &quot;] for key [&quot; + key + &quot;]&quot;);</span>
+        }
+        try {
+<span class="nc" id="L121">            V previous = get(key);</span>
+<span class="nc" id="L122">            cache.remove(key);</span>
+<span class="nc" id="L123">            return previous;</span>
+<span class="nc" id="L124">        } catch (Throwable t) {</span>
+<span class="nc" id="L125">            throw new CacheException(t);</span>
+        }
+    }
+
+    /**
+     * Removes all elements in the cache, but leaves the cache in a useable state.
+     */
+    public void clear() throws CacheException {
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        if (log.isTraceEnabled()) {</span>
+<span class="nc" id="L134">            log.trace(&quot;Clearing all objects from cache [&quot; + cache.getName() + &quot;]&quot;);</span>
+        }
+        try {
+<span class="nc" id="L137">            cache.removeAll();</span>
+<span class="nc" id="L138">        } catch (Throwable t) {</span>
+<span class="nc" id="L139">            throw new CacheException(t);</span>
+<span class="nc" id="L140">        }</span>
+<span class="nc" id="L141">    }</span>
+
+    public int size() {
+        try {
+<span class="nc" id="L145">            return cache.getSize();</span>
+<span class="nc" id="L146">        } catch (Throwable t) {</span>
+<span class="nc" id="L147">            throw new CacheException(t);</span>
+        }
+    }
+
+    public Set&lt;K&gt; keys() {
+        try {
+            @SuppressWarnings({&quot;unchecked&quot;})
+<span class="nc" id="L154">            List&lt;K&gt; keys = cache.getKeys();</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">            if (!CollectionUtils.isEmpty(keys)) {</span>
+<span class="nc" id="L156">                return Collections.unmodifiableSet(new LinkedHashSet&lt;K&gt;(keys));</span>
+            } else {
+<span class="nc" id="L158">                return Collections.emptySet();</span>
+            }
+<span class="nc" id="L160">        } catch (Throwable t) {</span>
+<span class="nc" id="L161">            throw new CacheException(t);</span>
+        }
+    }
+
+    public Collection&lt;V&gt; values() {
+        try {
+            @SuppressWarnings({&quot;unchecked&quot;})
+<span class="nc" id="L168">            List&lt;K&gt; keys = cache.getKeys();</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">            if (!CollectionUtils.isEmpty(keys)) {</span>
+<span class="nc" id="L170">                List&lt;V&gt; values = new ArrayList&lt;V&gt;(keys.size());</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">                for (K key : keys) {</span>
+<span class="nc" id="L172">                    V value = get(key);</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">                    if (value != null) {</span>
+<span class="nc" id="L174">                        values.add(value);</span>
+                    }
+<span class="nc" id="L176">                }</span>
+<span class="nc" id="L177">                return Collections.unmodifiableList(values);</span>
+            } else {
+<span class="nc" id="L179">                return Collections.emptyList();</span>
+            }
+<span class="nc" id="L181">        } catch (Throwable t) {</span>
+<span class="nc" id="L182">            throw new CacheException(t);</span>
+        }
+    }
+
+    /**
+     * Returns the size (in bytes) that this EhCache is using in memory (RAM), or &lt;code&gt;-1&lt;/code&gt; if that
+     * number is unknown or cannot be calculated.
+     *
+     * @return the size (in bytes) that this EhCache is using in memory (RAM), or &lt;code&gt;-1&lt;/code&gt; if that
+     *         number is unknown or cannot be calculated.
+     */
+    public long getMemoryUsage() {
+        try {
+<span class="nc" id="L195">            return cache.calculateInMemorySize();</span>
+        }
+<span class="nc" id="L197">        catch (Throwable t) {</span>
+<span class="nc" id="L198">            return -1;</span>
+        }
+    }
+
+    /**
+     * Returns the size (in bytes) that this EhCache's memory store is using (RAM), or &lt;code&gt;-1&lt;/code&gt; if
+     * that number is unknown or cannot be calculated.
+     *
+     * @return the size (in bytes) that this EhCache's memory store is using (RAM), or &lt;code&gt;-1&lt;/code&gt; if
+     *         that number is unknown or cannot be calculated.
+     */
+    public long getMemoryStoreSize() {
+        try {
+<span class="nc" id="L211">            return cache.getMemoryStoreSize();</span>
+        }
+<span class="nc" id="L213">        catch (Throwable t) {</span>
+<span class="nc" id="L214">            throw new CacheException(t);</span>
+        }
+    }
+
+    /**
+     * Returns the size (in bytes) that this EhCache's disk store is consuming or &lt;code&gt;-1&lt;/code&gt; if
+     * that number is unknown or cannot be calculated.
+     *
+     * @return the size (in bytes) that this EhCache's disk store is consuming or &lt;code&gt;-1&lt;/code&gt; if
+     *         that number is unknown or cannot be calculated.
+     */
+    public long getDiskStoreSize() {
+        try {
+<span class="nc" id="L227">            return cache.getDiskStoreSize();</span>
+<span class="nc" id="L228">        } catch (Throwable t) {</span>
+<span class="nc" id="L229">            throw new CacheException(t);</span>
+        }
+    }
+
+    /**
+     * Returns &amp;quot;EhCache [&amp;quot; + cache.getName() + &amp;quot;]&amp;quot;
+     *
+     * @return &amp;quot;EhCache [&amp;quot; + cache.getName() + &amp;quot;]&amp;quot;
+     */
+    public String toString() {
+<span class="nc" id="L239">        return &quot;EhCache [&quot; + cache.getName() + &quot;]&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

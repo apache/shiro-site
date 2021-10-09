@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>JndiLocator.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.jndi</a> &gt; <span class="el_source">JndiLocator.java</span></div><h1>JndiLocator.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.jndi;
+
+import java.util.Properties;
+import javax.naming.NamingException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Convenient superclass for JNDI accessors, providing &quot;jndiTemplate&quot;
+ * and &quot;jndiEnvironment&quot; bean properties.
+ *
+ * &lt;p&gt;Note that this implementation is an almost exact combined copy of the Spring Framework's 'JndiAccessor' and
+ * 'JndiLocatorSupport' classes from their 2.5.4 distribution - we didn't want to re-invent the wheel, but not require
+ * a full dependency on the Spring framework, nor does Spring make available only its JNDI classes in a small jar, or
+ * we would have used that. Since Shiro is also Apache 2.0 licensed, all regular licenses and conditions and
+ * authors have remained in tact.
+ *
+ * @see #setJndiTemplate
+ * @see #setJndiEnvironment
+ * @see #setResourceRef
+ * @since 1.1
+ */
+<span class="fc" id="L42">public class JndiLocator {</span>
+
+    /**
+     * Private class log.
+     */
+<span class="fc" id="L47">    private static final Logger log = LoggerFactory.getLogger(JndiLocator.class);</span>
+
+    /**
+     * JNDI prefix used in a J2EE container
+     */
+    public static final String CONTAINER_PREFIX = &quot;java:comp/env/&quot;;
+
+<span class="fc" id="L54">    private boolean resourceRef = false;</span>
+
+<span class="fc" id="L56">    private JndiTemplate jndiTemplate = new JndiTemplate();</span>
+
+
+    /**
+     * Set the JNDI template to use for JNDI lookups.
+     * &lt;p&gt;You can also specify JNDI environment settings via &quot;jndiEnvironment&quot;.
+     *
+     * @see #setJndiEnvironment
+     */
+    public void setJndiTemplate(JndiTemplate jndiTemplate) {
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        this.jndiTemplate = (jndiTemplate != null ? jndiTemplate : new JndiTemplate());</span>
+<span class="nc" id="L67">    }</span>
+
+    /**
+     * Return the JNDI template to use for JNDI lookups.
+     */
+    public JndiTemplate getJndiTemplate() {
+<span class="nc" id="L73">        return this.jndiTemplate;</span>
+    }
+
+    /**
+     * Set the JNDI environment to use for JNDI lookups.
+     * &lt;p&gt;Creates a JndiTemplate with the given environment settings.
+     *
+     * @see #setJndiTemplate
+     */
+    public void setJndiEnvironment(Properties jndiEnvironment) {
+<span class="nc" id="L83">        this.jndiTemplate = new JndiTemplate(jndiEnvironment);</span>
+<span class="nc" id="L84">    }</span>
+
+    /**
+     * Return the JNDI environment to use for JNDI lookups.
+     */
+    public Properties getJndiEnvironment() {
+<span class="nc" id="L90">        return this.jndiTemplate.getEnvironment();</span>
+    }
+
+    /**
+     * Set whether the lookup occurs in a J2EE container, i.e. if the prefix
+     * &quot;java:comp/env/&quot; needs to be added if the JNDI name doesn't already
+     * contain it. Default is &quot;false&quot;.
+     * &lt;p&gt;Note: Will only get applied if no other scheme (e.g. &quot;java:&quot;) is given.
+     */
+    public void setResourceRef(boolean resourceRef) {
+<span class="nc" id="L100">        this.resourceRef = resourceRef;</span>
+<span class="nc" id="L101">    }</span>
+
+    /**
+     * Return whether the lookup occurs in a J2EE container.
+     */
+    public boolean isResourceRef() {
+<span class="nc" id="L107">        return this.resourceRef;</span>
+    }
+
+
+    /**
+     * Perform an actual JNDI lookup for the given name via the JndiTemplate.
+     * &lt;p&gt;If the name doesn't begin with &quot;java:comp/env/&quot;, this prefix is added
+     * if &quot;resourceRef&quot; is set to &quot;true&quot;.
+     *
+     * @param jndiName the JNDI name to look up
+     * @return the obtained object
+     * @throws javax.naming.NamingException if the JNDI lookup failed
+     * @see #setResourceRef
+     */
+    protected Object lookup(String jndiName) throws NamingException {
+<span class="nc" id="L122">        return lookup(jndiName, null);</span>
+    }
+
+    /**
+     * Perform an actual JNDI lookup for the given name via the JndiTemplate.
+     * &lt;p&gt;If the name doesn't begin with &quot;java:comp/env/&quot;, this prefix is added
+     * if &quot;resourceRef&quot; is set to &quot;true&quot;.
+     *
+     * @param jndiName     the JNDI name to look up
+     * @param requiredType the required type of the object
+     * @return the obtained object
+     * @throws NamingException if the JNDI lookup failed
+     * @see #setResourceRef
+     */
+    protected Object lookup(String jndiName, Class requiredType) throws NamingException {
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        if (jndiName == null) {</span>
+<span class="nc" id="L138">            throw new IllegalArgumentException(&quot;jndiName argument must not be null&quot;);</span>
+        }
+<span class="nc" id="L140">        String convertedName = convertJndiName(jndiName);</span>
+        Object jndiObject;
+        try {
+<span class="nc" id="L143">            jndiObject = getJndiTemplate().lookup(convertedName, requiredType);</span>
+        }
+<span class="nc" id="L145">        catch (NamingException ex) {</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">            if (!convertedName.equals(jndiName)) {</span>
+                // Try fallback to originally specified name...
+<span class="nc bnc" id="L148" title="All 2 branches missed.">                if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L149">                    log.debug(&quot;Converted JNDI name [&quot; + convertedName +</span>
+                            &quot;] not found - trying original name [&quot; + jndiName + &quot;]. &quot; + ex);
+                }
+<span class="nc" id="L152">                jndiObject = getJndiTemplate().lookup(jndiName, requiredType);</span>
+            } else {
+<span class="nc" id="L154">                throw ex;</span>
+            }
+<span class="nc" id="L156">        }</span>
+<span class="nc" id="L157">        log.debug(&quot;Located object with JNDI name '{}'&quot;, convertedName);</span>
+<span class="nc" id="L158">        return jndiObject;</span>
+    }
+
+    /**
+     * Convert the given JNDI name into the actual JNDI name to use.
+     * &lt;p&gt;The default implementation applies the &quot;java:comp/env/&quot; prefix if
+     * &quot;resourceRef&quot; is &quot;true&quot; and no other scheme (e.g. &quot;java:&quot;) is given.
+     *
+     * @param jndiName the original JNDI name
+     * @return the JNDI name to use
+     * @see #CONTAINER_PREFIX
+     * @see #setResourceRef
+     */
+    protected String convertJndiName(String jndiName) {
+        // Prepend container prefix if not already specified and no other scheme given.
+<span class="nc bnc" id="L173" title="All 6 branches missed.">        if (isResourceRef() &amp;&amp; !jndiName.startsWith(CONTAINER_PREFIX) &amp;&amp; jndiName.indexOf(':') == -1) {</span>
+<span class="nc" id="L174">            jndiName = CONTAINER_PREFIX + jndiName;</span>
+        }
+<span class="nc" id="L176">        return jndiName;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

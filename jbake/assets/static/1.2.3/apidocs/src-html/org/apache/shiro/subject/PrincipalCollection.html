@@ -1,0 +1,213 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<FONT color="green">007</FONT>     * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<FONT color="green">008</FONT>     * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<FONT color="green">013</FONT>     * software distributed under the License is distributed on an<a name="line.13"></a>
+<FONT color="green">014</FONT>     * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<FONT color="green">015</FONT>     * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<FONT color="green">016</FONT>     * specific language governing permissions and limitations<a name="line.16"></a>
+<FONT color="green">017</FONT>     * under the License.<a name="line.17"></a>
+<FONT color="green">018</FONT>     */<a name="line.18"></a>
+<FONT color="green">019</FONT>    package org.apache.shiro.subject;<a name="line.19"></a>
+<FONT color="green">020</FONT>    <a name="line.20"></a>
+<FONT color="green">021</FONT>    import java.io.Serializable;<a name="line.21"></a>
+<FONT color="green">022</FONT>    import java.util.Collection;<a name="line.22"></a>
+<FONT color="green">023</FONT>    import java.util.List;<a name="line.23"></a>
+<FONT color="green">024</FONT>    import java.util.Set;<a name="line.24"></a>
+<FONT color="green">025</FONT>    <a name="line.25"></a>
+<FONT color="green">026</FONT>    /**<a name="line.26"></a>
+<FONT color="green">027</FONT>     * A collection of all principals associated with a corresponding {@link Subject Subject}.  A &lt;em&gt;principal&lt;/em&gt; is<a name="line.27"></a>
+<FONT color="green">028</FONT>     * just a security term for an identifying attribute, such as a username or user id or social security number or<a name="line.28"></a>
+<FONT color="green">029</FONT>     * anything else that can be considered an 'identifying' attribute for a {@code Subject}.<a name="line.29"></a>
+<FONT color="green">030</FONT>     * &lt;p/&gt;<a name="line.30"></a>
+<FONT color="green">031</FONT>     * A PrincipalCollection organizes its internal principals based on the {@code Realm} where they came from when the<a name="line.31"></a>
+<FONT color="green">032</FONT>     * Subject was first created.  To obtain the principal(s) for a specific Realm, see the {@link #fromRealm} method.  You<a name="line.32"></a>
+<FONT color="green">033</FONT>     * can also see which realms contributed to this collection via the {@link #getRealmNames() getRealmNames()} method.<a name="line.33"></a>
+<FONT color="green">034</FONT>     *<a name="line.34"></a>
+<FONT color="green">035</FONT>     * @see #getPrimaryPrincipal()<a name="line.35"></a>
+<FONT color="green">036</FONT>     * @see #fromRealm(String realmName)<a name="line.36"></a>
+<FONT color="green">037</FONT>     * @see #getRealmNames()<a name="line.37"></a>
+<FONT color="green">038</FONT>     * @since 0.9<a name="line.38"></a>
+<FONT color="green">039</FONT>     */<a name="line.39"></a>
+<FONT color="green">040</FONT>    public interface PrincipalCollection extends Iterable, Serializable {<a name="line.40"></a>
+<FONT color="green">041</FONT>    <a name="line.41"></a>
+<FONT color="green">042</FONT>        /**<a name="line.42"></a>
+<FONT color="green">043</FONT>         * Returns the primary principal used application-wide to uniquely identify the owning account/Subject.<a name="line.43"></a>
+<FONT color="green">044</FONT>         * &lt;p/&gt;<a name="line.44"></a>
+<FONT color="green">045</FONT>         * The value is usually always a uniquely identifying attribute specific to the data source that retrieved the<a name="line.45"></a>
+<FONT color="green">046</FONT>         * account data.  Some examples:<a name="line.46"></a>
+<FONT color="green">047</FONT>         * &lt;ul&gt;<a name="line.47"></a>
+<FONT color="green">048</FONT>         * &lt;li&gt;a {@link java.util.UUID UUID}&lt;/li&gt;<a name="line.48"></a>
+<FONT color="green">049</FONT>         * &lt;li&gt;a {@code long} value such as a surrogate primary key in a relational database&lt;/li&gt;<a name="line.49"></a>
+<FONT color="green">050</FONT>         * &lt;li&gt;an LDAP UUID or static DN&lt;/li&gt;<a name="line.50"></a>
+<FONT color="green">051</FONT>         * &lt;li&gt;a String username unique across all user accounts&lt;/li&gt;<a name="line.51"></a>
+<FONT color="green">052</FONT>         * &lt;/ul&gt;<a name="line.52"></a>
+<FONT color="green">053</FONT>         * &lt;h3&gt;Multi-Realm Applications&lt;/h3&gt;<a name="line.53"></a>
+<FONT color="green">054</FONT>         * In a single-{@code Realm} application, typically there is only ever one unique principal to retain and that<a name="line.54"></a>
+<FONT color="green">055</FONT>         * is the value returned from this method.  However, in a multi-{@code Realm} application, where the<a name="line.55"></a>
+<FONT color="green">056</FONT>         * {@code PrincipalCollection} might retain principals across more than one realm, the value returned from this<a name="line.56"></a>
+<FONT color="green">057</FONT>         * method should be the single principal that uniquely identifies the subject for the entire application.<a name="line.57"></a>
+<FONT color="green">058</FONT>         * &lt;p/&gt;<a name="line.58"></a>
+<FONT color="green">059</FONT>         * That value is of course application specific, but most applications will typically choose one of the primary<a name="line.59"></a>
+<FONT color="green">060</FONT>         * principals from one of the {@code Realm}s.<a name="line.60"></a>
+<FONT color="green">061</FONT>         * &lt;p/&gt;<a name="line.61"></a>
+<FONT color="green">062</FONT>         * Shiro's default implementations of this interface make this<a name="line.62"></a>
+<FONT color="green">063</FONT>         * assumption by usually simply returning {@link #iterator()}.{@link java.util.Iterator#next() next()}, which just<a name="line.63"></a>
+<FONT color="green">064</FONT>         * returns the first returned principal obtained from the first consulted/configured {@code Realm} during the<a name="line.64"></a>
+<FONT color="green">065</FONT>         * authentication attempt.  This means in a multi-{@code Realm} application, {@code Realm} configuraiton order<a name="line.65"></a>
+<FONT color="green">066</FONT>         * matters if you want to retain this default heuristic.<a name="line.66"></a>
+<FONT color="green">067</FONT>         * &lt;p/&gt;<a name="line.67"></a>
+<FONT color="green">068</FONT>         * If this heuristic is not sufficient, most Shiro end-users will need to implement a custom<a name="line.68"></a>
+<FONT color="green">069</FONT>         * {@link org.apache.shiro.authc.pam.AuthenticationStrategy}.  An {@code AuthenticationStrategy} has exact control<a name="line.69"></a>
+<FONT color="green">070</FONT>         * over the {@link PrincipalCollection} returned at the end of an authentication attempt via the<a name="line.70"></a>
+<FONT color="green">071</FONT>         * &lt;code&gt;AuthenticationStrategy#{@link org.apache.shiro.authc.pam.AuthenticationStrategy#afterAllAttempts(org.apache.shiro.authc.AuthenticationToken, org.apache.shiro.authc.AuthenticationInfo) afterAllAttempts}&lt;/code&gt;<a name="line.71"></a>
+<FONT color="green">072</FONT>         * implementation.<a name="line.72"></a>
+<FONT color="green">073</FONT>         *<a name="line.73"></a>
+<FONT color="green">074</FONT>         * @return the primary principal used to uniquely identify the owning account/Subject<a name="line.74"></a>
+<FONT color="green">075</FONT>         * @since 1.0<a name="line.75"></a>
+<FONT color="green">076</FONT>         */<a name="line.76"></a>
+<FONT color="green">077</FONT>        Object getPrimaryPrincipal();<a name="line.77"></a>
+<FONT color="green">078</FONT>    <a name="line.78"></a>
+<FONT color="green">079</FONT>        /**<a name="line.79"></a>
+<FONT color="green">080</FONT>         * Returns the first discovered principal assignable from the specified type, or {@code null} if there are none<a name="line.80"></a>
+<FONT color="green">081</FONT>         * of the specified type.<a name="line.81"></a>
+<FONT color="green">082</FONT>         * &lt;p/&gt;<a name="line.82"></a>
+<FONT color="green">083</FONT>         * Note that this will return {@code null} if the 'owning' subject has not yet logged in.<a name="line.83"></a>
+<FONT color="green">084</FONT>         *<a name="line.84"></a>
+<FONT color="green">085</FONT>         * @param type the type of the principal that should be returned.<a name="line.85"></a>
+<FONT color="green">086</FONT>         * @return a principal of the specified type or {@code null} if there isn't one of the specified type.<a name="line.86"></a>
+<FONT color="green">087</FONT>         */<a name="line.87"></a>
+<FONT color="green">088</FONT>        &lt;T&gt; T oneByType(Class&lt;T&gt; type);<a name="line.88"></a>
+<FONT color="green">089</FONT>    <a name="line.89"></a>
+<FONT color="green">090</FONT>        /**<a name="line.90"></a>
+<FONT color="green">091</FONT>         * Returns all principals assignable from the specified type, or an empty Collection if no principals of that<a name="line.91"></a>
+<FONT color="green">092</FONT>         * type are contained.<a name="line.92"></a>
+<FONT color="green">093</FONT>         * &lt;p/&gt;<a name="line.93"></a>
+<FONT color="green">094</FONT>         * Note that this will return an empty Collection if the 'owning' subject has not yet logged in.<a name="line.94"></a>
+<FONT color="green">095</FONT>         *<a name="line.95"></a>
+<FONT color="green">096</FONT>         * @param type the type of the principals that should be returned.<a name="line.96"></a>
+<FONT color="green">097</FONT>         * @return a Collection of principals that are assignable from the specified type, or<a name="line.97"></a>
+<FONT color="green">098</FONT>         *         an empty Collection if no principals of this type are associated.<a name="line.98"></a>
+<FONT color="green">099</FONT>         */<a name="line.99"></a>
+<FONT color="green">100</FONT>        &lt;T&gt; Collection&lt;T&gt; byType(Class&lt;T&gt; type);<a name="line.100"></a>
+<FONT color="green">101</FONT>    <a name="line.101"></a>
+<FONT color="green">102</FONT>        /**<a name="line.102"></a>
+<FONT color="green">103</FONT>         * Returns a single Subject's principals retrieved from all configured Realms as a List, or an empty List if<a name="line.103"></a>
+<FONT color="green">104</FONT>         * there are not any principals.<a name="line.104"></a>
+<FONT color="green">105</FONT>         * &lt;p/&gt;<a name="line.105"></a>
+<FONT color="green">106</FONT>         * Note that this will return an empty List if the 'owning' subject has not yet logged in.<a name="line.106"></a>
+<FONT color="green">107</FONT>         *<a name="line.107"></a>
+<FONT color="green">108</FONT>         * @return a single Subject's principals retrieved from all configured Realms as a List.<a name="line.108"></a>
+<FONT color="green">109</FONT>         */<a name="line.109"></a>
+<FONT color="green">110</FONT>        List asList();<a name="line.110"></a>
+<FONT color="green">111</FONT>    <a name="line.111"></a>
+<FONT color="green">112</FONT>        /**<a name="line.112"></a>
+<FONT color="green">113</FONT>         * Returns a single Subject's principals retrieved from all configured Realms as a Set, or an empty Set if there<a name="line.113"></a>
+<FONT color="green">114</FONT>         * are not any principals.<a name="line.114"></a>
+<FONT color="green">115</FONT>         * &lt;p/&gt;<a name="line.115"></a>
+<FONT color="green">116</FONT>         * Note that this will return an empty Set if the 'owning' subject has not yet logged in.<a name="line.116"></a>
+<FONT color="green">117</FONT>         *<a name="line.117"></a>
+<FONT color="green">118</FONT>         * @return a single Subject's principals retrieved from all configured Realms as a Set.<a name="line.118"></a>
+<FONT color="green">119</FONT>         */<a name="line.119"></a>
+<FONT color="green">120</FONT>        Set asSet();<a name="line.120"></a>
+<FONT color="green">121</FONT>    <a name="line.121"></a>
+<FONT color="green">122</FONT>        /**<a name="line.122"></a>
+<FONT color="green">123</FONT>         * Returns a single Subject's principals retrieved from the specified Realm &lt;em&gt;only&lt;/em&gt; as a Collection, or an empty<a name="line.123"></a>
+<FONT color="green">124</FONT>         * Collection if there are not any principals from that realm.<a name="line.124"></a>
+<FONT color="green">125</FONT>         * &lt;p/&gt;<a name="line.125"></a>
+<FONT color="green">126</FONT>         * Note that this will return an empty Collection if the 'owning' subject has not yet logged in.<a name="line.126"></a>
+<FONT color="green">127</FONT>         *<a name="line.127"></a>
+<FONT color="green">128</FONT>         * @param realmName the name of the Realm from which the principals were retrieved.<a name="line.128"></a>
+<FONT color="green">129</FONT>         * @return the Subject's principals from the specified Realm only as a Collection or an empty Collection if there<a name="line.129"></a>
+<FONT color="green">130</FONT>         *         are not any principals from that realm.<a name="line.130"></a>
+<FONT color="green">131</FONT>         */<a name="line.131"></a>
+<FONT color="green">132</FONT>        Collection fromRealm(String realmName);<a name="line.132"></a>
+<FONT color="green">133</FONT>    <a name="line.133"></a>
+<FONT color="green">134</FONT>        /**<a name="line.134"></a>
+<FONT color="green">135</FONT>         * Returns the realm names that this collection has principals for.<a name="line.135"></a>
+<FONT color="green">136</FONT>         *<a name="line.136"></a>
+<FONT color="green">137</FONT>         * @return the names of realms that this collection has one or more principals for.<a name="line.137"></a>
+<FONT color="green">138</FONT>         */<a name="line.138"></a>
+<FONT color="green">139</FONT>        Set&lt;String&gt; getRealmNames();<a name="line.139"></a>
+<FONT color="green">140</FONT>    <a name="line.140"></a>
+<FONT color="green">141</FONT>        /**<a name="line.141"></a>
+<FONT color="green">142</FONT>         * Returns {@code true} if this collection is empty, {@code false} otherwise.<a name="line.142"></a>
+<FONT color="green">143</FONT>         *<a name="line.143"></a>
+<FONT color="green">144</FONT>         * @return {@code true} if this collection is empty, {@code false} otherwise.<a name="line.144"></a>
+<FONT color="green">145</FONT>         */<a name="line.145"></a>
+<FONT color="green">146</FONT>        boolean isEmpty();<a name="line.146"></a>
+<FONT color="green">147</FONT>    }<a name="line.147"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

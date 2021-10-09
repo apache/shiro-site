@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>PassThruAuthenticationFilter.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.filter.authc</a> &gt; <span class="el_source">PassThruAuthenticationFilter.java</span></div><h1>PassThruAuthenticationFilter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.filter.authc;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
+/**
+ * An authentication filter that redirects the user to the login page when they are trying to access
+ * a protected resource.  However, if the user is trying to access the login page, the filter lets
+ * the request pass through to the application code.
+ * &lt;p/&gt;
+ * The difference between this filter and the {@link FormAuthenticationFilter FormAuthenticationFilter} is that
+ * on a login submission (by default an HTTP POST to the login URL), the &lt;code&gt;FormAuthenticationFilter&lt;/code&gt; filter
+ * attempts to automatically authenticate the user by passing the &lt;code&gt;username&lt;/code&gt; and &lt;code&gt;password&lt;/code&gt;
+ * request parameter values to
+ * {@link org.apache.shiro.subject.Subject#login(org.apache.shiro.authc.AuthenticationToken) Subject.login(usernamePasswordToken)}
+ * directly.
+ * &lt;p/&gt;
+ * Conversely, this controller always passes all requests to the {@link #setLoginUrl loginUrl} through, both GETs and
+ * POSTs.  This is useful in cases where the developer wants to write their own login behavior, which should include a
+ * call to {@link org.apache.shiro.subject.Subject#login(org.apache.shiro.authc.AuthenticationToken) Subject.login(AuthenticationToken)}
+ * at some point.  For example,  if the developer has their own custom MVC login controller or validator,
+ * this &lt;code&gt;PassThruAuthenticationFilter&lt;/code&gt; may be appropriate.
+ *
+ * @see FormAuthenticationFilter
+ * @since 0.9
+ */
+<span class="fc" id="L45">public class PassThruAuthenticationFilter extends AuthenticationFilter {</span>
+
+    //TODO - complete JavaDoc
+
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (isLoginRequest(request, response)) {</span>
+<span class="fc" id="L51">            return true;</span>
+        } else {
+<span class="fc" id="L53">            saveRequestAndRedirectToLogin(request, response);</span>
+<span class="fc" id="L54">            return false;</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

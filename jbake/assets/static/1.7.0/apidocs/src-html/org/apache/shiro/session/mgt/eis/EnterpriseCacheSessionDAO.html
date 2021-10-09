@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html lang="fr">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<main role="main">
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a id="line.1">/*</a>
+<span class="sourceLineNo">002</span><a id="line.2"> * Licensed to the Apache Software Foundation (ASF) under one</a>
+<span class="sourceLineNo">003</span><a id="line.3"> * or more contributor license agreements.  See the NOTICE file</a>
+<span class="sourceLineNo">004</span><a id="line.4"> * distributed with this work for additional information</a>
+<span class="sourceLineNo">005</span><a id="line.5"> * regarding copyright ownership.  The ASF licenses this file</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * to you under the Apache License, Version 2.0 (the</a>
+<span class="sourceLineNo">007</span><a id="line.7"> * "License"); you may not use this file except in compliance</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * with the License.  You may obtain a copy of the License at</a>
+<span class="sourceLineNo">009</span><a id="line.9"> *</a>
+<span class="sourceLineNo">010</span><a id="line.10"> *     http://www.apache.org/licenses/LICENSE-2.0</a>
+<span class="sourceLineNo">011</span><a id="line.11"> *</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * Unless required by applicable law or agreed to in writing,</a>
+<span class="sourceLineNo">013</span><a id="line.13"> * software distributed under the License is distributed on an</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</a>
+<span class="sourceLineNo">015</span><a id="line.15"> * KIND, either express or implied.  See the License for the</a>
+<span class="sourceLineNo">016</span><a id="line.16"> * specific language governing permissions and limitations</a>
+<span class="sourceLineNo">017</span><a id="line.17"> * under the License.</a>
+<span class="sourceLineNo">018</span><a id="line.18"> */</a>
+<span class="sourceLineNo">019</span><a id="line.19">package org.apache.shiro.session.mgt.eis;</a>
+<span class="sourceLineNo">020</span><a id="line.20"></a>
+<span class="sourceLineNo">021</span><a id="line.21">import org.apache.shiro.cache.AbstractCacheManager;</a>
+<span class="sourceLineNo">022</span><a id="line.22">import org.apache.shiro.cache.Cache;</a>
+<span class="sourceLineNo">023</span><a id="line.23">import org.apache.shiro.cache.CacheException;</a>
+<span class="sourceLineNo">024</span><a id="line.24">import org.apache.shiro.cache.MapCache;</a>
+<span class="sourceLineNo">025</span><a id="line.25">import org.apache.shiro.session.Session;</a>
+<span class="sourceLineNo">026</span><a id="line.26"></a>
+<span class="sourceLineNo">027</span><a id="line.27">import java.io.Serializable;</a>
+<span class="sourceLineNo">028</span><a id="line.28">import java.util.concurrent.ConcurrentHashMap;</a>
+<span class="sourceLineNo">029</span><a id="line.29"></a>
+<span class="sourceLineNo">030</span><a id="line.30">/**</a>
+<span class="sourceLineNo">031</span><a id="line.31"> * SessionDAO implementation that relies on an enterprise caching product as the EIS system of record for all sessions.</a>
+<span class="sourceLineNo">032</span><a id="line.32"> * It is expected that an injected {@link org.apache.shiro.cache.Cache Cache} or</a>
+<span class="sourceLineNo">033</span><a id="line.33"> * {@link org.apache.shiro.cache.CacheManager CacheManager} is backed by an enterprise caching product that can support</a>
+<span class="sourceLineNo">034</span><a id="line.34"> * all application sessions and/or provide disk paging for resilient data storage.</a>
+<span class="sourceLineNo">035</span><a id="line.35"> * &lt;h2&gt;Production Note&lt;/h2&gt;</a>
+<span class="sourceLineNo">036</span><a id="line.36"> * This implementation defaults to using an in-memory map-based {@code CacheManager}, which is great for testing but</a>
+<span class="sourceLineNo">037</span><a id="line.37"> * will typically not scale for production environments and could easily cause {@code OutOfMemoryException}s.  Just</a>
+<span class="sourceLineNo">038</span><a id="line.38"> * don't forget to configure&lt;b&gt;*&lt;/b&gt; an instance of this class with a production-grade {@code CacheManager} that can</a>
+<span class="sourceLineNo">039</span><a id="line.39"> * handle disk paging for large numbers of sessions and you'll be fine.</a>
+<span class="sourceLineNo">040</span><a id="line.40"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">041</span><a id="line.41"> * &lt;b&gt;*&lt;/b&gt;If you configure Shiro's {@code SecurityManager} instance with such a {@code CacheManager}, it will be</a>
+<span class="sourceLineNo">042</span><a id="line.42"> * automatically applied to an instance of this class and you won't need to explicitly set it in configuration.</a>
+<span class="sourceLineNo">043</span><a id="line.43"> * &lt;h3&gt;Implementation Details&lt;/h3&gt;</a>
+<span class="sourceLineNo">044</span><a id="line.44"> * This implementation relies heavily on the {@link CachingSessionDAO parent class}'s transparent caching behavior for</a>
+<span class="sourceLineNo">045</span><a id="line.45"> * all storage operations with the enterprise caching product.  Because the parent class uses a {@code Cache} or</a>
+<span class="sourceLineNo">046</span><a id="line.46"> * {@code CacheManager} to perform caching, and the cache is considered the system of record, nothing further needs to</a>
+<span class="sourceLineNo">047</span><a id="line.47"> * be done for the {@link #doReadSession}, {@link #doUpdate} and {@link #doDelete} method implementations.  This class</a>
+<span class="sourceLineNo">048</span><a id="line.48"> * implements those methods as required by the parent class, but they essentially do nothing.</a>
+<span class="sourceLineNo">049</span><a id="line.49"> *</a>
+<span class="sourceLineNo">050</span><a id="line.50"> * @since 1.0</a>
+<span class="sourceLineNo">051</span><a id="line.51"> */</a>
+<span class="sourceLineNo">052</span><a id="line.52">public class EnterpriseCacheSessionDAO extends CachingSessionDAO {</a>
+<span class="sourceLineNo">053</span><a id="line.53"></a>
+<span class="sourceLineNo">054</span><a id="line.54">    public EnterpriseCacheSessionDAO() {</a>
+<span class="sourceLineNo">055</span><a id="line.55">        setCacheManager(new AbstractCacheManager() {</a>
+<span class="sourceLineNo">056</span><a id="line.56">            @Override</a>
+<span class="sourceLineNo">057</span><a id="line.57">            protected Cache&lt;Serializable, Session&gt; createCache(String name) throws CacheException {</a>
+<span class="sourceLineNo">058</span><a id="line.58">                return new MapCache&lt;Serializable, Session&gt;(name, new ConcurrentHashMap&lt;Serializable, Session&gt;());</a>
+<span class="sourceLineNo">059</span><a id="line.59">            }</a>
+<span class="sourceLineNo">060</span><a id="line.60">        });</a>
+<span class="sourceLineNo">061</span><a id="line.61">    }</a>
+<span class="sourceLineNo">062</span><a id="line.62"></a>
+<span class="sourceLineNo">063</span><a id="line.63">    protected Serializable doCreate(Session session) {</a>
+<span class="sourceLineNo">064</span><a id="line.64">        Serializable sessionId = generateSessionId(session);</a>
+<span class="sourceLineNo">065</span><a id="line.65">        assignSessionId(session, sessionId);</a>
+<span class="sourceLineNo">066</span><a id="line.66">        return sessionId;</a>
+<span class="sourceLineNo">067</span><a id="line.67">    }</a>
+<span class="sourceLineNo">068</span><a id="line.68"></a>
+<span class="sourceLineNo">069</span><a id="line.69">    protected Session doReadSession(Serializable sessionId) {</a>
+<span class="sourceLineNo">070</span><a id="line.70">        return null; //should never execute because this implementation relies on parent class to access cache, which</a>
+<span class="sourceLineNo">071</span><a id="line.71">        //is where all sessions reside - it is the cache implementation that determines if the</a>
+<span class="sourceLineNo">072</span><a id="line.72">        //cache is memory only or disk-persistent, etc.</a>
+<span class="sourceLineNo">073</span><a id="line.73">    }</a>
+<span class="sourceLineNo">074</span><a id="line.74"></a>
+<span class="sourceLineNo">075</span><a id="line.75">    protected void doUpdate(Session session) {</a>
+<span class="sourceLineNo">076</span><a id="line.76">        //does nothing - parent class persists to cache.</a>
+<span class="sourceLineNo">077</span><a id="line.77">    }</a>
+<span class="sourceLineNo">078</span><a id="line.78"></a>
+<span class="sourceLineNo">079</span><a id="line.79">    protected void doDelete(Session session) {</a>
+<span class="sourceLineNo">080</span><a id="line.80">        //does nothing - parent class removes from cache.</a>
+<span class="sourceLineNo">081</span><a id="line.81">    }</a>
+<span class="sourceLineNo">082</span><a id="line.82">}</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</main>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractLdapRealm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Shiro :: Core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.realm.ldap</a> &gt; <span class="el_source">AbstractLdapRealm.java</span></div><h1>AbstractLdapRealm.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.realm.ldap;
+
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.naming.NamingException;
+
+/**
+ * &lt;p&gt;A {@link org.apache.shiro.realm.Realm} that authenticates with an LDAP
+ * server to build the Subject for a user.  This implementation only returns roles for a
+ * particular user, and not permissions - but it can be subclassed to build a permission
+ * list as well.&lt;/p&gt;
+ *
+ * &lt;p&gt;Implementations would need to implement the
+ * {@link #queryForAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken ,LdapContextFactory)} and
+ * {@link #queryForAuthorizationInfo(org.apache.shiro.subject.PrincipalCollection ,LdapContextFactory)} abstract methods.&lt;/p&gt;
+ *
+ * &lt;p&gt;By default, this implementation will create an instance of {@link DefaultLdapContextFactory} to use for
+ * creating LDAP connections using the principalSuffix, searchBase, url, systemUsername, and systemPassword properties
+ * specified on the realm.  The remaining settings use the defaults of {@link DefaultLdapContextFactory}, which are usually
+ * sufficient.  If more customized connections are needed, you should inject a custom {@link LdapContextFactory}, which
+ * will cause these properties specified on the realm to be ignored.&lt;/p&gt;
+ *
+ * @see #queryForAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken , LdapContextFactory)
+ * @see #queryForAuthorizationInfo(org.apache.shiro.subject.PrincipalCollection , LdapContextFactory)
+ * @since 0.1
+ */
+<span class="fc" id="L53">public abstract class AbstractLdapRealm extends AuthorizingRealm {</span>
+
+    //TODO - complete JavaDoc
+
+    /*--------------------------------------------
+    |             C O N S T A N T S             |
+    ============================================*/
+
+<span class="fc" id="L61">    private static final Logger log = LoggerFactory.getLogger(AbstractLdapRealm.class);</span>
+
+    /*--------------------------------------------
+    |    I N S T A N C E   V A R I A B L E S    |
+    ============================================*/
+<span class="fc" id="L66">    protected String principalSuffix = null;</span>
+
+<span class="fc" id="L68">    protected String searchBase = null;</span>
+
+<span class="fc" id="L70">    protected String url = null;</span>
+
+<span class="fc" id="L72">    protected String systemUsername = null;</span>
+
+<span class="fc" id="L74">    protected String systemPassword = null;</span>
+
+    //SHIRO-115 - prevent potential code injection:
+<span class="fc" id="L77">    protected String searchFilter = &quot;(&amp;(objectClass=*)(userPrincipalName={0}))&quot;;</span>
+
+<span class="fc" id="L79">    private LdapContextFactory ldapContextFactory = null;</span>
+
+    /*--------------------------------------------
+    |         C O N S T R U C T O R S           |
+    ============================================*/
+
+    /*--------------------------------------------
+    |  A C C E S S O R S / M O D I F I E R S    |
+    ============================================*/
+
+    /*--------------------------------------------
+    |               M E T H O D S               |
+    ============================================*/
+
+
+    /**
+     * Used when initializing the default {@link LdapContextFactory}.  This property is ignored if a custom
+     * &lt;tt&gt;LdapContextFactory&lt;/tt&gt; is specified.
+     *
+     * @param principalSuffix the suffix.
+     * @see DefaultLdapContextFactory#setPrincipalSuffix(String)
+     */
+    public void setPrincipalSuffix(String principalSuffix) {
+<span class="nc" id="L102">        this.principalSuffix = principalSuffix;</span>
+<span class="nc" id="L103">    }</span>
+
+    /**
+     * Used when initializing the default {@link LdapContextFactory}.  This property is ignored if a custom
+     * &lt;tt&gt;LdapContextFactory&lt;/tt&gt; is specified.
+     *
+     * @param searchBase the search base.
+     * @see DefaultLdapContextFactory#setSearchBase(String)
+     */
+    public void setSearchBase(String searchBase) {
+<span class="nc" id="L113">        this.searchBase = searchBase;</span>
+<span class="nc" id="L114">    }</span>
+
+    /**
+     * Used when initializing the default {@link LdapContextFactory}.  This property is ignored if a custom
+     * &lt;tt&gt;LdapContextFactory&lt;/tt&gt; is specified.
+     *
+     * @param url the LDAP url.
+     * @see DefaultLdapContextFactory#setUrl(String)
+     */
+    public void setUrl(String url) {
+<span class="nc" id="L124">        this.url = url;</span>
+<span class="nc" id="L125">    }</span>
+
+    /**
+     * Used when initializing the default {@link LdapContextFactory}.  This property is ignored if a custom
+     * &lt;tt&gt;LdapContextFactory&lt;/tt&gt; is specified.
+     *
+     * @param systemUsername the username to use when logging into the LDAP server for authorization.
+     * @see DefaultLdapContextFactory#setSystemUsername(String)
+     */
+    public void setSystemUsername(String systemUsername) {
+<span class="nc" id="L135">        this.systemUsername = systemUsername;</span>
+<span class="nc" id="L136">    }</span>
+
+
+    /**
+     * Used when initializing the default {@link LdapContextFactory}.  This property is ignored if a custom
+     * &lt;tt&gt;LdapContextFactory&lt;/tt&gt; is specified.
+     *
+     * @param systemPassword the password to use when logging into the LDAP server for authorization.
+     * @see DefaultLdapContextFactory#setSystemPassword(String)
+     */
+    public void setSystemPassword(String systemPassword) {
+<span class="nc" id="L147">        this.systemPassword = systemPassword;</span>
+<span class="nc" id="L148">    }</span>
+
+
+    /**
+     * Configures the {@link LdapContextFactory} implementation that is used to create LDAP connections for
+     * authentication and authorization.  If this is set, the {@link LdapContextFactory} provided will be used.
+     * Otherwise, a {@link DefaultLdapContextFactory} instance will be created based on the properties specified
+     * in this realm.
+     *
+     * @param ldapContextFactory the factory to use - if not specified, a default factory will be created automatically.
+     */
+    public void setLdapContextFactory(LdapContextFactory ldapContextFactory) {
+<span class="nc" id="L160">        this.ldapContextFactory = ldapContextFactory;</span>
+<span class="nc" id="L161">    }</span>
+
+
+    public void setSearchFilter(String searchFilter) {
+<span class="nc" id="L165">        this.searchFilter = searchFilter;</span>
+<span class="nc" id="L166">    }</span>
+
+    /*--------------------------------------------
+    |               M E T H O D S                |
+    ============================================*/
+
+    protected void onInit() {
+<span class="nc" id="L173">        super.onInit();</span>
+<span class="nc" id="L174">        ensureContextFactory();</span>
+<span class="nc" id="L175">    }</span>
+
+    private LdapContextFactory ensureContextFactory() {
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">        if (this.ldapContextFactory == null) {</span>
+
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">            if (log.isDebugEnabled()) {</span>
+<span class="fc" id="L181">                log.debug(&quot;No LdapContextFactory specified - creating a default instance.&quot;);</span>
+            }
+
+<span class="fc" id="L184">            DefaultLdapContextFactory defaultFactory = new DefaultLdapContextFactory();</span>
+<span class="fc" id="L185">            defaultFactory.setPrincipalSuffix(this.principalSuffix);</span>
+<span class="fc" id="L186">            defaultFactory.setSearchBase(this.searchBase);</span>
+<span class="fc" id="L187">            defaultFactory.setUrl(this.url);</span>
+<span class="fc" id="L188">            defaultFactory.setSystemUsername(this.systemUsername);</span>
+<span class="fc" id="L189">            defaultFactory.setSystemPassword(this.systemPassword);</span>
+
+<span class="fc" id="L191">            this.ldapContextFactory = defaultFactory;</span>
+        }
+<span class="fc" id="L193">        return this.ldapContextFactory;</span>
+    }
+
+
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        AuthenticationInfo info;
+        try {
+<span class="fc" id="L200">            info = queryForAuthenticationInfo(token, ensureContextFactory());</span>
+<span class="nc" id="L201">        } catch (javax.naming.AuthenticationException e) {</span>
+<span class="nc" id="L202">            throw new AuthenticationException(&quot;LDAP authentication failed.&quot;, e);</span>
+<span class="nc" id="L203">        } catch (NamingException e) {</span>
+<span class="nc" id="L204">            String msg = &quot;LDAP naming error while attempting to authenticate user.&quot;;</span>
+<span class="nc" id="L205">            throw new AuthenticationException(msg, e);</span>
+<span class="fc" id="L206">        }</span>
+
+<span class="fc" id="L208">        return info;</span>
+    }
+
+
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+        AuthorizationInfo info;
+        try {
+<span class="nc" id="L215">            info = queryForAuthorizationInfo(principals, ensureContextFactory());</span>
+<span class="nc" id="L216">        } catch (NamingException e) {</span>
+<span class="nc" id="L217">            String msg = &quot;LDAP naming error while attempting to retrieve authorization for user [&quot; + principals + &quot;].&quot;;</span>
+<span class="nc" id="L218">            throw new AuthorizationException(msg, e);</span>
+<span class="nc" id="L219">        }</span>
+
+<span class="nc" id="L221">        return info;</span>
+    }
+
+
+    /**
+     * &lt;p&gt;Abstract method that should be implemented by subclasses to builds an
+     * {@link AuthenticationInfo} object by querying the LDAP context for the
+     * specified username.&lt;/p&gt;
+     *
+     * @param token              the authentication token given during authentication.
+     * @param ldapContextFactory factory used to retrieve LDAP connections.
+     * @return an {@link AuthenticationInfo} instance containing information retrieved from the LDAP server.
+     * @throws NamingException if any LDAP errors occur during the search.
+     */
+    protected abstract AuthenticationInfo queryForAuthenticationInfo(AuthenticationToken token, LdapContextFactory ldapContextFactory) throws NamingException;
+
+
+    /**
+     * &lt;p&gt;Abstract method that should be implemented by subclasses to builds an
+     * {@link AuthorizationInfo} object by querying the LDAP context for the
+     * specified principal.&lt;/p&gt;
+     *
+     * @param principal          the principal of the Subject whose AuthenticationInfo should be queried from the LDAP server.
+     * @param ldapContextFactory factory used to retrieve LDAP connections.
+     * @return an {@link AuthorizationInfo} instance containing information retrieved from the LDAP server.
+     * @throws NamingException if any LDAP errors occur during the search.
+     */
+    protected abstract AuthorizationInfo queryForAuthorizationInfo(PrincipalCollection principal, LdapContextFactory ldapContextFactory) throws NamingException;
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
