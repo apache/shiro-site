@@ -20,97 +20,20 @@ name: Maven CI
 on:
   workflow_dispatch: {}
   push:
-    branches: [ main ]
+    branches: [ main, jbake ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, jbake ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      - name: Set up JDK
-        uses: actions/setup-java@v2
+      - uses: actions/setup-java@v2
         with:
-          java-version: 8
-          distribution: adopt-hotspot
+          java-version: '11'
+          distribution: 'temurin'
 
-      - name: License Check
-        run: mvn apache-rat:check "-Drat.consoleOutput"
-
-      - name: Build with Maven
-        run: mvn verify --show-version --errors --batch-mode --no-transfer-progress -Pdocs
-
-  build-all:
-    needs: build
-
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, windows-latest, macOS-latest ]
-        java:
-          #  8
-          - version: 8
-            dist: adopt-hotspot
-          - version: 8
-            dist: adopt-openj9
-          - version: 8
-            dist: zulu
-          # 11
-          - version: 11
-            dist: adopt-hotspot
-          - version: 11
-            dist: adopt-openj9
-          - version: 11
-            dist: zulu
-          # 17 (16 fallback)
-          - version: 17
-            dist: temurin
-          - version: 16
-            dist: adopt-openj9
-          - version: 17
-            dist: zulu
-        exclude:
-          # was already built
-          - os: ubuntu-latest
-            java:
-              version: 8
-              dist: adopt-hotspot
-          # exclude some builds, because MacOs builds have fewer resources available.
-          # excludes java 16 on macOS.
-          - os: macOS-latest
-            java:
-              version: 16
-          # exclude temurin on MacOS. zulu (also hotspot) and OpenJ9 are sufficient.
-          - os: macOS-latest
-            java:
-              dist: adopt-hotspot
-      fail-fast: false
-
-    runs-on: ${{ matrix.os }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Set up cache for ~./m2/repository
-        uses: actions/cache@v2.1.6
-        with:
-          path: |
-            ~/.m2/repository
-            !~/.m2/repository/org/apache/shiro
-          key: maven-${{ matrix.os }}-java${{ matrix.java }}-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            maven-${{ matrix.os }}-java${{ matrix.java }}-
-            maven-${{ matrix.os }}-
-
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: ${{ matrix.java.version }}
-          distribution: ${{ matrix.java.dist }}
-
-      - name: Build with Maven
-        run: mvn verify --show-version --errors --batch-mode --no-transfer-progress -Pdocs
+      - run: cd jbake && mvn generate-resources --show-version --errors --batch-mode --no-transfer-progress
