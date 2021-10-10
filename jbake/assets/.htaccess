@@ -19,3 +19,15 @@ RedirectMatch ^/2013/05/30/apache-shiro-122-released.html /how-to-contribute.htm
 
 # redirect old file names
 RedirectMatch ^/assets/images/articles/(.*) /files/articles/$1
+
+# javadoc fixes
+# old jar name
+RedirectMatch /static/(.*)/tools(.*) /static/$1/shiro-tools/$2
+
+# those do not exist anymore.
+RedirectMatch /static/1.1.0(.*) /static/current$1
+RedirectMatch /static/1.0.0-incubating(.*) /static/current$1
+
+# latest
+RedirectMatch /static/current(.*) /static/1.8.0$1
+RedirectMatch /static/latest(.*) /static/1.8.0$1
