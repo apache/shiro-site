@@ -40,6 +40,7 @@
     <meta name="generator" content="JBake">
     <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
     <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso" />
     <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
 
     <!-- Le styles -->
