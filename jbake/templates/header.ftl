@@ -33,8 +33,16 @@
     </#if>
     <title>${ftltitle}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <#if (content.description)??>
+    <meta name="description" content="${content.description}">
+    <meta property="og:description" content="${content.description}">
+    <#else>
+    <meta name="description" content="Apache Shiro is a powerful and easy-to-use Java security framework that performs authentication, authorization, cryptography, and session management.">
+    <#-- leave out og:description, so it will fill from the body. -->
+    </#if>
+    <#if (content.type == "post") && (content.author)??>
+    <meta name="author" content="${content.author}">
+    </#if>
     <#if (content.tags)??>
     <meta name="keywords" content='${(content.tags)?join(",")}'>
     </#if>
