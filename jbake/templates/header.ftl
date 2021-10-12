@@ -84,7 +84,7 @@
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
     </#if>
-    <meta property="og:site_name" content="The Apache Software Foundation"/>
+    <meta property="og:site_name" content="Apache Shiro"/>
 
     <!-- Le styles -->
     <link href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>css/bootstrap.min.css" rel="stylesheet">
