@@ -37,7 +37,6 @@
     <meta name="description" content="${content.description}">
     <meta property="og:description" content="${content.description}">
     <#else>
-    <meta name="description" content="Apache Shiro is a powerful and easy-to-use Java security framework that performs authentication, authorization, cryptography, and session management.">
     <#-- leave out og:description, so it will fill from the body. -->
     </#if>
     <#if (content.type == "post") && (content.author)??>
