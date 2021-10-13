@@ -71,7 +71,9 @@
     <meta property="og:type" content="website"/>
     </#switch>
     <#if (content.tags)??>
-    <meta property="article:tag" content='${content.tags?join(",")}'/>
+      <#list (content.tags) as tag>
+    <meta property="article:tag" content='${tag}'/>
+      </#list>
     </#if>
     <meta property="og:locale" content="en_US" />
     <#if content?? &&  (content.type)?? && (content.type) == "page">
