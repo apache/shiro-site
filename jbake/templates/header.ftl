@@ -21,27 +21,77 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>
-      <#if (content.title)?? && (content.title)?contains("|")>
-        <#-- The page has a full custom title, render it directly: -->
-        ${content.title}
-      <#elseif (content.title)??>
-        <#-- standard title, append the project name appended for SEO: -->
-        ${content.title} | Apache Shiro
-      <#else>
-        <#-- No title found in the page metadata, set the default: -->
-        Apache Shiro | Simple. Java. Security.
-      </#if>
-    </title>
+    <#if (content.title)?? && (content.title)?contains("|")>
+    <#-- The page has a full custom title, render it directly: -->
+      <#assign ftltitle="${content.title}" />
+    <#elseif (content.title)??>
+    <#-- standard title, append the project name appended for SEO: -->
+      <#assign ftltitle="${content.title} | Apache Shiro" />
+    <#else>
+    <#-- No title found in the page metadata, set the default: -->
+      <#assign ftltitle="Apache Shiro | Simple. Java. Security." />
+    </#if>
+    <title>${ftltitle}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <meta name="keywords" content="">
+    <#if (content.description)??>
+    <meta name="description" content="${content.description}">
+    <meta property="og:description" content="${content.description}">
+    <#else>
+    <#-- leave out og:description, so it will fill from the body. -->
+    </#if>
+    <#if (content.type == "post") && (content.author)??>
+    <meta name="author" content="${content.author}">
+    </#if>
+    <#if (content.tags)??>
+    <meta name="keywords" content='${(content.tags)?join(",")}'>
+    </#if>
     <meta name="generator" content="JBake">
     <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
     <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
-    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso" />
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
     <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
+
+    <meta property="og:title" content="${ftltitle}"/>
+    <#switch (content.type)!"">
+      <#case "post">
+        <#if (content.date)??>
+    <meta property="article:published_time" content="${content.date?date?string.iso}"/>
+        </#if>
+      <#-- fall through -->
+      <#case "page">
+    <meta property="og:type" content="article"/>
+        <#if (content.date)??>
+    <meta property="article:modification_time" content="${content.date?date?string.iso}"/>
+        </#if>
+        <#if (content.published_date)??>
+    <meta property="article:published_time" content="${content.published_date?date?string.iso}"/>
+        </#if>
+        <#break>
+      <#default>
+    <meta property="og:type" content="website"/>
+    </#switch>
+    <#if (content.tags)??>
+    <meta property="article:tag" content='${content.tags?join(",")}'/>
+    </#if>
+    <meta property="og:locale" content="en_US" />
+    <#if content?? &&  (content.type)?? && (content.type) == "page">
+    <meta property="og:url" content='${config.site_host}/${content.uri}'/>
+    <#else></#if>
+    <#-- custom featured image if it exists or default featured image. -->
+    <#if (content.featuredimage)?? >
+    <meta property="og:image" content="${content.rootpath!""}${content.featuredimage}"/>
+      <#if (content.featuredimagewidth)??>
+    <meta property="og:image:width" content="${content.featuredimagewidth}"/>
+      </#if>
+      <#if (content.featuredimageheight)??>
+    <meta property="og:image:height" content="${content.featuredimageheight}"/>
+      </#if>
+    <#else>
+    <meta property="og:image" content='${content.rootpath!""}img/shiro-featured-image.png'/>
+    <meta property="og:image:width" content='1200'/>
+    <meta property="og:image:height" content='628'/>
+    </#if>
+    <meta property="og:site_name" content="Apache Shiro"/>
 
     <!-- Le styles -->
     <link href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>css/bootstrap.min.css" rel="stylesheet">
