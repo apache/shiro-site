@@ -89,7 +89,8 @@
     <#else></#if>
     <#-- custom featured image if it exists or default featured image. -->
     <#if (content.featuredimage)?? >
-    <meta property="og:image" content="${content.rootpath!""}${content.featuredimage}"/>
+    <meta property="og:image" content="${content.featuredimage}"/>
+    <meta property="twitter:image" content="${content.featuredimage}"/>
       <#if (content.featuredimagewidth)??>
     <meta property="og:image:width" content="${content.featuredimagewidth}"/>
       </#if>
