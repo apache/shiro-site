@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<main role="main">
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a id="line.1">/*</a>
+<span class="sourceLineNo">002</span><a id="line.2"> * Licensed to the Apache Software Foundation (ASF) under one</a>
+<span class="sourceLineNo">003</span><a id="line.3"> * or more contributor license agreements.  See the NOTICE file</a>
+<span class="sourceLineNo">004</span><a id="line.4"> * distributed with this work for additional information</a>
+<span class="sourceLineNo">005</span><a id="line.5"> * regarding copyright ownership.  The ASF licenses this file</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * to you under the Apache License, Version 2.0 (the</a>
+<span class="sourceLineNo">007</span><a id="line.7"> * "License"); you may not use this file except in compliance</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * with the License.  You may obtain a copy of the License at</a>
+<span class="sourceLineNo">009</span><a id="line.9"> *</a>
+<span class="sourceLineNo">010</span><a id="line.10"> *     http://www.apache.org/licenses/LICENSE-2.0</a>
+<span class="sourceLineNo">011</span><a id="line.11"> *</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * Unless required by applicable law or agreed to in writing,</a>
+<span class="sourceLineNo">013</span><a id="line.13"> * software distributed under the License is distributed on an</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</a>
+<span class="sourceLineNo">015</span><a id="line.15"> * KIND, either express or implied.  See the License for the</a>
+<span class="sourceLineNo">016</span><a id="line.16"> * specific language governing permissions and limitations</a>
+<span class="sourceLineNo">017</span><a id="line.17"> * under the License.</a>
+<span class="sourceLineNo">018</span><a id="line.18"> */</a>
+<span class="sourceLineNo">019</span><a id="line.19">package org.apache.shiro.io;</a>
+<span class="sourceLineNo">020</span><a id="line.20"></a>
+<span class="sourceLineNo">021</span><a id="line.21">import java.beans.XMLDecoder;</a>
+<span class="sourceLineNo">022</span><a id="line.22">import java.beans.XMLEncoder;</a>
+<span class="sourceLineNo">023</span><a id="line.23">import java.io.BufferedInputStream;</a>
+<span class="sourceLineNo">024</span><a id="line.24">import java.io.BufferedOutputStream;</a>
+<span class="sourceLineNo">025</span><a id="line.25">import java.io.ByteArrayInputStream;</a>
+<span class="sourceLineNo">026</span><a id="line.26">import java.io.ByteArrayOutputStream;</a>
+<span class="sourceLineNo">027</span><a id="line.27"></a>
+<span class="sourceLineNo">028</span><a id="line.28">/**</a>
+<span class="sourceLineNo">029</span><a id="line.29"> * Serializer implementation that uses the JavaBeans</a>
+<span class="sourceLineNo">030</span><a id="line.30"> * {@link java.beans.XMLEncoder XMLEncoder} and {@link java.beans.XMLDecoder XMLDecoder} to serialize</a>
+<span class="sourceLineNo">031</span><a id="line.31"> * and deserialize, respectively.</a>
+<span class="sourceLineNo">032</span><a id="line.32"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">033</span><a id="line.33"> * &lt;b&gt;NOTE:&lt;/b&gt; The JavaBeans XMLEncoder/XMLDecoder only successfully encode/decode objects when they are</a>
+<span class="sourceLineNo">034</span><a id="line.34"> * JavaBeans compatible!</a>
+<span class="sourceLineNo">035</span><a id="line.35"> *</a>
+<span class="sourceLineNo">036</span><a id="line.36"> * @since 0.9</a>
+<span class="sourceLineNo">037</span><a id="line.37"> * @deprecated This class should not be used directly because of unsecure XMLEncoder/XMLDecoder usage.</a>
+<span class="sourceLineNo">038</span><a id="line.38"> */</a>
+<span class="sourceLineNo">039</span><a id="line.39">public class XmlSerializer implements Serializer {</a>
+<span class="sourceLineNo">040</span><a id="line.40"></a>
+<span class="sourceLineNo">041</span><a id="line.41">    /**</a>
+<span class="sourceLineNo">042</span><a id="line.42">     * Serializes the specified &lt;code&gt;source&lt;/code&gt; into a byte[] array by using the</a>
+<span class="sourceLineNo">043</span><a id="line.43">     * {@link java.beans.XMLEncoder XMLEncoder} to encode the object out to a</a>
+<span class="sourceLineNo">044</span><a id="line.44">     * {@link java.io.ByteArrayOutputStream ByteArrayOutputStream}, where the resulting byte[] array is returned.</a>
+<span class="sourceLineNo">045</span><a id="line.45">     * @param source the Object to convert into a byte[] array.</a>
+<span class="sourceLineNo">046</span><a id="line.46">     * @return the byte[] array representation of the XML encoded output.</a>
+<span class="sourceLineNo">047</span><a id="line.47">     */</a>
+<span class="sourceLineNo">048</span><a id="line.48">    public byte[] serialize(Object source) {</a>
+<span class="sourceLineNo">049</span><a id="line.49">        if (source == null) {</a>
+<span class="sourceLineNo">050</span><a id="line.50">            String msg = "argument cannot be null.";</a>
+<span class="sourceLineNo">051</span><a id="line.51">            throw new IllegalArgumentException(msg);</a>
+<span class="sourceLineNo">052</span><a id="line.52">        }</a>
+<span class="sourceLineNo">053</span><a id="line.53"></a>
+<span class="sourceLineNo">054</span><a id="line.54">        ByteArrayOutputStream bos = new ByteArrayOutputStream();</a>
+<span class="sourceLineNo">055</span><a id="line.55">        XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(bos));</a>
+<span class="sourceLineNo">056</span><a id="line.56">        encoder.writeObject(source);</a>
+<span class="sourceLineNo">057</span><a id="line.57">        encoder.close();</a>
+<span class="sourceLineNo">058</span><a id="line.58"></a>
+<span class="sourceLineNo">059</span><a id="line.59">        return bos.toByteArray();</a>
+<span class="sourceLineNo">060</span><a id="line.60">    }</a>
+<span class="sourceLineNo">061</span><a id="line.61"></a>
+<span class="sourceLineNo">062</span><a id="line.62">    /**</a>
+<span class="sourceLineNo">063</span><a id="line.63">     * Deserializes the specified &lt;code&gt;serialized&lt;/code&gt; source back into an Object by using a</a>
+<span class="sourceLineNo">064</span><a id="line.64">     * {@link java.io.ByteArrayInputStream ByteArrayInputStream} to wrap the argument and then decode this</a>
+<span class="sourceLineNo">065</span><a id="line.65">     * stream via an {@link java.beans.XMLDecoder XMLDecoder}, where the</a>
+<span class="sourceLineNo">066</span><a id="line.66">     * {@link java.beans.XMLDecoder#readObject() readObject} call results in the original Object to return.</a>
+<span class="sourceLineNo">067</span><a id="line.67">     * @param serialized the byte[] array representation of the XML encoded output.</a>
+<span class="sourceLineNo">068</span><a id="line.68">     * @return the original source Object in reconstituted form.</a>
+<span class="sourceLineNo">069</span><a id="line.69">     */</a>
+<span class="sourceLineNo">070</span><a id="line.70">    public Object deserialize(byte[] serialized) {</a>
+<span class="sourceLineNo">071</span><a id="line.71">        if (serialized == null) {</a>
+<span class="sourceLineNo">072</span><a id="line.72">            throw new IllegalArgumentException("Argument cannot be null.");</a>
+<span class="sourceLineNo">073</span><a id="line.73">        }</a>
+<span class="sourceLineNo">074</span><a id="line.74">        ByteArrayInputStream bis = new ByteArrayInputStream(serialized);</a>
+<span class="sourceLineNo">075</span><a id="line.75">        XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(bis));</a>
+<span class="sourceLineNo">076</span><a id="line.76">        Object o = decoder.readObject();</a>
+<span class="sourceLineNo">077</span><a id="line.77">        decoder.close();</a>
+<span class="sourceLineNo">078</span><a id="line.78">        return o;</a>
+<span class="sourceLineNo">079</span><a id="line.79">    }</a>
+<span class="sourceLineNo">080</span><a id="line.80">}</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</main>
+</body>
+</html>

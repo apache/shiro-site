@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SampleShiroNativeSessionsServletModule.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Shiro :: Samples :: Guice Web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.samples.guice</a> &gt; <span class="el_source">SampleShiroNativeSessionsServletModule.java</span></div><h1>SampleShiroNativeSessionsServletModule.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.samples.guice;
+
+import com.google.inject.Provides;
+import com.google.inject.binder.AnnotatedBindingBuilder;
+import com.google.inject.name.Names;
+import org.apache.shiro.codec.Base64;
+import org.apache.shiro.config.ConfigurationException;
+import org.apache.shiro.config.Ini;
+import org.apache.shiro.guice.web.ShiroWebModule;
+import org.apache.shiro.realm.text.IniRealm;
+import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.mgt.WebSecurityManager;
+import org.apache.shiro.web.servlet.Cookie;
+import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+
+import javax.inject.Singleton;
+import javax.servlet.ServletContext;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+public class SampleShiroNativeSessionsServletModule extends ShiroWebModule {
+    private final ServletContext servletContext;
+
+    public SampleShiroNativeSessionsServletModule(ServletContext servletContext) {
+<span class="fc" id="L46">        super(servletContext);</span>
+
+<span class="fc" id="L48">        this.servletContext = servletContext;</span>
+<span class="fc" id="L49">    }</span>
+
+    @Override
+    protected void configureShiroWeb() {
+<span class="fc" id="L53">        bindConstant().annotatedWith(Names.named(&quot;shiro.loginUrl&quot;)).to(&quot;/login.jsp&quot;);</span>
+        try {
+<span class="fc" id="L55">            this.bindRealm().toConstructor(IniRealm.class.getConstructor(Ini.class));</span>
+<span class="nc" id="L56">        } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L57">            addError(&quot;Could not locate proper constructor for IniRealm.&quot;, e);</span>
+<span class="fc" id="L58">        }</span>
+
+<span class="fc" id="L60">        this.addFilterChain(&quot;/login.jsp&quot;, AUTHC);</span>
+<span class="fc" id="L61">        this.addFilterChain(&quot;/logout&quot;, LOGOUT);</span>
+<span class="fc" id="L62">        this.addFilterChain(&quot;/account/**&quot;, AUTHC);</span>
+<span class="fc" id="L63">        this.addFilterChain(&quot;/remoting/**&quot;, filterConfig(AUTHC), filterConfig(ROLES, &quot;b2bClient&quot;), filterConfig(PERMS, &quot;remote:invoke:lan,wan&quot;));</span>
+<span class="fc" id="L64">    }</span>
+
+    @Provides
+    @Singleton
+    Ini loadShiroIni() throws MalformedURLException {
+<span class="fc" id="L69">        URL iniUrl = servletContext.getResource(&quot;/WEB-INF/shiro.ini&quot;);</span>
+<span class="fc" id="L70">        return Ini.fromResourcePath(&quot;url:&quot; + iniUrl.toExternalForm());</span>
+    }
+
+    @Override
+    protected void bindSessionManager(AnnotatedBindingBuilder&lt;SessionManager&gt; bind) {
+<span class="fc" id="L75">        bind.to(DefaultWebSessionManager.class);</span>
+<span class="fc" id="L76">        bindConstant().annotatedWith(Names.named(&quot;shiro.globalSessionTimeout&quot;)).to(5000L);</span>
+<span class="fc" id="L77">        bindConstant().annotatedWith(Names.named(&quot;shiro.sessionIdUrlRewritingEnabled&quot;)).to(false);</span>
+<span class="fc" id="L78">        bind(DefaultWebSessionManager.class);</span>
+<span class="fc" id="L79">        bind(Cookie.class).toInstance(new SimpleCookie(&quot;myCookie&quot;));</span>
+<span class="fc" id="L80">    }</span>
+
+    @Override
+    protected void bindWebSecurityManager(AnnotatedBindingBuilder&lt;? super WebSecurityManager&gt; bind)
+    {
+        try
+        {
+<span class="fc" id="L87">            String cipherKey = loadShiroIni().getSectionProperty( &quot;main&quot;, &quot;securityManager.rememberMeManager.cipherKey&quot; );</span>
+
+<span class="fc" id="L89">            DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();</span>
+<span class="fc" id="L90">            CookieRememberMeManager rememberMeManager = new CookieRememberMeManager();</span>
+<span class="fc" id="L91">            rememberMeManager.setCipherKey( Base64.decode( cipherKey ) );</span>
+<span class="fc" id="L92">            securityManager.setRememberMeManager(rememberMeManager);</span>
+<span class="fc" id="L93">            bind.toInstance(securityManager);</span>
+        }
+<span class="nc" id="L95">        catch ( MalformedURLException e )</span>
+        {
+            // for now just throw, you could just call
+            // super.bindWebSecurityManager(bind) if you do not need rememberMe functionality
+<span class="nc" id="L99">            throw new ConfigurationException( &quot;securityManager.rememberMeManager.cipherKey must be set in shiro.ini.&quot; );</span>
+<span class="fc" id="L100">        }</span>
+<span class="fc" id="L101">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

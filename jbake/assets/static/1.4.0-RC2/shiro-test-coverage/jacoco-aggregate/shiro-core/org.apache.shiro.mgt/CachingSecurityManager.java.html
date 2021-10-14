@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>CachingSecurityManager.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.mgt</a> &gt; <span class="el_source">CachingSecurityManager.java</span></div><h1>CachingSecurityManager.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.mgt;
+
+import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.cache.CacheManagerAware;
+import org.apache.shiro.event.EventBus;
+import org.apache.shiro.event.EventBusAware;
+import org.apache.shiro.event.support.DefaultEventBus;
+import org.apache.shiro.util.Destroyable;
+import org.apache.shiro.util.LifecycleUtils;
+
+
+/**
+ * A very basic starting point for the SecurityManager interface that merely provides logging and caching
+ * support.  All actual {@code SecurityManager} method implementations are left to subclasses.
+ * &lt;p/&gt;
+ * &lt;b&gt;Change in 1.0&lt;/b&gt; - a default {@code CacheManager} instance is &lt;em&gt;not&lt;/em&gt; created by default during
+ * instantiation.  As caching strategies can vary greatly depending on an application's needs, a {@code CacheManager}
+ * instance must be explicitly configured if caching across the framework is to be enabled.
+ *
+ * @since 0.9
+ */
+public abstract class CachingSecurityManager implements SecurityManager, Destroyable, CacheManagerAware, EventBusAware {
+
+    /**
+     * The CacheManager to use to perform caching operations to enhance performance.  Can be null.
+     */
+    private CacheManager cacheManager;
+
+    /**
+     * The EventBus to use to use to publish and receive events of interest during Shiro's lifecycle.
+     * @since 1.3
+     */
+    private EventBus eventBus;
+
+    /**
+     * Default no-arg constructor that will automatically attempt to initialize a default cacheManager
+     */
+<span class="fc" id="L56">    public CachingSecurityManager() {</span>
+        //use a default event bus:
+<span class="fc" id="L58">        setEventBus(new DefaultEventBus());</span>
+<span class="fc" id="L59">    }</span>
+
+    /**
+     * Returns the CacheManager used by this SecurityManager.
+     *
+     * @return the cacheManager used by this SecurityManager
+     */
+    public CacheManager getCacheManager() {
+<span class="fc" id="L67">        return cacheManager;</span>
+    }
+
+    /**
+     * Sets the CacheManager used by this {@code SecurityManager} and potentially any of its
+     * children components.
+     * &lt;p/&gt;
+     * After the cacheManager attribute has been set, the template method
+     * {@link #afterCacheManagerSet afterCacheManagerSet()} is executed to allow subclasses to adjust when a
+     * cacheManager is available.
+     *
+     * @param cacheManager the CacheManager used by this {@code SecurityManager} and potentially any of its
+     *                     children components.
+     */
+    public void setCacheManager(CacheManager cacheManager) {
+<span class="fc" id="L82">        this.cacheManager = cacheManager;</span>
+<span class="fc" id="L83">        afterCacheManagerSet();</span>
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * Template callback to notify subclasses that a
+     * {@link org.apache.shiro.cache.CacheManager CacheManager} has been set and is available for use via the
+     * {@link #getCacheManager getCacheManager()} method.
+     */
+    protected void afterCacheManagerSet() {
+<span class="fc" id="L92">        applyEventBusToCacheManager();</span>
+<span class="fc" id="L93">    }</span>
+
+    /**
+     * Returns the {@code EventBus} used by this SecurityManager and potentially any of its children components.
+     *
+     * @return the {@code EventBus} used by this SecurityManager and potentially any of its children components.
+     * @since 1.3
+     */
+    public EventBus getEventBus() {
+<span class="fc" id="L102">        return eventBus;</span>
+    }
+
+    /**
+     * Sets the EventBus used by this {@code SecurityManager} and potentially any of its
+     * children components.
+     * &lt;p/&gt;
+     * After the eventBus attribute has been set, the template method
+     * {@link #afterEventBusSet() afterEventBusSet()} is executed to allow subclasses to adjust when a
+     * eventBus is available.
+     *
+     * @param eventBus the EventBus used by this {@code SecurityManager} and potentially any of its
+     *                     children components.
+     * @since 1.3
+     */
+    public void setEventBus(EventBus eventBus) {
+<span class="fc" id="L118">        this.eventBus = eventBus;</span>
+<span class="fc" id="L119">        afterEventBusSet();</span>
+<span class="fc" id="L120">    }</span>
+
+    /**
+     * @since 1.3
+     */
+    protected void applyEventBusToCacheManager() {
+<span class="pc bpc" id="L126" title="2 of 6 branches missed.">        if (this.eventBus != null &amp;&amp; this.cacheManager != null &amp;&amp; this.cacheManager instanceof EventBusAware) {</span>
+<span class="nc" id="L127">            ((EventBusAware)this.cacheManager).setEventBus(this.eventBus);</span>
+        }
+<span class="fc" id="L129">    }</span>
+
+    /**
+     * Template callback to notify subclasses that an {@link EventBus EventBus} has been set and is available for use
+     * via the {@link #getEventBus() getEventBus()} method.
+     *
+     * @since 1.3
+     */
+    protected void afterEventBusSet() {
+<span class="fc" id="L138">        applyEventBusToCacheManager();</span>
+<span class="fc" id="L139">    }</span>
+
+    /**
+     * Destroys the {@link #getCacheManager() cacheManager} via {@link LifecycleUtils#destroy LifecycleUtils.destroy}.
+     */
+    public void destroy() {
+<span class="fc" id="L145">        LifecycleUtils.destroy(getCacheManager());</span>
+<span class="fc" id="L146">        this.cacheManager = null;</span>
+<span class="fc" id="L147">        LifecycleUtils.destroy(getEventBus());</span>
+<span class="fc" id="L148">        this.eventBus = new DefaultEventBus();</span>
+<span class="fc" id="L149">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

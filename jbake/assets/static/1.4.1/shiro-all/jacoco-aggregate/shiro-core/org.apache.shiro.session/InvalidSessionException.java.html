@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>InvalidSessionException.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: All (aggregate jar)</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.session</a> &gt; <span class="el_source">InvalidSessionException.java</span></div><h1>InvalidSessionException.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.session;
+
+/**
+ * Exception thrown when attempting to interact with the system under an established session
+ * when that session is considered invalid.  The meaning of the term 'invalid' is based on
+ * application behavior.  For example, a Session is considered invalid if it has been explicitly
+ * stopped (e.g. when a user logs-out or when explicitly
+ * {@link Session#stop() stopped} programmatically.  A Session can also be
+ * considered invalid if it has expired.
+ *
+ * @see StoppedSessionException
+ * @see ExpiredSessionException
+ * @see UnknownSessionException
+ * @since 0.1
+ */
+public class InvalidSessionException extends SessionException {
+
+    /**
+     * Creates a new InvalidSessionException.
+     */
+    public InvalidSessionException() {
+<span class="nc" id="L40">        super();</span>
+<span class="nc" id="L41">    }</span>
+
+    /**
+     * Constructs a new InvalidSessionException.
+     *
+     * @param message the reason for the exception
+     */
+    public InvalidSessionException(String message) {
+<span class="fc" id="L49">        super(message);</span>
+<span class="fc" id="L50">    }</span>
+
+    /**
+     * Constructs a new InvalidSessionException.
+     *
+     * @param cause the underlying Throwable that caused this exception to be thrown.
+     */
+    public InvalidSessionException(Throwable cause) {
+<span class="nc" id="L58">        super(cause);</span>
+<span class="nc" id="L59">    }</span>
+
+    /**
+     * Constructs a new InvalidSessionException.
+     *
+     * @param message the reason for the exception
+     * @param cause   the underlying Throwable that caused this exception to be thrown.
+     */
+    public InvalidSessionException(String message, Throwable cause) {
+<span class="nc" id="L68">        super(message, cause);</span>
+<span class="nc" id="L69">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

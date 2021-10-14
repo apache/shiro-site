@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>ShiroFilter.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.servlet</a> &gt; <span class="el_source">ShiroFilter.java</span></div><h1>ShiroFilter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.servlet;
+
+import org.apache.shiro.web.env.WebEnvironment;
+import org.apache.shiro.web.filter.mgt.FilterChainResolver;
+import org.apache.shiro.web.util.WebUtils;
+
+/**
+ * Primary Shiro Filter for web applications configuring Shiro via Servlet &amp;lt;listener&amp;gt; in web.xml.
+ * &lt;p/&gt;
+ * As of Shiro 1.2, this is Shiro's preferred filter for {@code web.xml} configuration.  It expects the presence of a
+ * Shiro {@link org.apache.shiro.web.env.WebEnvironment WebEnvironment} in the {@code ServletContext}, also
+ * configured via {@code web.xml}.
+ * &lt;h2&gt;Usage&lt;/h2&gt;
+ * As this Filter expects an available {@link org.apache.shiro.web.env.WebEnvironment WebEnvironment} instance to
+ * be configured, it must be defined in {@code web.xml} with the companion
+ * {@link org.apache.shiro.web.env.EnvironmentLoaderListener EnvironmentLoaderListener}, which performs the necessary
+ * environment setup.  For example:
+ * &lt;pre&gt;
+ * &amp;lt;listener&amp;gt;
+ *     &amp;lt;listener-class&amp;gt;{@link org.apache.shiro.web.env.EnvironmentLoaderListener}&amp;lt;/listener-class&amp;gt;
+ * &amp;lt;/listener&amp;gt;
+ * ...
+ * &amp;lt;filter&amp;gt;
+ *     &amp;lt;filter-name&amp;gt;ShiroFilter&amp;lt;/filter-name&amp;gt;
+ *     &amp;lt;filter-class&amp;gt;org.apache.shiro.web.servlet.ShiroFilter&amp;lt;/filter-class&amp;gt;
+ * &amp;lt;/filter&amp;gt;
+ *
+ * &amp;lt;-- Filter all web requests.  This filter mapping is typically declared
+ *     before all others to ensure any other filters are secured as well: --&amp;gt;
+ * &amp;lt;filter-mapping&amp;gt;
+ *     &amp;lt;filter-name&amp;gt;ShiroFilter&amp;lt;/filter-name&amp;gt;
+ *     &amp;lt;url-pattern&amp;gt;/*&amp;lt;/url-pattern&amp;gt;
+ * &amp;lt;/filter-mapping&amp;gt;
+ * &lt;/pre&gt;
+ * Configuration options (configuration file paths, etc) are specified as part of the
+ * {@code EnvironmentLoaderListener} configuration.  See the
+ * {@link org.apache.shiro.web.env.EnvironmentLoader EnvironmentLoader} JavaDoc for configuration options.
+ *
+ * @see org.apache.shiro.web.env.EnvironmentLoader EnvironmentLoader
+ * @see org.apache.shiro.web.env.EnvironmentLoaderListener EnvironmentLoaderListener
+ * @see &lt;a href=&quot;http://shiro.apache.org/web.html&quot;&gt;Apache Shiro Web Documentation&lt;/a&gt;
+ * @since 1.2
+ */
+<span class="fc" id="L62">public class ShiroFilter extends AbstractShiroFilter {</span>
+
+    /**
+     * Configures this instance based on the existing {@link org.apache.shiro.web.env.WebEnvironment} instance
+     * available to the currently accessible {@link #getServletContext() servletContext}.
+     *
+     * @see org.apache.shiro.web.env.EnvironmentLoaderListener
+     * @since 1.2
+     */
+    @Override
+    public void init() throws Exception {
+<span class="fc" id="L73">        WebEnvironment env = WebUtils.getRequiredWebEnvironment(getServletContext());</span>
+
+<span class="fc" id="L75">        setSecurityManager(env.getWebSecurityManager());</span>
+
+<span class="fc" id="L77">        FilterChainResolver resolver = env.getFilterChainResolver();</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if (resolver != null) {</span>
+<span class="fc" id="L79">            setFilterChainResolver(resolver);</span>
+        }
+<span class="fc" id="L81">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

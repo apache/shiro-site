@@ -1,0 +1,923 @@
+<!DOCTYPE HTML>
+<html lang="fr">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<main role="main">
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a id="line.1">/*</a>
+<span class="sourceLineNo">002</span><a id="line.2"> * Licensed to the Apache Software Foundation (ASF) under one</a>
+<span class="sourceLineNo">003</span><a id="line.3"> * or more contributor license agreements.  See the NOTICE file</a>
+<span class="sourceLineNo">004</span><a id="line.4"> * distributed with this work for additional information</a>
+<span class="sourceLineNo">005</span><a id="line.5"> * regarding copyright ownership.  The ASF licenses this file</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * to you under the Apache License, Version 2.0 (the</a>
+<span class="sourceLineNo">007</span><a id="line.7"> * "License"); you may not use this file except in compliance</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * with the License.  You may obtain a copy of the License at</a>
+<span class="sourceLineNo">009</span><a id="line.9"> *</a>
+<span class="sourceLineNo">010</span><a id="line.10"> *     http://www.apache.org/licenses/LICENSE-2.0</a>
+<span class="sourceLineNo">011</span><a id="line.11"> *</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * Unless required by applicable law or agreed to in writing,</a>
+<span class="sourceLineNo">013</span><a id="line.13"> * software distributed under the License is distributed on an</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</a>
+<span class="sourceLineNo">015</span><a id="line.15"> * KIND, either express or implied.  See the License for the</a>
+<span class="sourceLineNo">016</span><a id="line.16"> * specific language governing permissions and limitations</a>
+<span class="sourceLineNo">017</span><a id="line.17"> * under the License.</a>
+<span class="sourceLineNo">018</span><a id="line.18"> */</a>
+<span class="sourceLineNo">019</span><a id="line.19">package org.apache.shiro.subject;</a>
+<span class="sourceLineNo">020</span><a id="line.20"></a>
+<span class="sourceLineNo">021</span><a id="line.21">import org.apache.shiro.SecurityUtils;</a>
+<span class="sourceLineNo">022</span><a id="line.22">import org.apache.shiro.authc.AuthenticationException;</a>
+<span class="sourceLineNo">023</span><a id="line.23">import org.apache.shiro.authc.AuthenticationToken;</a>
+<span class="sourceLineNo">024</span><a id="line.24">import org.apache.shiro.authz.AuthorizationException;</a>
+<span class="sourceLineNo">025</span><a id="line.25">import org.apache.shiro.authz.Permission;</a>
+<span class="sourceLineNo">026</span><a id="line.26">import org.apache.shiro.mgt.SecurityManager;</a>
+<span class="sourceLineNo">027</span><a id="line.27">import org.apache.shiro.mgt.SubjectFactory;</a>
+<span class="sourceLineNo">028</span><a id="line.28">import org.apache.shiro.session.Session;</a>
+<span class="sourceLineNo">029</span><a id="line.29">import org.apache.shiro.subject.support.DefaultSubjectContext;</a>
+<span class="sourceLineNo">030</span><a id="line.30">import org.apache.shiro.util.StringUtils;</a>
+<span class="sourceLineNo">031</span><a id="line.31"></a>
+<span class="sourceLineNo">032</span><a id="line.32">import java.io.Serializable;</a>
+<span class="sourceLineNo">033</span><a id="line.33">import java.util.Collection;</a>
+<span class="sourceLineNo">034</span><a id="line.34">import java.util.List;</a>
+<span class="sourceLineNo">035</span><a id="line.35">import java.util.concurrent.Callable;</a>
+<span class="sourceLineNo">036</span><a id="line.36"></a>
+<span class="sourceLineNo">037</span><a id="line.37">/**</a>
+<span class="sourceLineNo">038</span><a id="line.38"> * A {@code Subject} represents state and security operations for a &lt;em&gt;single&lt;/em&gt; application user.</a>
+<span class="sourceLineNo">039</span><a id="line.39"> * These operations include authentication (login/logout), authorization (access control), and</a>
+<span class="sourceLineNo">040</span><a id="line.40"> * session access. It is Shiro's primary mechanism for single-user security functionality.</a>
+<span class="sourceLineNo">041</span><a id="line.41"> * &lt;h3&gt;Acquiring a Subject&lt;/h3&gt;</a>
+<span class="sourceLineNo">042</span><a id="line.42"> * To acquire the currently-executing {@code Subject}, application developers will almost always use</a>
+<span class="sourceLineNo">043</span><a id="line.43"> * {@code SecurityUtils}:</a>
+<span class="sourceLineNo">044</span><a id="line.44"> * &lt;pre&gt;</a>
+<span class="sourceLineNo">045</span><a id="line.45"> * {@link SecurityUtils SecurityUtils}.{@link org.apache.shiro.SecurityUtils#getSubject() getSubject()}&lt;/pre&gt;</a>
+<span class="sourceLineNo">046</span><a id="line.46"> * Almost all security operations should be performed with the {@code Subject} returned from this method.</a>
+<span class="sourceLineNo">047</span><a id="line.47"> * &lt;h3&gt;Permission methods&lt;/h3&gt;</a>
+<span class="sourceLineNo">048</span><a id="line.48"> * Note that there are many *Permission methods in this interface overloaded to accept String arguments instead of</a>
+<span class="sourceLineNo">049</span><a id="line.49"> * {@link Permission Permission} instances. They are a convenience allowing the caller to use a String representation of</a>
+<span class="sourceLineNo">050</span><a id="line.50"> * a {@link Permission Permission} if desired.  The underlying Authorization subsystem implementations will usually</a>
+<span class="sourceLineNo">051</span><a id="line.51"> * simply convert these String values to {@link Permission Permission} instances and then just call the corresponding</a>
+<span class="sourceLineNo">052</span><a id="line.52"> * type-safe method.  (Shiro's default implementations do String-to-Permission conversion for these methods using</a>
+<span class="sourceLineNo">053</span><a id="line.53"> * {@link org.apache.shiro.authz.permission.PermissionResolver PermissionResolver}s.)</a>
+<span class="sourceLineNo">054</span><a id="line.54"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">055</span><a id="line.55"> * These overloaded *Permission methods forgo type-safety for the benefit of convenience and simplicity,</a>
+<span class="sourceLineNo">056</span><a id="line.56"> * so you should choose which ones to use based on your preferences and needs.</a>
+<span class="sourceLineNo">057</span><a id="line.57"> *</a>
+<span class="sourceLineNo">058</span><a id="line.58"> * @since 0.1</a>
+<span class="sourceLineNo">059</span><a id="line.59"> */</a>
+<span class="sourceLineNo">060</span><a id="line.60">public interface Subject {</a>
+<span class="sourceLineNo">061</span><a id="line.61"></a>
+<span class="sourceLineNo">062</span><a id="line.62">    /**</a>
+<span class="sourceLineNo">063</span><a id="line.63">     * Returns this Subject's application-wide uniquely identifying principal, or {@code null} if this</a>
+<span class="sourceLineNo">064</span><a id="line.64">     * Subject is anonymous because it doesn't yet have any associated account data (for example,</a>
+<span class="sourceLineNo">065</span><a id="line.65">     * if they haven't logged in).</a>
+<span class="sourceLineNo">066</span><a id="line.66">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">067</span><a id="line.67">     * The term &lt;em&gt;principal&lt;/em&gt; is just a fancy security term for any identifying attribute(s) of an application</a>
+<span class="sourceLineNo">068</span><a id="line.68">     * user, such as a username, or user id, or public key, or anything else you might use in your application to</a>
+<span class="sourceLineNo">069</span><a id="line.69">     * identify a user.</a>
+<span class="sourceLineNo">070</span><a id="line.70">     * &lt;h4&gt;Uniqueness&lt;/h4&gt;</a>
+<span class="sourceLineNo">071</span><a id="line.71">     * Although given names and family names (first/last) are technically considered principals as well,</a>
+<span class="sourceLineNo">072</span><a id="line.72">     * Shiro expects the object returned from this method to be an identifying attribute unique across</a>
+<span class="sourceLineNo">073</span><a id="line.73">     * your entire application.</a>
+<span class="sourceLineNo">074</span><a id="line.74">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">075</span><a id="line.75">     * This implies that things like given names and family names are usually poor</a>
+<span class="sourceLineNo">076</span><a id="line.76">     * candidates as return values since they are rarely guaranteed to be unique;  Things often used for this value:</a>
+<span class="sourceLineNo">077</span><a id="line.77">     * &lt;ul&gt;</a>
+<span class="sourceLineNo">078</span><a id="line.78">     * &lt;li&gt;A {@code long} RDBMS surrogate primary key&lt;/li&gt;</a>
+<span class="sourceLineNo">079</span><a id="line.79">     * &lt;li&gt;An application-unique username&lt;/li&gt;</a>
+<span class="sourceLineNo">080</span><a id="line.80">     * &lt;li&gt;A {@link java.util.UUID UUID}&lt;/li&gt;</a>
+<span class="sourceLineNo">081</span><a id="line.81">     * &lt;li&gt;An LDAP Unique ID&lt;/li&gt;</a>
+<span class="sourceLineNo">082</span><a id="line.82">     * &lt;/ul&gt;</a>
+<span class="sourceLineNo">083</span><a id="line.83">     * or any other similar suitable unique mechanism valuable to your application.</a>
+<span class="sourceLineNo">084</span><a id="line.84">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">085</span><a id="line.85">     * Most implementations will simply return</a>
+<span class="sourceLineNo">086</span><a id="line.86">     * &lt;code&gt;{@link #getPrincipals()}.{@link org.apache.shiro.subject.PrincipalCollection#getPrimaryPrincipal() getPrimaryPrincipal()}&lt;/code&gt;</a>
+<span class="sourceLineNo">087</span><a id="line.87">     *</a>
+<span class="sourceLineNo">088</span><a id="line.88">     * @return this Subject's application-specific unique identity.</a>
+<span class="sourceLineNo">089</span><a id="line.89">     * @see org.apache.shiro.subject.PrincipalCollection#getPrimaryPrincipal()</a>
+<span class="sourceLineNo">090</span><a id="line.90">     */</a>
+<span class="sourceLineNo">091</span><a id="line.91">    Object getPrincipal();</a>
+<span class="sourceLineNo">092</span><a id="line.92"></a>
+<span class="sourceLineNo">093</span><a id="line.93">    /**</a>
+<span class="sourceLineNo">094</span><a id="line.94">     * Returns this Subject's principals (identifying attributes) in the form of a {@code PrincipalCollection} or</a>
+<span class="sourceLineNo">095</span><a id="line.95">     * {@code null} if this Subject is anonymous because it doesn't yet have any associated account data (for example,</a>
+<span class="sourceLineNo">096</span><a id="line.96">     * if they haven't logged in).</a>
+<span class="sourceLineNo">097</span><a id="line.97">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">098</span><a id="line.98">     * The word &amp;quot;principals&amp;quot; is nothing more than a fancy security term for identifying attributes associated</a>
+<span class="sourceLineNo">099</span><a id="line.99">     * with a Subject, aka, application user.  For example, user id, a surname (family/last name), given (first) name,</a>
+<span class="sourceLineNo">100</span><a id="line.100">     * social security number, nickname, username, etc, are all examples of a principal.</a>
+<span class="sourceLineNo">101</span><a id="line.101">     *</a>
+<span class="sourceLineNo">102</span><a id="line.102">     * @return all of this Subject's principals (identifying attributes).</a>
+<span class="sourceLineNo">103</span><a id="line.103">     * @see #getPrincipal()</a>
+<span class="sourceLineNo">104</span><a id="line.104">     * @see org.apache.shiro.subject.PrincipalCollection#getPrimaryPrincipal()</a>
+<span class="sourceLineNo">105</span><a id="line.105">     */</a>
+<span class="sourceLineNo">106</span><a id="line.106">    PrincipalCollection getPrincipals();</a>
+<span class="sourceLineNo">107</span><a id="line.107"></a>
+<span class="sourceLineNo">108</span><a id="line.108">    /**</a>
+<span class="sourceLineNo">109</span><a id="line.109">     * Returns {@code true} if this Subject is permitted to perform an action or access a resource summarized by the</a>
+<span class="sourceLineNo">110</span><a id="line.110">     * specified permission string.</a>
+<span class="sourceLineNo">111</span><a id="line.111">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">112</span><a id="line.112">     * This is an overloaded method for the corresponding type-safe {@link Permission Permission} variant.</a>
+<span class="sourceLineNo">113</span><a id="line.113">     * Please see the class-level JavaDoc for more information on these String-based permission methods.</a>
+<span class="sourceLineNo">114</span><a id="line.114">     *</a>
+<span class="sourceLineNo">115</span><a id="line.115">     * @param permission the String representation of a Permission that is being checked.</a>
+<span class="sourceLineNo">116</span><a id="line.116">     * @return true if this Subject is permitted, false otherwise.</a>
+<span class="sourceLineNo">117</span><a id="line.117">     * @see #isPermitted(Permission permission)</a>
+<span class="sourceLineNo">118</span><a id="line.118">     * @since 0.9</a>
+<span class="sourceLineNo">119</span><a id="line.119">     */</a>
+<span class="sourceLineNo">120</span><a id="line.120">    boolean isPermitted(String permission);</a>
+<span class="sourceLineNo">121</span><a id="line.121"></a>
+<span class="sourceLineNo">122</span><a id="line.122">    /**</a>
+<span class="sourceLineNo">123</span><a id="line.123">     * Returns {@code true} if this Subject is permitted to perform an action or access a resource summarized by the</a>
+<span class="sourceLineNo">124</span><a id="line.124">     * specified permission.</a>
+<span class="sourceLineNo">125</span><a id="line.125">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">126</span><a id="line.126">     * More specifically, this method determines if any {@code Permission}s associated</a>
+<span class="sourceLineNo">127</span><a id="line.127">     * with the subject {@link Permission#implies(Permission) imply} the specified permission.</a>
+<span class="sourceLineNo">128</span><a id="line.128">     *</a>
+<span class="sourceLineNo">129</span><a id="line.129">     * @param permission the permission that is being checked.</a>
+<span class="sourceLineNo">130</span><a id="line.130">     * @return true if this Subject is permitted, false otherwise.</a>
+<span class="sourceLineNo">131</span><a id="line.131">     */</a>
+<span class="sourceLineNo">132</span><a id="line.132">    boolean isPermitted(Permission permission);</a>
+<span class="sourceLineNo">133</span><a id="line.133"></a>
+<span class="sourceLineNo">134</span><a id="line.134">    /**</a>
+<span class="sourceLineNo">135</span><a id="line.135">     * Checks if this Subject implies the given permission strings and returns a boolean array indicating which</a>
+<span class="sourceLineNo">136</span><a id="line.136">     * permissions are implied.</a>
+<span class="sourceLineNo">137</span><a id="line.137">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">138</span><a id="line.138">     * This is an overloaded method for the corresponding type-safe {@link Permission Permission} variant.</a>
+<span class="sourceLineNo">139</span><a id="line.139">     * Please see the class-level JavaDoc for more information on these String-based permission methods.</a>
+<span class="sourceLineNo">140</span><a id="line.140">     *</a>
+<span class="sourceLineNo">141</span><a id="line.141">     * @param permissions the String representations of the Permissions that are being checked.</a>
+<span class="sourceLineNo">142</span><a id="line.142">     * @return a boolean array where indices correspond to the index of the</a>
+<span class="sourceLineNo">143</span><a id="line.143">     *         permissions in the given list.  A true value at an index indicates this Subject is permitted for</a>
+<span class="sourceLineNo">144</span><a id="line.144">     *         for the associated {@code Permission} string in the list.  A false value at an index</a>
+<span class="sourceLineNo">145</span><a id="line.145">     *         indicates otherwise.</a>
+<span class="sourceLineNo">146</span><a id="line.146">     * @since 0.9</a>
+<span class="sourceLineNo">147</span><a id="line.147">     */</a>
+<span class="sourceLineNo">148</span><a id="line.148">    boolean[] isPermitted(String... permissions);</a>
+<span class="sourceLineNo">149</span><a id="line.149"></a>
+<span class="sourceLineNo">150</span><a id="line.150">    /**</a>
+<span class="sourceLineNo">151</span><a id="line.151">     * Checks if this Subject implies the given Permissions and returns a boolean array indicating which permissions</a>
+<span class="sourceLineNo">152</span><a id="line.152">     * are implied.</a>
+<span class="sourceLineNo">153</span><a id="line.153">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">154</span><a id="line.154">     * More specifically, this method should determine if each {@code Permission} in</a>
+<span class="sourceLineNo">155</span><a id="line.155">     * the array is {@link Permission#implies(Permission) implied} by permissions</a>
+<span class="sourceLineNo">156</span><a id="line.156">     * already associated with the subject.</a>
+<span class="sourceLineNo">157</span><a id="line.157">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">158</span><a id="line.158">     * This is primarily a performance-enhancing method to help reduce the number of</a>
+<span class="sourceLineNo">159</span><a id="line.159">     * {@link #isPermitted} invocations over the wire in client/server systems.</a>
+<span class="sourceLineNo">160</span><a id="line.160">     *</a>
+<span class="sourceLineNo">161</span><a id="line.161">     * @param permissions the permissions that are being checked.</a>
+<span class="sourceLineNo">162</span><a id="line.162">     * @return a boolean array where indices correspond to the index of the</a>
+<span class="sourceLineNo">163</span><a id="line.163">     *         permissions in the given list.  A true value at an index indicates this Subject is permitted for</a>
+<span class="sourceLineNo">164</span><a id="line.164">     *         for the associated {@code Permission} object in the list.  A false value at an index</a>
+<span class="sourceLineNo">165</span><a id="line.165">     *         indicates otherwise.</a>
+<span class="sourceLineNo">166</span><a id="line.166">     */</a>
+<span class="sourceLineNo">167</span><a id="line.167">    boolean[] isPermitted(List&lt;Permission&gt; permissions);</a>
+<span class="sourceLineNo">168</span><a id="line.168"></a>
+<span class="sourceLineNo">169</span><a id="line.169">    /**</a>
+<span class="sourceLineNo">170</span><a id="line.170">     * Returns {@code true} if this Subject implies all of the specified permission strings, {@code false} otherwise.</a>
+<span class="sourceLineNo">171</span><a id="line.171">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">172</span><a id="line.172">     * This is an overloaded method for the corresponding type-safe {@link org.apache.shiro.authz.Permission Permission}</a>
+<span class="sourceLineNo">173</span><a id="line.173">     * variant.  Please see the class-level JavaDoc for more information on these String-based permission methods.</a>
+<span class="sourceLineNo">174</span><a id="line.174">     *</a>
+<span class="sourceLineNo">175</span><a id="line.175">     * @param permissions the String representations of the Permissions that are being checked.</a>
+<span class="sourceLineNo">176</span><a id="line.176">     * @return true if this Subject has all of the specified permissions, false otherwise.</a>
+<span class="sourceLineNo">177</span><a id="line.177">     * @see #isPermittedAll(Collection)</a>
+<span class="sourceLineNo">178</span><a id="line.178">     * @since 0.9</a>
+<span class="sourceLineNo">179</span><a id="line.179">     */</a>
+<span class="sourceLineNo">180</span><a id="line.180">    boolean isPermittedAll(String... permissions);</a>
+<span class="sourceLineNo">181</span><a id="line.181"></a>
+<span class="sourceLineNo">182</span><a id="line.182">    /**</a>
+<span class="sourceLineNo">183</span><a id="line.183">     * Returns {@code true} if this Subject implies all of the specified permissions, {@code false} otherwise.</a>
+<span class="sourceLineNo">184</span><a id="line.184">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">185</span><a id="line.185">     * More specifically, this method determines if all of the given {@code Permission}s are</a>
+<span class="sourceLineNo">186</span><a id="line.186">     * {@link Permission#implies(Permission) implied by} permissions already associated with this Subject.</a>
+<span class="sourceLineNo">187</span><a id="line.187">     *</a>
+<span class="sourceLineNo">188</span><a id="line.188">     * @param permissions the permissions to check.</a>
+<span class="sourceLineNo">189</span><a id="line.189">     * @return true if this Subject has all of the specified permissions, false otherwise.</a>
+<span class="sourceLineNo">190</span><a id="line.190">     */</a>
+<span class="sourceLineNo">191</span><a id="line.191">    boolean isPermittedAll(Collection&lt;Permission&gt; permissions);</a>
+<span class="sourceLineNo">192</span><a id="line.192"></a>
+<span class="sourceLineNo">193</span><a id="line.193">    /**</a>
+<span class="sourceLineNo">194</span><a id="line.194">     * Ensures this Subject implies the specified permission String.</a>
+<span class="sourceLineNo">195</span><a id="line.195">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">196</span><a id="line.196">     * If this subject's existing associated permissions do not {@link Permission#implies(Permission)} imply}</a>
+<span class="sourceLineNo">197</span><a id="line.197">     * the given permission, an {@link org.apache.shiro.authz.AuthorizationException} will be thrown.</a>
+<span class="sourceLineNo">198</span><a id="line.198">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">199</span><a id="line.199">     * This is an overloaded method for the corresponding type-safe {@link Permission Permission} variant.</a>
+<span class="sourceLineNo">200</span><a id="line.200">     * Please see the class-level JavaDoc for more information on these String-based permission methods.</a>
+<span class="sourceLineNo">201</span><a id="line.201">     *</a>
+<span class="sourceLineNo">202</span><a id="line.202">     * @param permission the String representation of the Permission to check.</a>
+<span class="sourceLineNo">203</span><a id="line.203">     * @throws org.apache.shiro.authz.AuthorizationException</a>
+<span class="sourceLineNo">204</span><a id="line.204">     *          if the user does not have the permission.</a>
+<span class="sourceLineNo">205</span><a id="line.205">     * @since 0.9</a>
+<span class="sourceLineNo">206</span><a id="line.206">     */</a>
+<span class="sourceLineNo">207</span><a id="line.207">    void checkPermission(String permission) throws AuthorizationException;</a>
+<span class="sourceLineNo">208</span><a id="line.208"></a>
+<span class="sourceLineNo">209</span><a id="line.209">    /**</a>
+<span class="sourceLineNo">210</span><a id="line.210">     * Ensures this Subject {@link Permission#implies(Permission) implies} the specified {@code Permission}.</a>
+<span class="sourceLineNo">211</span><a id="line.211">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">212</span><a id="line.212">     * If this subject's existing associated permissions do not {@link Permission#implies(Permission) imply}</a>
+<span class="sourceLineNo">213</span><a id="line.213">     * the given permission, an {@link org.apache.shiro.authz.AuthorizationException} will be thrown.</a>
+<span class="sourceLineNo">214</span><a id="line.214">     *</a>
+<span class="sourceLineNo">215</span><a id="line.215">     * @param permission the Permission to check.</a>
+<span class="sourceLineNo">216</span><a id="line.216">     * @throws org.apache.shiro.authz.AuthorizationException</a>
+<span class="sourceLineNo">217</span><a id="line.217">     *          if this Subject does not have the permission.</a>
+<span class="sourceLineNo">218</span><a id="line.218">     */</a>
+<span class="sourceLineNo">219</span><a id="line.219">    void checkPermission(Permission permission) throws AuthorizationException;</a>
+<span class="sourceLineNo">220</span><a id="line.220"></a>
+<span class="sourceLineNo">221</span><a id="line.221">    /**</a>
+<span class="sourceLineNo">222</span><a id="line.222">     * Ensures this Subject</a>
+<span class="sourceLineNo">223</span><a id="line.223">     * {@link org.apache.shiro.authz.Permission#implies(org.apache.shiro.authz.Permission) implies} all of the</a>
+<span class="sourceLineNo">224</span><a id="line.224">     * specified permission strings.</a>
+<span class="sourceLineNo">225</span><a id="line.225">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">226</span><a id="line.226">     * If this subject's existing associated permissions do not</a>
+<span class="sourceLineNo">227</span><a id="line.227">     * {@link org.apache.shiro.authz.Permission#implies(org.apache.shiro.authz.Permission) imply} all of the given permissions,</a>
+<span class="sourceLineNo">228</span><a id="line.228">     * an {@link org.apache.shiro.authz.AuthorizationException} will be thrown.</a>
+<span class="sourceLineNo">229</span><a id="line.229">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">230</span><a id="line.230">     * This is an overloaded method for the corresponding type-safe {@link Permission Permission} variant.</a>
+<span class="sourceLineNo">231</span><a id="line.231">     * Please see the class-level JavaDoc for more information on these String-based permission methods.</a>
+<span class="sourceLineNo">232</span><a id="line.232">     *</a>
+<span class="sourceLineNo">233</span><a id="line.233">     * @param permissions the string representations of Permissions to check.</a>
+<span class="sourceLineNo">234</span><a id="line.234">     * @throws AuthorizationException if this Subject does not have all of the given permissions.</a>
+<span class="sourceLineNo">235</span><a id="line.235">     * @since 0.9</a>
+<span class="sourceLineNo">236</span><a id="line.236">     */</a>
+<span class="sourceLineNo">237</span><a id="line.237">    void checkPermissions(String... permissions) throws AuthorizationException;</a>
+<span class="sourceLineNo">238</span><a id="line.238"></a>
+<span class="sourceLineNo">239</span><a id="line.239">    /**</a>
+<span class="sourceLineNo">240</span><a id="line.240">     * Ensures this Subject</a>
+<span class="sourceLineNo">241</span><a id="line.241">     * {@link org.apache.shiro.authz.Permission#implies(org.apache.shiro.authz.Permission) implies} all of the</a>
+<span class="sourceLineNo">242</span><a id="line.242">     * specified permission strings.</a>
+<span class="sourceLineNo">243</span><a id="line.243">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">244</span><a id="line.244">     * If this subject's existing associated permissions do not</a>
+<span class="sourceLineNo">245</span><a id="line.245">     * {@link org.apache.shiro.authz.Permission#implies(org.apache.shiro.authz.Permission) imply} all of the given permissions,</a>
+<span class="sourceLineNo">246</span><a id="line.246">     * an {@link org.apache.shiro.authz.AuthorizationException} will be thrown.</a>
+<span class="sourceLineNo">247</span><a id="line.247">     *</a>
+<span class="sourceLineNo">248</span><a id="line.248">     * @param permissions the Permissions to check.</a>
+<span class="sourceLineNo">249</span><a id="line.249">     * @throws AuthorizationException if this Subject does not have all of the given permissions.</a>
+<span class="sourceLineNo">250</span><a id="line.250">     */</a>
+<span class="sourceLineNo">251</span><a id="line.251">    void checkPermissions(Collection&lt;Permission&gt; permissions) throws AuthorizationException;</a>
+<span class="sourceLineNo">252</span><a id="line.252"></a>
+<span class="sourceLineNo">253</span><a id="line.253">    /**</a>
+<span class="sourceLineNo">254</span><a id="line.254">     * Returns {@code true} if this Subject has the specified role, {@code false} otherwise.</a>
+<span class="sourceLineNo">255</span><a id="line.255">     *</a>
+<span class="sourceLineNo">256</span><a id="line.256">     * @param roleIdentifier the application-specific role identifier (usually a role id or role name).</a>
+<span class="sourceLineNo">257</span><a id="line.257">     * @return {@code true} if this Subject has the specified role, {@code false} otherwise.</a>
+<span class="sourceLineNo">258</span><a id="line.258">     */</a>
+<span class="sourceLineNo">259</span><a id="line.259">    boolean hasRole(String roleIdentifier);</a>
+<span class="sourceLineNo">260</span><a id="line.260"></a>
+<span class="sourceLineNo">261</span><a id="line.261">    /**</a>
+<span class="sourceLineNo">262</span><a id="line.262">     * Checks if this Subject has the specified roles, returning a boolean array indicating</a>
+<span class="sourceLineNo">263</span><a id="line.263">     * which roles are associated.</a>
+<span class="sourceLineNo">264</span><a id="line.264">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">265</span><a id="line.265">     * This is primarily a performance-enhancing method to help reduce the number of</a>
+<span class="sourceLineNo">266</span><a id="line.266">     * {@link #hasRole} invocations over the wire in client/server systems.</a>
+<span class="sourceLineNo">267</span><a id="line.267">     *</a>
+<span class="sourceLineNo">268</span><a id="line.268">     * @param roleIdentifiers the application-specific role identifiers to check (usually role ids or role names).</a>
+<span class="sourceLineNo">269</span><a id="line.269">     * @return a boolean array where indices correspond to the index of the</a>
+<span class="sourceLineNo">270</span><a id="line.270">     *         roles in the given identifiers.  A true value indicates this Subject has the</a>
+<span class="sourceLineNo">271</span><a id="line.271">     *         role at that index.  False indicates this Subject does not have the role at that index.</a>
+<span class="sourceLineNo">272</span><a id="line.272">     */</a>
+<span class="sourceLineNo">273</span><a id="line.273">    boolean[] hasRoles(List&lt;String&gt; roleIdentifiers);</a>
+<span class="sourceLineNo">274</span><a id="line.274"></a>
+<span class="sourceLineNo">275</span><a id="line.275">    /**</a>
+<span class="sourceLineNo">276</span><a id="line.276">     * Returns {@code true} if this Subject has all of the specified roles, {@code false} otherwise.</a>
+<span class="sourceLineNo">277</span><a id="line.277">     *</a>
+<span class="sourceLineNo">278</span><a id="line.278">     * @param roleIdentifiers the application-specific role identifiers to check (usually role ids or role names).</a>
+<span class="sourceLineNo">279</span><a id="line.279">     * @return true if this Subject has all the roles, false otherwise.</a>
+<span class="sourceLineNo">280</span><a id="line.280">     */</a>
+<span class="sourceLineNo">281</span><a id="line.281">    boolean hasAllRoles(Collection&lt;String&gt; roleIdentifiers);</a>
+<span class="sourceLineNo">282</span><a id="line.282"></a>
+<span class="sourceLineNo">283</span><a id="line.283">    /**</a>
+<span class="sourceLineNo">284</span><a id="line.284">     * Asserts this Subject has the specified role by returning quietly if they do or throwing an</a>
+<span class="sourceLineNo">285</span><a id="line.285">     * {@link org.apache.shiro.authz.AuthorizationException} if they do not.</a>
+<span class="sourceLineNo">286</span><a id="line.286">     *</a>
+<span class="sourceLineNo">287</span><a id="line.287">     * @param roleIdentifier the application-specific role identifier (usually a role id or role name ).</a>
+<span class="sourceLineNo">288</span><a id="line.288">     * @throws org.apache.shiro.authz.AuthorizationException</a>
+<span class="sourceLineNo">289</span><a id="line.289">     *          if this Subject does not have the role.</a>
+<span class="sourceLineNo">290</span><a id="line.290">     */</a>
+<span class="sourceLineNo">291</span><a id="line.291">    void checkRole(String roleIdentifier) throws AuthorizationException;</a>
+<span class="sourceLineNo">292</span><a id="line.292"></a>
+<span class="sourceLineNo">293</span><a id="line.293">    /**</a>
+<span class="sourceLineNo">294</span><a id="line.294">     * Asserts this Subject has all of the specified roles by returning quietly if they do or throwing an</a>
+<span class="sourceLineNo">295</span><a id="line.295">     * {@link org.apache.shiro.authz.AuthorizationException} if they do not.</a>
+<span class="sourceLineNo">296</span><a id="line.296">     *</a>
+<span class="sourceLineNo">297</span><a id="line.297">     * @param roleIdentifiers the application-specific role identifiers to check (usually role ids or role names).</a>
+<span class="sourceLineNo">298</span><a id="line.298">     * @throws org.apache.shiro.authz.AuthorizationException</a>
+<span class="sourceLineNo">299</span><a id="line.299">     *          if this Subject does not have all of the specified roles.</a>
+<span class="sourceLineNo">300</span><a id="line.300">     */</a>
+<span class="sourceLineNo">301</span><a id="line.301">    void checkRoles(Collection&lt;String&gt; roleIdentifiers) throws AuthorizationException;</a>
+<span class="sourceLineNo">302</span><a id="line.302"></a>
+<span class="sourceLineNo">303</span><a id="line.303">    /**</a>
+<span class="sourceLineNo">304</span><a id="line.304">     * Same as {@link #checkRoles(Collection&lt;String&gt; roleIdentifiers) checkRoles(Collection&lt;String&gt; roleIdentifiers)} but</a>
+<span class="sourceLineNo">305</span><a id="line.305">     * doesn't require a collection as a an argument.</a>
+<span class="sourceLineNo">306</span><a id="line.306">     * Asserts this Subject has all of the specified roles by returning quietly if they do or throwing an</a>
+<span class="sourceLineNo">307</span><a id="line.307">     * {@link org.apache.shiro.authz.AuthorizationException} if they do not.</a>
+<span class="sourceLineNo">308</span><a id="line.308">     *</a>
+<span class="sourceLineNo">309</span><a id="line.309">     * @param roleIdentifiers roleIdentifiers the application-specific role identifiers to check (usually role ids or role names).</a>
+<span class="sourceLineNo">310</span><a id="line.310">     * @throws AuthorizationException org.apache.shiro.authz.AuthorizationException</a>
+<span class="sourceLineNo">311</span><a id="line.311">     *          if this Subject does not have all of the specified roles.</a>
+<span class="sourceLineNo">312</span><a id="line.312">     * @since 1.1.0</a>
+<span class="sourceLineNo">313</span><a id="line.313">     */</a>
+<span class="sourceLineNo">314</span><a id="line.314">    void checkRoles(String... roleIdentifiers) throws AuthorizationException;</a>
+<span class="sourceLineNo">315</span><a id="line.315"></a>
+<span class="sourceLineNo">316</span><a id="line.316">    /**</a>
+<span class="sourceLineNo">317</span><a id="line.317">     * Performs a login attempt for this Subject/user.  If unsuccessful,</a>
+<span class="sourceLineNo">318</span><a id="line.318">     * an {@link AuthenticationException} is thrown, the subclass of which identifies why the attempt failed.</a>
+<span class="sourceLineNo">319</span><a id="line.319">     * If successful, the account data associated with the submitted principals/credentials will be</a>
+<span class="sourceLineNo">320</span><a id="line.320">     * associated with this {@code Subject} and the method will return quietly.</a>
+<span class="sourceLineNo">321</span><a id="line.321">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">322</span><a id="line.322">     * Upon returning quietly, this {@code Subject} instance can be considered</a>
+<span class="sourceLineNo">323</span><a id="line.323">     * authenticated and {@link #getPrincipal() getPrincipal()} will be non-null and</a>
+<span class="sourceLineNo">324</span><a id="line.324">     * {@link #isAuthenticated() isAuthenticated()} will be {@code true}.</a>
+<span class="sourceLineNo">325</span><a id="line.325">     *</a>
+<span class="sourceLineNo">326</span><a id="line.326">     * @param token the token encapsulating the subject's principals and credentials to be passed to the</a>
+<span class="sourceLineNo">327</span><a id="line.327">     *              Authentication subsystem for verification.</a>
+<span class="sourceLineNo">328</span><a id="line.328">     * @throws org.apache.shiro.authc.AuthenticationException</a>
+<span class="sourceLineNo">329</span><a id="line.329">     *          if the authentication attempt fails.</a>
+<span class="sourceLineNo">330</span><a id="line.330">     * @since 0.9</a>
+<span class="sourceLineNo">331</span><a id="line.331">     */</a>
+<span class="sourceLineNo">332</span><a id="line.332">    void login(AuthenticationToken token) throws AuthenticationException;</a>
+<span class="sourceLineNo">333</span><a id="line.333"></a>
+<span class="sourceLineNo">334</span><a id="line.334">    /**</a>
+<span class="sourceLineNo">335</span><a id="line.335">     * Returns {@code true} if this Subject/user proved their identity &lt;em&gt;during their current session&lt;/em&gt;</a>
+<span class="sourceLineNo">336</span><a id="line.336">     * by providing valid credentials matching those known to the system, {@code false} otherwise.</a>
+<span class="sourceLineNo">337</span><a id="line.337">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">338</span><a id="line.338">     * Note that even if this Subject's identity has been remembered via 'remember me' services, this method will</a>
+<span class="sourceLineNo">339</span><a id="line.339">     * still return {@code false} unless the user has actually logged in with proper credentials &lt;em&gt;during their</a>
+<span class="sourceLineNo">340</span><a id="line.340">     * current session&lt;/em&gt;.  See the {@link #isRemembered() isRemembered()} method JavaDoc for more.</a>
+<span class="sourceLineNo">341</span><a id="line.341">     *</a>
+<span class="sourceLineNo">342</span><a id="line.342">     * @return {@code true} if this Subject proved their identity during their current session</a>
+<span class="sourceLineNo">343</span><a id="line.343">     *         by providing valid credentials matching those known to the system, {@code false} otherwise.</a>
+<span class="sourceLineNo">344</span><a id="line.344">     * @since 0.9</a>
+<span class="sourceLineNo">345</span><a id="line.345">     */</a>
+<span class="sourceLineNo">346</span><a id="line.346">    boolean isAuthenticated();</a>
+<span class="sourceLineNo">347</span><a id="line.347"></a>
+<span class="sourceLineNo">348</span><a id="line.348"></a>
+<span class="sourceLineNo">349</span><a id="line.349">    /**</a>
+<span class="sourceLineNo">350</span><a id="line.350">     * Returns {@code true} if this {@code Subject} has an identity (it is not anonymous) and the identity</a>
+<span class="sourceLineNo">351</span><a id="line.351">     * (aka {@link #getPrincipals() principals}) is remembered from a successful authentication during a previous</a>
+<span class="sourceLineNo">352</span><a id="line.352">     * session.</a>
+<span class="sourceLineNo">353</span><a id="line.353">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">354</span><a id="line.354">     * Although the underlying implementation determines exactly how this method functions, most implementations have</a>
+<span class="sourceLineNo">355</span><a id="line.355">     * this method act as the logical equivalent to this code:</a>
+<span class="sourceLineNo">356</span><a id="line.356">     * &lt;pre&gt;</a>
+<span class="sourceLineNo">357</span><a id="line.357">     * {@link #getPrincipal() getPrincipal()} != null &amp;&amp; !{@link #isAuthenticated() isAuthenticated()}&lt;/pre&gt;</a>
+<span class="sourceLineNo">358</span><a id="line.358">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">359</span><a id="line.359">     * Note as indicated by the above code example, if a {@code Subject} is remembered, they are</a>
+<span class="sourceLineNo">360</span><a id="line.360">     * &lt;em&gt;NOT&lt;/em&gt; considered authenticated.  A check against {@link #isAuthenticated() isAuthenticated()} is a more</a>
+<span class="sourceLineNo">361</span><a id="line.361">     * strict check than that reflected by this method.  For example, a check to see if a subject can access financial</a>
+<span class="sourceLineNo">362</span><a id="line.362">     * information should almost always depend on {@link #isAuthenticated() isAuthenticated()} to &lt;em&gt;guarantee&lt;/em&gt; a</a>
+<span class="sourceLineNo">363</span><a id="line.363">     * verified identity, and not this method.</a>
+<span class="sourceLineNo">364</span><a id="line.364">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">365</span><a id="line.365">     * Once the subject is authenticated, they are no longer considered only remembered because their identity would</a>
+<span class="sourceLineNo">366</span><a id="line.366">     * have been verified during the current session.</a>
+<span class="sourceLineNo">367</span><a id="line.367">     * &lt;h4&gt;Remembered vs Authenticated&lt;/h4&gt;</a>
+<span class="sourceLineNo">368</span><a id="line.368">     * Authentication is the process of &lt;em&gt;proving&lt;/em&gt; you are who you say you are.  When a user is only remembered,</a>
+<span class="sourceLineNo">369</span><a id="line.369">     * the remembered identity gives the system an idea who that user probably is, but in reality, has no way of</a>
+<span class="sourceLineNo">370</span><a id="line.370">     * absolutely &lt;em&gt;guaranteeing&lt;/em&gt; if the remembered {@code Subject} represents the user currently</a>
+<span class="sourceLineNo">371</span><a id="line.371">     * using the application.</a>
+<span class="sourceLineNo">372</span><a id="line.372">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">373</span><a id="line.373">     * So although many parts of the application can still perform user-specific logic based on the remembered</a>
+<span class="sourceLineNo">374</span><a id="line.374">     * {@link #getPrincipals() principals}, such as customized views, it should never perform highly-sensitive</a>
+<span class="sourceLineNo">375</span><a id="line.375">     * operations until the user has legitimately verified their identity by executing a successful authentication</a>
+<span class="sourceLineNo">376</span><a id="line.376">     * attempt.</a>
+<span class="sourceLineNo">377</span><a id="line.377">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">378</span><a id="line.378">     * We see this paradigm all over the web, and we will use &lt;a href="http://www.amazon.com"&gt;Amazon.com&lt;/a&gt; as an</a>
+<span class="sourceLineNo">379</span><a id="line.379">     * example:</a>
+<span class="sourceLineNo">380</span><a id="line.380">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">381</span><a id="line.381">     * When you visit Amazon.com and perform a login and ask it to 'remember me', it will set a cookie with your</a>
+<span class="sourceLineNo">382</span><a id="line.382">     * identity.  If you don't log out and your session expires, and you come back, say the next day, Amazon still knows</a>
+<span class="sourceLineNo">383</span><a id="line.383">     * who you &lt;em&gt;probably&lt;/em&gt; are: you still see all of your book and movie recommendations and similar user-specific</a>
+<span class="sourceLineNo">384</span><a id="line.384">     * features since these are based on your (remembered) user id.</a>
+<span class="sourceLineNo">385</span><a id="line.385">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">386</span><a id="line.386">     * BUT, if you try to do something sensitive, such as access your account's billing data, Amazon forces you</a>
+<span class="sourceLineNo">387</span><a id="line.387">     * to do an actual log-in, requiring your username and password.</a>
+<span class="sourceLineNo">388</span><a id="line.388">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">389</span><a id="line.389">     * This is because although amazon.com assumed your identity from 'remember me', it recognized that you were not</a>
+<span class="sourceLineNo">390</span><a id="line.390">     * actually authenticated.  The only way to really guarantee you are who you say you are, and therefore allow you</a>
+<span class="sourceLineNo">391</span><a id="line.391">     * access to sensitive account data, is to force you to perform an actual successful authentication.  You can</a>
+<span class="sourceLineNo">392</span><a id="line.392">     * check this guarantee via the {@link #isAuthenticated() isAuthenticated()} method and not via this method.</a>
+<span class="sourceLineNo">393</span><a id="line.393">     *</a>
+<span class="sourceLineNo">394</span><a id="line.394">     * @return {@code true} if this {@code Subject}'s identity (aka {@link #getPrincipals() principals}) is</a>
+<span class="sourceLineNo">395</span><a id="line.395">     *         remembered from a successful authentication during a previous session, {@code false} otherwise.</a>
+<span class="sourceLineNo">396</span><a id="line.396">     * @since 1.0</a>
+<span class="sourceLineNo">397</span><a id="line.397">     */</a>
+<span class="sourceLineNo">398</span><a id="line.398">    boolean isRemembered();</a>
+<span class="sourceLineNo">399</span><a id="line.399"></a>
+<span class="sourceLineNo">400</span><a id="line.400">    /**</a>
+<span class="sourceLineNo">401</span><a id="line.401">     * Returns the application {@code Session} associated with this Subject.  If no session exists when this</a>
+<span class="sourceLineNo">402</span><a id="line.402">     * method is called, a new session will be created, associated with this Subject, and then returned.</a>
+<span class="sourceLineNo">403</span><a id="line.403">     *</a>
+<span class="sourceLineNo">404</span><a id="line.404">     * @return the application {@code Session} associated with this Subject.</a>
+<span class="sourceLineNo">405</span><a id="line.405">     * @see #getSession(boolean)</a>
+<span class="sourceLineNo">406</span><a id="line.406">     * @since 0.2</a>
+<span class="sourceLineNo">407</span><a id="line.407">     */</a>
+<span class="sourceLineNo">408</span><a id="line.408">    Session getSession();</a>
+<span class="sourceLineNo">409</span><a id="line.409"></a>
+<span class="sourceLineNo">410</span><a id="line.410">    /**</a>
+<span class="sourceLineNo">411</span><a id="line.411">     * Returns the application {@code Session} associated with this Subject.  Based on the boolean argument,</a>
+<span class="sourceLineNo">412</span><a id="line.412">     * this method functions as follows:</a>
+<span class="sourceLineNo">413</span><a id="line.413">     * &lt;ul&gt;</a>
+<span class="sourceLineNo">414</span><a id="line.414">     * &lt;li&gt;If there is already an existing session associated with this {@code Subject}, it is returned and</a>
+<span class="sourceLineNo">415</span><a id="line.415">     * the {@code create} argument is ignored.&lt;/li&gt;</a>
+<span class="sourceLineNo">416</span><a id="line.416">     * &lt;li&gt;If no session exists and {@code create} is {@code true}, a new session will be created, associated with</a>
+<span class="sourceLineNo">417</span><a id="line.417">     * this {@code Subject} and then returned.&lt;/li&gt;</a>
+<span class="sourceLineNo">418</span><a id="line.418">     * &lt;li&gt;If no session exists and {@code create} is {@code false}, {@code null} is returned.&lt;/li&gt;</a>
+<span class="sourceLineNo">419</span><a id="line.419">     * &lt;/ul&gt;</a>
+<span class="sourceLineNo">420</span><a id="line.420">     *</a>
+<span class="sourceLineNo">421</span><a id="line.421">     * @param create boolean argument determining if a new session should be created or not if there is no existing session.</a>
+<span class="sourceLineNo">422</span><a id="line.422">     * @return the application {@code Session} associated with this {@code Subject} or {@code null} based</a>
+<span class="sourceLineNo">423</span><a id="line.423">     *         on the above described logic.</a>
+<span class="sourceLineNo">424</span><a id="line.424">     * @since 0.2</a>
+<span class="sourceLineNo">425</span><a id="line.425">     */</a>
+<span class="sourceLineNo">426</span><a id="line.426">    Session getSession(boolean create);</a>
+<span class="sourceLineNo">427</span><a id="line.427"></a>
+<span class="sourceLineNo">428</span><a id="line.428">    /**</a>
+<span class="sourceLineNo">429</span><a id="line.429">     * Logs out this Subject and invalidates and/or removes any associated entities,</a>
+<span class="sourceLineNo">430</span><a id="line.430">     * such as a {@link Session Session} and authorization data.  After this method is called, the Subject is</a>
+<span class="sourceLineNo">431</span><a id="line.431">     * considered 'anonymous' and may continue to be used for another log-in if desired.</a>
+<span class="sourceLineNo">432</span><a id="line.432">     * &lt;h3&gt;Web Environment Warning&lt;/h3&gt;</a>
+<span class="sourceLineNo">433</span><a id="line.433">     * Calling this method in web environments will usually remove any associated session cookie as part of</a>
+<span class="sourceLineNo">434</span><a id="line.434">     * session invalidation.  Because cookies are part of the HTTP header, and headers can only be set before the</a>
+<span class="sourceLineNo">435</span><a id="line.435">     * response body (html, image, etc) is sent, this method in web environments must be called before &lt;em&gt;any&lt;/em&gt;</a>
+<span class="sourceLineNo">436</span><a id="line.436">     * content has been rendered.</a>
+<span class="sourceLineNo">437</span><a id="line.437">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">438</span><a id="line.438">     * The typical approach most applications use in this scenario is to redirect the user to a different</a>
+<span class="sourceLineNo">439</span><a id="line.439">     * location (e.g. home page) immediately after calling this method.  This is an effect of the HTTP protocol</a>
+<span class="sourceLineNo">440</span><a id="line.440">     * itself and not a reflection of Shiro's implementation.</a>
+<span class="sourceLineNo">441</span><a id="line.441">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">442</span><a id="line.442">     * Non-HTTP environments may of course use a logged-out subject for login again if desired.</a>
+<span class="sourceLineNo">443</span><a id="line.443">     */</a>
+<span class="sourceLineNo">444</span><a id="line.444">    void logout();</a>
+<span class="sourceLineNo">445</span><a id="line.445"></a>
+<span class="sourceLineNo">446</span><a id="line.446">    /**</a>
+<span class="sourceLineNo">447</span><a id="line.447">     * Associates the specified {@code Callable} with this {@code Subject} instance and then executes it on the</a>
+<span class="sourceLineNo">448</span><a id="line.448">     * currently running thread.  If you want to execute the {@code Callable} on a different thread, it is better to</a>
+<span class="sourceLineNo">449</span><a id="line.449">     * use the {@link #associateWith(Callable)} method instead.</a>
+<span class="sourceLineNo">450</span><a id="line.450">     *</a>
+<span class="sourceLineNo">451</span><a id="line.451">     * @param callable the Callable to associate with this subject and then execute.</a>
+<span class="sourceLineNo">452</span><a id="line.452">     * @param &lt;V&gt;      the type of return value the {@code Callable} will return</a>
+<span class="sourceLineNo">453</span><a id="line.453">     * @return the resulting object returned by the {@code Callable}'s execution.</a>
+<span class="sourceLineNo">454</span><a id="line.454">     * @throws ExecutionException if the {@code Callable}'s {@link Callable#call call} method throws an exception.</a>
+<span class="sourceLineNo">455</span><a id="line.455">     * @since 1.0</a>
+<span class="sourceLineNo">456</span><a id="line.456">     */</a>
+<span class="sourceLineNo">457</span><a id="line.457">    &lt;V&gt; V execute(Callable&lt;V&gt; callable) throws ExecutionException;</a>
+<span class="sourceLineNo">458</span><a id="line.458"></a>
+<span class="sourceLineNo">459</span><a id="line.459">    /**</a>
+<span class="sourceLineNo">460</span><a id="line.460">     * Associates the specified {@code Runnable} with this {@code Subject} instance and then executes it on the</a>
+<span class="sourceLineNo">461</span><a id="line.461">     * currently running thread.  If you want to execute the {@code Runnable} on a different thread, it is better to</a>
+<span class="sourceLineNo">462</span><a id="line.462">     * use the {@link #associateWith(Runnable)} method instead.</a>
+<span class="sourceLineNo">463</span><a id="line.463">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">464</span><a id="line.464">     * &lt;b&gt;Note&lt;/b&gt;: This method is primarily provided to execute existing/legacy Runnable implementations.  It is better</a>
+<span class="sourceLineNo">465</span><a id="line.465">     * for new code to use {@link #execute(Callable)} since that supports the ability to return values and catch</a>
+<span class="sourceLineNo">466</span><a id="line.466">     * exceptions.</a>
+<span class="sourceLineNo">467</span><a id="line.467">     *</a>
+<span class="sourceLineNo">468</span><a id="line.468">     * @param runnable the {@code Runnable} to associate with this {@code Subject} and then execute.</a>
+<span class="sourceLineNo">469</span><a id="line.469">     * @since 1.0</a>
+<span class="sourceLineNo">470</span><a id="line.470">     */</a>
+<span class="sourceLineNo">471</span><a id="line.471">    void execute(Runnable runnable);</a>
+<span class="sourceLineNo">472</span><a id="line.472"></a>
+<span class="sourceLineNo">473</span><a id="line.473">    /**</a>
+<span class="sourceLineNo">474</span><a id="line.474">     * Returns a {@code Callable} instance matching the given argument while additionally ensuring that it will</a>
+<span class="sourceLineNo">475</span><a id="line.475">     * retain and execute under this Subject's identity.  The returned object can be used with an</a>
+<span class="sourceLineNo">476</span><a id="line.476">     * {@link java.util.concurrent.ExecutorService ExecutorService} to execute as this Subject.</a>
+<span class="sourceLineNo">477</span><a id="line.477">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">478</span><a id="line.478">     * This will effectively ensure that any calls to</a>
+<span class="sourceLineNo">479</span><a id="line.479">     * {@code SecurityUtils}.{@link SecurityUtils#getSubject() getSubject()} and related functionality will continue</a>
+<span class="sourceLineNo">480</span><a id="line.480">     * to function properly on any thread that executes the returned {@code Callable} instance.</a>
+<span class="sourceLineNo">481</span><a id="line.481">     *</a>
+<span class="sourceLineNo">482</span><a id="line.482">     * @param callable the callable to execute as this {@code Subject}</a>
+<span class="sourceLineNo">483</span><a id="line.483">     * @param &lt;V&gt;      the {@code Callable}s return value type</a>
+<span class="sourceLineNo">484</span><a id="line.484">     * @return a {@code Callable} that can be run as this {@code Subject}.</a>
+<span class="sourceLineNo">485</span><a id="line.485">     * @since 1.0</a>
+<span class="sourceLineNo">486</span><a id="line.486">     */</a>
+<span class="sourceLineNo">487</span><a id="line.487">    &lt;V&gt; Callable&lt;V&gt; associateWith(Callable&lt;V&gt; callable);</a>
+<span class="sourceLineNo">488</span><a id="line.488"></a>
+<span class="sourceLineNo">489</span><a id="line.489">    /**</a>
+<span class="sourceLineNo">490</span><a id="line.490">     * Returns a {@code Runnable} instance matching the given argument while additionally ensuring that it will</a>
+<span class="sourceLineNo">491</span><a id="line.491">     * retain and execute under this Subject's identity.  The returned object can be used with an</a>
+<span class="sourceLineNo">492</span><a id="line.492">     * {@link java.util.concurrent.Executor Executor} or another thread to execute as this Subject.</a>
+<span class="sourceLineNo">493</span><a id="line.493">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">494</span><a id="line.494">     * This will effectively ensure that any calls to</a>
+<span class="sourceLineNo">495</span><a id="line.495">     * {@code SecurityUtils}.{@link SecurityUtils#getSubject() getSubject()} and related functionality will continue</a>
+<span class="sourceLineNo">496</span><a id="line.496">     * to function properly on any thread that executes the returned {@code Runnable} instance.</a>
+<span class="sourceLineNo">497</span><a id="line.497">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">498</span><a id="line.498">     * *Note that if you need a return value to be returned as a result of the runnable's execution or if you need to</a>
+<span class="sourceLineNo">499</span><a id="line.499">     * react to any Exceptions, it is highly recommended to use the</a>
+<span class="sourceLineNo">500</span><a id="line.500">     * {@link #associateWith(java.util.concurrent.Callable) createCallable} method instead of this one.</a>
+<span class="sourceLineNo">501</span><a id="line.501">     *</a>
+<span class="sourceLineNo">502</span><a id="line.502">     * @param runnable the runnable to execute as this {@code Subject}</a>
+<span class="sourceLineNo">503</span><a id="line.503">     * @return a {@code Runnable} that can be run as this {@code Subject} on another thread.</a>
+<span class="sourceLineNo">504</span><a id="line.504">     * @see #associateWith (java.util.concurrent.Callable)</a>
+<span class="sourceLineNo">505</span><a id="line.505">     * @since 1.0</a>
+<span class="sourceLineNo">506</span><a id="line.506">     */</a>
+<span class="sourceLineNo">507</span><a id="line.507">    Runnable associateWith(Runnable runnable);</a>
+<span class="sourceLineNo">508</span><a id="line.508"></a>
+<span class="sourceLineNo">509</span><a id="line.509">    /**</a>
+<span class="sourceLineNo">510</span><a id="line.510">     * Allows this subject to 'run as' or 'assume' another identity indefinitely.  This can only be</a>
+<span class="sourceLineNo">511</span><a id="line.511">     * called when the {@code Subject} instance already has an identity (i.e. they are remembered from a previous</a>
+<span class="sourceLineNo">512</span><a id="line.512">     * log-in or they have authenticated during their current session).</a>
+<span class="sourceLineNo">513</span><a id="line.513">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">514</span><a id="line.514">     * Some notes about {@code runAs}:</a>
+<span class="sourceLineNo">515</span><a id="line.515">     * &lt;ul&gt;</a>
+<span class="sourceLineNo">516</span><a id="line.516">     * &lt;li&gt;You can tell if a {@code Subject} is 'running as' another identity by calling the</a>
+<span class="sourceLineNo">517</span><a id="line.517">     * {@link #isRunAs() isRunAs()} method.&lt;/li&gt;</a>
+<span class="sourceLineNo">518</span><a id="line.518">     * &lt;li&gt;If running as another identity, you can determine what the previous 'pre run as' identity</a>
+<span class="sourceLineNo">519</span><a id="line.519">     * was by calling the {@link #getPreviousPrincipals() getPreviousPrincipals()} method.&lt;/li&gt;</a>
+<span class="sourceLineNo">520</span><a id="line.520">     * &lt;li&gt;When you want a {@code Subject} to stop running as another identity, you can return to its previous</a>
+<span class="sourceLineNo">521</span><a id="line.521">     * 'pre run as' identity by calling the {@link #releaseRunAs() releaseRunAs()} method.&lt;/li&gt;</a>
+<span class="sourceLineNo">522</span><a id="line.522">     * &lt;/ul&gt;</a>
+<span class="sourceLineNo">523</span><a id="line.523">     *</a>
+<span class="sourceLineNo">524</span><a id="line.524">     * @param principals the identity to 'run as', aka the identity to &lt;em&gt;assume&lt;/em&gt; indefinitely.</a>
+<span class="sourceLineNo">525</span><a id="line.525">     * @throws NullPointerException  if the specified principals collection is {@code null} or empty.</a>
+<span class="sourceLineNo">526</span><a id="line.526">     * @throws IllegalStateException if this {@code Subject} does not yet have an identity of its own.</a>
+<span class="sourceLineNo">527</span><a id="line.527">     * @since 1.0</a>
+<span class="sourceLineNo">528</span><a id="line.528">     */</a>
+<span class="sourceLineNo">529</span><a id="line.529">    void runAs(PrincipalCollection principals) throws NullPointerException, IllegalStateException;</a>
+<span class="sourceLineNo">530</span><a id="line.530"></a>
+<span class="sourceLineNo">531</span><a id="line.531">    /**</a>
+<span class="sourceLineNo">532</span><a id="line.532">     * Returns {@code true} if this {@code Subject} is 'running as' another identity other than its original one or</a>
+<span class="sourceLineNo">533</span><a id="line.533">     * {@code false} otherwise (normal {@code Subject} state).  See the {@link #runAs runAs} method for more</a>
+<span class="sourceLineNo">534</span><a id="line.534">     * information.</a>
+<span class="sourceLineNo">535</span><a id="line.535">     *</a>
+<span class="sourceLineNo">536</span><a id="line.536">     * @return {@code true} if this {@code Subject} is 'running as' another identity other than its original one or</a>
+<span class="sourceLineNo">537</span><a id="line.537">     *         {@code false} otherwise (normal {@code Subject} state).</a>
+<span class="sourceLineNo">538</span><a id="line.538">     * @see #runAs</a>
+<span class="sourceLineNo">539</span><a id="line.539">     * @since 1.0</a>
+<span class="sourceLineNo">540</span><a id="line.540">     */</a>
+<span class="sourceLineNo">541</span><a id="line.541">    boolean isRunAs();</a>
+<span class="sourceLineNo">542</span><a id="line.542"></a>
+<span class="sourceLineNo">543</span><a id="line.543">    /**</a>
+<span class="sourceLineNo">544</span><a id="line.544">     * Returns the previous 'pre run as' identity of this {@code Subject} before assuming the current</a>
+<span class="sourceLineNo">545</span><a id="line.545">     * {@link #runAs runAs} identity, or {@code null} if this {@code Subject} is not operating under an assumed</a>
+<span class="sourceLineNo">546</span><a id="line.546">     * identity (normal state). See the {@link #runAs runAs} method for more information.</a>
+<span class="sourceLineNo">547</span><a id="line.547">     *</a>
+<span class="sourceLineNo">548</span><a id="line.548">     * @return the previous 'pre run as' identity of this {@code Subject} before assuming the current</a>
+<span class="sourceLineNo">549</span><a id="line.549">     *         {@link #runAs runAs} identity, or {@code null} if this {@code Subject} is not operating under an assumed</a>
+<span class="sourceLineNo">550</span><a id="line.550">     *         identity (normal state).</a>
+<span class="sourceLineNo">551</span><a id="line.551">     * @see #runAs</a>
+<span class="sourceLineNo">552</span><a id="line.552">     * @since 1.0</a>
+<span class="sourceLineNo">553</span><a id="line.553">     */</a>
+<span class="sourceLineNo">554</span><a id="line.554">    PrincipalCollection getPreviousPrincipals();</a>
+<span class="sourceLineNo">555</span><a id="line.555"></a>
+<span class="sourceLineNo">556</span><a id="line.556">    /**</a>
+<span class="sourceLineNo">557</span><a id="line.557">     * Releases the current 'run as' (assumed) identity and reverts back to the previous 'pre run as'</a>
+<span class="sourceLineNo">558</span><a id="line.558">     * identity that existed before {@code #runAs runAs} was called.</a>
+<span class="sourceLineNo">559</span><a id="line.559">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">560</span><a id="line.560">     * This method returns 'run as' (assumed) identity being released or {@code null} if this {@code Subject} is not</a>
+<span class="sourceLineNo">561</span><a id="line.561">     * operating under an assumed identity.</a>
+<span class="sourceLineNo">562</span><a id="line.562">     *</a>
+<span class="sourceLineNo">563</span><a id="line.563">     * @return the 'run as' (assumed) identity being released or {@code null} if this {@code Subject} is not operating</a>
+<span class="sourceLineNo">564</span><a id="line.564">     *         under an assumed identity.</a>
+<span class="sourceLineNo">565</span><a id="line.565">     * @see #runAs</a>
+<span class="sourceLineNo">566</span><a id="line.566">     * @since 1.0</a>
+<span class="sourceLineNo">567</span><a id="line.567">     */</a>
+<span class="sourceLineNo">568</span><a id="line.568">    PrincipalCollection releaseRunAs();</a>
+<span class="sourceLineNo">569</span><a id="line.569"></a>
+<span class="sourceLineNo">570</span><a id="line.570">    /**</a>
+<span class="sourceLineNo">571</span><a id="line.571">     * Builder design pattern implementation for creating {@link Subject} instances in a simplified way without</a>
+<span class="sourceLineNo">572</span><a id="line.572">     * requiring knowledge of Shiro's construction techniques.</a>
+<span class="sourceLineNo">573</span><a id="line.573">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">574</span><a id="line.574">     * &lt;b&gt;NOTE&lt;/b&gt;: This is provided for framework development support only and should typically never be used by</a>
+<span class="sourceLineNo">575</span><a id="line.575">     * application developers.  {@code Subject} instances should generally be acquired by using</a>
+<span class="sourceLineNo">576</span><a id="line.576">     * &lt;code&gt;SecurityUtils.{@link SecurityUtils#getSubject() getSubject()}&lt;/code&gt;</a>
+<span class="sourceLineNo">577</span><a id="line.577">     * &lt;h4&gt;Usage&lt;/h4&gt;</a>
+<span class="sourceLineNo">578</span><a id="line.578">     * The simplest usage of this builder is to construct an anonymous, session-less {@code Subject} instance:</a>
+<span class="sourceLineNo">579</span><a id="line.579">     * &lt;pre&gt;</a>
+<span class="sourceLineNo">580</span><a id="line.580">     * Subject subject = new Subject.{@link #Builder() Builder}().{@link #buildSubject() buildSubject()};&lt;/pre&gt;</a>
+<span class="sourceLineNo">581</span><a id="line.581">     * The default, no-arg {@code Subject.Builder()} constructor shown above will use the application's</a>
+<span class="sourceLineNo">582</span><a id="line.582">     * currently accessible {@code SecurityManager} via</a>
+<span class="sourceLineNo">583</span><a id="line.583">     * &lt;code&gt;SecurityUtils.{@link SecurityUtils#getSecurityManager() getSecurityManager()}&lt;/code&gt;.  You may also</a>
+<span class="sourceLineNo">584</span><a id="line.584">     * specify the exact {@code SecurityManager} instance to be used by the additional</a>
+<span class="sourceLineNo">585</span><a id="line.585">     * &lt;code&gt;Subject.{@link #Builder(org.apache.shiro.mgt.SecurityManager) Builder(securityManager)}&lt;/code&gt;</a>
+<span class="sourceLineNo">586</span><a id="line.586">     * constructor if desired.</a>
+<span class="sourceLineNo">587</span><a id="line.587">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">588</span><a id="line.588">     * All other methods may be called before the {@link #buildSubject() buildSubject()} method to</a>
+<span class="sourceLineNo">589</span><a id="line.589">     * provide context on how to construct the {@code Subject} instance.  For example, if you have a session id and</a>
+<span class="sourceLineNo">590</span><a id="line.590">     * want to acquire the {@code Subject} that 'owns' that session (assuming the session exists and is not expired):</a>
+<span class="sourceLineNo">591</span><a id="line.591">     * &lt;pre&gt;</a>
+<span class="sourceLineNo">592</span><a id="line.592">     * Subject subject = new Subject.Builder().sessionId(sessionId).buildSubject();&lt;/pre&gt;</a>
+<span class="sourceLineNo">593</span><a id="line.593">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">594</span><a id="line.594">     * Similarly, if you want a {@code Subject} instance reflecting a certain identity:</a>
+<span class="sourceLineNo">595</span><a id="line.595">     * &lt;pre&gt;</a>
+<span class="sourceLineNo">596</span><a id="line.596">     * PrincipalCollection principals = new SimplePrincipalCollection("username", &lt;em&gt;yourRealmName&lt;/em&gt;);</a>
+<span class="sourceLineNo">597</span><a id="line.597">     * Subject subject = new Subject.Builder().principals(principals).build();&lt;/pre&gt;</a>
+<span class="sourceLineNo">598</span><a id="line.598">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">599</span><a id="line.599">     * &lt;b&gt;Note*&lt;/b&gt; that the returned {@code Subject} instance is &lt;b&gt;not&lt;/b&gt; automatically bound to the application (thread)</a>
+<span class="sourceLineNo">600</span><a id="line.600">     * for further use.  That is,</a>
+<span class="sourceLineNo">601</span><a id="line.601">     * {@link org.apache.shiro.SecurityUtils SecurityUtils}.{@link org.apache.shiro.SecurityUtils#getSubject() getSubject()}</a>
+<span class="sourceLineNo">602</span><a id="line.602">     * will not automatically return the same instance as what is returned by the builder.  It is up to the framework</a>
+<span class="sourceLineNo">603</span><a id="line.603">     * developer to bind the built {@code Subject} for continued use if desired.</a>
+<span class="sourceLineNo">604</span><a id="line.604">     *</a>
+<span class="sourceLineNo">605</span><a id="line.605">     * @since 1.0</a>
+<span class="sourceLineNo">606</span><a id="line.606">     */</a>
+<span class="sourceLineNo">607</span><a id="line.607">    public static class Builder {</a>
+<span class="sourceLineNo">608</span><a id="line.608"></a>
+<span class="sourceLineNo">609</span><a id="line.609">        /**</a>
+<span class="sourceLineNo">610</span><a id="line.610">         * Hold all contextual data via the Builder instance's method invocations to be sent to the</a>
+<span class="sourceLineNo">611</span><a id="line.611">         * {@code SecurityManager} during the {@link #buildSubject} call.</a>
+<span class="sourceLineNo">612</span><a id="line.612">         */</a>
+<span class="sourceLineNo">613</span><a id="line.613">        private final SubjectContext subjectContext;</a>
+<span class="sourceLineNo">614</span><a id="line.614"></a>
+<span class="sourceLineNo">615</span><a id="line.615">        /**</a>
+<span class="sourceLineNo">616</span><a id="line.616">         * The SecurityManager to invoke during the {@link #buildSubject} call.</a>
+<span class="sourceLineNo">617</span><a id="line.617">         */</a>
+<span class="sourceLineNo">618</span><a id="line.618">        private final SecurityManager securityManager;</a>
+<span class="sourceLineNo">619</span><a id="line.619"></a>
+<span class="sourceLineNo">620</span><a id="line.620">        /**</a>
+<span class="sourceLineNo">621</span><a id="line.621">         * Constructs a new {@link Subject.Builder} instance, using the {@code SecurityManager} instance available</a>
+<span class="sourceLineNo">622</span><a id="line.622">         * to the calling code as determined by a call to {@link org.apache.shiro.SecurityUtils#getSecurityManager()}</a>
+<span class="sourceLineNo">623</span><a id="line.623">         * to build the {@code Subject} instance.</a>
+<span class="sourceLineNo">624</span><a id="line.624">         */</a>
+<span class="sourceLineNo">625</span><a id="line.625">        public Builder() {</a>
+<span class="sourceLineNo">626</span><a id="line.626">            this(SecurityUtils.getSecurityManager());</a>
+<span class="sourceLineNo">627</span><a id="line.627">        }</a>
+<span class="sourceLineNo">628</span><a id="line.628"></a>
+<span class="sourceLineNo">629</span><a id="line.629">        /**</a>
+<span class="sourceLineNo">630</span><a id="line.630">         * Constructs a new {@link Subject.Builder} instance which will use the specified {@code SecurityManager} when</a>
+<span class="sourceLineNo">631</span><a id="line.631">         * building the {@code Subject} instance.</a>
+<span class="sourceLineNo">632</span><a id="line.632">         *</a>
+<span class="sourceLineNo">633</span><a id="line.633">         * @param securityManager the {@code SecurityManager} to use when building the {@code Subject} instance.</a>
+<span class="sourceLineNo">634</span><a id="line.634">         */</a>
+<span class="sourceLineNo">635</span><a id="line.635">        public Builder(SecurityManager securityManager) {</a>
+<span class="sourceLineNo">636</span><a id="line.636">            if (securityManager == null) {</a>
+<span class="sourceLineNo">637</span><a id="line.637">                throw new NullPointerException("SecurityManager method argument cannot be null.");</a>
+<span class="sourceLineNo">638</span><a id="line.638">            }</a>
+<span class="sourceLineNo">639</span><a id="line.639">            this.securityManager = securityManager;</a>
+<span class="sourceLineNo">640</span><a id="line.640">            this.subjectContext = newSubjectContextInstance();</a>
+<span class="sourceLineNo">641</span><a id="line.641">            if (this.subjectContext == null) {</a>
+<span class="sourceLineNo">642</span><a id="line.642">                throw new IllegalStateException("Subject instance returned from 'newSubjectContextInstance' " +</a>
+<span class="sourceLineNo">643</span><a id="line.643">                        "cannot be null.");</a>
+<span class="sourceLineNo">644</span><a id="line.644">            }</a>
+<span class="sourceLineNo">645</span><a id="line.645">            this.subjectContext.setSecurityManager(securityManager);</a>
+<span class="sourceLineNo">646</span><a id="line.646">        }</a>
+<span class="sourceLineNo">647</span><a id="line.647"></a>
+<span class="sourceLineNo">648</span><a id="line.648">        /**</a>
+<span class="sourceLineNo">649</span><a id="line.649">         * Creates a new {@code SubjectContext} instance to be used to populate with subject contextual data that</a>
+<span class="sourceLineNo">650</span><a id="line.650">         * will then be sent to the {@code SecurityManager} to create a new {@code Subject} instance.</a>
+<span class="sourceLineNo">651</span><a id="line.651">         *</a>
+<span class="sourceLineNo">652</span><a id="line.652">         * @return a new {@code SubjectContext} instance</a>
+<span class="sourceLineNo">653</span><a id="line.653">         */</a>
+<span class="sourceLineNo">654</span><a id="line.654">        protected SubjectContext newSubjectContextInstance() {</a>
+<span class="sourceLineNo">655</span><a id="line.655">            return new DefaultSubjectContext();</a>
+<span class="sourceLineNo">656</span><a id="line.656">        }</a>
+<span class="sourceLineNo">657</span><a id="line.657"></a>
+<span class="sourceLineNo">658</span><a id="line.658">        /**</a>
+<span class="sourceLineNo">659</span><a id="line.659">         * Returns the backing context used to build the {@code Subject} instance, available to subclasses</a>
+<span class="sourceLineNo">660</span><a id="line.660">         * since the {@code context} class attribute is marked as {@code private}.</a>
+<span class="sourceLineNo">661</span><a id="line.661">         *</a>
+<span class="sourceLineNo">662</span><a id="line.662">         * @return the backing context used to build the {@code Subject} instance, available to subclasses.</a>
+<span class="sourceLineNo">663</span><a id="line.663">         */</a>
+<span class="sourceLineNo">664</span><a id="line.664">        protected SubjectContext getSubjectContext() {</a>
+<span class="sourceLineNo">665</span><a id="line.665">            return this.subjectContext;</a>
+<span class="sourceLineNo">666</span><a id="line.666">        }</a>
+<span class="sourceLineNo">667</span><a id="line.667"></a>
+<span class="sourceLineNo">668</span><a id="line.668">        /**</a>
+<span class="sourceLineNo">669</span><a id="line.669">         * Enables building a {@link Subject Subject} instance that owns the {@link Session Session} with the</a>
+<span class="sourceLineNo">670</span><a id="line.670">         * specified {@code sessionId}.</a>
+<span class="sourceLineNo">671</span><a id="line.671">         * &lt;p/&gt;</a>
+<span class="sourceLineNo">672</span><a id="line.672">         * Usually when specifying a {@code sessionId}, no other {@code Builder} methods would be specified because</a>
+<span class="sourceLineNo">673</span><a id="line.673">         * everything else (principals, inet address, etc) can usually be reconstructed based on the referenced</a>
+<span class="sourceLineNo">674</span><a id="line.674">         * session alone.  In other words, this is almost always sufficient:</a>
+<span class="sourceLineNo">675</span><a id="line.675">         * &lt;pre&gt;</a>
+<span class="sourceLineNo">676</span><a id="line.676">         * new Subject.Builder().sessionId(sessionId).buildSubject();&lt;/pre&gt;</a>
+<span class="sourceLineNo">677</span><a id="line.677">         * &lt;p/&gt;</a>
+<span class="sourceLineNo">678</span><a id="line.678">         * &lt;b&gt;Although simple in concept, this method provides very powerful functionality previously absent in almost</a>
+<span class="sourceLineNo">679</span><a id="line.679">         * all Java environments:&lt;/b&gt;</a>
+<span class="sourceLineNo">680</span><a id="line.680">         * &lt;p/&gt;</a>
+<span class="sourceLineNo">681</span><a id="line.681">         * The ability to reference a {@code Subject} and their server-side session</a>
+<span class="sourceLineNo">682</span><a id="line.682">         * &lt;em&gt;across clients of different mediums&lt;/em&gt; such as web applications, Java applets,</a>
+<span class="sourceLineNo">683</span><a id="line.683">         * standalone C# clients over XML-RPC and/or SOAP, and many others. This is a &lt;em&gt;huge&lt;/em&gt;</a>
+<span class="sourceLineNo">684</span><a id="line.684">         * benefit in heterogeneous enterprise applications.</a>
+<span class="sourceLineNo">685</span><a id="line.685">         * &lt;p/&gt;</a>
+<span class="sourceLineNo">686</span><a id="line.686">         * To maintain session integrity across client mediums, the {@code sessionId} &lt;b&gt;must&lt;/b&gt; be transmitted</a>
+<span class="sourceLineNo">687</span><a id="line.687">         * to all client mediums securely (e.g. over SSL) to prevent man-in-the-middle attacks.  This</a>
+<span class="sourceLineNo">688</span><a id="line.688">         * is nothing new - all web applications are susceptible to the same problem when transmitting</a>
+<span class="sourceLineNo">689</span><a id="line.689">         * {@code Cookie}s or when using URL rewriting.  As long as the</a>
+<span class="sourceLineNo">690</span><a id="line.690">         * {@code sessionId} is transmitted securely, session integrity can be maintained.</a>
+<span class="sourceLineNo">691</span><a id="line.691">         *</a>
+<span class="sourceLineNo">692</span><a id="line.692">         * @param sessionId the id of the session that backs the desired Subject being acquired.</a>
+<span class="sourceLineNo">693</span><a id="line.693">         * @return this {@code Builder} instance for method chaining.</a>
+<span class="sourceLineNo">694</span><a id="line.694">         */</a>
+<span class="sourceLineNo">695</span><a id="line.695">        public Builder sessionId(Serializable sessionId) {</a>
+<span class="sourceLineNo">696</span><a id="line.696">            if (sessionId != null) {</a>
+<span class="sourceLineNo">697</span><a id="line.697">                this.subjectContext.setSessionId(sessionId);</a>
+<span class="sourceLineNo">698</span><a id="line.698">            }</a>
+<span class="sourceLineNo">699</span><a id="line.699">            return this;</a>
+<span class="sourceLineNo">700</span><a id="line.700">        }</a>
+<span class="sourceLineNo">701</span><a id="line.701"></a>
+<span class="sourceLineNo">702</span><a id="line.702">        /**</a>
+<span class="sourceLineNo">703</span><a id="line.703">         * Ensures the {@code Subject} being built will reflect the specified host name or IP as its originating</a>
+<span class="sourceLineNo">704</span><a id="line.704">         * location.</a>
+<span class="sourceLineNo">705</span><a id="line.705">         *</a>
+<span class="sourceLineNo">706</span><a id="line.706">         * @param host the host name or IP address to use as the {@code Subject}'s originating location.</a>
+<span class="sourceLineNo">707</span><a id="line.707">         * @return this {@code Builder} instance for method chaining.</a>
+<span class="sourceLineNo">708</span><a id="line.708">         */</a>
+<span class="sourceLineNo">709</span><a id="line.709">        public Builder host(String host) {</a>
+<span class="sourceLineNo">710</span><a id="line.710">            if (StringUtils.hasText(host)) {</a>
+<span class="sourceLineNo">711</span><a id="line.711">                this.subjectContext.setHost(host);</a>
+<span class="sourceLineNo">712</span><a id="line.712">            }</a>
+<span class="sourceLineNo">713</span><a id="line.713">            return this;</a>
+<span class="sourceLineNo">714</span><a id="line.714">        }</a>
+<span class="sourceLineNo">715</span><a id="line.715"></a>
+<span class="sourceLineNo">716</span><a id="line.716">        /**</a>
+<span class="sourceLineNo">717</span><a id="line.717">         * Ensures the {@code Subject} being built will use the specified {@link Session} instance.  Note that it is</a>
+<span class="sourceLineNo">718</span><a id="line.718">         * more common to use the {@link #sessionId sessionId} builder method rather than having to construct a</a>
+<span class="sourceLineNo">719</span><a id="line.719">         * {@code Session} instance for this method.</a>
+<span class="sourceLineNo">720</span><a id="line.720">         *</a>
+<span class="sourceLineNo">721</span><a id="line.721">         * @param session the session to use as the {@code Subject}'s {@link Session}</a>
+<span class="sourceLineNo">722</span><a id="line.722">         * @return this {@code Builder} instance for method chaining.</a>
+<span class="sourceLineNo">723</span><a id="line.723">         */</a>
+<span class="sourceLineNo">724</span><a id="line.724">        public Builder session(Session session) {</a>
+<span class="sourceLineNo">725</span><a id="line.725">            if (session != null) {</a>
+<span class="sourceLineNo">726</span><a id="line.726">                this.subjectContext.setSession(session);</a>
+<span class="sourceLineNo">727</span><a id="line.727">            }</a>
+<span class="sourceLineNo">728</span><a id="line.728">            return this;</a>
+<span class="sourceLineNo">729</span><a id="line.729">        }</a>
+<span class="sourceLineNo">730</span><a id="line.730"></a>
+<span class="sourceLineNo">731</span><a id="line.731">        /**</a>
+<span class="sourceLineNo">732</span><a id="line.732">         * Ensures the {@code Subject} being built will reflect the specified principals (aka identity).</a>
+<span class="sourceLineNo">733</span><a id="line.733">         * &lt;p/&gt;</a>
+<span class="sourceLineNo">734</span><a id="line.734">         * For example, if your application's unique identifier for users is a {@code String} username, and you wanted</a>
+<span class="sourceLineNo">735</span><a id="line.735">         * to create a {@code Subject} instance that reflected a user whose username is</a>
+<span class="sourceLineNo">736</span><a id="line.736">         * '{@code jsmith}', and you knew the Realm that could acquire {@code jsmith}'s principals based on the username</a>
+<span class="sourceLineNo">737</span><a id="line.737">         * was named &amp;quot;{@code myRealm}&amp;quot;, you might create the '{@code jsmith} {@code Subject} instance this</a>
+<span class="sourceLineNo">738</span><a id="line.738">         * way:</a>
+<span class="sourceLineNo">739</span><a id="line.739">         * &lt;pre&gt;</a>
+<span class="sourceLineNo">740</span><a id="line.740">         * PrincipalCollection identity = new {@link org.apache.shiro.subject.SimplePrincipalCollection#SimplePrincipalCollection(Object, String) SimplePrincipalCollection}(&amp;quot;jsmith&amp;quot;, &amp;quot;myRealm&amp;quot;);</a>
+<span class="sourceLineNo">741</span><a id="line.741">         * Subject jsmith = new Subject.Builder().principals(identity).buildSubject();&lt;/pre&gt;</a>
+<span class="sourceLineNo">742</span><a id="line.742">         * &lt;p/&gt;</a>
+<span class="sourceLineNo">743</span><a id="line.743">         * Similarly, if your application's unique identifier for users is a {@code long} value (such as might be used</a>
+<span class="sourceLineNo">744</span><a id="line.744">         * as a primary key in a relational database) and you were using a {@code JDBC}</a>
+<span class="sourceLineNo">745</span><a id="line.745">         * {@code Realm} named, (unimaginatively) &amp;quot;jdbcRealm&amp;quot;, you might create the Subject</a>
+<span class="sourceLineNo">746</span><a id="line.746">         * instance this way:</a>
+<span class="sourceLineNo">747</span><a id="line.747">         * &lt;pre&gt;</a>
+<span class="sourceLineNo">748</span><a id="line.748">         * long userId = //get user ID from somewhere</a>
+<span class="sourceLineNo">749</span><a id="line.749">         * PrincipalCollection userIdentity = new {@link org.apache.shiro.subject.SimplePrincipalCollection#SimplePrincipalCollection(Object, String) SimplePrincipalCollection}(&lt;em&gt;userId&lt;/em&gt;, &amp;quot;jdbcRealm&amp;quot;);</a>
+<span class="sourceLineNo">750</span><a id="line.750">         * Subject user = new Subject.Builder().principals(identity).buildSubject();&lt;/pre&gt;</a>
+<span class="sourceLineNo">751</span><a id="line.751">         *</a>
+<span class="sourceLineNo">752</span><a id="line.752">         * @param principals the principals to use as the {@code Subject}'s identity.</a>
+<span class="sourceLineNo">753</span><a id="line.753">         * @return this {@code Builder} instance for method chaining.</a>
+<span class="sourceLineNo">754</span><a id="line.754">         */</a>
+<span class="sourceLineNo">755</span><a id="line.755">        public Builder principals(PrincipalCollection principals) {</a>
+<span class="sourceLineNo">756</span><a id="line.756">            if (principals != null &amp;&amp; !principals.isEmpty()) {</a>
+<span class="sourceLineNo">757</span><a id="line.757">                this.subjectContext.setPrincipals(principals);</a>
+<span class="sourceLineNo">758</span><a id="line.758">            }</a>
+<span class="sourceLineNo">759</span><a id="line.759">            return this;</a>
+<span class="sourceLineNo">760</span><a id="line.760">        }</a>
+<span class="sourceLineNo">761</span><a id="line.761"></a>
+<span class="sourceLineNo">762</span><a id="line.762">        /**</a>
+<span class="sourceLineNo">763</span><a id="line.763">         * Configures whether or not the created Subject instance can create a new {@code Session} if one does not</a>
+<span class="sourceLineNo">764</span><a id="line.764">         * already exist.  If set to {@code false}, any application calls to</a>
+<span class="sourceLineNo">765</span><a id="line.765">         * {@code subject.getSession()} or {@code subject.getSession(true))} will result in a SessionException.</a>
+<span class="sourceLineNo">766</span><a id="line.766">         * &lt;p/&gt;</a>
+<span class="sourceLineNo">767</span><a id="line.767">         * This setting is {@code true} by default, as most applications find value in sessions.</a>
+<span class="sourceLineNo">768</span><a id="line.768">         *</a>
+<span class="sourceLineNo">769</span><a id="line.769">         * @param enabled whether or not the created Subject instance can create a new {@code Session} if one does not</a>
+<span class="sourceLineNo">770</span><a id="line.770">         *                already exist.</a>
+<span class="sourceLineNo">771</span><a id="line.771">         * @return this {@code Builder} instance for method chaining.</a>
+<span class="sourceLineNo">772</span><a id="line.772">         * @since 1.2</a>
+<span class="sourceLineNo">773</span><a id="line.773">         */</a>
+<span class="sourceLineNo">774</span><a id="line.774">        public Builder sessionCreationEnabled(boolean enabled) {</a>
+<span class="sourceLineNo">775</span><a id="line.775">            this.subjectContext.setSessionCreationEnabled(enabled);</a>
+<span class="sourceLineNo">776</span><a id="line.776">            return this;</a>
+<span class="sourceLineNo">777</span><a id="line.777">        }</a>
+<span class="sourceLineNo">778</span><a id="line.778"></a>
+<span class="sourceLineNo">779</span><a id="line.779">        /**</a>
+<span class="sourceLineNo">780</span><a id="line.780">         * Ensures the {@code Subject} being built will be considered</a>
+<span class="sourceLineNo">781</span><a id="line.781">         * {@link org.apache.shiro.subject.Subject#isAuthenticated() authenticated}.  Per the</a>
+<span class="sourceLineNo">782</span><a id="line.782">         * {@link org.apache.shiro.subject.Subject#isAuthenticated() isAuthenticated()} JavaDoc, be careful</a>
+<span class="sourceLineNo">783</span><a id="line.783">         * when specifying {@code true} - you should know what you are doing and have a good reason for ignoring Shiro's</a>
+<span class="sourceLineNo">784</span><a id="line.784">         * default authentication state mechanisms.</a>
+<span class="sourceLineNo">785</span><a id="line.785">         *</a>
+<span class="sourceLineNo">786</span><a id="line.786">         * @param authenticated whether or not the built {@code Subject} will be considered authenticated.</a>
+<span class="sourceLineNo">787</span><a id="line.787">         * @return this {@code Builder} instance for method chaining.</a>
+<span class="sourceLineNo">788</span><a id="line.788">         * @see org.apache.shiro.subject.Subject#isAuthenticated()</a>
+<span class="sourceLineNo">789</span><a id="line.789">         */</a>
+<span class="sourceLineNo">790</span><a id="line.790">        public Builder authenticated(boolean authenticated) {</a>
+<span class="sourceLineNo">791</span><a id="line.791">            this.subjectContext.setAuthenticated(authenticated);</a>
+<span class="sourceLineNo">792</span><a id="line.792">            return this;</a>
+<span class="sourceLineNo">793</span><a id="line.793">        }</a>
+<span class="sourceLineNo">794</span><a id="line.794"></a>
+<span class="sourceLineNo">795</span><a id="line.795">        /**</a>
+<span class="sourceLineNo">796</span><a id="line.796">         * Allows custom attributes to be added to the underlying context {@code Map} used to construct the</a>
+<span class="sourceLineNo">797</span><a id="line.797">         * {@link Subject} instance.</a>
+<span class="sourceLineNo">798</span><a id="line.798">         * &lt;p/&gt;</a>
+<span class="sourceLineNo">799</span><a id="line.799">         * A {@code null} key throws an {@link IllegalArgumentException}. A {@code null} value effectively removes</a>
+<span class="sourceLineNo">800</span><a id="line.800">         * any previously stored attribute under the given key from the context map.</a>
+<span class="sourceLineNo">801</span><a id="line.801">         * &lt;p/&gt;</a>
+<span class="sourceLineNo">802</span><a id="line.802">         * &lt;b&gt;*NOTE*:&lt;/b&gt; This method is only useful when configuring Shiro with a custom {@link SubjectFactory}</a>
+<span class="sourceLineNo">803</span><a id="line.803">         * implementation.  This method allows end-users to append additional data to the context map which the</a>
+<span class="sourceLineNo">804</span><a id="line.804">         * {@code SubjectFactory} implementation can use when building custom Subject instances. As such, this method</a>
+<span class="sourceLineNo">805</span><a id="line.805">         * is only useful when a custom {@code SubjectFactory} implementation has been configured.</a>
+<span class="sourceLineNo">806</span><a id="line.806">         *</a>
+<span class="sourceLineNo">807</span><a id="line.807">         * @param attributeKey   the key under which the corresponding value will be stored in the context {@code Map}.</a>
+<span class="sourceLineNo">808</span><a id="line.808">         * @param attributeValue the value to store in the context map under the specified {@code attributeKey}.</a>
+<span class="sourceLineNo">809</span><a id="line.809">         * @return this {@code Builder} instance for method chaining.</a>
+<span class="sourceLineNo">810</span><a id="line.810">         * @throws IllegalArgumentException if the {@code attributeKey} is {@code null}.</a>
+<span class="sourceLineNo">811</span><a id="line.811">         * @see SubjectFactory#createSubject(SubjectContext)</a>
+<span class="sourceLineNo">812</span><a id="line.812">         */</a>
+<span class="sourceLineNo">813</span><a id="line.813">        public Builder contextAttribute(String attributeKey, Object attributeValue) {</a>
+<span class="sourceLineNo">814</span><a id="line.814">            if (attributeKey == null) {</a>
+<span class="sourceLineNo">815</span><a id="line.815">                String msg = "Subject context map key cannot be null.";</a>
+<span class="sourceLineNo">816</span><a id="line.816">                throw new IllegalArgumentException(msg);</a>
+<span class="sourceLineNo">817</span><a id="line.817">            }</a>
+<span class="sourceLineNo">818</span><a id="line.818">            if (attributeValue == null) {</a>
+<span class="sourceLineNo">819</span><a id="line.819">                this.subjectContext.remove(attributeKey);</a>
+<span class="sourceLineNo">820</span><a id="line.820">            } else {</a>
+<span class="sourceLineNo">821</span><a id="line.821">                this.subjectContext.put(attributeKey, attributeValue);</a>
+<span class="sourceLineNo">822</span><a id="line.822">            }</a>
+<span class="sourceLineNo">823</span><a id="line.823">            return this;</a>
+<span class="sourceLineNo">824</span><a id="line.824">        }</a>
+<span class="sourceLineNo">825</span><a id="line.825"></a>
+<span class="sourceLineNo">826</span><a id="line.826">        /**</a>
+<span class="sourceLineNo">827</span><a id="line.827">         * Creates and returns a new {@code Subject} instance reflecting the cumulative state acquired by the</a>
+<span class="sourceLineNo">828</span><a id="line.828">         * other methods in this class.</a>
+<span class="sourceLineNo">829</span><a id="line.829">         * &lt;p/&gt;</a>
+<span class="sourceLineNo">830</span><a id="line.830">         * This {@code Builder} instance will still retain the underlying state after this method is called - it</a>
+<span class="sourceLineNo">831</span><a id="line.831">         * will not clear it; repeated calls to this method will return multiple {@link Subject} instances, all</a>
+<span class="sourceLineNo">832</span><a id="line.832">         * reflecting the exact same state.  If a new (different) {@code Subject} is to be constructed, a new</a>
+<span class="sourceLineNo">833</span><a id="line.833">         * {@code Builder} instance must be created.</a>
+<span class="sourceLineNo">834</span><a id="line.834">         * &lt;p/&gt;</a>
+<span class="sourceLineNo">835</span><a id="line.835">         * &lt;b&gt;Note&lt;/b&gt; that the returned {@code Subject} instance is &lt;b&gt;not&lt;/b&gt; automatically bound to the application</a>
+<span class="sourceLineNo">836</span><a id="line.836">         * (thread) for further use.  That is,</a>
+<span class="sourceLineNo">837</span><a id="line.837">         * {@link org.apache.shiro.SecurityUtils SecurityUtils}.{@link org.apache.shiro.SecurityUtils#getSubject() getSubject()}</a>
+<span class="sourceLineNo">838</span><a id="line.838">         * will not automatically return the same instance as what is returned by the builder.  It is up to the</a>
+<span class="sourceLineNo">839</span><a id="line.839">         * framework developer to bind the returned {@code Subject} for continued use if desired.</a>
+<span class="sourceLineNo">840</span><a id="line.840">         *</a>
+<span class="sourceLineNo">841</span><a id="line.841">         * @return a new {@code Subject} instance reflecting the cumulative state acquired by the</a>
+<span class="sourceLineNo">842</span><a id="line.842">         *         other methods in this class.</a>
+<span class="sourceLineNo">843</span><a id="line.843">         */</a>
+<span class="sourceLineNo">844</span><a id="line.844">        public Subject buildSubject() {</a>
+<span class="sourceLineNo">845</span><a id="line.845">            return this.securityManager.createSubject(this.subjectContext);</a>
+<span class="sourceLineNo">846</span><a id="line.846">        }</a>
+<span class="sourceLineNo">847</span><a id="line.847">    }</a>
+<span class="sourceLineNo">848</span><a id="line.848"></a>
+<span class="sourceLineNo">849</span><a id="line.849">}</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</main>
+</body>
+</html>

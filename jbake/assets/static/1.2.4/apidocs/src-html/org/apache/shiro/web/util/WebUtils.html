@@ -1,0 +1,740 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<FONT color="green">007</FONT>     * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<FONT color="green">008</FONT>     * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<FONT color="green">013</FONT>     * software distributed under the License is distributed on an<a name="line.13"></a>
+<FONT color="green">014</FONT>     * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<FONT color="green">015</FONT>     * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<FONT color="green">016</FONT>     * specific language governing permissions and limitations<a name="line.16"></a>
+<FONT color="green">017</FONT>     * under the License.<a name="line.17"></a>
+<FONT color="green">018</FONT>     */<a name="line.18"></a>
+<FONT color="green">019</FONT>    package org.apache.shiro.web.util;<a name="line.19"></a>
+<FONT color="green">020</FONT>    <a name="line.20"></a>
+<FONT color="green">021</FONT>    import org.apache.shiro.SecurityUtils;<a name="line.21"></a>
+<FONT color="green">022</FONT>    import org.apache.shiro.session.Session;<a name="line.22"></a>
+<FONT color="green">023</FONT>    import org.apache.shiro.subject.Subject;<a name="line.23"></a>
+<FONT color="green">024</FONT>    import org.apache.shiro.subject.support.DefaultSubjectContext;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import org.apache.shiro.util.StringUtils;<a name="line.25"></a>
+<FONT color="green">026</FONT>    import org.apache.shiro.web.env.EnvironmentLoader;<a name="line.26"></a>
+<FONT color="green">027</FONT>    import org.apache.shiro.web.env.WebEnvironment;<a name="line.27"></a>
+<FONT color="green">028</FONT>    import org.apache.shiro.web.filter.AccessControlFilter;<a name="line.28"></a>
+<FONT color="green">029</FONT>    import org.slf4j.Logger;<a name="line.29"></a>
+<FONT color="green">030</FONT>    import org.slf4j.LoggerFactory;<a name="line.30"></a>
+<FONT color="green">031</FONT>    <a name="line.31"></a>
+<FONT color="green">032</FONT>    import javax.servlet.ServletContext;<a name="line.32"></a>
+<FONT color="green">033</FONT>    import javax.servlet.ServletRequest;<a name="line.33"></a>
+<FONT color="green">034</FONT>    import javax.servlet.ServletResponse;<a name="line.34"></a>
+<FONT color="green">035</FONT>    import javax.servlet.http.HttpServletRequest;<a name="line.35"></a>
+<FONT color="green">036</FONT>    import javax.servlet.http.HttpServletResponse;<a name="line.36"></a>
+<FONT color="green">037</FONT>    import java.io.IOException;<a name="line.37"></a>
+<FONT color="green">038</FONT>    import java.io.UnsupportedEncodingException;<a name="line.38"></a>
+<FONT color="green">039</FONT>    import java.net.URLDecoder;<a name="line.39"></a>
+<FONT color="green">040</FONT>    import java.util.Map;<a name="line.40"></a>
+<FONT color="green">041</FONT>    <a name="line.41"></a>
+<FONT color="green">042</FONT>    /**<a name="line.42"></a>
+<FONT color="green">043</FONT>     * Simple utility class for operations used across multiple class hierarchies in the web framework code.<a name="line.43"></a>
+<FONT color="green">044</FONT>     * &lt;p/&gt;<a name="line.44"></a>
+<FONT color="green">045</FONT>     * Some methods in this class were copied from the Spring Framework so we didn't have to re-invent the wheel,<a name="line.45"></a>
+<FONT color="green">046</FONT>     * and in these cases, we have retained all license, copyright and author information.<a name="line.46"></a>
+<FONT color="green">047</FONT>     *<a name="line.47"></a>
+<FONT color="green">048</FONT>     * @since 0.9<a name="line.48"></a>
+<FONT color="green">049</FONT>     */<a name="line.49"></a>
+<FONT color="green">050</FONT>    public class WebUtils {<a name="line.50"></a>
+<FONT color="green">051</FONT>    <a name="line.51"></a>
+<FONT color="green">052</FONT>        //TODO - complete JavaDoc<a name="line.52"></a>
+<FONT color="green">053</FONT>    <a name="line.53"></a>
+<FONT color="green">054</FONT>        private static final Logger log = LoggerFactory.getLogger(WebUtils.class);<a name="line.54"></a>
+<FONT color="green">055</FONT>    <a name="line.55"></a>
+<FONT color="green">056</FONT>        public static final String SERVLET_REQUEST_KEY = ServletRequest.class.getName() + "_SHIRO_THREAD_CONTEXT_KEY";<a name="line.56"></a>
+<FONT color="green">057</FONT>        public static final String SERVLET_RESPONSE_KEY = ServletResponse.class.getName() + "_SHIRO_THREAD_CONTEXT_KEY";<a name="line.57"></a>
+<FONT color="green">058</FONT>    <a name="line.58"></a>
+<FONT color="green">059</FONT>        /**<a name="line.59"></a>
+<FONT color="green">060</FONT>         * {@link org.apache.shiro.session.Session Session} key used to save a request and later restore it, for example when redirecting to a<a name="line.60"></a>
+<FONT color="green">061</FONT>         * requested page after login, equal to {@code shiroSavedRequest}.<a name="line.61"></a>
+<FONT color="green">062</FONT>         */<a name="line.62"></a>
+<FONT color="green">063</FONT>        public static final String SAVED_REQUEST_KEY = "shiroSavedRequest";<a name="line.63"></a>
+<FONT color="green">064</FONT>    <a name="line.64"></a>
+<FONT color="green">065</FONT>        /**<a name="line.65"></a>
+<FONT color="green">066</FONT>         * Standard Servlet 2.3+ spec request attributes for include URI and paths.<a name="line.66"></a>
+<FONT color="green">067</FONT>         * &lt;p&gt;If included via a RequestDispatcher, the current resource will see the<a name="line.67"></a>
+<FONT color="green">068</FONT>         * originating request. Its own URI and paths are exposed as request attributes.<a name="line.68"></a>
+<FONT color="green">069</FONT>         */<a name="line.69"></a>
+<FONT color="green">070</FONT>        public static final String INCLUDE_REQUEST_URI_ATTRIBUTE = "javax.servlet.include.request_uri";<a name="line.70"></a>
+<FONT color="green">071</FONT>        public static final String INCLUDE_CONTEXT_PATH_ATTRIBUTE = "javax.servlet.include.context_path";<a name="line.71"></a>
+<FONT color="green">072</FONT>        public static final String INCLUDE_SERVLET_PATH_ATTRIBUTE = "javax.servlet.include.servlet_path";<a name="line.72"></a>
+<FONT color="green">073</FONT>        public static final String INCLUDE_PATH_INFO_ATTRIBUTE = "javax.servlet.include.path_info";<a name="line.73"></a>
+<FONT color="green">074</FONT>        public static final String INCLUDE_QUERY_STRING_ATTRIBUTE = "javax.servlet.include.query_string";<a name="line.74"></a>
+<FONT color="green">075</FONT>    <a name="line.75"></a>
+<FONT color="green">076</FONT>        /**<a name="line.76"></a>
+<FONT color="green">077</FONT>         * Standard Servlet 2.4+ spec request attributes for forward URI and paths.<a name="line.77"></a>
+<FONT color="green">078</FONT>         * &lt;p&gt;If forwarded to via a RequestDispatcher, the current resource will see its<a name="line.78"></a>
+<FONT color="green">079</FONT>         * own URI and paths. The originating URI and paths are exposed as request attributes.<a name="line.79"></a>
+<FONT color="green">080</FONT>         */<a name="line.80"></a>
+<FONT color="green">081</FONT>        public static final String FORWARD_REQUEST_URI_ATTRIBUTE = "javax.servlet.forward.request_uri";<a name="line.81"></a>
+<FONT color="green">082</FONT>        public static final String FORWARD_CONTEXT_PATH_ATTRIBUTE = "javax.servlet.forward.context_path";<a name="line.82"></a>
+<FONT color="green">083</FONT>        public static final String FORWARD_SERVLET_PATH_ATTRIBUTE = "javax.servlet.forward.servlet_path";<a name="line.83"></a>
+<FONT color="green">084</FONT>        public static final String FORWARD_PATH_INFO_ATTRIBUTE = "javax.servlet.forward.path_info";<a name="line.84"></a>
+<FONT color="green">085</FONT>        public static final String FORWARD_QUERY_STRING_ATTRIBUTE = "javax.servlet.forward.query_string";<a name="line.85"></a>
+<FONT color="green">086</FONT>    <a name="line.86"></a>
+<FONT color="green">087</FONT>        /**<a name="line.87"></a>
+<FONT color="green">088</FONT>         * Default character encoding to use when &lt;code&gt;request.getCharacterEncoding&lt;/code&gt;<a name="line.88"></a>
+<FONT color="green">089</FONT>         * returns &lt;code&gt;null&lt;/code&gt;, according to the Servlet spec.<a name="line.89"></a>
+<FONT color="green">090</FONT>         *<a name="line.90"></a>
+<FONT color="green">091</FONT>         * @see javax.servlet.ServletRequest#getCharacterEncoding<a name="line.91"></a>
+<FONT color="green">092</FONT>         */<a name="line.92"></a>
+<FONT color="green">093</FONT>        public static final String DEFAULT_CHARACTER_ENCODING = "ISO-8859-1";<a name="line.93"></a>
+<FONT color="green">094</FONT>    <a name="line.94"></a>
+<FONT color="green">095</FONT>        /**<a name="line.95"></a>
+<FONT color="green">096</FONT>         * Return the path within the web application for the given request.<a name="line.96"></a>
+<FONT color="green">097</FONT>         * Detects include request URL if called within a RequestDispatcher include.<a name="line.97"></a>
+<FONT color="green">098</FONT>         * &lt;p/&gt;<a name="line.98"></a>
+<FONT color="green">099</FONT>         * For example, for a request to URL<a name="line.99"></a>
+<FONT color="green">100</FONT>         * &lt;p/&gt;<a name="line.100"></a>
+<FONT color="green">101</FONT>         * &lt;code&gt;http://www.somehost.com/myapp/my/url.jsp&lt;/code&gt;,<a name="line.101"></a>
+<FONT color="green">102</FONT>         * &lt;p/&gt;<a name="line.102"></a>
+<FONT color="green">103</FONT>         * for an application deployed to &lt;code&gt;/mayapp&lt;/code&gt; (the application's context path), this method would return<a name="line.103"></a>
+<FONT color="green">104</FONT>         * &lt;p/&gt;<a name="line.104"></a>
+<FONT color="green">105</FONT>         * &lt;code&gt;/my/url.jsp&lt;/code&gt;.<a name="line.105"></a>
+<FONT color="green">106</FONT>         *<a name="line.106"></a>
+<FONT color="green">107</FONT>         * @param request current HTTP request<a name="line.107"></a>
+<FONT color="green">108</FONT>         * @return the path within the web application<a name="line.108"></a>
+<FONT color="green">109</FONT>         */<a name="line.109"></a>
+<FONT color="green">110</FONT>        public static String getPathWithinApplication(HttpServletRequest request) {<a name="line.110"></a>
+<FONT color="green">111</FONT>            String contextPath = getContextPath(request);<a name="line.111"></a>
+<FONT color="green">112</FONT>            String requestUri = getRequestUri(request);<a name="line.112"></a>
+<FONT color="green">113</FONT>            if (StringUtils.startsWithIgnoreCase(requestUri, contextPath)) {<a name="line.113"></a>
+<FONT color="green">114</FONT>                // Normal case: URI contains context path.<a name="line.114"></a>
+<FONT color="green">115</FONT>                String path = requestUri.substring(contextPath.length());<a name="line.115"></a>
+<FONT color="green">116</FONT>                return (StringUtils.hasText(path) ? path : "/");<a name="line.116"></a>
+<FONT color="green">117</FONT>            } else {<a name="line.117"></a>
+<FONT color="green">118</FONT>                // Special case: rather unusual.<a name="line.118"></a>
+<FONT color="green">119</FONT>                return requestUri;<a name="line.119"></a>
+<FONT color="green">120</FONT>            }<a name="line.120"></a>
+<FONT color="green">121</FONT>        }<a name="line.121"></a>
+<FONT color="green">122</FONT>    <a name="line.122"></a>
+<FONT color="green">123</FONT>        /**<a name="line.123"></a>
+<FONT color="green">124</FONT>         * Return the request URI for the given request, detecting an include request<a name="line.124"></a>
+<FONT color="green">125</FONT>         * URL if called within a RequestDispatcher include.<a name="line.125"></a>
+<FONT color="green">126</FONT>         * &lt;p&gt;As the value returned by &lt;code&gt;request.getRequestURI()&lt;/code&gt; is &lt;i&gt;not&lt;/i&gt;<a name="line.126"></a>
+<FONT color="green">127</FONT>         * decoded by the servlet container, this method will decode it.<a name="line.127"></a>
+<FONT color="green">128</FONT>         * &lt;p&gt;The URI that the web container resolves &lt;i&gt;should&lt;/i&gt; be correct, but some<a name="line.128"></a>
+<FONT color="green">129</FONT>         * containers like JBoss/Jetty incorrectly include ";" strings like ";jsessionid"<a name="line.129"></a>
+<FONT color="green">130</FONT>         * in the URI. This method cuts off such incorrect appendices.<a name="line.130"></a>
+<FONT color="green">131</FONT>         *<a name="line.131"></a>
+<FONT color="green">132</FONT>         * @param request current HTTP request<a name="line.132"></a>
+<FONT color="green">133</FONT>         * @return the request URI<a name="line.133"></a>
+<FONT color="green">134</FONT>         */<a name="line.134"></a>
+<FONT color="green">135</FONT>        public static String getRequestUri(HttpServletRequest request) {<a name="line.135"></a>
+<FONT color="green">136</FONT>            String uri = (String) request.getAttribute(INCLUDE_REQUEST_URI_ATTRIBUTE);<a name="line.136"></a>
+<FONT color="green">137</FONT>            if (uri == null) {<a name="line.137"></a>
+<FONT color="green">138</FONT>                uri = request.getRequestURI();<a name="line.138"></a>
+<FONT color="green">139</FONT>            }<a name="line.139"></a>
+<FONT color="green">140</FONT>            return normalize(decodeAndCleanUriString(request, uri));<a name="line.140"></a>
+<FONT color="green">141</FONT>        }<a name="line.141"></a>
+<FONT color="green">142</FONT>    <a name="line.142"></a>
+<FONT color="green">143</FONT>        /**<a name="line.143"></a>
+<FONT color="green">144</FONT>         * Normalize a relative URI path that may have relative values ("/./",<a name="line.144"></a>
+<FONT color="green">145</FONT>         * "/../", and so on ) it it.  &lt;strong&gt;WARNING&lt;/strong&gt; - This method is<a name="line.145"></a>
+<FONT color="green">146</FONT>         * useful only for normalizing application-generated paths.  It does not<a name="line.146"></a>
+<FONT color="green">147</FONT>         * try to perform security checks for malicious input.<a name="line.147"></a>
+<FONT color="green">148</FONT>         * Normalize operations were was happily taken from org.apache.catalina.util.RequestUtil in<a name="line.148"></a>
+<FONT color="green">149</FONT>         * Tomcat trunk, r939305<a name="line.149"></a>
+<FONT color="green">150</FONT>         *<a name="line.150"></a>
+<FONT color="green">151</FONT>         * @param path Relative path to be normalized<a name="line.151"></a>
+<FONT color="green">152</FONT>         * @return normalized path<a name="line.152"></a>
+<FONT color="green">153</FONT>         */<a name="line.153"></a>
+<FONT color="green">154</FONT>        public static String normalize(String path) {<a name="line.154"></a>
+<FONT color="green">155</FONT>            return normalize(path, true);<a name="line.155"></a>
+<FONT color="green">156</FONT>        }<a name="line.156"></a>
+<FONT color="green">157</FONT>    <a name="line.157"></a>
+<FONT color="green">158</FONT>        /**<a name="line.158"></a>
+<FONT color="green">159</FONT>         * Normalize a relative URI path that may have relative values ("/./",<a name="line.159"></a>
+<FONT color="green">160</FONT>         * "/../", and so on ) it it.  &lt;strong&gt;WARNING&lt;/strong&gt; - This method is<a name="line.160"></a>
+<FONT color="green">161</FONT>         * useful only for normalizing application-generated paths.  It does not<a name="line.161"></a>
+<FONT color="green">162</FONT>         * try to perform security checks for malicious input.<a name="line.162"></a>
+<FONT color="green">163</FONT>         * Normalize operations were was happily taken from org.apache.catalina.util.RequestUtil in<a name="line.163"></a>
+<FONT color="green">164</FONT>         * Tomcat trunk, r939305<a name="line.164"></a>
+<FONT color="green">165</FONT>         *<a name="line.165"></a>
+<FONT color="green">166</FONT>         * @param path             Relative path to be normalized<a name="line.166"></a>
+<FONT color="green">167</FONT>         * @param replaceBackSlash Should '\\' be replaced with '/'<a name="line.167"></a>
+<FONT color="green">168</FONT>         * @return normalized path<a name="line.168"></a>
+<FONT color="green">169</FONT>         */<a name="line.169"></a>
+<FONT color="green">170</FONT>        private static String normalize(String path, boolean replaceBackSlash) {<a name="line.170"></a>
+<FONT color="green">171</FONT>    <a name="line.171"></a>
+<FONT color="green">172</FONT>            if (path == null)<a name="line.172"></a>
+<FONT color="green">173</FONT>                return null;<a name="line.173"></a>
+<FONT color="green">174</FONT>    <a name="line.174"></a>
+<FONT color="green">175</FONT>            // Create a place for the normalized path<a name="line.175"></a>
+<FONT color="green">176</FONT>            String normalized = path;<a name="line.176"></a>
+<FONT color="green">177</FONT>    <a name="line.177"></a>
+<FONT color="green">178</FONT>            if (replaceBackSlash &amp;&amp; normalized.indexOf('\\') &gt;= 0)<a name="line.178"></a>
+<FONT color="green">179</FONT>                normalized = normalized.replace('\\', '/');<a name="line.179"></a>
+<FONT color="green">180</FONT>    <a name="line.180"></a>
+<FONT color="green">181</FONT>            if (normalized.equals("/."))<a name="line.181"></a>
+<FONT color="green">182</FONT>                return "/";<a name="line.182"></a>
+<FONT color="green">183</FONT>    <a name="line.183"></a>
+<FONT color="green">184</FONT>            // Add a leading "/" if necessary<a name="line.184"></a>
+<FONT color="green">185</FONT>            if (!normalized.startsWith("/"))<a name="line.185"></a>
+<FONT color="green">186</FONT>                normalized = "/" + normalized;<a name="line.186"></a>
+<FONT color="green">187</FONT>    <a name="line.187"></a>
+<FONT color="green">188</FONT>            // Resolve occurrences of "//" in the normalized path<a name="line.188"></a>
+<FONT color="green">189</FONT>            while (true) {<a name="line.189"></a>
+<FONT color="green">190</FONT>                int index = normalized.indexOf("//");<a name="line.190"></a>
+<FONT color="green">191</FONT>                if (index &lt; 0)<a name="line.191"></a>
+<FONT color="green">192</FONT>                    break;<a name="line.192"></a>
+<FONT color="green">193</FONT>                normalized = normalized.substring(0, index) +<a name="line.193"></a>
+<FONT color="green">194</FONT>                        normalized.substring(index + 1);<a name="line.194"></a>
+<FONT color="green">195</FONT>            }<a name="line.195"></a>
+<FONT color="green">196</FONT>    <a name="line.196"></a>
+<FONT color="green">197</FONT>            // Resolve occurrences of "/./" in the normalized path<a name="line.197"></a>
+<FONT color="green">198</FONT>            while (true) {<a name="line.198"></a>
+<FONT color="green">199</FONT>                int index = normalized.indexOf("/./");<a name="line.199"></a>
+<FONT color="green">200</FONT>                if (index &lt; 0)<a name="line.200"></a>
+<FONT color="green">201</FONT>                    break;<a name="line.201"></a>
+<FONT color="green">202</FONT>                normalized = normalized.substring(0, index) +<a name="line.202"></a>
+<FONT color="green">203</FONT>                        normalized.substring(index + 2);<a name="line.203"></a>
+<FONT color="green">204</FONT>            }<a name="line.204"></a>
+<FONT color="green">205</FONT>    <a name="line.205"></a>
+<FONT color="green">206</FONT>            // Resolve occurrences of "/../" in the normalized path<a name="line.206"></a>
+<FONT color="green">207</FONT>            while (true) {<a name="line.207"></a>
+<FONT color="green">208</FONT>                int index = normalized.indexOf("/../");<a name="line.208"></a>
+<FONT color="green">209</FONT>                if (index &lt; 0)<a name="line.209"></a>
+<FONT color="green">210</FONT>                    break;<a name="line.210"></a>
+<FONT color="green">211</FONT>                if (index == 0)<a name="line.211"></a>
+<FONT color="green">212</FONT>                    return (null);  // Trying to go outside our context<a name="line.212"></a>
+<FONT color="green">213</FONT>                int index2 = normalized.lastIndexOf('/', index - 1);<a name="line.213"></a>
+<FONT color="green">214</FONT>                normalized = normalized.substring(0, index2) +<a name="line.214"></a>
+<FONT color="green">215</FONT>                        normalized.substring(index + 3);<a name="line.215"></a>
+<FONT color="green">216</FONT>            }<a name="line.216"></a>
+<FONT color="green">217</FONT>    <a name="line.217"></a>
+<FONT color="green">218</FONT>            // Return the normalized path that we have completed<a name="line.218"></a>
+<FONT color="green">219</FONT>            return (normalized);<a name="line.219"></a>
+<FONT color="green">220</FONT>    <a name="line.220"></a>
+<FONT color="green">221</FONT>        }<a name="line.221"></a>
+<FONT color="green">222</FONT>    <a name="line.222"></a>
+<FONT color="green">223</FONT>    <a name="line.223"></a>
+<FONT color="green">224</FONT>        /**<a name="line.224"></a>
+<FONT color="green">225</FONT>         * Decode the supplied URI string and strips any extraneous portion after a ';'.<a name="line.225"></a>
+<FONT color="green">226</FONT>         *<a name="line.226"></a>
+<FONT color="green">227</FONT>         * @param request the incoming HttpServletRequest<a name="line.227"></a>
+<FONT color="green">228</FONT>         * @param uri     the application's URI string<a name="line.228"></a>
+<FONT color="green">229</FONT>         * @return the supplied URI string stripped of any extraneous portion after a ';'.<a name="line.229"></a>
+<FONT color="green">230</FONT>         */<a name="line.230"></a>
+<FONT color="green">231</FONT>        private static String decodeAndCleanUriString(HttpServletRequest request, String uri) {<a name="line.231"></a>
+<FONT color="green">232</FONT>            uri = decodeRequestString(request, uri);<a name="line.232"></a>
+<FONT color="green">233</FONT>            int semicolonIndex = uri.indexOf(';');<a name="line.233"></a>
+<FONT color="green">234</FONT>            return (semicolonIndex != -1 ? uri.substring(0, semicolonIndex) : uri);<a name="line.234"></a>
+<FONT color="green">235</FONT>        }<a name="line.235"></a>
+<FONT color="green">236</FONT>    <a name="line.236"></a>
+<FONT color="green">237</FONT>        /**<a name="line.237"></a>
+<FONT color="green">238</FONT>         * Return the context path for the given request, detecting an include request<a name="line.238"></a>
+<FONT color="green">239</FONT>         * URL if called within a RequestDispatcher include.<a name="line.239"></a>
+<FONT color="green">240</FONT>         * &lt;p&gt;As the value returned by &lt;code&gt;request.getContextPath()&lt;/code&gt; is &lt;i&gt;not&lt;/i&gt;<a name="line.240"></a>
+<FONT color="green">241</FONT>         * decoded by the servlet container, this method will decode it.<a name="line.241"></a>
+<FONT color="green">242</FONT>         *<a name="line.242"></a>
+<FONT color="green">243</FONT>         * @param request current HTTP request<a name="line.243"></a>
+<FONT color="green">244</FONT>         * @return the context path<a name="line.244"></a>
+<FONT color="green">245</FONT>         */<a name="line.245"></a>
+<FONT color="green">246</FONT>        public static String getContextPath(HttpServletRequest request) {<a name="line.246"></a>
+<FONT color="green">247</FONT>            String contextPath = (String) request.getAttribute(INCLUDE_CONTEXT_PATH_ATTRIBUTE);<a name="line.247"></a>
+<FONT color="green">248</FONT>            if (contextPath == null) {<a name="line.248"></a>
+<FONT color="green">249</FONT>                contextPath = request.getContextPath();<a name="line.249"></a>
+<FONT color="green">250</FONT>            }<a name="line.250"></a>
+<FONT color="green">251</FONT>            if ("/".equals(contextPath)) {<a name="line.251"></a>
+<FONT color="green">252</FONT>                // Invalid case, but happens for includes on Jetty: silently adapt it.<a name="line.252"></a>
+<FONT color="green">253</FONT>                contextPath = "";<a name="line.253"></a>
+<FONT color="green">254</FONT>            }<a name="line.254"></a>
+<FONT color="green">255</FONT>            return decodeRequestString(request, contextPath);<a name="line.255"></a>
+<FONT color="green">256</FONT>        }<a name="line.256"></a>
+<FONT color="green">257</FONT>    <a name="line.257"></a>
+<FONT color="green">258</FONT>        /**<a name="line.258"></a>
+<FONT color="green">259</FONT>         * Find the Shiro {@link WebEnvironment} for this web application, which is typically loaded via the<a name="line.259"></a>
+<FONT color="green">260</FONT>         * {@link org.apache.shiro.web.env.EnvironmentLoaderListener}.<a name="line.260"></a>
+<FONT color="green">261</FONT>         * &lt;p/&gt;<a name="line.261"></a>
+<FONT color="green">262</FONT>         * This implementation rethrows an exception that happened on environment startup to differentiate between a failed<a name="line.262"></a>
+<FONT color="green">263</FONT>         * environment startup and no environment at all.<a name="line.263"></a>
+<FONT color="green">264</FONT>         *<a name="line.264"></a>
+<FONT color="green">265</FONT>         * @param sc ServletContext to find the web application context for<a name="line.265"></a>
+<FONT color="green">266</FONT>         * @return the root WebApplicationContext for this web app<a name="line.266"></a>
+<FONT color="green">267</FONT>         * @throws IllegalStateException if the root WebApplicationContext could not be found<a name="line.267"></a>
+<FONT color="green">268</FONT>         * @see org.apache.shiro.web.env.EnvironmentLoader#ENVIRONMENT_ATTRIBUTE_KEY<a name="line.268"></a>
+<FONT color="green">269</FONT>         * @since 1.2<a name="line.269"></a>
+<FONT color="green">270</FONT>         */<a name="line.270"></a>
+<FONT color="green">271</FONT>        public static WebEnvironment getRequiredWebEnvironment(ServletContext sc)<a name="line.271"></a>
+<FONT color="green">272</FONT>                throws IllegalStateException {<a name="line.272"></a>
+<FONT color="green">273</FONT>    <a name="line.273"></a>
+<FONT color="green">274</FONT>            WebEnvironment we = getWebEnvironment(sc);<a name="line.274"></a>
+<FONT color="green">275</FONT>            if (we == null) {<a name="line.275"></a>
+<FONT color="green">276</FONT>                throw new IllegalStateException("No WebEnvironment found: no EnvironmentLoaderListener registered?");<a name="line.276"></a>
+<FONT color="green">277</FONT>            }<a name="line.277"></a>
+<FONT color="green">278</FONT>            return we;<a name="line.278"></a>
+<FONT color="green">279</FONT>        }<a name="line.279"></a>
+<FONT color="green">280</FONT>    <a name="line.280"></a>
+<FONT color="green">281</FONT>        /**<a name="line.281"></a>
+<FONT color="green">282</FONT>         * Find the Shiro {@link WebEnvironment} for this web application, which is typically loaded via<a name="line.282"></a>
+<FONT color="green">283</FONT>         * {@link org.apache.shiro.web.env.EnvironmentLoaderListener}.<a name="line.283"></a>
+<FONT color="green">284</FONT>         * &lt;p/&gt;<a name="line.284"></a>
+<FONT color="green">285</FONT>         * This implementation rethrows an exception that happened on environment startup to differentiate between a failed<a name="line.285"></a>
+<FONT color="green">286</FONT>         * environment startup and no environment at all.<a name="line.286"></a>
+<FONT color="green">287</FONT>         *<a name="line.287"></a>
+<FONT color="green">288</FONT>         * @param sc ServletContext to find the web application context for<a name="line.288"></a>
+<FONT color="green">289</FONT>         * @return the root WebApplicationContext for this web app, or &lt;code&gt;null&lt;/code&gt; if none<a name="line.289"></a>
+<FONT color="green">290</FONT>         * @see org.apache.shiro.web.env.EnvironmentLoader#ENVIRONMENT_ATTRIBUTE_KEY<a name="line.290"></a>
+<FONT color="green">291</FONT>         * @since 1.2<a name="line.291"></a>
+<FONT color="green">292</FONT>         */<a name="line.292"></a>
+<FONT color="green">293</FONT>        public static WebEnvironment getWebEnvironment(ServletContext sc) {<a name="line.293"></a>
+<FONT color="green">294</FONT>            return getWebEnvironment(sc, EnvironmentLoader.ENVIRONMENT_ATTRIBUTE_KEY);<a name="line.294"></a>
+<FONT color="green">295</FONT>        }<a name="line.295"></a>
+<FONT color="green">296</FONT>    <a name="line.296"></a>
+<FONT color="green">297</FONT>        /**<a name="line.297"></a>
+<FONT color="green">298</FONT>         * Find the Shiro {@link WebEnvironment} for this web application.<a name="line.298"></a>
+<FONT color="green">299</FONT>         *<a name="line.299"></a>
+<FONT color="green">300</FONT>         * @param sc       ServletContext to find the web application context for<a name="line.300"></a>
+<FONT color="green">301</FONT>         * @param attrName the name of the ServletContext attribute to look for<a name="line.301"></a>
+<FONT color="green">302</FONT>         * @return the desired WebEnvironment for this web app, or &lt;code&gt;null&lt;/code&gt; if none<a name="line.302"></a>
+<FONT color="green">303</FONT>         * @since 1.2<a name="line.303"></a>
+<FONT color="green">304</FONT>         */<a name="line.304"></a>
+<FONT color="green">305</FONT>        public static WebEnvironment getWebEnvironment(ServletContext sc, String attrName) {<a name="line.305"></a>
+<FONT color="green">306</FONT>            if (sc == null) {<a name="line.306"></a>
+<FONT color="green">307</FONT>                throw new IllegalArgumentException("ServletContext argument must not be null.");<a name="line.307"></a>
+<FONT color="green">308</FONT>            }<a name="line.308"></a>
+<FONT color="green">309</FONT>            Object attr = sc.getAttribute(attrName);<a name="line.309"></a>
+<FONT color="green">310</FONT>            if (attr == null) {<a name="line.310"></a>
+<FONT color="green">311</FONT>                return null;<a name="line.311"></a>
+<FONT color="green">312</FONT>            }<a name="line.312"></a>
+<FONT color="green">313</FONT>            if (attr instanceof RuntimeException) {<a name="line.313"></a>
+<FONT color="green">314</FONT>                throw (RuntimeException) attr;<a name="line.314"></a>
+<FONT color="green">315</FONT>            }<a name="line.315"></a>
+<FONT color="green">316</FONT>            if (attr instanceof Error) {<a name="line.316"></a>
+<FONT color="green">317</FONT>                throw (Error) attr;<a name="line.317"></a>
+<FONT color="green">318</FONT>            }<a name="line.318"></a>
+<FONT color="green">319</FONT>            if (attr instanceof Exception) {<a name="line.319"></a>
+<FONT color="green">320</FONT>                throw new IllegalStateException((Exception) attr);<a name="line.320"></a>
+<FONT color="green">321</FONT>            }<a name="line.321"></a>
+<FONT color="green">322</FONT>            if (!(attr instanceof WebEnvironment)) {<a name="line.322"></a>
+<FONT color="green">323</FONT>                throw new IllegalStateException("Context attribute is not of type WebEnvironment: " + attr);<a name="line.323"></a>
+<FONT color="green">324</FONT>            }<a name="line.324"></a>
+<FONT color="green">325</FONT>            return (WebEnvironment) attr;<a name="line.325"></a>
+<FONT color="green">326</FONT>        }<a name="line.326"></a>
+<FONT color="green">327</FONT>    <a name="line.327"></a>
+<FONT color="green">328</FONT>    <a name="line.328"></a>
+<FONT color="green">329</FONT>        /**<a name="line.329"></a>
+<FONT color="green">330</FONT>         * Decode the given source string with a URLDecoder. The encoding will be taken<a name="line.330"></a>
+<FONT color="green">331</FONT>         * from the request, falling back to the default "ISO-8859-1".<a name="line.331"></a>
+<FONT color="green">332</FONT>         * &lt;p&gt;The default implementation uses &lt;code&gt;URLDecoder.decode(input, enc)&lt;/code&gt;.<a name="line.332"></a>
+<FONT color="green">333</FONT>         *<a name="line.333"></a>
+<FONT color="green">334</FONT>         * @param request current HTTP request<a name="line.334"></a>
+<FONT color="green">335</FONT>         * @param source  the String to decode<a name="line.335"></a>
+<FONT color="green">336</FONT>         * @return the decoded String<a name="line.336"></a>
+<FONT color="green">337</FONT>         * @see #DEFAULT_CHARACTER_ENCODING<a name="line.337"></a>
+<FONT color="green">338</FONT>         * @see javax.servlet.ServletRequest#getCharacterEncoding<a name="line.338"></a>
+<FONT color="green">339</FONT>         * @see java.net.URLDecoder#decode(String, String)<a name="line.339"></a>
+<FONT color="green">340</FONT>         * @see java.net.URLDecoder#decode(String)<a name="line.340"></a>
+<FONT color="green">341</FONT>         */<a name="line.341"></a>
+<FONT color="green">342</FONT>        @SuppressWarnings({"deprecation"})<a name="line.342"></a>
+<FONT color="green">343</FONT>        public static String decodeRequestString(HttpServletRequest request, String source) {<a name="line.343"></a>
+<FONT color="green">344</FONT>            String enc = determineEncoding(request);<a name="line.344"></a>
+<FONT color="green">345</FONT>            try {<a name="line.345"></a>
+<FONT color="green">346</FONT>                return URLDecoder.decode(source, enc);<a name="line.346"></a>
+<FONT color="green">347</FONT>            } catch (UnsupportedEncodingException ex) {<a name="line.347"></a>
+<FONT color="green">348</FONT>                if (log.isWarnEnabled()) {<a name="line.348"></a>
+<FONT color="green">349</FONT>                    log.warn("Could not decode request string [" + source + "] with encoding '" + enc +<a name="line.349"></a>
+<FONT color="green">350</FONT>                            "': falling back to platform default encoding; exception message: " + ex.getMessage());<a name="line.350"></a>
+<FONT color="green">351</FONT>                }<a name="line.351"></a>
+<FONT color="green">352</FONT>                return URLDecoder.decode(source);<a name="line.352"></a>
+<FONT color="green">353</FONT>            }<a name="line.353"></a>
+<FONT color="green">354</FONT>        }<a name="line.354"></a>
+<FONT color="green">355</FONT>    <a name="line.355"></a>
+<FONT color="green">356</FONT>        /**<a name="line.356"></a>
+<FONT color="green">357</FONT>         * Determine the encoding for the given request.<a name="line.357"></a>
+<FONT color="green">358</FONT>         * Can be overridden in subclasses.<a name="line.358"></a>
+<FONT color="green">359</FONT>         * &lt;p&gt;The default implementation checks the request's<a name="line.359"></a>
+<FONT color="green">360</FONT>         * {@link ServletRequest#getCharacterEncoding() character encoding}, and if that<a name="line.360"></a>
+<FONT color="green">361</FONT>         * &lt;code&gt;null&lt;/code&gt;, falls back to the {@link #DEFAULT_CHARACTER_ENCODING}.<a name="line.361"></a>
+<FONT color="green">362</FONT>         *<a name="line.362"></a>
+<FONT color="green">363</FONT>         * @param request current HTTP request<a name="line.363"></a>
+<FONT color="green">364</FONT>         * @return the encoding for the request (never &lt;code&gt;null&lt;/code&gt;)<a name="line.364"></a>
+<FONT color="green">365</FONT>         * @see javax.servlet.ServletRequest#getCharacterEncoding()<a name="line.365"></a>
+<FONT color="green">366</FONT>         */<a name="line.366"></a>
+<FONT color="green">367</FONT>        protected static String determineEncoding(HttpServletRequest request) {<a name="line.367"></a>
+<FONT color="green">368</FONT>            String enc = request.getCharacterEncoding();<a name="line.368"></a>
+<FONT color="green">369</FONT>            if (enc == null) {<a name="line.369"></a>
+<FONT color="green">370</FONT>                enc = DEFAULT_CHARACTER_ENCODING;<a name="line.370"></a>
+<FONT color="green">371</FONT>            }<a name="line.371"></a>
+<FONT color="green">372</FONT>            return enc;<a name="line.372"></a>
+<FONT color="green">373</FONT>        }<a name="line.373"></a>
+<FONT color="green">374</FONT>    <a name="line.374"></a>
+<FONT color="green">375</FONT>        /*<a name="line.375"></a>
+<FONT color="green">376</FONT>         * Returns {@code true} IFF the specified {@code SubjectContext}:<a name="line.376"></a>
+<FONT color="green">377</FONT>         * &lt;ol&gt;<a name="line.377"></a>
+<FONT color="green">378</FONT>         * &lt;li&gt;A {@link WebSubjectContext} instance&lt;/li&gt;<a name="line.378"></a>
+<FONT color="green">379</FONT>         * &lt;li&gt;The {@code WebSubjectContext}'s request/response pair are not null&lt;/li&gt;<a name="line.379"></a>
+<FONT color="green">380</FONT>         * &lt;li&gt;The request is an {@link HttpServletRequest} instance&lt;/li&gt;<a name="line.380"></a>
+<FONT color="green">381</FONT>         * &lt;li&gt;The response is an {@link HttpServletResponse} instance&lt;/li&gt;<a name="line.381"></a>
+<FONT color="green">382</FONT>         * &lt;/ol&gt;<a name="line.382"></a>
+<FONT color="green">383</FONT>         *<a name="line.383"></a>
+<FONT color="green">384</FONT>         * @param context the SubjectContext to check to see if it is HTTP compatible.<a name="line.384"></a>
+<FONT color="green">385</FONT>         * @return {@code true} IFF the specified context has HTTP request/response objects, {@code false} otherwise.<a name="line.385"></a>
+<FONT color="green">386</FONT>         * @since 1.0<a name="line.386"></a>
+<FONT color="green">387</FONT>         */<a name="line.387"></a>
+<FONT color="green">388</FONT>    <a name="line.388"></a>
+<FONT color="green">389</FONT>        public static boolean isWeb(Object requestPairSource) {<a name="line.389"></a>
+<FONT color="green">390</FONT>            return requestPairSource instanceof RequestPairSource &amp;&amp; isWeb((RequestPairSource) requestPairSource);<a name="line.390"></a>
+<FONT color="green">391</FONT>        }<a name="line.391"></a>
+<FONT color="green">392</FONT>    <a name="line.392"></a>
+<FONT color="green">393</FONT>        public static boolean isHttp(Object requestPairSource) {<a name="line.393"></a>
+<FONT color="green">394</FONT>            return requestPairSource instanceof RequestPairSource &amp;&amp; isHttp((RequestPairSource) requestPairSource);<a name="line.394"></a>
+<FONT color="green">395</FONT>        }<a name="line.395"></a>
+<FONT color="green">396</FONT>    <a name="line.396"></a>
+<FONT color="green">397</FONT>        public static ServletRequest getRequest(Object requestPairSource) {<a name="line.397"></a>
+<FONT color="green">398</FONT>            if (requestPairSource instanceof RequestPairSource) {<a name="line.398"></a>
+<FONT color="green">399</FONT>                return ((RequestPairSource) requestPairSource).getServletRequest();<a name="line.399"></a>
+<FONT color="green">400</FONT>            }<a name="line.400"></a>
+<FONT color="green">401</FONT>            return null;<a name="line.401"></a>
+<FONT color="green">402</FONT>        }<a name="line.402"></a>
+<FONT color="green">403</FONT>    <a name="line.403"></a>
+<FONT color="green">404</FONT>        public static ServletResponse getResponse(Object requestPairSource) {<a name="line.404"></a>
+<FONT color="green">405</FONT>            if (requestPairSource instanceof RequestPairSource) {<a name="line.405"></a>
+<FONT color="green">406</FONT>                return ((RequestPairSource) requestPairSource).getServletResponse();<a name="line.406"></a>
+<FONT color="green">407</FONT>            }<a name="line.407"></a>
+<FONT color="green">408</FONT>            return null;<a name="line.408"></a>
+<FONT color="green">409</FONT>        }<a name="line.409"></a>
+<FONT color="green">410</FONT>    <a name="line.410"></a>
+<FONT color="green">411</FONT>        public static HttpServletRequest getHttpRequest(Object requestPairSource) {<a name="line.411"></a>
+<FONT color="green">412</FONT>            ServletRequest request = getRequest(requestPairSource);<a name="line.412"></a>
+<FONT color="green">413</FONT>            if (request instanceof HttpServletRequest) {<a name="line.413"></a>
+<FONT color="green">414</FONT>                return (HttpServletRequest) request;<a name="line.414"></a>
+<FONT color="green">415</FONT>            }<a name="line.415"></a>
+<FONT color="green">416</FONT>            return null;<a name="line.416"></a>
+<FONT color="green">417</FONT>        }<a name="line.417"></a>
+<FONT color="green">418</FONT>    <a name="line.418"></a>
+<FONT color="green">419</FONT>        public static HttpServletResponse getHttpResponse(Object requestPairSource) {<a name="line.419"></a>
+<FONT color="green">420</FONT>            ServletResponse response = getResponse(requestPairSource);<a name="line.420"></a>
+<FONT color="green">421</FONT>            if (response instanceof HttpServletResponse) {<a name="line.421"></a>
+<FONT color="green">422</FONT>                return (HttpServletResponse) response;<a name="line.422"></a>
+<FONT color="green">423</FONT>            }<a name="line.423"></a>
+<FONT color="green">424</FONT>            return null;<a name="line.424"></a>
+<FONT color="green">425</FONT>        }<a name="line.425"></a>
+<FONT color="green">426</FONT>    <a name="line.426"></a>
+<FONT color="green">427</FONT>        private static boolean isWeb(RequestPairSource source) {<a name="line.427"></a>
+<FONT color="green">428</FONT>            ServletRequest request = source.getServletRequest();<a name="line.428"></a>
+<FONT color="green">429</FONT>            ServletResponse response = source.getServletResponse();<a name="line.429"></a>
+<FONT color="green">430</FONT>            return request != null &amp;&amp; response != null;<a name="line.430"></a>
+<FONT color="green">431</FONT>        }<a name="line.431"></a>
+<FONT color="green">432</FONT>    <a name="line.432"></a>
+<FONT color="green">433</FONT>        private static boolean isHttp(RequestPairSource source) {<a name="line.433"></a>
+<FONT color="green">434</FONT>            ServletRequest request = source.getServletRequest();<a name="line.434"></a>
+<FONT color="green">435</FONT>            ServletResponse response = source.getServletResponse();<a name="line.435"></a>
+<FONT color="green">436</FONT>            return request instanceof HttpServletRequest &amp;&amp; response instanceof HttpServletResponse;<a name="line.436"></a>
+<FONT color="green">437</FONT>        }<a name="line.437"></a>
+<FONT color="green">438</FONT>    <a name="line.438"></a>
+<FONT color="green">439</FONT>        /**<a name="line.439"></a>
+<FONT color="green">440</FONT>         * Returns {@code true} if a session is allowed to be created for a subject-associated request, {@code false}<a name="line.440"></a>
+<FONT color="green">441</FONT>         * otherwise.<a name="line.441"></a>
+<FONT color="green">442</FONT>         * &lt;p/&gt;<a name="line.442"></a>
+<FONT color="green">443</FONT>         * &lt;b&gt;This method exists for Shiro's internal framework needs and should never be called by Shiro end-users.  It<a name="line.443"></a>
+<FONT color="green">444</FONT>         * could be changed/removed at any time.&lt;/b&gt;<a name="line.444"></a>
+<FONT color="green">445</FONT>         *<a name="line.445"></a>
+<FONT color="green">446</FONT>         * @param requestPairSource a {@link RequestPairSource} instance, almost always a<a name="line.446"></a>
+<FONT color="green">447</FONT>         *                          {@link org.apache.shiro.web.subject.WebSubject WebSubject} instance.<a name="line.447"></a>
+<FONT color="green">448</FONT>         * @return {@code true} if a session is allowed to be created for a subject-associated request, {@code false}<a name="line.448"></a>
+<FONT color="green">449</FONT>         *         otherwise.<a name="line.449"></a>
+<FONT color="green">450</FONT>         */<a name="line.450"></a>
+<FONT color="green">451</FONT>        public static boolean _isSessionCreationEnabled(Object requestPairSource) {<a name="line.451"></a>
+<FONT color="green">452</FONT>            if (requestPairSource instanceof RequestPairSource) {<a name="line.452"></a>
+<FONT color="green">453</FONT>                RequestPairSource source = (RequestPairSource) requestPairSource;<a name="line.453"></a>
+<FONT color="green">454</FONT>                return _isSessionCreationEnabled(source.getServletRequest());<a name="line.454"></a>
+<FONT color="green">455</FONT>            }<a name="line.455"></a>
+<FONT color="green">456</FONT>            return true; //by default<a name="line.456"></a>
+<FONT color="green">457</FONT>        }<a name="line.457"></a>
+<FONT color="green">458</FONT>    <a name="line.458"></a>
+<FONT color="green">459</FONT>        /**<a name="line.459"></a>
+<FONT color="green">460</FONT>         * Returns {@code true} if a session is allowed to be created for a subject-associated request, {@code false}<a name="line.460"></a>
+<FONT color="green">461</FONT>         * otherwise.<a name="line.461"></a>
+<FONT color="green">462</FONT>         * &lt;p/&gt;<a name="line.462"></a>
+<FONT color="green">463</FONT>         * &lt;b&gt;This method exists for Shiro's internal framework needs and should never be called by Shiro end-users.  It<a name="line.463"></a>
+<FONT color="green">464</FONT>         * could be changed/removed at any time.&lt;/b&gt;<a name="line.464"></a>
+<FONT color="green">465</FONT>         *<a name="line.465"></a>
+<FONT color="green">466</FONT>         * @param request incoming servlet request.<a name="line.466"></a>
+<FONT color="green">467</FONT>         * @return {@code true} if a session is allowed to be created for a subject-associated request, {@code false}<a name="line.467"></a>
+<FONT color="green">468</FONT>         *         otherwise.<a name="line.468"></a>
+<FONT color="green">469</FONT>         */<a name="line.469"></a>
+<FONT color="green">470</FONT>        public static boolean _isSessionCreationEnabled(ServletRequest request) {<a name="line.470"></a>
+<FONT color="green">471</FONT>            if (request != null) {<a name="line.471"></a>
+<FONT color="green">472</FONT>                Object val = request.getAttribute(DefaultSubjectContext.SESSION_CREATION_ENABLED);<a name="line.472"></a>
+<FONT color="green">473</FONT>                if (val != null &amp;&amp; val instanceof Boolean) {<a name="line.473"></a>
+<FONT color="green">474</FONT>                    return (Boolean) val;<a name="line.474"></a>
+<FONT color="green">475</FONT>                }<a name="line.475"></a>
+<FONT color="green">476</FONT>            }<a name="line.476"></a>
+<FONT color="green">477</FONT>            return true; //by default<a name="line.477"></a>
+<FONT color="green">478</FONT>        }<a name="line.478"></a>
+<FONT color="green">479</FONT>    <a name="line.479"></a>
+<FONT color="green">480</FONT>        /**<a name="line.480"></a>
+<FONT color="green">481</FONT>         * A convenience method that merely casts the incoming &lt;code&gt;ServletRequest&lt;/code&gt; to an<a name="line.481"></a>
+<FONT color="green">482</FONT>         * &lt;code&gt;HttpServletRequest&lt;/code&gt;:<a name="line.482"></a>
+<FONT color="green">483</FONT>         * &lt;p/&gt;<a name="line.483"></a>
+<FONT color="green">484</FONT>         * &lt;code&gt;return (HttpServletRequest)request;&lt;/code&gt;<a name="line.484"></a>
+<FONT color="green">485</FONT>         * &lt;p/&gt;<a name="line.485"></a>
+<FONT color="green">486</FONT>         * Logic could be changed in the future for logging or throwing an meaningful exception in<a name="line.486"></a>
+<FONT color="green">487</FONT>         * non HTTP request environments (e.g. Portlet API).<a name="line.487"></a>
+<FONT color="green">488</FONT>         *<a name="line.488"></a>
+<FONT color="green">489</FONT>         * @param request the incoming ServletRequest<a name="line.489"></a>
+<FONT color="green">490</FONT>         * @return the &lt;code&gt;request&lt;/code&gt; argument casted to an &lt;code&gt;HttpServletRequest&lt;/code&gt;.<a name="line.490"></a>
+<FONT color="green">491</FONT>         */<a name="line.491"></a>
+<FONT color="green">492</FONT>        public static HttpServletRequest toHttp(ServletRequest request) {<a name="line.492"></a>
+<FONT color="green">493</FONT>            return (HttpServletRequest) request;<a name="line.493"></a>
+<FONT color="green">494</FONT>        }<a name="line.494"></a>
+<FONT color="green">495</FONT>    <a name="line.495"></a>
+<FONT color="green">496</FONT>        /**<a name="line.496"></a>
+<FONT color="green">497</FONT>         * A convenience method that merely casts the incoming &lt;code&gt;ServletResponse&lt;/code&gt; to an<a name="line.497"></a>
+<FONT color="green">498</FONT>         * &lt;code&gt;HttpServletResponse&lt;/code&gt;:<a name="line.498"></a>
+<FONT color="green">499</FONT>         * &lt;p/&gt;<a name="line.499"></a>
+<FONT color="green">500</FONT>         * &lt;code&gt;return (HttpServletResponse)response;&lt;/code&gt;<a name="line.500"></a>
+<FONT color="green">501</FONT>         * &lt;p/&gt;<a name="line.501"></a>
+<FONT color="green">502</FONT>         * Logic could be changed in the future for logging or throwing an meaningful exception in<a name="line.502"></a>
+<FONT color="green">503</FONT>         * non HTTP request environments (e.g. Portlet API).<a name="line.503"></a>
+<FONT color="green">504</FONT>         *<a name="line.504"></a>
+<FONT color="green">505</FONT>         * @param response the outgoing ServletResponse<a name="line.505"></a>
+<FONT color="green">506</FONT>         * @return the &lt;code&gt;response&lt;/code&gt; argument casted to an &lt;code&gt;HttpServletResponse&lt;/code&gt;.<a name="line.506"></a>
+<FONT color="green">507</FONT>         */<a name="line.507"></a>
+<FONT color="green">508</FONT>        public static HttpServletResponse toHttp(ServletResponse response) {<a name="line.508"></a>
+<FONT color="green">509</FONT>            return (HttpServletResponse) response;<a name="line.509"></a>
+<FONT color="green">510</FONT>        }<a name="line.510"></a>
+<FONT color="green">511</FONT>    <a name="line.511"></a>
+<FONT color="green">512</FONT>        /**<a name="line.512"></a>
+<FONT color="green">513</FONT>         * Redirects the current request to a new URL based on the given parameters.<a name="line.513"></a>
+<FONT color="green">514</FONT>         *<a name="line.514"></a>
+<FONT color="green">515</FONT>         * @param request          the servlet request.<a name="line.515"></a>
+<FONT color="green">516</FONT>         * @param response         the servlet response.<a name="line.516"></a>
+<FONT color="green">517</FONT>         * @param url              the URL to redirect the user to.<a name="line.517"></a>
+<FONT color="green">518</FONT>         * @param queryParams      a map of parameters that should be set as request parameters for the new request.<a name="line.518"></a>
+<FONT color="green">519</FONT>         * @param contextRelative  true if the URL is relative to the servlet context path, or false if the URL is absolute.<a name="line.519"></a>
+<FONT color="green">520</FONT>         * @param http10Compatible whether to stay compatible with HTTP 1.0 clients.<a name="line.520"></a>
+<FONT color="green">521</FONT>         * @throws java.io.IOException if thrown by response methods.<a name="line.521"></a>
+<FONT color="green">522</FONT>         */<a name="line.522"></a>
+<FONT color="green">523</FONT>        public static void issueRedirect(ServletRequest request, ServletResponse response, String url, Map queryParams, boolean contextRelative, boolean http10Compatible) throws IOException {<a name="line.523"></a>
+<FONT color="green">524</FONT>            RedirectView view = new RedirectView(url, contextRelative, http10Compatible);<a name="line.524"></a>
+<FONT color="green">525</FONT>            view.renderMergedOutputModel(queryParams, toHttp(request), toHttp(response));<a name="line.525"></a>
+<FONT color="green">526</FONT>        }<a name="line.526"></a>
+<FONT color="green">527</FONT>    <a name="line.527"></a>
+<FONT color="green">528</FONT>        /**<a name="line.528"></a>
+<FONT color="green">529</FONT>         * Redirects the current request to a new URL based on the given parameters and default values<a name="line.529"></a>
+<FONT color="green">530</FONT>         * for unspecified parameters.<a name="line.530"></a>
+<FONT color="green">531</FONT>         *<a name="line.531"></a>
+<FONT color="green">532</FONT>         * @param request  the servlet request.<a name="line.532"></a>
+<FONT color="green">533</FONT>         * @param response the servlet response.<a name="line.533"></a>
+<FONT color="green">534</FONT>         * @param url      the URL to redirect the user to.<a name="line.534"></a>
+<FONT color="green">535</FONT>         * @throws java.io.IOException if thrown by response methods.<a name="line.535"></a>
+<FONT color="green">536</FONT>         */<a name="line.536"></a>
+<FONT color="green">537</FONT>        public static void issueRedirect(ServletRequest request, ServletResponse response, String url) throws IOException {<a name="line.537"></a>
+<FONT color="green">538</FONT>            issueRedirect(request, response, url, null, true, true);<a name="line.538"></a>
+<FONT color="green">539</FONT>        }<a name="line.539"></a>
+<FONT color="green">540</FONT>    <a name="line.540"></a>
+<FONT color="green">541</FONT>        /**<a name="line.541"></a>
+<FONT color="green">542</FONT>         * Redirects the current request to a new URL based on the given parameters and default values<a name="line.542"></a>
+<FONT color="green">543</FONT>         * for unspecified parameters.<a name="line.543"></a>
+<FONT color="green">544</FONT>         *<a name="line.544"></a>
+<FONT color="green">545</FONT>         * @param request     the servlet request.<a name="line.545"></a>
+<FONT color="green">546</FONT>         * @param response    the servlet response.<a name="line.546"></a>
+<FONT color="green">547</FONT>         * @param url         the URL to redirect the user to.<a name="line.547"></a>
+<FONT color="green">548</FONT>         * @param queryParams a map of parameters that should be set as request parameters for the new request.<a name="line.548"></a>
+<FONT color="green">549</FONT>         * @throws java.io.IOException if thrown by response methods.<a name="line.549"></a>
+<FONT color="green">550</FONT>         */<a name="line.550"></a>
+<FONT color="green">551</FONT>        public static void issueRedirect(ServletRequest request, ServletResponse response, String url, Map queryParams) throws IOException {<a name="line.551"></a>
+<FONT color="green">552</FONT>            issueRedirect(request, response, url, queryParams, true, true);<a name="line.552"></a>
+<FONT color="green">553</FONT>        }<a name="line.553"></a>
+<FONT color="green">554</FONT>    <a name="line.554"></a>
+<FONT color="green">555</FONT>        /**<a name="line.555"></a>
+<FONT color="green">556</FONT>         * Redirects the current request to a new URL based on the given parameters and default values<a name="line.556"></a>
+<FONT color="green">557</FONT>         * for unspecified parameters.<a name="line.557"></a>
+<FONT color="green">558</FONT>         *<a name="line.558"></a>
+<FONT color="green">559</FONT>         * @param request         the servlet request.<a name="line.559"></a>
+<FONT color="green">560</FONT>         * @param response        the servlet response.<a name="line.560"></a>
+<FONT color="green">561</FONT>         * @param url             the URL to redirect the user to.<a name="line.561"></a>
+<FONT color="green">562</FONT>         * @param queryParams     a map of parameters that should be set as request parameters for the new request.<a name="line.562"></a>
+<FONT color="green">563</FONT>         * @param contextRelative true if the URL is relative to the servlet context path, or false if the URL is absolute.<a name="line.563"></a>
+<FONT color="green">564</FONT>         * @throws java.io.IOException if thrown by response methods.<a name="line.564"></a>
+<FONT color="green">565</FONT>         */<a name="line.565"></a>
+<FONT color="green">566</FONT>        public static void issueRedirect(ServletRequest request, ServletResponse response, String url, Map queryParams, boolean contextRelative) throws IOException {<a name="line.566"></a>
+<FONT color="green">567</FONT>            issueRedirect(request, response, url, queryParams, contextRelative, true);<a name="line.567"></a>
+<FONT color="green">568</FONT>        }<a name="line.568"></a>
+<FONT color="green">569</FONT>    <a name="line.569"></a>
+<FONT color="green">570</FONT>        /**<a name="line.570"></a>
+<FONT color="green">571</FONT>         * &lt;p&gt;Checks to see if a request param is considered true using a loose matching strategy for<a name="line.571"></a>
+<FONT color="green">572</FONT>         * general values that indicate that something is true or enabled, etc.&lt;/p&gt;<a name="line.572"></a>
+<FONT color="green">573</FONT>         * &lt;p/&gt;<a name="line.573"></a>
+<FONT color="green">574</FONT>         * &lt;p&gt;Values that are considered "true" include (case-insensitive): true, t, 1, enabled, y, yes, on.&lt;/p&gt;<a name="line.574"></a>
+<FONT color="green">575</FONT>         *<a name="line.575"></a>
+<FONT color="green">576</FONT>         * @param request   the servlet request<a name="line.576"></a>
+<FONT color="green">577</FONT>         * @param paramName @return true if the param value is considered true or false if it isn't.<a name="line.577"></a>
+<FONT color="green">578</FONT>         * @return true if the given parameter is considered "true" - false otherwise.<a name="line.578"></a>
+<FONT color="green">579</FONT>         */<a name="line.579"></a>
+<FONT color="green">580</FONT>        public static boolean isTrue(ServletRequest request, String paramName) {<a name="line.580"></a>
+<FONT color="green">581</FONT>            String value = getCleanParam(request, paramName);<a name="line.581"></a>
+<FONT color="green">582</FONT>            return value != null &amp;&amp;<a name="line.582"></a>
+<FONT color="green">583</FONT>                    (value.equalsIgnoreCase("true") ||<a name="line.583"></a>
+<FONT color="green">584</FONT>                            value.equalsIgnoreCase("t") ||<a name="line.584"></a>
+<FONT color="green">585</FONT>                            value.equalsIgnoreCase("1") ||<a name="line.585"></a>
+<FONT color="green">586</FONT>                            value.equalsIgnoreCase("enabled") ||<a name="line.586"></a>
+<FONT color="green">587</FONT>                            value.equalsIgnoreCase("y") ||<a name="line.587"></a>
+<FONT color="green">588</FONT>                            value.equalsIgnoreCase("yes") ||<a name="line.588"></a>
+<FONT color="green">589</FONT>                            value.equalsIgnoreCase("on"));<a name="line.589"></a>
+<FONT color="green">590</FONT>        }<a name="line.590"></a>
+<FONT color="green">591</FONT>    <a name="line.591"></a>
+<FONT color="green">592</FONT>        /**<a name="line.592"></a>
+<FONT color="green">593</FONT>         * Convenience method that returns a request parameter value, first running it through<a name="line.593"></a>
+<FONT color="green">594</FONT>         * {@link StringUtils#clean(String)}.<a name="line.594"></a>
+<FONT color="green">595</FONT>         *<a name="line.595"></a>
+<FONT color="green">596</FONT>         * @param request   the servlet request.<a name="line.596"></a>
+<FONT color="green">597</FONT>         * @param paramName the parameter name.<a name="line.597"></a>
+<FONT color="green">598</FONT>         * @return the clean param value, or null if the param does not exist or is empty.<a name="line.598"></a>
+<FONT color="green">599</FONT>         */<a name="line.599"></a>
+<FONT color="green">600</FONT>        public static String getCleanParam(ServletRequest request, String paramName) {<a name="line.600"></a>
+<FONT color="green">601</FONT>            return StringUtils.clean(request.getParameter(paramName));<a name="line.601"></a>
+<FONT color="green">602</FONT>        }<a name="line.602"></a>
+<FONT color="green">603</FONT>    <a name="line.603"></a>
+<FONT color="green">604</FONT>        public static void saveRequest(ServletRequest request) {<a name="line.604"></a>
+<FONT color="green">605</FONT>            Subject subject = SecurityUtils.getSubject();<a name="line.605"></a>
+<FONT color="green">606</FONT>            Session session = subject.getSession();<a name="line.606"></a>
+<FONT color="green">607</FONT>            HttpServletRequest httpRequest = toHttp(request);<a name="line.607"></a>
+<FONT color="green">608</FONT>            SavedRequest savedRequest = new SavedRequest(httpRequest);<a name="line.608"></a>
+<FONT color="green">609</FONT>            session.setAttribute(SAVED_REQUEST_KEY, savedRequest);<a name="line.609"></a>
+<FONT color="green">610</FONT>        }<a name="line.610"></a>
+<FONT color="green">611</FONT>    <a name="line.611"></a>
+<FONT color="green">612</FONT>        public static SavedRequest getAndClearSavedRequest(ServletRequest request) {<a name="line.612"></a>
+<FONT color="green">613</FONT>            SavedRequest savedRequest = getSavedRequest(request);<a name="line.613"></a>
+<FONT color="green">614</FONT>            if (savedRequest != null) {<a name="line.614"></a>
+<FONT color="green">615</FONT>                Subject subject = SecurityUtils.getSubject();<a name="line.615"></a>
+<FONT color="green">616</FONT>                Session session = subject.getSession();<a name="line.616"></a>
+<FONT color="green">617</FONT>                session.removeAttribute(SAVED_REQUEST_KEY);<a name="line.617"></a>
+<FONT color="green">618</FONT>            }<a name="line.618"></a>
+<FONT color="green">619</FONT>            return savedRequest;<a name="line.619"></a>
+<FONT color="green">620</FONT>        }<a name="line.620"></a>
+<FONT color="green">621</FONT>    <a name="line.621"></a>
+<FONT color="green">622</FONT>        public static SavedRequest getSavedRequest(ServletRequest request) {<a name="line.622"></a>
+<FONT color="green">623</FONT>            SavedRequest savedRequest = null;<a name="line.623"></a>
+<FONT color="green">624</FONT>            Subject subject = SecurityUtils.getSubject();<a name="line.624"></a>
+<FONT color="green">625</FONT>            Session session = subject.getSession(false);<a name="line.625"></a>
+<FONT color="green">626</FONT>            if (session != null) {<a name="line.626"></a>
+<FONT color="green">627</FONT>                savedRequest = (SavedRequest) session.getAttribute(SAVED_REQUEST_KEY);<a name="line.627"></a>
+<FONT color="green">628</FONT>            }<a name="line.628"></a>
+<FONT color="green">629</FONT>            return savedRequest;<a name="line.629"></a>
+<FONT color="green">630</FONT>        }<a name="line.630"></a>
+<FONT color="green">631</FONT>    <a name="line.631"></a>
+<FONT color="green">632</FONT>        /**<a name="line.632"></a>
+<FONT color="green">633</FONT>         * Redirects the to the request url from a previously<a name="line.633"></a>
+<FONT color="green">634</FONT>         * {@link #saveRequest(javax.servlet.ServletRequest) saved} request, or if there is no saved request, redirects the<a name="line.634"></a>
+<FONT color="green">635</FONT>         * end user to the specified {@code fallbackUrl}.  If there is no saved request or fallback url, this method<a name="line.635"></a>
+<FONT color="green">636</FONT>         * throws an {@link IllegalStateException}.<a name="line.636"></a>
+<FONT color="green">637</FONT>         * &lt;p/&gt;<a name="line.637"></a>
+<FONT color="green">638</FONT>         * This method is primarily used to support a common login scenario - if an unauthenticated user accesses a<a name="line.638"></a>
+<FONT color="green">639</FONT>         * page that requires authentication, it is expected that request is<a name="line.639"></a>
+<FONT color="green">640</FONT>         * {@link #saveRequest(javax.servlet.ServletRequest) saved} first and then redirected to the login page. Then,<a name="line.640"></a>
+<FONT color="green">641</FONT>         * after a successful login, this method can be called to redirect them back to their originally requested URL, a<a name="line.641"></a>
+<FONT color="green">642</FONT>         * nice usability feature.<a name="line.642"></a>
+<FONT color="green">643</FONT>         *<a name="line.643"></a>
+<FONT color="green">644</FONT>         * @param request     the incoming request<a name="line.644"></a>
+<FONT color="green">645</FONT>         * @param response    the outgoing response<a name="line.645"></a>
+<FONT color="green">646</FONT>         * @param fallbackUrl the fallback url to redirect to if there is no saved request available.<a name="line.646"></a>
+<FONT color="green">647</FONT>         * @throws IllegalStateException if there is no saved request and the {@code fallbackUrl} is {@code null}.<a name="line.647"></a>
+<FONT color="green">648</FONT>         * @throws IOException           if there is an error redirecting<a name="line.648"></a>
+<FONT color="green">649</FONT>         * @since 1.0<a name="line.649"></a>
+<FONT color="green">650</FONT>         */<a name="line.650"></a>
+<FONT color="green">651</FONT>        public static void redirectToSavedRequest(ServletRequest request, ServletResponse response, String fallbackUrl)<a name="line.651"></a>
+<FONT color="green">652</FONT>                throws IOException {<a name="line.652"></a>
+<FONT color="green">653</FONT>            String successUrl = null;<a name="line.653"></a>
+<FONT color="green">654</FONT>            boolean contextRelative = true;<a name="line.654"></a>
+<FONT color="green">655</FONT>            SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);<a name="line.655"></a>
+<FONT color="green">656</FONT>            if (savedRequest != null &amp;&amp; savedRequest.getMethod().equalsIgnoreCase(AccessControlFilter.GET_METHOD)) {<a name="line.656"></a>
+<FONT color="green">657</FONT>                successUrl = savedRequest.getRequestUrl();<a name="line.657"></a>
+<FONT color="green">658</FONT>                contextRelative = false;<a name="line.658"></a>
+<FONT color="green">659</FONT>            }<a name="line.659"></a>
+<FONT color="green">660</FONT>    <a name="line.660"></a>
+<FONT color="green">661</FONT>            if (successUrl == null) {<a name="line.661"></a>
+<FONT color="green">662</FONT>                successUrl = fallbackUrl;<a name="line.662"></a>
+<FONT color="green">663</FONT>            }<a name="line.663"></a>
+<FONT color="green">664</FONT>    <a name="line.664"></a>
+<FONT color="green">665</FONT>            if (successUrl == null) {<a name="line.665"></a>
+<FONT color="green">666</FONT>                throw new IllegalStateException("Success URL not available via saved request or via the " +<a name="line.666"></a>
+<FONT color="green">667</FONT>                        "successUrlFallback method parameter. One of these must be non-null for " +<a name="line.667"></a>
+<FONT color="green">668</FONT>                        "issueSuccessRedirect() to work.");<a name="line.668"></a>
+<FONT color="green">669</FONT>            }<a name="line.669"></a>
+<FONT color="green">670</FONT>    <a name="line.670"></a>
+<FONT color="green">671</FONT>            WebUtils.issueRedirect(request, response, successUrl, null, contextRelative);<a name="line.671"></a>
+<FONT color="green">672</FONT>        }<a name="line.672"></a>
+<FONT color="green">673</FONT>    <a name="line.673"></a>
+<FONT color="green">674</FONT>    }<a name="line.674"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

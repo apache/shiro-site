@@ -1,0 +1,303 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<FONT color="green">007</FONT>     * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<FONT color="green">008</FONT>     * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<FONT color="green">013</FONT>     * software distributed under the License is distributed on an<a name="line.13"></a>
+<FONT color="green">014</FONT>     * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<FONT color="green">015</FONT>     * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<FONT color="green">016</FONT>     * specific language governing permissions and limitations<a name="line.16"></a>
+<FONT color="green">017</FONT>     * under the License.<a name="line.17"></a>
+<FONT color="green">018</FONT>     */<a name="line.18"></a>
+<FONT color="green">019</FONT>    package org.apache.shiro.subject;<a name="line.19"></a>
+<FONT color="green">020</FONT>    <a name="line.20"></a>
+<FONT color="green">021</FONT>    import org.apache.shiro.authc.AuthenticationInfo;<a name="line.21"></a>
+<FONT color="green">022</FONT>    import org.apache.shiro.authc.AuthenticationToken;<a name="line.22"></a>
+<FONT color="green">023</FONT>    import org.apache.shiro.mgt.SecurityManager;<a name="line.23"></a>
+<FONT color="green">024</FONT>    import org.apache.shiro.session.Session;<a name="line.24"></a>
+<FONT color="green">025</FONT>    <a name="line.25"></a>
+<FONT color="green">026</FONT>    import java.io.Serializable;<a name="line.26"></a>
+<FONT color="green">027</FONT>    import java.util.Map;<a name="line.27"></a>
+<FONT color="green">028</FONT>    <a name="line.28"></a>
+<FONT color="green">029</FONT>    /**<a name="line.29"></a>
+<FONT color="green">030</FONT>     * A {@code SubjectContext} is a 'bucket' of data presented to a {@link SecurityManager} which interprets<a name="line.30"></a>
+<FONT color="green">031</FONT>     * this data to construct {@link org.apache.shiro.subject.Subject Subject} instances.  It is essentially a Map of data<a name="line.31"></a>
+<FONT color="green">032</FONT>     * with a few additional type-safe methods for easy retrieval of objects commonly used to construct Subject instances.<a name="line.32"></a>
+<FONT color="green">033</FONT>     * &lt;p/&gt;<a name="line.33"></a>
+<FONT color="green">034</FONT>     * While this interface contains type-safe setters and getters for common data types, the map can contain anything<a name="line.34"></a>
+<FONT color="green">035</FONT>     * additional that might be needed by the {@link SecurityManager} or<a name="line.35"></a>
+<FONT color="green">036</FONT>     * {@link org.apache.shiro.mgt.SubjectFactory SubjectFactory} implementation to construct {@code Subject} instances.<a name="line.36"></a>
+<FONT color="green">037</FONT>     * &lt;h2&gt;Data Resolution&lt;/h2&gt;<a name="line.37"></a>
+<FONT color="green">038</FONT>     * The {@link SubjectContext} interface also allows for heuristic resolution of data used to construct a subject<a name="line.38"></a>
+<FONT color="green">039</FONT>     * instance.  That is, if an attribute has not been explicitly provided via a setter method, the {@code resolve*}<a name="line.39"></a>
+<FONT color="green">040</FONT>     * methods can use heuristics to obtain that data in another way from other attributes.<a name="line.40"></a>
+<FONT color="green">041</FONT>     * &lt;p/&gt;<a name="line.41"></a>
+<FONT color="green">042</FONT>     * For example, if one calls {@link #getPrincipals()} and no principals are returned, perhaps the principals exist<a name="line.42"></a>
+<FONT color="green">043</FONT>     * in the {@link #getSession() session} or another attribute in the context.  The {@link #resolvePrincipals()} will know<a name="line.43"></a>
+<FONT color="green">044</FONT>     * how to resolve the principals based on heuristics.  If the {@code resolve*} methods return {@code null} then the<a name="line.44"></a>
+<FONT color="green">045</FONT>     * data could not be achieved by any heuristics and must be considered as not available in the context.<a name="line.45"></a>
+<FONT color="green">046</FONT>     * &lt;p/&gt;<a name="line.46"></a>
+<FONT color="green">047</FONT>     * The general idea is that the normal getters can be called to see if the value was explicitly set.  The<a name="line.47"></a>
+<FONT color="green">048</FONT>     * {@code resolve*} methods should be used when actually constructing the {@code Subject} instance to ensure the most<a name="line.48"></a>
+<FONT color="green">049</FONT>     * specific/accurate data can be used.<a name="line.49"></a>
+<FONT color="green">050</FONT>     * &lt;p/&gt;<a name="line.50"></a>
+<FONT color="green">051</FONT>     * &lt;b&gt;USAGE&lt;/b&gt;: Most Shiro end-users will never use a {@code SubjectContext} instance directly and instead will use a<a name="line.51"></a>
+<FONT color="green">052</FONT>     * {@link Subject.Builder} (which internally uses a {@code SubjectContext}) and build {@code Subject} instances that<a name="line.52"></a>
+<FONT color="green">053</FONT>     * way.<a name="line.53"></a>
+<FONT color="green">054</FONT>     *<a name="line.54"></a>
+<FONT color="green">055</FONT>     * @see org.apache.shiro.mgt.SecurityManager#createSubject SecurityManager.createSubject<a name="line.55"></a>
+<FONT color="green">056</FONT>     * @see org.apache.shiro.mgt.SubjectFactory SubjectFactory<a name="line.56"></a>
+<FONT color="green">057</FONT>     * @since 1.0<a name="line.57"></a>
+<FONT color="green">058</FONT>     */<a name="line.58"></a>
+<FONT color="green">059</FONT>    public interface SubjectContext extends Map&lt;String, Object&gt; {<a name="line.59"></a>
+<FONT color="green">060</FONT>    <a name="line.60"></a>
+<FONT color="green">061</FONT>        /**<a name="line.61"></a>
+<FONT color="green">062</FONT>         * Returns the SecurityManager instance that should be used to back the constructed {@link Subject} instance or<a name="line.62"></a>
+<FONT color="green">063</FONT>         * {@code null} if one has not yet been provided to this context.<a name="line.63"></a>
+<FONT color="green">064</FONT>         *<a name="line.64"></a>
+<FONT color="green">065</FONT>         * @return the SecurityManager instance that should be used to back the constructed {@link Subject} instance or<a name="line.65"></a>
+<FONT color="green">066</FONT>         *         {@code null} if one has not yet been provided to this context.<a name="line.66"></a>
+<FONT color="green">067</FONT>         */<a name="line.67"></a>
+<FONT color="green">068</FONT>        SecurityManager getSecurityManager();<a name="line.68"></a>
+<FONT color="green">069</FONT>    <a name="line.69"></a>
+<FONT color="green">070</FONT>        /**<a name="line.70"></a>
+<FONT color="green">071</FONT>         * Sets the SecurityManager instance that should be used to back the constructed {@link Subject} instance<a name="line.71"></a>
+<FONT color="green">072</FONT>         * (typically used to support {@link org.apache.shiro.subject.support.DelegatingSubject DelegatingSubject} implementations).<a name="line.72"></a>
+<FONT color="green">073</FONT>         *<a name="line.73"></a>
+<FONT color="green">074</FONT>         * @param securityManager the SecurityManager instance that should be used to back the constructed {@link Subject}<a name="line.74"></a>
+<FONT color="green">075</FONT>         *                        instance.<a name="line.75"></a>
+<FONT color="green">076</FONT>         */<a name="line.76"></a>
+<FONT color="green">077</FONT>        void setSecurityManager(SecurityManager securityManager);<a name="line.77"></a>
+<FONT color="green">078</FONT>    <a name="line.78"></a>
+<FONT color="green">079</FONT>        /**<a name="line.79"></a>
+<FONT color="green">080</FONT>         * Resolves the {@code SecurityManager} instance that should be used to back the constructed {@link Subject}<a name="line.80"></a>
+<FONT color="green">081</FONT>         * instance (typically used to support {@link org.apache.shiro.subject.support.DelegatingSubject DelegatingSubject} implementations).<a name="line.81"></a>
+<FONT color="green">082</FONT>         *<a name="line.82"></a>
+<FONT color="green">083</FONT>         * @return the {@code SecurityManager} instance that should be used to back the constructed {@link Subject}<a name="line.83"></a>
+<FONT color="green">084</FONT>         *         instance<a name="line.84"></a>
+<FONT color="green">085</FONT>         */<a name="line.85"></a>
+<FONT color="green">086</FONT>        SecurityManager resolveSecurityManager();<a name="line.86"></a>
+<FONT color="green">087</FONT>    <a name="line.87"></a>
+<FONT color="green">088</FONT>        /**<a name="line.88"></a>
+<FONT color="green">089</FONT>         * Returns the session id of the session that should be associated with the constructed {@link Subject} instance.<a name="line.89"></a>
+<FONT color="green">090</FONT>         * &lt;p/&gt;<a name="line.90"></a>
+<FONT color="green">091</FONT>         * The construction process is expected to resolve the session with the specified id and then construct the Subject<a name="line.91"></a>
+<FONT color="green">092</FONT>         * instance based on the resolved session.<a name="line.92"></a>
+<FONT color="green">093</FONT>         *<a name="line.93"></a>
+<FONT color="green">094</FONT>         * @return the session id of the session that should be associated with the constructed {@link Subject} instance.<a name="line.94"></a>
+<FONT color="green">095</FONT>         */<a name="line.95"></a>
+<FONT color="green">096</FONT>        Serializable getSessionId();<a name="line.96"></a>
+<FONT color="green">097</FONT>    <a name="line.97"></a>
+<FONT color="green">098</FONT>        /**<a name="line.98"></a>
+<FONT color="green">099</FONT>         * Sets the session id of the session that should be associated with the constructed {@link Subject} instance.<a name="line.99"></a>
+<FONT color="green">100</FONT>         * &lt;p/&gt;<a name="line.100"></a>
+<FONT color="green">101</FONT>         * The construction process is expected to resolve the session with the specified id and then construct the Subject<a name="line.101"></a>
+<FONT color="green">102</FONT>         * instance based on the resolved session.<a name="line.102"></a>
+<FONT color="green">103</FONT>         *<a name="line.103"></a>
+<FONT color="green">104</FONT>         * @param sessionId the session id of the session that should be associated with the constructed {@link Subject}<a name="line.104"></a>
+<FONT color="green">105</FONT>         *                  instance.<a name="line.105"></a>
+<FONT color="green">106</FONT>         */<a name="line.106"></a>
+<FONT color="green">107</FONT>        void setSessionId(Serializable sessionId);<a name="line.107"></a>
+<FONT color="green">108</FONT>    <a name="line.108"></a>
+<FONT color="green">109</FONT>        /**<a name="line.109"></a>
+<FONT color="green">110</FONT>         * Returns any existing {@code Subject} that may be in use at the time the new {@code Subject} instance is<a name="line.110"></a>
+<FONT color="green">111</FONT>         * being created.<a name="line.111"></a>
+<FONT color="green">112</FONT>         * &lt;p/&gt;<a name="line.112"></a>
+<FONT color="green">113</FONT>         * This is typically used in the case where the existing {@code Subject} instance returned by<a name="line.113"></a>
+<FONT color="green">114</FONT>         * this method is unauthenticated and a new {@code Subject} instance is being created to reflect a successful<a name="line.114"></a>
+<FONT color="green">115</FONT>         * authentication - you want to return most of the state of the previous {@code Subject} instance when creating the<a name="line.115"></a>
+<FONT color="green">116</FONT>         * newly authenticated instance.<a name="line.116"></a>
+<FONT color="green">117</FONT>         *<a name="line.117"></a>
+<FONT color="green">118</FONT>         * @return any existing {@code Subject} that may be in use at the time the new {@code Subject} instance is<a name="line.118"></a>
+<FONT color="green">119</FONT>         *         being created.<a name="line.119"></a>
+<FONT color="green">120</FONT>         */<a name="line.120"></a>
+<FONT color="green">121</FONT>        Subject getSubject();<a name="line.121"></a>
+<FONT color="green">122</FONT>    <a name="line.122"></a>
+<FONT color="green">123</FONT>        /**<a name="line.123"></a>
+<FONT color="green">124</FONT>         * Sets the existing {@code Subject} that may be in use at the time the new {@code Subject} instance is<a name="line.124"></a>
+<FONT color="green">125</FONT>         * being created.<a name="line.125"></a>
+<FONT color="green">126</FONT>         * &lt;p/&gt;<a name="line.126"></a>
+<FONT color="green">127</FONT>         * This is typically used in the case where the existing {@code Subject} instance returned by<a name="line.127"></a>
+<FONT color="green">128</FONT>         * this method is unauthenticated and a new {@code Subject} instance is being created to reflect a successful<a name="line.128"></a>
+<FONT color="green">129</FONT>         * authentication - you want to return most of the state of the previous {@code Subject} instance when creating the<a name="line.129"></a>
+<FONT color="green">130</FONT>         * newly authenticated instance.<a name="line.130"></a>
+<FONT color="green">131</FONT>         *<a name="line.131"></a>
+<FONT color="green">132</FONT>         * @param subject the existing {@code Subject} that may be in use at the time the new {@code Subject} instance is<a name="line.132"></a>
+<FONT color="green">133</FONT>         *                being created.<a name="line.133"></a>
+<FONT color="green">134</FONT>         */<a name="line.134"></a>
+<FONT color="green">135</FONT>        void setSubject(Subject subject);<a name="line.135"></a>
+<FONT color="green">136</FONT>    <a name="line.136"></a>
+<FONT color="green">137</FONT>        /**<a name="line.137"></a>
+<FONT color="green">138</FONT>         * Returns the principals (aka identity) that the constructed {@code Subject} should reflect.<a name="line.138"></a>
+<FONT color="green">139</FONT>         *<a name="line.139"></a>
+<FONT color="green">140</FONT>         * @return the principals (aka identity) that the constructed {@code Subject} should reflect.<a name="line.140"></a>
+<FONT color="green">141</FONT>         */<a name="line.141"></a>
+<FONT color="green">142</FONT>        PrincipalCollection getPrincipals();<a name="line.142"></a>
+<FONT color="green">143</FONT>    <a name="line.143"></a>
+<FONT color="green">144</FONT>        PrincipalCollection resolvePrincipals();<a name="line.144"></a>
+<FONT color="green">145</FONT>    <a name="line.145"></a>
+<FONT color="green">146</FONT>        /**<a name="line.146"></a>
+<FONT color="green">147</FONT>         * Sets the principals (aka identity) that the constructed {@code Subject} should reflect.<a name="line.147"></a>
+<FONT color="green">148</FONT>         *<a name="line.148"></a>
+<FONT color="green">149</FONT>         * @param principals the principals (aka identity) that the constructed {@code Subject} should reflect.<a name="line.149"></a>
+<FONT color="green">150</FONT>         */<a name="line.150"></a>
+<FONT color="green">151</FONT>        void setPrincipals(PrincipalCollection principals);<a name="line.151"></a>
+<FONT color="green">152</FONT>    <a name="line.152"></a>
+<FONT color="green">153</FONT>        /**<a name="line.153"></a>
+<FONT color="green">154</FONT>         * Returns the {@code Session} to use when building the {@code Subject} instance.  Note that it is more<a name="line.154"></a>
+<FONT color="green">155</FONT>         * common to specify a {@link #setSessionId sessionId} to acquire the desired session rather than having to<a name="line.155"></a>
+<FONT color="green">156</FONT>         * construct a {@code Session} to be returned by this method.<a name="line.156"></a>
+<FONT color="green">157</FONT>         *<a name="line.157"></a>
+<FONT color="green">158</FONT>         * @return the {@code Session} to use when building the {@code Subject} instance.<a name="line.158"></a>
+<FONT color="green">159</FONT>         */<a name="line.159"></a>
+<FONT color="green">160</FONT>        Session getSession();<a name="line.160"></a>
+<FONT color="green">161</FONT>    <a name="line.161"></a>
+<FONT color="green">162</FONT>        /**<a name="line.162"></a>
+<FONT color="green">163</FONT>         * Sets the {@code Session} to use when building the {@code Subject} instance.  Note that it is more<a name="line.163"></a>
+<FONT color="green">164</FONT>         * common to specify a {@link #setSessionId sessionId} to automatically resolve the desired session rather than<a name="line.164"></a>
+<FONT color="green">165</FONT>         * constructing a {@code Session} to call this method.<a name="line.165"></a>
+<FONT color="green">166</FONT>         *<a name="line.166"></a>
+<FONT color="green">167</FONT>         * @param session the {@code Session} to use when building the {@code Subject} instance.<a name="line.167"></a>
+<FONT color="green">168</FONT>         */<a name="line.168"></a>
+<FONT color="green">169</FONT>        void setSession(Session session);<a name="line.169"></a>
+<FONT color="green">170</FONT>    <a name="line.170"></a>
+<FONT color="green">171</FONT>        Session resolveSession();<a name="line.171"></a>
+<FONT color="green">172</FONT>    <a name="line.172"></a>
+<FONT color="green">173</FONT>        /**<a name="line.173"></a>
+<FONT color="green">174</FONT>         * Returns {@code true} if the constructed {@code Subject} should be considered authenticated, {@code false}<a name="line.174"></a>
+<FONT color="green">175</FONT>         * otherwise.  Be careful setting this value to {@code true} - you should know what you are doing and have a good<a name="line.175"></a>
+<FONT color="green">176</FONT>         * reason for ignoring Shiro's default authentication state mechanisms.<a name="line.176"></a>
+<FONT color="green">177</FONT>         *<a name="line.177"></a>
+<FONT color="green">178</FONT>         * @return {@code true} if the constructed {@code Subject} should be considered authenticated, {@code false}<a name="line.178"></a>
+<FONT color="green">179</FONT>         *         otherwise.<a name="line.179"></a>
+<FONT color="green">180</FONT>         */<a name="line.180"></a>
+<FONT color="green">181</FONT>        boolean isAuthenticated();<a name="line.181"></a>
+<FONT color="green">182</FONT>    <a name="line.182"></a>
+<FONT color="green">183</FONT>        /**<a name="line.183"></a>
+<FONT color="green">184</FONT>         * Sets whether or not the constructed {@code Subject} instance should be considered as authenticated.  Be careful<a name="line.184"></a>
+<FONT color="green">185</FONT>         * when specifying {@code true} - you should know what you are doing and have a good reason for ignoring Shiro's<a name="line.185"></a>
+<FONT color="green">186</FONT>         * default authentication state mechanisms.<a name="line.186"></a>
+<FONT color="green">187</FONT>         *<a name="line.187"></a>
+<FONT color="green">188</FONT>         * @param authc whether or not the constructed {@code Subject} instance should be considered as authenticated.<a name="line.188"></a>
+<FONT color="green">189</FONT>         */<a name="line.189"></a>
+<FONT color="green">190</FONT>        void setAuthenticated(boolean authc);<a name="line.190"></a>
+<FONT color="green">191</FONT>    <a name="line.191"></a>
+<FONT color="green">192</FONT>        /**<a name="line.192"></a>
+<FONT color="green">193</FONT>         * Returns {@code true} if the constructed {@code Subject} should be allowed to create a session, {@code false}<a name="line.193"></a>
+<FONT color="green">194</FONT>         * otherwise.  Shiro's configuration defaults to {@code true} as most applications find value in Sessions.<a name="line.194"></a>
+<FONT color="green">195</FONT>         *<a name="line.195"></a>
+<FONT color="green">196</FONT>         * @return {@code true} if the constructed {@code Subject} should be allowed to create sessions, {@code false}<a name="line.196"></a>
+<FONT color="green">197</FONT>         * otherwise.<a name="line.197"></a>
+<FONT color="green">198</FONT>         * @since 1.2<a name="line.198"></a>
+<FONT color="green">199</FONT>         */<a name="line.199"></a>
+<FONT color="green">200</FONT>        boolean isSessionCreationEnabled();<a name="line.200"></a>
+<FONT color="green">201</FONT>    <a name="line.201"></a>
+<FONT color="green">202</FONT>        /**<a name="line.202"></a>
+<FONT color="green">203</FONT>         * Sets whether or not the constructed {@code Subject} instance should be allowed to create a session,<a name="line.203"></a>
+<FONT color="green">204</FONT>         * {@code false} otherwise.<a name="line.204"></a>
+<FONT color="green">205</FONT>         *<a name="line.205"></a>
+<FONT color="green">206</FONT>         * @param enabled whether or not the constructed {@code Subject} instance should be allowed to create a session,<a name="line.206"></a>
+<FONT color="green">207</FONT>         * {@code false} otherwise.<a name="line.207"></a>
+<FONT color="green">208</FONT>         * @since 1.2<a name="line.208"></a>
+<FONT color="green">209</FONT>         */<a name="line.209"></a>
+<FONT color="green">210</FONT>        void setSessionCreationEnabled(boolean enabled);<a name="line.210"></a>
+<FONT color="green">211</FONT>    <a name="line.211"></a>
+<FONT color="green">212</FONT>        boolean resolveAuthenticated();<a name="line.212"></a>
+<FONT color="green">213</FONT>    <a name="line.213"></a>
+<FONT color="green">214</FONT>        AuthenticationInfo getAuthenticationInfo();<a name="line.214"></a>
+<FONT color="green">215</FONT>    <a name="line.215"></a>
+<FONT color="green">216</FONT>        void setAuthenticationInfo(AuthenticationInfo info);<a name="line.216"></a>
+<FONT color="green">217</FONT>    <a name="line.217"></a>
+<FONT color="green">218</FONT>        AuthenticationToken getAuthenticationToken();<a name="line.218"></a>
+<FONT color="green">219</FONT>    <a name="line.219"></a>
+<FONT color="green">220</FONT>        void setAuthenticationToken(AuthenticationToken token);<a name="line.220"></a>
+<FONT color="green">221</FONT>    <a name="line.221"></a>
+<FONT color="green">222</FONT>        /**<a name="line.222"></a>
+<FONT color="green">223</FONT>         * Returns the host name or IP that should reflect the constructed {@code Subject}'s originating location.<a name="line.223"></a>
+<FONT color="green">224</FONT>         *<a name="line.224"></a>
+<FONT color="green">225</FONT>         * @return the host name or IP that should reflect the constructed {@code Subject}'s originating location.<a name="line.225"></a>
+<FONT color="green">226</FONT>         */<a name="line.226"></a>
+<FONT color="green">227</FONT>        String getHost();<a name="line.227"></a>
+<FONT color="green">228</FONT>    <a name="line.228"></a>
+<FONT color="green">229</FONT>        /**<a name="line.229"></a>
+<FONT color="green">230</FONT>         * Sets the host name or IP that should reflect the constructed {@code Subject}'s originating location.<a name="line.230"></a>
+<FONT color="green">231</FONT>         *<a name="line.231"></a>
+<FONT color="green">232</FONT>         * @param host the host name or IP that should reflect the constructed {@code Subject}'s originating location.<a name="line.232"></a>
+<FONT color="green">233</FONT>         */<a name="line.233"></a>
+<FONT color="green">234</FONT>        void setHost(String host);<a name="line.234"></a>
+<FONT color="green">235</FONT>    <a name="line.235"></a>
+<FONT color="green">236</FONT>        String resolveHost();<a name="line.236"></a>
+<FONT color="green">237</FONT>    }<a name="line.237"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

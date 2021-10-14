@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>AnnotationMethodInterceptor.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Jar Bundle</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.aop</a> &gt; <span class="el_source">AnnotationMethodInterceptor.java</span></div><h1>AnnotationMethodInterceptor.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.aop;
+
+import java.lang.annotation.Annotation;
+
+/**
+ * MethodInterceptor that inspects a specific annotation on the method invocation before continuing
+ * its execution.
+ * &lt;/p&gt;
+ * The annotation is acquired from the {@link MethodInvocation MethodInvocation} via a
+ * {@link AnnotationResolver AnnotationResolver} instance that may be configured.  Unless
+ * overridden, the default {@code AnnotationResolver} is a
+ *
+ * @since 0.9
+ */
+public abstract class AnnotationMethodInterceptor extends MethodInterceptorSupport {
+
+    private AnnotationHandler handler;
+
+    /**
+     * The resolver to use to find annotations on intercepted methods.
+     *
+     * @since 1.1
+     */
+    private AnnotationResolver resolver;
+
+    /**
+     * Constructs an &lt;code&gt;AnnotationMethodInterceptor&lt;/code&gt; with the
+     * {@link AnnotationHandler AnnotationHandler} that will be used to process annotations of a
+     * corresponding type.
+     *
+     * @param handler the handler to delegate to for processing the annotation.
+     */
+    public AnnotationMethodInterceptor(AnnotationHandler handler) {
+<span class="fc" id="L52">        this(handler, new DefaultAnnotationResolver());</span>
+<span class="fc" id="L53">    }</span>
+
+    /**
+     * Constructs an &lt;code&gt;AnnotationMethodInterceptor&lt;/code&gt; with the
+     * {@link AnnotationHandler AnnotationHandler} that will be used to process annotations of a
+     * corresponding type, using the specified {@code AnnotationResolver} to acquire annotations
+     * at runtime.
+     *
+     * @param handler  the handler to use to process any discovered annotation
+     * @param resolver the resolver to use to locate/acquire the annotation
+     * @since 1.1
+     */
+<span class="fc" id="L65">    public AnnotationMethodInterceptor(AnnotationHandler handler, AnnotationResolver resolver) {</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">        if (handler == null) {</span>
+<span class="nc" id="L67">            throw new IllegalArgumentException(&quot;AnnotationHandler argument cannot be null.&quot;);</span>
+        }
+<span class="fc" id="L69">        setHandler(handler);</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        setResolver(resolver != null ? resolver : new DefaultAnnotationResolver());</span>
+<span class="fc" id="L71">    }</span>
+
+    /**
+     * Returns the {@code AnnotationHandler} used to perform authorization behavior based on
+     * an annotation discovered at runtime.
+     *
+     * @return the {@code AnnotationHandler} used to perform authorization behavior based on
+     *         an annotation discovered at runtime.
+     */
+    public AnnotationHandler getHandler() {
+<span class="fc" id="L81">        return handler;</span>
+    }
+
+    /**
+     * Sets the {@code AnnotationHandler} used to perform authorization behavior based on
+     * an annotation discovered at runtime.
+     *
+     * @param handler the {@code AnnotationHandler} used to perform authorization behavior based on
+     *                an annotation discovered at runtime.
+     */
+    public void setHandler(AnnotationHandler handler) {
+<span class="fc" id="L92">        this.handler = handler;</span>
+<span class="fc" id="L93">    }</span>
+
+    /**
+     * Returns the {@code AnnotationResolver} to use to acquire annotations from intercepted
+     * methods at runtime.  The annotation is then used by the {@link #getHandler handler} to
+     * perform authorization logic.
+     *
+     * @return the {@code AnnotationResolver} to use to acquire annotations from intercepted
+     *         methods at runtime.
+     * @since 1.1
+     */
+    public AnnotationResolver getResolver() {
+<span class="fc" id="L105">        return resolver;</span>
+    }
+
+    /**
+     * Returns the {@code AnnotationResolver} to use to acquire annotations from intercepted
+     * methods at runtime.  The annotation is then used by the {@link #getHandler handler} to
+     * perform authorization logic.
+     *
+     * @param resolver the {@code AnnotationResolver} to use to acquire annotations from intercepted
+     *                 methods at runtime.
+     * @since 1.1
+     */
+    public void setResolver(AnnotationResolver resolver) {
+<span class="fc" id="L118">        this.resolver = resolver;</span>
+<span class="fc" id="L119">    }</span>
+
+    /**
+     * Returns &lt;code&gt;true&lt;/code&gt; if this interceptor supports, that is, should inspect, the specified
+     * &lt;code&gt;MethodInvocation&lt;/code&gt;, &lt;code&gt;false&lt;/code&gt; otherwise.
+     * &lt;p/&gt;
+     * The default implementation simply does the following:
+     * &lt;p/&gt;
+     * &lt;code&gt;return {@link #getAnnotation(MethodInvocation) getAnnotation(mi)} != null&lt;/code&gt;
+     *
+     * @param mi the &lt;code&gt;MethodInvocation&lt;/code&gt; for the method being invoked.
+     * @return &lt;code&gt;true&lt;/code&gt; if this interceptor supports, that is, should inspect, the specified
+     *         &lt;code&gt;MethodInvocation&lt;/code&gt;, &lt;code&gt;false&lt;/code&gt; otherwise.
+     */
+    public boolean supports(MethodInvocation mi) {
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        return getAnnotation(mi) != null;</span>
+    }
+
+    /**
+     * Returns the Annotation that this interceptor will process for the specified method invocation.
+     * &lt;p/&gt;
+     * The default implementation acquires the annotation using an annotation
+     * {@link #getResolver resolver} using the internal annotation {@link #getHandler handler}'s
+     * {@link org.apache.shiro.aop.AnnotationHandler#getAnnotationClass() annotationClass}.
+     *
+     * @param mi the MethodInvocation wrapping the Method from which the Annotation will be acquired.
+     * @return the Annotation that this interceptor will process for the specified method invocation.
+     */
+    protected Annotation getAnnotation(MethodInvocation mi) {
+<span class="fc" id="L148">        return getResolver().getAnnotation(mi, getHandler().getAnnotationClass());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

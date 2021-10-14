@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>Hex.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-lang</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.codec</a> &gt; <span class="el_source">Hex.java</span></div><h1>Hex.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.codec;
+
+/**
+ * &lt;a href=&quot;http://en.wikipedia.org/wiki/Hexadecimal&quot;&gt;Hexadecimal&lt;/a&gt; encoder and decoder.
+ * &lt;p/&gt;
+ * This class was borrowed from Apache Commons Codec SVN repository (rev. {@code 560660}) with modifications
+ * to enable Hex conversion without a full dependency on Commons Codec.  We didn't want to reinvent the wheel of
+ * great work they've done, but also didn't want to force every Shiro user to depend on the commons-codec.jar
+ * &lt;p/&gt;
+ * As per the Apache 2.0 license, the original copyright notice and all author and copyright information have
+ * remained in tact.
+ *
+ * @see &lt;a href=&quot;http://en.wikipedia.org/wiki/Hexadecimal&quot;&gt;Wikipedia: Hexadecimal&lt;/a&gt;
+ * @since 0.9
+ */
+<span class="nc" id="L34">public class Hex {</span>
+
+    /**
+     * Used to build output as Hex
+     */
+<span class="fc" id="L39">    private static final char[] DIGITS = {</span>
+            '0', '1', '2', '3', '4', '5', '6', '7',
+            '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
+    };
+
+    /**
+     * Encodes the specified byte array to a character array and then returns that character array
+     * as a String.
+     *
+     * @param bytes the byte array to Hex-encode.
+     * @return A String representation of the resultant hex-encoded char array.
+     */
+    public static String encodeToString(byte[] bytes) {
+<span class="fc" id="L52">        char[] encodedChars = encode(bytes);</span>
+<span class="fc" id="L53">        return new String(encodedChars);</span>
+    }
+
+    /**
+     * Converts an array of bytes into an array of characters representing the hexadecimal values of each byte in order.
+     * The returned array will be double the length of the passed array, as it takes two characters to represent any
+     * given byte.
+     *
+     * @param data byte[] to convert to Hex characters
+     * @return A char[] containing hexadecimal characters
+     */
+    public static char[] encode(byte[] data) {
+
+<span class="fc" id="L66">        int l = data.length;</span>
+
+<span class="fc" id="L68">        char[] out = new char[l &lt;&lt; 1];</span>
+
+        // two characters form the hex value.
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        for (int i = 0, j = 0; i &lt; l; i++) {</span>
+<span class="fc" id="L72">            out[j++] = DIGITS[(0xF0 &amp; data[i]) &gt;&gt;&gt; 4];</span>
+<span class="fc" id="L73">            out[j++] = DIGITS[0x0F &amp; data[i]];</span>
+        }
+
+<span class="fc" id="L76">        return out;</span>
+    }
+
+    /**
+     * Converts an array of character bytes representing hexadecimal values into an
+     * array of bytes of those same values. The returned array will be half the
+     * length of the passed array, as it takes two characters to represent any
+     * given byte. An exception is thrown if the passed char array has an odd
+     * number of elements.
+     *
+     * @param array An array of character bytes containing hexadecimal digits
+     * @return A byte array containing binary data decoded from
+     *         the supplied byte array (representing characters).
+     * @throws IllegalArgumentException Thrown if an odd number of characters is supplied
+     *                                  to this function
+     * @see #decode(char[])
+     */
+    public static byte[] decode(byte[] array) throws IllegalArgumentException {
+<span class="fc" id="L94">        String s = CodecSupport.toString(array);</span>
+<span class="fc" id="L95">        return decode(s);</span>
+    }
+
+    /**
+     * Converts the specified Hex-encoded String into a raw byte array.  This is a
+     * convenience method that merely delegates to {@link #decode(char[])} using the
+     * argument's hex.toCharArray() value.
+     *
+     * @param hex a Hex-encoded String.
+     * @return A byte array containing binary data decoded from the supplied String's char array.
+     */
+    public static byte[] decode(String hex) {
+<span class="fc" id="L107">        return decode(hex.toCharArray());</span>
+    }
+
+    /**
+     * Converts an array of characters representing hexadecimal values into an
+     * array of bytes of those same values. The returned array will be half the
+     * length of the passed array, as it takes two characters to represent any
+     * given byte. An exception is thrown if the passed char array has an odd
+     * number of elements.
+     *
+     * @param data An array of characters containing hexadecimal digits
+     * @return A byte array containing binary data decoded from
+     *         the supplied char array.
+     * @throws IllegalArgumentException if an odd number or illegal of characters
+     *                                  is supplied
+     */
+    public static byte[] decode(char[] data) throws IllegalArgumentException {
+
+<span class="fc" id="L125">        int len = data.length;</span>
+
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">        if ((len &amp; 0x01) != 0) {</span>
+<span class="nc" id="L128">            throw new IllegalArgumentException(&quot;Odd number of characters.&quot;);</span>
+        }
+
+<span class="fc" id="L131">        byte[] out = new byte[len &gt;&gt; 1];</span>
+
+        // two characters form the hex value.
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        for (int i = 0, j = 0; j &lt; len; i++) {</span>
+<span class="fc" id="L135">            int f = toDigit(data[j], j) &lt;&lt; 4;</span>
+<span class="fc" id="L136">            j++;</span>
+<span class="fc" id="L137">            f = f | toDigit(data[j], j);</span>
+<span class="fc" id="L138">            j++;</span>
+<span class="fc" id="L139">            out[i] = (byte) (f &amp; 0xFF);</span>
+        }
+
+<span class="fc" id="L142">        return out;</span>
+    }
+
+    /**
+     * Converts a hexadecimal character to an integer.
+     *
+     * @param ch    A character to convert to an integer digit
+     * @param index The index of the character in the source
+     * @return An integer
+     * @throws IllegalArgumentException if ch is an illegal hex character
+     */
+    protected static int toDigit(char ch, int index) throws IllegalArgumentException {
+<span class="fc" id="L154">        int digit = Character.digit(ch, 16);</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        if (digit == -1) {</span>
+<span class="nc" id="L156">            throw new IllegalArgumentException(&quot;Illegal hexadecimal character &quot; + ch + &quot; at index &quot; + index);</span>
+        }
+<span class="fc" id="L158">        return digit;</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
