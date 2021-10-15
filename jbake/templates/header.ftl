@@ -88,7 +88,9 @@
       </#list>
     </#if>
     <meta property="og:locale" content="en_US" />
+    <#if (content.uri)??>
     <meta property="og:url" content='${config.site_host}/${content.uri}'/>
+    <#else></#if>
     <#-- custom featured image if it exists or default featured image. -->
     <#if (content.featuredimage)?? >
       <#if (content.featuredimage)?starts_with("http")>
