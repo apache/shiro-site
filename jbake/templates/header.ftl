@@ -57,7 +57,7 @@
         <#if (content.date)??>
     <meta property="article:published_time" content="${content.date?date?string.iso}"/>
         </#if>
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@ApacheShiro" />
           <#if (content.author!"") != "">
             <#assign authors = data.get('authors.yaml').authors>
