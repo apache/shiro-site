@@ -89,8 +89,15 @@
     <#else></#if>
     <#-- custom featured image if it exists or default featured image. -->
     <#if (content.featuredimage)?? >
+      <#if (content.featuredimage)?starts_with("http") || (content.featuredimage)?starts_with("/")>
     <meta property="og:image" content="${content.featuredimage}"/>
     <meta property="twitter:image" content="${content.featuredimage}"/>
+      <#else>
+        <#-- relative URI starting with ./ or directly with the image name. -->
+        <#assign imageprefix="${config.site_host}/${(content.uri?substring(0, content.uri?last_index_of('/')))}/" />
+    <meta property="og:image" content="${imageprefix}${content.featuredimage}"/>
+    <meta property="twitter:image" content="${imageprefix}${content.featuredimage}"/>
+      </#if>
       <#if (content.featuredimagewidth)??>
     <meta property="og:image:width" content="${content.featuredimagewidth}"/>
       </#if>
