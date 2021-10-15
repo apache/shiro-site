@@ -57,17 +57,21 @@
         <#if (content.date)??>
     <meta property="article:published_time" content="${content.date?date?string.iso}"/>
         </#if>
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@ApacheShiro" />
-          <#if (content.author!"") != "">
-            <#assign authors = data.get('authors.yaml').authors>
-            <#if (authors[content.author?trim].twitter)??>
+        <#if (content.author!"") != "">
+          <#assign authors = data.get('authors.yaml').authors>
+          <#if (authors[content.author?trim].twitter)??>
     <meta name="twitter:creator" content="${authors[content.author].twitter}" />
-            </#if>
+          </#if>
         </#if>
       <#-- fall through -->
       <#case "page">
     <meta property="og:type" content="article"/>
+    <#if (content.twittercard!"")?trim == "large">
+      <meta name="twitter:card" content="summary_large_image" />
+    <#else>
+      <meta name="twitter:card" content="summary" />
+    </#if>
+    <meta name="twitter:site" content="@ApacheShiro" />
         <#if (content.date)??>
     <meta property="article:modification_time" content="${content.date?date?string.iso}"/>
         </#if>
