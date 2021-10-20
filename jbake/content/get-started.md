@@ -4,6 +4,7 @@ author=Les Hazelwood
 type=page
 tags=documentation, manual
 status=published
+description=Resources, guides and tutorials for new Shiro users.
 ~~~~~~
 
 Apache Shiro focuses on ease-of-use, so you can rely on secure, stable authentication, authorization, cryptography, and session management. With Shiro’s easy-to-understand API, you can quickly and easily secure any application. Get started!
