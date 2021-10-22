@@ -133,7 +133,11 @@
               <#else>
               <li class="page-item disabled" aria-disabled="true" disabled><a class="page-link" rel="prev" href="#">Previous</a></li>
               </#if>
+              <#if (currentPageNumber == 1)>
+              <li class="page-item"><a class="page-link" rel="self" href="<#if (content.rootpath)??>${content.rootpath}</#if>">${currentPageNumber}</a></li>
+              <#else>
               <li class="page-item"><a class="page-link" rel="self" href="<#if (content.rootpath)??>${content.rootpath}</#if>${currentPageNumber}">${currentPageNumber}</a></li>
+              </#if>
               <#if (currentPageNumber < numberOfPages)>
               <li class="page-item"><a class="page-link" rel="next" href="<#if (content.rootpath)??>${content.rootpath}</#if>${currentPageNumber + 1}">Next</a></li>
               <#else>
