@@ -30,7 +30,7 @@ At least that's what we strive for.
 A lot 😉.
 But we don't want to bloat the QuickStart.
 Please check out our link:features.html[Features] page if you'd like to see what it can do for you.
-Also, if you're curious on how we got started and why we exist, please see the link:what-is-shiro.html[Shiro History and Mission] page.
+Also, if you're curious on how we got started and why we exist, please see the link:/what-is-shiro.html[Shiro History and Mission] page.
 
 Ok.
 Now let's actually do something!
@@ -80,7 +80,7 @@ In almost all environments, you can obtain the currently executing user via the 
 Subject currentUser = SecurityUtils.getSubject();
 ----
 
-Using link:static/current/apidocs/org/apache/shiro/SecurityUtils.html[`SecurityUtils`].link:static/current/apidocs/org/apache/shiro/SecurityUtils.html#getSubject--[`getSubject()`], we can obtain the currently executing link:static/current/apidocs/org/apache/shiro/subject/Subject.html[`Subject`].
+Using link:static/current/apidocs/org/apache/shiro/SecurityUtils.html[`SecurityUtils`].link:static/current/apidocs/org/apache/shiro/SecurityUtils.html#getSubject()[`getSubject()`], we can obtain the currently executing link:static/current/apidocs/org/apache/shiro/subject/Subject.html[`Subject`].
 A _Subject_ is just a security-specific "view" of an application User.
 We actually wanted to call it 'User' since that "just makes sense", but we decided against it: too many applications have existing APIs that already have their own User classes/frameworks, and we didn't want to conflict with those.
 Also, in the security world, the term `Subject` is actually the recognized nomenclature.

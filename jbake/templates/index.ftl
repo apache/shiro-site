@@ -17,8 +17,8 @@
 
         <ul>
           <li><a href="https://www.infoq.com/articles/apache-shiro">What is Apache Shiro?</a></li>
-          <li><a href="10-minute-tutorial.html">10 Minute Tutorial</a></li>
-          <li><a href="articles.html">More articles...</a></li>
+          <li><a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>10-minute-tutorial.html">10 Minute Tutorial</a></li>
+          <li><a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>articles.html">More articles...</a></li>
         </ul>
       </div>
 
@@ -39,7 +39,7 @@
         </div>
         <div class="card-body shadow-sm pb-2">
           <p>Support logins across one or more pluggable data sources (LDAP, JDBC, Active Directory...</p>
-          <a href="authentication-features.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
+          <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>authentication-features.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
         </div>
       </div>
 
@@ -49,7 +49,7 @@
         </div>
         <div class="card-body shadow-sm pb-2">
           <p>Perform access control based on roles or fine grained permissions, also using plug...</p>
-          <a href="authorization-features.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
+          <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>authorization-features.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
         </div>
       </div>
     </div>
@@ -61,7 +61,7 @@
         </div>
         <div class="card-body shadow-sm pb-2">
           <p>Secure data with the easiest possible Cryptography API&#8217;s available, giving you...</p>
-          <a href="cryptography-features.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
+          <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>cryptography-features.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
         </div>
       </div>
 
@@ -71,7 +71,7 @@
         </div>
         <div class="card-body shadow-sm pb-2">
           <p>Use sessions in any environment, even outside web or EJB containers. Easily...</p>
-          <a href="session-management-features.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
+          <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>session-management-features.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
         </div>
       </div>
     </div>
@@ -83,7 +83,7 @@
         </div>
         <div class="card-body shadow-sm pb-2">
           <p>Save development time with innovative approaches that easily handle web specific...</p>
-          <a href="web-features.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
+          <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>web-features.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
         </div>
       </div>
 
@@ -93,7 +93,7 @@
         </div>
         <div class="card-body shadow-sm pb-2">
           <p>API&#8217;s giving you power and simplicty beyond what Java provides by default...</p>
-          <a href="integration.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
+          <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>integration.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
         </div>
       </div>
     </div>
@@ -155,15 +155,15 @@
 
         <div class="card-body">
           <div>
-            <a href="java-authentication-guide.html"><h4 class="popular-guides">Java Authentication Guide</h4></a>
+            <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>java-authentication-guide.html"><h4 class="popular-guides">Java Authentication Guide</h4></a>
             <p><small>Learn how Shiro securely verifies identities.</small></p>
           </div>
           <div>
-            <a href="java-authorization-guide.html"><h4 class="popular-guides">Java Authorization Guide</h4></a>
+            <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>java-authorization-guide.html"><h4 class="popular-guides">Java Authorization Guide</h4></a>
             <p><small>Learn how Shiro handles permissions, roles and users.</small></p>
           </div>
           <div>
-            <a href="webapp-tutorial.html"><h4 class="popular-guides">Web App Tutorial</h4></a>
+            <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>webapp-tutorial.html"><h4 class="popular-guides">Web App Tutorial</h4></a>
             <p><small>Step-by-step tutorial for securing a web application with Apache Shiro.</small></p>
           </div>
           <div>
