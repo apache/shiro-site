@@ -35,9 +35,10 @@
 
 <#list displayReleases as version>
   <#assign release=versions.releases[version] />
+  <section id="${release.version?replace(".", "")}">
   <h2>Release ${release.version}</h2>
 
-  <h4><a id="#${release.version?replace(".", "")}Binary"></a>${release.version} Binary Distribution</h4>
+  <h3 id="${release.version?replace(".", "")}Binary">${release.version} Binary Distribution</h3>
 
 
   <p>Associated documentation can be found <a href="documentation.html" title="Documentation">here</a></p>
@@ -50,7 +51,7 @@
 
   <@artifacttable.artifactTable versionObject=release />
 
-  <h4><a id=""#${release.version?replace(".", "")}Source"></a>${release.version} Source Code Distribution</h4>
+  <h3 id="${release.version?replace(".", "")}Source">${release.version} Source Code Distribution</h3>
 
   <p>The source bundle requires JDK 1.8 and Maven 3.0.3+ to build:</p>
 
@@ -61,13 +62,15 @@
             href="https://www.apache.org/dist/shiro/${release.version}/shiro-root-${release.version}-source-release.zip.sha512">sha512</a>)
   </p>
 
-  <h4><a name="latestGit"></a>${release.version} Git Source repository</h4>
+  <h3 id="${release.version?replace(".", "")}Git">${release.version} Git Source repository</h3>
 
   <p>The source can be cloned anonymously from Git with this command:</p>
-  <pre><code style="bash" class="language-bash">git clone https://github.com/apache/shiro.git
-git checkout shiro-root-${release.version} -b shiro-root-${release.version}
+  <pre><code class="language-bash bash">git clone https://github.com/apache/shiro.git
+git switch shiro-root-${release.version}
 </code>
 </pre>
+
+  </section>
 
 </#list>
 
