@@ -62,12 +62,21 @@
           <#if (authors[content.author?trim].twitter)??>
     <meta name="twitter:creator" content="${authors[content.author].twitter}" />
           </#if>
+          <#if (authors[content.author?trim].facebook)??>
+    <meta property="article:author" content="${authors[content.author].facebook}" />
+          </#if>
+          <#if (authors[content.author?trim].first_name)??>
+    <meta property="profile:first_name" content="${authors[content.author].first_name}" />
+          </#if>
+          <#if (authors[content.author?trim].last_name)??>
+    <meta property="profile:last_name" content="${authors[content.author].last_name}" />
+          </#if>
         </#if>
       <#-- fall through -->
       <#case "page">
     <meta property="og:type" content="article"/>
     <#if (content.twittercard!"")?trim == "large">
-      <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content="summary_large_image" />
     <#else>
       <meta name="twitter:card" content="summary" />
     </#if>
