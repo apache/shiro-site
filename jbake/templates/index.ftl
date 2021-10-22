@@ -119,7 +119,7 @@
         <#list posts as post>
         <#if (post.status == "published"  && post?index >= (currentPageNumber-1) * config.index_posts_per_page?eval && post?index < currentPageNumber * config.index_posts_per_page?eval)>
           <div>
-            <a href="${post.uri}"><h4 class="news-title">${post.title}</h4></a>
+            <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>${post.uri}"><h4 class="news-title">${post.title}</h4></a>
             <p><small>by ${(post.author)!"The Apache Shiro Team"} on ${post.date?string("yyyy-MM-dd")}</small></p>
           </div>
         </#if>
