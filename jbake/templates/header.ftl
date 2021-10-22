@@ -56,6 +56,7 @@
       <#case "post">
         <#if (content.date)??>
     <meta property="article:published_time" content="${content.date?date?string.iso}"/>
+    <meta name="publish_date" property="og:publish_date" content="${content.date?date?string.iso}"/>
         </#if>
         <#if (content.author!"") != "">
           <#assign authors = data.get('authors.yaml').authors>
@@ -86,6 +87,7 @@
         </#if>
         <#if (content.published_date)??>
     <meta property="article:published_time" content="${content.published_date?date?string.iso}"/>
+    <meta name="publish_date" property="og:publish_date" content="${content.published_date?date?string.iso}"/>
         </#if>
         <#break>
       <#default>
