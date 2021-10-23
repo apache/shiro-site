@@ -567,7 +567,7 @@ The `home.jsp` file was further modified in the page body (right after the `&lt;
     request.setAttribute("account", org.apache.shiro.SecurityUtils.getSubject().getPrincipals().oneByType(java.util.Map.class));
 
 %>
-<c:out value="${account.givenName}"/></shiro:user>!
+<c:out value="${r"${account.givenName}"}"/></shiro:user>!
     ( <shiro:user><a href="<c:url value="/logout"/>">Log out</a></shiro:user>
     <shiro:guest><a href="<c:url value="/login.jsp"/>">Log in</a></shiro:guest> )
 </p>
@@ -828,7 +828,7 @@ Just as we have JSP tags for role checks, parallel tags exist for permission che
 
 <ul>
     <li>You may <shiro:lacksPermission name="ship:NCC-1701-D:command"><b>NOT</b> </shiro:lacksPermission> command the <code>NCC-1701-D</code> Starship!</li>
-    <li>You may <shiro:lacksPermission name="user:${account.username}:edit"><b>NOT</b> </shiro:lacksPermission> edit the ${account.username} user!</li>
+    <li>You may <shiro:lacksPermission name="user:${r"${account.username}"}:edit"><b>NOT</b> </shiro:lacksPermission> edit the ${r"${account.username}"} user!</li>
 </ul>
 ----
 
@@ -856,10 +856,10 @@ Finally, we'll call to attention an extremely powerful feature with permission c
 
 [source,html]
 ----
-<shiro:lacksPermission name="user:${account.username}:edit"> ...
+<shiro:lacksPermission name="user:${r"${account.username}"}:edit"> ...
 ----
 
-The `${account.username}` value is interpreted at runtime and forms the final `user:aUsername:edit` value, and then the final String value is used for the permission check.
+The `${r"${account.username}"}` value is interpreted at runtime and forms the final `user:aUsername:edit` value, and then the final String value is used for the permission check.
 
 This is _extremely_ powerful: you can perform permission checks based on who the current user is and _what is currently being interacted with_. These runtime-based instance-level permission checks are a foundational technique for developing highly customizable and secure applications.
 
