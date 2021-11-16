@@ -137,7 +137,7 @@ A subject is considered remembered if `subject.link:/static/current/apidocs/org/
 * *Authenticated*: An authenticated `Subject` is one that has been successfully authenticated (i.e. the `login` method was invoked without throwing an exception) _during the Subject's current session_.
 A subject is considered authenticated if `subject.link:/static/current/apidocs/org/apache/shiro/subject/Subject.html#isAuthenticated()[isAuthenticated()]` returns `true`.
 
-[WARNING]
+[CAUTION]
 ====
 .Mutually Exclusive
 Remembered and authenticated states are mutually exclusive - a `true` value for one indicates a `false` value for the other and vice versa.
@@ -226,7 +226,7 @@ is a 'module' in PAM terminology).
 Before, during and after the `Realms` are invoked for authentication, the `AuthenticationStrategy` will be called to allow it to react to each Realm's results.
 We will cover `AuthenticationStrategies` soon.
 
-[CAUTION]
+[NOTE]
 ====
 .Single-Realm Application
 If only a single Realm is configured, it is called directly - there is no need for an `AuthenticationStrategy` in a single-Realm application.
