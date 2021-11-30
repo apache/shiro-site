@@ -17,25 +17,20 @@ If you haven't already please take moment and go through Shiro's link:/10-minute
 [#JavaAuthenticationGuide-Terminologyyoullneed]
 == Terminology you'll need
 
-* *Subject* +
-Security specific user 'view' of an application user. It can be a human being, a third-party process, a server connecting to your application, or even a cron job. Basically, it is anything or anyone communicating with your application.
+Subject:: Security specific user 'view' of an application user. It can be a human being, a third-party process, a server connecting to your application, or even a cron job. Basically, it is anything or anyone communicating with your application.
 
-* *Principals* +
-A subjects identifying attributes. First name, last name, social security number, username
+Principals:: A subjects identifying attributes. First name, last name, social security number, username
 
-* *Credentials* +
-secret data that are used to verify identities. Passwords, Biometric data, x509 certificates,
+Credentials:: secret data that are used to verify identities. Passwords, Biometric data, x509 certificates,
 
-* *Realms* +
-Security specific DAO, data access object, software component that talks to a backend data source. If you have usernames and password in LDAP, then you would have an LDAP Realm that would communicate with LDAP. The idea is that you would use a realm per back-end data source and Shiro would know how to coordinate with these realms together to do what you have to do.
+Realms:: Security specific DAO, data access object, software component that talks to a backend data source. If you have usernames and password in LDAP, then you would have an LDAP Realm that would communicate with LDAP. The idea is that you would use a realm per back-end data source and Shiro would know how to coordinate with these realms together to do what you have to do.
 
 [#JavaAuthenticationGuide-HowtoAuthenticateinJavawithShiro]
-=== How to Authenticate in Java with Shiro
+== How to Authenticate in Java with Shiro
 
 In Shiro's framework, and most every other framework for that matter, the Java authentication process can be broken up into three distinct steps.
 
 [#JavaAuthenticationGuide-Steps]
-=== Steps
 
 . Collect the subject's principals and credentials
 . Submit the principals and credentials to an authentication system.
