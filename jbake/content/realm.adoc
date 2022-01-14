@@ -43,7 +43,7 @@ securityManager.realms = $fooRealm, $barRealm, $bazRealm
 ----
 
 Explicit assignment is deterministic - you control exactly which realms are used as well as _the order_ that they will be used for authentication and authorization.
-Realm ordering effects are described in detail in the Authentication chapter's link:authentication.html#[[#]]#Authentication-sequence[Authentication Sequence] section.
+Realm ordering effects are described in detail in the Authentication chapter's link:authentication.html#Authentication-AuthenticationSequence[Authentication Sequence] section.
 
 [#Realm-ImplicitAssignment]
 === Implicit Assignment
@@ -91,13 +91,13 @@ Once you understand Shiro's main link:/authentication.html#Authentication-sequen
 [#Realm-Supporting%7B%7BAuthenticationTokens%7D%7D]
 === Supporting `AuthenticationTokens`
 
-As mentioned in the link:/authentication.html#[[#]]#Authentication-sequence[authentication sequence], just before a `Realm` is consulted to perform an authentication attempt, its link:static/current/apidocs/org/apache/shiro/realm/Realm.html#[[#]]#supports-org.apache.shiro.authc.AuthenticationToken-[`supports`] method is called.
+As mentioned in the link:/authentication.html#Authentication-AuthenticationSequence[authentication sequence], just before a `Realm` is consulted to perform an authentication attempt, its link:static/current/apidocs/org/apache/shiro/realm/Realm.html#supports(org.apache.shiro.authc.AuthenticationToken)[`supports`] method is called.
 If the return value is `true`, only then will its `getAuthenticationInfo(token)` method be invoked.
 
 Typically a realm will check the type (interface or class) of the submitted token to see if it can process it.
 For example, a Realm that processes biometric data may not understand `UsernamePasswordTokens` at all, in which case it would return `false` from the `supports` method.
 
-[#Realm-Handlingsupported%7B%7BAuthenticationTokens%7D%7D]
+[#Realm-Handling-supported-AuthenticationTokens]
 === Handling supported `AuthenticationTokens`
 
 If a `Realm` `supports` a submitted `AuthenticationToken`, the `Authenticator` will call the Realm's link:static/current/apidocs/org/apache/shiro/realm/Realm.html#getAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken)[getAuthenticationInfo(token)] method.
@@ -299,5 +299,5 @@ a. First it gets identify all Permissions assigned to Subject directly by callin
 b. If a link:/static/current/apidocs/org/apache/shiro/authz/permission/RolePermissionResolver.html[RolePermissionResolver] is registered, it is used to retrieve Permissions based on all of the roles assigned to Subject by calling the `RolePermissionResolver.resolvePermissionsInRole()`
 
 c. For aggregated Permissions from a. and b. the implies() method is called to check if any of these permission are implied the checked permission.
-See link:/permissions.html#Permissions-WildcardPermissions[WildcardPermission]
+See link:/permissions.html#wildcard_permissions[WildcardPermission]
 

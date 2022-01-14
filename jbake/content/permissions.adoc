@@ -22,9 +22,10 @@ For example, permissions can be grouped in a Role and that Role could be associa
 
 There are many variations for how permissions could be granted to users - the application determines how to model this based on the application requirements.
 
+[#wildcard_permissions]
 == Wildcard Permissions
 
-The above examples of permissions, "Open a file", "View the 'user/list' web page", etc are all valid permission statements. However, it would be very difficult computationally to interpret those natural language strings and determine if a user is allowed to perform that behavior or not.
+The above examples of permissions, "Open a file", "View the 'user/list' web page", etc are all valid permission statements.However, it would be very difficult computationally to interpret those natural language strings and determine if a user is allowed to perform that behavior or not.
 
 So to enable easy-to-process yet still readable permission statements, Shiro provides powerful and intuitive permission syntax we refer to as the WildcardPermission.
 
@@ -32,7 +33,7 @@ So to enable easy-to-process yet still readable permission statements, Shiro pro
 
 Let's say you want to protect access to your company's printers such that some people can print to particular printers, while others can query what jobs are currently in the queue.
 
-An extremely simple approach would be to grant the user a "queryPrinter" permission. Then you could check to see if the user has the queryPrinter permission by calling:
+An extremely simple approach would be to grant the user a "queryPrinter" permission.Then you could check to see if the user has the queryPrinter permission by calling:
 
 [source,java]
 ----

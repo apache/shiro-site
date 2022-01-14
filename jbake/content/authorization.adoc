@@ -125,7 +125,7 @@ If you want to control access based on simpler/traditional implicit role names, 
 
 If you want to simply check to see if the current `Subject` has a role or not, you can call the variant `hasRole*` methods on the `Subject` instance.
 
-For example, to see if a `Subject` has a particular (single) role, you can call the `subject.` link:static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRole-java.lang.String-[`hasRole(roleName)`] method, and react accordingly:
+For example, to see if a `Subject` has a particular (single) role, you can call the `subject.` link:static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRole(java.lang.String)[`hasRole(roleName)`] method, and react accordingly:
 
 [source,java]
 ----
@@ -144,9 +144,9 @@ There are few role-oriented `Subject` methods you can call, depending on your ne
 |===
 |Subject Method |Description
 
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRolejava.lang.String-[`hasRole(String roleName)`] |Returns `true` if the `Subject` is assigned the specified role, `false` otherwise.
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRoles-java.util.List-[`hasRoles(List&lt;String&gt; roleNames)`] |Returns a array of `hasRole` results corresponding to the indices in the method argument. Useful as a performance enhancement if many role checks need to be performed (e.g. when customizing a complex view)
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#hasAllRoles-java.util.Collection-[`hasAllRoles(Collection&lt;String&gt; roleNames)`] |Returns `true` if the `Subject` is assigned _all_ of the specified roles, `false` otherwise.
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRole(java.lang.String)[`hasRole(String roleName)`] |Returns `true` if the `Subject` is assigned the specified role, `false` otherwise.
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRoles(java.util.List)[`hasRoles(List&lt;String&gt; roleNames)`] |Returns a array of `hasRole` results corresponding to the indices in the method argument. Useful as a performance enhancement if many role checks need to be performed (e.g. when customizing a complex view)
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#hasAllRoles(java.util.Collection)[`hasAllRoles(Collection&lt;String&gt; roleNames)`] |Returns `true` if the `Subject` is assigned _all_ of the specified roles, `false` otherwise.
 |===
 
 [#Authentication-AuthorizingSubjects-ProgrammaticAuthorization-RoleBasedAuthorization-Assertions]
@@ -173,9 +173,9 @@ There are few role-oriented `Subject` assertion methods you can call, depending 
 |===
 |Subject Method |Description
 
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRole-java.lang.String-[`checkRole(String roleName)`] |Returns quietly if the `Subject` is assigned the specified role or throws an `AuthorizationException` if not.
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRoles-java.util.Collection-[`checkRoles(Collection&lt;String&gt; roleNames)`] |Returns quietly if the `Subject` is assigned _all_ of the specified role or throws an `AuthorizationException` if not.
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRoles-java.lang.String...-[`checkRoles(String... roleNames)`] |Same effect as the `checkRoles` method above, but allows Java 5 var-args style arguments.
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRole(java.lang.String)[`checkRole(String roleName)`] |Returns quietly if the `Subject` is assigned the specified role or throws an `AuthorizationException` if not.
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRoles(java.util.Collection)[`checkRoles(Collection&lt;String&gt; roleNames)`] |Returns quietly if the `Subject` is assigned _all_ of the specified role or throws an `AuthorizationException` if not.
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRoles(java.lang.String...)[`checkRoles(String... roleIdentifiers)`] |Same effect as the `checkRoles` method above, but allows Java 5 var-args style arguments.
 |===
 
 [#Authentication-AuthorizingSubjects-ProgrammaticAuthorization-PermissionBasedAuthorization]
@@ -214,7 +214,7 @@ Object-based `Permissions` are useful if:
 
 * You want compile-time type-safety
 * You want to guarantee permissions are represented and used correctly
-* You want explicit control of how permission resolution logic (called permission implication logic, based on the Permission interface's link:static/current/apidocs/org/apache/shiro/authz/Permission.html#implies-org.apache.shiro.authz.Permission-[`implies`] method) executes.
+* You want explicit control of how permission resolution logic (called permission implication logic, based on the Permission interface's link:static/current/apidocs/org/apache/shiro/authz/Permission.html#implies(org.apache.shiro.authz.Permission)[`implies`] method) executes.
 * You want to guarantee Permissions reflect application resources accurately (for example, maybe Permission classes can be auto-generated during a project's build based on a project's domain model).
 
 There are few Object permission-oriented `Subject` methods you can call, depending on your needs:
@@ -222,9 +222,9 @@ There are few Object permission-oriented `Subject` methods you can call, dependi
 |===
 |Subject Method |Description
 
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted-org.apache.shiro.authz.Permission-[`isPermitted(Permission p)`] |Returns `true` if the `Subject` is permitted to perform an action or access a resource summarized by the specified `Permission` instance, `false` otherwise.
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted-java.util.List-[`isPermitted(List&lt;Permission&gt; perms)`] |Returns an array of `isPermitted` results corresponding to the indices in the method argument. Useful as a performance enhancement if many permission checks need to be performed (e.g. when customizing a complex view)
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermittedAll-java.util.Collection-[`isPermittedAll(Collection&lt;Permission&gt; perms)`] |Returns `true` if the `Subject` is permitted _all_ of the specified permissions, `false` otherwise.
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted(org.apache.shiro.authz.Permission)[`isPermitted(Permission p)`] |Returns `true` if the `Subject` is permitted to perform an action or access a resource summarized by the specified `Permission` instance, `false` otherwise.
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted(java.util.List)[`isPermitted(List&lt;Permission&gt; perms)`] |Returns an array of `isPermitted` results corresponding to the indices in the method argument. Useful as a performance enhancement if many permission checks need to be performed (e.g. when customizing a complex view)
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermittedAll(java.util.Collection)[`isPermittedAll(Collection&lt;Permission&gt; perms)`] |Returns `true` if the `Subject` is permitted _all_ of the specified permissions, `false` otherwise.
 |===
 
 [#Authentication-AuthorizingSubjects-ProgrammaticAuthorization-PermissionBasedAuthorization-StringBasedPermissionChecks]
@@ -275,9 +275,9 @@ Like the Object-based permission check methods, there are String variants to sup
 |===
 |Subject Method |Description
 
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted-java.lang.String-[`isPermitted(String perm)`] |Returns `true` if the `Subject` is permitted to perform an action or access a resource summarized by the specified `String` permission, `false` otherwise.
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted-java.util.List-[`isPermitted(String... perms)`] |Returns an array of `isPermitted` results corresponding to the indices in the method argument. Useful as a performance enhancement if many `String` permission checks need to be performed (e.g. when customizing a complex view)
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermittedAll-java.lang.String...-[`isPermittedAll(String... perms)`] |Returns `true` if the `Subject` is permitted _all_ of the specified `String` permissions, `false` otherwise.
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted(java.lang.String)[`isPermitted(String perm)`] |Returns `true` if the `Subject` is permitted to perform an action or access a resource summarized by the specified `String` permission, `false` otherwise.
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted(java.util.List)[`isPermitted(String... perms)`] |Returns an array of `isPermitted` results corresponding to the indices in the method argument. Useful as a performance enhancement if many `String` permission checks need to be performed (e.g. when customizing a complex view)
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermittedAll(java.lang.String...)[`isPermittedAll(String... perms)`] |Returns `true` if the `Subject` is permitted _all_ of the specified `String` permissions, `false` otherwise.
 |===
 
 [#Authentication-AuthorizingSubjects-ProgrammaticAuthorization-PermissionBasedAuthorization-PermissionAssertions]
@@ -317,10 +317,10 @@ There are few permission-oriented `Subject` assertion methods you can call, depe
 |===
 |Subject Method |Description
 
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkPermission-org.apache.shiro.authz.Permission-[`checkPermission(Permission p)`] |Returns quietly if the `Subject` is permitted to perform an action or access a resource summarized by the specified `Permission` instance, or throws an `AuthorizationException` if not.
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkPermission-java.lang.String-[`checkPermission(String perm)`] |Returns quietly if the `Subject` is is permitted to perform an action or access a resource summarized by the specified `String` permission, or throws an `AuthorizationException` if not.
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkPermissions-java.util.Collection-[`checkPermissions(Collection&lt;Permission&gt; perms)`] |Returns quietly if the `Subject` is permitted _all_ the specified permissions, or throws an `AuthorizationException` if not.
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkPermissions-java.lang.String...-[`checkPermissions(String... perms)`] |Same effect as the `checkPermissions` method above, but using `String`-based permissions.
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkPermission(org.apache.shiro.authz.Permission)[`checkPermission(Permission p)`] |Returns quietly if the `Subject` is permitted to perform an action or access a resource summarized by the specified `Permission` instance, or throws an `AuthorizationException` if not.
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkPermission(java.lang.String)[`checkPermission(String perm)`] |Returns quietly if the `Subject` is is permitted to perform an action or access a resource summarized by the specified `String` permission, or throws an `AuthorizationException` if not.
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkPermissions(java.util.Collection)[`checkPermissions(Collection&lt;Permission&gt; perms)`] |Returns quietly if the `Subject` is permitted _all_ the specified permissions, or throws an `AuthorizationException` if not.
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkPermissions(java.lang.String...)[`checkPermissions(String... perms)`] |Same effect as the `checkPermissions` method above, but using `String`-based permissions.
 |===
 
 [#Authentication-AuthorizingSubjects-NotationBasedAuthorization]

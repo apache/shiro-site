@@ -7,6 +7,7 @@
 
 Shiro's Spring-Boot integration is the easiest way to integrate Shiro into a Spring-base application, for more general Spring Framework integration, take a the link:spring-framework.html[annotation] or link:spring-xml.html[XML] guides.
 
+[#web_applications]
 == Web Applications
 
 Shiro has first-class support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a main Shiro Filter. This filter itself is extremely powerful, allowing for ad-hoc custom filter chains to be executed based on any URL path expression.
@@ -177,7 +178,7 @@ public Realm realm() {
 }
 ----
 
-The easiest way to setup Shiro, so that all SecurityUtils.* methods work in all cases, is to make the `SecurityManager` bean a static singleton.  DO NOT do this in web applications - see the link:#Spring-WebApplications[Web Applications] section below instead.
+The easiest way to setup Shiro, so that all SecurityUtils.* methods work in all cases, is to make the `SecurityManager` bean a static singleton.  DO NOT do this in web applications - see the link:#web_applications[Web Applications] section below instead.
 
 [source,java]
 ----
