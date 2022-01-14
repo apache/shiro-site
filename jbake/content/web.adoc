@@ -7,14 +7,15 @@
 :toc:
 :toclevels: 5
 
+[#configuration]
 == Configuration
 
-The simplest way to integrate Shiro into any web application is to configure a Servlet ContextListener and Filter in web.xml that understands how to read Shiro's INI configuration. The bulk of the INI config format itself is defined in the Configuration pages's link:configuration.html#[[#]]#Configuration-INISections[INI Sections] section, but we'll cover some additional web-specific sections here.
+The simplest way to integrate Shiro into any web application is to configure a Servlet ContextListener and Filter in web.xml that understands how to read Shiro's INI configuration. The bulk of the INI config format itself is defined in the Configuration pages's link:/configuration.html#Configuration-INIConfiguration-Sections[INI Sections] section, but we'll cover some additional web-specific sections here.
 
 [INFO]
 .Using Spring?
 ====
-Spring Framework users will not perform this setup. If you use Spring, you will want to read about link:spring-boot.html#web-applications[Spring-specific web configuration] instead.
+Spring Framework users will not perform this setup. If you use Spring, you will want to read about link:/spring-boot.html#web_applications[Spring-specific web configuration] instead.
 ====
 
 === `web.xml`
@@ -209,6 +210,7 @@ Inline config is often fine for small or simple applications, but it is usually 
 
 It is up to you - use what makes sense for your project.
 
+[#web_ini]
 === Web INI configuration
 
 In addition to the standard `[main]`, `[users]` and `[roles]` sections already described in the main link:configuration.html[Configuration] chapter, you can additionally specify a web-specific `[urls]` section in your `shiro.ini` file:
@@ -326,6 +328,7 @@ myFilter.property1 = value1
 /some/path/** = myFilter
 ----
 
+[#default_filters]
 == Default Filters
 
 When running a web-app, Shiro will create some useful default `Filter` instances and make them available in the `[main]` section automatically. You can configure them in `main` as you would any other bean and reference them in your chain definitions. For example:
@@ -482,6 +485,7 @@ ssl.hsts.includeSubDomains = true
 ...
 ----
 
+[#session_management]
 == Session Management
 
 === Servlet Container Sessions
@@ -533,7 +537,7 @@ Once declared, you can configure the `DefaultWebSessionManager` instance with na
 
 ===== Native Session Timeout
 
-After configuring the `DefaultWebSessionManager` instance, session timeout is configured as described in link:session-management.html#[[#]]#SessionManagement-sessionTimeout[Session Management: Session Timeout]
+After configuring the `DefaultWebSessionManager` instance, session timeout is configured as described in link:/session-management.html#SessionManagement-SessionManager-SessionTimeout[Session Management: Session Timeout]
 
 ===== Session Cookie
 
@@ -685,11 +689,12 @@ rememberMeManager = com.my.impl.RememberMeManager
 securityManager.rememberMeManager = $rememberMeManager
 ----
 
+[#tag_library]
 == JSP / GSP Tag Library
 
 Apache Shiro provides a `Subject`-aware JSP/GSP tag library that allows you to control your JSP, JSTL or GSP page output based on the current Subject's state. This is quite useful for personalizing views based on the identity and authorization state of the current user viewing the web page.
 
-===Tag Library Configuration
+=== Tag Library Configuration
 
 The Tag Library Descriptor (TLD) file is bundled in `shiro-web.jar` in the `META-INF/shiro.tld` file. To use any of the tags, add the following line to the top of your JSP page (or wherever you define page directives):
 
@@ -702,6 +707,7 @@ We've used the `shiro` prefix to indicate the shiro tag library namespace, but y
 
 Now we'll cover each tag and show how it might be used to render a page.
 
+[#web_guesttag]
 ===  The `guest` tag
 
 The `guest` tag will display its wrapped content only if the current `Subject` is considered a 'guest'. A guest is any `Subject` that does not have an identity. That is, we don't know who the user is because they have not logged in and they are not remembered (from Remember Me services) from a previous site visit.
@@ -715,11 +721,12 @@ Example:
 </shiro:guest>
 ----
 
-The `guest` tag is the logical opposite of the <<Web-usertag,`user`>> tag.
+The `guest` tag is the logical opposite of the <<web_usertag,`user`>> tag.
 
+[#web_usertag]
 === The `user` tag
 
-The `user` tag will display its wrapped content only if the current `Subject` is considered a 'user'. A 'user' in this context is defined as a `Subject` with a known identity, either from a successful authentication or from 'RememberMe' services. Note that this tag is semantically different from the <<Web-authenticatedtag,authenticated>> tag, which is more restrictive than this tag.
+The `user` tag will display its wrapped content only if the current `Subject` is considered a 'user'. A 'user' in this context is defined as a `Subject` with a known identity, either from a successful authentication or from 'RememberMe' services. Note that this tag is semantically different from the <<web_authenticatedtag,authenticated>> tag, which is more restrictive than this tag.
 
 Example:
 
@@ -730,13 +737,14 @@ Example:
 </shiro:user>
 ----
 
-The `user` tag is the logical opposite of the <<Web-guesttag,`guest`>> tag.
+The `user` tag is the logical opposite of the <<web_guesttag,`guest`>> tag.
 
+[#web_authenticatedtag]
 === The `authenticated` tag
 
 Displays body content only if the current user has successfully authenticated _during their current session_. It is more restrictive than the 'user' tag. It is logically opposite to the 'notAuthenticated' tag.
 
-The `authenticated` tag will display its wrapped content only if the current `Subject` has successfully authenticated _during their current session_. It is a more restrictive tag than the <<Web-usertag,user>>, which is used to guarantee identity in sensitive workflows.
+The `authenticated` tag will display its wrapped content only if the current `Subject` has successfully authenticated _during their current session_. It is a more restrictive tag than the <<web_usertag,user>>, which is used to guarantee identity in sensitive workflows.
 
 Example:
 
@@ -747,8 +755,9 @@ Example:
 </shiro:authenticated>
 ----
 
-The `authenticated` tag is the logical opposite of the <<Web-notauthenticatedtag,`notAuthenticated`>> tag.
+The `authenticated` tag is the logical opposite of the <<web_notauthenticatedtag,`notAuthenticated`>> tag.
 
+[#web_notauthenticatedtag]
 === The `notAuthenticated` tag
 
 The `notAuthenticated` tag will display its wrapped content if the current `Subject` has *NOT* yet successfully authenticated during the current session.
@@ -762,7 +771,7 @@ Example:
 </shiro:notAuthenticated>
 ----
 
-The `notAuthenticated` tag is the logical opposite of the <<Web-authenticatedtag,`authenticated`>> tag.
+The `notAuthenticated` tag is the logical opposite of the <<web_authenticatedtag,`authenticated`>> tag.
 
 === The `principal` tag
 
@@ -830,6 +839,7 @@ this is largely equivalent to the following:
 Hello, <%= SecurityUtils.getSubject().getPrincipals().oneByType(com.foo.User.class).getFirstName().toString() %>, how are you today?
 ----
 
+[#web_hasroletag]
 === The `hasRole` tag
 
 The `hasRole` tag will display its wrapped content only if the current `Subject` is assigned the specified role.
@@ -843,8 +853,9 @@ For example:
 </shiro:hasRole>
 ----
 
-The `hasRole` tag is the logical opposite of the <<Web-lacksroletag,lacksRole>> tag.
+The `hasRole` tag is the logical opposite of the <<web_lacksroletag,lacksRole>> tag.
 
+[#web_lacksroletag]
 === The `lacksRole` tag
 
 The `lacksRole` tag will display its wrapped content only if the current `Subject` *is NOT* assigned the specified role.
@@ -858,7 +869,7 @@ For example:
 </shiro:lacksRole>
 ----
 
-The `lacksRole` tag is the logical opposite of the <<Web-hasroletag,hasRole>> tag.
+The `lacksRole` tag is the logical opposite of the <<web_hasroletag,hasRole>> tag.
 
 === The `hasAnyRole` tag
 
@@ -875,6 +886,7 @@ For example:
 
 The `hasAnyRole` tag does not currently have a logically opposite tag.
 
+[#web_haspermissiontag]
 === The `hasPermission` tag
 
 The `hasPermission` tag will display its wrapped content only if the current `Subject` 'has' (implies) the specified permission. That is, the user has the specified ability.
@@ -888,8 +900,9 @@ For example:
 </shiro:hasPermission>
 ----
 
-The `hasPermission` tag is the logical opposite of the <<Web-lackspermissiontag,lacksPermission>> tag.
+The `hasPermission` tag is the logical opposite of the <<web_lackspermissiontag,lacksPermission>> tag.
 
+[#web_lackspermissiontag]
 === The `lacksPermission` tag
 
 The `lacksPermission` tag will display its wrapped content only if the current `Subject` *DOES NOT* have (imply) the specified permission. That is, the user *DOES NOT* have the specified ability.
@@ -903,7 +916,7 @@ For example:
 </shiro:lacksPermission>
 ----
 
-The `lacksPermission` tag is the logical opposite of the <<Web-haspermissiontag,hasPermission>> tag.
+The `lacksPermission` tag is the logical opposite of the <<web_haspermissiontag,hasPermission>> tag.
 
 ++++
 <@lendahand.lendahand />

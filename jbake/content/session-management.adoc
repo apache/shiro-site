@@ -401,7 +401,7 @@ One of the very exciting things about Apache Shiro's session capabilities is tha
 
 So how does it work?
 
-Because of Shiro's POJO-based N-tiered architecture, enabling Session clustering is as simple as enabling a clustering mechanism at the Session persistence level. That is, if you configure a cluster-capable <<SessionManagement-sessionstorage,`SessionDAO`>>, the DAO can interact with a clustering mechanism and Shiro's `SessionManager` never needs to know about clustering concerns.
+Because of Shiro's POJO-based N-tiered architecture, enabling Session clustering is as simple as enabling a clustering mechanism at the Session persistence level. That is, if you configure a cluster-capable <<SessionManagement-SessionManager-Storage,`SessionDAO`>>, the DAO can interact with a clustering mechanism and Shiro's `SessionManager` never needs to know about clustering concerns.
 
 *Distributed Caches*
 
@@ -475,9 +475,9 @@ Then at runtime, when the `EnterpriseCacheSessionDAO` needs the `activeSessionsC
 
 One such distributed caching solution that people have had success with while using Shiro is the Ehcache + Terracotta pairing. See the Ehcache-hosted http://www.ehcache.org/documentation/get-started/about-distributed-cache[Distributed Caching With Terracotta] documentation for full details of how to enable distributed caching with Ehcache.
 
-Once you've got Terracotta clustering working with Ehcache, the Shiro-specific parts are very simple. Read and follow the <<SessionManagement-ehcachesessiondao,Ehcache SessionDAO>> documentation, but we'll need to make a few changes
+Once you've got Terracotta clustering working with Ehcache, the Shiro-specific parts are very simple. Read and follow the <<SessionManagement-SessionManager-Storage-EHCacheSessionDAO,Ehcache SessionDAO>> documentation, but we'll need to make a few changes
 
-The Ehcache Session Cache Configuration <<SessionManagement-ehcachesessioncacheconfiguration,referenced previously>> will not work - a Terracotta-specific configuration is needed. Here is an example configuration that has been tested to work correctly. Save its contents in a file and save it in an `ehcache.xml` file:
+The Ehcache Session Cache Configuration <<SessionManagement-SessionManager-Storage-EHCacheSessionDAO-CacheConfiguration,referenced previously>> will not work - a Terracotta-specific configuration is needed. Here is an example configuration that has been tested to work correctly. Save its contents in a file and save it in an `ehcache.xml` file:
 
 *TerraCotta Session Clustering*
 
@@ -511,7 +511,7 @@ The Ehcache Session Cache Configuration <<SessionManagement-ehcachesessioncachec
 </ehcache>
 ----
 
-Of course you will want to change your `&lt;terracottaConfig url=&quot;localhost:9510&quot;/&gt;` entry to reference the appropriate host/port of your Terracotta server array. Also notice that, unlike the <<SessionManagement-ehcachesessioncacheconfiguration,previous>> configuration, the `ehcache-activeSessionCache` element *_DOES NOT_* set `diskPersistent` or `overflowToDisk` attributes to `true`. They should both be `false` as true values are not supported in clustered configuration.
+Of course you will want to change your `&lt;terracottaConfig url=&quot;localhost:9510&quot;/&gt;` entry to reference the appropriate host/port of your Terracotta server array. Also notice that, unlike the <<SessionManagement-SessionManager-Storage-EHCacheSessionDAO-CacheConfiguration,previous>> configuration, the `ehcache-activeSessionCache` element *_DOES NOT_* set `diskPersistent` or `overflowToDisk` attributes to `true`. They should both be `false` as true values are not supported in clustered configuration.
 
 After you've saved this `ehcache.xml` file, we'll need to reference it in Shiro's configuration. Assuming you've made the terracotta-specific `ehcache.xml` file accessible at the root of the classpath, here is the final Shiro configuration that enables Terracotta+Ehcache clustering for all of Shiro's needs (including Sessions):
 
