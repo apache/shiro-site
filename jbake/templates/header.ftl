@@ -124,7 +124,7 @@
     <meta property="og:image:height" content="${content.featuredimageheight}"/>
       </#if>
     <#else>
-    <meta property="og:image" content='${content.rootpath!""}img/shiro-featured-image.png'/>
+    <meta property="og:image" content='${content.rootpath!""}images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
     </#if>
@@ -153,7 +153,7 @@
 
       <div class="masthead">
         <p class="lead">
-          <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>index.html"><img src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>img/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>index.html"><img src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
           <span class="tagline">Simple. Java. Security.</span>
           <a class="pull-right" href="https://www.apache.org/events/current-event.html">
             <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
