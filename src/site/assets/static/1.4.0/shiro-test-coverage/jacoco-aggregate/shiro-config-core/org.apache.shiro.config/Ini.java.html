@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>Ini.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-config-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.config</a> &gt; <span class="el_source">Ini.java</span></div><h1>Ini.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.config;
+
+import org.apache.shiro.io.ResourceUtils;
+import org.apache.shiro.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
+
+/**
+ * A class representing the &lt;a href=&quot;http://en.wikipedia.org/wiki/INI_file&quot;&gt;INI&lt;/a&gt; text configuration format.
+ * &lt;p/&gt;
+ * An Ini instance is a map of {@link Ini.Section Section}s, keyed by section name.  Each
+ * {@code Section} is itself a map of {@code String} name/value pairs.  Name/value pairs are guaranteed to be unique
+ * within each {@code Section} only - not across the entire {@code Ini} instance.
+ *
+ * @since 1.0
+ */
+public class Ini implements Map&lt;String, Ini.Section&gt; {
+
+<span class="fc" id="L49">    private static transient final Logger log = LoggerFactory.getLogger(Ini.class);</span>
+
+    public static final String DEFAULT_SECTION_NAME = &quot;&quot;; //empty string means the first unnamed section
+    public static final String DEFAULT_CHARSET_NAME = &quot;UTF-8&quot;;
+
+    public static final String COMMENT_POUND = &quot;#&quot;;
+    public static final String COMMENT_SEMICOLON = &quot;;&quot;;
+    public static final String SECTION_PREFIX = &quot;[&quot;;
+    public static final String SECTION_SUFFIX = &quot;]&quot;;
+
+    protected static final char ESCAPE_TOKEN = '\\';
+
+    private final Map&lt;String, Section&gt; sections;
+
+    /**
+     * Creates a new empty {@code Ini} instance.
+     */
+<span class="fc" id="L66">    public Ini() {</span>
+<span class="fc" id="L67">        this.sections = new LinkedHashMap&lt;String, Section&gt;();</span>
+<span class="fc" id="L68">    }</span>
+
+    /**
+     * Creates a new {@code Ini} instance with the specified defaults.
+     *
+     * @param defaults the default sections and/or key-value pairs to copy into the new instance.
+     */
+    public Ini(Ini defaults) {
+<span class="fc" id="L76">        this();</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if (defaults == null) {</span>
+<span class="nc" id="L78">            throw new NullPointerException(&quot;Defaults cannot be null.&quot;);</span>
+        }
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        for (Section section : defaults.getSections()) {</span>
+<span class="fc" id="L81">            Section copy = new Section(section);</span>
+<span class="fc" id="L82">            this.sections.put(section.getName(), copy);</span>
+<span class="fc" id="L83">        }</span>
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * Returns {@code true} if no sections have been configured, or if there are sections, but the sections themselves
+     * are all empty, {@code false} otherwise.
+     *
+     * @return {@code true} if no sections have been configured, or if there are sections, but the sections themselves
+     *         are all empty, {@code false} otherwise.
+     */
+    public boolean isEmpty() {
+<span class="fc" id="L94">        Collection&lt;Section&gt; sections = this.sections.values();</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (!sections.isEmpty()) {</span>
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">            for (Section section : sections) {</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">                if (!section.isEmpty()) {</span>
+<span class="fc" id="L98">                    return false;</span>
+                }
+<span class="nc" id="L100">            }</span>
+        }
+<span class="fc" id="L102">        return true;</span>
+    }
+
+    /**
+     * Returns the names of all sections managed by this {@code Ini} instance or an empty collection if there are
+     * no sections.
+     *
+     * @return the names of all sections managed by this {@code Ini} instance or an empty collection if there are
+     *         no sections.
+     */
+    public Set&lt;String&gt; getSectionNames() {
+<span class="fc" id="L113">        return Collections.unmodifiableSet(sections.keySet());</span>
+    }
+
+    /**
+     * Returns the sections managed by this {@code Ini} instance or an empty collection if there are
+     * no sections.
+     *
+     * @return the sections managed by this {@code Ini} instance or an empty collection if there are
+     *         no sections.
+     */
+    public Collection&lt;Section&gt; getSections() {
+<span class="fc" id="L124">        return Collections.unmodifiableCollection(sections.values());</span>
+    }
+
+    /**
+     * Returns the {@link Section} with the given name or {@code null} if no section with that name exists.
+     *
+     * @param sectionName the name of the section to retrieve.
+     * @return the {@link Section} with the given name or {@code null} if no section with that name exists.
+     */
+    public Section getSection(String sectionName) {
+<span class="fc" id="L134">        String name = cleanName(sectionName);</span>
+<span class="fc" id="L135">        return sections.get(name);</span>
+    }
+
+    /**
+     * Ensures a section with the specified name exists, adding a new one if it does not yet exist.
+     *
+     * @param sectionName the name of the section to ensure existence
+     * @return the section created if it did not yet exist, or the existing Section that already existed.
+     */
+    public Section addSection(String sectionName) {
+<span class="fc" id="L145">        String name = cleanName(sectionName);</span>
+<span class="fc" id="L146">        Section section = getSection(name);</span>
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">        if (section == null) {</span>
+<span class="fc" id="L148">            section = new Section(name);</span>
+<span class="fc" id="L149">            this.sections.put(name, section);</span>
+        }
+<span class="fc" id="L151">        return section;</span>
+    }
+
+    /**
+     * Removes the section with the specified name and returns it, or {@code null} if the section did not exist.
+     *
+     * @param sectionName the name of the section to remove.
+     * @return the section with the specified name or {@code null} if the section did not exist.
+     */
+    public Section removeSection(String sectionName) {
+<span class="nc" id="L161">        String name = cleanName(sectionName);</span>
+<span class="nc" id="L162">        return this.sections.remove(name);</span>
+    }
+
+    private static String cleanName(String sectionName) {
+<span class="fc" id="L166">        String name = StringUtils.clean(sectionName);</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        if (name == null) {</span>
+<span class="fc" id="L168">            log.trace(&quot;Specified name was null or empty.  Defaulting to the default section (name = \&quot;\&quot;)&quot;);</span>
+<span class="fc" id="L169">            name = DEFAULT_SECTION_NAME;</span>
+        }
+<span class="fc" id="L171">        return name;</span>
+    }
+
+    /**
+     * Sets a name/value pair for the section with the given {@code sectionName}.  If the section does not yet exist,
+     * it will be created.  If the {@code sectionName} is null or empty, the name/value pair will be placed in the
+     * default (unnamed, empty string) section.
+     *
+     * @param sectionName   the name of the section to add the name/value pair
+     * @param propertyName  the name of the property to add
+     * @param propertyValue the property value
+     */
+    public void setSectionProperty(String sectionName, String propertyName, String propertyValue) {
+<span class="fc" id="L184">        String name = cleanName(sectionName);</span>
+<span class="fc" id="L185">        Section section = getSection(name);</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">        if (section == null) {</span>
+<span class="fc" id="L187">            section = addSection(name);</span>
+        }
+<span class="fc" id="L189">        section.put(propertyName, propertyValue);</span>
+<span class="fc" id="L190">    }</span>
+
+    /**
+     * Returns the value of the specified section property, or {@code null} if the section or property do not exist.
+     *
+     * @param sectionName  the name of the section to retrieve to acquire the property value
+     * @param propertyName the name of the section property for which to return the value
+     * @return the value of the specified section property, or {@code null} if the section or property do not exist.
+     */
+    public String getSectionProperty(String sectionName, String propertyName) {
+<span class="fc" id="L200">        Section section = getSection(sectionName);</span>
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">        return section != null ? section.get(propertyName) : null;</span>
+    }
+
+    /**
+     * Returns the value of the specified section property, or the {@code defaultValue} if the section or
+     * property do not exist.
+     *
+     * @param sectionName  the name of the section to add the name/value pair
+     * @param propertyName the name of the property to add
+     * @param defaultValue the default value to return if the section or property do not exist.
+     * @return the value of the specified section property, or the {@code defaultValue} if the section or
+     *         property do not exist.
+     */
+    public String getSectionProperty(String sectionName, String propertyName, String defaultValue) {
+<span class="nc" id="L215">        String value = getSectionProperty(sectionName, propertyName);</span>
+<span class="nc bnc" id="L216" title="All 2 branches missed.">        return value != null ? value : defaultValue;</span>
+    }
+
+    /**
+     * Creates a new {@code Ini} instance loaded with the INI-formatted data in the resource at the given path.  The
+     * resource path may be any value interpretable by the
+     * {@link ResourceUtils#getInputStreamForPath(String) ResourceUtils.getInputStreamForPath} method.
+     *
+     * @param resourcePath the resource location of the INI data to load when creating the {@code Ini} instance.
+     * @return a new {@code Ini} instance loaded with the INI-formatted data in the resource at the given path.
+     * @throws ConfigurationException if the path cannot be loaded into an {@code Ini} instance.
+     */
+    public static Ini fromResourcePath(String resourcePath) throws ConfigurationException {
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">        if (!StringUtils.hasLength(resourcePath)) {</span>
+<span class="nc" id="L230">            throw new IllegalArgumentException(&quot;Resource Path argument cannot be null or empty.&quot;);</span>
+        }
+<span class="fc" id="L232">        Ini ini = new Ini();</span>
+<span class="fc" id="L233">        ini.loadFromPath(resourcePath);</span>
+<span class="fc" id="L234">        return ini;</span>
+    }
+
+    /**
+     * Loads data from the specified resource path into this current {@code Ini} instance.  The
+     * resource path may be any value interpretable by the
+     * {@link ResourceUtils#getInputStreamForPath(String) ResourceUtils.getInputStreamForPath} method.
+     *
+     * @param resourcePath the resource location of the INI data to load into this instance.
+     * @throws ConfigurationException if the path cannot be loaded
+     */
+    public void loadFromPath(String resourcePath) throws ConfigurationException {
+        InputStream is;
+        try {
+<span class="fc" id="L248">            is = ResourceUtils.getInputStreamForPath(resourcePath);</span>
+<span class="nc" id="L249">        } catch (IOException e) {</span>
+<span class="nc" id="L250">            throw new ConfigurationException(e);</span>
+<span class="fc" id="L251">        }</span>
+<span class="fc" id="L252">        load(is);</span>
+<span class="fc" id="L253">    }</span>
+
+    /**
+     * Loads the specified raw INI-formatted text into this instance.
+     *
+     * @param iniConfig the raw INI-formatted text to load into this instance.
+     * @throws ConfigurationException if the text cannot be loaded
+     */
+    public void load(String iniConfig) throws ConfigurationException {
+<span class="fc" id="L262">        load(new Scanner(iniConfig));</span>
+<span class="fc" id="L263">    }</span>
+
+    /**
+     * Loads the INI-formatted text backed by the given InputStream into this instance.  This implementation will
+     * close the input stream after it has finished loading.  It is expected that the stream's contents are
+     * UTF-8 encoded.
+     *
+     * @param is the {@code InputStream} from which to read the INI-formatted text
+     * @throws ConfigurationException if unable
+     */
+    public void load(InputStream is) throws ConfigurationException {
+<span class="pc bpc" id="L274" title="1 of 2 branches missed.">        if (is == null) {</span>
+<span class="nc" id="L275">            throw new NullPointerException(&quot;InputStream argument cannot be null.&quot;);</span>
+        }
+        InputStreamReader isr;
+        try {
+<span class="fc" id="L279">            isr = new InputStreamReader(is, DEFAULT_CHARSET_NAME);</span>
+<span class="nc" id="L280">        } catch (UnsupportedEncodingException e) {</span>
+<span class="nc" id="L281">            throw new ConfigurationException(e);</span>
+<span class="fc" id="L282">        }</span>
+<span class="fc" id="L283">        load(isr);</span>
+<span class="fc" id="L284">    }</span>
+
+    /**
+     * Loads the INI-formatted text backed by the given Reader into this instance.  This implementation will close the
+     * reader after it has finished loading.
+     *
+     * @param reader the {@code Reader} from which to read the INI-formatted text
+     */
+    public void load(Reader reader) {
+<span class="fc" id="L293">        Scanner scanner = new Scanner(reader);</span>
+        try {
+<span class="fc" id="L295">            load(scanner);</span>
+        } finally {
+<span class="nc" id="L297">            try {</span>
+<span class="pc" id="L298">                scanner.close();</span>
+<span class="nc" id="L299">            } catch (Exception e) {</span>
+<span class="nc" id="L300">                log.debug(&quot;Unable to cleanly close the InputStream scanner.  Non-critical - ignoring.&quot;, e);</span>
+<span class="pc" id="L301">            }</span>
+<span class="nc" id="L302">        }</span>
+<span class="fc" id="L303">    }</span>
+
+    /**
+     * Merges the contents of &lt;code&gt;m&lt;/code&gt;'s {@link Section} objects into self.
+     * This differs from {@link Ini#putAll(Map)}, in that each section is merged with the existing one.
+     * For example the following two ini blocks are merged and the result is the third&lt;BR/&gt;
+     * &lt;p&gt;
+     * Initial:
+     * &lt;pre&gt;
+     * &lt;code&gt;[section1]
+     * key1 = value1
+     *
+     * [section2]
+     * key2 = value2
+     * &lt;/code&gt; &lt;/pre&gt;
+     *
+     * To be merged:
+     * &lt;pre&gt;
+     * &lt;code&gt;[section1]
+     * foo = bar
+     *
+     * [section2]
+     * key2 = new value
+     * &lt;/code&gt; &lt;/pre&gt;
+     *
+     * Result:
+     * &lt;pre&gt;
+     * &lt;code&gt;[section1]
+     * key1 = value1
+     * foo = bar
+     *
+     * [section2]
+     * key2 = new value
+     * &lt;/code&gt; &lt;/pre&gt;
+     *
+     * &lt;/p&gt;
+     *
+     * @param m map to be merged
+     * @since 1.4
+     */
+    public void merge(Map&lt;String, Section&gt; m) {
+
+<span class="pc bpc" id="L345" title="1 of 2 branches missed.">        if (m != null) {</span>
+<span class="fc bfc" id="L346" title="All 2 branches covered.">            for (Entry&lt;String, Section&gt; entry : m.entrySet()) {</span>
+<span class="fc" id="L347">                Section section = this.getSection(entry.getKey());</span>
+<span class="fc bfc" id="L348" title="All 2 branches covered.">                if (section == null) {</span>
+<span class="fc" id="L349">                    section = addSection(entry.getKey());</span>
+                }
+<span class="fc" id="L351">                section.putAll(entry.getValue());</span>
+<span class="fc" id="L352">            }</span>
+        }
+<span class="fc" id="L354">    }</span>
+
+    private void addSection(String name, StringBuilder content) {
+<span class="fc bfc" id="L357" title="All 2 branches covered.">        if (content.length() &gt; 0) {</span>
+<span class="fc" id="L358">            String contentString = content.toString();</span>
+<span class="fc" id="L359">            String cleaned = StringUtils.clean(contentString);</span>
+<span class="pc bpc" id="L360" title="1 of 2 branches missed.">            if (cleaned != null) {</span>
+<span class="fc" id="L361">                Section section = new Section(name, contentString);</span>
+<span class="pc bpc" id="L362" title="1 of 2 branches missed.">                if (!section.isEmpty()) {</span>
+<span class="fc" id="L363">                    sections.put(name, section);</span>
+                }
+            }
+        }
+<span class="fc" id="L367">    }</span>
+
+    /**
+     * Loads the INI-formatted text backed by the given Scanner.  This implementation will close the
+     * scanner after it has finished loading.
+     *
+     * @param scanner the {@code Scanner} from which to read the INI-formatted text
+     */
+    public void load(Scanner scanner) {
+
+<span class="fc" id="L377">        String sectionName = DEFAULT_SECTION_NAME;</span>
+<span class="fc" id="L378">        StringBuilder sectionContent = new StringBuilder();</span>
+
+<span class="fc bfc" id="L380" title="All 2 branches covered.">        while (scanner.hasNextLine()) {</span>
+
+<span class="fc" id="L382">            String rawLine = scanner.nextLine();</span>
+<span class="fc" id="L383">            String line = StringUtils.clean(rawLine);</span>
+
+<span class="fc bfc" id="L385" title="All 6 branches covered.">            if (line == null || line.startsWith(COMMENT_POUND) || line.startsWith(COMMENT_SEMICOLON)) {</span>
+                //skip empty lines and comments:
+<span class="fc" id="L387">                continue;</span>
+            }
+
+<span class="fc" id="L390">            String newSectionName = getSectionName(line);</span>
+<span class="fc bfc" id="L391" title="All 2 branches covered.">            if (newSectionName != null) {</span>
+                //found a new section - convert the currently buffered one into a Section object
+<span class="fc" id="L393">                addSection(sectionName, sectionContent);</span>
+
+                //reset the buffer for the new section:
+<span class="fc" id="L396">                sectionContent = new StringBuilder();</span>
+
+<span class="fc" id="L398">                sectionName = newSectionName;</span>
+
+<span class="fc bfc" id="L400" title="All 2 branches covered.">                if (log.isDebugEnabled()) {</span>
+<span class="fc" id="L401">                    log.debug(&quot;Parsing &quot; + SECTION_PREFIX + sectionName + SECTION_SUFFIX);</span>
+                }
+            } else {
+                //normal line - add it to the existing content buffer:
+<span class="fc" id="L405">                sectionContent.append(rawLine).append(&quot;\n&quot;);</span>
+            }
+<span class="fc" id="L407">        }</span>
+
+        //finish any remaining buffered content:
+<span class="fc" id="L410">        addSection(sectionName, sectionContent);</span>
+<span class="fc" id="L411">    }</span>
+
+    protected static boolean isSectionHeader(String line) {
+<span class="fc" id="L414">        String s = StringUtils.clean(line);</span>
+<span class="pc bpc" id="L415" title="2 of 6 branches missed.">        return s != null &amp;&amp; s.startsWith(SECTION_PREFIX) &amp;&amp; s.endsWith(SECTION_SUFFIX);</span>
+    }
+
+    protected static String getSectionName(String line) {
+<span class="fc" id="L419">        String s = StringUtils.clean(line);</span>
+<span class="fc bfc" id="L420" title="All 2 branches covered.">        if (isSectionHeader(s)) {</span>
+<span class="fc" id="L421">            return cleanName(s.substring(1, s.length() - 1));</span>
+        }
+<span class="fc" id="L423">        return null;</span>
+    }
+
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L427" title="All 2 branches missed.">        if (obj instanceof Ini) {</span>
+<span class="nc" id="L428">            Ini ini = (Ini) obj;</span>
+<span class="nc" id="L429">            return this.sections.equals(ini.sections);</span>
+        }
+<span class="nc" id="L431">        return false;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L436">        return this.sections.hashCode();</span>
+    }
+
+    public String toString() {
+<span class="pc bpc" id="L440" title="2 of 4 branches missed.">        if (this.sections == null || this.sections.isEmpty()) {</span>
+<span class="nc" id="L441">            return &quot;&lt;empty INI&gt;&quot;;</span>
+        } else {
+<span class="fc" id="L443">            StringBuilder sb = new StringBuilder(&quot;sections=&quot;);</span>
+<span class="fc" id="L444">            int i = 0;</span>
+<span class="fc bfc" id="L445" title="All 2 branches covered.">            for (Ini.Section section : this.sections.values()) {</span>
+<span class="fc bfc" id="L446" title="All 2 branches covered.">                if (i &gt; 0) {</span>
+<span class="fc" id="L447">                    sb.append(&quot;,&quot;);</span>
+                }
+<span class="fc" id="L449">                sb.append(section.toString());</span>
+<span class="fc" id="L450">                i++;</span>
+<span class="fc" id="L451">            }</span>
+<span class="fc" id="L452">            return sb.toString();</span>
+        }
+    }
+
+    public int size() {
+<span class="fc" id="L457">        return this.sections.size();</span>
+    }
+
+    public boolean containsKey(Object key) {
+<span class="nc" id="L461">        return this.sections.containsKey(key);</span>
+    }
+
+    public boolean containsValue(Object value) {
+<span class="nc" id="L465">        return this.sections.containsValue(value);</span>
+    }
+
+    public Section get(Object key) {
+<span class="nc" id="L469">        return this.sections.get(key);</span>
+    }
+
+    public Section put(String key, Section value) {
+<span class="nc" id="L473">        return this.sections.put(key, value);</span>
+    }
+
+    public Section remove(Object key) {
+<span class="nc" id="L477">        return this.sections.remove(key);</span>
+    }
+
+    public void putAll(Map&lt;? extends String, ? extends Section&gt; m) {
+<span class="fc" id="L481">        this.sections.putAll(m);</span>
+<span class="fc" id="L482">    }</span>
+
+    public void clear() {
+<span class="nc" id="L485">        this.sections.clear();</span>
+<span class="nc" id="L486">    }</span>
+
+    public Set&lt;String&gt; keySet() {
+<span class="nc" id="L489">        return Collections.unmodifiableSet(this.sections.keySet());</span>
+    }
+
+    public Collection&lt;Section&gt; values() {
+<span class="nc" id="L493">        return Collections.unmodifiableCollection(this.sections.values());</span>
+    }
+
+    public Set&lt;Entry&lt;String, Section&gt;&gt; entrySet() {
+<span class="fc" id="L497">        return Collections.unmodifiableSet(this.sections.entrySet());</span>
+    }
+
+    /**
+     * An {@code Ini.Section} is String-key-to-String-value Map, identifiable by a
+     * {@link #getName() name} unique within an {@link Ini} instance.
+     */
+    public static class Section implements Map&lt;String, String&gt; {
+        private final String name;
+        private final Map&lt;String, String&gt; props;
+
+<span class="fc" id="L508">        private Section(String name) {</span>
+<span class="pc bpc" id="L509" title="1 of 2 branches missed.">            if (name == null) {</span>
+<span class="nc" id="L510">                throw new NullPointerException(&quot;name&quot;);</span>
+            }
+<span class="fc" id="L512">            this.name = name;</span>
+<span class="fc" id="L513">            this.props = new LinkedHashMap&lt;String, String&gt;();</span>
+<span class="fc" id="L514">        }</span>
+
+<span class="fc" id="L516">        private Section(String name, String sectionContent) {</span>
+<span class="pc bpc" id="L517" title="1 of 2 branches missed.">            if (name == null) {</span>
+<span class="nc" id="L518">                throw new NullPointerException(&quot;name&quot;);</span>
+            }
+<span class="fc" id="L520">            this.name = name;</span>
+            Map&lt;String,String&gt; props;
+<span class="pc bpc" id="L522" title="1 of 2 branches missed.">            if (StringUtils.hasText(sectionContent) ) {</span>
+<span class="fc" id="L523">                props = toMapProps(sectionContent);</span>
+            } else {
+<span class="nc" id="L525">                props = new LinkedHashMap&lt;String,String&gt;();</span>
+            }
+<span class="pc bpc" id="L527" title="1 of 2 branches missed.">            if ( props != null ) {</span>
+<span class="fc" id="L528">                this.props = props;</span>
+            } else {
+<span class="nc" id="L530">                this.props = new LinkedHashMap&lt;String,String&gt;();</span>
+            }
+<span class="fc" id="L532">        }</span>
+
+        private Section(Section defaults) {
+<span class="fc" id="L535">            this(defaults.getName());</span>
+<span class="fc" id="L536">            putAll(defaults.props);</span>
+<span class="fc" id="L537">        }</span>
+
+        //Protected to access in a test case - NOT considered part of Shiro's public API
+
+        protected static boolean isContinued(String line) {
+<span class="pc bpc" id="L542" title="1 of 2 branches missed.">            if (!StringUtils.hasText(line)) {</span>
+<span class="nc" id="L543">                return false;</span>
+            }
+<span class="fc" id="L545">            int length = line.length();</span>
+            //find the number of backslashes at the end of the line.  If an even number, the
+            //backslashes are considered escaped.  If an odd number, the line is considered continued on the next line
+<span class="fc" id="L548">            int backslashCount = 0;</span>
+<span class="pc bpc" id="L549" title="1 of 2 branches missed.">            for (int i = length - 1; i &gt; 0; i--) {</span>
+<span class="fc bfc" id="L550" title="All 2 branches covered.">                if (line.charAt(i) == ESCAPE_TOKEN) {</span>
+<span class="fc" id="L551">                    backslashCount++;</span>
+                } else {
+                    break;
+                }
+            }
+<span class="fc bfc" id="L556" title="All 2 branches covered.">            return backslashCount % 2 != 0;</span>
+        }
+
+        private static boolean isKeyValueSeparatorChar(char c) {
+<span class="fc bfc" id="L560" title="All 6 branches covered.">            return Character.isWhitespace(c) || c == ':' || c == '=';</span>
+        }
+
+        private static boolean isCharEscaped(CharSequence s, int index) {
+<span class="pc bpc" id="L564" title="2 of 4 branches missed.">            return index &gt; 0 &amp;&amp; s.charAt(index - 1) == ESCAPE_TOKEN;</span>
+        }
+
+        //Protected to access in a test case - NOT considered part of Shiro's public API
+        protected static String[] splitKeyValue(String keyValueLine) {
+<span class="fc" id="L569">            String line = StringUtils.clean(keyValueLine);</span>
+<span class="pc bpc" id="L570" title="1 of 2 branches missed.">            if (line == null) {</span>
+<span class="nc" id="L571">                return null;</span>
+            }
+<span class="fc" id="L573">            StringBuilder keyBuffer = new StringBuilder();</span>
+<span class="fc" id="L574">            StringBuilder valueBuffer = new StringBuilder();</span>
+
+<span class="fc" id="L576">            boolean buildingKey = true; //we'll build the value next:</span>
+
+<span class="fc bfc" id="L578" title="All 2 branches covered.">            for (int i = 0; i &lt; line.length(); i++) {</span>
+<span class="fc" id="L579">                char c = line.charAt(i);</span>
+
+<span class="fc bfc" id="L581" title="All 2 branches covered.">                if (buildingKey) {</span>
+<span class="pc bpc" id="L582" title="1 of 4 branches missed.">                    if (isKeyValueSeparatorChar(c) &amp;&amp; !isCharEscaped(line, i)) {</span>
+<span class="fc" id="L583">                        buildingKey = false;//now start building the value</span>
+                    } else {
+<span class="fc" id="L585">                        keyBuffer.append(c);</span>
+                    }
+                } else {
+<span class="pc bpc" id="L588" title="1 of 6 branches missed.">                    if (valueBuffer.length() == 0 &amp;&amp; isKeyValueSeparatorChar(c) &amp;&amp; !isCharEscaped(line, i)) {</span>
+                        //swallow the separator chars before we start building the value
+                    } else {
+<span class="fc" id="L591">                        valueBuffer.append(c);</span>
+                    }
+                }
+            }
+
+<span class="fc" id="L596">            String key = StringUtils.clean(keyBuffer.toString());</span>
+<span class="fc" id="L597">            String value = StringUtils.clean(valueBuffer.toString());</span>
+
+<span class="pc bpc" id="L599" title="1 of 4 branches missed.">            if (key == null || value == null) {</span>
+<span class="fc" id="L600">                String msg = &quot;Line argument must contain a key and a value.  Only one string token was found.&quot;;</span>
+<span class="fc" id="L601">                throw new IllegalArgumentException(msg);</span>
+            }
+
+<span class="fc" id="L604">            log.trace(&quot;Discovered key/value pair: {} = {}&quot;, key, value);</span>
+
+<span class="fc" id="L606">            return new String[]{key, value};</span>
+        }
+
+        private static Map&lt;String, String&gt; toMapProps(String content) {
+<span class="fc" id="L610">            Map&lt;String, String&gt; props = new LinkedHashMap&lt;String, String&gt;();</span>
+            String line;
+<span class="fc" id="L612">            StringBuilder lineBuffer = new StringBuilder();</span>
+<span class="fc" id="L613">            Scanner scanner = new Scanner(content);</span>
+<span class="fc bfc" id="L614" title="All 2 branches covered.">            while (scanner.hasNextLine()) {</span>
+<span class="fc" id="L615">                line = StringUtils.clean(scanner.nextLine());</span>
+<span class="fc bfc" id="L616" title="All 2 branches covered.">                if (isContinued(line)) {</span>
+                    //strip off the last continuation backslash:
+<span class="fc" id="L618">                    line = line.substring(0, line.length() - 1);</span>
+<span class="fc" id="L619">                    lineBuffer.append(line);</span>
+<span class="fc" id="L620">                    continue;</span>
+                } else {
+<span class="fc" id="L622">                    lineBuffer.append(line);</span>
+                }
+<span class="fc" id="L624">                line = lineBuffer.toString();</span>
+<span class="fc" id="L625">                lineBuffer = new StringBuilder();</span>
+<span class="fc" id="L626">                String[] kvPair = splitKeyValue(line);</span>
+<span class="fc" id="L627">                props.put(kvPair[0], kvPair[1]);</span>
+<span class="fc" id="L628">            }</span>
+
+<span class="fc" id="L630">            return props;</span>
+        }
+
+        public String getName() {
+<span class="fc" id="L634">            return this.name;</span>
+        }
+
+        public void clear() {
+<span class="nc" id="L638">            this.props.clear();</span>
+<span class="nc" id="L639">        }</span>
+
+        public boolean containsKey(Object key) {
+<span class="nc" id="L642">            return this.props.containsKey(key);</span>
+        }
+
+        public boolean containsValue(Object value) {
+<span class="nc" id="L646">            return this.props.containsValue(value);</span>
+        }
+
+        public Set&lt;Entry&lt;String, String&gt;&gt; entrySet() {
+<span class="fc" id="L650">            return this.props.entrySet();</span>
+        }
+
+        public String get(Object key) {
+<span class="fc" id="L654">            return this.props.get(key);</span>
+        }
+
+        public boolean isEmpty() {
+<span class="fc" id="L658">            return this.props.isEmpty();</span>
+        }
+
+        public Set&lt;String&gt; keySet() {
+<span class="fc" id="L662">            return this.props.keySet();</span>
+        }
+
+        public String put(String key, String value) {
+<span class="fc" id="L666">            return this.props.put(key, value);</span>
+        }
+
+        public void putAll(Map&lt;? extends String, ? extends String&gt; m) {
+<span class="fc" id="L670">            this.props.putAll(m);</span>
+<span class="fc" id="L671">        }</span>
+
+        public String remove(Object key) {
+<span class="nc" id="L674">            return this.props.remove(key);</span>
+        }
+
+        public int size() {
+<span class="fc" id="L678">            return this.props.size();</span>
+        }
+
+        public Collection&lt;String&gt; values() {
+<span class="nc" id="L682">            return this.props.values();</span>
+        }
+
+        public String toString() {
+<span class="fc" id="L686">            String name = getName();</span>
+<span class="pc bpc" id="L687" title="1 of 2 branches missed.">            if (DEFAULT_SECTION_NAME.equals(name)) {</span>
+<span class="nc" id="L688">                return &quot;&lt;default&gt;&quot;;</span>
+            }
+<span class="fc" id="L690">            return name;</span>
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+<span class="nc bnc" id="L695" title="All 2 branches missed.">            if (obj instanceof Section) {</span>
+<span class="nc" id="L696">                Section other = (Section) obj;</span>
+<span class="nc bnc" id="L697" title="All 4 branches missed.">                return getName().equals(other.getName()) &amp;&amp; this.props.equals(other.props);</span>
+            }
+<span class="nc" id="L699">            return false;</span>
+        }
+
+        @Override
+        public int hashCode() {
+<span class="nc" id="L704">            return this.name.hashCode() * 31 + this.props.hashCode();</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

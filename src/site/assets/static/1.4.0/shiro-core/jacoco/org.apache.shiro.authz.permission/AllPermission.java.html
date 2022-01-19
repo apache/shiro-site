@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AllPermission.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Shiro :: Core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.authz.permission</a> &gt; <span class="el_source">AllPermission.java</span></div><h1>AllPermission.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.authz.permission;
+
+import java.io.Serializable;
+
+import org.apache.shiro.authz.Permission;
+
+
+/**
+ * An all &lt;tt&gt;AllPermission&lt;/tt&gt; instance is one that always implies any other permission; that is, its
+ * {@link #implies implies} method always returns &lt;tt&gt;true&lt;/tt&gt;.
+ *
+ * &lt;p&gt;You should be very careful about the users, roles, and/or groups to which this permission is assigned since
+ * those respective entities will have the ability to do anything.  As such, an instance of this class
+ * is typically only assigned only to &quot;root&quot; or &quot;administrator&quot; users or roles.
+ *
+ * @since 0.1
+ */
+<span class="fc" id="L36">public class AllPermission implements Permission, Serializable {</span>
+
+    /**
+     * Always returns &lt;tt&gt;true&lt;/tt&gt;, indicating any Subject granted this permission can do anything.
+     *
+     * @param p the Permission to check for implies logic.
+     * @return &lt;tt&gt;true&lt;/tt&gt; always, indicating any Subject grated this permission can do anything.
+     */
+    public boolean implies(Permission p) {
+<span class="fc" id="L45">        return true;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

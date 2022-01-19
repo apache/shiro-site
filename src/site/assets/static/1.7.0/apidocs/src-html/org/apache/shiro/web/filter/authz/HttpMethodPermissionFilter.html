@@ -1,0 +1,340 @@
+<!DOCTYPE HTML>
+<html lang="fr">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<main role="main">
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a id="line.1">/*</a>
+<span class="sourceLineNo">002</span><a id="line.2"> * Licensed to the Apache Software Foundation (ASF) under one</a>
+<span class="sourceLineNo">003</span><a id="line.3"> * or more contributor license agreements.  See the NOTICE file</a>
+<span class="sourceLineNo">004</span><a id="line.4"> * distributed with this work for additional information</a>
+<span class="sourceLineNo">005</span><a id="line.5"> * regarding copyright ownership.  The ASF licenses this file</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * to you under the Apache License, Version 2.0 (the</a>
+<span class="sourceLineNo">007</span><a id="line.7"> * "License"); you may not use this file except in compliance</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * with the License.  You may obtain a copy of the License at</a>
+<span class="sourceLineNo">009</span><a id="line.9"> *</a>
+<span class="sourceLineNo">010</span><a id="line.10"> *     http://www.apache.org/licenses/LICENSE-2.0</a>
+<span class="sourceLineNo">011</span><a id="line.11"> *</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * Unless required by applicable law or agreed to in writing,</a>
+<span class="sourceLineNo">013</span><a id="line.13"> * software distributed under the License is distributed on an</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</a>
+<span class="sourceLineNo">015</span><a id="line.15"> * KIND, either express or implied.  See the License for the</a>
+<span class="sourceLineNo">016</span><a id="line.16"> * specific language governing permissions and limitations</a>
+<span class="sourceLineNo">017</span><a id="line.17"> * under the License.</a>
+<span class="sourceLineNo">018</span><a id="line.18"> */</a>
+<span class="sourceLineNo">019</span><a id="line.19">package org.apache.shiro.web.filter.authz;</a>
+<span class="sourceLineNo">020</span><a id="line.20"></a>
+<span class="sourceLineNo">021</span><a id="line.21">import org.apache.shiro.util.StringUtils;</a>
+<span class="sourceLineNo">022</span><a id="line.22">import org.slf4j.Logger;</a>
+<span class="sourceLineNo">023</span><a id="line.23">import org.slf4j.LoggerFactory;</a>
+<span class="sourceLineNo">024</span><a id="line.24"></a>
+<span class="sourceLineNo">025</span><a id="line.25">import javax.servlet.ServletRequest;</a>
+<span class="sourceLineNo">026</span><a id="line.26">import javax.servlet.ServletResponse;</a>
+<span class="sourceLineNo">027</span><a id="line.27">import javax.servlet.http.HttpServletRequest;</a>
+<span class="sourceLineNo">028</span><a id="line.28">import java.io.IOException;</a>
+<span class="sourceLineNo">029</span><a id="line.29">import java.util.HashMap;</a>
+<span class="sourceLineNo">030</span><a id="line.30">import java.util.Map;</a>
+<span class="sourceLineNo">031</span><a id="line.31"></a>
+<span class="sourceLineNo">032</span><a id="line.32">/**</a>
+<span class="sourceLineNo">033</span><a id="line.33"> * A filter that translates an HTTP Request's Method (eg GET, POST, etc)</a>
+<span class="sourceLineNo">034</span><a id="line.34"> * into an corresponding action (verb) and uses that verb to construct a permission that will be checked to determine</a>
+<span class="sourceLineNo">035</span><a id="line.35"> * access.</a>
+<span class="sourceLineNo">036</span><a id="line.36"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">037</span><a id="line.37"> * This Filter is primarily provided to support REST environments where the type (Method)</a>
+<span class="sourceLineNo">038</span><a id="line.38"> * of request translates to an action being performed on one or more resources.  This paradigm works well with Shiro's</a>
+<span class="sourceLineNo">039</span><a id="line.39"> * concepts of using permissions for access control and can be leveraged to easily perform permission checks.</a>
+<span class="sourceLineNo">040</span><a id="line.40"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">041</span><a id="line.41"> * This filter functions as follows:</a>
+<span class="sourceLineNo">042</span><a id="line.42"> * &lt;ol&gt;</a>
+<span class="sourceLineNo">043</span><a id="line.43"> * &lt;li&gt;The incoming HTTP request's Method (GET, POST, PUT, DELETE, etc) is discovered.&lt;/li&gt;</a>
+<span class="sourceLineNo">044</span><a id="line.44"> * &lt;li&gt;The Method is translated into a more 'application friendly' verb, such as 'create', edit', 'delete', etc.&lt;/li&gt;</a>
+<span class="sourceLineNo">045</span><a id="line.45"> * &lt;li&gt;The verb is appended to any configured permissions for the</a>
+<span class="sourceLineNo">046</span><a id="line.46"> * {@link org.apache.shiro.web.filter.PathMatchingFilter currently matching path}.&lt;/li&gt;</a>
+<span class="sourceLineNo">047</span><a id="line.47"> * &lt;li&gt;If the current {@code Subject} {@link org.apache.shiro.subject.Subject#isPermitted(String) isPermitted} to</a>
+<span class="sourceLineNo">048</span><a id="line.48"> * perform the resolved action, the request is allowed to continue.&lt;/li&gt;</a>
+<span class="sourceLineNo">049</span><a id="line.49"> * &lt;/ol&gt;</a>
+<span class="sourceLineNo">050</span><a id="line.50"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">051</span><a id="line.51"> * For example, if the following filter chain was defined, where 'rest' was the name given to a filter instance of</a>
+<span class="sourceLineNo">052</span><a id="line.52"> * this class:</a>
+<span class="sourceLineNo">053</span><a id="line.53"> * &lt;pre&gt;</a>
+<span class="sourceLineNo">054</span><a id="line.54"> * /user/** = rest[user]&lt;/pre&gt;</a>
+<span class="sourceLineNo">055</span><a id="line.55"> * Then an HTTP {@code GET} request to {@code /user/1234} would translate to the constructed permission</a>
+<span class="sourceLineNo">056</span><a id="line.56"> * {@code user:read} (GET is mapped to the 'read' action) and execute the permission check</a>
+<span class="sourceLineNo">057</span><a id="line.57"> * &lt;code&gt;Subject.isPermitted(&amp;quot;user:read&amp;quot;)&lt;/code&gt; in order to allow the request to continue.</a>
+<span class="sourceLineNo">058</span><a id="line.58"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">059</span><a id="line.59"> * Similarly, an HTTP {@code POST} to {@code /user} would translate to the constructed permission</a>
+<span class="sourceLineNo">060</span><a id="line.60"> * {@code user:create} (POST is mapped to the 'create' action) and execute the permission check</a>
+<span class="sourceLineNo">061</span><a id="line.61"> * &lt;code&gt;Subject.isPermitted(&amp;quot;user:create&amp;quot;)&lt;/code&gt; in order to allow the request to continue.</a>
+<span class="sourceLineNo">062</span><a id="line.62"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">063</span><a id="line.63"> * &lt;h3&gt;Method To Verb Mapping&lt;/h3&gt;</a>
+<span class="sourceLineNo">064</span><a id="line.64"> * The following table represents the default HTTP Method-to-action verb mapping:</a>
+<span class="sourceLineNo">065</span><a id="line.65"> * &lt;table&gt;</a>
+<span class="sourceLineNo">066</span><a id="line.66"> * &lt;tr&gt;&lt;th&gt;HTTP Method&lt;/th&gt;&lt;th&gt;Mapped Action&lt;/th&gt;&lt;th&gt;Example Permission&lt;/th&gt;&lt;th&gt;Runtime Check&lt;/th&gt;&lt;/tr&gt;</a>
+<span class="sourceLineNo">067</span><a id="line.67"> * &lt;tr&gt;&lt;td&gt;head&lt;/td&gt;&lt;td&gt;read&lt;/td&gt;&lt;td&gt;perm1&lt;/td&gt;&lt;td&gt;perm1:read&lt;/td&gt;&lt;/tr&gt;</a>
+<span class="sourceLineNo">068</span><a id="line.68"> * &lt;tr&gt;&lt;td&gt;get&lt;/td&gt;&lt;td&gt;read&lt;/td&gt;&lt;td&gt;perm2&lt;/td&gt;&lt;td&gt;perm2:read&lt;/td&gt;&lt;/tr&gt;</a>
+<span class="sourceLineNo">069</span><a id="line.69"> * &lt;tr&gt;&lt;td&gt;put&lt;/td&gt;&lt;td&gt;update&lt;/td&gt;&lt;td&gt;perm3&lt;/td&gt;&lt;td&gt;perm3:update&lt;/td&gt;&lt;/tr&gt;</a>
+<span class="sourceLineNo">070</span><a id="line.70"> * &lt;tr&gt;&lt;td&gt;post&lt;/td&gt;&lt;td&gt;create&lt;/td&gt;&lt;td&gt;perm4&lt;/td&gt;&lt;td&gt;perm4:create&lt;/td&gt;&lt;/tr&gt;</a>
+<span class="sourceLineNo">071</span><a id="line.71"> * &lt;tr&gt;&lt;td&gt;mkcol&lt;/td&gt;&lt;td&gt;create&lt;/td&gt;&lt;td&gt;perm5&lt;/td&gt;&lt;td&gt;perm5:create&lt;/td&gt;&lt;/tr&gt;</a>
+<span class="sourceLineNo">072</span><a id="line.72"> * &lt;tr&gt;&lt;td&gt;options&lt;/td&gt;&lt;td&gt;read&lt;/td&gt;&lt;td&gt;perm6&lt;/td&gt;&lt;td&gt;perm6:read&lt;/td&gt;&lt;/tr&gt;</a>
+<span class="sourceLineNo">073</span><a id="line.73"> * &lt;tr&gt;&lt;td&gt;trace&lt;/td&gt;&lt;td&gt;read&lt;/td&gt;&lt;td&gt;perm7&lt;/td&gt;&lt;td&gt;perm7:read&lt;/td&gt;&lt;/tr&gt;</a>
+<span class="sourceLineNo">074</span><a id="line.74"> * &lt;/table&gt;</a>
+<span class="sourceLineNo">075</span><a id="line.75"> *</a>
+<span class="sourceLineNo">076</span><a id="line.76"> * @since 1.0</a>
+<span class="sourceLineNo">077</span><a id="line.77"> */</a>
+<span class="sourceLineNo">078</span><a id="line.78">public class HttpMethodPermissionFilter extends PermissionsAuthorizationFilter {</a>
+<span class="sourceLineNo">079</span><a id="line.79"></a>
+<span class="sourceLineNo">080</span><a id="line.80">    /**</a>
+<span class="sourceLineNo">081</span><a id="line.81">     * This class's private logger.</a>
+<span class="sourceLineNo">082</span><a id="line.82">     */</a>
+<span class="sourceLineNo">083</span><a id="line.83">    private static final Logger log = LoggerFactory.getLogger(HttpMethodPermissionFilter.class);</a>
+<span class="sourceLineNo">084</span><a id="line.84"></a>
+<span class="sourceLineNo">085</span><a id="line.85">    /**</a>
+<span class="sourceLineNo">086</span><a id="line.86">     * Map that contains a mapping between http methods to permission actions (verbs)</a>
+<span class="sourceLineNo">087</span><a id="line.87">     */</a>
+<span class="sourceLineNo">088</span><a id="line.88">    private final Map&lt;String, String&gt; httpMethodActions = new HashMap&lt;String, String&gt;();</a>
+<span class="sourceLineNo">089</span><a id="line.89"></a>
+<span class="sourceLineNo">090</span><a id="line.90">    //Actions representing HTTP Method values (GET -&gt; read, POST -&gt; create, etc)</a>
+<span class="sourceLineNo">091</span><a id="line.91">    private static final String CREATE_ACTION = "create";</a>
+<span class="sourceLineNo">092</span><a id="line.92">    private static final String READ_ACTION = "read";</a>
+<span class="sourceLineNo">093</span><a id="line.93">    private static final String UPDATE_ACTION = "update";</a>
+<span class="sourceLineNo">094</span><a id="line.94">    private static final String DELETE_ACTION = "delete";</a>
+<span class="sourceLineNo">095</span><a id="line.95"></a>
+<span class="sourceLineNo">096</span><a id="line.96">    /**</a>
+<span class="sourceLineNo">097</span><a id="line.97">     * Enum of constants for well-defined mapping values.  Used in the Filter's constructor to perform the map instance</a>
+<span class="sourceLineNo">098</span><a id="line.98">     * used at runtime.</a>
+<span class="sourceLineNo">099</span><a id="line.99">     */</a>
+<span class="sourceLineNo">100</span><a id="line.100">    private static enum HttpMethodAction {</a>
+<span class="sourceLineNo">101</span><a id="line.101"></a>
+<span class="sourceLineNo">102</span><a id="line.102">        DELETE(DELETE_ACTION),</a>
+<span class="sourceLineNo">103</span><a id="line.103">        GET(READ_ACTION),</a>
+<span class="sourceLineNo">104</span><a id="line.104">        HEAD(READ_ACTION),</a>
+<span class="sourceLineNo">105</span><a id="line.105">        MKCOL(CREATE_ACTION), //webdav, but useful here</a>
+<span class="sourceLineNo">106</span><a id="line.106">        OPTIONS(READ_ACTION),</a>
+<span class="sourceLineNo">107</span><a id="line.107">        POST(CREATE_ACTION),</a>
+<span class="sourceLineNo">108</span><a id="line.108">        PUT(UPDATE_ACTION),</a>
+<span class="sourceLineNo">109</span><a id="line.109">        TRACE(READ_ACTION);</a>
+<span class="sourceLineNo">110</span><a id="line.110"></a>
+<span class="sourceLineNo">111</span><a id="line.111">        private final String action;</a>
+<span class="sourceLineNo">112</span><a id="line.112"></a>
+<span class="sourceLineNo">113</span><a id="line.113">        private HttpMethodAction(String action) {</a>
+<span class="sourceLineNo">114</span><a id="line.114">            this.action = action;</a>
+<span class="sourceLineNo">115</span><a id="line.115">        }</a>
+<span class="sourceLineNo">116</span><a id="line.116"></a>
+<span class="sourceLineNo">117</span><a id="line.117">        public String getAction() {</a>
+<span class="sourceLineNo">118</span><a id="line.118">            return this.action;</a>
+<span class="sourceLineNo">119</span><a id="line.119">        }</a>
+<span class="sourceLineNo">120</span><a id="line.120">    }</a>
+<span class="sourceLineNo">121</span><a id="line.121"></a>
+<span class="sourceLineNo">122</span><a id="line.122">    /**</a>
+<span class="sourceLineNo">123</span><a id="line.123">     * Creates the filter instance with default method-to-action values in the instance's</a>
+<span class="sourceLineNo">124</span><a id="line.124">     * {@link #getHttpMethodActions() http method actions map}.</a>
+<span class="sourceLineNo">125</span><a id="line.125">     */</a>
+<span class="sourceLineNo">126</span><a id="line.126">    public HttpMethodPermissionFilter() {</a>
+<span class="sourceLineNo">127</span><a id="line.127">        for (HttpMethodAction methodAction : HttpMethodAction.values()) {</a>
+<span class="sourceLineNo">128</span><a id="line.128">            httpMethodActions.put(methodAction.name().toLowerCase(), methodAction.getAction());</a>
+<span class="sourceLineNo">129</span><a id="line.129">        }</a>
+<span class="sourceLineNo">130</span><a id="line.130">    }</a>
+<span class="sourceLineNo">131</span><a id="line.131"></a>
+<span class="sourceLineNo">132</span><a id="line.132">    /**</a>
+<span class="sourceLineNo">133</span><a id="line.133">     * Returns the HTTP Method name (key) to action verb (value) mapping used to resolve actions based on an</a>
+<span class="sourceLineNo">134</span><a id="line.134">     * incoming {@code HttpServletRequest}.  All keys and values are lower-case.  The</a>
+<span class="sourceLineNo">135</span><a id="line.135">     * default key/value pairs are defined in the top class-level JavaDoc.</a>
+<span class="sourceLineNo">136</span><a id="line.136">     *</a>
+<span class="sourceLineNo">137</span><a id="line.137">     * @return the HTTP Method lower-case name (key) to lower-case action verb (value) mapping</a>
+<span class="sourceLineNo">138</span><a id="line.138">     */</a>
+<span class="sourceLineNo">139</span><a id="line.139">    protected Map&lt;String, String&gt; getHttpMethodActions() {</a>
+<span class="sourceLineNo">140</span><a id="line.140">        return this.httpMethodActions;</a>
+<span class="sourceLineNo">141</span><a id="line.141">    }</a>
+<span class="sourceLineNo">142</span><a id="line.142"></a>
+<span class="sourceLineNo">143</span><a id="line.143">    /**</a>
+<span class="sourceLineNo">144</span><a id="line.144">     * Determines the action (verb) attempting to be performed on the filtered resource by the current request.</a>
+<span class="sourceLineNo">145</span><a id="line.145">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">146</span><a id="line.146">     * This implementation expects the incoming request to be an {@link HttpServletRequest} and returns a mapped</a>
+<span class="sourceLineNo">147</span><a id="line.147">     * action based on the HTTP request {@link javax.servlet.http.HttpServletRequest#getMethod() method}.</a>
+<span class="sourceLineNo">148</span><a id="line.148">     *</a>
+<span class="sourceLineNo">149</span><a id="line.149">     * @param request to pull the method from.</a>
+<span class="sourceLineNo">150</span><a id="line.150">     * @return The string equivalent verb of the http method.</a>
+<span class="sourceLineNo">151</span><a id="line.151">     */</a>
+<span class="sourceLineNo">152</span><a id="line.152">    protected String getHttpMethodAction(ServletRequest request) {</a>
+<span class="sourceLineNo">153</span><a id="line.153">        String method = ((HttpServletRequest) request).getMethod();</a>
+<span class="sourceLineNo">154</span><a id="line.154">        return getHttpMethodAction(method);</a>
+<span class="sourceLineNo">155</span><a id="line.155">    }</a>
+<span class="sourceLineNo">156</span><a id="line.156"></a>
+<span class="sourceLineNo">157</span><a id="line.157">    /**</a>
+<span class="sourceLineNo">158</span><a id="line.158">     * Determines the corresponding application action that will be performed on the filtered resource based on the</a>
+<span class="sourceLineNo">159</span><a id="line.159">     * specified HTTP method (GET, POST, etc).</a>
+<span class="sourceLineNo">160</span><a id="line.160">     *</a>
+<span class="sourceLineNo">161</span><a id="line.161">     * @param method to be translated into the verb.</a>
+<span class="sourceLineNo">162</span><a id="line.162">     * @return The string equivalent verb of the method.</a>
+<span class="sourceLineNo">163</span><a id="line.163">     */</a>
+<span class="sourceLineNo">164</span><a id="line.164">    protected String getHttpMethodAction(String method) {</a>
+<span class="sourceLineNo">165</span><a id="line.165">        String lc = method.toLowerCase();</a>
+<span class="sourceLineNo">166</span><a id="line.166">        String resolved = getHttpMethodActions().get(lc);</a>
+<span class="sourceLineNo">167</span><a id="line.167">        return resolved != null ? resolved : method;</a>
+<span class="sourceLineNo">168</span><a id="line.168">    }</a>
+<span class="sourceLineNo">169</span><a id="line.169"></a>
+<span class="sourceLineNo">170</span><a id="line.170">    /**</a>
+<span class="sourceLineNo">171</span><a id="line.171">     * Returns a collection of String permissions with which to perform a permission check to determine if the filter</a>
+<span class="sourceLineNo">172</span><a id="line.172">     * will allow the request to continue.</a>
+<span class="sourceLineNo">173</span><a id="line.173">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">174</span><a id="line.174">     * This implementation merely delegates to {@link #buildPermissions(String[], String)} and ignores the inbound</a>
+<span class="sourceLineNo">175</span><a id="line.175">     * HTTP servlet request, but it can be overridden by subclasses for more complex request-specific building logic</a>
+<span class="sourceLineNo">176</span><a id="line.176">     * if necessary.</a>
+<span class="sourceLineNo">177</span><a id="line.177">     *</a>
+<span class="sourceLineNo">178</span><a id="line.178">     * @param request         the inbound HTTP request - ignored in this implementation, but available to</a>
+<span class="sourceLineNo">179</span><a id="line.179">     *                        subclasses for more complex construction building logic if necessary</a>
+<span class="sourceLineNo">180</span><a id="line.180">     * @param configuredPerms any url-specific permissions mapped to this filter in the URL rules mappings.</a>
+<span class="sourceLineNo">181</span><a id="line.181">     * @param action          the application-friendly action (verb) resolved based on the HTTP Method name.</a>
+<span class="sourceLineNo">182</span><a id="line.182">     * @return a collection of String permissions with which to perform a permission check to determine if the filter</a>
+<span class="sourceLineNo">183</span><a id="line.183">     *         will allow the request to continue.</a>
+<span class="sourceLineNo">184</span><a id="line.184">     */</a>
+<span class="sourceLineNo">185</span><a id="line.185">    protected String[] buildPermissions(HttpServletRequest request, String[] configuredPerms, String action) {</a>
+<span class="sourceLineNo">186</span><a id="line.186">        return buildPermissions(configuredPerms, action);</a>
+<span class="sourceLineNo">187</span><a id="line.187">    }</a>
+<span class="sourceLineNo">188</span><a id="line.188"></a>
+<span class="sourceLineNo">189</span><a id="line.189">    /**</a>
+<span class="sourceLineNo">190</span><a id="line.190">     * Builds a new array of permission strings based on the original argument, appending the specified action verb</a>
+<span class="sourceLineNo">191</span><a id="line.191">     * to each one per {@link org.apache.shiro.authz.permission.WildcardPermission WildcardPermission} conventions.  The</a>
+<span class="sourceLineNo">192</span><a id="line.192">     * built permission strings will be the ones used at runtime during the permission check that determines if filter</a>
+<span class="sourceLineNo">193</span><a id="line.193">     * access should be allowed to continue or not.</a>
+<span class="sourceLineNo">194</span><a id="line.194">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">195</span><a id="line.195">     * For example, if the {@code configuredPerms} argument contains the following 3 permission strings:</a>
+<span class="sourceLineNo">196</span><a id="line.196">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">197</span><a id="line.197">     * &lt;ol&gt;</a>
+<span class="sourceLineNo">198</span><a id="line.198">     * &lt;li&gt;permission:one&lt;/li&gt;</a>
+<span class="sourceLineNo">199</span><a id="line.199">     * &lt;li&gt;permission:two&lt;/li&gt;</a>
+<span class="sourceLineNo">200</span><a id="line.200">     * &lt;li&gt;permission:three&lt;/li&gt;</a>
+<span class="sourceLineNo">201</span><a id="line.201">     * &lt;/ol&gt;</a>
+<span class="sourceLineNo">202</span><a id="line.202">     * And the action is {@code read}, then the return value will be:</a>
+<span class="sourceLineNo">203</span><a id="line.203">     * &lt;ol&gt;</a>
+<span class="sourceLineNo">204</span><a id="line.204">     * &lt;li&gt;permission:one:read&lt;/li&gt;</a>
+<span class="sourceLineNo">205</span><a id="line.205">     * &lt;li&gt;permission:two:read&lt;/li&gt;</a>
+<span class="sourceLineNo">206</span><a id="line.206">     * &lt;li&gt;permission:three:read&lt;/li&gt;</a>
+<span class="sourceLineNo">207</span><a id="line.207">     * &lt;/ol&gt;</a>
+<span class="sourceLineNo">208</span><a id="line.208">     * per {@link org.apache.shiro.authz.permission.WildcardPermission WildcardPermission} conventions.  Subclasses</a>
+<span class="sourceLineNo">209</span><a id="line.209">     * are of course free to override this method or the</a>
+<span class="sourceLineNo">210</span><a id="line.210">     * {@link #buildPermissions(javax.servlet.http.HttpServletRequest, String[], String) buildPermissions} request</a>
+<span class="sourceLineNo">211</span><a id="line.211">     * variant for custom building logic or with different permission formats.</a>
+<span class="sourceLineNo">212</span><a id="line.212">     *</a>
+<span class="sourceLineNo">213</span><a id="line.213">     * @param configuredPerms list of configuredPerms to be converted.</a>
+<span class="sourceLineNo">214</span><a id="line.214">     * @param action          the resolved action based on the request method to be appended to permission strings.</a>
+<span class="sourceLineNo">215</span><a id="line.215">     * @return an array of permission strings with each element appended with the action.</a>
+<span class="sourceLineNo">216</span><a id="line.216">     */</a>
+<span class="sourceLineNo">217</span><a id="line.217">    protected String[] buildPermissions(String[] configuredPerms, String action) {</a>
+<span class="sourceLineNo">218</span><a id="line.218">        if (configuredPerms == null || configuredPerms.length &lt;= 0 || !StringUtils.hasText(action)) {</a>
+<span class="sourceLineNo">219</span><a id="line.219">            return configuredPerms;</a>
+<span class="sourceLineNo">220</span><a id="line.220">        }</a>
+<span class="sourceLineNo">221</span><a id="line.221"></a>
+<span class="sourceLineNo">222</span><a id="line.222">        String[] mappedPerms = new String[configuredPerms.length];</a>
+<span class="sourceLineNo">223</span><a id="line.223"></a>
+<span class="sourceLineNo">224</span><a id="line.224">        // loop and append :action</a>
+<span class="sourceLineNo">225</span><a id="line.225">        for (int i = 0; i &lt; configuredPerms.length; i++) {</a>
+<span class="sourceLineNo">226</span><a id="line.226">            mappedPerms[i] = configuredPerms[i] + ":" + action;</a>
+<span class="sourceLineNo">227</span><a id="line.227">        }</a>
+<span class="sourceLineNo">228</span><a id="line.228"></a>
+<span class="sourceLineNo">229</span><a id="line.229">        if (log.isTraceEnabled()) {</a>
+<span class="sourceLineNo">230</span><a id="line.230">            StringBuilder sb = new StringBuilder();</a>
+<span class="sourceLineNo">231</span><a id="line.231">            for (int i = 0; i &lt; mappedPerms.length; i++) {</a>
+<span class="sourceLineNo">232</span><a id="line.232">                if (i &gt; 0) {</a>
+<span class="sourceLineNo">233</span><a id="line.233">                    sb.append(", ");</a>
+<span class="sourceLineNo">234</span><a id="line.234">                }</a>
+<span class="sourceLineNo">235</span><a id="line.235">                sb.append(mappedPerms[i]);</a>
+<span class="sourceLineNo">236</span><a id="line.236">            }</a>
+<span class="sourceLineNo">237</span><a id="line.237">            log.trace("MAPPED '{}' action to permission(s) '{}'", action, sb);</a>
+<span class="sourceLineNo">238</span><a id="line.238">        }</a>
+<span class="sourceLineNo">239</span><a id="line.239"></a>
+<span class="sourceLineNo">240</span><a id="line.240">        return mappedPerms;</a>
+<span class="sourceLineNo">241</span><a id="line.241">    }</a>
+<span class="sourceLineNo">242</span><a id="line.242"></a>
+<span class="sourceLineNo">243</span><a id="line.243">    /**</a>
+<span class="sourceLineNo">244</span><a id="line.244">     * Resolves an 'application friendly' action verb based on the {@code HttpServletRequest}'s method, appends that</a>
+<span class="sourceLineNo">245</span><a id="line.245">     * action to each configured permission (the {@code mappedValue} argument is a {@code String[]} array), and</a>
+<span class="sourceLineNo">246</span><a id="line.246">     * delegates the permission check for the newly constructed permission(s) to the superclass</a>
+<span class="sourceLineNo">247</span><a id="line.247">     * {@link PermissionsAuthorizationFilter#isAccessAllowed(javax.servlet.ServletRequest, javax.servlet.ServletResponse, Object) isAccessAllowed}</a>
+<span class="sourceLineNo">248</span><a id="line.248">     * implementation to perform the actual permission check.</a>
+<span class="sourceLineNo">249</span><a id="line.249">     *</a>
+<span class="sourceLineNo">250</span><a id="line.250">     * @param request     the inbound {@code ServletRequest}</a>
+<span class="sourceLineNo">251</span><a id="line.251">     * @param response    the outbound {@code ServletResponse}</a>
+<span class="sourceLineNo">252</span><a id="line.252">     * @param mappedValue the filter-specific config value mapped to this filter in the URL rules mappings.</a>
+<span class="sourceLineNo">253</span><a id="line.253">     * @return {@code true} if the request should proceed through the filter normally, {@code false} if the</a>
+<span class="sourceLineNo">254</span><a id="line.254">     *         request should be processed by this filter's</a>
+<span class="sourceLineNo">255</span><a id="line.255">     *         {@link #onAccessDenied(ServletRequest,ServletResponse,Object)} method instead.</a>
+<span class="sourceLineNo">256</span><a id="line.256">     * @throws IOException</a>
+<span class="sourceLineNo">257</span><a id="line.257">     */</a>
+<span class="sourceLineNo">258</span><a id="line.258">    @Override</a>
+<span class="sourceLineNo">259</span><a id="line.259">    public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {</a>
+<span class="sourceLineNo">260</span><a id="line.260">        String[] perms = (String[]) mappedValue;</a>
+<span class="sourceLineNo">261</span><a id="line.261">        // append the http action to the end of the permissions and then back to super</a>
+<span class="sourceLineNo">262</span><a id="line.262">        String action = getHttpMethodAction(request);</a>
+<span class="sourceLineNo">263</span><a id="line.263">        String[] resolvedPerms = buildPermissions(perms, action);</a>
+<span class="sourceLineNo">264</span><a id="line.264">        return super.isAccessAllowed(request, response, resolvedPerms);</a>
+<span class="sourceLineNo">265</span><a id="line.265">    }</a>
+<span class="sourceLineNo">266</span><a id="line.266">}</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</main>
+</body>
+</html>

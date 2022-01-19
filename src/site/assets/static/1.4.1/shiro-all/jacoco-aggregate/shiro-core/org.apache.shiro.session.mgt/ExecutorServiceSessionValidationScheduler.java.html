@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>ExecutorServiceSessionValidationScheduler.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: All (aggregate jar)</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.session.mgt</a> &gt; <span class="el_source">ExecutorServiceSessionValidationScheduler.java</span></div><h1>ExecutorServiceSessionValidationScheduler.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.session.mgt;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+/**
+ * SessionValidationScheduler implementation that uses a
+ * {@link ScheduledExecutorService} to call {@link ValidatingSessionManager#validateSessions()} every
+ * &lt;em&gt;{@link #getInterval interval}&lt;/em&gt; milliseconds.
+ *
+ * @since 0.9
+ */
+public class ExecutorServiceSessionValidationScheduler implements SessionValidationScheduler, Runnable {
+
+    //TODO - complete JavaDoc
+
+    /** Private internal log instance. */
+<span class="fc" id="L43">    private static final Logger log = LoggerFactory.getLogger(ExecutorServiceSessionValidationScheduler.class);</span>
+
+    ValidatingSessionManager sessionManager;
+    private ScheduledExecutorService service;
+<span class="fc" id="L47">    private long interval = DefaultSessionManager.DEFAULT_SESSION_VALIDATION_INTERVAL;</span>
+<span class="fc" id="L48">    private boolean enabled = false;</span>
+<span class="fc" id="L49">    private String threadNamePrefix = &quot;SessionValidationThread-&quot;;</span>
+
+    public ExecutorServiceSessionValidationScheduler() {
+<span class="fc" id="L52">        super();</span>
+<span class="fc" id="L53">    }</span>
+
+<span class="fc" id="L55">    public ExecutorServiceSessionValidationScheduler(ValidatingSessionManager sessionManager) {</span>
+<span class="fc" id="L56">        this.sessionManager = sessionManager;</span>
+<span class="fc" id="L57">    }</span>
+
+    public ValidatingSessionManager getSessionManager() {
+<span class="nc" id="L60">        return sessionManager;</span>
+    }
+
+    public void setSessionManager(ValidatingSessionManager sessionManager) {
+<span class="nc" id="L64">        this.sessionManager = sessionManager;</span>
+<span class="nc" id="L65">    }</span>
+
+    public long getInterval() {
+<span class="nc" id="L68">        return interval;</span>
+    }
+
+    public void setInterval(long interval) {
+<span class="fc" id="L72">        this.interval = interval;</span>
+<span class="fc" id="L73">    }</span>
+
+    public boolean isEnabled() {
+<span class="fc" id="L76">        return this.enabled;</span>
+    }
+
+    public void setThreadNamePrefix(String threadNamePrefix) {
+<span class="nc" id="L80">        this.threadNamePrefix = threadNamePrefix;</span>
+<span class="nc" id="L81">    }</span>
+
+    public String getThreadNamePrefix() {
+<span class="nc" id="L84">        return this.threadNamePrefix;</span>
+    }
+
+    /**
+     * Creates a single thread {@link ScheduledExecutorService} to validate sessions at fixed intervals 
+     * and enables this scheduler. The executor is created as a daemon thread to allow JVM to shut down
+     */
+    //TODO Implement an integration test to test for jvm exit as part of the standalone example
+    // (so we don't have to change the unit test execution model for the core module)
+    public void enableSessionValidation() {
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (this.interval &gt; 0l) {</span>
+<span class="fc" id="L95">            this.service = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {  </span>
+<span class="fc" id="L96">	            private final AtomicInteger count = new AtomicInteger(1);</span>
+
+	            public Thread newThread(Runnable r) {  
+<span class="fc" id="L99">	                Thread thread = new Thread(r);  </span>
+<span class="fc" id="L100">	                thread.setDaemon(true);  </span>
+<span class="fc" id="L101">	                thread.setName(threadNamePrefix + count.getAndIncrement());</span>
+<span class="fc" id="L102">	                return thread;  </span>
+	            }  
+            });                  
+<span class="fc" id="L105">            this.service.scheduleAtFixedRate(this, interval, interval, TimeUnit.MILLISECONDS);</span>
+        }
+<span class="fc" id="L107">        this.enabled = true;</span>
+<span class="fc" id="L108">    }</span>
+
+    public void run() {
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L112">            log.debug(&quot;Executing session validation...&quot;);</span>
+        }
+<span class="nc" id="L114">        long startTime = System.currentTimeMillis();</span>
+<span class="nc" id="L115">        this.sessionManager.validateSessions();</span>
+<span class="nc" id="L116">        long stopTime = System.currentTimeMillis();</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L118">            log.debug(&quot;Session validation completed successfully in &quot; + (stopTime - startTime) + &quot; milliseconds.&quot;);</span>
+        }
+<span class="nc" id="L120">    }</span>
+
+    public void disableSessionValidation() {
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">        if (this.service != null) {</span>
+<span class="fc" id="L124">            this.service.shutdownNow();</span>
+        }
+<span class="fc" id="L126">        this.enabled = false;</span>
+<span class="fc" id="L127">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

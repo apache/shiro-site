@@ -1,0 +1,148 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<FONT color="green">007</FONT>     * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<FONT color="green">008</FONT>     * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<FONT color="green">013</FONT>     * software distributed under the License is distributed on an<a name="line.13"></a>
+<FONT color="green">014</FONT>     * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<FONT color="green">015</FONT>     * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<FONT color="green">016</FONT>     * specific language governing permissions and limitations<a name="line.16"></a>
+<FONT color="green">017</FONT>     * under the License.<a name="line.17"></a>
+<FONT color="green">018</FONT>     */<a name="line.18"></a>
+<FONT color="green">019</FONT>    <a name="line.19"></a>
+<FONT color="green">020</FONT>    package org.apache.shiro.authc;<a name="line.20"></a>
+<FONT color="green">021</FONT>    <a name="line.21"></a>
+<FONT color="green">022</FONT>    import org.apache.shiro.subject.PrincipalCollection;<a name="line.22"></a>
+<FONT color="green">023</FONT>    <a name="line.23"></a>
+<FONT color="green">024</FONT>    import java.io.Serializable;<a name="line.24"></a>
+<FONT color="green">025</FONT>    <a name="line.25"></a>
+<FONT color="green">026</FONT>    /**<a name="line.26"></a>
+<FONT color="green">027</FONT>     * &lt;code&gt;AuthenticationInfo&lt;/code&gt; represents a Subject's (aka user's) stored account information relevant to the<a name="line.27"></a>
+<FONT color="green">028</FONT>     * authentication/log-in process only.<a name="line.28"></a>
+<FONT color="green">029</FONT>     * &lt;p/&gt;<a name="line.29"></a>
+<FONT color="green">030</FONT>     * It is important to understand the difference between this interface and the<a name="line.30"></a>
+<FONT color="green">031</FONT>     * {@link AuthenticationToken AuthenticationToken} interface.  &lt;code&gt;AuthenticationInfo&lt;/code&gt; implementations<a name="line.31"></a>
+<FONT color="green">032</FONT>     * represent already-verified and stored account data, whereas an &lt;code&gt;AuthenticationToken&lt;/code&gt; represents data<a name="line.32"></a>
+<FONT color="green">033</FONT>     * submitted for any given login attempt (which may or may not successfully match the verified and stored account<a name="line.33"></a>
+<FONT color="green">034</FONT>     * &lt;code&gt;AuthenticationInfo&lt;/code&gt;).<a name="line.34"></a>
+<FONT color="green">035</FONT>     * &lt;p/&gt;<a name="line.35"></a>
+<FONT color="green">036</FONT>     * Because the act of authentication (log-in) is orthogonal to authorization (access control), this interface is<a name="line.36"></a>
+<FONT color="green">037</FONT>     * intended to represent only the account data needed by Shiro during an authentication attempt.  Shiro also<a name="line.37"></a>
+<FONT color="green">038</FONT>     * has a parallel {@link org.apache.shiro.authz.AuthorizationInfo AuthorizationInfo} interface for use during the<a name="line.38"></a>
+<FONT color="green">039</FONT>     * authorization process that references access control data such as roles and permissions.<a name="line.39"></a>
+<FONT color="green">040</FONT>     * &lt;p/&gt;<a name="line.40"></a>
+<FONT color="green">041</FONT>     * But because many if not most {@link org.apache.shiro.realm.Realm Realm}s store both sets of data for a Subject, it might be<a name="line.41"></a>
+<FONT color="green">042</FONT>     * convenient for a &lt;code&gt;Realm&lt;/code&gt; implementation to utilize an implementation of the {@link Account Account}<a name="line.42"></a>
+<FONT color="green">043</FONT>     * interface instead, which is a convenience interface that combines both &lt;code&gt;AuthenticationInfo&lt;/code&gt; and<a name="line.43"></a>
+<FONT color="green">044</FONT>     * &lt;code&gt;AuthorizationInfo&lt;/code&gt;.  Whether you choose to implement these two interfaces separately or implement the one<a name="line.44"></a>
+<FONT color="green">045</FONT>     * &lt;code&gt;Account&lt;/code&gt; interface for a given &lt;code&gt;Realm&lt;/code&gt; is entirely based on your application's needs or your<a name="line.45"></a>
+<FONT color="green">046</FONT>     * preferences.<a name="line.46"></a>
+<FONT color="green">047</FONT>     * &lt;p/&gt;<a name="line.47"></a>
+<FONT color="green">048</FONT>     * &lt;p&gt;&lt;b&gt;Pleae note:&lt;/b&gt;  Since Shiro sometimes logs authentication operations, please ensure your AuthenticationInfo's<a name="line.48"></a>
+<FONT color="green">049</FONT>     * &lt;code&gt;toString()&lt;/code&gt; implementation does &lt;em&gt;not&lt;/em&gt; print out account credentials (password, etc), as these might be viewable to<a name="line.49"></a>
+<FONT color="green">050</FONT>     * someone reading your logs.  This is good practice anyway, and account credentials should rarely (if ever) be printed<a name="line.50"></a>
+<FONT color="green">051</FONT>     * out for any reason.  If you're using Shiro's default implementations of this interface, they only ever print the<a name="line.51"></a>
+<FONT color="green">052</FONT>     * account {@link #getPrincipals() principals}, so you do not need to do anything additional.&lt;/p&gt;<a name="line.52"></a>
+<FONT color="green">053</FONT>     *<a name="line.53"></a>
+<FONT color="green">054</FONT>     * @see org.apache.shiro.authz.AuthorizationInfo AuthorizationInfo<a name="line.54"></a>
+<FONT color="green">055</FONT>     * @see Account<a name="line.55"></a>
+<FONT color="green">056</FONT>     * @since 0.9<a name="line.56"></a>
+<FONT color="green">057</FONT>     */<a name="line.57"></a>
+<FONT color="green">058</FONT>    public interface AuthenticationInfo extends Serializable {<a name="line.58"></a>
+<FONT color="green">059</FONT>    <a name="line.59"></a>
+<FONT color="green">060</FONT>        /**<a name="line.60"></a>
+<FONT color="green">061</FONT>         * Returns all principals associated with the corresponding Subject.  Each principal is an identifying piece of<a name="line.61"></a>
+<FONT color="green">062</FONT>         * information useful to the application such as a username, or user id, a given name, etc - anything useful<a name="line.62"></a>
+<FONT color="green">063</FONT>         * to the application to identify the current &lt;code&gt;Subject&lt;/code&gt;.<a name="line.63"></a>
+<FONT color="green">064</FONT>         * &lt;p/&gt;<a name="line.64"></a>
+<FONT color="green">065</FONT>         * The returned PrincipalCollection should &lt;em&gt;not&lt;/em&gt; contain any credentials used to verify principals, such<a name="line.65"></a>
+<FONT color="green">066</FONT>         * as passwords, private keys, etc.  Those should be instead returned by {@link #getCredentials() getCredentials()}.<a name="line.66"></a>
+<FONT color="green">067</FONT>         *<a name="line.67"></a>
+<FONT color="green">068</FONT>         * @return all principals associated with the corresponding Subject.<a name="line.68"></a>
+<FONT color="green">069</FONT>         */<a name="line.69"></a>
+<FONT color="green">070</FONT>        PrincipalCollection getPrincipals();<a name="line.70"></a>
+<FONT color="green">071</FONT>    <a name="line.71"></a>
+<FONT color="green">072</FONT>        /**<a name="line.72"></a>
+<FONT color="green">073</FONT>         * Returns the credentials associated with the corresponding Subject.  A credential verifies one or more of the<a name="line.73"></a>
+<FONT color="green">074</FONT>         * {@link #getPrincipals() principals} associated with the Subject, such as a password or private key.  Credentials<a name="line.74"></a>
+<FONT color="green">075</FONT>         * are used by Shiro particularly during the authentication process to ensure that submitted credentials<a name="line.75"></a>
+<FONT color="green">076</FONT>         * during a login attempt match exactly the credentials here in the &lt;code&gt;AuthenticationInfo&lt;/code&gt; instance.<a name="line.76"></a>
+<FONT color="green">077</FONT>         *<a name="line.77"></a>
+<FONT color="green">078</FONT>         * @return the credentials associated with the corresponding Subject.<a name="line.78"></a>
+<FONT color="green">079</FONT>         */<a name="line.79"></a>
+<FONT color="green">080</FONT>        Object getCredentials();<a name="line.80"></a>
+<FONT color="green">081</FONT>    <a name="line.81"></a>
+<FONT color="green">082</FONT>    }<a name="line.82"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

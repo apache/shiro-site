@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>SessionsSecurityManager.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.mgt</a> &gt; <span class="el_source">SessionsSecurityManager.java</span></div><h1>SessionsSecurityManager.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.mgt;
+
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.cache.CacheManagerAware;
+import org.apache.shiro.event.EventBus;
+import org.apache.shiro.event.EventBusAware;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.session.SessionException;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
+import org.apache.shiro.session.mgt.SessionContext;
+import org.apache.shiro.session.mgt.SessionKey;
+import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.util.LifecycleUtils;
+
+
+/**
+ * Shiro support of a {@link SecurityManager} class hierarchy that delegates all
+ * {@link org.apache.shiro.session.Session session} operations to a wrapped
+ * {@link org.apache.shiro.session.mgt.SessionManager SessionManager} instance.  That is, this class implements the
+ * methods in the {@link SessionManager SessionManager} interface, but in reality, those methods are merely
+ * passthrough calls to the underlying 'real' {@code SessionManager} instance.
+ * &lt;p/&gt;
+ * The remaining {@code SecurityManager} methods not implemented by this class or its parents are left to be
+ * implemented by subclasses.
+ * &lt;p/&gt;
+ * In keeping with the other classes in this hierarchy and Shiro's desire to minimize configuration whenever
+ * possible, suitable default instances for all dependencies will be created upon instantiation.
+ *
+ * @since 0.9
+ */
+public abstract class SessionsSecurityManager extends AuthorizingSecurityManager {
+
+    /**
+     * The internal delegate &lt;code&gt;SessionManager&lt;/code&gt; used by this security manager that manages all the
+     * application's {@link Session Session}s.
+     */
+    private SessionManager sessionManager;
+
+    /**
+     * Default no-arg constructor, internally creates a suitable default {@link SessionManager SessionManager} delegate
+     * instance.
+     */
+    public SessionsSecurityManager() {
+<span class="fc" id="L62">        super();</span>
+<span class="fc" id="L63">        this.sessionManager = new DefaultSessionManager();</span>
+<span class="fc" id="L64">        applyCacheManagerToSessionManager();</span>
+<span class="fc" id="L65">    }</span>
+
+    /**
+     * Sets the underlying delegate {@link SessionManager} instance that will be used to support this implementation's
+     * &lt;tt&gt;SessionManager&lt;/tt&gt; method calls.
+     * &lt;p/&gt;
+     * This &lt;tt&gt;SecurityManager&lt;/tt&gt; implementation does not provide logic to support the inherited
+     * &lt;tt&gt;SessionManager&lt;/tt&gt; interface, but instead delegates these calls to an internal
+     * &lt;tt&gt;SessionManager&lt;/tt&gt; instance.
+     * &lt;p/&gt;
+     * If a &lt;tt&gt;SessionManager&lt;/tt&gt; instance is not set, a default one will be automatically created and
+     * initialized appropriately for the the existing runtime environment.
+     *
+     * @param sessionManager delegate instance to use to support this manager's &lt;tt&gt;SessionManager&lt;/tt&gt; method calls.
+     */
+    public void setSessionManager(SessionManager sessionManager) {
+<span class="fc" id="L81">        this.sessionManager = sessionManager;</span>
+<span class="fc" id="L82">        afterSessionManagerSet();</span>
+<span class="fc" id="L83">    }</span>
+
+    protected void afterSessionManagerSet() {
+<span class="fc" id="L86">        applyCacheManagerToSessionManager();</span>
+<span class="fc" id="L87">        applyEventBusToSessionManager();</span>
+<span class="fc" id="L88">    }</span>
+
+    /**
+     * Returns this security manager's internal delegate {@link SessionManager SessionManager}.
+     *
+     * @return this security manager's internal delegate {@link SessionManager SessionManager}.
+     * @see #setSessionManager(org.apache.shiro.session.mgt.SessionManager) setSessionManager
+     */
+    public SessionManager getSessionManager() {
+<span class="fc" id="L97">        return this.sessionManager;</span>
+    }
+
+    /**
+     * Calls {@link org.apache.shiro.mgt.AuthorizingSecurityManager#afterCacheManagerSet() super.afterCacheManagerSet()} and then immediately calls
+     * {@link #applyCacheManagerToSessionManager() applyCacheManagerToSessionManager()} to ensure the
+     * &lt;code&gt;CacheManager&lt;/code&gt; is applied to the SessionManager as necessary.
+     */
+    @Override
+    protected void afterCacheManagerSet() {
+<span class="fc" id="L107">        super.afterCacheManagerSet();</span>
+<span class="fc" id="L108">        applyCacheManagerToSessionManager();</span>
+<span class="fc" id="L109">    }</span>
+
+    /**
+     * Sets any configured EventBus on the SessionManager if necessary.
+     *
+     * @since 1.3
+     */
+    @Override
+    protected void afterEventBusSet() {
+<span class="fc" id="L118">        super.afterEventBusSet();</span>
+<span class="fc" id="L119">        applyEventBusToSessionManager();</span>
+<span class="fc" id="L120">    }</span>
+
+    /**
+     * Ensures the internal delegate &lt;code&gt;SessionManager&lt;/code&gt; is injected with the newly set
+     * {@link #setCacheManager CacheManager} so it may use it for its internal caching needs.
+     * &lt;p/&gt;
+     * Note:  This implementation only injects the CacheManager into the SessionManager if the SessionManager
+     * instance implements the {@link CacheManagerAware CacheManagerAware} interface.
+     */
+    protected void applyCacheManagerToSessionManager() {
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if (this.sessionManager instanceof CacheManagerAware) {</span>
+<span class="fc" id="L131">            ((CacheManagerAware) this.sessionManager).setCacheManager(getCacheManager());</span>
+        }
+<span class="fc" id="L133">    }</span>
+
+    /**
+     * Ensures the internal delegate &lt;code&gt;SessionManager&lt;/code&gt; is injected with the newly set
+     * {@link #setEventBus EventBus} so it may use it for its internal event needs.
+     * &lt;p/&gt;
+     * Note: This implementation only injects the EventBus into the SessionManager if the SessionManager
+     * instance implements the {@link EventBusAware EventBusAware} interface.
+     *
+     * @since 1.3
+     */
+    protected void applyEventBusToSessionManager() {
+<span class="fc" id="L145">        EventBus eventBus = getEventBus();</span>
+<span class="pc bpc" id="L146" title="1 of 4 branches missed.">        if (eventBus != null &amp;&amp; this.sessionManager instanceof EventBusAware) {</span>
+<span class="fc" id="L147">            ((EventBusAware)this.sessionManager).setEventBus(eventBus);</span>
+        }
+<span class="fc" id="L149">    }</span>
+
+    public Session start(SessionContext context) throws AuthorizationException {
+<span class="fc" id="L152">        return this.sessionManager.start(context);</span>
+    }
+
+    public Session getSession(SessionKey key) throws SessionException {
+<span class="fc" id="L156">        return this.sessionManager.getSession(key);</span>
+    }
+
+    public void destroy() {
+<span class="fc" id="L160">        LifecycleUtils.destroy(getSessionManager());</span>
+<span class="fc" id="L161">        this.sessionManager = null;</span>
+<span class="fc" id="L162">        super.destroy();</span>
+<span class="fc" id="L163">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

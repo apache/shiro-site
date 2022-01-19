@@ -1,0 +1,36 @@
+= Apache Shiro Site: Contributing
+
+== General guidelines
+
+* New files are written in AsciiDoc, using `.adoc` filename extensions.
+* Each sentence ends with a newline (`\n`).
+Git will automatically convert line endings for you.
+
+
+== Changes for a new Apache Shiro Release
+
+=== Changes to link:data/releases.yaml[]
+
+* If the new `latestRelease` is a new minor release (e.g. `1.x.0`), prepend the old version to the `oldReleases` array. +
+Please skip this step for minor releases.
+* If the new `latestRelease` is a minor release, update the version number of the `releases` object at the end of the file. +
+_Rationale:_ Every minor release should only be represented with the latest bugfix release.
+* Change `latestRelease: "..."` to the new version.
+* Update the `versionInfo` object accordingly. +
+You can just add a new release, there is no need to remove old releases.
+
+=== Changes to link:data/artifacts.yaml[]
+
+In the unlikely event that new artifacts were generated, please modify link:data/artifacts.yaml[] according to your needs. +
+Do not delete artifacts, as they may be in use for old versions.
+
+After modifying the artifacts file, update the `releases` object in link:data/releases.yaml[] to include the new artifact's name.
+
+== Development server
+
+To start a development server on http://localhost:8820, use this command:
+
+[source,bash]
+----
+mvn clean jbake:inline
+----

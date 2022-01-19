@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClassUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Shiro :: Core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.util</a> &gt; <span class="el_source">ClassUtils.java</span></div><h1>ClassUtils.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.util;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+
+/**
+ * Utility method library used to conveniently interact with &lt;code&gt;Class&lt;/code&gt;es, such as acquiring them from the
+ * application &lt;code&gt;ClassLoader&lt;/code&gt;s and instantiating Objects from them.
+ *
+ * @since 0.1
+ */
+<span class="nc" id="L38">public class ClassUtils {</span>
+
+    //TODO - complete JavaDoc
+
+    /**
+     * Private internal log instance.
+     */
+<span class="fc" id="L45">    private static final Logger log = LoggerFactory.getLogger(ClassUtils.class);</span>
+
+    /**
+     * @since 1.0
+     */
+<span class="fc" id="L50">    private static final ClassLoaderAccessor THREAD_CL_ACCESSOR = new ExceptionIgnoringAccessor() {</span>
+        @Override
+        protected ClassLoader doGetClassLoader() throws Throwable {
+<span class="fc" id="L53">            return Thread.currentThread().getContextClassLoader();</span>
+        }
+    };
+
+    /**
+     * @since 1.0
+     */
+<span class="fc" id="L60">    private static final ClassLoaderAccessor CLASS_CL_ACCESSOR = new ExceptionIgnoringAccessor() {</span>
+        @Override
+        protected ClassLoader doGetClassLoader() throws Throwable {
+<span class="fc" id="L63">            return ClassUtils.class.getClassLoader();</span>
+        }
+    };
+
+    /**
+     * @since 1.0
+     */
+<span class="fc" id="L70">    private static final ClassLoaderAccessor SYSTEM_CL_ACCESSOR = new ExceptionIgnoringAccessor() {</span>
+        @Override
+        protected ClassLoader doGetClassLoader() throws Throwable {
+<span class="fc" id="L73">            return ClassLoader.getSystemClassLoader();</span>
+        }
+    };
+
+    /**
+     * Returns the specified resource by checking the current thread's
+     * {@link Thread#getContextClassLoader() context class loader}, then the
+     * current ClassLoader (&lt;code&gt;ClassUtils.class.getClassLoader()&lt;/code&gt;), then the system/application
+     * ClassLoader (&lt;code&gt;ClassLoader.getSystemClassLoader()&lt;/code&gt;, in that order, using
+     * {@link ClassLoader#getResourceAsStream(String) getResourceAsStream(name)}.
+     *
+     * @param name the name of the resource to acquire from the classloader(s).
+     * @return the InputStream of the resource found, or &lt;code&gt;null&lt;/code&gt; if the resource cannot be found from any
+     *         of the three mentioned ClassLoaders.
+     * @since 0.9
+     */
+    public static InputStream getResourceAsStream(String name) {
+
+<span class="fc" id="L91">        InputStream is = THREAD_CL_ACCESSOR.getResourceStream(name);</span>
+
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        if (is == null) {</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">            if (log.isTraceEnabled()) {</span>
+<span class="fc" id="L95">                log.trace(&quot;Resource [&quot; + name + &quot;] was not found via the thread context ClassLoader.  Trying the &quot; +</span>
+                        &quot;current ClassLoader...&quot;);
+            }
+<span class="fc" id="L98">            is = CLASS_CL_ACCESSOR.getResourceStream(name);</span>
+        }
+
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        if (is == null) {</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">            if (log.isTraceEnabled()) {</span>
+<span class="fc" id="L103">                log.trace(&quot;Resource [&quot; + name + &quot;] was not found via the current class loader.  Trying the &quot; +</span>
+                        &quot;system/application ClassLoader...&quot;);
+            }
+<span class="fc" id="L106">            is = SYSTEM_CL_ACCESSOR.getResourceStream(name);</span>
+        }
+
+<span class="pc bpc" id="L109" title="1 of 4 branches missed.">        if (is == null &amp;&amp; log.isTraceEnabled()) {</span>
+<span class="fc" id="L110">            log.trace(&quot;Resource [&quot; + name + &quot;] was not found via the thread context, current, or &quot; +</span>
+                    &quot;system/application ClassLoaders.  All heuristics have been exhausted.  Returning null.&quot;);
+        }
+
+<span class="fc" id="L114">        return is;</span>
+    }
+
+    /**
+     * Attempts to load the specified class name from the current thread's
+     * {@link Thread#getContextClassLoader() context class loader}, then the
+     * current ClassLoader (&lt;code&gt;ClassUtils.class.getClassLoader()&lt;/code&gt;), then the system/application
+     * ClassLoader (&lt;code&gt;ClassLoader.getSystemClassLoader()&lt;/code&gt;, in that order.  If any of them cannot locate
+     * the specified class, an &lt;code&gt;UnknownClassException&lt;/code&gt; is thrown (our RuntimeException equivalent of
+     * the JRE's &lt;code&gt;ClassNotFoundException&lt;/code&gt;.
+     *
+     * @param fqcn the fully qualified class name to load
+     * @return the located class
+     * @throws UnknownClassException if the class cannot be found.
+     */
+    public static Class forName(String fqcn) throws UnknownClassException {
+
+<span class="fc" id="L131">        Class clazz = THREAD_CL_ACCESSOR.loadClass(fqcn);</span>
+
+<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (clazz == null) {</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">            if (log.isTraceEnabled()) {</span>
+<span class="fc" id="L135">                log.trace(&quot;Unable to load class named [&quot; + fqcn +</span>
+                        &quot;] from the thread context ClassLoader.  Trying the current ClassLoader...&quot;);
+            }
+<span class="fc" id="L138">            clazz = CLASS_CL_ACCESSOR.loadClass(fqcn);</span>
+        }
+
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        if (clazz == null) {</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">            if (log.isTraceEnabled()) {</span>
+<span class="fc" id="L143">                log.trace(&quot;Unable to load class named [&quot; + fqcn + &quot;] from the current ClassLoader.  &quot; +</span>
+                        &quot;Trying the system/application ClassLoader...&quot;);
+            }
+<span class="fc" id="L146">            clazz = SYSTEM_CL_ACCESSOR.loadClass(fqcn);</span>
+        }
+
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (clazz == null) {</span>
+<span class="fc" id="L150">            String msg = &quot;Unable to load class named [&quot; + fqcn + &quot;] from the thread context, current, or &quot; +</span>
+                    &quot;system/application ClassLoaders.  All heuristics have been exhausted.  Class could not be found.&quot;;
+<span class="fc" id="L152">            throw new UnknownClassException(msg);</span>
+        }
+
+<span class="fc" id="L155">        return clazz;</span>
+    }
+
+    public static boolean isAvailable(String fullyQualifiedClassName) {
+        try {
+<span class="nc" id="L160">            forName(fullyQualifiedClassName);</span>
+<span class="nc" id="L161">            return true;</span>
+<span class="nc" id="L162">        } catch (UnknownClassException e) {</span>
+<span class="nc" id="L163">            return false;</span>
+        }
+    }
+
+    public static Object newInstance(String fqcn) {
+<span class="fc" id="L168">        return newInstance(forName(fqcn));</span>
+    }
+
+    public static Object newInstance(String fqcn, Object... args) {
+<span class="nc" id="L172">        return newInstance(forName(fqcn), args);</span>
+    }
+
+    public static Object newInstance(Class clazz) {
+<span class="pc bpc" id="L176" title="1 of 2 branches missed.">        if (clazz == null) {</span>
+<span class="nc" id="L177">            String msg = &quot;Class method parameter cannot be null.&quot;;</span>
+<span class="nc" id="L178">            throw new IllegalArgumentException(msg);</span>
+        }
+        try {
+<span class="fc" id="L181">            return clazz.newInstance();</span>
+<span class="nc" id="L182">        } catch (Exception e) {</span>
+<span class="nc" id="L183">            throw new InstantiationException(&quot;Unable to instantiate class [&quot; + clazz.getName() + &quot;]&quot;, e);</span>
+        }
+    }
+
+    public static Object newInstance(Class clazz, Object... args) {
+<span class="fc" id="L188">        Class[] argTypes = new Class[args.length];</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">        for (int i = 0; i &lt; args.length; i++) {</span>
+<span class="fc" id="L190">            argTypes[i] = args[i].getClass();</span>
+        }
+<span class="fc" id="L192">        Constructor ctor = getConstructor(clazz, argTypes);</span>
+<span class="fc" id="L193">        return instantiate(ctor, args);</span>
+    }
+
+    public static Constructor getConstructor(Class clazz, Class... argTypes) {
+        try {
+<span class="fc" id="L198">            return clazz.getConstructor(argTypes);</span>
+<span class="nc" id="L199">        } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L200">            throw new IllegalStateException(e);</span>
+        }
+
+    }
+
+    public static Object instantiate(Constructor ctor, Object... args) {
+        try {
+<span class="fc" id="L207">            return ctor.newInstance(args);</span>
+<span class="nc" id="L208">        } catch (Exception e) {</span>
+<span class="nc" id="L209">            String msg = &quot;Unable to instantiate Permission instance with constructor [&quot; + ctor + &quot;]&quot;;</span>
+<span class="nc" id="L210">            throw new InstantiationException(msg, e);</span>
+        }
+    }
+
+    /**
+     *
+     * @param type
+     * @param annotation
+     * @return
+     * @since 1.3
+     */
+    public static List&lt;Method&gt; getAnnotatedMethods(final Class&lt;?&gt; type, final Class&lt;? extends Annotation&gt; annotation) {
+<span class="fc" id="L222">        final List&lt;Method&gt; methods = new ArrayList&lt;Method&gt;();</span>
+<span class="fc" id="L223">        Class&lt;?&gt; clazz = type;</span>
+<span class="fc bfc" id="L224" title="All 2 branches covered.">        while (!Object.class.equals(clazz)) {</span>
+<span class="fc" id="L225">            Method[] currentClassMethods = clazz.getDeclaredMethods();</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">            for (final Method method : currentClassMethods) {</span>
+<span class="pc bpc" id="L227" title="1 of 4 branches missed.">                if (annotation == null || method.isAnnotationPresent(annotation)) {</span>
+<span class="fc" id="L228">                    methods.add(method);</span>
+                }
+            }
+            // move to the upper class in the hierarchy in search for more methods
+<span class="fc" id="L232">            clazz = clazz.getSuperclass();</span>
+<span class="fc" id="L233">        }</span>
+<span class="fc" id="L234">        return methods;</span>
+    }
+
+    /**
+     * @since 1.0
+     */
+    private static interface ClassLoaderAccessor {
+        Class loadClass(String fqcn);
+        InputStream getResourceStream(String name);
+    }
+
+    /**
+     * @since 1.0
+     */
+<span class="fc" id="L248">    private static abstract class ExceptionIgnoringAccessor implements ClassLoaderAccessor {</span>
+
+        public Class loadClass(String fqcn) {
+<span class="fc" id="L251">            Class clazz = null;</span>
+<span class="fc" id="L252">            ClassLoader cl = getClassLoader();</span>
+<span class="pc bpc" id="L253" title="1 of 2 branches missed.">            if (cl != null) {</span>
+                try {
+<span class="fc" id="L255">                    clazz = cl.loadClass(fqcn);</span>
+<span class="fc" id="L256">                } catch (ClassNotFoundException e) {</span>
+<span class="pc bpc" id="L257" title="1 of 2 branches missed.">                    if (log.isTraceEnabled()) {</span>
+<span class="fc" id="L258">                        log.trace(&quot;Unable to load clazz named [&quot; + fqcn + &quot;] from class loader [&quot; + cl + &quot;]&quot;);</span>
+                    }
+<span class="fc" id="L260">                }</span>
+            }
+<span class="fc" id="L262">            return clazz;</span>
+        }
+
+        public InputStream getResourceStream(String name) {
+<span class="fc" id="L266">            InputStream is = null;</span>
+<span class="fc" id="L267">            ClassLoader cl = getClassLoader();</span>
+<span class="pc bpc" id="L268" title="1 of 2 branches missed.">            if (cl != null) {</span>
+<span class="fc" id="L269">                is = cl.getResourceAsStream(name);</span>
+            }
+<span class="fc" id="L271">            return is;</span>
+        }
+
+        protected final ClassLoader getClassLoader() {
+            try {
+<span class="fc" id="L276">                return doGetClassLoader();</span>
+<span class="nc" id="L277">            } catch (Throwable t) {</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">                if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L279">                    log.debug(&quot;Unable to acquire ClassLoader.&quot;, t);</span>
+                }
+            }
+<span class="nc" id="L282">            return null;</span>
+        }
+
+        protected abstract ClassLoader doGetClassLoader() throws Throwable;
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

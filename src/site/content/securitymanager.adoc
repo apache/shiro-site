@@ -1,0 +1,82 @@
+= Understanding the SecurityManager in Apache Shiro
+:jbake-type: page
+:jbake-status: published
+:jbake-tags: permissions, authorization, authentication, securitymanager
+:idprefix:
+
+[#SecurityManager-UnderstandingtheSecurityManagerinApacheShiro]
+The link:static/current/apidocs/org/apache/shiro/mgt/SecurityManager.html[SecurityManager] lies at the heart of Shiro's architecture. While the link:subject.html[Subject] represents security functionality and state for a _single_ application user, the `SecurityManager` performs security operations and manages state for _all_ application users.
+
+Because Shiro's API encourages a `Subject`-centric programming approach, most application developers will rarely, if ever, interact with the `SecurityManager` directly (framework developers however might sometimes find it useful). Even so, it is still important to know how the `SecurityManager` functions, especially when configuring one for an application.
+
+[#SecurityManager-Design]
+== Design
+
+As stated previously, the application's `SecurityManager` performs security operations and manages state for _all_ application users. In Shiro's default `SecurityManager` implementations, this includes:
+
+* Authentication
+* Authorization
+* Session Management
+* Cache Management
+* link:realm.html[Realm] coordination
+* Event propagation
+* "Remember Me" Services
+* Subject creation
+* Logout
+* and more!
+
+But this is a lot of functionality to try to manage in a single component. And, making these things flexible and customizable would be very difficult if everything were lumped into a single implementation class.
+
+To simplify configuration and enable flexible configuration/pluggability, Shiro's implementations are all highly modular in design - so modular in fact, that the SecurityManager implementation (and its class-hierarchy) does not do much at all. Instead, the `SecurityManager` implementations mostly act as a lightweight 'container' component, delegating almost all behavior to nested/wrapped components.
+
+[#SecurityManager-Modularity]
+### Modularity
+
+To simplify the `SecurityManager` implementation complexity and allow for pluggable behavior, the Shiro `SecurityManager` implementations delegate almost all logic to a nested set of modular components that actually perform the necessary functionality. While the components actually execute the logic, the `SecurityManager` implementation knows how and when to coordinate the components for the correct behavior.
+
+The nested components that the `SecurityManager` coordinates and delegates to are:
+
+* Authenticator (`org.apache.shiro.authc.Authenticator`)
+* Authorizer (`org.apache.shiro.authz.Authorizer`)
+* SessionManager (`org.apache.shiro.session.mgt.SessionManager`)
+* link:cachemanager.html[CacheManager] (`org.apache.shiro.cache.CacheManager`)
+* RememberMeManager (`org.apache.shiro.mgt.RememberMeManager`)
+* SubjectFactory(`org.apache.shiro.mgt.SubjectFactory`)
+
+The `SecurityManager` implementations and are also JavaBeans compatible, which allows you (or a configuration mechanism) to easily customize the pluggable components via standard JavaBeans accessor/mutator methods (get*/set*). This means the Shiro's architectural modularity can translate into very easy configuration for custom behavior.
+
+[TIP]
+.Easy Configuration
+====
+Because of JavaBeans compatibility, it is very easy to configure the `SecurityManager` with custom components via any mechanism that supports JavaBeans-style configuration, such as link:spring.html[Spring], Guice, JBoss, etc.
+====
+
+[#SecurityManager-ProgrammaticConfiguration]
+### Programmatic Configuration
+
+The absolute simplest way to create a SecurityManager and make it available to the application is to create a `org.apache.shiro.mgt.DefaultSecurityManager` and wire it up in code:
+
+[source,java]
+----
+Realm realm = //instantiate or acquire a Realm instance.  We'll discuss Realms later. 
+SecurityManager securityManager = new DefaultSecurityManager(realm);
+//Make the SecurityManager instance available to the entire application: 
+SecurityUtils.setSecurityManager(securityManager);
+----
+
+Surprisingly, after only 3 lines of code, you now have a fully functional Shiro environment suitable for most applications. How easy was that!?
+
+You could additionally call any of the `SecurityManager` instance's setter methods with custom implementations of the nested components listed above to fully customize its behavior.
+
+But, as simple as programmatic customization is, these 3 lines of code do not represent the ideal configuration for most real world applications. There are a few reasons why programmatic configuration may not be suitable for your application:
+
+. It requires you to know about and instantiate a direct implementation. It would be nicer if you didn't have to know about concrete implementations and where to find them.
+. The `SecurityUtils.setSecurityManager` method call makes the instantiated `SecurityManager` instance a VM static singleton, which, while fine for many applications, would cause problems if more than one Shiro-enabled application was running on the same JVM. It could be better if the instance was an application singleton, but not a static memory reference.
+. It requires you to recompile your application every time you want to make a Shiro configuration change.
+
+Most applications instead benefit from text-based configuration that could be modified independently of source code and even make things easier to understand for those not intimately familiar with Shiro's APIs.
+
+[#SecurityManager-TextConfiguration]
+=== Text Configuration
+
+Shiro provides a simple INI-based link:configuration.html[configuration] that can be used out of the box, but any other JavaBeans-compatible mechanism can be used as well. For example, Shiro has excellent link:spring.html[Spring support] too. Other similar frameworks (Guice, JBoss, etc) could also be used.

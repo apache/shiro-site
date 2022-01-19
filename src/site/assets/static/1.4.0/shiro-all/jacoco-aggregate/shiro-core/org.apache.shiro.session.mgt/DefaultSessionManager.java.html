@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>DefaultSessionManager.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: All (aggregate jar)</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.session.mgt</a> &gt; <span class="el_source">DefaultSessionManager.java</span></div><h1>DefaultSessionManager.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.session.mgt;
+
+import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.cache.CacheManagerAware;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.session.UnknownSessionException;
+import org.apache.shiro.session.mgt.eis.MemorySessionDAO;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+
+/**
+ * Default business-tier implementation of a {@link ValidatingSessionManager}.  All session CRUD operations are
+ * delegated to an internal {@link SessionDAO}.
+ *
+ * @since 0.1
+ */
+public class DefaultSessionManager extends AbstractValidatingSessionManager implements CacheManagerAware {
+
+    //TODO - complete JavaDoc
+
+<span class="fc" id="L45">    private static final Logger log = LoggerFactory.getLogger(DefaultSessionManager.class);</span>
+
+    private SessionFactory sessionFactory;
+
+    protected SessionDAO sessionDAO;  //todo - move SessionDAO up to AbstractValidatingSessionManager?
+
+    private CacheManager cacheManager;
+
+    private boolean deleteInvalidSessions;
+
+<span class="fc" id="L55">    public DefaultSessionManager() {</span>
+<span class="fc" id="L56">        this.deleteInvalidSessions = true;</span>
+<span class="fc" id="L57">        this.sessionFactory = new SimpleSessionFactory();</span>
+<span class="fc" id="L58">        this.sessionDAO = new MemorySessionDAO();</span>
+<span class="fc" id="L59">    }</span>
+
+    public void setSessionDAO(SessionDAO sessionDAO) {
+<span class="fc" id="L62">        this.sessionDAO = sessionDAO;</span>
+<span class="fc" id="L63">        applyCacheManagerToSessionDAO();</span>
+<span class="fc" id="L64">    }</span>
+
+    public SessionDAO getSessionDAO() {
+<span class="fc" id="L67">        return this.sessionDAO;</span>
+    }
+
+    /**
+     * Returns the {@code SessionFactory} used to generate new {@link Session} instances.  The default instance
+     * is a {@link SimpleSessionFactory}.
+     *
+     * @return the {@code SessionFactory} used to generate new {@link Session} instances.
+     * @since 1.0
+     */
+    public SessionFactory getSessionFactory() {
+<span class="fc" id="L78">        return sessionFactory;</span>
+    }
+
+    /**
+     * Sets the {@code SessionFactory} used to generate new {@link Session} instances.  The default instance
+     * is a {@link SimpleSessionFactory}.
+     *
+     * @param sessionFactory the {@code SessionFactory} used to generate new {@link Session} instances.
+     * @since 1.0
+     */
+    public void setSessionFactory(SessionFactory sessionFactory) {
+<span class="fc" id="L89">        this.sessionFactory = sessionFactory;</span>
+<span class="fc" id="L90">    }</span>
+
+    /**
+     * Returns {@code true} if sessions should be automatically deleted after they are discovered to be invalid,
+     * {@code false} if invalid sessions will be manually deleted by some process external to Shiro's control.  The
+     * default is {@code true} to ensure no orphans exist in the underlying data store.
+     * &lt;h4&gt;Usage&lt;/h4&gt;
+     * It is ok to set this to {@code false} &lt;b&gt;&lt;em&gt;ONLY&lt;/em&gt;&lt;/b&gt; if you have some other process that you manage yourself
+     * that periodically deletes invalid sessions from the backing data store over time, such as via a Quartz or Cron
+     * job.  If you do not do this, the invalid sessions will become 'orphans' and fill up the data store over time.
+     * &lt;p/&gt;
+     * This property is provided because some systems need the ability to perform querying/reporting against sessions in
+     * the data store, even after they have stopped or expired.  Setting this attribute to {@code false} will allow
+     * such querying, but with the caveat that the application developer/configurer deletes the sessions themselves by
+     * some other means (cron, quartz, etc).
+     *
+     * @return {@code true} if sessions should be automatically deleted after they are discovered to be invalid,
+     *         {@code false} if invalid sessions will be manually deleted by some process external to Shiro's control.
+     * @since 1.0
+     */
+    public boolean isDeleteInvalidSessions() {
+<span class="fc" id="L111">        return deleteInvalidSessions;</span>
+    }
+
+    /**
+     * Sets whether or not sessions should be automatically deleted after they are discovered to be invalid.  Default
+     * value is {@code true} to ensure no orphans will exist in the underlying data store.
+     * &lt;h4&gt;WARNING&lt;/h4&gt;
+     * Only set this value to {@code false} if you are manually going to delete sessions yourself by some process
+     * (quartz, cron, etc) external to Shiro's control.  See the
+     * {@link #isDeleteInvalidSessions() isDeleteInvalidSessions()} JavaDoc for more.
+     *
+     * @param deleteInvalidSessions whether or not sessions should be automatically deleted after they are discovered
+     *                              to be invalid.
+     * @since 1.0
+     */
+    @SuppressWarnings({&quot;UnusedDeclaration&quot;})
+    public void setDeleteInvalidSessions(boolean deleteInvalidSessions) {
+<span class="fc" id="L128">        this.deleteInvalidSessions = deleteInvalidSessions;</span>
+<span class="fc" id="L129">    }</span>
+
+    public void setCacheManager(CacheManager cacheManager) {
+<span class="fc" id="L132">        this.cacheManager = cacheManager;</span>
+<span class="fc" id="L133">        applyCacheManagerToSessionDAO();</span>
+<span class="fc" id="L134">    }</span>
+
+    /**
+     * Sets the internal {@code CacheManager} on the {@code SessionDAO} if it implements the
+     * {@link org.apache.shiro.cache.CacheManagerAware CacheManagerAware} interface.
+     * &lt;p/&gt;
+     * This method is called after setting a cacheManager via the
+     * {@link #setCacheManager(org.apache.shiro.cache.CacheManager) setCacheManager} method &lt;em&gt;em&lt;/em&gt; when
+     * setting a {@code SessionDAO} via the {@link #setSessionDAO} method to allow it to be propagated
+     * in either case.
+     *
+     * @since 1.0
+     */
+    private void applyCacheManagerToSessionDAO() {
+<span class="pc bpc" id="L148" title="1 of 6 branches missed.">        if (this.cacheManager != null &amp;&amp; this.sessionDAO != null &amp;&amp; this.sessionDAO instanceof CacheManagerAware) {</span>
+<span class="fc" id="L149">            ((CacheManagerAware) this.sessionDAO).setCacheManager(this.cacheManager);</span>
+        }
+<span class="fc" id="L151">    }</span>
+
+    protected Session doCreateSession(SessionContext context) {
+<span class="fc" id="L154">        Session s = newSessionInstance(context);</span>
+<span class="fc bfc" id="L155" title="All 2 branches covered.">        if (log.isTraceEnabled()) {</span>
+<span class="fc" id="L156">            log.trace(&quot;Creating session for host {}&quot;, s.getHost());</span>
+        }
+<span class="fc" id="L158">        create(s);</span>
+<span class="fc" id="L159">        return s;</span>
+    }
+
+    protected Session newSessionInstance(SessionContext context) {
+<span class="fc" id="L163">        return getSessionFactory().createSession(context);</span>
+    }
+
+    /**
+     * Persists the given session instance to an underlying EIS (Enterprise Information System).  This implementation
+     * delegates and calls
+     * &lt;code&gt;this.{@link SessionDAO sessionDAO}.{@link SessionDAO#create(org.apache.shiro.session.Session) create}(session);&lt;code&gt;
+     *
+     * @param session the Session instance to persist to the underlying EIS.
+     */
+    protected void create(Session session) {
+<span class="fc bfc" id="L174" title="All 2 branches covered.">        if (log.isDebugEnabled()) {</span>
+<span class="fc" id="L175">            log.debug(&quot;Creating new EIS record for new session instance [&quot; + session + &quot;]&quot;);</span>
+        }
+<span class="fc" id="L177">        sessionDAO.create(session);</span>
+<span class="fc" id="L178">    }</span>
+
+    @Override
+    protected void onStop(Session session) {
+<span class="pc bpc" id="L182" title="1 of 2 branches missed.">        if (session instanceof SimpleSession) {</span>
+<span class="fc" id="L183">            SimpleSession ss = (SimpleSession) session;</span>
+<span class="fc" id="L184">            Date stopTs = ss.getStopTimestamp();</span>
+<span class="fc" id="L185">            ss.setLastAccessTime(stopTs);</span>
+        }
+<span class="fc" id="L187">        onChange(session);</span>
+<span class="fc" id="L188">    }</span>
+
+    @Override
+    protected void afterStopped(Session session) {
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">        if (isDeleteInvalidSessions()) {</span>
+<span class="fc" id="L193">            delete(session);</span>
+        }
+<span class="fc" id="L195">    }</span>
+
+    protected void onExpiration(Session session) {
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">        if (session instanceof SimpleSession) {</span>
+<span class="fc" id="L199">            ((SimpleSession) session).setExpired(true);</span>
+        }
+<span class="fc" id="L201">        onChange(session);</span>
+<span class="fc" id="L202">    }</span>
+
+    @Override
+    protected void afterExpired(Session session) {
+<span class="pc bpc" id="L206" title="1 of 2 branches missed.">        if (isDeleteInvalidSessions()) {</span>
+<span class="fc" id="L207">            delete(session);</span>
+        }
+<span class="fc" id="L209">    }</span>
+
+    protected void onChange(Session session) {
+<span class="fc" id="L212">        sessionDAO.update(session);</span>
+<span class="fc" id="L213">    }</span>
+
+    protected Session retrieveSession(SessionKey sessionKey) throws UnknownSessionException {
+<span class="fc" id="L216">        Serializable sessionId = getSessionId(sessionKey);</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">        if (sessionId == null) {</span>
+<span class="fc" id="L218">            log.debug(&quot;Unable to resolve session ID from SessionKey [{}].  Returning null to indicate a &quot; +</span>
+                    &quot;session could not be found.&quot;, sessionKey);
+<span class="fc" id="L220">            return null;</span>
+        }
+<span class="fc" id="L222">        Session s = retrieveSessionFromDataSource(sessionId);</span>
+<span class="pc bpc" id="L223" title="1 of 2 branches missed.">        if (s == null) {</span>
+            //session ID was provided, meaning one is expected to be found, but we couldn't find one:
+<span class="nc" id="L225">            String msg = &quot;Could not find session with ID [&quot; + sessionId + &quot;]&quot;;</span>
+<span class="nc" id="L226">            throw new UnknownSessionException(msg);</span>
+        }
+<span class="fc" id="L228">        return s;</span>
+    }
+
+    protected Serializable getSessionId(SessionKey sessionKey) {
+<span class="fc" id="L232">        return sessionKey.getSessionId();</span>
+    }
+
+    protected Session retrieveSessionFromDataSource(Serializable sessionId) throws UnknownSessionException {
+<span class="fc" id="L236">        return sessionDAO.readSession(sessionId);</span>
+    }
+
+    protected void delete(Session session) {
+<span class="fc" id="L240">        sessionDAO.delete(session);</span>
+<span class="fc" id="L241">    }</span>
+
+    protected Collection&lt;Session&gt; getActiveSessions() {
+<span class="fc" id="L244">        Collection&lt;Session&gt; active = sessionDAO.getActiveSessions();</span>
+<span class="pc bpc" id="L245" title="1 of 2 branches missed.">        return active != null ? active : Collections.&lt;Session&gt;emptySet();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

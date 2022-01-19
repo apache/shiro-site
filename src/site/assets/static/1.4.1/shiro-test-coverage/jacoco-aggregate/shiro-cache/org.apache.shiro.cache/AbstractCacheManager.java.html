@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>AbstractCacheManager.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-cache</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.cache</a> &gt; <span class="el_source">AbstractCacheManager.java</span></div><h1>AbstractCacheManager.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.cache;
+
+import org.apache.shiro.util.Destroyable;
+import org.apache.shiro.util.LifecycleUtils;
+import org.apache.shiro.util.StringUtils;
+
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+/**
+ * Very simple abstract {@code CacheManager} implementation that retains all created {@link Cache Cache} instances in
+ * an in-memory {@link ConcurrentMap ConcurrentMap}.  {@code Cache} instance creation is left to subclasses via
+ * the {@link #createCache createCache} method implementation.
+ *
+ * @since 1.0
+ */
+public abstract class AbstractCacheManager implements CacheManager, Destroyable {
+
+    /**
+     * Retains all Cache objects maintained by this cache manager.
+     */
+    private final ConcurrentMap&lt;String, Cache&gt; caches;
+
+    /**
+     * Default no-arg constructor that instantiates an internal name-to-cache {@code ConcurrentMap}.
+     */
+<span class="fc" id="L46">    public AbstractCacheManager() {</span>
+<span class="fc" id="L47">        this.caches = new ConcurrentHashMap&lt;String, Cache&gt;();</span>
+<span class="fc" id="L48">    }</span>
+
+    /**
+     * Returns the cache with the specified {@code name}.  If the cache instance does not yet exist, it will be lazily
+     * created, retained for further access, and then returned.
+     *
+     * @param name the name of the cache to acquire.
+     * @return the cache with the specified {@code name}.
+     * @throws IllegalArgumentException if the {@code name} argument is {@code null} or does not contain text.
+     * @throws CacheException           if there is a problem lazily creating a {@code Cache} instance.
+     */
+    public &lt;K, V&gt; Cache&lt;K, V&gt; getCache(String name) throws IllegalArgumentException, CacheException {
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        if (!StringUtils.hasText(name)) {</span>
+<span class="nc" id="L61">            throw new IllegalArgumentException(&quot;Cache name cannot be null or empty.&quot;);</span>
+        }
+
+        Cache cache;
+
+<span class="fc" id="L66">        cache = caches.get(name);</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        if (cache == null) {</span>
+<span class="fc" id="L68">            cache = createCache(name);</span>
+<span class="fc" id="L69">            Cache existing = caches.putIfAbsent(name, cache);</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">            if (existing != null) {</span>
+<span class="nc" id="L71">                cache = existing;</span>
+            }
+        }
+
+        //noinspection unchecked
+<span class="fc" id="L76">        return cache;</span>
+    }
+
+    /**
+     * Creates a new {@code Cache} instance associated with the specified {@code name}.
+     *
+     * @param name the name of the cache to create
+     * @return a new {@code Cache} instance associated with the specified {@code name}.
+     * @throws CacheException if the {@code Cache} instance cannot be created.
+     */
+    protected abstract Cache createCache(String name) throws CacheException;
+
+    /**
+     * Cleanup method that first {@link LifecycleUtils#destroy destroys} all of it's managed caches and then
+     * {@link java.util.Map#clear clears} out the internally referenced cache map.
+     *
+     * @throws Exception if any of the managed caches can't destroy properly.
+     */
+    public void destroy() throws Exception {
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        while (!caches.isEmpty()) {</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">            for (Cache cache : caches.values()) {</span>
+<span class="fc" id="L97">                LifecycleUtils.destroy(cache);</span>
+<span class="fc" id="L98">            }</span>
+<span class="fc" id="L99">            caches.clear();</span>
+        }
+<span class="fc" id="L101">    }</span>
+
+    public String toString() {
+<span class="fc" id="L104">        Collection&lt;Cache&gt; values = caches.values();</span>
+<span class="fc" id="L105">        StringBuilder sb = new StringBuilder(getClass().getSimpleName())</span>
+<span class="fc" id="L106">                .append(&quot; with &quot;)</span>
+<span class="fc" id="L107">                .append(caches.size())</span>
+<span class="fc" id="L108">                .append(&quot; cache(s)): [&quot;);</span>
+<span class="fc" id="L109">        int i = 0;</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        for (Cache cache : values) {</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">            if (i &gt; 0) {</span>
+<span class="nc" id="L112">                sb.append(&quot;, &quot;);</span>
+            }
+<span class="nc" id="L114">            sb.append(cache.toString());</span>
+<span class="nc" id="L115">            i++;</span>
+<span class="nc" id="L116">        }</span>
+<span class="fc" id="L117">        sb.append(&quot;]&quot;);</span>
+<span class="fc" id="L118">        return sb.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

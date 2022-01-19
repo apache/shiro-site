@@ -1,0 +1,41 @@
+= Cache Manager
+:jbake-type: page
+:jbake-status: published
+:jbake-tags: documentation, cache
+:idprefix:
+
+== Apache Shiro Cache Manager Overview
+
+Shiro has three important cache interfaces:
+
+* link:static/current/apidocs/org/apache/shiro/cache/CacheManager.html[`+CacheManager+`]
+* link:static/current/apidocs/org/apache/shiro/cache/Cache.html[`+Cache+`]
+* link:static/current/apidocs/org/apache/shiro/cache/CacheManagerAware.html[`+CacheManagerAware+`]
+
+A `+CacheManager+` returns `+Cache+` instances and various Shiro components use those `+Cache<+` instances to cache data as necessary.
+Any Shiro component that implements `+CacheManager+` will automatically receive a configured `+CacheManager+`, where it can be used to acquire `+Cache+` instances.
+
+The Shiro link:securitymanager.html[`+SecurityManager+`] implementations and all
+link:static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html[`+AuthorizingRealm+`] implementations implement CacheManagerAware.
+If you set the `+CacheManager+` on the `+SecurityManager+`, it will in turn set it on the various Realms that implement CacheManagerAware as well (OO delegation).
+For example, in shiro.ini:
+
+[source,ini]
+.example shiro.ini CacheManager configuration
+----
+securityManager.realms = $myRealm1, $myRealm2, ..., $myRealmN
+...
+cacheManager = my.implementation.of.CacheManager
+...
+securityManager.cacheManager = $cacheManager
+# at this point, the securityManager and all CacheManagerAware
+# realms have been set with the cacheManager instance
+----
+
+We have an out-of-the-box link:static/current/apidocs/org/apache/shiro/cache/ehcache/EhCacheManager.html[`+EhCacheManager+`] implementation, so you can use that today if you wanted.
+Otherwise, you can implement your own `+CacheManager+` (e.g. with Coherence, etc) and configure it as above, and you’ll be good to go.
+
+== Authorization Cache Invalidation [[CacheManager-AuthorizationCacheInvalidation]]
+
+Finally note that link:static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html[`+AuthorizingRealm+`] has a link:static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html#clearCachedAuthorizationInfo%28org.apache.shiro.subject.PrincipalCollection%29[`+clearCachedAuthorizationInfo+`] method that can be called by subclasses to evict the cached authzInfo for a particular account.
+It is usually called by custom logic if the corresponding account’s authz data has changed (to ensure the next authz check will pick up the new data).

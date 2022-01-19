@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - run: cd jbake && sed -i.bak 's/site.host=.*/site.host=https:\/\/shiro-jbake.staged.apache.org\//g' jbake.properties && rm jbake.properties.bak
+      - run: sed -i.bak 's/site.host=.*/site.host=https:\/\/shiro-jbake.staged.apache.org\//g' jbake.properties && rm jbake.properties.bak
         shell: bash
 
       - uses: actions/setup-java@v2
@@ -39,4 +39,4 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - run: cd jbake && mvn generate-resources --show-version --errors --batch-mode --no-transfer-progress
+      - run: mvn generate-resources --show-version --errors --batch-mode --no-transfer-progress

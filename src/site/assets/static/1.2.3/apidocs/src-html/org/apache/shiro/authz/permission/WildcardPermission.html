@@ -1,0 +1,319 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<FONT color="green">007</FONT>     * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<FONT color="green">008</FONT>     * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<FONT color="green">013</FONT>     * software distributed under the License is distributed on an<a name="line.13"></a>
+<FONT color="green">014</FONT>     * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<FONT color="green">015</FONT>     * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<FONT color="green">016</FONT>     * specific language governing permissions and limitations<a name="line.16"></a>
+<FONT color="green">017</FONT>     * under the License.<a name="line.17"></a>
+<FONT color="green">018</FONT>     */<a name="line.18"></a>
+<FONT color="green">019</FONT>    package org.apache.shiro.authz.permission;<a name="line.19"></a>
+<FONT color="green">020</FONT>    <a name="line.20"></a>
+<FONT color="green">021</FONT>    import org.apache.shiro.authz.Permission;<a name="line.21"></a>
+<FONT color="green">022</FONT>    import org.apache.shiro.util.CollectionUtils;<a name="line.22"></a>
+<FONT color="green">023</FONT>    <a name="line.23"></a>
+<FONT color="green">024</FONT>    import java.io.Serializable;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import java.util.ArrayList;<a name="line.25"></a>
+<FONT color="green">026</FONT>    import java.util.LinkedHashSet;<a name="line.26"></a>
+<FONT color="green">027</FONT>    import java.util.List;<a name="line.27"></a>
+<FONT color="green">028</FONT>    import java.util.Set;<a name="line.28"></a>
+<FONT color="green">029</FONT>    <a name="line.29"></a>
+<FONT color="green">030</FONT>    /**<a name="line.30"></a>
+<FONT color="green">031</FONT>     * A &lt;code&gt;WildcardPermission&lt;/code&gt; is a very flexible permission construct supporting multiple levels of<a name="line.31"></a>
+<FONT color="green">032</FONT>     * permission matching. However, most people will probably follow some standard conventions as explained below.<a name="line.32"></a>
+<FONT color="green">033</FONT>     * &lt;p/&gt;<a name="line.33"></a>
+<FONT color="green">034</FONT>     * &lt;h3&gt;Simple Usage&lt;/h3&gt;<a name="line.34"></a>
+<FONT color="green">035</FONT>     * &lt;p/&gt;<a name="line.35"></a>
+<FONT color="green">036</FONT>     * In the simplest form, &lt;code&gt;WildcardPermission&lt;/code&gt; can be used as a simple permission string. You could grant a<a name="line.36"></a>
+<FONT color="green">037</FONT>     * user an &amp;quot;editNewsletter&amp;quot; permission and then check to see if the user has the editNewsletter<a name="line.37"></a>
+<FONT color="green">038</FONT>     * permission by calling<a name="line.38"></a>
+<FONT color="green">039</FONT>     * &lt;p/&gt;<a name="line.39"></a>
+<FONT color="green">040</FONT>     * &lt;code&gt;subject.isPermitted(&amp;quot;editNewsletter&amp;quot;)&lt;/code&gt;<a name="line.40"></a>
+<FONT color="green">041</FONT>     * &lt;p/&gt;<a name="line.41"></a>
+<FONT color="green">042</FONT>     * This is (mostly) equivalent to<a name="line.42"></a>
+<FONT color="green">043</FONT>     * &lt;p/&gt;<a name="line.43"></a>
+<FONT color="green">044</FONT>     * &lt;code&gt;subject.isPermitted( new WildcardPermission(&amp;quot;editNewsletter&amp;quot;) )&lt;/code&gt;<a name="line.44"></a>
+<FONT color="green">045</FONT>     * &lt;p/&gt;<a name="line.45"></a>
+<FONT color="green">046</FONT>     * but more on that later.<a name="line.46"></a>
+<FONT color="green">047</FONT>     * &lt;p/&gt;<a name="line.47"></a>
+<FONT color="green">048</FONT>     * The simple permission string may work for simple applications, but it requires you to have permissions like<a name="line.48"></a>
+<FONT color="green">049</FONT>     * &lt;code&gt;&amp;quot;viewNewsletter&amp;quot;&lt;/code&gt;, &lt;code&gt;&amp;quot;deleteNewsletter&amp;quot;&lt;/code&gt;,<a name="line.49"></a>
+<FONT color="green">050</FONT>     * &lt;code&gt;&amp;quot;createNewsletter&amp;quot;&lt;/code&gt;, etc. You can also grant a user &lt;code&gt;&amp;quot;*&amp;quot;&lt;/code&gt; permissions<a name="line.50"></a>
+<FONT color="green">051</FONT>     * using the wildcard character (giving this class its name), which means they have &lt;em&gt;all&lt;/em&gt; permissions. But<a name="line.51"></a>
+<FONT color="green">052</FONT>     * using this approach there's no way to just say a user has &amp;quot;all newsletter permissions&amp;quot;.<a name="line.52"></a>
+<FONT color="green">053</FONT>     * &lt;p/&gt;<a name="line.53"></a>
+<FONT color="green">054</FONT>     * For this reason, &lt;code&gt;WildcardPermission&lt;/code&gt; supports multiple &lt;em&gt;levels&lt;/em&gt; of permissioning.<a name="line.54"></a>
+<FONT color="green">055</FONT>     * &lt;p/&gt;<a name="line.55"></a>
+<FONT color="green">056</FONT>     * &lt;h3&gt;Multiple Levels&lt;/h3&gt;<a name="line.56"></a>
+<FONT color="green">057</FONT>     * &lt;p/&gt;<a name="line.57"></a>
+<FONT color="green">058</FONT>     * WildcardPermission&lt;/code&gt; also supports the concept of multiple &lt;em&gt;levels&lt;/em&gt;.  For example, you could<a name="line.58"></a>
+<FONT color="green">059</FONT>     * restructure the previous simple example by granting a user the permission &lt;code&gt;&amp;quot;newsletter:edit&amp;quot;&lt;/code&gt;.<a name="line.59"></a>
+<FONT color="green">060</FONT>     * The colon in this example is a special character used by the &lt;code&gt;WildcardPermission&lt;/code&gt; that delimits the<a name="line.60"></a>
+<FONT color="green">061</FONT>     * next token in the permission.<a name="line.61"></a>
+<FONT color="green">062</FONT>     * &lt;p/&gt;<a name="line.62"></a>
+<FONT color="green">063</FONT>     * In this example, the first token is the &lt;em&gt;domain&lt;/em&gt; that is being operated on<a name="line.63"></a>
+<FONT color="green">064</FONT>     * and the second token is the &lt;em&gt;action&lt;/em&gt; being performed. Each level can contain multiple values.  So you<a name="line.64"></a>
+<FONT color="green">065</FONT>     * could simply grant a user the permission &lt;code&gt;&amp;quot;newsletter:view,edit,create&amp;quot;&lt;/code&gt; which gives them<a name="line.65"></a>
+<FONT color="green">066</FONT>     * access to perform &lt;code&gt;view&lt;/code&gt;, &lt;code&gt;edit&lt;/code&gt;, and &lt;code&gt;create&lt;/code&gt; actions in the &lt;code&gt;newsletter&lt;/code&gt;<a name="line.66"></a>
+<FONT color="green">067</FONT>     * &lt;em&gt;domain&lt;/em&gt;. Then you could check to see if the user has the &lt;code&gt;&amp;quot;newsletter:create&amp;quot;&lt;/code&gt;<a name="line.67"></a>
+<FONT color="green">068</FONT>     * permission by calling<a name="line.68"></a>
+<FONT color="green">069</FONT>     * &lt;p/&gt;<a name="line.69"></a>
+<FONT color="green">070</FONT>     * &lt;code&gt;subject.isPermitted(&amp;quot;newsletter:create&amp;quot;)&lt;/code&gt;<a name="line.70"></a>
+<FONT color="green">071</FONT>     * &lt;p/&gt;<a name="line.71"></a>
+<FONT color="green">072</FONT>     * (which would return true).<a name="line.72"></a>
+<FONT color="green">073</FONT>     * &lt;p/&gt;<a name="line.73"></a>
+<FONT color="green">074</FONT>     * In addition to granting multiple permissions via a single string, you can grant all permission for a particular<a name="line.74"></a>
+<FONT color="green">075</FONT>     * level. So if you wanted to grant a user all actions in the &lt;code&gt;newsletter&lt;/code&gt; domain, you could simply give<a name="line.75"></a>
+<FONT color="green">076</FONT>     * them &lt;code&gt;&amp;quot;newsletter:*&amp;quot;&lt;/code&gt;. Now, any permission check for &lt;code&gt;&amp;quot;newsletter:XXX&amp;quot;&lt;/code&gt;<a name="line.76"></a>
+<FONT color="green">077</FONT>     * will return &lt;code&gt;true&lt;/code&gt;. It is also possible to use the wildcard token at the domain level (or both): so you<a name="line.77"></a>
+<FONT color="green">078</FONT>     * could grant a user the &lt;code&gt;&amp;quot;view&amp;quot;&lt;/code&gt; action across all domains &lt;code&gt;&amp;quot;*:view&amp;quot;&lt;/code&gt;.<a name="line.78"></a>
+<FONT color="green">079</FONT>     * &lt;p/&gt;<a name="line.79"></a>
+<FONT color="green">080</FONT>     * &lt;h3&gt;Instance-level Access Control&lt;/h3&gt;<a name="line.80"></a>
+<FONT color="green">081</FONT>     * &lt;p/&gt;<a name="line.81"></a>
+<FONT color="green">082</FONT>     * Another common usage of the &lt;code&gt;WildcardPermission&lt;/code&gt; is to model instance-level Access Control Lists.<a name="line.82"></a>
+<FONT color="green">083</FONT>     * In this scenario you use three tokens - the first is the &lt;em&gt;domain&lt;/em&gt;, the second is the &lt;em&gt;action&lt;/em&gt;, and<a name="line.83"></a>
+<FONT color="green">084</FONT>     * the third is the &lt;em&gt;instance&lt;/em&gt; you are acting on.<a name="line.84"></a>
+<FONT color="green">085</FONT>     * &lt;p/&gt;<a name="line.85"></a>
+<FONT color="green">086</FONT>     * So for example you could grant a user &lt;code&gt;&amp;quot;newsletter:edit:12,13,18&amp;quot;&lt;/code&gt;.  In this example, assume<a name="line.86"></a>
+<FONT color="green">087</FONT>     * that the third token is the system's ID of the newsletter. That would allow the user to edit newsletters<a name="line.87"></a>
+<FONT color="green">088</FONT>     * &lt;code&gt;12&lt;/code&gt;, &lt;code&gt;13&lt;/code&gt;, and &lt;code&gt;18&lt;/code&gt;. This is an extremely powerful way to express permissions,<a name="line.88"></a>
+<FONT color="green">089</FONT>     * since you can now say things like &lt;code&gt;&amp;quot;newsletter:*:13&amp;quot;&lt;/code&gt; (grant a user all actions for newsletter<a name="line.89"></a>
+<FONT color="green">090</FONT>     * &lt;code&gt;13&lt;/code&gt;), &lt;code&gt;&amp;quot;newsletter:view,create,edit:*&amp;quot;&lt;/code&gt; (allow the user to<a name="line.90"></a>
+<FONT color="green">091</FONT>     * &lt;code&gt;view&lt;/code&gt;, &lt;code&gt;create&lt;/code&gt;, or &lt;code&gt;edit&lt;/code&gt; &lt;em&gt;any&lt;/em&gt; newsletter), or<a name="line.91"></a>
+<FONT color="green">092</FONT>     * &lt;code&gt;&amp;quot;newsletter:*:*&lt;/code&gt; (allow the user to perform &lt;em&gt;any&lt;/em&gt; action on &lt;em&gt;any&lt;/em&gt; newsletter).<a name="line.92"></a>
+<FONT color="green">093</FONT>     * &lt;p/&gt;<a name="line.93"></a>
+<FONT color="green">094</FONT>     * To perform checks against these instance-level permissions, the application should include the instance ID in the<a name="line.94"></a>
+<FONT color="green">095</FONT>     * permission check like so:<a name="line.95"></a>
+<FONT color="green">096</FONT>     * &lt;p/&gt;<a name="line.96"></a>
+<FONT color="green">097</FONT>     * &lt;code&gt;subject.isPermitted( &amp;quot;newsletter:edit:13&amp;quot; )&lt;/code&gt;<a name="line.97"></a>
+<FONT color="green">098</FONT>     * &lt;p/&gt;<a name="line.98"></a>
+<FONT color="green">099</FONT>     * There is no limit to the number of tokens that can be used, so it is up to your imagination in terms of ways that<a name="line.99"></a>
+<FONT color="green">100</FONT>     * this could be used in your application.  However, the Shiro team likes to standardize some common usages shown<a name="line.100"></a>
+<FONT color="green">101</FONT>     * above to help people get started and provide consistency in the Shiro community.<a name="line.101"></a>
+<FONT color="green">102</FONT>     *<a name="line.102"></a>
+<FONT color="green">103</FONT>     * @since 0.9<a name="line.103"></a>
+<FONT color="green">104</FONT>     */<a name="line.104"></a>
+<FONT color="green">105</FONT>    public class WildcardPermission implements Permission, Serializable {<a name="line.105"></a>
+<FONT color="green">106</FONT>    <a name="line.106"></a>
+<FONT color="green">107</FONT>        //TODO - JavaDoc methods<a name="line.107"></a>
+<FONT color="green">108</FONT>    <a name="line.108"></a>
+<FONT color="green">109</FONT>        /*--------------------------------------------<a name="line.109"></a>
+<FONT color="green">110</FONT>        |             C O N S T A N T S             |<a name="line.110"></a>
+<FONT color="green">111</FONT>        ============================================*/<a name="line.111"></a>
+<FONT color="green">112</FONT>        protected static final String WILDCARD_TOKEN = "*";<a name="line.112"></a>
+<FONT color="green">113</FONT>        protected static final String PART_DIVIDER_TOKEN = ":";<a name="line.113"></a>
+<FONT color="green">114</FONT>        protected static final String SUBPART_DIVIDER_TOKEN = ",";<a name="line.114"></a>
+<FONT color="green">115</FONT>        protected static final boolean DEFAULT_CASE_SENSITIVE = false;<a name="line.115"></a>
+<FONT color="green">116</FONT>    <a name="line.116"></a>
+<FONT color="green">117</FONT>        /*--------------------------------------------<a name="line.117"></a>
+<FONT color="green">118</FONT>        |    I N S T A N C E   V A R I A B L E S    |<a name="line.118"></a>
+<FONT color="green">119</FONT>        ============================================*/<a name="line.119"></a>
+<FONT color="green">120</FONT>        private List&lt;Set&lt;String&gt;&gt; parts;<a name="line.120"></a>
+<FONT color="green">121</FONT>    <a name="line.121"></a>
+<FONT color="green">122</FONT>        /*--------------------------------------------<a name="line.122"></a>
+<FONT color="green">123</FONT>        |         C O N S T R U C T O R S           |<a name="line.123"></a>
+<FONT color="green">124</FONT>        ============================================*/<a name="line.124"></a>
+<FONT color="green">125</FONT>        /**<a name="line.125"></a>
+<FONT color="green">126</FONT>         * Default no-arg constructor for subclasses only - end-user developers instantiating Permission instances must<a name="line.126"></a>
+<FONT color="green">127</FONT>         * provide a wildcard string at a minimum, since Permission instances are immutable once instantiated.<a name="line.127"></a>
+<FONT color="green">128</FONT>         * &lt;p/&gt;<a name="line.128"></a>
+<FONT color="green">129</FONT>         * Note that the WildcardPermission class is very robust and typically subclasses are not necessary unless you<a name="line.129"></a>
+<FONT color="green">130</FONT>         * wish to create type-safe Permission objects that would be used in your application, such as perhaps a<a name="line.130"></a>
+<FONT color="green">131</FONT>         * {@code UserPermission}, {@code SystemPermission}, {@code PrinterPermission}, etc.  If you want such type-safe<a name="line.131"></a>
+<FONT color="green">132</FONT>         * permission usage, consider subclassing the {@link DomainPermission DomainPermission} class for your needs.<a name="line.132"></a>
+<FONT color="green">133</FONT>         */<a name="line.133"></a>
+<FONT color="green">134</FONT>        protected WildcardPermission() {<a name="line.134"></a>
+<FONT color="green">135</FONT>        }<a name="line.135"></a>
+<FONT color="green">136</FONT>    <a name="line.136"></a>
+<FONT color="green">137</FONT>        public WildcardPermission(String wildcardString) {<a name="line.137"></a>
+<FONT color="green">138</FONT>            this(wildcardString, DEFAULT_CASE_SENSITIVE);<a name="line.138"></a>
+<FONT color="green">139</FONT>        }<a name="line.139"></a>
+<FONT color="green">140</FONT>    <a name="line.140"></a>
+<FONT color="green">141</FONT>        public WildcardPermission(String wildcardString, boolean caseSensitive) {<a name="line.141"></a>
+<FONT color="green">142</FONT>            setParts(wildcardString, caseSensitive);<a name="line.142"></a>
+<FONT color="green">143</FONT>        }<a name="line.143"></a>
+<FONT color="green">144</FONT>    <a name="line.144"></a>
+<FONT color="green">145</FONT>        protected void setParts(String wildcardString) {<a name="line.145"></a>
+<FONT color="green">146</FONT>            setParts(wildcardString, DEFAULT_CASE_SENSITIVE);<a name="line.146"></a>
+<FONT color="green">147</FONT>        }<a name="line.147"></a>
+<FONT color="green">148</FONT>    <a name="line.148"></a>
+<FONT color="green">149</FONT>        protected void setParts(String wildcardString, boolean caseSensitive) {<a name="line.149"></a>
+<FONT color="green">150</FONT>            if (wildcardString == null || wildcardString.trim().length() == 0) {<a name="line.150"></a>
+<FONT color="green">151</FONT>                throw new IllegalArgumentException("Wildcard string cannot be null or empty. Make sure permission strings are properly formatted.");<a name="line.151"></a>
+<FONT color="green">152</FONT>            }<a name="line.152"></a>
+<FONT color="green">153</FONT>    <a name="line.153"></a>
+<FONT color="green">154</FONT>            wildcardString = wildcardString.trim();<a name="line.154"></a>
+<FONT color="green">155</FONT>    <a name="line.155"></a>
+<FONT color="green">156</FONT>            List&lt;String&gt; parts = CollectionUtils.asList(wildcardString.split(PART_DIVIDER_TOKEN));<a name="line.156"></a>
+<FONT color="green">157</FONT>    <a name="line.157"></a>
+<FONT color="green">158</FONT>            this.parts = new ArrayList&lt;Set&lt;String&gt;&gt;();<a name="line.158"></a>
+<FONT color="green">159</FONT>            for (String part : parts) {<a name="line.159"></a>
+<FONT color="green">160</FONT>                Set&lt;String&gt; subparts = CollectionUtils.asSet(part.split(SUBPART_DIVIDER_TOKEN));<a name="line.160"></a>
+<FONT color="green">161</FONT>                if (!caseSensitive) {<a name="line.161"></a>
+<FONT color="green">162</FONT>                    subparts = lowercase(subparts);<a name="line.162"></a>
+<FONT color="green">163</FONT>                }<a name="line.163"></a>
+<FONT color="green">164</FONT>                if (subparts.isEmpty()) {<a name="line.164"></a>
+<FONT color="green">165</FONT>                    throw new IllegalArgumentException("Wildcard string cannot contain parts with only dividers. Make sure permission strings are properly formatted.");<a name="line.165"></a>
+<FONT color="green">166</FONT>                }<a name="line.166"></a>
+<FONT color="green">167</FONT>                this.parts.add(subparts);<a name="line.167"></a>
+<FONT color="green">168</FONT>            }<a name="line.168"></a>
+<FONT color="green">169</FONT>    <a name="line.169"></a>
+<FONT color="green">170</FONT>            if (this.parts.isEmpty()) {<a name="line.170"></a>
+<FONT color="green">171</FONT>                throw new IllegalArgumentException("Wildcard string cannot contain only dividers. Make sure permission strings are properly formatted.");<a name="line.171"></a>
+<FONT color="green">172</FONT>            }<a name="line.172"></a>
+<FONT color="green">173</FONT>        }<a name="line.173"></a>
+<FONT color="green">174</FONT>    <a name="line.174"></a>
+<FONT color="green">175</FONT>        private Set&lt;String&gt; lowercase(Set&lt;String&gt; subparts) {<a name="line.175"></a>
+<FONT color="green">176</FONT>            Set&lt;String&gt; lowerCasedSubparts = new LinkedHashSet&lt;String&gt;(subparts.size());<a name="line.176"></a>
+<FONT color="green">177</FONT>            for (String subpart : subparts) {<a name="line.177"></a>
+<FONT color="green">178</FONT>                lowerCasedSubparts.add(subpart.toLowerCase());<a name="line.178"></a>
+<FONT color="green">179</FONT>            }<a name="line.179"></a>
+<FONT color="green">180</FONT>            return lowerCasedSubparts;<a name="line.180"></a>
+<FONT color="green">181</FONT>        }<a name="line.181"></a>
+<FONT color="green">182</FONT>    <a name="line.182"></a>
+<FONT color="green">183</FONT>        /*--------------------------------------------<a name="line.183"></a>
+<FONT color="green">184</FONT>        |  A C C E S S O R S / M O D I F I E R S    |<a name="line.184"></a>
+<FONT color="green">185</FONT>        ============================================*/<a name="line.185"></a>
+<FONT color="green">186</FONT>        protected List&lt;Set&lt;String&gt;&gt; getParts() {<a name="line.186"></a>
+<FONT color="green">187</FONT>            return this.parts;<a name="line.187"></a>
+<FONT color="green">188</FONT>        }<a name="line.188"></a>
+<FONT color="green">189</FONT>    <a name="line.189"></a>
+<FONT color="green">190</FONT>        /*--------------------------------------------<a name="line.190"></a>
+<FONT color="green">191</FONT>        |               M E T H O D S               |<a name="line.191"></a>
+<FONT color="green">192</FONT>        ============================================*/<a name="line.192"></a>
+<FONT color="green">193</FONT>    <a name="line.193"></a>
+<FONT color="green">194</FONT>        public boolean implies(Permission p) {<a name="line.194"></a>
+<FONT color="green">195</FONT>            // By default only supports comparisons with other WildcardPermissions<a name="line.195"></a>
+<FONT color="green">196</FONT>            if (!(p instanceof WildcardPermission)) {<a name="line.196"></a>
+<FONT color="green">197</FONT>                return false;<a name="line.197"></a>
+<FONT color="green">198</FONT>            }<a name="line.198"></a>
+<FONT color="green">199</FONT>    <a name="line.199"></a>
+<FONT color="green">200</FONT>            WildcardPermission wp = (WildcardPermission) p;<a name="line.200"></a>
+<FONT color="green">201</FONT>    <a name="line.201"></a>
+<FONT color="green">202</FONT>            List&lt;Set&lt;String&gt;&gt; otherParts = wp.getParts();<a name="line.202"></a>
+<FONT color="green">203</FONT>    <a name="line.203"></a>
+<FONT color="green">204</FONT>            int i = 0;<a name="line.204"></a>
+<FONT color="green">205</FONT>            for (Set&lt;String&gt; otherPart : otherParts) {<a name="line.205"></a>
+<FONT color="green">206</FONT>                // If this permission has less parts than the other permission, everything after the number of parts contained<a name="line.206"></a>
+<FONT color="green">207</FONT>                // in this permission is automatically implied, so return true<a name="line.207"></a>
+<FONT color="green">208</FONT>                if (getParts().size() - 1 &lt; i) {<a name="line.208"></a>
+<FONT color="green">209</FONT>                    return true;<a name="line.209"></a>
+<FONT color="green">210</FONT>                } else {<a name="line.210"></a>
+<FONT color="green">211</FONT>                    Set&lt;String&gt; part = getParts().get(i);<a name="line.211"></a>
+<FONT color="green">212</FONT>                    if (!part.contains(WILDCARD_TOKEN) &amp;&amp; !part.containsAll(otherPart)) {<a name="line.212"></a>
+<FONT color="green">213</FONT>                        return false;<a name="line.213"></a>
+<FONT color="green">214</FONT>                    }<a name="line.214"></a>
+<FONT color="green">215</FONT>                    i++;<a name="line.215"></a>
+<FONT color="green">216</FONT>                }<a name="line.216"></a>
+<FONT color="green">217</FONT>            }<a name="line.217"></a>
+<FONT color="green">218</FONT>    <a name="line.218"></a>
+<FONT color="green">219</FONT>            // If this permission has more parts than the other parts, only imply it if all of the other parts are wildcards<a name="line.219"></a>
+<FONT color="green">220</FONT>            for (; i &lt; getParts().size(); i++) {<a name="line.220"></a>
+<FONT color="green">221</FONT>                Set&lt;String&gt; part = getParts().get(i);<a name="line.221"></a>
+<FONT color="green">222</FONT>                if (!part.contains(WILDCARD_TOKEN)) {<a name="line.222"></a>
+<FONT color="green">223</FONT>                    return false;<a name="line.223"></a>
+<FONT color="green">224</FONT>                }<a name="line.224"></a>
+<FONT color="green">225</FONT>            }<a name="line.225"></a>
+<FONT color="green">226</FONT>    <a name="line.226"></a>
+<FONT color="green">227</FONT>            return true;<a name="line.227"></a>
+<FONT color="green">228</FONT>        }<a name="line.228"></a>
+<FONT color="green">229</FONT>    <a name="line.229"></a>
+<FONT color="green">230</FONT>        public String toString() {<a name="line.230"></a>
+<FONT color="green">231</FONT>            StringBuilder buffer = new StringBuilder();<a name="line.231"></a>
+<FONT color="green">232</FONT>            for (Set&lt;String&gt; part : parts) {<a name="line.232"></a>
+<FONT color="green">233</FONT>                if (buffer.length() &gt; 0) {<a name="line.233"></a>
+<FONT color="green">234</FONT>                    buffer.append(":");<a name="line.234"></a>
+<FONT color="green">235</FONT>                }<a name="line.235"></a>
+<FONT color="green">236</FONT>                buffer.append(part);<a name="line.236"></a>
+<FONT color="green">237</FONT>            }<a name="line.237"></a>
+<FONT color="green">238</FONT>            return buffer.toString();<a name="line.238"></a>
+<FONT color="green">239</FONT>        }<a name="line.239"></a>
+<FONT color="green">240</FONT>    <a name="line.240"></a>
+<FONT color="green">241</FONT>        public boolean equals(Object o) {<a name="line.241"></a>
+<FONT color="green">242</FONT>            if (o instanceof WildcardPermission) {<a name="line.242"></a>
+<FONT color="green">243</FONT>                WildcardPermission wp = (WildcardPermission) o;<a name="line.243"></a>
+<FONT color="green">244</FONT>                return parts.equals(wp.parts);<a name="line.244"></a>
+<FONT color="green">245</FONT>            }<a name="line.245"></a>
+<FONT color="green">246</FONT>            return false;<a name="line.246"></a>
+<FONT color="green">247</FONT>        }<a name="line.247"></a>
+<FONT color="green">248</FONT>    <a name="line.248"></a>
+<FONT color="green">249</FONT>        public int hashCode() {<a name="line.249"></a>
+<FONT color="green">250</FONT>            return parts.hashCode();<a name="line.250"></a>
+<FONT color="green">251</FONT>        }<a name="line.251"></a>
+<FONT color="green">252</FONT>    <a name="line.252"></a>
+<FONT color="green">253</FONT>    }<a name="line.253"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

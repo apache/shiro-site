@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"org.apache.shiro.cache.ehcache","l":"EhCache"},{"p":"org.apache.shiro.cache.ehcache","l":"EhCacheManager"}]

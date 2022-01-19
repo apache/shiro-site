@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<span class="sourceLineNo">004</span> * distributed with this work for additional information<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<span class="sourceLineNo">009</span> *<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<span class="sourceLineNo">011</span> *<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * software distributed under the License is distributed on an<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<span class="sourceLineNo">016</span> * specific language governing permissions and limitations<a name="line.16"></a>
+<span class="sourceLineNo">017</span> * under the License.<a name="line.17"></a>
+<span class="sourceLineNo">018</span> */<a name="line.18"></a>
+<span class="sourceLineNo">019</span>package org.apache.shiro.authz;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>/**<a name="line.21"></a>
+<span class="sourceLineNo">022</span> * A Permission represents the ability to perform an action or access a resource.  A Permission is the most<a name="line.22"></a>
+<span class="sourceLineNo">023</span> * granular, or atomic, unit in a system's security policy and is the cornerstone upon which fine-grained security<a name="line.23"></a>
+<span class="sourceLineNo">024</span> * models are built.<a name="line.24"></a>
+<span class="sourceLineNo">025</span> * &lt;p/&gt;<a name="line.25"></a>
+<span class="sourceLineNo">026</span> * It is important to understand a Permission instance only represents functionality or access - it does not grant it.<a name="line.26"></a>
+<span class="sourceLineNo">027</span> * Granting access to an application functionality or a particular resource is done by the application's security<a name="line.27"></a>
+<span class="sourceLineNo">028</span> * configuration, typically by assigning Permissions to users, roles and/or groups.<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * &lt;p/&gt;<a name="line.29"></a>
+<span class="sourceLineNo">030</span> * Most typical systems are what the Shiro team calls &lt;em&gt;role-based&lt;/em&gt; in nature, where a role represents<a name="line.30"></a>
+<span class="sourceLineNo">031</span> * common behavior for certain user types.  For example, a system might have an &lt;em&gt;Administrator&lt;/em&gt; role, a<a name="line.31"></a>
+<span class="sourceLineNo">032</span> * &lt;em&gt;User&lt;/em&gt; or &lt;em&gt;Guest&lt;/em&gt; roles, etc.<a name="line.32"></a>
+<span class="sourceLineNo">033</span> * &lt;p/&gt;<a name="line.33"></a>
+<span class="sourceLineNo">034</span> * But if you have a dynamic security model, where roles can be created and deleted at runtime, you can't hard-code<a name="line.34"></a>
+<span class="sourceLineNo">035</span> * role names in your code.  In this environment, roles themselves aren't aren't very useful.  What matters is what<a name="line.35"></a>
+<span class="sourceLineNo">036</span> * &lt;em&gt;permissions&lt;/em&gt; are assigned to these roles.<a name="line.36"></a>
+<span class="sourceLineNo">037</span> * &lt;p/&gt;<a name="line.37"></a>
+<span class="sourceLineNo">038</span> * Under this paradigm, permissions are immutable and reflect an application's raw functionality<a name="line.38"></a>
+<span class="sourceLineNo">039</span> * (opening files, accessing a web URL, creating users, etc).  This is what allows a system's security policy<a name="line.39"></a>
+<span class="sourceLineNo">040</span> * to be dynamic: because Permissions represent raw functionality and only change when the application's<a name="line.40"></a>
+<span class="sourceLineNo">041</span> * source code changes, they are immutable at runtime - they represent 'what' the system can do.  Roles, users, and<a name="line.41"></a>
+<span class="sourceLineNo">042</span> * groups are the 'who' of the application.  Determining 'who' can do 'what' then becomes a simple exercise of<a name="line.42"></a>
+<span class="sourceLineNo">043</span> * associating Permissions to roles, users, and groups in some way.<a name="line.43"></a>
+<span class="sourceLineNo">044</span> * &lt;p/&gt;<a name="line.44"></a>
+<span class="sourceLineNo">045</span> * Most applications do this by associating a named role with permissions (i.e. a role 'has a' collection of<a name="line.45"></a>
+<span class="sourceLineNo">046</span> * Permissions) and then associate users with roles (i.e. a user 'has a' collection of roles) so that by transitive<a name="line.46"></a>
+<span class="sourceLineNo">047</span> * association, the user 'has' the permissions in their roles.  There are numerous variations on this theme<a name="line.47"></a>
+<span class="sourceLineNo">048</span> * (permissions assigned directly to users, or assigned to groups, and users added to groups and these groups in turn<a name="line.48"></a>
+<span class="sourceLineNo">049</span> * have roles, etc, etc).  When employing a permission-based security model instead of a role-based one, users, roles,<a name="line.49"></a>
+<span class="sourceLineNo">050</span> * and groups can all be created, configured and/or deleted at runtime.  This enables  an extremely powerful security<a name="line.50"></a>
+<span class="sourceLineNo">051</span> * model.<a name="line.51"></a>
+<span class="sourceLineNo">052</span> * &lt;p/&gt;<a name="line.52"></a>
+<span class="sourceLineNo">053</span> * A benefit to Shiro is that, although it assumes most systems are based on these types of static role or<a name="line.53"></a>
+<span class="sourceLineNo">054</span> * dynamic role w/ permission schemes, it does not require a system to model their security data this way - all<a name="line.54"></a>
+<span class="sourceLineNo">055</span> * Permission checks are relegated to {@link org.apache.shiro.realm.Realm} implementations, and only those<a name="line.55"></a>
+<span class="sourceLineNo">056</span> * implementations really determine how a user 'has' a permission or not.  The Realm could use the semantics described<a name="line.56"></a>
+<span class="sourceLineNo">057</span> * here, or it could utilize some other mechanism entirely - it is always up to the application developer.<a name="line.57"></a>
+<span class="sourceLineNo">058</span> * &lt;p/&gt;<a name="line.58"></a>
+<span class="sourceLineNo">059</span> * Shiro provides a very powerful default implementation of this interface in the form of the<a name="line.59"></a>
+<span class="sourceLineNo">060</span> * {@link org.apache.shiro.authz.permission.WildcardPermission WildcardPermission}.  We highly recommend that you<a name="line.60"></a>
+<span class="sourceLineNo">061</span> * investigate this class before trying to implement your own &lt;code&gt;Permission&lt;/code&gt;s.<a name="line.61"></a>
+<span class="sourceLineNo">062</span> *<a name="line.62"></a>
+<span class="sourceLineNo">063</span> * @see org.apache.shiro.authz.permission.WildcardPermission WildcardPermission<a name="line.63"></a>
+<span class="sourceLineNo">064</span> * @since 0.2<a name="line.64"></a>
+<span class="sourceLineNo">065</span> */<a name="line.65"></a>
+<span class="sourceLineNo">066</span>public interface Permission {<a name="line.66"></a>
+<span class="sourceLineNo">067</span><a name="line.67"></a>
+<span class="sourceLineNo">068</span>    /**<a name="line.68"></a>
+<span class="sourceLineNo">069</span>     * Returns {@code true} if this current instance &lt;em&gt;implies&lt;/em&gt; all the functionality and/or resource access<a name="line.69"></a>
+<span class="sourceLineNo">070</span>     * described by the specified {@code Permission} argument, {@code false} otherwise.<a name="line.70"></a>
+<span class="sourceLineNo">071</span>     * &lt;p/&gt;<a name="line.71"></a>
+<span class="sourceLineNo">072</span>     * &lt;p&gt;That is, this current instance must be exactly equal to or a &lt;em&gt;superset&lt;/em&gt; of the functionality<a name="line.72"></a>
+<span class="sourceLineNo">073</span>     * and/or resource access described by the given {@code Permission} argument.  Yet another way of saying this<a name="line.73"></a>
+<span class="sourceLineNo">074</span>     * would be:<a name="line.74"></a>
+<span class="sourceLineNo">075</span>     * &lt;p/&gt;<a name="line.75"></a>
+<span class="sourceLineNo">076</span>     * &lt;p&gt;If &amp;quot;permission1 implies permission2&amp;quot;, i.e. &lt;code&gt;permission1.implies(permission2)&lt;/code&gt; ,<a name="line.76"></a>
+<span class="sourceLineNo">077</span>     * then any Subject granted {@code permission1} would have ability greater than or equal to that defined by<a name="line.77"></a>
+<span class="sourceLineNo">078</span>     * {@code permission2}.<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     *<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     * @param p the permission to check for behavior/functionality comparison.<a name="line.80"></a>
+<span class="sourceLineNo">081</span>     * @return {@code true} if this current instance &lt;em&gt;implies&lt;/em&gt; all the functionality and/or resource access<a name="line.81"></a>
+<span class="sourceLineNo">082</span>     *         described by the specified {@code Permission} argument, {@code false} otherwise.<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     */<a name="line.83"></a>
+<span class="sourceLineNo">084</span>    boolean implies(Permission p);<a name="line.84"></a>
+<span class="sourceLineNo">085</span>}<a name="line.85"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
