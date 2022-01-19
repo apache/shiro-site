@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>RedirectView.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: All (aggregate jar)</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.util</a> &gt; <span class="el_source">RedirectView.java</span></div><h1>RedirectView.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.util;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Map;
+
+/**
+ * View that redirects to an absolute, context relative, or current request
+ * relative URL, exposing all model attributes as HTTP query parameters.
+ * &lt;p/&gt;
+ * A URL for this view is supposed to be a HTTP redirect URL, i.e.
+ * suitable for HttpServletResponse's &lt;code&gt;sendRedirect&lt;/code&gt; method, which
+ * is what actually does the redirect if the HTTP 1.0 flag is on, or via sending
+ * back an HTTP 303 code - if the HTTP 1.0 compatibility flag is off.
+ * &lt;p/&gt;
+ * Note that while the default value for the &quot;contextRelative&quot; flag is off,
+ * you will probably want to almost always set it to true. With the flag off,
+ * URLs starting with &quot;/&quot; are considered relative to the web server root, while
+ * with the flag on, they are considered relative to the web application root.
+ * Since most web apps will never know or care what their context path actually
+ * is, they are much better off setting this flag to true, and submitting paths
+ * which are to be considered relative to the web application root.
+ * &lt;p/&gt;
+ * Note that in a Servlet 2.2 environment, i.e. a servlet container which
+ * is only compliant to the limits of this spec, this class will probably fail
+ * when feeding in URLs which are not fully absolute, or relative to the current
+ * request (no leading &quot;/&quot;), as these are the only two types of URL that
+ * &lt;code&gt;sendRedirect&lt;/code&gt; supports in a Servlet 2.2 environment.
+ * &lt;p/&gt;
+ * &lt;em&gt;This class was borrowed from a nearly identical version found in
+ * the &lt;a href=&quot;http://www.springframework.org/&quot;&gt;Spring Framework&lt;/a&gt;, with minor modifications to
+ * avoid a dependency on Spring itself for a very small amount of code - we couldn't have done it better, and
+ * don't want to repeat all of their great effort ;).
+ * The original author names and copyright (Apache 2.0) has been left in place.  A special
+ * thanks to Rod Johnson, Juergen Hoeller, and Colin Sampaleanu for making this available.&lt;/em&gt;
+ *
+ * @see #setContextRelative
+ * @see #setHttp10Compatible
+ * @see javax.servlet.http.HttpServletResponse#sendRedirect
+ * @since 0.2
+ */
+public class RedirectView {
+
+    //TODO - complete JavaDoc
+
+    /**
+     * The default encoding scheme: UTF-8
+     */
+    public static final String DEFAULT_ENCODING_SCHEME = &quot;UTF-8&quot;;
+
+    private String url;
+
+<span class="pc" id="L74">    private boolean contextRelative = false;</span>
+
+<span class="pc" id="L76">    private boolean http10Compatible = true;</span>
+
+<span class="pc" id="L78">    private String encodingScheme = DEFAULT_ENCODING_SCHEME;</span>
+
+    /**
+     * Constructor for use as a bean.
+     */
+    @SuppressWarnings({&quot;UnusedDeclaration&quot;})
+<span class="nc" id="L84">    public RedirectView() {</span>
+<span class="nc" id="L85">    }</span>
+
+    /**
+     * Create a new RedirectView with the given URL.
+     * &lt;p&gt;The given URL will be considered as relative to the web server,
+     * not as relative to the current ServletContext.
+     *
+     * @param url the URL to redirect to
+     * @see #RedirectView(String, boolean)
+     */
+<span class="fc" id="L95">    public RedirectView(String url) {</span>
+<span class="fc" id="L96">        setUrl(url);</span>
+<span class="fc" id="L97">    }</span>
+
+    /**
+     * Create a new RedirectView with the given URL.
+     *
+     * @param url             the URL to redirect to
+     * @param contextRelative whether to interpret the given URL as
+     *                        relative to the current ServletContext
+     */
+    public RedirectView(String url, boolean contextRelative) {
+<span class="nc" id="L107">        this(url);</span>
+<span class="nc" id="L108">        this.contextRelative = contextRelative;</span>
+<span class="nc" id="L109">    }</span>
+
+    /**
+     * Create a new RedirectView with the given URL.
+     *
+     * @param url              the URL to redirect to
+     * @param contextRelative  whether to interpret the given URL as
+     *                         relative to the current ServletContext
+     * @param http10Compatible whether to stay compatible with HTTP 1.0 clients
+     */
+    public RedirectView(String url, boolean contextRelative, boolean http10Compatible) {
+<span class="fc" id="L120">        this(url);</span>
+<span class="fc" id="L121">        this.contextRelative = contextRelative;</span>
+<span class="fc" id="L122">        this.http10Compatible = http10Compatible;</span>
+<span class="fc" id="L123">    }</span>
+
+
+    public String getUrl() {
+<span class="fc" id="L127">        return url;</span>
+    }
+
+    public void setUrl(String url) {
+<span class="fc" id="L131">        this.url = url;</span>
+<span class="fc" id="L132">    }</span>
+
+    /**
+     * Set whether to interpret a given URL that starts with a slash (&quot;/&quot;)
+     * as relative to the current ServletContext, i.e. as relative to the
+     * web application root.
+     * &lt;p/&gt;
+     * Default is &quot;false&quot;: A URL that starts with a slash will be interpreted
+     * as absolute, i.e. taken as-is. If true, the context path will be
+     * prepended to the URL in such a case.
+     *
+     * @param contextRelative whether to interpret a given URL that starts with a slash (&quot;/&quot;)
+     *                        as relative to the current ServletContext, i.e. as relative to the
+     *                        web application root.
+     * @see javax.servlet.http.HttpServletRequest#getContextPath
+     */
+    public void setContextRelative(boolean contextRelative) {
+<span class="nc" id="L149">        this.contextRelative = contextRelative;</span>
+<span class="nc" id="L150">    }</span>
+
+    /**
+     * Set whether to stay compatible with HTTP 1.0 clients.
+     * &lt;p&gt;In the default implementation, this will enforce HTTP status code 302
+     * in any case, i.e. delegate to &lt;code&gt;HttpServletResponse.sendRedirect&lt;/code&gt;.
+     * Turning this off will send HTTP status code 303, which is the correct
+     * code for HTTP 1.1 clients, but not understood by HTTP 1.0 clients.
+     * &lt;p&gt;Many HTTP 1.1 clients treat 302 just like 303, not making any
+     * difference. However, some clients depend on 303 when redirecting
+     * after a POST request; turn this flag off in such a scenario.
+     *
+     * @param http10Compatible whether to stay compatible with HTTP 1.0 clients.
+     * @see javax.servlet.http.HttpServletResponse#sendRedirect
+     */
+    public void setHttp10Compatible(boolean http10Compatible) {
+<span class="nc" id="L166">        this.http10Compatible = http10Compatible;</span>
+<span class="nc" id="L167">    }</span>
+
+    /**
+     * Set the encoding scheme for this view. Default is UTF-8.
+     *
+     * @param encodingScheme the encoding scheme for this view. Default is UTF-8.
+     */
+    @SuppressWarnings({&quot;UnusedDeclaration&quot;})
+    public void setEncodingScheme(String encodingScheme) {
+<span class="nc" id="L176">        this.encodingScheme = encodingScheme;</span>
+<span class="nc" id="L177">    }</span>
+
+
+    /**
+     * Convert model to request parameters and redirect to the given URL.
+     *
+     * @param model    the model to convert
+     * @param request  the incoming HttpServletRequest
+     * @param response the outgoing HttpServletResponse
+     * @throws java.io.IOException if there is a problem issuing the redirect
+     * @see #appendQueryProperties
+     * @see #sendRedirect
+     */
+    public final void renderMergedOutputModel(
+            Map model, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        // Prepare name URL.
+<span class="fc" id="L194">        StringBuilder targetUrl = new StringBuilder();</span>
+<span class="pc bpc" id="L195" title="1 of 4 branches missed.">        if (this.contextRelative &amp;&amp; getUrl().startsWith(&quot;/&quot;)) {</span>
+            // Do not apply context path to relative URLs.
+<span class="fc" id="L197">            targetUrl.append(request.getContextPath());</span>
+        }
+<span class="fc" id="L199">        targetUrl.append(getUrl());</span>
+        //change the following method to accept a StringBuilder instead of a StringBuilder for Shiro 2.x:
+<span class="fc" id="L201">        appendQueryProperties(targetUrl, model, this.encodingScheme);</span>
+
+<span class="fc" id="L203">        sendRedirect(request, response, targetUrl.toString(), this.http10Compatible);</span>
+<span class="fc" id="L204">    }</span>
+
+    /**
+     * Append query properties to the redirect URL.
+     * Stringifies, URL-encodes and formats model attributes as query properties.
+     *
+     * @param targetUrl      the StringBuffer to append the properties to
+     * @param model          Map that contains model attributes
+     * @param encodingScheme the encoding scheme to use
+     * @throws java.io.UnsupportedEncodingException if string encoding failed
+     * @see #urlEncode
+     * @see #queryProperties
+     * @see #urlEncode(String, String)
+     */
+    protected void appendQueryProperties(StringBuilder targetUrl, Map model, String encodingScheme)
+            throws UnsupportedEncodingException {
+
+        // Extract anchor fragment, if any.
+        // The following code does not use JDK 1.4's StringBuffer.indexOf(String)
+        // method to retain JDK 1.3 compatibility.
+<span class="fc" id="L224">        String fragment = null;</span>
+<span class="fc" id="L225">        int anchorIndex = targetUrl.toString().indexOf('#');</span>
+<span class="pc bpc" id="L226" title="1 of 2 branches missed.">        if (anchorIndex &gt; -1) {</span>
+<span class="nc" id="L227">            fragment = targetUrl.substring(anchorIndex);</span>
+<span class="nc" id="L228">            targetUrl.delete(anchorIndex, targetUrl.length());</span>
+        }
+
+        // If there aren't already some parameters, we need a &quot;?&quot;.
+<span class="pc bpc" id="L232" title="1 of 2 branches missed.">        boolean first = (getUrl().indexOf('?') &lt; 0);</span>
+<span class="fc" id="L233">        Map queryProps = queryProperties(model);</span>
+
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">        if (queryProps != null) {</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">            for (Object o : queryProps.entrySet()) {</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">                if (first) {</span>
+<span class="nc" id="L238">                    targetUrl.append('?');</span>
+<span class="nc" id="L239">                    first = false;</span>
+                } else {
+<span class="nc" id="L241">                    targetUrl.append('&amp;');</span>
+                }
+<span class="nc" id="L243">                Map.Entry entry = (Map.Entry) o;</span>
+<span class="nc" id="L244">                String encodedKey = urlEncode(entry.getKey().toString(), encodingScheme);</span>
+<span class="nc" id="L245">                String encodedValue =</span>
+<span class="nc bnc" id="L246" title="All 2 branches missed.">                        (entry.getValue() != null ? urlEncode(entry.getValue().toString(), encodingScheme) : &quot;&quot;);</span>
+<span class="nc" id="L247">                targetUrl.append(encodedKey).append('=').append(encodedValue);</span>
+<span class="nc" id="L248">            }</span>
+        }
+
+        // Append anchor fragment, if any, to end of URL.
+<span class="pc bpc" id="L252" title="1 of 2 branches missed.">        if (fragment != null) {</span>
+<span class="nc" id="L253">            targetUrl.append(fragment);</span>
+        }
+<span class="fc" id="L255">    }</span>
+
+    /**
+     * URL-encode the given input String with the given encoding scheme, using
+     * {@link URLEncoder#encode(String, String) URLEncoder.encode(input, enc)}.
+     *
+     * @param input          the unencoded input String
+     * @param encodingScheme the encoding scheme
+     * @return the encoded output String
+     * @throws UnsupportedEncodingException if thrown by the JDK URLEncoder
+     * @see java.net.URLEncoder#encode(String, String)
+     * @see java.net.URLEncoder#encode(String)
+     */
+    protected String urlEncode(String input, String encodingScheme) throws UnsupportedEncodingException {
+<span class="nc" id="L269">        return URLEncoder.encode(input, encodingScheme);</span>
+    }
+
+    /**
+     * Determine name-value pairs for query strings, which will be stringified,
+     * URL-encoded and formatted by appendQueryProperties.
+     * &lt;p/&gt;
+     * This implementation returns all model elements as-is.
+     *
+     * @param model the model elements for which to determine name-value pairs.
+     * @return the name-value pairs for query strings.
+     * @see #appendQueryProperties
+     */
+    protected Map queryProperties(Map model) {
+<span class="fc" id="L283">        return model;</span>
+    }
+
+    /**
+     * Send a redirect back to the HTTP client
+     *
+     * @param request          current HTTP request (allows for reacting to request method)
+     * @param response         current HTTP response (for sending response headers)
+     * @param targetUrl        the name URL to redirect to
+     * @param http10Compatible whether to stay compatible with HTTP 1.0 clients
+     * @throws IOException if thrown by response methods
+     */
+    @SuppressWarnings({&quot;UnusedDeclaration&quot;})
+    protected void sendRedirect(HttpServletRequest request, HttpServletResponse response,
+                                String targetUrl, boolean http10Compatible) throws IOException {
+<span class="pc bpc" id="L298" title="1 of 2 branches missed.">        if (http10Compatible) {</span>
+            // Always send status code 302.
+<span class="fc" id="L300">            response.sendRedirect(response.encodeRedirectURL(targetUrl));</span>
+        } else {
+            // Correct HTTP status code is 303, in particular for POST requests.
+<span class="nc" id="L303">            response.setStatus(303);</span>
+<span class="nc" id="L304">            response.setHeader(&quot;Location&quot;, response.encodeRedirectURL(targetUrl));</span>
+        }
+<span class="fc" id="L306">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

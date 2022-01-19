@@ -1,0 +1,172 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<FONT color="green">007</FONT>     * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<FONT color="green">008</FONT>     * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<FONT color="green">013</FONT>     * software distributed under the License is distributed on an<a name="line.13"></a>
+<FONT color="green">014</FONT>     * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<FONT color="green">015</FONT>     * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<FONT color="green">016</FONT>     * specific language governing permissions and limitations<a name="line.16"></a>
+<FONT color="green">017</FONT>     * under the License.<a name="line.17"></a>
+<FONT color="green">018</FONT>     */<a name="line.18"></a>
+<FONT color="green">019</FONT>    package org.apache.shiro.web.filter.authz;<a name="line.19"></a>
+<FONT color="green">020</FONT>    <a name="line.20"></a>
+<FONT color="green">021</FONT>    import org.apache.shiro.util.StringUtils;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    import javax.servlet.ServletRequest;<a name="line.23"></a>
+<FONT color="green">024</FONT>    import javax.servlet.ServletResponse;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import java.util.regex.Pattern;<a name="line.25"></a>
+<FONT color="green">026</FONT>    import java.util.Map;<a name="line.26"></a>
+<FONT color="green">027</FONT>    <a name="line.27"></a>
+<FONT color="green">028</FONT>    /**<a name="line.28"></a>
+<FONT color="green">029</FONT>     * A Filter that can allow or deny access based on the host that sent the request.<a name="line.29"></a>
+<FONT color="green">030</FONT>     *<a name="line.30"></a>
+<FONT color="green">031</FONT>     * &lt;b&gt;WARNING:&lt;/b&gt; NOT YET FULLY IMPLEMENTED!!!  Work in progress.<a name="line.31"></a>
+<FONT color="green">032</FONT>     *<a name="line.32"></a>
+<FONT color="green">033</FONT>     * @since 1.0<a name="line.33"></a>
+<FONT color="green">034</FONT>     */<a name="line.34"></a>
+<FONT color="green">035</FONT>    public class HostFilter extends AuthorizationFilter {<a name="line.35"></a>
+<FONT color="green">036</FONT>    <a name="line.36"></a>
+<FONT color="green">037</FONT>        public static final String IPV4_QUAD_REGEX = "(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2(?:[0-4][0-9]|5[0-5]))";<a name="line.37"></a>
+<FONT color="green">038</FONT>    <a name="line.38"></a>
+<FONT color="green">039</FONT>        public static final String IPV4_REGEX = "(?:" + IPV4_QUAD_REGEX + "\\.){3}" + IPV4_QUAD_REGEX + "$";<a name="line.39"></a>
+<FONT color="green">040</FONT>        public static final Pattern IPV4_PATTERN = Pattern.compile(IPV4_REGEX);<a name="line.40"></a>
+<FONT color="green">041</FONT>    <a name="line.41"></a>
+<FONT color="green">042</FONT>        public static final String PRIVATE_CLASS_B_SUBSET = "(?:1[6-9]|2[0-9]|3[0-1])";<a name="line.42"></a>
+<FONT color="green">043</FONT>    <a name="line.43"></a>
+<FONT color="green">044</FONT>        public static final String PRIVATE_CLASS_A_REGEX = "10\\.(?:" + IPV4_QUAD_REGEX + "\\.){2}" + IPV4_QUAD_REGEX + "$";<a name="line.44"></a>
+<FONT color="green">045</FONT>    <a name="line.45"></a>
+<FONT color="green">046</FONT>        public static final String PRIVATE_CLASS_B_REGEX =<a name="line.46"></a>
+<FONT color="green">047</FONT>                "172\\." + PRIVATE_CLASS_B_SUBSET + "\\." + IPV4_QUAD_REGEX + "\\." + IPV4_QUAD_REGEX + "$";<a name="line.47"></a>
+<FONT color="green">048</FONT>    <a name="line.48"></a>
+<FONT color="green">049</FONT>        public static final String PRIVATE_CLASS_C_REGEX = "192\\.168\\." + IPV4_QUAD_REGEX + "\\." + IPV4_QUAD_REGEX + "$";<a name="line.49"></a>
+<FONT color="green">050</FONT>    <a name="line.50"></a>
+<FONT color="green">051</FONT>        Map&lt;String, String&gt; authorizedIps; //user-configured IP (which can be wildcarded) to constructed regex mapping<a name="line.51"></a>
+<FONT color="green">052</FONT>        Map&lt;String, String&gt; deniedIps;<a name="line.52"></a>
+<FONT color="green">053</FONT>        Map&lt;String, String&gt; authorizedHostnames;<a name="line.53"></a>
+<FONT color="green">054</FONT>        Map&lt;String, String&gt; deniedHostnames;<a name="line.54"></a>
+<FONT color="green">055</FONT>    <a name="line.55"></a>
+<FONT color="green">056</FONT>    <a name="line.56"></a>
+<FONT color="green">057</FONT>        public void setAuthorizedHosts(String authorizedHosts) {<a name="line.57"></a>
+<FONT color="green">058</FONT>            if (!StringUtils.hasText(authorizedHosts)) {<a name="line.58"></a>
+<FONT color="green">059</FONT>                throw new IllegalArgumentException("authorizedHosts argument cannot be null or empty.");<a name="line.59"></a>
+<FONT color="green">060</FONT>            }<a name="line.60"></a>
+<FONT color="green">061</FONT>            String[] hosts = StringUtils.tokenizeToStringArray(authorizedHosts, ", \t");<a name="line.61"></a>
+<FONT color="green">062</FONT>    <a name="line.62"></a>
+<FONT color="green">063</FONT>            for (String host : hosts) {<a name="line.63"></a>
+<FONT color="green">064</FONT>                //replace any periods with \\. to ensure the regex works:<a name="line.64"></a>
+<FONT color="green">065</FONT>                String periodsReplaced = host.replace(".", "\\.");<a name="line.65"></a>
+<FONT color="green">066</FONT>                //check for IPv4:<a name="line.66"></a>
+<FONT color="green">067</FONT>                String wildcardsReplaced = periodsReplaced.replace("*", IPV4_QUAD_REGEX);<a name="line.67"></a>
+<FONT color="green">068</FONT>    <a name="line.68"></a>
+<FONT color="green">069</FONT>                if (IPV4_PATTERN.matcher(wildcardsReplaced).matches()) {<a name="line.69"></a>
+<FONT color="green">070</FONT>                    authorizedIps.put(host, wildcardsReplaced);<a name="line.70"></a>
+<FONT color="green">071</FONT>                } else {<a name="line.71"></a>
+<FONT color="green">072</FONT>    <a name="line.72"></a>
+<FONT color="green">073</FONT>                }<a name="line.73"></a>
+<FONT color="green">074</FONT>    <a name="line.74"></a>
+<FONT color="green">075</FONT>    <a name="line.75"></a>
+<FONT color="green">076</FONT>            }<a name="line.76"></a>
+<FONT color="green">077</FONT>    <a name="line.77"></a>
+<FONT color="green">078</FONT>        }<a name="line.78"></a>
+<FONT color="green">079</FONT>    <a name="line.79"></a>
+<FONT color="green">080</FONT>        public void setDeniedHosts(String deniedHosts) {<a name="line.80"></a>
+<FONT color="green">081</FONT>            if (!StringUtils.hasText(deniedHosts)) {<a name="line.81"></a>
+<FONT color="green">082</FONT>                throw new IllegalArgumentException("deniedHosts argument cannot be null or empty.");<a name="line.82"></a>
+<FONT color="green">083</FONT>            }<a name="line.83"></a>
+<FONT color="green">084</FONT>        }<a name="line.84"></a>
+<FONT color="green">085</FONT>    <a name="line.85"></a>
+<FONT color="green">086</FONT>        protected boolean isIpv4Candidate(String host) {<a name="line.86"></a>
+<FONT color="green">087</FONT>            String[] quads = StringUtils.tokenizeToStringArray(host, ".");<a name="line.87"></a>
+<FONT color="green">088</FONT>            if (quads == null || quads.length != 4) {<a name="line.88"></a>
+<FONT color="green">089</FONT>                return false;<a name="line.89"></a>
+<FONT color="green">090</FONT>            }<a name="line.90"></a>
+<FONT color="green">091</FONT>            for (String quad : quads) {<a name="line.91"></a>
+<FONT color="green">092</FONT>                if (!quad.equals("*")) {<a name="line.92"></a>
+<FONT color="green">093</FONT>                    try {<a name="line.93"></a>
+<FONT color="green">094</FONT>                        Integer.parseInt(quad);<a name="line.94"></a>
+<FONT color="green">095</FONT>                    } catch (NumberFormatException nfe) {<a name="line.95"></a>
+<FONT color="green">096</FONT>                        return false;<a name="line.96"></a>
+<FONT color="green">097</FONT>                    }<a name="line.97"></a>
+<FONT color="green">098</FONT>                }<a name="line.98"></a>
+<FONT color="green">099</FONT>            }<a name="line.99"></a>
+<FONT color="green">100</FONT>            return true;<a name="line.100"></a>
+<FONT color="green">101</FONT>        }<a name="line.101"></a>
+<FONT color="green">102</FONT>    <a name="line.102"></a>
+<FONT color="green">103</FONT>        protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {<a name="line.103"></a>
+<FONT color="green">104</FONT>            throw new UnsupportedOperationException("Not yet fully implemented!!!" );<a name="line.104"></a>
+<FONT color="green">105</FONT>        }<a name="line.105"></a>
+<FONT color="green">106</FONT>    }<a name="line.106"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

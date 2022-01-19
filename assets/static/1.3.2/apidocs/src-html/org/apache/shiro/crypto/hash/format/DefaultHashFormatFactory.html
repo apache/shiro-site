@@ -1,0 +1,426 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<span class="sourceLineNo">004</span> * distributed with this work for additional information<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<span class="sourceLineNo">009</span> *<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<span class="sourceLineNo">011</span> *<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * software distributed under the License is distributed on an<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<span class="sourceLineNo">016</span> * specific language governing permissions and limitations<a name="line.16"></a>
+<span class="sourceLineNo">017</span> * under the License.<a name="line.17"></a>
+<span class="sourceLineNo">018</span> */<a name="line.18"></a>
+<span class="sourceLineNo">019</span>package org.apache.shiro.crypto.hash.format;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>import org.apache.shiro.util.ClassUtils;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import org.apache.shiro.util.StringUtils;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>import org.apache.shiro.util.UnknownClassException;<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span>import java.util.HashMap;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>import java.util.HashSet;<a name="line.26"></a>
+<span class="sourceLineNo">027</span>import java.util.Map;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>import java.util.Set;<a name="line.28"></a>
+<span class="sourceLineNo">029</span><a name="line.29"></a>
+<span class="sourceLineNo">030</span>/**<a name="line.30"></a>
+<span class="sourceLineNo">031</span> * This default {@code HashFormatFactory} implementation heuristically determines a {@code HashFormat} class to<a name="line.31"></a>
+<span class="sourceLineNo">032</span> * instantiate based on the input argument and returns a new instance of the discovered class.  The heuristics are<a name="line.32"></a>
+<span class="sourceLineNo">033</span> * detailed in the {@link #getInstance(String) getInstance} method documentation.<a name="line.33"></a>
+<span class="sourceLineNo">034</span> *<a name="line.34"></a>
+<span class="sourceLineNo">035</span> * @since 1.2<a name="line.35"></a>
+<span class="sourceLineNo">036</span> */<a name="line.36"></a>
+<span class="sourceLineNo">037</span>public class DefaultHashFormatFactory implements HashFormatFactory {<a name="line.37"></a>
+<span class="sourceLineNo">038</span><a name="line.38"></a>
+<span class="sourceLineNo">039</span>    private Map&lt;String, String&gt; formatClassNames; //id - to - fully qualified class name<a name="line.39"></a>
+<span class="sourceLineNo">040</span><a name="line.40"></a>
+<span class="sourceLineNo">041</span>    private Set&lt;String&gt; searchPackages; //packages to search for HashFormat implementations<a name="line.41"></a>
+<span class="sourceLineNo">042</span><a name="line.42"></a>
+<span class="sourceLineNo">043</span>    public DefaultHashFormatFactory() {<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        this.searchPackages = new HashSet&lt;String&gt;();<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        this.formatClassNames = new HashMap&lt;String, String&gt;();<a name="line.45"></a>
+<span class="sourceLineNo">046</span>    }<a name="line.46"></a>
+<span class="sourceLineNo">047</span><a name="line.47"></a>
+<span class="sourceLineNo">048</span>    /**<a name="line.48"></a>
+<span class="sourceLineNo">049</span>     * Returns a {@code hashFormatAlias}-to-&lt;code&gt;fullyQualifiedHashFormatClassNameImplementation&lt;/code&gt; map.<a name="line.49"></a>
+<span class="sourceLineNo">050</span>     * &lt;p/&gt;<a name="line.50"></a>
+<span class="sourceLineNo">051</span>     * This map will be used by the {@link #getInstance(String) getInstance} implementation:  that method's argument<a name="line.51"></a>
+<span class="sourceLineNo">052</span>     * will be used as a lookup key to this map.  If the map returns a value, that value will be used to instantiate<a name="line.52"></a>
+<span class="sourceLineNo">053</span>     * and return a new {@code HashFormat} instance.<a name="line.53"></a>
+<span class="sourceLineNo">054</span>     * &lt;h3&gt;Defaults&lt;/h3&gt;<a name="line.54"></a>
+<span class="sourceLineNo">055</span>     * Shiro's default HashFormat implementations (as listed by the {@link ProvidedHashFormat} enum) will<a name="line.55"></a>
+<span class="sourceLineNo">056</span>     * be searched automatically independently of this map.  You only need to populate this map with custom<a name="line.56"></a>
+<span class="sourceLineNo">057</span>     * {@code HashFormat} implementations that are &lt;em&gt;not&lt;/em&gt; already represented by a {@code ProvidedHashFormat}.<a name="line.57"></a>
+<span class="sourceLineNo">058</span>     * &lt;h3&gt;Efficiency&lt;/h3&gt;<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     * Populating this map will be more efficient than configuring {@link #getSearchPackages() searchPackages},<a name="line.59"></a>
+<span class="sourceLineNo">060</span>     * but search packages may be more convenient depending on the number of {@code HashFormat} implementations that<a name="line.60"></a>
+<span class="sourceLineNo">061</span>     * need to be supported by this factory.<a name="line.61"></a>
+<span class="sourceLineNo">062</span>     *<a name="line.62"></a>
+<span class="sourceLineNo">063</span>     * @return a {@code hashFormatAlias}-to-&lt;code&gt;fullyQualifiedHashFormatClassNameImplementation&lt;/code&gt; map.<a name="line.63"></a>
+<span class="sourceLineNo">064</span>     */<a name="line.64"></a>
+<span class="sourceLineNo">065</span>    public Map&lt;String, String&gt; getFormatClassNames() {<a name="line.65"></a>
+<span class="sourceLineNo">066</span>        return formatClassNames;<a name="line.66"></a>
+<span class="sourceLineNo">067</span>    }<a name="line.67"></a>
+<span class="sourceLineNo">068</span><a name="line.68"></a>
+<span class="sourceLineNo">069</span>    /**<a name="line.69"></a>
+<span class="sourceLineNo">070</span>     * Sets the {@code hash-format-alias}-to-{@code fullyQualifiedHashFormatClassNameImplementation} map to be used in<a name="line.70"></a>
+<span class="sourceLineNo">071</span>     * the {@link #getInstance(String)} implementation.  See the {@link #getFormatClassNames()} JavaDoc for more<a name="line.71"></a>
+<span class="sourceLineNo">072</span>     * information.<a name="line.72"></a>
+<span class="sourceLineNo">073</span>     * &lt;h3&gt;Efficiency&lt;/h3&gt;<a name="line.73"></a>
+<span class="sourceLineNo">074</span>     * Populating this map will be more efficient than configuring {@link #getSearchPackages() searchPackages},<a name="line.74"></a>
+<span class="sourceLineNo">075</span>     * but search packages may be more convenient depending on the number of {@code HashFormat} implementations that<a name="line.75"></a>
+<span class="sourceLineNo">076</span>     * need to be supported by this factory.<a name="line.76"></a>
+<span class="sourceLineNo">077</span>     *<a name="line.77"></a>
+<span class="sourceLineNo">078</span>     * @param formatClassNames the {@code hash-format-alias}-to-{@code fullyQualifiedHashFormatClassNameImplementation}<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     *                         map to be used in the {@link #getInstance(String)} implementation.<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     */<a name="line.80"></a>
+<span class="sourceLineNo">081</span>    public void setFormatClassNames(Map&lt;String, String&gt; formatClassNames) {<a name="line.81"></a>
+<span class="sourceLineNo">082</span>        this.formatClassNames = formatClassNames;<a name="line.82"></a>
+<span class="sourceLineNo">083</span>    }<a name="line.83"></a>
+<span class="sourceLineNo">084</span><a name="line.84"></a>
+<span class="sourceLineNo">085</span>    /**<a name="line.85"></a>
+<span class="sourceLineNo">086</span>     * Returns a set of package names that can be searched for {@link HashFormat} implementations according to<a name="line.86"></a>
+<span class="sourceLineNo">087</span>     * heuristics defined in the {@link #getHashFormatClass(String, String) getHashFormat(packageName, token)} JavaDoc.<a name="line.87"></a>
+<span class="sourceLineNo">088</span>     * &lt;h3&gt;Efficiency&lt;/h3&gt;<a name="line.88"></a>
+<span class="sourceLineNo">089</span>     * Configuring this property is not as efficient as configuring a {@link #getFormatClassNames() formatClassNames}<a name="line.89"></a>
+<span class="sourceLineNo">090</span>     * map, but it may be more convenient depending on the number of {@code HashFormat} implementations that<a name="line.90"></a>
+<span class="sourceLineNo">091</span>     * need to be supported by this factory.<a name="line.91"></a>
+<span class="sourceLineNo">092</span>     *<a name="line.92"></a>
+<span class="sourceLineNo">093</span>     * @return a set of package names that can be searched for {@link HashFormat} implementations<a name="line.93"></a>
+<span class="sourceLineNo">094</span>     * @see #getHashFormatClass(String, String)<a name="line.94"></a>
+<span class="sourceLineNo">095</span>     */<a name="line.95"></a>
+<span class="sourceLineNo">096</span>    public Set&lt;String&gt; getSearchPackages() {<a name="line.96"></a>
+<span class="sourceLineNo">097</span>        return searchPackages;<a name="line.97"></a>
+<span class="sourceLineNo">098</span>    }<a name="line.98"></a>
+<span class="sourceLineNo">099</span><a name="line.99"></a>
+<span class="sourceLineNo">100</span>    /**<a name="line.100"></a>
+<span class="sourceLineNo">101</span>     * Sets a set of package names that can be searched for {@link HashFormat} implementations according to<a name="line.101"></a>
+<span class="sourceLineNo">102</span>     * heuristics defined in the {@link #getHashFormatClass(String, String) getHashFormat(packageName, token)} JavaDoc.<a name="line.102"></a>
+<span class="sourceLineNo">103</span>     * &lt;h3&gt;Efficiency&lt;/h3&gt;<a name="line.103"></a>
+<span class="sourceLineNo">104</span>     * Configuring this property is not as efficient as configuring a {@link #getFormatClassNames() formatClassNames}<a name="line.104"></a>
+<span class="sourceLineNo">105</span>     * map, but it may be more convenient depending on the number of {@code HashFormat} implementations that<a name="line.105"></a>
+<span class="sourceLineNo">106</span>     * need to be supported by this factory.<a name="line.106"></a>
+<span class="sourceLineNo">107</span>     *<a name="line.107"></a>
+<span class="sourceLineNo">108</span>     * @param searchPackages a set of package names that can be searched for {@link HashFormat} implementations<a name="line.108"></a>
+<span class="sourceLineNo">109</span>     */<a name="line.109"></a>
+<span class="sourceLineNo">110</span>    public void setSearchPackages(Set&lt;String&gt; searchPackages) {<a name="line.110"></a>
+<span class="sourceLineNo">111</span>        this.searchPackages = searchPackages;<a name="line.111"></a>
+<span class="sourceLineNo">112</span>    }<a name="line.112"></a>
+<span class="sourceLineNo">113</span><a name="line.113"></a>
+<span class="sourceLineNo">114</span>    public HashFormat getInstance(String in) {<a name="line.114"></a>
+<span class="sourceLineNo">115</span>        if (in == null) {<a name="line.115"></a>
+<span class="sourceLineNo">116</span>            return null;<a name="line.116"></a>
+<span class="sourceLineNo">117</span>        }<a name="line.117"></a>
+<span class="sourceLineNo">118</span><a name="line.118"></a>
+<span class="sourceLineNo">119</span>        HashFormat hashFormat = null;<a name="line.119"></a>
+<span class="sourceLineNo">120</span>        Class clazz = null;<a name="line.120"></a>
+<span class="sourceLineNo">121</span><a name="line.121"></a>
+<span class="sourceLineNo">122</span>        //NOTE: this code block occurs BEFORE calling getHashFormatClass(in) on purpose as a performance<a name="line.122"></a>
+<span class="sourceLineNo">123</span>        //optimization.  If the input arg is an MCF-formatted string, there will be many unnecessary ClassLoader<a name="line.123"></a>
+<span class="sourceLineNo">124</span>        //misses which can be slow.  By checking the MCF-formatted option, we can significantly improve performance<a name="line.124"></a>
+<span class="sourceLineNo">125</span>        if (in.startsWith(ModularCryptFormat.TOKEN_DELIMITER)) {<a name="line.125"></a>
+<span class="sourceLineNo">126</span>            //odds are high that the input argument is not a fully qualified class name or a format key (e.g. 'hex',<a name="line.126"></a>
+<span class="sourceLineNo">127</span>            //base64' or 'shiro1').  Try to find the key and lookup via that:<a name="line.127"></a>
+<span class="sourceLineNo">128</span>            String test = in.substring(ModularCryptFormat.TOKEN_DELIMITER.length());<a name="line.128"></a>
+<span class="sourceLineNo">129</span>            String[] tokens = test.split("\\" + ModularCryptFormat.TOKEN_DELIMITER);<a name="line.129"></a>
+<span class="sourceLineNo">130</span>            //the MCF ID is always the first token in the delimited string:<a name="line.130"></a>
+<span class="sourceLineNo">131</span>            String possibleMcfId = (tokens != null &amp;&amp; tokens.length &gt; 0) ? tokens[0] : null;<a name="line.131"></a>
+<span class="sourceLineNo">132</span>            if (possibleMcfId != null) {<a name="line.132"></a>
+<span class="sourceLineNo">133</span>                //found a possible MCF ID - test it using our heuristics to see if we can find a corresponding class:<a name="line.133"></a>
+<span class="sourceLineNo">134</span>                clazz = getHashFormatClass(possibleMcfId);<a name="line.134"></a>
+<span class="sourceLineNo">135</span>            }<a name="line.135"></a>
+<span class="sourceLineNo">136</span>        }<a name="line.136"></a>
+<span class="sourceLineNo">137</span><a name="line.137"></a>
+<span class="sourceLineNo">138</span>        if (clazz == null) {<a name="line.138"></a>
+<span class="sourceLineNo">139</span>            //not an MCF-formatted string - use the unaltered input arg and go through our heuristics:<a name="line.139"></a>
+<span class="sourceLineNo">140</span>            clazz = getHashFormatClass(in);<a name="line.140"></a>
+<span class="sourceLineNo">141</span>        }<a name="line.141"></a>
+<span class="sourceLineNo">142</span><a name="line.142"></a>
+<span class="sourceLineNo">143</span>        if (clazz != null) {<a name="line.143"></a>
+<span class="sourceLineNo">144</span>            //we found a HashFormat class - instantiate it:<a name="line.144"></a>
+<span class="sourceLineNo">145</span>            hashFormat = newHashFormatInstance(clazz);<a name="line.145"></a>
+<span class="sourceLineNo">146</span>        }<a name="line.146"></a>
+<span class="sourceLineNo">147</span><a name="line.147"></a>
+<span class="sourceLineNo">148</span>        return hashFormat;<a name="line.148"></a>
+<span class="sourceLineNo">149</span>    }<a name="line.149"></a>
+<span class="sourceLineNo">150</span><a name="line.150"></a>
+<span class="sourceLineNo">151</span>    /**<a name="line.151"></a>
+<span class="sourceLineNo">152</span>     * Heuristically determine the fully qualified HashFormat implementation class name based on the specified<a name="line.152"></a>
+<span class="sourceLineNo">153</span>     * token.<a name="line.153"></a>
+<span class="sourceLineNo">154</span>     * &lt;p/&gt;<a name="line.154"></a>
+<span class="sourceLineNo">155</span>     * This implementation functions as follows (in order):<a name="line.155"></a>
+<span class="sourceLineNo">156</span>     * &lt;ol&gt;<a name="line.156"></a>
+<span class="sourceLineNo">157</span>     * &lt;li&gt;See if the argument can be used as a lookup key in the {@link #getFormatClassNames() formatClassNames}<a name="line.157"></a>
+<span class="sourceLineNo">158</span>     * map.  If a value (a fully qualified class name {@link HashFormat HashFormat} implementation) is found,<a name="line.158"></a>
+<span class="sourceLineNo">159</span>     * {@link ClassUtils#forName(String) lookup} the class and return it.&lt;/li&gt;<a name="line.159"></a>
+<span class="sourceLineNo">160</span>     * &lt;li&gt;<a name="line.160"></a>
+<span class="sourceLineNo">161</span>     * Check to see if the token argument is a<a name="line.161"></a>
+<span class="sourceLineNo">162</span>     * {@link ProvidedHashFormat} enum value.  If so, acquire the corresponding {@code HashFormat} class and<a name="line.162"></a>
+<span class="sourceLineNo">163</span>     * return it.<a name="line.163"></a>
+<span class="sourceLineNo">164</span>     * &lt;/li&gt;<a name="line.164"></a>
+<span class="sourceLineNo">165</span>     * &lt;li&gt;<a name="line.165"></a>
+<span class="sourceLineNo">166</span>     * Check to see if the token argument is itself a fully qualified class name.  If so, try to load the class<a name="line.166"></a>
+<span class="sourceLineNo">167</span>     * and return it.<a name="line.167"></a>
+<span class="sourceLineNo">168</span>     * &lt;/li&gt;<a name="line.168"></a>
+<span class="sourceLineNo">169</span>     * &lt;li&gt;If the above options do not result in a discovered class, search all all configured<a name="line.169"></a>
+<span class="sourceLineNo">170</span>     * {@link #getSearchPackages() searchPackages} using heuristics defined in the<a name="line.170"></a>
+<span class="sourceLineNo">171</span>     * {@link #getHashFormatClass(String, String) getHashFormatClass(packageName, token)} method documentation<a name="line.171"></a>
+<span class="sourceLineNo">172</span>     * (relaying the {@code token} argument to that method for each configured package).<a name="line.172"></a>
+<span class="sourceLineNo">173</span>     * &lt;/li&gt;<a name="line.173"></a>
+<span class="sourceLineNo">174</span>     * &lt;/ol&gt;<a name="line.174"></a>
+<span class="sourceLineNo">175</span>     * &lt;p/&gt;<a name="line.175"></a>
+<span class="sourceLineNo">176</span>     * If a class is not discovered via any of the above means, {@code null} is returned to indicate the class<a name="line.176"></a>
+<span class="sourceLineNo">177</span>     * could not be found.<a name="line.177"></a>
+<span class="sourceLineNo">178</span>     *<a name="line.178"></a>
+<span class="sourceLineNo">179</span>     * @param token the string token from which a class name will be heuristically determined.<a name="line.179"></a>
+<span class="sourceLineNo">180</span>     * @return the discovered HashFormat class implementation or {@code null} if no class could be heuristically determined.<a name="line.180"></a>
+<span class="sourceLineNo">181</span>     */<a name="line.181"></a>
+<span class="sourceLineNo">182</span>    protected Class getHashFormatClass(String token) {<a name="line.182"></a>
+<span class="sourceLineNo">183</span><a name="line.183"></a>
+<span class="sourceLineNo">184</span>        Class clazz = null;<a name="line.184"></a>
+<span class="sourceLineNo">185</span><a name="line.185"></a>
+<span class="sourceLineNo">186</span>        //check to see if the token is a configured FQCN alias.  This is faster than searching packages,<a name="line.186"></a>
+<span class="sourceLineNo">187</span>        //so we try this first:<a name="line.187"></a>
+<span class="sourceLineNo">188</span>        if (this.formatClassNames != null) {<a name="line.188"></a>
+<span class="sourceLineNo">189</span>            String value = this.formatClassNames.get(token);<a name="line.189"></a>
+<span class="sourceLineNo">190</span>            if (value != null) {<a name="line.190"></a>
+<span class="sourceLineNo">191</span>                //found an alias - see if the value is a class:<a name="line.191"></a>
+<span class="sourceLineNo">192</span>                clazz = lookupHashFormatClass(value);<a name="line.192"></a>
+<span class="sourceLineNo">193</span>            }<a name="line.193"></a>
+<span class="sourceLineNo">194</span>        }<a name="line.194"></a>
+<span class="sourceLineNo">195</span><a name="line.195"></a>
+<span class="sourceLineNo">196</span>        //check to see if the token is one of Shiro's provided FQCN aliases (again, faster than searching):<a name="line.196"></a>
+<span class="sourceLineNo">197</span>        if (clazz == null) {<a name="line.197"></a>
+<span class="sourceLineNo">198</span>            ProvidedHashFormat provided = ProvidedHashFormat.byId(token);<a name="line.198"></a>
+<span class="sourceLineNo">199</span>            if (provided != null) {<a name="line.199"></a>
+<span class="sourceLineNo">200</span>                clazz = provided.getHashFormatClass();<a name="line.200"></a>
+<span class="sourceLineNo">201</span>            }<a name="line.201"></a>
+<span class="sourceLineNo">202</span>        }<a name="line.202"></a>
+<span class="sourceLineNo">203</span><a name="line.203"></a>
+<span class="sourceLineNo">204</span>        if (clazz == null) {<a name="line.204"></a>
+<span class="sourceLineNo">205</span>            //check to see if 'token' was a FQCN itself:<a name="line.205"></a>
+<span class="sourceLineNo">206</span>            clazz = lookupHashFormatClass(token);<a name="line.206"></a>
+<span class="sourceLineNo">207</span>        }<a name="line.207"></a>
+<span class="sourceLineNo">208</span><a name="line.208"></a>
+<span class="sourceLineNo">209</span>        if (clazz == null) {<a name="line.209"></a>
+<span class="sourceLineNo">210</span>            //token wasn't a FQCN or a FQCN alias - try searching in configured packages:<a name="line.210"></a>
+<span class="sourceLineNo">211</span>            if (this.searchPackages != null) {<a name="line.211"></a>
+<span class="sourceLineNo">212</span>                for (String packageName : this.searchPackages) {<a name="line.212"></a>
+<span class="sourceLineNo">213</span>                    clazz = getHashFormatClass(packageName, token);<a name="line.213"></a>
+<span class="sourceLineNo">214</span>                    if (clazz != null) {<a name="line.214"></a>
+<span class="sourceLineNo">215</span>                        //found it:<a name="line.215"></a>
+<span class="sourceLineNo">216</span>                        break;<a name="line.216"></a>
+<span class="sourceLineNo">217</span>                    }<a name="line.217"></a>
+<span class="sourceLineNo">218</span>                }<a name="line.218"></a>
+<span class="sourceLineNo">219</span>            }<a name="line.219"></a>
+<span class="sourceLineNo">220</span>        }<a name="line.220"></a>
+<span class="sourceLineNo">221</span><a name="line.221"></a>
+<span class="sourceLineNo">222</span>        if (clazz != null) {<a name="line.222"></a>
+<span class="sourceLineNo">223</span>            assertHashFormatImpl(clazz);<a name="line.223"></a>
+<span class="sourceLineNo">224</span>        }<a name="line.224"></a>
+<span class="sourceLineNo">225</span><a name="line.225"></a>
+<span class="sourceLineNo">226</span>        return clazz;<a name="line.226"></a>
+<span class="sourceLineNo">227</span>    }<a name="line.227"></a>
+<span class="sourceLineNo">228</span><a name="line.228"></a>
+<span class="sourceLineNo">229</span>    /**<a name="line.229"></a>
+<span class="sourceLineNo">230</span>     * Heuristically determine the fully qualified {@code HashFormat} implementation class name in the specified<a name="line.230"></a>
+<span class="sourceLineNo">231</span>     * package based on the provided token.<a name="line.231"></a>
+<span class="sourceLineNo">232</span>     * &lt;p/&gt;<a name="line.232"></a>
+<span class="sourceLineNo">233</span>     * The token is expected to be a relevant fragment of an unqualified class name in the specified package.<a name="line.233"></a>
+<span class="sourceLineNo">234</span>     * A 'relevant fragment' can be one of the following:<a name="line.234"></a>
+<span class="sourceLineNo">235</span>     * &lt;ul&gt;<a name="line.235"></a>
+<span class="sourceLineNo">236</span>     * &lt;li&gt;The {@code HashFormat} implementation unqualified class name&lt;/li&gt;<a name="line.236"></a>
+<span class="sourceLineNo">237</span>     * &lt;li&gt;The prefix of an unqualified class name ending with the text {@code Format}.  The first character of<a name="line.237"></a>
+<span class="sourceLineNo">238</span>     * this prefix can be upper or lower case and both options will be tried.&lt;/li&gt;<a name="line.238"></a>
+<span class="sourceLineNo">239</span>     * &lt;li&gt;The prefix of an unqualified class name ending with the text {@code HashFormat}.  The first character of<a name="line.239"></a>
+<span class="sourceLineNo">240</span>     * this prefix can be upper or lower case and both options will be tried.&lt;/li&gt;<a name="line.240"></a>
+<span class="sourceLineNo">241</span>     * &lt;li&gt;The prefix of an unqualified class name ending with the text {@code CryptoFormat}.  The first character<a name="line.241"></a>
+<span class="sourceLineNo">242</span>     * of this prefix can be upper or lower case and both options will be tried.&lt;/li&gt;<a name="line.242"></a>
+<span class="sourceLineNo">243</span>     * &lt;/ul&gt;<a name="line.243"></a>
+<span class="sourceLineNo">244</span>     * &lt;p/&gt;<a name="line.244"></a>
+<span class="sourceLineNo">245</span>     * Some examples:<a name="line.245"></a>
+<span class="sourceLineNo">246</span>     * &lt;table&gt;<a name="line.246"></a>
+<span class="sourceLineNo">247</span>     * &lt;tr&gt;<a name="line.247"></a>
+<span class="sourceLineNo">248</span>     * &lt;th&gt;Package Name&lt;/th&gt;<a name="line.248"></a>
+<span class="sourceLineNo">249</span>     * &lt;th&gt;Token&lt;/th&gt;<a name="line.249"></a>
+<span class="sourceLineNo">250</span>     * &lt;th&gt;Expected Output Class&lt;/th&gt;<a name="line.250"></a>
+<span class="sourceLineNo">251</span>     * &lt;th&gt;Notes&lt;/th&gt;<a name="line.251"></a>
+<span class="sourceLineNo">252</span>     * &lt;/tr&gt;<a name="line.252"></a>
+<span class="sourceLineNo">253</span>     * &lt;tr&gt;<a name="line.253"></a>
+<span class="sourceLineNo">254</span>     * &lt;td&gt;{@code com.foo.whatever}&lt;/td&gt;<a name="line.254"></a>
+<span class="sourceLineNo">255</span>     * &lt;td&gt;{@code MyBarFormat}&lt;/td&gt;<a name="line.255"></a>
+<span class="sourceLineNo">256</span>     * &lt;td&gt;{@code com.foo.whatever.MyBarFormat}&lt;/td&gt;<a name="line.256"></a>
+<span class="sourceLineNo">257</span>     * &lt;td&gt;Token is a complete unqualified class name&lt;/td&gt;<a name="line.257"></a>
+<span class="sourceLineNo">258</span>     * &lt;/tr&gt;<a name="line.258"></a>
+<span class="sourceLineNo">259</span>     * &lt;tr&gt;<a name="line.259"></a>
+<span class="sourceLineNo">260</span>     * &lt;td&gt;{@code com.foo.whatever}&lt;/td&gt;<a name="line.260"></a>
+<span class="sourceLineNo">261</span>     * &lt;td&gt;{@code Bar}&lt;/td&gt;<a name="line.261"></a>
+<span class="sourceLineNo">262</span>     * &lt;td&gt;{@code com.foo.whatever.BarFormat} &lt;em&gt;or&lt;/em&gt; {@code com.foo.whatever.BarHashFormat} &lt;em&gt;or&lt;/em&gt;<a name="line.262"></a>
+<span class="sourceLineNo">263</span>     * {@code com.foo.whatever.BarCryptFormat}&lt;/td&gt;<a name="line.263"></a>
+<span class="sourceLineNo">264</span>     * &lt;td&gt;The token is only part of the unqualified class name - i.e. all characters in front of the {@code *Format}<a name="line.264"></a>
+<span class="sourceLineNo">265</span>     * {@code *HashFormat} or {@code *CryptFormat} suffix.  Note that the {@code *Format} variant will be tried before<a name="line.265"></a>
+<span class="sourceLineNo">266</span>     * {@code *HashFormat} and then finally {@code *CryptFormat}&lt;/td&gt;<a name="line.266"></a>
+<span class="sourceLineNo">267</span>     * &lt;/tr&gt;<a name="line.267"></a>
+<span class="sourceLineNo">268</span>     * &lt;tr&gt;<a name="line.268"></a>
+<span class="sourceLineNo">269</span>     * &lt;td&gt;{@code com.foo.whatever}&lt;/td&gt;<a name="line.269"></a>
+<span class="sourceLineNo">270</span>     * &lt;td&gt;{@code bar}&lt;/td&gt;<a name="line.270"></a>
+<span class="sourceLineNo">271</span>     * &lt;td&gt;{@code com.foo.whatever.BarFormat} &lt;em&gt;or&lt;/em&gt; {@code com.foo.whatever.BarHashFormat} &lt;em&gt;or&lt;/em&gt;<a name="line.271"></a>
+<span class="sourceLineNo">272</span>     * {@code com.foo.whatever.BarCryptFormat}&lt;/td&gt;<a name="line.272"></a>
+<span class="sourceLineNo">273</span>     * &lt;td&gt;Exact same output as the above {@code Bar} input example. (The token differs only by the first character)&lt;/td&gt;<a name="line.273"></a>
+<span class="sourceLineNo">274</span>     * &lt;/tr&gt;<a name="line.274"></a>
+<span class="sourceLineNo">275</span>     * &lt;/table&gt;<a name="line.275"></a>
+<span class="sourceLineNo">276</span>     *<a name="line.276"></a>
+<span class="sourceLineNo">277</span>     * @param packageName the package to search for matching {@code HashFormat} implementations.<a name="line.277"></a>
+<span class="sourceLineNo">278</span>     * @param token       the string token from which a class name will be heuristically determined.<a name="line.278"></a>
+<span class="sourceLineNo">279</span>     * @return the discovered HashFormat class implementation or {@code null} if no class could be heuristically determined.<a name="line.279"></a>
+<span class="sourceLineNo">280</span>     */<a name="line.280"></a>
+<span class="sourceLineNo">281</span>    protected Class getHashFormatClass(String packageName, String token) {<a name="line.281"></a>
+<span class="sourceLineNo">282</span>        String test = token;<a name="line.282"></a>
+<span class="sourceLineNo">283</span>        Class clazz = null;<a name="line.283"></a>
+<span class="sourceLineNo">284</span>        String pkg = packageName == null ? "" : packageName;<a name="line.284"></a>
+<span class="sourceLineNo">285</span><a name="line.285"></a>
+<span class="sourceLineNo">286</span>        //1. Assume the arg is a fully qualified class name in the classpath:<a name="line.286"></a>
+<span class="sourceLineNo">287</span>        clazz = lookupHashFormatClass(test);<a name="line.287"></a>
+<span class="sourceLineNo">288</span><a name="line.288"></a>
+<span class="sourceLineNo">289</span>        if (clazz == null) {<a name="line.289"></a>
+<span class="sourceLineNo">290</span>            test = pkg + "." + token;<a name="line.290"></a>
+<span class="sourceLineNo">291</span>            clazz = lookupHashFormatClass(test);<a name="line.291"></a>
+<span class="sourceLineNo">292</span>        }<a name="line.292"></a>
+<span class="sourceLineNo">293</span><a name="line.293"></a>
+<span class="sourceLineNo">294</span>        if (clazz == null) {<a name="line.294"></a>
+<span class="sourceLineNo">295</span>            test = pkg + "." + StringUtils.uppercaseFirstChar(token) + "Format";<a name="line.295"></a>
+<span class="sourceLineNo">296</span>            clazz = lookupHashFormatClass(test);<a name="line.296"></a>
+<span class="sourceLineNo">297</span>        }<a name="line.297"></a>
+<span class="sourceLineNo">298</span><a name="line.298"></a>
+<span class="sourceLineNo">299</span>        if (clazz == null) {<a name="line.299"></a>
+<span class="sourceLineNo">300</span>            test = pkg + "." + token + "Format";<a name="line.300"></a>
+<span class="sourceLineNo">301</span>            clazz = lookupHashFormatClass(test);<a name="line.301"></a>
+<span class="sourceLineNo">302</span>        }<a name="line.302"></a>
+<span class="sourceLineNo">303</span><a name="line.303"></a>
+<span class="sourceLineNo">304</span>        if (clazz == null) {<a name="line.304"></a>
+<span class="sourceLineNo">305</span>            test = pkg + "." + StringUtils.uppercaseFirstChar(token) + "HashFormat";<a name="line.305"></a>
+<span class="sourceLineNo">306</span>            clazz = lookupHashFormatClass(test);<a name="line.306"></a>
+<span class="sourceLineNo">307</span>        }<a name="line.307"></a>
+<span class="sourceLineNo">308</span><a name="line.308"></a>
+<span class="sourceLineNo">309</span>        if (clazz == null) {<a name="line.309"></a>
+<span class="sourceLineNo">310</span>            test = pkg + "." + token + "HashFormat";<a name="line.310"></a>
+<span class="sourceLineNo">311</span>            clazz = lookupHashFormatClass(test);<a name="line.311"></a>
+<span class="sourceLineNo">312</span>        }<a name="line.312"></a>
+<span class="sourceLineNo">313</span><a name="line.313"></a>
+<span class="sourceLineNo">314</span>        if (clazz == null) {<a name="line.314"></a>
+<span class="sourceLineNo">315</span>            test = pkg + "." + StringUtils.uppercaseFirstChar(token) + "CryptFormat";<a name="line.315"></a>
+<span class="sourceLineNo">316</span>            clazz = lookupHashFormatClass(test);<a name="line.316"></a>
+<span class="sourceLineNo">317</span>        }<a name="line.317"></a>
+<span class="sourceLineNo">318</span><a name="line.318"></a>
+<span class="sourceLineNo">319</span>        if (clazz == null) {<a name="line.319"></a>
+<span class="sourceLineNo">320</span>            test = pkg + "." + token + "CryptFormat";<a name="line.320"></a>
+<span class="sourceLineNo">321</span>            clazz = lookupHashFormatClass(test);<a name="line.321"></a>
+<span class="sourceLineNo">322</span>        }<a name="line.322"></a>
+<span class="sourceLineNo">323</span><a name="line.323"></a>
+<span class="sourceLineNo">324</span>        if (clazz == null) {<a name="line.324"></a>
+<span class="sourceLineNo">325</span>            return null; //ran out of options<a name="line.325"></a>
+<span class="sourceLineNo">326</span>        }<a name="line.326"></a>
+<span class="sourceLineNo">327</span><a name="line.327"></a>
+<span class="sourceLineNo">328</span>        assertHashFormatImpl(clazz);<a name="line.328"></a>
+<span class="sourceLineNo">329</span><a name="line.329"></a>
+<span class="sourceLineNo">330</span>        return clazz;<a name="line.330"></a>
+<span class="sourceLineNo">331</span>    }<a name="line.331"></a>
+<span class="sourceLineNo">332</span><a name="line.332"></a>
+<span class="sourceLineNo">333</span>    protected Class lookupHashFormatClass(String name) {<a name="line.333"></a>
+<span class="sourceLineNo">334</span>        try {<a name="line.334"></a>
+<span class="sourceLineNo">335</span>            return ClassUtils.forName(name);<a name="line.335"></a>
+<span class="sourceLineNo">336</span>        } catch (UnknownClassException ignored) {<a name="line.336"></a>
+<span class="sourceLineNo">337</span>        }<a name="line.337"></a>
+<span class="sourceLineNo">338</span><a name="line.338"></a>
+<span class="sourceLineNo">339</span>        return null;<a name="line.339"></a>
+<span class="sourceLineNo">340</span>    }<a name="line.340"></a>
+<span class="sourceLineNo">341</span><a name="line.341"></a>
+<span class="sourceLineNo">342</span>    protected final void assertHashFormatImpl(Class clazz) {<a name="line.342"></a>
+<span class="sourceLineNo">343</span>        if (!HashFormat.class.isAssignableFrom(clazz) || clazz.isInterface()) {<a name="line.343"></a>
+<span class="sourceLineNo">344</span>            throw new IllegalArgumentException("Discovered class [" + clazz.getName() + "] is not a " +<a name="line.344"></a>
+<span class="sourceLineNo">345</span>                    HashFormat.class.getName() + " implementation.");<a name="line.345"></a>
+<span class="sourceLineNo">346</span>        }<a name="line.346"></a>
+<span class="sourceLineNo">347</span><a name="line.347"></a>
+<span class="sourceLineNo">348</span>    }<a name="line.348"></a>
+<span class="sourceLineNo">349</span><a name="line.349"></a>
+<span class="sourceLineNo">350</span>    protected final HashFormat newHashFormatInstance(Class clazz) {<a name="line.350"></a>
+<span class="sourceLineNo">351</span>        assertHashFormatImpl(clazz);<a name="line.351"></a>
+<span class="sourceLineNo">352</span>        return (HashFormat) ClassUtils.newInstance(clazz);<a name="line.352"></a>
+<span class="sourceLineNo">353</span>    }<a name="line.353"></a>
+<span class="sourceLineNo">354</span>}<a name="line.354"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

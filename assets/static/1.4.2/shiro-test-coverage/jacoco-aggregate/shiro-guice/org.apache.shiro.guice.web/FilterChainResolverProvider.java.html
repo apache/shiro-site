@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>FilterChainResolverProvider.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-guice</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.guice.web</a> &gt; <span class="el_source">FilterChainResolverProvider.java</span></div><h1>FilterChainResolverProvider.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.guice.web;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.Filter;
+
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.Singleton;
+import com.google.inject.spi.Dependency;
+import com.google.inject.spi.ProviderWithDependencies;
+
+import org.apache.shiro.util.AntPathMatcher;
+import org.apache.shiro.util.PatternMatcher;
+import org.apache.shiro.web.filter.mgt.FilterChainResolver;
+
+@Singleton
+class FilterChainResolverProvider implements ProviderWithDependencies&lt;FilterChainResolver&gt; {
+    @Inject
+    Injector injector;
+
+    private final Map&lt;String, Key&lt;? extends Filter&gt;[]&gt; chains;
+
+    private final Set&lt;Dependency&lt;?&gt;&gt; dependencies;
+
+<span class="fc" id="L48">    private PatternMatcher patternMatcher = new AntPathMatcher();</span>
+
+<span class="fc" id="L50">    public FilterChainResolverProvider(Map&lt;String, Key&lt;? extends Filter&gt;[]&gt; chains) {</span>
+<span class="fc" id="L51">        this.chains = chains;</span>
+<span class="fc" id="L52">        Set&lt;Dependency&lt;?&gt;&gt; dependenciesBuilder = new HashSet&lt;Dependency&lt;?&gt;&gt;();</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        for (String chain : chains.keySet()) {</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">            for (Key&lt;? extends Filter&gt; filterKey : chains.get(chain)) {</span>
+<span class="fc" id="L55">                dependenciesBuilder.add(Dependency.get(filterKey));</span>
+            }
+<span class="fc" id="L57">        }</span>
+<span class="fc" id="L58">        this.dependencies = Collections.unmodifiableSet(dependenciesBuilder);</span>
+<span class="fc" id="L59">    }</span>
+
+    @Inject(optional = true)
+    public void setPatternMatcher(PatternMatcher patternMatcher) {
+<span class="fc" id="L63">        this.patternMatcher = patternMatcher;</span>
+<span class="fc" id="L64">    }</span>
+
+    public Set&lt;Dependency&lt;?&gt;&gt; getDependencies() {
+<span class="fc" id="L67">        return dependencies;</span>
+    }
+
+    public FilterChainResolver get() {
+<span class="fc" id="L71">        return new SimpleFilterChainResolver(chains, injector, patternMatcher);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

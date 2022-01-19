@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>SubjectAwareScheduledExecutorService.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.concurrent</a> &gt; <span class="el_source">SubjectAwareScheduledExecutorService.java</span></div><h1>SubjectAwareScheduledExecutorService.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.concurrent;
+
+import java.util.concurrent.*;
+
+/**
+ * Same concept as the {@link SubjectAwareExecutorService} but additionally supports the
+ * {@link ScheduledExecutorService} interface.
+ */
+public class SubjectAwareScheduledExecutorService extends SubjectAwareExecutorService implements ScheduledExecutorService {
+
+    private ScheduledExecutorService targetScheduledExecutorService;
+
+<span class="nc" id="L31">    public SubjectAwareScheduledExecutorService() {</span>
+<span class="nc" id="L32">    }</span>
+
+<span class="nc" id="L34">    public SubjectAwareScheduledExecutorService(ScheduledExecutorService target) {</span>
+<span class="nc" id="L35">        setTargetScheduledExecutorService(target);</span>
+<span class="nc" id="L36">    }</span>
+
+    public ScheduledExecutorService getTargetScheduledExecutorService() {
+<span class="nc" id="L39">        return targetScheduledExecutorService;</span>
+    }
+
+    public void setTargetScheduledExecutorService(ScheduledExecutorService targetScheduledExecutorService) {
+<span class="nc" id="L43">        super.setTargetExecutorService(targetScheduledExecutorService);</span>
+<span class="nc" id="L44">        this.targetScheduledExecutorService = targetScheduledExecutorService;</span>
+<span class="nc" id="L45">    }</span>
+
+    @Override
+    public void setTargetExecutor(Executor targetExecutor) {
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (!(targetExecutor instanceof ScheduledExecutorService)) {</span>
+<span class="nc" id="L50">            String msg = &quot;The &quot; + getClass().getName() + &quot; implementation only accepts &quot; +</span>
+<span class="nc" id="L51">                    ScheduledExecutorService.class.getName() + &quot; target instances.&quot;;</span>
+<span class="nc" id="L52">            throw new IllegalArgumentException(msg);</span>
+        }
+<span class="nc" id="L54">        super.setTargetExecutorService((ScheduledExecutorService) targetExecutor);</span>
+<span class="nc" id="L55">    }</span>
+
+    @Override
+    public void setTargetExecutorService(ExecutorService targetExecutorService) {
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (!(targetExecutorService instanceof ScheduledExecutorService)) {</span>
+<span class="nc" id="L60">            String msg = &quot;The &quot; + getClass().getName() + &quot; implementation only accepts &quot; +</span>
+<span class="nc" id="L61">                    ScheduledExecutorService.class.getName() + &quot; target instances.&quot;;</span>
+<span class="nc" id="L62">            throw new IllegalArgumentException(msg);</span>
+        }
+<span class="nc" id="L64">        super.setTargetExecutorService(targetExecutorService);</span>
+<span class="nc" id="L65">    }</span>
+
+    public ScheduledFuture&lt;?&gt; schedule(Runnable command, long delay, TimeUnit unit) {
+<span class="nc" id="L68">        Runnable work = associateWithSubject(command);</span>
+<span class="nc" id="L69">        return this.targetScheduledExecutorService.schedule(work, delay, unit);</span>
+    }
+
+    public &lt;V&gt; ScheduledFuture&lt;V&gt; schedule(Callable&lt;V&gt; callable, long delay, TimeUnit unit) {
+<span class="nc" id="L73">        Callable&lt;V&gt; work = associateWithSubject(callable);</span>
+<span class="nc" id="L74">        return this.targetScheduledExecutorService.schedule(work, delay, unit);</span>
+    }
+
+    public ScheduledFuture&lt;?&gt; scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
+<span class="nc" id="L78">        Runnable work = associateWithSubject(command);</span>
+<span class="nc" id="L79">        return this.targetScheduledExecutorService.scheduleAtFixedRate(work, initialDelay, period, unit);</span>
+    }
+
+    public ScheduledFuture&lt;?&gt; scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
+<span class="nc" id="L83">        Runnable work = associateWithSubject(command);</span>
+<span class="nc" id="L84">        return this.targetScheduledExecutorService.scheduleWithFixedDelay(work, initialDelay, delay, unit);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

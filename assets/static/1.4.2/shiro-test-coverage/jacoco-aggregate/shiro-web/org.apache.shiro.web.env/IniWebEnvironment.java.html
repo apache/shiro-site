@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>IniWebEnvironment.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.env</a> &gt; <span class="el_source">IniWebEnvironment.java</span></div><h1>IniWebEnvironment.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.env;
+
+import org.apache.shiro.config.ConfigurationException;
+import org.apache.shiro.config.Ini;
+import org.apache.shiro.config.IniFactorySupport;
+import org.apache.shiro.io.ResourceUtils;
+import org.apache.shiro.util.*;
+import org.apache.shiro.web.config.IniFilterChainResolverFactory;
+import org.apache.shiro.web.config.WebIniSecurityManagerFactory;
+import org.apache.shiro.web.filter.mgt.FilterChainResolver;
+import org.apache.shiro.web.mgt.WebSecurityManager;
+import org.apache.shiro.web.util.WebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletContext;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * {@link WebEnvironment} implementation configured by an {@link Ini} instance or {@code Ini} resource locations.
+ *
+ * @since 1.2
+ */
+public class IniWebEnvironment extends ResourceBasedWebEnvironment implements Initializable, Destroyable {
+
+    public static final String DEFAULT_WEB_INI_RESOURCE_PATH = &quot;/WEB-INF/shiro.ini&quot;;
+    public static final String FILTER_CHAIN_RESOLVER_NAME = &quot;filterChainResolver&quot;;
+
+<span class="fc" id="L50">    private static final Logger log = LoggerFactory.getLogger(IniWebEnvironment.class);</span>
+
+    /**
+     * The Ini that configures this WebEnvironment instance.
+     */
+    private Ini ini;
+
+    private WebIniSecurityManagerFactory factory;
+
+<span class="fc" id="L59">    public IniWebEnvironment() {</span>
+<span class="fc" id="L60">        factory = new WebIniSecurityManagerFactory();</span>
+<span class="fc" id="L61">    }</span>
+
+    /**
+     * Initializes this instance by resolving any potential (explicit or resource-configured) {@link Ini}
+     * configuration and calling {@link #configure() configure} for actual instance configuration.
+     */
+    public void init() {
+
+<span class="fc" id="L69">        setIni(parseConfig());</span>
+
+<span class="fc" id="L71">        configure();</span>
+<span class="fc" id="L72">    }</span>
+
+    /**
+     * Loads configuration {@link Ini} from {@link #getConfigLocations()} if set, otherwise falling back
+     * to the {@link #getDefaultConfigLocations()}. Finally any Ini objects will be merged with the value returned
+     * from {@link #getFrameworkIni()}
+     * @return Ini configuration to be used by this Environment.
+     * @since 1.4
+     */
+    protected Ini parseConfig() {
+<span class="fc" id="L82">        Ini ini = getIni();</span>
+
+<span class="fc" id="L84">        String[] configLocations = getConfigLocations();</span>
+
+<span class="pc bpc" id="L86" title="4 of 8 branches missed.">        if (log.isWarnEnabled() &amp;&amp; !CollectionUtils.isEmpty(ini) &amp;&amp;</span>
+                configLocations != null &amp;&amp; configLocations.length &gt; 0) {
+<span class="nc" id="L88">            log.warn(&quot;Explicit INI instance has been provided, but configuration locations have also been &quot; +</span>
+                    &quot;specified.  The {} implementation does not currently support multiple Ini config, but this may &quot; +
+                    &quot;be supported in the future. Only the INI instance will be used for configuration.&quot;,
+<span class="nc" id="L91">                    IniWebEnvironment.class.getName());</span>
+        }
+
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (CollectionUtils.isEmpty(ini)) {</span>
+<span class="fc" id="L95">            log.debug(&quot;Checking any specified config locations.&quot;);</span>
+<span class="fc" id="L96">            ini = getSpecifiedIni(configLocations);</span>
+        }
+
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        if (CollectionUtils.isEmpty(ini)) {</span>
+<span class="fc" id="L100">            log.debug(&quot;No INI instance or config locations specified.  Trying default config locations.&quot;);</span>
+<span class="fc" id="L101">            ini = getDefaultIni();</span>
+        }
+
+        // Allow for integrations to provide default that will be merged other configuration.
+        // to retain backwards compatibility this must be a different method then 'getDefaultIni()'
+<span class="fc" id="L106">        ini = mergeIni(getFrameworkIni(), ini);</span>
+
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        if (CollectionUtils.isEmpty(ini)) {</span>
+<span class="nc" id="L109">            String msg = &quot;Shiro INI configuration was either not found or discovered to be empty/unconfigured.&quot;;</span>
+<span class="nc" id="L110">            throw new ConfigurationException(msg);</span>
+        }
+<span class="fc" id="L112">        return ini;</span>
+    }
+
+    protected void configure() {
+
+<span class="fc" id="L117">        this.objects.clear();</span>
+
+<span class="fc" id="L119">        WebSecurityManager securityManager = createWebSecurityManager();</span>
+<span class="fc" id="L120">        setWebSecurityManager(securityManager);</span>
+
+<span class="fc" id="L122">        FilterChainResolver resolver = createFilterChainResolver();</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (resolver != null) {</span>
+<span class="fc" id="L124">            setFilterChainResolver(resolver);</span>
+        }
+<span class="fc" id="L126">    }</span>
+
+    /**
+     * Extension point to allow subclasses to provide an {@link Ini} configuration that will be merged into the
+     * users configuration.  The users configuration will override anything set here.
+     * &lt;p&gt;
+     * &lt;strong&gt;NOTE:&lt;/strong&gt; Framework developers should use with caution. It is possible a user could provide
+     * configuration that would conflict with the frameworks configuration.  For example: if this method returns an
+     * Ini object with the following configuration:
+     * &lt;pre&gt;&lt;code&gt;
+     *     [main]
+     *     realm = com.myco.FoobarRealm
+     *     realm.foobarSpecificField = A string
+     * &lt;/code&gt;&lt;/pre&gt;
+     * And the user provides a similar configuration:
+     * &lt;pre&gt;&lt;code&gt;
+     *     [main]
+     *     realm = net.differentco.MyCustomRealm
+     * &lt;/code&gt;&lt;/pre&gt;
+     *
+     * This would merge into:
+     * &lt;pre&gt;&lt;code&gt;
+     *     [main]
+     *     realm = net.differentco.MyCustomRealm
+     *     realm.foobarSpecificField = A string
+     * &lt;/code&gt;&lt;/pre&gt;
+     *
+     * This may cause a configuration error if &lt;code&gt;MyCustomRealm&lt;/code&gt; does not contain the field &lt;code&gt;foobarSpecificField&lt;/code&gt;.
+     * This can be avoided if the Framework Ini uses more unique names, such as &lt;code&gt;foobarRealm&lt;/code&gt;. which would result
+     * in a merged configuration that looks like:
+     * &lt;pre&gt;&lt;code&gt;
+     *     [main]
+     *     foobarRealm = com.myco.FoobarRealm
+     *     foobarRealm.foobarSpecificField = A string
+     *     realm = net.differentco.MyCustomRealm
+     * &lt;/code&gt;&lt;/pre&gt;
+     *
+     * &lt;/p&gt;
+     *
+     * @return Ini configuration used by the framework integrations.
+     * @since 1.4
+     */
+    protected Ini getFrameworkIni() {
+<span class="fc" id="L169">        return null;</span>
+    }
+
+    protected Ini getSpecifiedIni(String[] configLocations) throws ConfigurationException {
+
+<span class="fc" id="L174">        Ini ini = null;</span>
+
+<span class="pc bpc" id="L176" title="3 of 4 branches missed.">        if (configLocations != null &amp;&amp; configLocations.length &gt; 0) {</span>
+
+<span class="nc bnc" id="L178" title="All 2 branches missed.">            if (configLocations.length &gt; 1) {</span>
+<span class="nc" id="L179">                log.warn(&quot;More than one Shiro .ini config location has been specified.  Only the first will be &quot; +</span>
+                        &quot;used for configuration as the {} implementation does not currently support multiple &quot; +
+<span class="nc" id="L181">                        &quot;files.  This may be supported in the future however.&quot;, IniWebEnvironment.class.getName());</span>
+            }
+
+            //required, as it is user specified:
+<span class="nc" id="L185">            ini = createIni(configLocations[0], true);</span>
+        }
+
+<span class="fc" id="L188">        return ini;</span>
+    }
+
+    protected Ini mergeIni(Ini ini1, Ini ini2) {
+
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        if (ini1 == null) {</span>
+<span class="fc" id="L194">            return ini2;</span>
+        }
+
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">        if (ini2 == null) {</span>
+<span class="nc" id="L198">            return ini1;</span>
+        }
+
+        // at this point we have two valid ini objects, create a new one and merge the contents of 2 into 1
+<span class="fc" id="L202">        Ini iniResult = new Ini(ini1);</span>
+<span class="fc" id="L203">        iniResult.merge(ini2);</span>
+
+<span class="fc" id="L205">        return iniResult;</span>
+    }
+
+    protected Ini getDefaultIni() {
+
+<span class="fc" id="L210">        Ini ini = null;</span>
+
+<span class="fc" id="L212">        String[] configLocations = getDefaultConfigLocations();</span>
+<span class="pc bpc" id="L213" title="1 of 2 branches missed.">        if (configLocations != null) {</span>
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">            for (String location : configLocations) {</span>
+<span class="fc" id="L215">                ini = createIni(location, false);</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">                if (!CollectionUtils.isEmpty(ini)) {</span>
+<span class="fc" id="L217">                    log.debug(&quot;Discovered non-empty INI configuration at location '{}'.  Using for configuration.&quot;,</span>
+                            location);
+<span class="fc" id="L219">                    break;</span>
+                }
+            }
+        }
+
+<span class="fc" id="L224">        return ini;</span>
+    }
+
+    /**
+     * Creates an {@link Ini} instance reflecting the specified path, or {@code null} if the path does not exist and
+     * is not required.
+     * &lt;p/&gt;
+     * If the path is required and does not exist or is empty, a {@link ConfigurationException} will be thrown.
+     *
+     * @param configLocation the resource path to load into an {@code Ini} instance.
+     * @param required       if the path must exist and be converted to a non-empty {@link Ini} instance.
+     * @return an {@link Ini} instance reflecting the specified path, or {@code null} if the path does not exist and
+     *         is not required.
+     * @throws ConfigurationException if the path is required but results in a null or empty Ini instance.
+     */
+    protected Ini createIni(String configLocation, boolean required) throws ConfigurationException {
+
+<span class="fc" id="L241">        Ini ini = null;</span>
+
+<span class="pc bpc" id="L243" title="1 of 2 branches missed.">        if (configLocation != null) {</span>
+<span class="fc" id="L244">            ini = convertPathToIni(configLocation, required);</span>
+        }
+<span class="pc bpc" id="L246" title="3 of 4 branches missed.">        if (required &amp;&amp; CollectionUtils.isEmpty(ini)) {</span>
+<span class="nc" id="L247">            String msg = &quot;Required configuration location '&quot; + configLocation + &quot;' does not exist or did not &quot; +</span>
+                    &quot;contain any INI configuration.&quot;;
+<span class="nc" id="L249">            throw new ConfigurationException(msg);</span>
+        }
+
+<span class="fc" id="L252">        return ini;</span>
+    }
+
+    protected FilterChainResolver createFilterChainResolver() {
+
+<span class="fc" id="L257">        FilterChainResolver resolver = null;</span>
+
+<span class="fc" id="L259">        Ini ini = getIni();</span>
+
+<span class="pc bpc" id="L261" title="1 of 2 branches missed.">        if (!CollectionUtils.isEmpty(ini)) {</span>
+            //only create a resolver if the 'filters' or 'urls' sections are defined:
+<span class="fc" id="L263">            Ini.Section urls = ini.getSection(IniFilterChainResolverFactory.URLS);</span>
+<span class="fc" id="L264">            Ini.Section filters = ini.getSection(IniFilterChainResolverFactory.FILTERS);</span>
+<span class="pc bpc" id="L265" title="1 of 4 branches missed.">            if (!CollectionUtils.isEmpty(urls) || !CollectionUtils.isEmpty(filters)) {</span>
+                //either the urls section or the filters section was defined.  Go ahead and create the resolver:
+
+<span class="fc" id="L268">                Factory&lt;FilterChainResolver&gt; factory = (Factory&lt;FilterChainResolver&gt;) this.objects.get(FILTER_CHAIN_RESOLVER_NAME);</span>
+<span class="pc bpc" id="L269" title="1 of 2 branches missed.">                if (factory instanceof IniFactorySupport) {</span>
+<span class="fc" id="L270">                    IniFactorySupport iniFactory = (IniFactorySupport) factory;</span>
+<span class="fc" id="L271">                    iniFactory.setIni(ini);</span>
+<span class="fc" id="L272">                    iniFactory.setDefaults(this.objects);</span>
+                }
+<span class="fc" id="L274">                resolver = factory.getInstance();</span>
+            }
+        }
+
+<span class="fc" id="L278">        return resolver;</span>
+    }
+
+    protected WebSecurityManager createWebSecurityManager() {
+
+<span class="fc" id="L283">        Ini ini = getIni();</span>
+<span class="pc bpc" id="L284" title="1 of 2 branches missed.">        if (!CollectionUtils.isEmpty(ini)) {</span>
+<span class="fc" id="L285">            factory.setIni(ini);</span>
+        }
+
+<span class="fc" id="L288">        Map&lt;String, Object&gt; defaults = getDefaults();</span>
+<span class="pc bpc" id="L289" title="1 of 2 branches missed.">        if (!CollectionUtils.isEmpty(defaults)) {</span>
+<span class="fc" id="L290">            factory.setDefaults(defaults);</span>
+        }
+
+<span class="fc" id="L293">        WebSecurityManager wsm = (WebSecurityManager)factory.getInstance();</span>
+
+        //SHIRO-306 - get beans after they've been created (the call was before the factory.getInstance() call,
+        //which always returned null.
+<span class="fc" id="L297">        Map&lt;String, ?&gt; beans = factory.getBeans();</span>
+<span class="pc bpc" id="L298" title="1 of 2 branches missed.">        if (!CollectionUtils.isEmpty(beans)) {</span>
+<span class="fc" id="L299">            this.objects.putAll(beans);</span>
+        }
+
+<span class="fc" id="L302">        return wsm;</span>
+    }
+
+    /**
+     * Returns an array with two elements, {@code /WEB-INF/shiro.ini} and {@code classpath:shiro.ini}.
+     *
+     * @return an array with two elements, {@code /WEB-INF/shiro.ini} and {@code classpath:shiro.ini}.
+     */
+    protected String[] getDefaultConfigLocations() {
+<span class="fc" id="L311">        return new String[]{</span>
+                DEFAULT_WEB_INI_RESOURCE_PATH,
+                IniFactorySupport.DEFAULT_INI_RESOURCE_PATH
+        };
+    }
+
+    /**
+     * Converts the specified file path to an {@link Ini} instance.
+     * &lt;p/&gt;
+     * If the path does not have a resource prefix as defined by {@link org.apache.shiro.io.ResourceUtils#hasResourcePrefix(String)}, the
+     * path is expected to be resolvable by the {@code ServletContext} via
+     * {@link javax.servlet.ServletContext#getResourceAsStream(String)}.
+     *
+     * @param path     the path of the INI resource to load into an INI instance.
+     * @param required if the specified path must exist
+     * @return an INI instance populated based on the given INI resource path.
+     */
+    private Ini convertPathToIni(String path, boolean required) {
+
+        //TODO - this logic is ugly - it'd be ideal if we had a Resource API to polymorphically encaspulate this behavior
+
+<span class="fc" id="L332">        Ini ini = null;</span>
+
+<span class="pc bpc" id="L334" title="1 of 2 branches missed.">        if (StringUtils.hasText(path)) {</span>
+<span class="fc" id="L335">            InputStream is = null;</span>
+
+            //SHIRO-178: Check for servlet context resource and not only resource paths:
+<span class="fc bfc" id="L338" title="All 2 branches covered.">            if (!ResourceUtils.hasResourcePrefix(path)) {</span>
+<span class="fc" id="L339">                is = getServletContextResourceStream(path);</span>
+            } else {
+                try {
+<span class="fc" id="L342">                    is = ResourceUtils.getInputStreamForPath(path);</span>
+<span class="nc" id="L343">                } catch (IOException e) {</span>
+<span class="nc bnc" id="L344" title="All 2 branches missed.">                    if (required) {</span>
+<span class="nc" id="L345">                        throw new ConfigurationException(e);</span>
+                    } else {
+<span class="nc bnc" id="L347" title="All 2 branches missed.">                        if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L348">                            log.debug(&quot;Unable to load optional path '&quot; + path + &quot;'.&quot;, e);</span>
+                        }
+                    }
+<span class="fc" id="L351">                }</span>
+            }
+<span class="fc bfc" id="L353" title="All 2 branches covered.">            if (is != null) {</span>
+<span class="fc" id="L354">                ini = new Ini();</span>
+<span class="fc" id="L355">                ini.load(is);</span>
+            } else {
+<span class="pc bpc" id="L357" title="1 of 2 branches missed.">                if (required) {</span>
+<span class="nc" id="L358">                    throw new ConfigurationException(&quot;Unable to load resource path '&quot; + path + &quot;'&quot;);</span>
+                }
+            }
+        }
+
+<span class="fc" id="L363">        return ini;</span>
+    }
+
+    //TODO - this logic is ugly - it'd be ideal if we had a Resource API to polymorphically encaspulate this behavior
+    private InputStream getServletContextResourceStream(String path) {
+<span class="fc" id="L368">        InputStream is = null;</span>
+
+<span class="fc" id="L370">        path = WebUtils.normalize(path);</span>
+<span class="fc" id="L371">        ServletContext sc = getServletContext();</span>
+<span class="pc bpc" id="L372" title="1 of 2 branches missed.">        if (sc != null) {</span>
+<span class="fc" id="L373">            is = sc.getResourceAsStream(path);</span>
+        }
+
+<span class="fc" id="L376">        return is;</span>
+    }
+
+    /**
+     * Returns the {@code Ini} instance reflecting this WebEnvironment's configuration.
+     *
+     * @return the {@code Ini} instance reflecting this WebEnvironment's configuration.
+     */
+    public Ini getIni() {
+<span class="fc" id="L385">        return this.ini;</span>
+    }
+
+    /**
+     * Allows for configuration via a direct {@link Ini} instance instead of via
+     * {@link #getConfigLocations() config locations}.
+     * &lt;p/&gt;
+     * If the specified instance is null or empty, the fallback/default resource-based configuration will be used.
+     *
+     * @param ini the ini instance to use for creation.
+     */
+    public void setIni(Ini ini) {
+<span class="fc" id="L397">        this.ini = ini;</span>
+<span class="fc" id="L398">    }</span>
+
+    protected Map&lt;String, Object&gt; getDefaults() {
+<span class="fc" id="L401">        Map&lt;String, Object&gt; defaults = new HashMap&lt;String, Object&gt;();</span>
+<span class="fc" id="L402">        defaults.put(FILTER_CHAIN_RESOLVER_NAME, new IniFilterChainResolverFactory());</span>
+<span class="fc" id="L403">        return defaults;</span>
+    }
+
+    /**
+     * Returns the SecurityManager factory used by this WebEnvironment.
+     *
+     * @return the SecurityManager factory used by this WebEnvironment.
+     * @since 1.4
+     */
+    @SuppressWarnings(&quot;unused&quot;)
+    protected WebIniSecurityManagerFactory getSecurityManagerFactory() {
+<span class="nc" id="L414">        return factory;</span>
+    }
+
+    /**
+     * Allows for setting the SecurityManager factory which will be used to create the SecurityManager.
+     *
+     * @param factory the SecurityManager factory to used.
+     * @since 1.4
+     */
+    protected void setSecurityManagerFactory(WebIniSecurityManagerFactory factory) {
+<span class="nc" id="L424">        this.factory = factory;</span>
+<span class="nc" id="L425">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>LifecycleBeanPostProcessor.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Jar Bundle</a> &gt; <a href="../index.html" class="el_bundle">shiro-spring</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.spring</a> &gt; <span class="el_source">LifecycleBeanPostProcessor.java</span></div><h1>LifecycleBeanPostProcessor.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.spring;
+
+import org.springframework.beans.BeansException;
+import org.springframework.beans.FatalBeanException;
+import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
+import org.springframework.core.PriorityOrdered;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.apache.shiro.util.Destroyable;
+import org.apache.shiro.util.Initializable;
+
+
+/**
+ * &lt;p&gt;Bean post processor for Spring that automatically calls the &lt;tt&gt;init()&lt;/tt&gt; and/or
+ * &lt;tt&gt;destroy()&lt;/tt&gt; methods on Shiro objects that implement the {@link org.apache.shiro.util.Initializable}
+ * or {@link org.apache.shiro.util.Destroyable} interfaces, respectfully.  This post processor makes it easier
+ * to configure Shiro beans in Spring, since the user never has to worry about whether or not if they
+ * have to specify init-method and destroy-method bean attributes.&lt;/p&gt;
+ *
+ * &lt;p&gt;&lt;b&gt;Warning: This post processor has no way to determine if &lt;tt&gt;init()&lt;/tt&gt; or &lt;tt&gt;destroy()&lt;/tt&gt; have
+ * already been called, so if you define this post processor in your applicationContext, do not also call these
+ * methods manually or via Spring's &lt;tt&gt;init-method&lt;/tt&gt; or &lt;tt&gt;destroy-method&lt;/tt&gt; bean attributes.&lt;/b&gt;&lt;/p&gt;
+ *
+ * @since 0.2
+ */
+public class LifecycleBeanPostProcessor implements DestructionAwareBeanPostProcessor, PriorityOrdered {
+
+    /**
+     * Private internal class log instance.
+     */
+<span class="nc" id="L51">    private static final Logger log = LoggerFactory.getLogger(LifecycleBeanPostProcessor.class);</span>
+
+    /**
+     * Order value of this BeanPostProcessor.
+     */
+    private int order;
+
+    /**
+     * Default Constructor.
+     */
+    public LifecycleBeanPostProcessor() {
+<span class="nc" id="L62">        this(LOWEST_PRECEDENCE);</span>
+<span class="nc" id="L63">    }</span>
+
+    /**
+     * Constructor with definable {@link #getOrder() order value}.
+     *
+     * @param order order value of this BeanPostProcessor.
+     */
+<span class="nc" id="L70">    public LifecycleBeanPostProcessor(int order) {</span>
+<span class="nc" id="L71">        this.order = order;</span>
+<span class="nc" id="L72">    }</span>
+
+    /**
+     * Calls the &lt;tt&gt;init()&lt;/tt&gt; methods on the bean if it implements {@link org.apache.shiro.util.Initializable}
+     *
+     * @param object the object being initialized.
+     * @param name   the name of the bean being initialized.
+     * @return the initialized bean.
+     * @throws BeansException if any exception is thrown during initialization.
+     */
+    public Object postProcessBeforeInitialization(Object object, String name) throws BeansException {
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (object instanceof Initializable) {</span>
+            try {
+<span class="nc bnc" id="L85" title="All 2 branches missed.">                if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L86">                    log.debug(&quot;Initializing bean [&quot; + name + &quot;]...&quot;);</span>
+                }
+
+<span class="nc" id="L89">                ((Initializable) object).init();</span>
+<span class="nc" id="L90">            } catch (Exception e) {</span>
+<span class="nc" id="L91">                throw new FatalBeanException(&quot;Error initializing bean [&quot; + name + &quot;]&quot;, e);</span>
+<span class="nc" id="L92">            }</span>
+        }
+<span class="nc" id="L94">        return object;</span>
+    }
+
+
+    /**
+     * Does nothing - merely returns the object argument immediately.
+     */
+    public Object postProcessAfterInitialization(Object object, String name) throws BeansException {
+        // Does nothing after initialization
+<span class="nc" id="L103">        return object;</span>
+    }
+
+
+    /**
+     * Calls the &lt;tt&gt;destroy()&lt;/tt&gt; methods on the bean if it implements {@link org.apache.shiro.util.Destroyable}
+     *
+     * @param object the object being initialized.
+     * @param name   the name of the bean being initialized.
+     * @throws BeansException if any exception is thrown during initialization.
+     */
+    public void postProcessBeforeDestruction(Object object, String name) throws BeansException {
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (object instanceof Destroyable) {</span>
+            try {
+<span class="nc bnc" id="L117" title="All 2 branches missed.">                if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L118">                    log.debug(&quot;Destroying bean [&quot; + name + &quot;]...&quot;);</span>
+                }
+
+<span class="nc" id="L121">                ((Destroyable) object).destroy();</span>
+<span class="nc" id="L122">            } catch (Exception e) {</span>
+<span class="nc" id="L123">                throw new FatalBeanException(&quot;Error destroying bean [&quot; + name + &quot;]&quot;, e);</span>
+<span class="nc" id="L124">            }</span>
+        }
+<span class="nc" id="L126">    }</span>
+
+    /**
+     * Order value of this BeanPostProcessor.
+     *
+     * @return order value.
+     */
+    public int getOrder() {
+        // LifecycleBeanPostProcessor needs Order. See https://issues.apache.org/jira/browse/SHIRO-222
+<span class="nc" id="L135">        return order;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

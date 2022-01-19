@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>IniFilterChainResolverFactory.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Jar Bundle</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.config</a> &gt; <span class="el_source">IniFilterChainResolverFactory.java</span></div><h1>IniFilterChainResolverFactory.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.config;
+
+import org.apache.shiro.config.Ini;
+import org.apache.shiro.config.IniFactorySupport;
+import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.config.ReflectionBuilder;
+import org.apache.shiro.util.CollectionUtils;
+import org.apache.shiro.util.Factory;
+import org.apache.shiro.web.filter.mgt.FilterChainManager;
+import org.apache.shiro.web.filter.mgt.FilterChainResolver;
+import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterConfig;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+/**
+ * A {@link Factory} that creates {@link FilterChainResolver} instances based on {@link Ini} configuration.
+ *
+ * @since 1.0
+ */
+public class IniFilterChainResolverFactory extends IniFactorySupport&lt;FilterChainResolver&gt; {
+
+    public static final String FILTERS = &quot;filters&quot;;
+    public static final String URLS = &quot;urls&quot;;
+
+<span class="fc" id="L48">    private static transient final Logger log = LoggerFactory.getLogger(IniFilterChainResolverFactory.class);</span>
+
+    private FilterConfig filterConfig;
+
+    private Map&lt;String, ?&gt; defaultBeans;
+
+    public IniFilterChainResolverFactory() {
+<span class="fc" id="L55">        super();</span>
+<span class="fc" id="L56">    }</span>
+
+    public IniFilterChainResolverFactory(Ini ini) {
+<span class="fc" id="L59">        super(ini);</span>
+<span class="fc" id="L60">    }</span>
+
+    public IniFilterChainResolverFactory(Ini ini, Map&lt;String, ?&gt; defaultBeans) {
+<span class="fc" id="L63">        this(ini);</span>
+<span class="fc" id="L64">        this.defaultBeans = defaultBeans;</span>
+<span class="fc" id="L65">    }</span>
+
+    public FilterConfig getFilterConfig() {
+<span class="fc" id="L68">        return filterConfig;</span>
+    }
+
+    public void setFilterConfig(FilterConfig filterConfig) {
+<span class="fc" id="L72">        this.filterConfig = filterConfig;</span>
+<span class="fc" id="L73">    }</span>
+
+    protected FilterChainResolver createInstance(Ini ini) {
+<span class="fc" id="L76">        FilterChainResolver filterChainResolver = createDefaultInstance();</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if (filterChainResolver instanceof PathMatchingFilterChainResolver) {</span>
+<span class="fc" id="L78">            PathMatchingFilterChainResolver resolver = (PathMatchingFilterChainResolver) filterChainResolver;</span>
+<span class="fc" id="L79">            FilterChainManager manager = resolver.getFilterChainManager();</span>
+<span class="fc" id="L80">            buildChains(manager, ini);</span>
+        }
+<span class="fc" id="L82">        return filterChainResolver;</span>
+    }
+
+    protected FilterChainResolver createDefaultInstance() {
+<span class="fc" id="L86">        FilterConfig filterConfig = getFilterConfig();</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        if (filterConfig != null) {</span>
+<span class="fc" id="L88">            return new PathMatchingFilterChainResolver(filterConfig);</span>
+        } else {
+<span class="fc" id="L90">            return new PathMatchingFilterChainResolver();</span>
+        }
+    }
+
+    protected void buildChains(FilterChainManager manager, Ini ini) {
+        //filters section:
+<span class="fc" id="L96">        Ini.Section section = ini.getSection(FILTERS);</span>
+
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        if (!CollectionUtils.isEmpty(section)) {</span>
+<span class="fc" id="L99">            String msg = &quot;The [{}] section has been deprecated and will be removed in a future release!  Please &quot; +</span>
+                    &quot;move all object configuration (filters and all other objects) to the [{}] section.&quot;;
+<span class="fc" id="L101">            log.warn(msg, FILTERS, IniSecurityManagerFactory.MAIN_SECTION_NAME);</span>
+        }
+
+<span class="fc" id="L104">        Map&lt;String, Object&gt; defaults = new LinkedHashMap&lt;String, Object&gt;();</span>
+
+<span class="fc" id="L106">        Map&lt;String, Filter&gt; defaultFilters = manager.getFilters();</span>
+
+        //now let's see if there are any object defaults in addition to the filters
+        //these can be used to configure the filters:
+        //create a Map of objects to use as the defaults:
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">        if (!CollectionUtils.isEmpty(defaultFilters)) {</span>
+<span class="fc" id="L112">            defaults.putAll(defaultFilters);</span>
+        }
+        //User-provided objects must come _after_ the default filters - to allow the user-provided
+        //ones to override the default filters if necessary.
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        if (!CollectionUtils.isEmpty(this.defaultBeans)) {</span>
+<span class="fc" id="L117">            defaults.putAll(this.defaultBeans);</span>
+        }
+
+<span class="fc" id="L120">        Map&lt;String, Filter&gt; filters = getFilters(section, defaults);</span>
+
+        //add the filters to the manager:
+<span class="fc" id="L123">        registerFilters(filters, manager);</span>
+
+        //urls section:
+<span class="fc" id="L126">        section = ini.getSection(URLS);</span>
+<span class="fc" id="L127">        createChains(section, manager);</span>
+<span class="fc" id="L128">    }</span>
+
+    protected void registerFilters(Map&lt;String, Filter&gt; filters, FilterChainManager manager) {
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">        if (!CollectionUtils.isEmpty(filters)) {</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">            boolean init = getFilterConfig() != null; //only call filter.init if there is a FilterConfig available</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">            for (Map.Entry&lt;String, Filter&gt; entry : filters.entrySet()) {</span>
+<span class="fc" id="L134">                String name = entry.getKey();</span>
+<span class="fc" id="L135">                Filter filter = entry.getValue();</span>
+<span class="fc" id="L136">                manager.addFilter(name, filter, init);</span>
+<span class="fc" id="L137">            }</span>
+        }
+<span class="fc" id="L139">    }</span>
+
+    protected Map&lt;String, Filter&gt; getFilters(Map&lt;String, String&gt; section, Map&lt;String, ?&gt; defaults) {
+
+<span class="fc" id="L143">        Map&lt;String, Filter&gt; filters = extractFilters(defaults);</span>
+
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        if (!CollectionUtils.isEmpty(section)) {</span>
+<span class="fc" id="L146">            ReflectionBuilder builder = new ReflectionBuilder(defaults);</span>
+<span class="fc" id="L147">            Map&lt;String, ?&gt; built = builder.buildObjects(section);</span>
+<span class="fc" id="L148">            Map&lt;String,Filter&gt; sectionFilters = extractFilters(built);</span>
+
+<span class="fc bfc" id="L150" title="All 2 branches covered.">            if (CollectionUtils.isEmpty(filters)) {</span>
+<span class="fc" id="L151">                filters = sectionFilters;</span>
+            } else {
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">                if (!CollectionUtils.isEmpty(sectionFilters)) {</span>
+<span class="fc" id="L154">                    filters.putAll(sectionFilters);</span>
+                }
+            }
+        }
+
+<span class="fc" id="L159">        return filters;</span>
+    }
+
+    private Map&lt;String, Filter&gt; extractFilters(Map&lt;String, ?&gt; objects) {
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        if (CollectionUtils.isEmpty(objects)) {</span>
+<span class="fc" id="L164">            return null;</span>
+        }
+<span class="fc" id="L166">        Map&lt;String, Filter&gt; filterMap = new LinkedHashMap&lt;String, Filter&gt;();</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        for (Map.Entry&lt;String, ?&gt; entry : objects.entrySet()) {</span>
+<span class="fc" id="L168">            String key = entry.getKey();</span>
+<span class="fc" id="L169">            Object value = entry.getValue();</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">            if (value instanceof Filter) {</span>
+<span class="fc" id="L171">                filterMap.put(key, (Filter) value);</span>
+            }
+<span class="fc" id="L173">        }</span>
+<span class="fc" id="L174">        return filterMap;</span>
+    }
+
+    protected void createChains(Map&lt;String, String&gt; urls, FilterChainManager manager) {
+<span class="fc bfc" id="L178" title="All 2 branches covered.">        if (CollectionUtils.isEmpty(urls)) {</span>
+<span class="pc bpc" id="L179" title="1 of 2 branches missed.">            if (log.isDebugEnabled()) {</span>
+<span class="fc" id="L180">                log.debug(&quot;No urls to process.&quot;);</span>
+            }
+<span class="fc" id="L182">            return;</span>
+        }
+
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">        if (log.isTraceEnabled()) {</span>
+<span class="fc" id="L186">            log.trace(&quot;Before url processing.&quot;);</span>
+        }
+
+<span class="fc bfc" id="L189" title="All 2 branches covered.">        for (Map.Entry&lt;String, String&gt; entry : urls.entrySet()) {</span>
+<span class="fc" id="L190">            String path = entry.getKey();</span>
+<span class="fc" id="L191">            String value = entry.getValue();</span>
+<span class="fc" id="L192">            manager.createChain(path, value);</span>
+<span class="fc" id="L193">        }</span>
+<span class="fc" id="L194">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

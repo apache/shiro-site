@@ -1,0 +1,210 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<main role="main">
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a id="line.1">/*</a>
+<span class="sourceLineNo">002</span><a id="line.2"> * Licensed to the Apache Software Foundation (ASF) under one</a>
+<span class="sourceLineNo">003</span><a id="line.3"> * or more contributor license agreements.  See the NOTICE file</a>
+<span class="sourceLineNo">004</span><a id="line.4"> * distributed with this work for additional information</a>
+<span class="sourceLineNo">005</span><a id="line.5"> * regarding copyright ownership.  The ASF licenses this file</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * to you under the Apache License, Version 2.0 (the</a>
+<span class="sourceLineNo">007</span><a id="line.7"> * "License"); you may not use this file except in compliance</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * with the License.  You may obtain a copy of the License at</a>
+<span class="sourceLineNo">009</span><a id="line.9"> *</a>
+<span class="sourceLineNo">010</span><a id="line.10"> *     http://www.apache.org/licenses/LICENSE-2.0</a>
+<span class="sourceLineNo">011</span><a id="line.11"> *</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * Unless required by applicable law or agreed to in writing,</a>
+<span class="sourceLineNo">013</span><a id="line.13"> * software distributed under the License is distributed on an</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</a>
+<span class="sourceLineNo">015</span><a id="line.15"> * KIND, either express or implied.  See the License for the</a>
+<span class="sourceLineNo">016</span><a id="line.16"> * specific language governing permissions and limitations</a>
+<span class="sourceLineNo">017</span><a id="line.17"> * under the License.</a>
+<span class="sourceLineNo">018</span><a id="line.18"> */</a>
+<span class="sourceLineNo">019</span><a id="line.19">package org.apache.shiro.spring.remoting;</a>
+<span class="sourceLineNo">020</span><a id="line.20"></a>
+<span class="sourceLineNo">021</span><a id="line.21">import org.aopalliance.intercept.MethodInvocation;</a>
+<span class="sourceLineNo">022</span><a id="line.22">import org.apache.shiro.SecurityUtils;</a>
+<span class="sourceLineNo">023</span><a id="line.23">import org.apache.shiro.session.Session;</a>
+<span class="sourceLineNo">024</span><a id="line.24">import org.apache.shiro.session.mgt.NativeSessionManager;</a>
+<span class="sourceLineNo">025</span><a id="line.25">import org.apache.shiro.session.mgt.SessionKey;</a>
+<span class="sourceLineNo">026</span><a id="line.26">import org.apache.shiro.session.mgt.SessionManager;</a>
+<span class="sourceLineNo">027</span><a id="line.27">import org.apache.shiro.subject.Subject;</a>
+<span class="sourceLineNo">028</span><a id="line.28">import org.slf4j.Logger;</a>
+<span class="sourceLineNo">029</span><a id="line.29">import org.slf4j.LoggerFactory;</a>
+<span class="sourceLineNo">030</span><a id="line.30">import org.springframework.remoting.support.DefaultRemoteInvocationFactory;</a>
+<span class="sourceLineNo">031</span><a id="line.31">import org.springframework.remoting.support.RemoteInvocation;</a>
+<span class="sourceLineNo">032</span><a id="line.32">import org.springframework.remoting.support.RemoteInvocationFactory;</a>
+<span class="sourceLineNo">033</span><a id="line.33"></a>
+<span class="sourceLineNo">034</span><a id="line.34">import java.io.Serializable;</a>
+<span class="sourceLineNo">035</span><a id="line.35"></a>
+<span class="sourceLineNo">036</span><a id="line.36">/**</a>
+<span class="sourceLineNo">037</span><a id="line.37"> * A {@link RemoteInvocationFactory} that passes the session ID to the server via a</a>
+<span class="sourceLineNo">038</span><a id="line.38"> * {@link RemoteInvocation} {@link RemoteInvocation#getAttribute(String) attribute}.</a>
+<span class="sourceLineNo">039</span><a id="line.39"> * This factory is the client-side part of</a>
+<span class="sourceLineNo">040</span><a id="line.40"> * the Shiro Spring remoting invocation.  A {@link SecureRemoteInvocationExecutor} should</a>
+<span class="sourceLineNo">041</span><a id="line.41"> * be used to export the server-side remote services to ensure that the appropriate</a>
+<span class="sourceLineNo">042</span><a id="line.42"> * Subject and Session are bound to the remote thread during execution.</a>
+<span class="sourceLineNo">043</span><a id="line.43"> *</a>
+<span class="sourceLineNo">044</span><a id="line.44"> * @since 0.1</a>
+<span class="sourceLineNo">045</span><a id="line.45"> */</a>
+<span class="sourceLineNo">046</span><a id="line.46">public class SecureRemoteInvocationFactory extends DefaultRemoteInvocationFactory {</a>
+<span class="sourceLineNo">047</span><a id="line.47"></a>
+<span class="sourceLineNo">048</span><a id="line.48">    private static final Logger log = LoggerFactory.getLogger(SecureRemoteInvocationFactory.class);</a>
+<span class="sourceLineNo">049</span><a id="line.49"></a>
+<span class="sourceLineNo">050</span><a id="line.50">    public static final String SESSION_ID_KEY = SecureRemoteInvocationFactory.class.getName() + ".SESSION_ID_KEY";</a>
+<span class="sourceLineNo">051</span><a id="line.51">    public static final String HOST_KEY = SecureRemoteInvocationFactory.class.getName() + ".HOST_KEY";</a>
+<span class="sourceLineNo">052</span><a id="line.52"></a>
+<span class="sourceLineNo">053</span><a id="line.53">    private static final String SESSION_ID_SYSTEM_PROPERTY_NAME = "shiro.session.id";</a>
+<span class="sourceLineNo">054</span><a id="line.54"></a>
+<span class="sourceLineNo">055</span><a id="line.55">    private String sessionId;</a>
+<span class="sourceLineNo">056</span><a id="line.56"></a>
+<span class="sourceLineNo">057</span><a id="line.57">    public SecureRemoteInvocationFactory() {</a>
+<span class="sourceLineNo">058</span><a id="line.58">    }</a>
+<span class="sourceLineNo">059</span><a id="line.59"></a>
+<span class="sourceLineNo">060</span><a id="line.60">    public SecureRemoteInvocationFactory(String sessionId) {</a>
+<span class="sourceLineNo">061</span><a id="line.61">        this();</a>
+<span class="sourceLineNo">062</span><a id="line.62">        this.sessionId = sessionId;</a>
+<span class="sourceLineNo">063</span><a id="line.63">    }</a>
+<span class="sourceLineNo">064</span><a id="line.64"></a>
+<span class="sourceLineNo">065</span><a id="line.65">    /**</a>
+<span class="sourceLineNo">066</span><a id="line.66">     * Creates a {@link RemoteInvocation} with the current session ID as an</a>
+<span class="sourceLineNo">067</span><a id="line.67">     * {@link RemoteInvocation#getAttribute(String) attribute}.</a>
+<span class="sourceLineNo">068</span><a id="line.68">     *</a>
+<span class="sourceLineNo">069</span><a id="line.69">     * @param mi the method invocation that the remote invocation should be based on.</a>
+<span class="sourceLineNo">070</span><a id="line.70">     * @return a remote invocation object containing the current session ID as an attribute.</a>
+<span class="sourceLineNo">071</span><a id="line.71">     */</a>
+<span class="sourceLineNo">072</span><a id="line.72">    public RemoteInvocation createRemoteInvocation(MethodInvocation mi) {</a>
+<span class="sourceLineNo">073</span><a id="line.73"></a>
+<span class="sourceLineNo">074</span><a id="line.74">        Serializable sessionId = null;</a>
+<span class="sourceLineNo">075</span><a id="line.75">        String host = null;</a>
+<span class="sourceLineNo">076</span><a id="line.76">        boolean sessionManagerMethodInvocation = false;</a>
+<span class="sourceLineNo">077</span><a id="line.77"></a>
+<span class="sourceLineNo">078</span><a id="line.78">        //If the calling MI is for a remoting SessionManager delegate, we need to acquire the session ID from the method</a>
+<span class="sourceLineNo">079</span><a id="line.79">        //argument and NOT interact with SecurityUtils/subject.getSession to avoid a stack overflow</a>
+<span class="sourceLineNo">080</span><a id="line.80">        Class miDeclaringClass = mi.getMethod().getDeclaringClass();</a>
+<span class="sourceLineNo">081</span><a id="line.81">        if (SessionManager.class.equals(miDeclaringClass) || NativeSessionManager.class.equals(miDeclaringClass)) {</a>
+<span class="sourceLineNo">082</span><a id="line.82">            sessionManagerMethodInvocation = true;</a>
+<span class="sourceLineNo">083</span><a id="line.83">            //for SessionManager calls, all method calls except the 'start' methods require a SessionKey</a>
+<span class="sourceLineNo">084</span><a id="line.84">            // as the first argument, so just get it from there:</a>
+<span class="sourceLineNo">085</span><a id="line.85">            if (!mi.getMethod().getName().equals("start")) {</a>
+<span class="sourceLineNo">086</span><a id="line.86">                SessionKey key = (SessionKey) mi.getArguments()[0];</a>
+<span class="sourceLineNo">087</span><a id="line.87">                sessionId = key.getSessionId();</a>
+<span class="sourceLineNo">088</span><a id="line.88">            }</a>
+<span class="sourceLineNo">089</span><a id="line.89">        }</a>
+<span class="sourceLineNo">090</span><a id="line.90"></a>
+<span class="sourceLineNo">091</span><a id="line.91">        //tried the delegate. Use the injected session id if given</a>
+<span class="sourceLineNo">092</span><a id="line.92">        if (sessionId == null) sessionId = this.sessionId;</a>
+<span class="sourceLineNo">093</span><a id="line.93"></a>
+<span class="sourceLineNo">094</span><a id="line.94">        // If sessionId is null, only then try the Subject:</a>
+<span class="sourceLineNo">095</span><a id="line.95">        if (sessionId == null) {</a>
+<span class="sourceLineNo">096</span><a id="line.96">            try {</a>
+<span class="sourceLineNo">097</span><a id="line.97">                // HACK Check if can get the securityManager - this'll cause an exception if it's not set </a>
+<span class="sourceLineNo">098</span><a id="line.98">                SecurityUtils.getSecurityManager();</a>
+<span class="sourceLineNo">099</span><a id="line.99">                if (!sessionManagerMethodInvocation) {</a>
+<span class="sourceLineNo">100</span><a id="line.100">                    Subject subject = SecurityUtils.getSubject();</a>
+<span class="sourceLineNo">101</span><a id="line.101">                    Session session = subject.getSession(false);</a>
+<span class="sourceLineNo">102</span><a id="line.102">                    if (session != null) {</a>
+<span class="sourceLineNo">103</span><a id="line.103">                        sessionId = session.getId();</a>
+<span class="sourceLineNo">104</span><a id="line.104">                        host = session.getHost();</a>
+<span class="sourceLineNo">105</span><a id="line.105">                    }</a>
+<span class="sourceLineNo">106</span><a id="line.106">                }</a>
+<span class="sourceLineNo">107</span><a id="line.107">            }</a>
+<span class="sourceLineNo">108</span><a id="line.108">            catch (Exception e) {</a>
+<span class="sourceLineNo">109</span><a id="line.109">                log.trace("No security manager set. Trying next to get session id from system property");</a>
+<span class="sourceLineNo">110</span><a id="line.110">            }</a>
+<span class="sourceLineNo">111</span><a id="line.111">        }</a>
+<span class="sourceLineNo">112</span><a id="line.112">        //No call to the sessionManager, and the Subject doesn't have a session.  Try a system property</a>
+<span class="sourceLineNo">113</span><a id="line.113">        //as a last result:</a>
+<span class="sourceLineNo">114</span><a id="line.114">        if (sessionId == null) {</a>
+<span class="sourceLineNo">115</span><a id="line.115">            if (log.isTraceEnabled()) {</a>
+<span class="sourceLineNo">116</span><a id="line.116">                log.trace("No Session found for the currently executing subject via subject.getSession(false).  " +</a>
+<span class="sourceLineNo">117</span><a id="line.117">                        "Attempting to revert back to the 'shiro.session.id' system property...");</a>
+<span class="sourceLineNo">118</span><a id="line.118">            }</a>
+<span class="sourceLineNo">119</span><a id="line.119">            sessionId = System.getProperty(SESSION_ID_SYSTEM_PROPERTY_NAME);</a>
+<span class="sourceLineNo">120</span><a id="line.120">            if (sessionId == null &amp;&amp; log.isTraceEnabled()) {</a>
+<span class="sourceLineNo">121</span><a id="line.121">                log.trace("No 'shiro.session.id' system property found.  Heuristics have been exhausted; " +</a>
+<span class="sourceLineNo">122</span><a id="line.122">                        "RemoteInvocation will not contain a sessionId.");</a>
+<span class="sourceLineNo">123</span><a id="line.123">            }</a>
+<span class="sourceLineNo">124</span><a id="line.124">        }</a>
+<span class="sourceLineNo">125</span><a id="line.125"></a>
+<span class="sourceLineNo">126</span><a id="line.126">        RemoteInvocation ri = new RemoteInvocation(mi);</a>
+<span class="sourceLineNo">127</span><a id="line.127">        if (sessionId != null) {</a>
+<span class="sourceLineNo">128</span><a id="line.128">            ri.addAttribute(SESSION_ID_KEY, sessionId);</a>
+<span class="sourceLineNo">129</span><a id="line.129">        }</a>
+<span class="sourceLineNo">130</span><a id="line.130">        if (host != null) {</a>
+<span class="sourceLineNo">131</span><a id="line.131">            ri.addAttribute(HOST_KEY, host);</a>
+<span class="sourceLineNo">132</span><a id="line.132">        }</a>
+<span class="sourceLineNo">133</span><a id="line.133"></a>
+<span class="sourceLineNo">134</span><a id="line.134">        return ri;</a>
+<span class="sourceLineNo">135</span><a id="line.135">    }</a>
+<span class="sourceLineNo">136</span><a id="line.136">}</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</main>
+</body>
+</html>

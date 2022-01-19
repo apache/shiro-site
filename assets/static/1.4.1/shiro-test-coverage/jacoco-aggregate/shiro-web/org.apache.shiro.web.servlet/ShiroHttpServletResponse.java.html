@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>ShiroHttpServletResponse.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.servlet</a> &gt; <span class="el_source">ShiroHttpServletResponse.java</span></div><h1>ShiroHttpServletResponse.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.servlet;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+
+/**
+ * HttpServletResponse implementation to support URL Encoding of Shiro Session IDs.
+ * &lt;p/&gt;
+ * It is only used when using Shiro's native Session Management configuration (and not when using the Servlet
+ * Container session configuration, which is Shiro's default in a web environment).  Because the servlet container
+ * already performs url encoding of its own session ids, instances of this class are only needed when using Shiro
+ * native sessions.
+ * &lt;p/&gt;
+ * Note that this implementation relies in part on source code from the Tomcat 6.x distribution for
+ * encoding URLs for session ID URL Rewriting (we didn't want to re-invent the wheel).  Since Shiro is also
+ * Apache 2.0 license, all regular licenses and conditions have remained in tact.
+ *
+ * @since 0.2
+ */
+public class ShiroHttpServletResponse extends HttpServletResponseWrapper {
+
+    //TODO - complete JavaDoc
+
+    private static final String DEFAULT_SESSION_ID_PARAMETER_NAME = ShiroHttpSession.DEFAULT_SESSION_ID_NAME;
+
+<span class="fc" id="L51">    private ServletContext context = null;</span>
+    //the associated request
+<span class="fc" id="L53">    private ShiroHttpServletRequest request = null;</span>
+
+    public ShiroHttpServletResponse(HttpServletResponse wrapped, ServletContext context, ShiroHttpServletRequest request) {
+<span class="fc" id="L56">        super(wrapped);</span>
+<span class="fc" id="L57">        this.context = context;</span>
+<span class="fc" id="L58">        this.request = request;</span>
+<span class="fc" id="L59">    }</span>
+
+    @SuppressWarnings({&quot;UnusedDeclaration&quot;})
+    public ServletContext getContext() {
+<span class="nc" id="L63">        return context;</span>
+    }
+
+    @SuppressWarnings({&quot;UnusedDeclaration&quot;})
+    public void setContext(ServletContext context) {
+<span class="nc" id="L68">        this.context = context;</span>
+<span class="nc" id="L69">    }</span>
+
+    public ShiroHttpServletRequest getRequest() {
+<span class="fc" id="L72">        return request;</span>
+    }
+
+    @SuppressWarnings({&quot;UnusedDeclaration&quot;})
+    public void setRequest(ShiroHttpServletRequest request) {
+<span class="nc" id="L77">        this.request = request;</span>
+<span class="nc" id="L78">    }</span>
+
+    /**
+     * Encode the session identifier associated with this response
+     * into the specified redirect URL, if necessary.
+     *
+     * @param url URL to be encoded
+     */
+    public String encodeRedirectURL(String url) {
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">        if (isEncodeable(toAbsolute(url))) {</span>
+<span class="nc" id="L88">            return toEncoded(url, request.getSession().getId());</span>
+        } else {
+<span class="fc" id="L90">            return url;</span>
+        }
+    }
+
+
+    public String encodeRedirectUrl(String s) {
+<span class="nc" id="L96">        return encodeRedirectURL(s);</span>
+    }
+
+
+    /**
+     * Encode the session identifier associated with this response
+     * into the specified URL, if necessary.
+     *
+     * @param url URL to be encoded
+     */
+    public String encodeURL(String url) {
+<span class="fc" id="L107">        String absolute = toAbsolute(url);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (isEncodeable(absolute)) {</span>
+            // W3c spec clearly said
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">            if (url.equalsIgnoreCase(&quot;&quot;)) {</span>
+<span class="nc" id="L111">                url = absolute;</span>
+            }
+<span class="fc" id="L113">            return toEncoded(url, request.getSession().getId());</span>
+        } else {
+<span class="fc" id="L115">            return url;</span>
+        }
+    }
+
+    public String encodeUrl(String s) {
+<span class="nc" id="L120">        return encodeURL(s);</span>
+    }
+
+    /**
+     * Return &lt;code&gt;true&lt;/code&gt; if the specified URL should be encoded with
+     * a session identifier.  This will be true if all of the following
+     * conditions are met:
+     * &lt;ul&gt;
+     * &lt;li&gt;The request we are responding to asked for a valid session
+     * &lt;li&gt;The requested session ID was not received via a cookie
+     * &lt;li&gt;The specified URL points back to somewhere within the web
+     * application that is responding to this request
+     * &lt;/ul&gt;
+     *
+     * @param location Absolute URL to be validated
+     * @return {@code true} if the specified URL should be encoded with a session identifier, {@code false} otherwise.
+     */
+    protected boolean isEncodeable(final String location) {
+
+        // First check if URL rewriting is disabled globally
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (Boolean.FALSE.equals(request.getAttribute(ShiroHttpServletRequest.SESSION_ID_URL_REWRITING_ENABLED)))</span>
+<span class="fc" id="L141">            return (false);</span>
+
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        if (location == null)</span>
+<span class="nc" id="L144">            return (false);</span>
+
+        // Is this an intra-document reference?
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">        if (location.startsWith(&quot;#&quot;))</span>
+<span class="nc" id="L148">            return (false);</span>
+
+        // Are we in a valid session that is not using cookies?
+<span class="fc" id="L151">        final HttpServletRequest hreq = request;</span>
+<span class="fc" id="L152">        final HttpSession session = hreq.getSession(false);</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        if (session == null)</span>
+<span class="fc" id="L154">            return (false);</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        if (hreq.isRequestedSessionIdFromCookie())</span>
+<span class="nc" id="L156">            return (false);</span>
+
+<span class="fc" id="L158">        return doIsEncodeable(hreq, session, location);</span>
+    }
+
+    private boolean doIsEncodeable(HttpServletRequest hreq, HttpSession session, String location) {
+        // Is this a valid absolute URL?
+        URL url;
+        try {
+<span class="fc" id="L165">            url = new URL(location);</span>
+<span class="nc" id="L166">        } catch (MalformedURLException e) {</span>
+<span class="nc" id="L167">            return (false);</span>
+<span class="fc" id="L168">        }</span>
+
+        // Does this URL match down to (and including) the context path?
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">        if (!hreq.getScheme().equalsIgnoreCase(url.getProtocol()))</span>
+<span class="nc" id="L172">            return (false);</span>
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">        if (!hreq.getServerName().equalsIgnoreCase(url.getHost()))</span>
+<span class="nc" id="L174">            return (false);</span>
+<span class="fc" id="L175">        int serverPort = hreq.getServerPort();</span>
+<span class="pc bpc" id="L176" title="1 of 2 branches missed.">        if (serverPort == -1) {</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">            if (&quot;https&quot;.equals(hreq.getScheme()))</span>
+<span class="nc" id="L178">                serverPort = 443;</span>
+            else
+<span class="nc" id="L180">                serverPort = 80;</span>
+        }
+<span class="fc" id="L182">        int urlPort = url.getPort();</span>
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">        if (urlPort == -1) {</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">            if (&quot;https&quot;.equals(url.getProtocol()))</span>
+<span class="nc" id="L185">                urlPort = 443;</span>
+            else
+<span class="nc" id="L187">                urlPort = 80;</span>
+        }
+<span class="pc bpc" id="L189" title="1 of 2 branches missed.">        if (serverPort != urlPort)</span>
+<span class="nc" id="L190">            return (false);</span>
+
+<span class="fc" id="L192">        String contextPath = getRequest().getContextPath();</span>
+<span class="pc bpc" id="L193" title="1 of 2 branches missed.">        if (contextPath != null) {</span>
+<span class="fc" id="L194">            String file = url.getFile();</span>
+<span class="pc bpc" id="L195" title="2 of 4 branches missed.">            if ((file == null) || !file.startsWith(contextPath))</span>
+<span class="nc" id="L196">                return (false);</span>
+<span class="fc" id="L197">            String tok = &quot;;&quot; + DEFAULT_SESSION_ID_PARAMETER_NAME + &quot;=&quot; + session.getId();</span>
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">            if (file.indexOf(tok, contextPath.length()) &gt;= 0)</span>
+<span class="nc" id="L199">                return (false);</span>
+        }
+
+        // This URL belongs to our web application, so it is encodeable
+<span class="fc" id="L203">        return (true);</span>
+
+    }
+
+
+    /**
+     * Convert (if necessary) and return the absolute URL that represents the
+     * resource referenced by this possibly relative URL.  If this URL is
+     * already absolute, return it unchanged.
+     *
+     * @param location URL to be (possibly) converted and then returned
+     * @return resource location as an absolute url
+     * @throws IllegalArgumentException if a MalformedURLException is
+     *                                  thrown when converting the relative URL to an absolute one
+     */
+    private String toAbsolute(String location) {
+
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">        if (location == null)</span>
+<span class="nc" id="L221">            return (location);</span>
+
+<span class="fc" id="L223">        boolean leadingSlash = location.startsWith(&quot;/&quot;);</span>
+
+<span class="pc bpc" id="L225" title="3 of 4 branches missed.">        if (leadingSlash || !hasScheme(location)) {</span>
+
+<span class="fc" id="L227">            StringBuilder buf = new StringBuilder();</span>
+
+<span class="fc" id="L229">            String scheme = request.getScheme();</span>
+<span class="fc" id="L230">            String name = request.getServerName();</span>
+<span class="fc" id="L231">            int port = request.getServerPort();</span>
+
+            try {
+<span class="fc" id="L234">                buf.append(scheme).append(&quot;://&quot;).append(name);</span>
+<span class="pc bpc" id="L235" title="2 of 4 branches missed.">                if ((scheme.equals(&quot;http&quot;) &amp;&amp; port != 80)</span>
+<span class="nc bnc" id="L236" title="All 4 branches missed.">                        || (scheme.equals(&quot;https&quot;) &amp;&amp; port != 443)) {</span>
+<span class="fc" id="L237">                    buf.append(':').append(port);</span>
+                }
+<span class="pc bpc" id="L239" title="1 of 2 branches missed.">                if (!leadingSlash) {</span>
+<span class="nc" id="L240">                    String relativePath = request.getRequestURI();</span>
+<span class="nc" id="L241">                    int pos = relativePath.lastIndexOf('/');</span>
+<span class="nc" id="L242">                    relativePath = relativePath.substring(0, pos);</span>
+
+<span class="nc" id="L244">                    String encodedURI = URLEncoder.encode(relativePath, getCharacterEncoding());</span>
+<span class="nc" id="L245">                    buf.append(encodedURI).append('/');</span>
+                }
+<span class="fc" id="L247">                buf.append(location);</span>
+<span class="nc" id="L248">            } catch (IOException e) {</span>
+<span class="nc" id="L249">                IllegalArgumentException iae = new IllegalArgumentException(location);</span>
+<span class="nc" id="L250">                iae.initCause(e);</span>
+<span class="nc" id="L251">                throw iae;</span>
+<span class="fc" id="L252">            }</span>
+
+<span class="fc" id="L254">            return buf.toString();</span>
+
+        } else {
+<span class="nc" id="L257">            return location;</span>
+        }
+    }
+
+    /**
+     * Determine if the character is allowed in the scheme of a URI.
+     * See RFC 2396, Section 3.1
+     *
+     * @param c the character to check
+     * @return {@code true} if the character is allowed in a URI scheme, {@code false} otherwise.
+     */
+    public static boolean isSchemeChar(char c) {
+<span class="nc bnc" id="L269" title="All 8 branches missed.">        return Character.isLetterOrDigit(c) ||</span>
+                c == '+' || c == '-' || c == '.';
+    }
+
+
+    /**
+     * Returns {@code true} if the URI string has a {@code scheme} component, {@code false} otherwise.
+     *
+     * @param uri the URI string to check for a scheme component
+     * @return {@code true} if the URI string has a {@code scheme} component, {@code false} otherwise.
+     */
+    private boolean hasScheme(String uri) {
+<span class="nc" id="L281">        int len = uri.length();</span>
+<span class="nc bnc" id="L282" title="All 2 branches missed.">        for (int i = 0; i &lt; len; i++) {</span>
+<span class="nc" id="L283">            char c = uri.charAt(i);</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">            if (c == ':') {</span>
+<span class="nc bnc" id="L285" title="All 2 branches missed.">                return i &gt; 0;</span>
+<span class="nc bnc" id="L286" title="All 2 branches missed.">            } else if (!isSchemeChar(c)) {</span>
+<span class="nc" id="L287">                return false;</span>
+            }
+        }
+<span class="nc" id="L290">        return false;</span>
+    }
+
+    /**
+     * Return the specified URL with the specified session identifier suitably encoded.
+     *
+     * @param url       URL to be encoded with the session id
+     * @param sessionId Session id to be included in the encoded URL
+     * @return the url with the session identifer properly encoded.
+     */
+    protected String toEncoded(String url, String sessionId) {
+
+<span class="pc bpc" id="L302" title="2 of 4 branches missed.">        if ((url == null) || (sessionId == null))</span>
+<span class="nc" id="L303">            return (url);</span>
+
+<span class="fc" id="L305">        String path = url;</span>
+<span class="fc" id="L306">        String query = &quot;&quot;;</span>
+<span class="fc" id="L307">        String anchor = &quot;&quot;;</span>
+<span class="fc" id="L308">        int question = url.indexOf('?');</span>
+<span class="pc bpc" id="L309" title="1 of 2 branches missed.">        if (question &gt;= 0) {</span>
+<span class="nc" id="L310">            path = url.substring(0, question);</span>
+<span class="nc" id="L311">            query = url.substring(question);</span>
+        }
+<span class="fc" id="L313">        int pound = path.indexOf('#');</span>
+<span class="pc bpc" id="L314" title="1 of 2 branches missed.">        if (pound &gt;= 0) {</span>
+<span class="nc" id="L315">            anchor = path.substring(pound);</span>
+<span class="nc" id="L316">            path = path.substring(0, pound);</span>
+        }
+<span class="fc" id="L318">        StringBuilder sb = new StringBuilder(path);</span>
+<span class="pc bpc" id="L319" title="1 of 2 branches missed.">        if (sb.length() &gt; 0) { // session id param can't be first.</span>
+<span class="fc" id="L320">            sb.append(&quot;;&quot;);</span>
+<span class="fc" id="L321">            sb.append(DEFAULT_SESSION_ID_PARAMETER_NAME);</span>
+<span class="fc" id="L322">            sb.append(&quot;=&quot;);</span>
+<span class="fc" id="L323">            sb.append(sessionId);</span>
+        }
+<span class="fc" id="L325">        sb.append(anchor);</span>
+<span class="fc" id="L326">        sb.append(query);</span>
+<span class="fc" id="L327">        return (sb.toString());</span>
+
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

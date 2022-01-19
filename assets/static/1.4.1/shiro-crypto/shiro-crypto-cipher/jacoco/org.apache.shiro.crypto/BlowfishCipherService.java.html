@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BlowfishCipherService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Shiro :: Cryptography :: Ciphers</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.crypto</a> &gt; <span class="el_source">BlowfishCipherService.java</span></div><h1>BlowfishCipherService.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.crypto;
+
+/**
+ * {@code CipherService} using the {@code Blowfish} cipher algorithm for all encryption, decryption, and key operations.
+ * &lt;p/&gt;
+ * The Blowfish algorithm can support key sizes between {@code 32} and {@code 448} bits&lt;b&gt;*&lt;/b&gt;, inclusive.  However,
+ * modern cryptanalysis techniques render keys of 80 bits or less mostly worthless - use {@code 128} or more whenever
+ * possible.
+ * &lt;p/&gt;
+ * Note that this class retains the parent class's default {@link OperationMode#CBC CBC} mode of operation
+ * instead of the typical JDK default of {@link OperationMode#ECB ECB}.  {@code ECB} should not be used in
+ * security-sensitive environments because {@code ECB} does not allow for initialization vectors, which are
+ * considered necessary for strong encryption.  See the {@link DefaultBlockCipherService parent class}'s JavaDoc and the
+ * {@link JcaCipherService JcaCipherService} JavaDoc for more on why the JDK default should not be used and is not
+ * used in this implementation.
+ * &lt;p/&gt;
+ * &lt;b&gt;*&lt;/b&gt; Generating and using Blowfish key sizes greater than 128 require installation of the
+ * &lt;a href=&quot;http://java.sun.com/javase/downloads/index.jsp&quot;&gt;Java Cryptography Extension (JCE) Unlimited Strength
+ * Jurisdiction Policy files&lt;/a&gt;.
+ *
+ * @since 1.0
+ */
+public class BlowfishCipherService extends DefaultBlockCipherService {
+
+    private static final String ALGORITHM_NAME = &quot;Blowfish&quot;;
+    private static final int BLOCK_SIZE = 64;
+
+    /**
+     * Creates a new {@link CipherService} instance using the {@code Blowfish} cipher algorithm with the following
+     * important cipher default attributes:
+     * &lt;table&gt;
+     * &lt;tr&gt;
+     * &lt;th&gt;Attribute&lt;/th&gt;
+     * &lt;th&gt;Value&lt;/th&gt;
+     * &lt;/tr&gt;
+     * &lt;tr&gt;
+     * &lt;td&gt;{@link #setKeySize keySize}&lt;/td&gt;
+     * &lt;td&gt;{@code 128} bits&lt;/td&gt;
+     * &lt;/tr&gt;
+     * &lt;tr&gt;
+     * &lt;td&gt;{@link #setBlockSize blockSize}&lt;/td&gt;
+     * &lt;td&gt;{@code 64} bits (required for {@code Blowfish})&lt;/td&gt;
+     * &lt;/tr&gt;
+     * &lt;tr&gt;
+     * &lt;td&gt;{@link #setMode mode}&lt;/td&gt;
+     * &lt;td&gt;{@link OperationMode#CBC CBC}&lt;b&gt;*&lt;/b&gt;&lt;/td&gt;
+     * &lt;/tr&gt;
+     * &lt;tr&gt;
+     * &lt;td&gt;{@link #setPaddingScheme paddingScheme}&lt;/td&gt;
+     * &lt;td&gt;{@link PaddingScheme#PKCS5 PKCS5}&lt;/td&gt;
+     * &lt;/tr&gt;
+     * &lt;tr&gt;
+     * &lt;td&gt;{@link #setInitializationVectorSize(int) initializationVectorSize}&lt;/td&gt;
+     * &lt;td&gt;{@code 64} bits&lt;/td&gt;
+     * &lt;/tr&gt;
+     * &lt;tr&gt;
+     * &lt;td&gt;{@link #setGenerateInitializationVectors(boolean) generateInitializationVectors}&lt;/td&gt;
+     * &lt;td&gt;{@code true}&lt;b&gt;**&lt;/b&gt;&lt;/td&gt;
+     * &lt;/tr&gt;
+     * &lt;/table&gt;
+     * &lt;p/&gt;
+     * &lt;b&gt;*&lt;/b&gt; The {@link OperationMode#CBC CBC} operation mode is used instead of the JDK default {@code ECB} to
+     * ensure strong encryption.  {@code ECB} should not be used in security-sensitive environments - see the
+     * {@link DefaultBlockCipherService DefaultBlockCipherService} class JavaDoc's &amp;quot;Operation Mode&amp;quot; section
+     * for more.
+     * &lt;p/&gt;
+     * &lt;b&gt;**&lt;/b&gt;In conjunction with the default {@code CBC} operation mode, initialization vectors are generated by
+     * default to ensure strong encryption.  See the {@link JcaCipherService JcaCipherService} class JavaDoc for more.
+     */
+    public BlowfishCipherService() {
+<span class="fc" id="L89">        super(ALGORITHM_NAME);</span>
+<span class="fc" id="L90">        setInitializationVectorSize(BLOCK_SIZE); //like most block ciphers, the IV size is the same as the block size</span>
+<span class="fc" id="L91">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

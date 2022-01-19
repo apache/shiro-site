@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>DefaultSubjectContext.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Jar Bundle</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.subject.support</a> &gt; <span class="el_source">DefaultSubjectContext.java</span></div><h1>DefaultSubjectContext.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.subject.support;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.UnavailableSecurityManagerException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.HostAuthenticationToken;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.subject.SubjectContext;
+import org.apache.shiro.util.CollectionUtils;
+import org.apache.shiro.util.MapContext;
+import org.apache.shiro.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+
+/**
+ * Default implementation of the {@link SubjectContext} interface.  Note that the getters and setters are not
+ * simple pass-through methods to an underlying attribute;  the getters will employ numerous heuristics to acquire
+ * their data attribute as best as possible (for example, if {@link #getPrincipals} is invoked, if the principals aren't
+ * in the backing map, it might check to see if there is a subject or session in the map and attempt to acquire the
+ * principals from those objects).
+ *
+ * @since 1.0
+ */
+public class DefaultSubjectContext extends MapContext implements SubjectContext {
+
+<span class="fc" id="L50">    private static final String SECURITY_MANAGER = DefaultSubjectContext.class.getName() + &quot;.SECURITY_MANAGER&quot;;</span>
+
+<span class="fc" id="L52">    private static final String SESSION_ID = DefaultSubjectContext.class.getName() + &quot;.SESSION_ID&quot;;</span>
+
+<span class="fc" id="L54">    private static final String AUTHENTICATION_TOKEN = DefaultSubjectContext.class.getName() + &quot;.AUTHENTICATION_TOKEN&quot;;</span>
+
+<span class="fc" id="L56">    private static final String AUTHENTICATION_INFO = DefaultSubjectContext.class.getName() + &quot;.AUTHENTICATION_INFO&quot;;</span>
+
+<span class="fc" id="L58">    private static final String SUBJECT = DefaultSubjectContext.class.getName() + &quot;.SUBJECT&quot;;</span>
+
+<span class="fc" id="L60">    private static final String PRINCIPALS = DefaultSubjectContext.class.getName() + &quot;.PRINCIPALS&quot;;</span>
+
+<span class="fc" id="L62">    private static final String SESSION = DefaultSubjectContext.class.getName() + &quot;.SESSION&quot;;</span>
+
+<span class="fc" id="L64">    private static final String AUTHENTICATED = DefaultSubjectContext.class.getName() + &quot;.AUTHENTICATED&quot;;</span>
+
+<span class="fc" id="L66">    private static final String HOST = DefaultSubjectContext.class.getName() + &quot;.HOST&quot;;</span>
+
+<span class="fc" id="L68">    public static final String SESSION_CREATION_ENABLED = DefaultSubjectContext.class.getName() + &quot;.SESSION_CREATION_ENABLED&quot;;</span>
+
+    /**
+     * The session key that is used to store subject principals.
+     */
+<span class="fc" id="L73">    public static final String PRINCIPALS_SESSION_KEY = DefaultSubjectContext.class.getName() + &quot;_PRINCIPALS_SESSION_KEY&quot;;</span>
+
+    /**
+     * The session key that is used to store whether or not the user is authenticated.
+     */
+<span class="fc" id="L78">    public static final String AUTHENTICATED_SESSION_KEY = DefaultSubjectContext.class.getName() + &quot;_AUTHENTICATED_SESSION_KEY&quot;;</span>
+
+<span class="fc" id="L80">    private static final transient Logger log = LoggerFactory.getLogger(DefaultSubjectContext.class);</span>
+
+    public DefaultSubjectContext() {
+<span class="fc" id="L83">        super();</span>
+<span class="fc" id="L84">    }</span>
+
+    public DefaultSubjectContext(SubjectContext ctx) {
+<span class="fc" id="L87">        super(ctx);</span>
+<span class="fc" id="L88">    }</span>
+
+    public SecurityManager getSecurityManager() {
+<span class="fc" id="L91">        return getTypedValue(SECURITY_MANAGER, SecurityManager.class);</span>
+    }
+
+    public void setSecurityManager(SecurityManager securityManager) {
+<span class="fc" id="L95">        nullSafePut(SECURITY_MANAGER, securityManager);</span>
+<span class="fc" id="L96">    }</span>
+
+    public SecurityManager resolveSecurityManager() {
+<span class="fc" id="L99">        SecurityManager securityManager = getSecurityManager();</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (securityManager == null) {</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">            if (log.isDebugEnabled()) {</span>
+<span class="fc" id="L102">                log.debug(&quot;No SecurityManager available in subject context map.  &quot; +</span>
+                        &quot;Falling back to SecurityUtils.getSecurityManager() lookup.&quot;);
+            }
+            try {
+<span class="fc" id="L106">                securityManager = SecurityUtils.getSecurityManager();</span>
+<span class="fc" id="L107">            } catch (UnavailableSecurityManagerException e) {</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">                if (log.isDebugEnabled()) {</span>
+<span class="fc" id="L109">                    log.debug(&quot;No SecurityManager available via SecurityUtils.  Heuristics exhausted.&quot;, e);</span>
+                }
+<span class="fc" id="L111">            }</span>
+        }
+<span class="fc" id="L113">        return securityManager;</span>
+    }
+
+    public Serializable getSessionId() {
+<span class="fc" id="L117">        return getTypedValue(SESSION_ID, Serializable.class);</span>
+    }
+
+    public void setSessionId(Serializable sessionId) {
+<span class="nc" id="L121">        nullSafePut(SESSION_ID, sessionId);</span>
+<span class="nc" id="L122">    }</span>
+
+    public Subject getSubject() {
+<span class="fc" id="L125">        return getTypedValue(SUBJECT, Subject.class);</span>
+    }
+
+    public void setSubject(Subject subject) {
+<span class="fc" id="L129">        nullSafePut(SUBJECT, subject);</span>
+<span class="fc" id="L130">    }</span>
+
+    public PrincipalCollection getPrincipals() {
+<span class="fc" id="L133">        return getTypedValue(PRINCIPALS, PrincipalCollection.class);</span>
+    }
+
+    public void setPrincipals(PrincipalCollection principals) {
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">        if (!CollectionUtils.isEmpty(principals)) {</span>
+<span class="fc" id="L138">            put(PRINCIPALS, principals);</span>
+        }
+<span class="fc" id="L140">    }</span>
+
+    public PrincipalCollection resolvePrincipals() {
+<span class="fc" id="L143">        PrincipalCollection principals = getPrincipals();</span>
+
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        if (CollectionUtils.isEmpty(principals)) {</span>
+            //check to see if they were just authenticated:
+<span class="fc" id="L147">            AuthenticationInfo info = getAuthenticationInfo();</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">            if (info != null) {</span>
+<span class="fc" id="L149">                principals = info.getPrincipals();</span>
+            }
+        }
+
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        if (CollectionUtils.isEmpty(principals)) {</span>
+<span class="fc" id="L154">            Subject subject = getSubject();</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">            if (subject != null) {</span>
+<span class="nc" id="L156">                principals = subject.getPrincipals();</span>
+            }
+        }
+
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        if (CollectionUtils.isEmpty(principals)) {</span>
+            //try the session:
+<span class="fc" id="L162">            Session session = resolveSession();</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">            if (session != null) {</span>
+<span class="fc" id="L164">                principals = (PrincipalCollection) session.getAttribute(PRINCIPALS_SESSION_KEY);</span>
+            }
+        }
+
+<span class="fc" id="L168">        return principals;</span>
+    }
+
+
+    public Session getSession() {
+<span class="fc" id="L173">        return getTypedValue(SESSION, Session.class);</span>
+    }
+
+    public void setSession(Session session) {
+<span class="fc" id="L177">        nullSafePut(SESSION, session);</span>
+<span class="fc" id="L178">    }</span>
+
+    public Session resolveSession() {
+<span class="fc" id="L181">        Session session = getSession();</span>
+<span class="fc bfc" id="L182" title="All 2 branches covered.">        if (session == null) {</span>
+            //try the Subject if it exists:
+<span class="fc" id="L184">            Subject existingSubject = getSubject();</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">            if (existingSubject != null) {</span>
+<span class="fc" id="L186">                session = existingSubject.getSession(false);</span>
+            }
+        }
+<span class="fc" id="L189">        return session;</span>
+    }
+
+    public boolean isSessionCreationEnabled() {
+<span class="fc" id="L193">        Boolean val = getTypedValue(SESSION_CREATION_ENABLED, Boolean.class);</span>
+<span class="pc bpc" id="L194" title="3 of 4 branches missed.">        return val == null || val;</span>
+    }
+
+    public void setSessionCreationEnabled(boolean enabled) {
+<span class="nc" id="L198">        nullSafePut(SESSION_CREATION_ENABLED, enabled);</span>
+<span class="nc" id="L199">    }</span>
+
+    public boolean isAuthenticated() {
+<span class="nc" id="L202">        Boolean authc = getTypedValue(AUTHENTICATED, Boolean.class);</span>
+<span class="nc bnc" id="L203" title="All 4 branches missed.">        return authc != null &amp;&amp; authc;</span>
+    }
+
+    public void setAuthenticated(boolean authc) {
+<span class="fc" id="L207">        put(AUTHENTICATED, authc);</span>
+<span class="fc" id="L208">    }</span>
+
+    public boolean resolveAuthenticated() {
+<span class="fc" id="L211">        Boolean authc = getTypedValue(AUTHENTICATED, Boolean.class);</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">        if (authc == null) {</span>
+            //see if there is an AuthenticationInfo object.  If so, the very presence of one indicates a successful
+            //authentication attempt:
+<span class="fc" id="L215">            AuthenticationInfo info = getAuthenticationInfo();</span>
+<span class="pc bpc" id="L216" title="1 of 2 branches missed.">            authc = info != null;</span>
+        }
+<span class="fc bfc" id="L218" title="All 2 branches covered.">        if (!authc) {</span>
+            //fall back to a session check:
+<span class="fc" id="L220">            Session session = resolveSession();</span>
+<span class="fc bfc" id="L221" title="All 2 branches covered.">            if (session != null) {</span>
+<span class="fc" id="L222">                Boolean sessionAuthc = (Boolean) session.getAttribute(AUTHENTICATED_SESSION_KEY);</span>
+<span class="pc bpc" id="L223" title="3 of 4 branches missed.">                authc = sessionAuthc != null &amp;&amp; sessionAuthc;</span>
+            }
+        }
+
+<span class="fc" id="L227">        return authc;</span>
+    }
+
+    public AuthenticationInfo getAuthenticationInfo() {
+<span class="fc" id="L231">        return getTypedValue(AUTHENTICATION_INFO, AuthenticationInfo.class);</span>
+    }
+
+    public void setAuthenticationInfo(AuthenticationInfo info) {
+<span class="fc" id="L235">        nullSafePut(AUTHENTICATION_INFO, info);</span>
+<span class="fc" id="L236">    }</span>
+
+    public AuthenticationToken getAuthenticationToken() {
+<span class="fc" id="L239">        return getTypedValue(AUTHENTICATION_TOKEN, AuthenticationToken.class);</span>
+    }
+
+    public void setAuthenticationToken(AuthenticationToken token) {
+<span class="fc" id="L243">        nullSafePut(AUTHENTICATION_TOKEN, token);</span>
+<span class="fc" id="L244">    }</span>
+
+    public String getHost() {
+<span class="fc" id="L247">        return getTypedValue(HOST, String.class);</span>
+    }
+
+    public void setHost(String host) {
+<span class="nc bnc" id="L251" title="All 2 branches missed.">        if (StringUtils.hasText(host)) {</span>
+<span class="nc" id="L252">            put(HOST, host);</span>
+        }
+<span class="nc" id="L254">    }</span>
+
+    public String resolveHost() {
+<span class="fc" id="L257">        String host = getHost();</span>
+
+<span class="pc bpc" id="L259" title="1 of 2 branches missed.">        if (host == null) {</span>
+            //check to see if there is an AuthenticationToken from which to retrieve it:
+<span class="fc" id="L261">            AuthenticationToken token = getAuthenticationToken();</span>
+<span class="fc bfc" id="L262" title="All 2 branches covered.">            if (token instanceof HostAuthenticationToken) {</span>
+<span class="fc" id="L263">                host = ((HostAuthenticationToken) token).getHost();</span>
+            }
+        }
+
+<span class="fc bfc" id="L267" title="All 2 branches covered.">        if (host == null) {</span>
+<span class="fc" id="L268">            Session session = resolveSession();</span>
+<span class="fc bfc" id="L269" title="All 2 branches covered.">            if (session != null) {</span>
+<span class="fc" id="L270">                host = session.getHost();</span>
+            }
+        }
+
+<span class="fc" id="L274">        return host;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

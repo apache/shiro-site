@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<main role="main">
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a id="line.1">/*</a>
+<span class="sourceLineNo">002</span><a id="line.2"> * Licensed to the Apache Software Foundation (ASF) under one</a>
+<span class="sourceLineNo">003</span><a id="line.3"> * or more contributor license agreements.  See the NOTICE file</a>
+<span class="sourceLineNo">004</span><a id="line.4"> * distributed with this work for additional information</a>
+<span class="sourceLineNo">005</span><a id="line.5"> * regarding copyright ownership.  The ASF licenses this file</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * to you under the Apache License, Version 2.0 (the</a>
+<span class="sourceLineNo">007</span><a id="line.7"> * "License"); you may not use this file except in compliance</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * with the License.  You may obtain a copy of the License at</a>
+<span class="sourceLineNo">009</span><a id="line.9"> *</a>
+<span class="sourceLineNo">010</span><a id="line.10"> * http://www.apache.org/licenses/LICENSE-2.0</a>
+<span class="sourceLineNo">011</span><a id="line.11"> *</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * Unless required by applicable law or agreed to in writing,</a>
+<span class="sourceLineNo">013</span><a id="line.13"> * software distributed under the License is distributed on an</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</a>
+<span class="sourceLineNo">015</span><a id="line.15"> * KIND, either express or implied.  See the License for the</a>
+<span class="sourceLineNo">016</span><a id="line.16"> * specific language governing permissions and limitations</a>
+<span class="sourceLineNo">017</span><a id="line.17"> * under the License.</a>
+<span class="sourceLineNo">018</span><a id="line.18"> */</a>
+<span class="sourceLineNo">019</span><a id="line.19">package org.apache.shiro.crypto.hash;</a>
+<span class="sourceLineNo">020</span><a id="line.20"></a>
+<span class="sourceLineNo">021</span><a id="line.21">/**</a>
+<span class="sourceLineNo">022</span><a id="line.22"> * A {@code HashService} hashes input sources utilizing a particular hashing strategy.</a>
+<span class="sourceLineNo">023</span><a id="line.23"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">024</span><a id="line.24"> * A {@code HashService} sits at a higher architectural level than Shiro's simple {@link Hash} classes:  it allows</a>
+<span class="sourceLineNo">025</span><a id="line.25"> * for salting and iteration-related strategies to be configured and internalized in a</a>
+<span class="sourceLineNo">026</span><a id="line.26"> * single component that can be re-used in multiple places in the application.</a>
+<span class="sourceLineNo">027</span><a id="line.27"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">028</span><a id="line.28"> * For example, for the most secure hashes, it is highly recommended to use a randomly generated salt, potentially</a>
+<span class="sourceLineNo">029</span><a id="line.29"> * paired with an configuration-specific private salt, in addition to using multiple hash iterations.</a>
+<span class="sourceLineNo">030</span><a id="line.30"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">031</span><a id="line.31"> * While one can do this easily enough using Shiro's {@link Hash} implementations directly, this direct approach could</a>
+<span class="sourceLineNo">032</span><a id="line.32"> * quickly lead to copy-and-paste behavior.  For example, consider this logic which might need to repeated in an</a>
+<span class="sourceLineNo">033</span><a id="line.33"> * application:</a>
+<span class="sourceLineNo">034</span><a id="line.34"> * &lt;pre&gt;</a>
+<span class="sourceLineNo">035</span><a id="line.35"> * int numHashIterations = ...</a>
+<span class="sourceLineNo">036</span><a id="line.36"> * ByteSource privateSalt = ...</a>
+<span class="sourceLineNo">037</span><a id="line.37"> * ByteSource randomSalt = {@link org.apache.shiro.crypto.RandomNumberGenerator randomNumberGenerator}.nextBytes();</a>
+<span class="sourceLineNo">038</span><a id="line.38"> * ByteSource combined = combine(privateSalt, randomSalt);</a>
+<span class="sourceLineNo">039</span><a id="line.39"> * Hash hash = Sha512Hash(source, combined, numHashIterations);</a>
+<span class="sourceLineNo">040</span><a id="line.40"> * save(hash);</a>
+<span class="sourceLineNo">041</span><a id="line.41"> * &lt;/pre&gt;</a>
+<span class="sourceLineNo">042</span><a id="line.42"> * In this example, often only the input source will change during runtime, while the hashing strategy (how salts</a>
+<span class="sourceLineNo">043</span><a id="line.43"> * are generated or acquired, how many hash iterations will be performed, etc) usually remain consistent.  A HashService</a>
+<span class="sourceLineNo">044</span><a id="line.44"> * internalizes this logic so the above becomes simply this:</a>
+<span class="sourceLineNo">045</span><a id="line.45"> * &lt;pre&gt;</a>
+<span class="sourceLineNo">046</span><a id="line.46"> * HashRequest request = new HashRequest.Builder().source(source).build();</a>
+<span class="sourceLineNo">047</span><a id="line.47"> * Hash result = hashService.hash(request);</a>
+<span class="sourceLineNo">048</span><a id="line.48"> * save(result);</a>
+<span class="sourceLineNo">049</span><a id="line.49"> * &lt;/pre&gt;</a>
+<span class="sourceLineNo">050</span><a id="line.50"> *</a>
+<span class="sourceLineNo">051</span><a id="line.51"> * @since 1.2</a>
+<span class="sourceLineNo">052</span><a id="line.52"> */</a>
+<span class="sourceLineNo">053</span><a id="line.53">public interface HashService {</a>
+<span class="sourceLineNo">054</span><a id="line.54"></a>
+<span class="sourceLineNo">055</span><a id="line.55">    /**</a>
+<span class="sourceLineNo">056</span><a id="line.56">     * Computes a hash based on the given request.</a>
+<span class="sourceLineNo">057</span><a id="line.57">     *</a>
+<span class="sourceLineNo">058</span><a id="line.58">     * &lt;h3&gt;Salt Notice&lt;/h3&gt;</a>
+<span class="sourceLineNo">059</span><a id="line.59">     *</a>
+<span class="sourceLineNo">060</span><a id="line.60">     * If a salt accompanies the return value</a>
+<span class="sourceLineNo">061</span><a id="line.61">     * (i.e. &lt;code&gt;returnedHash.{@link org.apache.shiro.crypto.hash.Hash#getSalt() getSalt()} != null&lt;/code&gt;), this</a>
+<span class="sourceLineNo">062</span><a id="line.62">     * same exact salt &lt;b&gt;&lt;em&gt;MUST&lt;/em&gt;&lt;/b&gt; be presented back to the {@code HashService} if hash</a>
+<span class="sourceLineNo">063</span><a id="line.63">     * comparison/verification will be performed at a later time (for example, for password hash or file checksum</a>
+<span class="sourceLineNo">064</span><a id="line.64">     * comparison).</a>
+<span class="sourceLineNo">065</span><a id="line.65">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">066</span><a id="line.66">     * For additional security, the {@code HashService}'s internal implementation may use more complex salting</a>
+<span class="sourceLineNo">067</span><a id="line.67">     * strategies than what would be achieved by computing a {@code Hash} manually.</a>
+<span class="sourceLineNo">068</span><a id="line.68">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">069</span><a id="line.69">     * In summary, if a {@link HashService} returns a salt in a returned Hash, it is expected that the same salt</a>
+<span class="sourceLineNo">070</span><a id="line.70">     * will be provided to the same {@code HashService} instance.</a>
+<span class="sourceLineNo">071</span><a id="line.71">     *</a>
+<span class="sourceLineNo">072</span><a id="line.72">     * @param request the request to process</a>
+<span class="sourceLineNo">073</span><a id="line.73">     * @return the hashed data</a>
+<span class="sourceLineNo">074</span><a id="line.74">     * @see Hash#getSalt()</a>
+<span class="sourceLineNo">075</span><a id="line.75">     */</a>
+<span class="sourceLineNo">076</span><a id="line.76">    Hash computeHash(HashRequest request);</a>
+<span class="sourceLineNo">077</span><a id="line.77">}</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</main>
+</body>
+</html>

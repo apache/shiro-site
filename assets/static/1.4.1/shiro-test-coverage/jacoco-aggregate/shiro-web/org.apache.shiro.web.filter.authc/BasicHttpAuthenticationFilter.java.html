@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>BasicHttpAuthenticationFilter.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.filter.authc</a> &gt; <span class="el_source">BasicHttpAuthenticationFilter.java</span></div><h1>BasicHttpAuthenticationFilter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.filter.authc;
+
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.codec.Base64;
+import org.apache.shiro.web.util.WebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
+
+
+/**
+ * Requires the requesting user to be {@link org.apache.shiro.subject.Subject#isAuthenticated() authenticated} for the
+ * request to continue, and if they're not, requires the user to login via the HTTP Basic protocol-specific challenge.
+ * Upon successful login, they're allowed to continue on to the requested resource/url.
+ * &lt;p/&gt;
+ * This implementation is a 'clean room' Java implementation of Basic HTTP Authentication specification per
+ * &lt;a href=&quot;ftp://ftp.isi.edu/in-notes/rfc2617.txt&quot;&gt;RFC 2617&lt;/a&gt;.
+ * &lt;p/&gt;
+ * Basic authentication functions as follows:
+ * &lt;ol&gt;
+ * &lt;li&gt;A request comes in for a resource that requires authentication.&lt;/li&gt;
+ * &lt;li&gt;The server replies with a 401 response status, sets the &lt;code&gt;WWW-Authenticate&lt;/code&gt; header, and the contents of a
+ * page informing the user that the incoming resource requires authentication.&lt;/li&gt;
+ * &lt;li&gt;Upon receiving this &lt;code&gt;WWW-Authenticate&lt;/code&gt; challenge from the server, the client then takes a
+ * username and a password and puts them in the following format:
+ * &lt;p&gt;&lt;code&gt;username:password&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+ * &lt;li&gt;This token is then base 64 encoded.&lt;/li&gt;
+ * &lt;li&gt;The client then sends another request for the same resource with the following header:&lt;br/&gt;
+ * &lt;p&gt;&lt;code&gt;Authorization: Basic &lt;em&gt;Base64_encoded_username_and_password&lt;/em&gt;&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+ * &lt;/ol&gt;
+ * The {@link #onAccessDenied(javax.servlet.ServletRequest, javax.servlet.ServletResponse)} method will
+ * only be called if the subject making the request is not
+ * {@link org.apache.shiro.subject.Subject#isAuthenticated() authenticated}
+ *
+ * @see &lt;a href=&quot;ftp://ftp.isi.edu/in-notes/rfc2617.txt&quot;&gt;RFC 2617&lt;/a&gt;
+ * @see &lt;a href=&quot;http://en.wikipedia.org/wiki/Basic_access_authentication&quot;&gt;Basic Access Authentication&lt;/a&gt;
+ * @since 0.9
+ */
+<span class="fc" id="L64">public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {</span>
+
+    /**
+     * This class's private logger.
+     */
+<span class="fc" id="L69">    private static final Logger log = LoggerFactory.getLogger(BasicHttpAuthenticationFilter.class);</span>
+
+    /**
+     * HTTP Authorization header, equal to &lt;code&gt;Authorization&lt;/code&gt;
+     */
+    protected static final String AUTHORIZATION_HEADER = &quot;Authorization&quot;;
+
+    /**
+     * HTTP Authentication header, equal to &lt;code&gt;WWW-Authenticate&lt;/code&gt;
+     */
+    protected static final String AUTHENTICATE_HEADER = &quot;WWW-Authenticate&quot;;
+
+    /**
+     * The name that is displayed during the challenge process of authentication, defauls to &lt;code&gt;application&lt;/code&gt;
+     * and can be overridden by the {@link #setApplicationName(String) setApplicationName} method.
+     */
+<span class="fc" id="L85">    private String applicationName = &quot;application&quot;;</span>
+
+    /**
+     * The authcScheme to look for in the &lt;code&gt;Authorization&lt;/code&gt; header, defaults to &lt;code&gt;BASIC&lt;/code&gt;
+     */
+<span class="fc" id="L90">    private String authcScheme = HttpServletRequest.BASIC_AUTH;</span>
+
+    /**
+     * The authzScheme value to look for in the &lt;code&gt;Authorization&lt;/code&gt; header, defaults to &lt;code&gt;BASIC&lt;/code&gt;
+     */
+<span class="fc" id="L95">    private String authzScheme = HttpServletRequest.BASIC_AUTH;</span>
+
+    /**
+     * Returns the name to use in the ServletResponse's &lt;b&gt;&lt;code&gt;WWW-Authenticate&lt;/code&gt;&lt;/b&gt; header.
+     * &lt;p/&gt;
+     * Per RFC 2617, this name name is displayed to the end user when they are asked to authenticate.  Unless overridden
+     * by the {@link #setApplicationName(String) setApplicationName(String)} method, the default value is 'application'.
+     * &lt;p/&gt;
+     * Please see {@link #setApplicationName(String) setApplicationName(String)} for an example of how this functions.
+     *
+     * @return the name to use in the ServletResponse's 'WWW-Authenticate' header.
+     */
+    public String getApplicationName() {
+<span class="nc" id="L108">        return applicationName;</span>
+    }
+
+    /**
+     * Sets the name to use in the ServletResponse's &lt;b&gt;&lt;code&gt;WWW-Authenticate&lt;/code&gt;&lt;/b&gt; header.
+     * &lt;p/&gt;
+     * Per RFC 2617, this name name is displayed to the end user when they are asked to authenticate.  Unless overridden
+     * by this method, the default value is &amp;quot;application&amp;quot;
+     * &lt;p/&gt;
+     * For example, setting this property to the value &lt;b&gt;&lt;code&gt;Awesome Webapp&lt;/code&gt;&lt;/b&gt; will result in the
+     * following header:
+     * &lt;p/&gt;
+     * &lt;code&gt;WWW-Authenticate: Basic realm=&amp;quot;&lt;b&gt;Awesome Webapp&lt;/b&gt;&amp;quot;&lt;/code&gt;
+     * &lt;p/&gt;
+     * Side note: As you can see from the header text, the HTTP Basic specification calls
+     * this the authentication 'realm', but we call this the 'applicationName' instead to avoid confusion with
+     * Shiro's Realm constructs.
+     *
+     * @param applicationName the name to use in the ServletResponse's 'WWW-Authenticate' header.
+     */
+    public void setApplicationName(String applicationName) {
+<span class="nc" id="L129">        this.applicationName = applicationName;</span>
+<span class="nc" id="L130">    }</span>
+
+    /**
+     * Returns the HTTP &lt;b&gt;&lt;code&gt;Authorization&lt;/code&gt;&lt;/b&gt; header value that this filter will respond to as indicating
+     * a login request.
+     * &lt;p/&gt;
+     * Unless overridden by the {@link #setAuthzScheme(String) setAuthzScheme(String)} method, the
+     * default value is &lt;code&gt;BASIC&lt;/code&gt;.
+     *
+     * @return the Http 'Authorization' header value that this filter will respond to as indicating a login request
+     */
+    public String getAuthzScheme() {
+<span class="fc" id="L142">        return authzScheme;</span>
+    }
+
+    /**
+     * Sets the HTTP &lt;b&gt;&lt;code&gt;Authorization&lt;/code&gt;&lt;/b&gt; header value that this filter will respond to as indicating a
+     * login request.
+     * &lt;p/&gt;
+     * Unless overridden by this method, the default value is &lt;code&gt;BASIC&lt;/code&gt;
+     *
+     * @param authzScheme the HTTP &lt;code&gt;Authorization&lt;/code&gt; header value that this filter will respond to as
+     *                    indicating a login request.
+     */
+    public void setAuthzScheme(String authzScheme) {
+<span class="nc" id="L155">        this.authzScheme = authzScheme;</span>
+<span class="nc" id="L156">    }</span>
+
+    /**
+     * Returns the HTTP &lt;b&gt;&lt;code&gt;WWW-Authenticate&lt;/code&gt;&lt;/b&gt; header scheme that this filter will use when sending
+     * the HTTP Basic challenge response.  The default value is &lt;code&gt;BASIC&lt;/code&gt;.
+     *
+     * @return the HTTP &lt;code&gt;WWW-Authenticate&lt;/code&gt; header scheme that this filter will use when sending the HTTP
+     *         Basic challenge response.
+     * @see #sendChallenge
+     */
+    public String getAuthcScheme() {
+<span class="nc" id="L167">        return authcScheme;</span>
+    }
+
+    /**
+     * Sets the HTTP &lt;b&gt;&lt;code&gt;WWW-Authenticate&lt;/code&gt;&lt;/b&gt; header scheme that this filter will use when sending the
+     * HTTP Basic challenge response.  The default value is &lt;code&gt;BASIC&lt;/code&gt;.
+     *
+     * @param authcScheme the HTTP &lt;code&gt;WWW-Authenticate&lt;/code&gt; header scheme that this filter will use when
+     *                    sending the Http Basic challenge response.
+     * @see #sendChallenge
+     */
+    public void setAuthcScheme(String authcScheme) {
+<span class="nc" id="L179">        this.authcScheme = authcScheme;</span>
+<span class="nc" id="L180">    }</span>
+    
+    /**
+     * The Basic authentication filter can be configured with a list of HTTP methods to which it should apply. This
+     * method ensures that authentication is &lt;em&gt;only&lt;/em&gt; required for those HTTP methods specified. For example,
+     * if you had the configuration:
+     * &lt;pre&gt;
+     *    [urls]
+     *    /basic/** = authcBasic[POST,PUT,DELETE]
+     * &lt;/pre&gt;
+     * then a GET request would not required authentication but a POST would.
+     * @param request The current HTTP servlet request.
+     * @param response The current HTTP servlet response.
+     * @param mappedValue The array of configured HTTP methods as strings. This is empty if no methods are configured.
+     */
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+<span class="fc" id="L196">        HttpServletRequest httpRequest = WebUtils.toHttp(request);</span>
+<span class="fc" id="L197">        String httpMethod = httpRequest.getMethod();</span>
+        
+        // Check whether the current request's method requires authentication.
+        // If no methods have been configured, then all of them require auth,
+        // otherwise only the declared ones need authentication.
+
+<span class="fc" id="L203">        Set&lt;String&gt; methods = httpMethodsFromOptions((String[])mappedValue);</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">        boolean authcRequired = methods.size() == 0;</span>
+<span class="fc bfc" id="L205" title="All 2 branches covered.">        for (String m : methods) {</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">            if (httpMethod.toUpperCase(Locale.ENGLISH).equals(m)) { // list of methods is in upper case</span>
+<span class="fc" id="L207">                authcRequired = true;</span>
+<span class="fc" id="L208">                break;</span>
+            }
+<span class="fc" id="L210">        }</span>
+        
+<span class="fc bfc" id="L212" title="All 2 branches covered.">        if (authcRequired) {</span>
+<span class="fc" id="L213">            return super.isAccessAllowed(request, response, mappedValue);</span>
+        }
+        else {
+<span class="fc" id="L216">            return true;</span>
+        }
+    }
+
+    private Set&lt;String&gt; httpMethodsFromOptions(String[] options) {
+<span class="fc" id="L221">        Set&lt;String&gt; methods = new HashSet&lt;String&gt;();</span>
+
+<span class="fc bfc" id="L223" title="All 2 branches covered.">        if (options != null) {</span>
+<span class="fc bfc" id="L224" title="All 2 branches covered.">            for (String option : options) {</span>
+                // to be backwards compatible with 1.3, we can ONLY check for known args
+                // ideally we would just validate HTTP methods, but someone could already be using this for webdav
+<span class="fc bfc" id="L227" title="All 2 branches covered.">                if (!option.equalsIgnoreCase(PERMISSIVE)) {</span>
+<span class="fc" id="L228">                    methods.add(option.toUpperCase(Locale.ENGLISH));</span>
+                }
+            }
+        }
+<span class="fc" id="L232">        return methods;</span>
+    }
+
+    /**
+     * Processes unauthenticated requests. It handles the two-stage request/challenge authentication protocol.
+     *
+     * @param request  incoming ServletRequest
+     * @param response outgoing ServletResponse
+     * @return true if the request should be processed; false if the request should not continue to be processed
+     */
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+<span class="fc" id="L243">        boolean loggedIn = false; //false by default or we wouldn't be in this method</span>
+<span class="pc bpc" id="L244" title="1 of 2 branches missed.">        if (isLoginAttempt(request, response)) {</span>
+<span class="fc" id="L245">            loggedIn = executeLogin(request, response);</span>
+        }
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">        if (!loggedIn) {</span>
+<span class="nc" id="L248">            sendChallenge(request, response);</span>
+        }
+<span class="fc" id="L250">        return loggedIn;</span>
+    }
+
+    /**
+     * Determines whether the incoming request is an attempt to log in.
+     * &lt;p/&gt;
+     * The default implementation obtains the value of the request's
+     * {@link #AUTHORIZATION_HEADER AUTHORIZATION_HEADER}, and if it is not &lt;code&gt;null&lt;/code&gt;, delegates
+     * to {@link #isLoginAttempt(String) isLoginAttempt(authzHeaderValue)}. If the header is &lt;code&gt;null&lt;/code&gt;,
+     * &lt;code&gt;false&lt;/code&gt; is returned.
+     *
+     * @param request  incoming ServletRequest
+     * @param response outgoing ServletResponse
+     * @return true if the incoming request is an attempt to log in based, false otherwise
+     */
+    protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
+<span class="fc" id="L266">        String authzHeader = getAuthzHeader(request);</span>
+<span class="pc bpc" id="L267" title="1 of 4 branches missed.">        return authzHeader != null &amp;&amp; isLoginAttempt(authzHeader);</span>
+    }
+
+    /**
+     * Delegates to {@link #isLoginAttempt(javax.servlet.ServletRequest, javax.servlet.ServletResponse) isLoginAttempt}.
+     */
+    @Override
+    protected final boolean isLoginRequest(ServletRequest request, ServletResponse response) {
+<span class="fc" id="L275">        return this.isLoginAttempt(request, response);</span>
+    }
+
+    /**
+     * Returns the {@link #AUTHORIZATION_HEADER AUTHORIZATION_HEADER} from the specified ServletRequest.
+     * &lt;p/&gt;
+     * This implementation merely casts the request to an &lt;code&gt;HttpServletRequest&lt;/code&gt; and returns the header:
+     * &lt;p/&gt;
+     * &lt;code&gt;HttpServletRequest httpRequest = {@link WebUtils#toHttp(javax.servlet.ServletRequest) toHttp(reaquest)};&lt;br/&gt;
+     * return httpRequest.getHeader({@link #AUTHORIZATION_HEADER AUTHORIZATION_HEADER});&lt;/code&gt;
+     *
+     * @param request the incoming &lt;code&gt;ServletRequest&lt;/code&gt;
+     * @return the &lt;code&gt;Authorization&lt;/code&gt; header's value.
+     */
+    protected String getAuthzHeader(ServletRequest request) {
+<span class="fc" id="L290">        HttpServletRequest httpRequest = WebUtils.toHttp(request);</span>
+<span class="fc" id="L291">        return httpRequest.getHeader(AUTHORIZATION_HEADER);</span>
+    }
+
+    /**
+     * Default implementation that returns &lt;code&gt;true&lt;/code&gt; if the specified &lt;code&gt;authzHeader&lt;/code&gt;
+     * starts with the same (case-insensitive) characters specified by the
+     * {@link #getAuthzScheme() authzScheme}, &lt;code&gt;false&lt;/code&gt; otherwise.
+     * &lt;p/&gt;
+     * That is:
+     * &lt;p/&gt;
+     * &lt;code&gt;String authzScheme = getAuthzScheme().toLowerCase();&lt;br/&gt;
+     * return authzHeader.toLowerCase().startsWith(authzScheme);&lt;/code&gt;
+     *
+     * @param authzHeader the 'Authorization' header value (guaranteed to be non-null if the
+     *                    {@link #isLoginAttempt(javax.servlet.ServletRequest, javax.servlet.ServletResponse)} method is not overriden).
+     * @return &lt;code&gt;true&lt;/code&gt; if the authzHeader value matches that configured as defined by
+     *         the {@link #getAuthzScheme() authzScheme}.
+     */
+    protected boolean isLoginAttempt(String authzHeader) {
+        //SHIRO-415: use English Locale:
+<span class="fc" id="L311">        String authzScheme = getAuthzScheme().toLowerCase(Locale.ENGLISH);</span>
+<span class="fc" id="L312">        return authzHeader.toLowerCase(Locale.ENGLISH).startsWith(authzScheme);</span>
+    }
+
+    /**
+     * Builds the challenge for authorization by setting a HTTP &lt;code&gt;401&lt;/code&gt; (Unauthorized) status as well as the
+     * response's {@link #AUTHENTICATE_HEADER AUTHENTICATE_HEADER}.
+     * &lt;p/&gt;
+     * The header value constructed is equal to:
+     * &lt;p/&gt;
+     * &lt;code&gt;{@link #getAuthcScheme() getAuthcScheme()} + &quot; realm=\&quot;&quot; + {@link #getApplicationName() getApplicationName()} + &quot;\&quot;&quot;;&lt;/code&gt;
+     *
+     * @param request  incoming ServletRequest, ignored by this implementation
+     * @param response outgoing ServletResponse
+     * @return false - this sends the challenge to be sent back
+     */
+    protected boolean sendChallenge(ServletRequest request, ServletResponse response) {
+<span class="nc" id="L328">        log.debug(&quot;Authentication required: sending 401 Authentication challenge response.&quot;);</span>
+
+<span class="nc" id="L330">        HttpServletResponse httpResponse = WebUtils.toHttp(response);</span>
+<span class="nc" id="L331">        httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);</span>
+<span class="nc" id="L332">        String authcHeader = getAuthcScheme() + &quot; realm=\&quot;&quot; + getApplicationName() + &quot;\&quot;&quot;;</span>
+<span class="nc" id="L333">        httpResponse.setHeader(AUTHENTICATE_HEADER, authcHeader);</span>
+<span class="nc" id="L334">        return false;</span>
+    }
+
+    /**
+     * Creates an AuthenticationToken for use during login attempt with the provided credentials in the http header.
+     * &lt;p/&gt;
+     * This implementation:
+     * &lt;ol&gt;&lt;li&gt;acquires the username and password based on the request's
+     * {@link #getAuthzHeader(javax.servlet.ServletRequest) authorization header} via the
+     * {@link #getPrincipalsAndCredentials(String, javax.servlet.ServletRequest) getPrincipalsAndCredentials} method&lt;/li&gt;
+     * &lt;li&gt;The return value of that method is converted to an &lt;code&gt;AuthenticationToken&lt;/code&gt; via the
+     * {@link #createToken(String, String, javax.servlet.ServletRequest, javax.servlet.ServletResponse) createToken} method&lt;/li&gt;
+     * &lt;li&gt;The created &lt;code&gt;AuthenticationToken&lt;/code&gt; is returned.&lt;/li&gt;
+     * &lt;/ol&gt;
+     *
+     * @param request  incoming ServletRequest
+     * @param response outgoing ServletResponse
+     * @return the AuthenticationToken used to execute the login attempt
+     */
+    protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) {
+<span class="fc" id="L354">        String authorizationHeader = getAuthzHeader(request);</span>
+<span class="pc bpc" id="L355" title="1 of 4 branches missed.">        if (authorizationHeader == null || authorizationHeader.length() == 0) {</span>
+            // Create an empty authentication token since there is no
+            // Authorization header.
+<span class="fc" id="L358">            return createToken(&quot;&quot;, &quot;&quot;, request, response);</span>
+        }
+
+<span class="fc" id="L361">        log.debug(&quot;Attempting to execute login with auth header&quot;);</span>
+
+<span class="fc" id="L363">        String[] prinCred = getPrincipalsAndCredentials(authorizationHeader, request);</span>
+<span class="pc bpc" id="L364" title="2 of 4 branches missed.">        if (prinCred == null || prinCred.length &lt; 2) {</span>
+            // Create an authentication token with an empty password,
+            // since one hasn't been provided in the request.
+<span class="nc bnc" id="L367" title="All 4 branches missed.">            String username = prinCred == null || prinCred.length == 0 ? &quot;&quot; : prinCred[0];</span>
+<span class="nc" id="L368">            return createToken(username, &quot;&quot;, request, response);</span>
+        }
+
+<span class="fc" id="L371">        String username = prinCred[0];</span>
+<span class="fc" id="L372">        String password = prinCred[1];</span>
+
+<span class="fc" id="L374">        return createToken(username, password, request, response);</span>
+    }
+
+    /**
+     * Returns the username obtained from the
+     * {@link #getAuthzHeader(javax.servlet.ServletRequest) authorizationHeader}.
+     * &lt;p/&gt;
+     * Once the {@code authzHeader} is split per the RFC (based on the space character ' '), the resulting split tokens
+     * are translated into the username/password pair by the
+     * {@link #getPrincipalsAndCredentials(String, String) getPrincipalsAndCredentials(scheme,encoded)} method.
+     *
+     * @param authorizationHeader the authorization header obtained from the request.
+     * @param request             the incoming ServletRequest
+     * @return the username (index 0)/password pair (index 1) submitted by the user for the given header value and request.
+     * @see #getAuthzHeader(javax.servlet.ServletRequest)
+     */
+    protected String[] getPrincipalsAndCredentials(String authorizationHeader, ServletRequest request) {
+<span class="pc bpc" id="L391" title="1 of 2 branches missed.">        if (authorizationHeader == null) {</span>
+<span class="nc" id="L392">            return null;</span>
+        }
+<span class="fc" id="L394">        String[] authTokens = authorizationHeader.split(&quot; &quot;);</span>
+<span class="pc bpc" id="L395" title="2 of 4 branches missed.">        if (authTokens == null || authTokens.length &lt; 2) {</span>
+<span class="nc" id="L396">            return null;</span>
+        }
+<span class="fc" id="L398">        return getPrincipalsAndCredentials(authTokens[0], authTokens[1]);</span>
+    }
+
+    /**
+     * Returns the username and password pair based on the specified &lt;code&gt;encoded&lt;/code&gt; String obtained from
+     * the request's authorization header.
+     * &lt;p/&gt;
+     * Per RFC 2617, the default implementation first Base64 decodes the string and then splits the resulting decoded
+     * string into two based on the &quot;:&quot; character.  That is:
+     * &lt;p/&gt;
+     * &lt;code&gt;String decoded = Base64.decodeToString(encoded);&lt;br/&gt;
+     * return decoded.split(&quot;:&quot;);&lt;/code&gt;
+     *
+     * @param scheme  the {@link #getAuthcScheme() authcScheme} found in the request
+     *                {@link #getAuthzHeader(javax.servlet.ServletRequest) authzHeader}.  It is ignored by this implementation,
+     *                but available to overriding implementations should they find it useful.
+     * @param encoded the Base64-encoded username:password value found after the scheme in the header
+     * @return the username (index 0)/password (index 1) pair obtained from the encoded header data.
+     */
+    protected String[] getPrincipalsAndCredentials(String scheme, String encoded) {
+<span class="fc" id="L418">        String decoded = Base64.decodeToString(encoded);</span>
+<span class="fc" id="L419">        return decoded.split(&quot;:&quot;, 2);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

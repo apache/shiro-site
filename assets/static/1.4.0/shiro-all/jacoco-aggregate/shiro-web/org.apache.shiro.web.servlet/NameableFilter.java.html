@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>NameableFilter.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: All (aggregate jar)</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.servlet</a> &gt; <span class="el_source">NameableFilter.java</span></div><h1>NameableFilter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.servlet;
+
+import org.apache.shiro.util.Nameable;
+
+import javax.servlet.FilterConfig;
+
+/**
+ * Allows a filter to be named via JavaBeans-compatible
+ * {@link #getName()}/{@link #setName(String)} methods.  If no name is specified, the name of the filter will
+ * default to the name given to it in {@code web.xml} (the {@code FilterConfig}'s
+ * {@link javax.servlet.FilterConfig#getFilterName() filterName}).
+ *
+ * @since 1.0
+ */
+<span class="fc" id="L33">public abstract class NameableFilter extends AbstractFilter implements Nameable {</span>
+
+    /**
+     * The name of this filter, unique within an application.
+     */
+    private String name;
+
+    /**
+     * Returns the filter's name.
+     * &lt;p/&gt;
+     * Unless overridden by calling the {@link #setName(String) setName(String)} method, this value defaults to the
+     * filter name as specified by the servlet container at start-up:
+     * &lt;pre&gt;
+     * this.name = {@link #getFilterConfig() getFilterConfig()}.{@link javax.servlet.FilterConfig#getFilterName() getName()};&lt;/pre&gt;
+     *
+     * @return the filter name, or {@code null} if none available
+     * @see javax.servlet.GenericServlet#getServletName()
+     * @see javax.servlet.FilterConfig#getFilterName()
+     */
+    protected String getName() {
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (this.name == null) {</span>
+<span class="fc" id="L54">            FilterConfig config = getFilterConfig();</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">            if (config != null) {</span>
+<span class="fc" id="L56">                this.name = config.getFilterName();</span>
+            }
+        }
+
+<span class="fc" id="L60">        return this.name;</span>
+    }
+
+    /**
+     * Sets the filter's name.
+     * &lt;p/&gt;
+     * Unless overridden by calling this method, this value defaults to the filter name as specified by the
+     * servlet container at start-up:
+     * &lt;pre&gt;
+     * this.name = {@link #getFilterConfig() getFilterConfig()}.{@link javax.servlet.FilterConfig#getFilterName() getName()};&lt;/pre&gt;
+     *
+     * @param name the name of the filter.
+     */
+    public void setName(String name) {
+<span class="fc" id="L74">        this.name = name;</span>
+<span class="fc" id="L75">    }</span>
+
+    /**
+     * Returns a StringBuilder instance with the {@link #getName() name}, or if the name is {@code null}, just the
+     * {@code super.toStringBuilder()} instance.
+     *
+     * @return a StringBuilder instance to use for appending String data that will eventually be returned from a
+     *         {@code toString()} invocation.
+     */
+    protected StringBuilder toStringBuilder() {
+<span class="fc" id="L85">        String name = getName();</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">        if (name == null) {</span>
+<span class="nc" id="L87">            return super.toStringBuilder();</span>
+        } else {
+<span class="fc" id="L89">            StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L90">            sb.append(name);</span>
+<span class="fc" id="L91">            return sb;</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

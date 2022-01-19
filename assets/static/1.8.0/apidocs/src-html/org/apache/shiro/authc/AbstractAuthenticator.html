@@ -1,0 +1,335 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<main role="main">
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a id="line.1">/*</a>
+<span class="sourceLineNo">002</span><a id="line.2"> * Licensed to the Apache Software Foundation (ASF) under one</a>
+<span class="sourceLineNo">003</span><a id="line.3"> * or more contributor license agreements.  See the NOTICE file</a>
+<span class="sourceLineNo">004</span><a id="line.4"> * distributed with this work for additional information</a>
+<span class="sourceLineNo">005</span><a id="line.5"> * regarding copyright ownership.  The ASF licenses this file</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * to you under the Apache License, Version 2.0 (the</a>
+<span class="sourceLineNo">007</span><a id="line.7"> * "License"); you may not use this file except in compliance</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * with the License.  You may obtain a copy of the License at</a>
+<span class="sourceLineNo">009</span><a id="line.9"> *</a>
+<span class="sourceLineNo">010</span><a id="line.10"> *     http://www.apache.org/licenses/LICENSE-2.0</a>
+<span class="sourceLineNo">011</span><a id="line.11"> *</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * Unless required by applicable law or agreed to in writing,</a>
+<span class="sourceLineNo">013</span><a id="line.13"> * software distributed under the License is distributed on an</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</a>
+<span class="sourceLineNo">015</span><a id="line.15"> * KIND, either express or implied.  See the License for the</a>
+<span class="sourceLineNo">016</span><a id="line.16"> * specific language governing permissions and limitations</a>
+<span class="sourceLineNo">017</span><a id="line.17"> * under the License.</a>
+<span class="sourceLineNo">018</span><a id="line.18"> */</a>
+<span class="sourceLineNo">019</span><a id="line.19">package org.apache.shiro.authc;</a>
+<span class="sourceLineNo">020</span><a id="line.20"></a>
+<span class="sourceLineNo">021</span><a id="line.21">import org.apache.shiro.subject.PrincipalCollection;</a>
+<span class="sourceLineNo">022</span><a id="line.22">import org.slf4j.Logger;</a>
+<span class="sourceLineNo">023</span><a id="line.23">import org.slf4j.LoggerFactory;</a>
+<span class="sourceLineNo">024</span><a id="line.24"></a>
+<span class="sourceLineNo">025</span><a id="line.25">import java.util.ArrayList;</a>
+<span class="sourceLineNo">026</span><a id="line.26">import java.util.Collection;</a>
+<span class="sourceLineNo">027</span><a id="line.27"></a>
+<span class="sourceLineNo">028</span><a id="line.28"></a>
+<span class="sourceLineNo">029</span><a id="line.29">/**</a>
+<span class="sourceLineNo">030</span><a id="line.30"> * Superclass for almost all {@link Authenticator} implementations that performs the common work around authentication</a>
+<span class="sourceLineNo">031</span><a id="line.31"> * attempts.</a>
+<span class="sourceLineNo">032</span><a id="line.32"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">033</span><a id="line.33"> * This class delegates the actual authentication attempt to subclasses but supports notification for</a>
+<span class="sourceLineNo">034</span><a id="line.34"> * successful and failed logins as well as logouts. Notification is sent to one or more registered</a>
+<span class="sourceLineNo">035</span><a id="line.35"> * {@link AuthenticationListener AuthenticationListener}s to allow for custom processing logic</a>
+<span class="sourceLineNo">036</span><a id="line.36"> * when these conditions occur.</a>
+<span class="sourceLineNo">037</span><a id="line.37"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">038</span><a id="line.38"> * In most cases, the only thing a subclass needs to do (via its {@link #doAuthenticate} implementation)</a>
+<span class="sourceLineNo">039</span><a id="line.39"> * is perform the actual principal/credential verification process for the submitted {@code AuthenticationToken}.</a>
+<span class="sourceLineNo">040</span><a id="line.40"> *</a>
+<span class="sourceLineNo">041</span><a id="line.41"> * @since 0.1</a>
+<span class="sourceLineNo">042</span><a id="line.42"> */</a>
+<span class="sourceLineNo">043</span><a id="line.43">public abstract class AbstractAuthenticator implements Authenticator, LogoutAware {</a>
+<span class="sourceLineNo">044</span><a id="line.44"></a>
+<span class="sourceLineNo">045</span><a id="line.45">    /*-------------------------------------------</a>
+<span class="sourceLineNo">046</span><a id="line.46">    |             C O N S T A N T S             |</a>
+<span class="sourceLineNo">047</span><a id="line.47">    ============================================*/</a>
+<span class="sourceLineNo">048</span><a id="line.48">    /**</a>
+<span class="sourceLineNo">049</span><a id="line.49">     * Private class log instance.</a>
+<span class="sourceLineNo">050</span><a id="line.50">     */</a>
+<span class="sourceLineNo">051</span><a id="line.51">    private static final Logger log = LoggerFactory.getLogger(AbstractAuthenticator.class);</a>
+<span class="sourceLineNo">052</span><a id="line.52"></a>
+<span class="sourceLineNo">053</span><a id="line.53">    /*-------------------------------------------</a>
+<span class="sourceLineNo">054</span><a id="line.54">    |    I N S T A N C E   V A R I A B L E S    |</a>
+<span class="sourceLineNo">055</span><a id="line.55">    ============================================*/</a>
+<span class="sourceLineNo">056</span><a id="line.56">    /**</a>
+<span class="sourceLineNo">057</span><a id="line.57">     * Any registered listeners that wish to know about things during the authentication process.</a>
+<span class="sourceLineNo">058</span><a id="line.58">     */</a>
+<span class="sourceLineNo">059</span><a id="line.59">    private Collection&lt;AuthenticationListener&gt; listeners;</a>
+<span class="sourceLineNo">060</span><a id="line.60"></a>
+<span class="sourceLineNo">061</span><a id="line.61">    /*-------------------------------------------</a>
+<span class="sourceLineNo">062</span><a id="line.62">    |         C O N S T R U C T O R S           |</a>
+<span class="sourceLineNo">063</span><a id="line.63">    ============================================*/</a>
+<span class="sourceLineNo">064</span><a id="line.64"></a>
+<span class="sourceLineNo">065</span><a id="line.65">    /**</a>
+<span class="sourceLineNo">066</span><a id="line.66">     * Default no-argument constructor. Ensures the internal</a>
+<span class="sourceLineNo">067</span><a id="line.67">     * {@link AuthenticationListener AuthenticationListener} collection is a non-null {@code ArrayList}.</a>
+<span class="sourceLineNo">068</span><a id="line.68">     */</a>
+<span class="sourceLineNo">069</span><a id="line.69">    public AbstractAuthenticator() {</a>
+<span class="sourceLineNo">070</span><a id="line.70">        listeners = new ArrayList&lt;AuthenticationListener&gt;();</a>
+<span class="sourceLineNo">071</span><a id="line.71">    }</a>
+<span class="sourceLineNo">072</span><a id="line.72"></a>
+<span class="sourceLineNo">073</span><a id="line.73">    /*--------------------------------------------</a>
+<span class="sourceLineNo">074</span><a id="line.74">    |  A C C E S S O R S / M O D I F I E R S    |</a>
+<span class="sourceLineNo">075</span><a id="line.75">    ============================================*/</a>
+<span class="sourceLineNo">076</span><a id="line.76"></a>
+<span class="sourceLineNo">077</span><a id="line.77">    /**</a>
+<span class="sourceLineNo">078</span><a id="line.78">     * Sets the {@link AuthenticationListener AuthenticationListener}s that should be notified during authentication</a>
+<span class="sourceLineNo">079</span><a id="line.79">     * attempts.</a>
+<span class="sourceLineNo">080</span><a id="line.80">     *</a>
+<span class="sourceLineNo">081</span><a id="line.81">     * @param listeners one or more {@code AuthenticationListener}s that should be notified due to an</a>
+<span class="sourceLineNo">082</span><a id="line.82">     *                  authentication attempt.</a>
+<span class="sourceLineNo">083</span><a id="line.83">     */</a>
+<span class="sourceLineNo">084</span><a id="line.84">    @SuppressWarnings({"UnusedDeclaration"})</a>
+<span class="sourceLineNo">085</span><a id="line.85">    public void setAuthenticationListeners(Collection&lt;AuthenticationListener&gt; listeners) {</a>
+<span class="sourceLineNo">086</span><a id="line.86">        if (listeners == null) {</a>
+<span class="sourceLineNo">087</span><a id="line.87">            this.listeners = new ArrayList&lt;AuthenticationListener&gt;();</a>
+<span class="sourceLineNo">088</span><a id="line.88">        } else {</a>
+<span class="sourceLineNo">089</span><a id="line.89">            this.listeners = listeners;</a>
+<span class="sourceLineNo">090</span><a id="line.90">        }</a>
+<span class="sourceLineNo">091</span><a id="line.91">    }</a>
+<span class="sourceLineNo">092</span><a id="line.92"></a>
+<span class="sourceLineNo">093</span><a id="line.93">    /**</a>
+<span class="sourceLineNo">094</span><a id="line.94">     * Returns the {@link AuthenticationListener AuthenticationListener}s that should be notified during authentication</a>
+<span class="sourceLineNo">095</span><a id="line.95">     * attempts.</a>
+<span class="sourceLineNo">096</span><a id="line.96">     *</a>
+<span class="sourceLineNo">097</span><a id="line.97">     * @return the {@link AuthenticationListener AuthenticationListener}s that should be notified during authentication</a>
+<span class="sourceLineNo">098</span><a id="line.98">     *         attempts.</a>
+<span class="sourceLineNo">099</span><a id="line.99">     */</a>
+<span class="sourceLineNo">100</span><a id="line.100">    @SuppressWarnings({"UnusedDeclaration"})</a>
+<span class="sourceLineNo">101</span><a id="line.101">    public Collection&lt;AuthenticationListener&gt; getAuthenticationListeners() {</a>
+<span class="sourceLineNo">102</span><a id="line.102">        return this.listeners;</a>
+<span class="sourceLineNo">103</span><a id="line.103">    }</a>
+<span class="sourceLineNo">104</span><a id="line.104"></a>
+<span class="sourceLineNo">105</span><a id="line.105">    /*-------------------------------------------</a>
+<span class="sourceLineNo">106</span><a id="line.106">    |               M E T H O D S               |</a>
+<span class="sourceLineNo">107</span><a id="line.107">    ============================================*/</a>
+<span class="sourceLineNo">108</span><a id="line.108"></a>
+<span class="sourceLineNo">109</span><a id="line.109">    /**</a>
+<span class="sourceLineNo">110</span><a id="line.110">     * Notifies any registered {@link AuthenticationListener AuthenticationListener}s that</a>
+<span class="sourceLineNo">111</span><a id="line.111">     * authentication was successful for the specified {@code token} which resulted in the specified</a>
+<span class="sourceLineNo">112</span><a id="line.112">     * {@code info}.  This implementation merely iterates over the internal {@code listeners} collection and</a>
+<span class="sourceLineNo">113</span><a id="line.113">     * calls {@link AuthenticationListener#onSuccess(AuthenticationToken, AuthenticationInfo) onSuccess}</a>
+<span class="sourceLineNo">114</span><a id="line.114">     * for each.</a>
+<span class="sourceLineNo">115</span><a id="line.115">     *</a>
+<span class="sourceLineNo">116</span><a id="line.116">     * @param token the submitted {@code AuthenticationToken} that resulted in a successful authentication.</a>
+<span class="sourceLineNo">117</span><a id="line.117">     * @param info  the returned {@code AuthenticationInfo} resulting from the successful authentication.</a>
+<span class="sourceLineNo">118</span><a id="line.118">     */</a>
+<span class="sourceLineNo">119</span><a id="line.119">    protected void notifySuccess(AuthenticationToken token, AuthenticationInfo info) {</a>
+<span class="sourceLineNo">120</span><a id="line.120">        for (AuthenticationListener listener : this.listeners) {</a>
+<span class="sourceLineNo">121</span><a id="line.121">            listener.onSuccess(token, info);</a>
+<span class="sourceLineNo">122</span><a id="line.122">        }</a>
+<span class="sourceLineNo">123</span><a id="line.123">    }</a>
+<span class="sourceLineNo">124</span><a id="line.124"></a>
+<span class="sourceLineNo">125</span><a id="line.125">    /**</a>
+<span class="sourceLineNo">126</span><a id="line.126">     * Notifies any registered {@link AuthenticationListener AuthenticationListener}s that</a>
+<span class="sourceLineNo">127</span><a id="line.127">     * authentication failed for the</a>
+<span class="sourceLineNo">128</span><a id="line.128">     * specified {@code token} which resulted in the specified {@code ae} exception.  This implementation merely</a>
+<span class="sourceLineNo">129</span><a id="line.129">     * iterates over the internal {@code listeners} collection and calls</a>
+<span class="sourceLineNo">130</span><a id="line.130">     * {@link AuthenticationListener#onFailure(AuthenticationToken, AuthenticationException) onFailure}</a>
+<span class="sourceLineNo">131</span><a id="line.131">     * for each.</a>
+<span class="sourceLineNo">132</span><a id="line.132">     *</a>
+<span class="sourceLineNo">133</span><a id="line.133">     * @param token the submitted {@code AuthenticationToken} that resulted in a failed authentication.</a>
+<span class="sourceLineNo">134</span><a id="line.134">     * @param ae    the resulting {@code AuthenticationException} that caused the authentication to fail.</a>
+<span class="sourceLineNo">135</span><a id="line.135">     */</a>
+<span class="sourceLineNo">136</span><a id="line.136">    protected void notifyFailure(AuthenticationToken token, AuthenticationException ae) {</a>
+<span class="sourceLineNo">137</span><a id="line.137">        for (AuthenticationListener listener : this.listeners) {</a>
+<span class="sourceLineNo">138</span><a id="line.138">            listener.onFailure(token, ae);</a>
+<span class="sourceLineNo">139</span><a id="line.139">        }</a>
+<span class="sourceLineNo">140</span><a id="line.140">    }</a>
+<span class="sourceLineNo">141</span><a id="line.141"></a>
+<span class="sourceLineNo">142</span><a id="line.142">    /**</a>
+<span class="sourceLineNo">143</span><a id="line.143">     * Notifies any registered {@link AuthenticationListener AuthenticationListener}s that a</a>
+<span class="sourceLineNo">144</span><a id="line.144">     * {@code Subject} has logged-out.  This implementation merely</a>
+<span class="sourceLineNo">145</span><a id="line.145">     * iterates over the internal {@code listeners} collection and calls</a>
+<span class="sourceLineNo">146</span><a id="line.146">     * {@link AuthenticationListener#onLogout(org.apache.shiro.subject.PrincipalCollection) onLogout}</a>
+<span class="sourceLineNo">147</span><a id="line.147">     * for each.</a>
+<span class="sourceLineNo">148</span><a id="line.148">     *</a>
+<span class="sourceLineNo">149</span><a id="line.149">     * @param principals the identifying principals of the {@code Subject}/account logging out.</a>
+<span class="sourceLineNo">150</span><a id="line.150">     */</a>
+<span class="sourceLineNo">151</span><a id="line.151">    protected void notifyLogout(PrincipalCollection principals) {</a>
+<span class="sourceLineNo">152</span><a id="line.152">        for (AuthenticationListener listener : this.listeners) {</a>
+<span class="sourceLineNo">153</span><a id="line.153">            listener.onLogout(principals);</a>
+<span class="sourceLineNo">154</span><a id="line.154">        }</a>
+<span class="sourceLineNo">155</span><a id="line.155">    }</a>
+<span class="sourceLineNo">156</span><a id="line.156"></a>
+<span class="sourceLineNo">157</span><a id="line.157">    /**</a>
+<span class="sourceLineNo">158</span><a id="line.158">     * This implementation merely calls</a>
+<span class="sourceLineNo">159</span><a id="line.159">     * {@link #notifyLogout(org.apache.shiro.subject.PrincipalCollection) notifyLogout} to allow any registered listeners</a>
+<span class="sourceLineNo">160</span><a id="line.160">     * to react to the logout.</a>
+<span class="sourceLineNo">161</span><a id="line.161">     *</a>
+<span class="sourceLineNo">162</span><a id="line.162">     * @param principals the identifying principals of the {@code Subject}/account logging out.</a>
+<span class="sourceLineNo">163</span><a id="line.163">     */</a>
+<span class="sourceLineNo">164</span><a id="line.164">    public void onLogout(PrincipalCollection principals) {</a>
+<span class="sourceLineNo">165</span><a id="line.165">        notifyLogout(principals);</a>
+<span class="sourceLineNo">166</span><a id="line.166">    }</a>
+<span class="sourceLineNo">167</span><a id="line.167"></a>
+<span class="sourceLineNo">168</span><a id="line.168">    /**</a>
+<span class="sourceLineNo">169</span><a id="line.169">     * Implementation of the {@link Authenticator} interface that functions in the following manner:</a>
+<span class="sourceLineNo">170</span><a id="line.170">     * &lt;ol&gt;</a>
+<span class="sourceLineNo">171</span><a id="line.171">     * &lt;li&gt;Calls template {@link #doAuthenticate doAuthenticate} method for subclass execution of the actual</a>
+<span class="sourceLineNo">172</span><a id="line.172">     * authentication behavior.&lt;/li&gt;</a>
+<span class="sourceLineNo">173</span><a id="line.173">     * &lt;li&gt;If an {@code AuthenticationException} is thrown during {@code doAuthenticate},</a>
+<span class="sourceLineNo">174</span><a id="line.174">     * {@link #notifyFailure(AuthenticationToken, AuthenticationException) notify} any registered</a>
+<span class="sourceLineNo">175</span><a id="line.175">     * {@link AuthenticationListener AuthenticationListener}s of the exception and then propagate the exception</a>
+<span class="sourceLineNo">176</span><a id="line.176">     * for the caller to handle.&lt;/li&gt;</a>
+<span class="sourceLineNo">177</span><a id="line.177">     * &lt;li&gt;If no exception is thrown (indicating a successful login),</a>
+<span class="sourceLineNo">178</span><a id="line.178">     * {@link #notifySuccess(AuthenticationToken, AuthenticationInfo) notify} any registered</a>
+<span class="sourceLineNo">179</span><a id="line.179">     * {@link AuthenticationListener AuthenticationListener}s of the successful attempt.&lt;/li&gt;</a>
+<span class="sourceLineNo">180</span><a id="line.180">     * &lt;li&gt;Return the {@code AuthenticationInfo}&lt;/li&gt;</a>
+<span class="sourceLineNo">181</span><a id="line.181">     * &lt;/ol&gt;</a>
+<span class="sourceLineNo">182</span><a id="line.182">     *</a>
+<span class="sourceLineNo">183</span><a id="line.183">     * @param token the submitted token representing the subject's (user's) login principals and credentials.</a>
+<span class="sourceLineNo">184</span><a id="line.184">     * @return the AuthenticationInfo referencing the authenticated user's account data.</a>
+<span class="sourceLineNo">185</span><a id="line.185">     * @throws AuthenticationException if there is any problem during the authentication process - see the</a>
+<span class="sourceLineNo">186</span><a id="line.186">     *                                 interface's JavaDoc for a more detailed explanation.</a>
+<span class="sourceLineNo">187</span><a id="line.187">     */</a>
+<span class="sourceLineNo">188</span><a id="line.188">    public final AuthenticationInfo authenticate(AuthenticationToken token) throws AuthenticationException {</a>
+<span class="sourceLineNo">189</span><a id="line.189"></a>
+<span class="sourceLineNo">190</span><a id="line.190">        if (token == null) {</a>
+<span class="sourceLineNo">191</span><a id="line.191">            throw new IllegalArgumentException("Method argument (authentication token) cannot be null.");</a>
+<span class="sourceLineNo">192</span><a id="line.192">        }</a>
+<span class="sourceLineNo">193</span><a id="line.193"></a>
+<span class="sourceLineNo">194</span><a id="line.194">        log.trace("Authentication attempt received for token [{}]", token);</a>
+<span class="sourceLineNo">195</span><a id="line.195"></a>
+<span class="sourceLineNo">196</span><a id="line.196">        AuthenticationInfo info;</a>
+<span class="sourceLineNo">197</span><a id="line.197">        try {</a>
+<span class="sourceLineNo">198</span><a id="line.198">            info = doAuthenticate(token);</a>
+<span class="sourceLineNo">199</span><a id="line.199">            if (info == null) {</a>
+<span class="sourceLineNo">200</span><a id="line.200">                String msg = "No account information found for authentication token [" + token + "] by this " +</a>
+<span class="sourceLineNo">201</span><a id="line.201">                        "Authenticator instance.  Please check that it is configured correctly.";</a>
+<span class="sourceLineNo">202</span><a id="line.202">                throw new AuthenticationException(msg);</a>
+<span class="sourceLineNo">203</span><a id="line.203">            }</a>
+<span class="sourceLineNo">204</span><a id="line.204">        } catch (Throwable t) {</a>
+<span class="sourceLineNo">205</span><a id="line.205">            AuthenticationException ae = null;</a>
+<span class="sourceLineNo">206</span><a id="line.206">            if (t instanceof AuthenticationException) {</a>
+<span class="sourceLineNo">207</span><a id="line.207">                ae = (AuthenticationException) t;</a>
+<span class="sourceLineNo">208</span><a id="line.208">            }</a>
+<span class="sourceLineNo">209</span><a id="line.209">            if (ae == null) {</a>
+<span class="sourceLineNo">210</span><a id="line.210">                //Exception thrown was not an expected AuthenticationException.  Therefore it is probably a little more</a>
+<span class="sourceLineNo">211</span><a id="line.211">                //severe or unexpected.  So, wrap in an AuthenticationException, log to warn, and propagate:</a>
+<span class="sourceLineNo">212</span><a id="line.212">                String msg = "Authentication failed for token submission [" + token + "].  Possible unexpected " +</a>
+<span class="sourceLineNo">213</span><a id="line.213">                        "error? (Typical or expected login exceptions should extend from AuthenticationException).";</a>
+<span class="sourceLineNo">214</span><a id="line.214">                ae = new AuthenticationException(msg, t);</a>
+<span class="sourceLineNo">215</span><a id="line.215">                if (log.isWarnEnabled())</a>
+<span class="sourceLineNo">216</span><a id="line.216">                    log.warn(msg, t);</a>
+<span class="sourceLineNo">217</span><a id="line.217">            }</a>
+<span class="sourceLineNo">218</span><a id="line.218">            try {</a>
+<span class="sourceLineNo">219</span><a id="line.219">                notifyFailure(token, ae);</a>
+<span class="sourceLineNo">220</span><a id="line.220">            } catch (Throwable t2) {</a>
+<span class="sourceLineNo">221</span><a id="line.221">                if (log.isWarnEnabled()) {</a>
+<span class="sourceLineNo">222</span><a id="line.222">                    String msg = "Unable to send notification for failed authentication attempt - listener error?.  " +</a>
+<span class="sourceLineNo">223</span><a id="line.223">                            "Please check your AuthenticationListener implementation(s).  Logging sending exception " +</a>
+<span class="sourceLineNo">224</span><a id="line.224">                            "and propagating original AuthenticationException instead...";</a>
+<span class="sourceLineNo">225</span><a id="line.225">                    log.warn(msg, t2);</a>
+<span class="sourceLineNo">226</span><a id="line.226">                }</a>
+<span class="sourceLineNo">227</span><a id="line.227">            }</a>
+<span class="sourceLineNo">228</span><a id="line.228"></a>
+<span class="sourceLineNo">229</span><a id="line.229"></a>
+<span class="sourceLineNo">230</span><a id="line.230">            throw ae;</a>
+<span class="sourceLineNo">231</span><a id="line.231">        }</a>
+<span class="sourceLineNo">232</span><a id="line.232"></a>
+<span class="sourceLineNo">233</span><a id="line.233">        log.debug("Authentication successful for token [{}].  Returned account [{}]", token, info);</a>
+<span class="sourceLineNo">234</span><a id="line.234"></a>
+<span class="sourceLineNo">235</span><a id="line.235">        notifySuccess(token, info);</a>
+<span class="sourceLineNo">236</span><a id="line.236"></a>
+<span class="sourceLineNo">237</span><a id="line.237">        return info;</a>
+<span class="sourceLineNo">238</span><a id="line.238">    }</a>
+<span class="sourceLineNo">239</span><a id="line.239"></a>
+<span class="sourceLineNo">240</span><a id="line.240">    /**</a>
+<span class="sourceLineNo">241</span><a id="line.241">     * Template design pattern hook for subclasses to implement specific authentication behavior.</a>
+<span class="sourceLineNo">242</span><a id="line.242">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">243</span><a id="line.243">     * Common behavior for most authentication attempts is encapsulated in the</a>
+<span class="sourceLineNo">244</span><a id="line.244">     * {@link #authenticate} method and that method invokes this one for custom behavior.</a>
+<span class="sourceLineNo">245</span><a id="line.245">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">246</span><a id="line.246">     * &lt;b&gt;N.B.&lt;/b&gt; Subclasses &lt;em&gt;should&lt;/em&gt; throw some kind of</a>
+<span class="sourceLineNo">247</span><a id="line.247">     * {@code AuthenticationException} if there is a problem during</a>
+<span class="sourceLineNo">248</span><a id="line.248">     * authentication instead of returning {@code null}.  A {@code null} return value indicates</a>
+<span class="sourceLineNo">249</span><a id="line.249">     * a configuration or programming error, since {@code AuthenticationException}s should</a>
+<span class="sourceLineNo">250</span><a id="line.250">     * indicate any expected problem (such as an unknown account or username, or invalid password, etc).</a>
+<span class="sourceLineNo">251</span><a id="line.251">     *</a>
+<span class="sourceLineNo">252</span><a id="line.252">     * @param token the authentication token encapsulating the user's login information.</a>
+<span class="sourceLineNo">253</span><a id="line.253">     * @return an {@code AuthenticationInfo} object encapsulating the user's account information</a>
+<span class="sourceLineNo">254</span><a id="line.254">     *         important to Shiro.</a>
+<span class="sourceLineNo">255</span><a id="line.255">     * @throws AuthenticationException if there is a problem logging in the user.</a>
+<span class="sourceLineNo">256</span><a id="line.256">     */</a>
+<span class="sourceLineNo">257</span><a id="line.257">    protected abstract AuthenticationInfo doAuthenticate(AuthenticationToken token)</a>
+<span class="sourceLineNo">258</span><a id="line.258">            throws AuthenticationException;</a>
+<span class="sourceLineNo">259</span><a id="line.259"></a>
+<span class="sourceLineNo">260</span><a id="line.260"></a>
+<span class="sourceLineNo">261</span><a id="line.261">}</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</main>
+</body>
+</html>

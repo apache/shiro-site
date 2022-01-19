@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>JdbcRealm.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.realm.jdbc</a> &gt; <span class="el_source">JdbcRealm.java</span></div><h1>JdbcRealm.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.realm.jdbc;
+
+import org.apache.shiro.authc.AccountException;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.config.ConfigurationException;
+import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
+import org.apache.shiro.util.JdbcUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+
+/**
+ * Realm that allows authentication and authorization via JDBC calls.  The default queries suggest a potential schema
+ * for retrieving the user's password for authentication, and querying for a user's roles and permissions.  The
+ * default queries can be overridden by setting the query properties of the realm.
+ * &lt;p/&gt;
+ * If the default implementation
+ * of authentication and authorization cannot handle your schema, this class can be subclassed and the
+ * appropriate methods overridden. (usually {@link #doGetAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken)},
+ * {@link #getRoleNamesForUser(java.sql.Connection,String)}, and/or {@link #getPermissions(java.sql.Connection,String,java.util.Collection)}
+ * &lt;p/&gt;
+ * This realm supports caching by extending from {@link org.apache.shiro.realm.AuthorizingRealm}.
+ *
+ * @since 0.2
+ */
+<span class="fc" id="L63">public class JdbcRealm extends AuthorizingRealm {</span>
+
+    //TODO - complete JavaDoc
+
+    /*--------------------------------------------
+    |             C O N S T A N T S             |
+    ============================================*/
+    /**
+     * The default query used to retrieve account data for the user.
+     */
+    protected static final String DEFAULT_AUTHENTICATION_QUERY = &quot;select password from users where username = ?&quot;;
+    
+    /**
+     * The default query used to retrieve account data for the user when {@link #saltStyle} is COLUMN.
+     */
+    protected static final String DEFAULT_SALTED_AUTHENTICATION_QUERY = &quot;select password, password_salt from users where username = ?&quot;;
+
+    /**
+     * The default query used to retrieve the roles that apply to a user.
+     */
+    protected static final String DEFAULT_USER_ROLES_QUERY = &quot;select role_name from user_roles where username = ?&quot;;
+
+    /**
+     * The default query used to retrieve permissions that apply to a particular role.
+     */
+    protected static final String DEFAULT_PERMISSIONS_QUERY = &quot;select permission from roles_permissions where role_name = ?&quot;;
+
+<span class="fc" id="L90">    private static final Logger log = LoggerFactory.getLogger(JdbcRealm.class);</span>
+    
+    /**
+     * Password hash salt configuration. &lt;ul&gt;
+     *   &lt;li&gt;NO_SALT - password hashes are not salted.&lt;/li&gt;
+     *   &lt;li&gt;CRYPT - password hashes are stored in unix crypt format.&lt;/li&gt;
+     *   &lt;li&gt;COLUMN - salt is in a separate column in the database.&lt;/li&gt; 
+     *   &lt;li&gt;EXTERNAL - salt is not stored in the database. {@link #getSaltForUser(String)} will be called
+     *       to get the salt&lt;/li&gt;&lt;/ul&gt;
+     */
+<span class="fc" id="L100">    public enum SaltStyle {NO_SALT, CRYPT, COLUMN, EXTERNAL};</span>
+
+    /*--------------------------------------------
+    |    I N S T A N C E   V A R I A B L E S    |
+    ============================================*/
+    protected DataSource dataSource;
+
+<span class="fc" id="L107">    protected String authenticationQuery = DEFAULT_AUTHENTICATION_QUERY;</span>
+
+<span class="fc" id="L109">    protected String userRolesQuery = DEFAULT_USER_ROLES_QUERY;</span>
+
+<span class="fc" id="L111">    protected String permissionsQuery = DEFAULT_PERMISSIONS_QUERY;</span>
+
+<span class="fc" id="L113">    protected boolean permissionsLookupEnabled = false;</span>
+    
+<span class="fc" id="L115">    protected SaltStyle saltStyle = SaltStyle.NO_SALT;</span>
+
+    /*--------------------------------------------
+    |         C O N S T R U C T O R S           |
+    ============================================*/
+
+    /*--------------------------------------------
+    |  A C C E S S O R S / M O D I F I E R S    |
+    ============================================*/
+    
+    /**
+     * Sets the datasource that should be used to retrieve connections used by this realm.
+     *
+     * @param dataSource the SQL data source.
+     */
+    public void setDataSource(DataSource dataSource) {
+<span class="fc" id="L131">        this.dataSource = dataSource;</span>
+<span class="fc" id="L132">    }</span>
+
+    /**
+     * Overrides the default query used to retrieve a user's password during authentication.  When using the default
+     * implementation, this query must take the user's username as a single parameter and return a single result
+     * with the user's password as the first column.  If you require a solution that does not match this query
+     * structure, you can override {@link #doGetAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken)} or
+     * just {@link #getPasswordForUser(java.sql.Connection,String)}
+     *
+     * @param authenticationQuery the query to use for authentication.
+     * @see #DEFAULT_AUTHENTICATION_QUERY
+     */
+    public void setAuthenticationQuery(String authenticationQuery) {
+<span class="nc" id="L145">        this.authenticationQuery = authenticationQuery;</span>
+<span class="nc" id="L146">    }</span>
+
+    /**
+     * Overrides the default query used to retrieve a user's roles during authorization.  When using the default
+     * implementation, this query must take the user's username as a single parameter and return a row
+     * per role with a single column containing the role name.  If you require a solution that does not match this query
+     * structure, you can override {@link #doGetAuthorizationInfo(PrincipalCollection)} or just
+     * {@link #getRoleNamesForUser(java.sql.Connection,String)}
+     *
+     * @param userRolesQuery the query to use for retrieving a user's roles.
+     * @see #DEFAULT_USER_ROLES_QUERY
+     */
+    public void setUserRolesQuery(String userRolesQuery) {
+<span class="nc" id="L159">        this.userRolesQuery = userRolesQuery;</span>
+<span class="nc" id="L160">    }</span>
+
+    /**
+     * Overrides the default query used to retrieve a user's permissions during authorization.  When using the default
+     * implementation, this query must take a role name as the single parameter and return a row
+     * per permission with three columns containing the fully qualified name of the permission class, the permission
+     * name, and the permission actions (in that order).  If you require a solution that does not match this query
+     * structure, you can override {@link #doGetAuthorizationInfo(org.apache.shiro.subject.PrincipalCollection)} or just
+     * {@link #getPermissions(java.sql.Connection,String,java.util.Collection)}&lt;/p&gt;
+     * &lt;p/&gt;
+     * &lt;b&gt;Permissions are only retrieved if you set {@link #permissionsLookupEnabled} to true.  Otherwise,
+     * this query is ignored.&lt;/b&gt;
+     *
+     * @param permissionsQuery the query to use for retrieving permissions for a role.
+     * @see #DEFAULT_PERMISSIONS_QUERY
+     * @see #setPermissionsLookupEnabled(boolean)
+     */
+    public void setPermissionsQuery(String permissionsQuery) {
+<span class="nc" id="L178">        this.permissionsQuery = permissionsQuery;</span>
+<span class="nc" id="L179">    }</span>
+
+    /**
+     * Enables lookup of permissions during authorization.  The default is &quot;false&quot; - meaning that only roles
+     * are associated with a user.  Set this to true in order to lookup roles &lt;b&gt;and&lt;/b&gt; permissions.
+     *
+     * @param permissionsLookupEnabled true if permissions should be looked up during authorization, or false if only
+     *                                 roles should be looked up.
+     */
+    public void setPermissionsLookupEnabled(boolean permissionsLookupEnabled) {
+<span class="fc" id="L189">        this.permissionsLookupEnabled = permissionsLookupEnabled;</span>
+<span class="fc" id="L190">    }</span>
+    
+    /**
+     * Sets the salt style.  See {@link #saltStyle}.
+     * 
+     * @param saltStyle new SaltStyle to set.
+     */
+    public void setSaltStyle(SaltStyle saltStyle) {
+<span class="fc" id="L198">        this.saltStyle = saltStyle;</span>
+<span class="pc bpc" id="L199" title="1 of 4 branches missed.">        if (saltStyle == SaltStyle.COLUMN &amp;&amp; authenticationQuery.equals(DEFAULT_AUTHENTICATION_QUERY)) {</span>
+<span class="fc" id="L200">            authenticationQuery = DEFAULT_SALTED_AUTHENTICATION_QUERY;</span>
+        }
+<span class="fc" id="L202">    }</span>
+
+    /*--------------------------------------------
+    |               M E T H O D S               |
+    ============================================*/
+
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+
+<span class="fc" id="L210">        UsernamePasswordToken upToken = (UsernamePasswordToken) token;</span>
+<span class="fc" id="L211">        String username = upToken.getUsername();</span>
+
+        // Null username is invalid
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">        if (username == null) {</span>
+<span class="nc" id="L215">            throw new AccountException(&quot;Null usernames are not allowed by this realm.&quot;);</span>
+        }
+
+<span class="fc" id="L218">        Connection conn = null;</span>
+<span class="fc" id="L219">        SimpleAuthenticationInfo info = null;</span>
+        try {
+<span class="fc" id="L221">            conn = dataSource.getConnection();</span>
+
+<span class="fc" id="L223">            String password = null;</span>
+<span class="fc" id="L224">            String salt = null;</span>
+<span class="pc bpc" id="L225" title="2 of 5 branches missed.">            switch (saltStyle) {</span>
+            case NO_SALT:
+<span class="fc" id="L227">                password = getPasswordForUser(conn, username)[0];</span>
+<span class="fc" id="L228">                break;</span>
+            case CRYPT:
+                // TODO: separate password and hash from getPasswordForUser[0]
+<span class="nc" id="L231">                throw new ConfigurationException(&quot;Not implemented yet&quot;);</span>
+                //break;
+            case COLUMN:
+<span class="fc" id="L234">                String[] queryResults = getPasswordForUser(conn, username);</span>
+<span class="fc" id="L235">                password = queryResults[0];</span>
+<span class="fc" id="L236">                salt = queryResults[1];</span>
+<span class="fc" id="L237">                break;</span>
+            case EXTERNAL:
+<span class="fc" id="L239">                password = getPasswordForUser(conn, username)[0];</span>
+<span class="fc" id="L240">                salt = getSaltForUser(username);</span>
+            }
+
+<span class="pc bpc" id="L243" title="1 of 2 branches missed.">            if (password == null) {</span>
+<span class="nc" id="L244">                throw new UnknownAccountException(&quot;No account found for user [&quot; + username + &quot;]&quot;);</span>
+            }
+
+<span class="fc" id="L247">            info = new SimpleAuthenticationInfo(username, password.toCharArray(), getName());</span>
+            
+<span class="fc bfc" id="L249" title="All 2 branches covered.">            if (salt != null) {</span>
+<span class="fc" id="L250">                info.setCredentialsSalt(ByteSource.Util.bytes(salt));</span>
+            }
+
+<span class="nc" id="L253">        } catch (SQLException e) {</span>
+<span class="nc" id="L254">            final String message = &quot;There was a SQL error while authenticating user [&quot; + username + &quot;]&quot;;</span>
+<span class="nc bnc" id="L255" title="All 2 branches missed.">            if (log.isErrorEnabled()) {</span>
+<span class="nc" id="L256">                log.error(message, e);</span>
+            }
+
+            // Rethrow any SQL errors as an authentication exception
+<span class="nc" id="L260">            throw new AuthenticationException(message, e);</span>
+        } finally {
+<span class="fc" id="L262">            JdbcUtils.closeConnection(conn);</span>
+        }
+
+<span class="fc" id="L265">        return info;</span>
+    }
+
+    private String[] getPasswordForUser(Connection conn, String username) throws SQLException {
+
+        String[] result;
+<span class="fc" id="L271">        boolean returningSeparatedSalt = false;</span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">        switch (saltStyle) {</span>
+        case NO_SALT:
+        case CRYPT:
+        case EXTERNAL:
+<span class="fc" id="L276">            result = new String[1];</span>
+<span class="fc" id="L277">            break;</span>
+        default:
+<span class="fc" id="L279">            result = new String[2];</span>
+<span class="fc" id="L280">            returningSeparatedSalt = true;</span>
+        }
+        
+<span class="fc" id="L283">        PreparedStatement ps = null;</span>
+<span class="fc" id="L284">        ResultSet rs = null;</span>
+        try {
+<span class="fc" id="L286">            ps = conn.prepareStatement(authenticationQuery);</span>
+<span class="fc" id="L287">            ps.setString(1, username);</span>
+
+            // Execute query
+<span class="fc" id="L290">            rs = ps.executeQuery();</span>
+
+            // Loop over results - although we are only expecting one result, since usernames should be unique
+<span class="fc" id="L293">            boolean foundResult = false;</span>
+<span class="fc bfc" id="L294" title="All 2 branches covered.">            while (rs.next()) {</span>
+
+                // Check to ensure only one row is processed
+<span class="fc bfc" id="L297" title="All 2 branches covered.">                if (foundResult) {</span>
+<span class="fc" id="L298">                    throw new AuthenticationException(&quot;More than one user row found for user [&quot; + username + &quot;]. Usernames must be unique.&quot;);</span>
+                }
+
+<span class="fc" id="L301">                result[0] = rs.getString(1);</span>
+<span class="fc bfc" id="L302" title="All 2 branches covered.">                if (returningSeparatedSalt) {</span>
+<span class="fc" id="L303">                    result[1] = rs.getString(2);</span>
+                }
+
+<span class="fc" id="L306">                foundResult = true;</span>
+            }
+        } finally {
+<span class="fc" id="L309">            JdbcUtils.closeResultSet(rs);</span>
+<span class="fc" id="L310">            JdbcUtils.closeStatement(ps);</span>
+        }
+
+<span class="fc" id="L313">        return result;</span>
+    }
+
+    /**
+     * This implementation of the interface expects the principals collection to return a String username keyed off of
+     * this realm's {@link #getName() name}
+     *
+     * @see #getAuthorizationInfo(org.apache.shiro.subject.PrincipalCollection)
+     */
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+
+        //null usernames are invalid
+<span class="pc bpc" id="L326" title="1 of 2 branches missed.">        if (principals == null) {</span>
+<span class="nc" id="L327">            throw new AuthorizationException(&quot;PrincipalCollection method argument cannot be null.&quot;);</span>
+        }
+
+<span class="fc" id="L330">        String username = (String) getAvailablePrincipal(principals);</span>
+
+<span class="fc" id="L332">        Connection conn = null;</span>
+<span class="fc" id="L333">        Set&lt;String&gt; roleNames = null;</span>
+<span class="fc" id="L334">        Set&lt;String&gt; permissions = null;</span>
+        try {
+<span class="fc" id="L336">            conn = dataSource.getConnection();</span>
+
+            // Retrieve roles and permissions from database
+<span class="fc" id="L339">            roleNames = getRoleNamesForUser(conn, username);</span>
+<span class="fc bfc" id="L340" title="All 2 branches covered.">            if (permissionsLookupEnabled) {</span>
+<span class="fc" id="L341">                permissions = getPermissions(conn, username, roleNames);</span>
+            }
+
+<span class="nc" id="L344">        } catch (SQLException e) {</span>
+<span class="nc" id="L345">            final String message = &quot;There was a SQL error while authorizing user [&quot; + username + &quot;]&quot;;</span>
+<span class="nc bnc" id="L346" title="All 2 branches missed.">            if (log.isErrorEnabled()) {</span>
+<span class="nc" id="L347">                log.error(message, e);</span>
+            }
+
+            // Rethrow any SQL errors as an authorization exception
+<span class="nc" id="L351">            throw new AuthorizationException(message, e);</span>
+        } finally {
+<span class="fc" id="L353">            JdbcUtils.closeConnection(conn);</span>
+        }
+
+<span class="fc" id="L356">        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roleNames);</span>
+<span class="fc" id="L357">        info.setStringPermissions(permissions);</span>
+<span class="fc" id="L358">        return info;</span>
+
+    }
+
+    protected Set&lt;String&gt; getRoleNamesForUser(Connection conn, String username) throws SQLException {
+<span class="fc" id="L363">        PreparedStatement ps = null;</span>
+<span class="fc" id="L364">        ResultSet rs = null;</span>
+<span class="fc" id="L365">        Set&lt;String&gt; roleNames = new LinkedHashSet&lt;String&gt;();</span>
+        try {
+<span class="fc" id="L367">            ps = conn.prepareStatement(userRolesQuery);</span>
+<span class="fc" id="L368">            ps.setString(1, username);</span>
+
+            // Execute query
+<span class="fc" id="L371">            rs = ps.executeQuery();</span>
+
+            // Loop over results and add each returned role to a set
+<span class="fc bfc" id="L374" title="All 2 branches covered.">            while (rs.next()) {</span>
+
+<span class="fc" id="L376">                String roleName = rs.getString(1);</span>
+
+                // Add the role to the list of names if it isn't null
+<span class="pc bpc" id="L379" title="1 of 2 branches missed.">                if (roleName != null) {</span>
+<span class="fc" id="L380">                    roleNames.add(roleName);</span>
+                } else {
+<span class="nc bnc" id="L382" title="All 2 branches missed.">                    if (log.isWarnEnabled()) {</span>
+<span class="nc" id="L383">                        log.warn(&quot;Null role name found while retrieving role names for user [&quot; + username + &quot;]&quot;);</span>
+                    }
+                }
+<span class="fc" id="L386">            }</span>
+        } finally {
+<span class="fc" id="L388">            JdbcUtils.closeResultSet(rs);</span>
+<span class="fc" id="L389">            JdbcUtils.closeStatement(ps);</span>
+        }
+<span class="fc" id="L391">        return roleNames;</span>
+    }
+
+    protected Set&lt;String&gt; getPermissions(Connection conn, String username, Collection&lt;String&gt; roleNames) throws SQLException {
+<span class="fc" id="L395">        PreparedStatement ps = null;</span>
+<span class="fc" id="L396">        Set&lt;String&gt; permissions = new LinkedHashSet&lt;String&gt;();</span>
+        try {
+<span class="fc" id="L398">            ps = conn.prepareStatement(permissionsQuery);</span>
+<span class="fc bfc" id="L399" title="All 2 branches covered.">            for (String roleName : roleNames) {</span>
+
+<span class="fc" id="L401">                ps.setString(1, roleName);</span>
+
+<span class="fc" id="L403">                ResultSet rs = null;</span>
+
+                try {
+                    // Execute query
+<span class="fc" id="L407">                    rs = ps.executeQuery();</span>
+
+                    // Loop over results and add each returned role to a set
+<span class="fc bfc" id="L410" title="All 2 branches covered.">                    while (rs.next()) {</span>
+
+<span class="fc" id="L412">                        String permissionString = rs.getString(1);</span>
+
+                        // Add the permission to the set of permissions
+<span class="fc" id="L415">                        permissions.add(permissionString);</span>
+<span class="fc" id="L416">                    }</span>
+                } finally {
+<span class="fc" id="L418">                    JdbcUtils.closeResultSet(rs);</span>
+                }
+
+<span class="fc" id="L421">            }</span>
+        } finally {
+<span class="fc" id="L423">            JdbcUtils.closeStatement(ps);</span>
+        }
+
+<span class="fc" id="L426">        return permissions;</span>
+    }
+    
+    protected String getSaltForUser(String username) {
+<span class="fc" id="L430">        return username;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

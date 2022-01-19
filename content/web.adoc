@@ -1,0 +1,923 @@
+= Apache Shiro Web Support
+:jbake-type: page
+:jbake-status: published
+:jbake-tags: documentation, web
+:idprefix:
+:icons: font
+:toc:
+:toclevels: 5
+
+[#configuration]
+== Configuration
+
+The simplest way to integrate Shiro into any web application is to configure a Servlet ContextListener and Filter in web.xml that understands how to read Shiro's INI configuration. The bulk of the INI config format itself is defined in the Configuration pages's link:/configuration.html#Configuration-INIConfiguration-Sections[INI Sections] section, but we'll cover some additional web-specific sections here.
+
+[INFO]
+.Using Spring?
+====
+Spring Framework users will not perform this setup. If you use Spring, you will want to read about link:/spring-boot.html#web_applications[Spring-specific web configuration] instead.
+====
+
+=== `web.xml`
+
+==== Shiro 1.2 and later
+
+In Shiro 1.2 and later, standard web applications initialize Shiro by adding the following XML chunks to `web.xml`:
+
+[source,xml]
+----
+<listener>
+    <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
+</listener>
+
+<!-- ... -->
+
+<filter>
+    <filter-name>ShiroFilter</filter-name>
+    <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
+</filter>
+
+<filter-mapping>
+    <filter-name>ShiroFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+    <dispatcher>ASYNC</dispatcher>
+</filter-mapping>
+
+----
+
+This assumes a Shiro INI link:configuration.html[Configuration] file is located at either of the following two locations, using whichever is found first:
+
+. `/WEB-INF/shiro.ini`
+. `shiro.ini` file at the root of the classpath.
+
+Here is what the above config does:
+
+* The `EnvironmentLoaderListener` initializes a Shiro `WebEnvironment` instance (which contains everything Shiro needs to operate, including the `SecurityManager`) and makes it accessible in the `ServletContext`. If you need to obtain this `WebEnvironment` instance at any time, you can call `WebUtils.getRequiredWebEnvironment(servletContext)`.
+
+* The `ShiroFilter` will use this `WebEnvironment` to perform all necessary security operations for any filtered request.
+
+* Finally, the `filter-mapping` definition ensures that all requests are filtered by the `ShiroFilter`, recommended for most web applications to ensure that any request can be secured.
+
+[TIP]
+.ShiroFilter filter-mapping
+====
+It is usually desirable to define the `ShiroFilter filter-mapping` before any other `filter-mapping` declarations to ensure that Shiro can function in those filters as well.
+====
+
+[INFO]
+.ShiroFilter default encoding
+====
+The shiro filter is a standard servlet filter, with a default encoding of ISO-8859-1 according to the link:https://javaee.github.io/servlet-spec/downloads/servlet-4.0/servlet-4_0_FINAL.pdf[servlet specification]. However, the client can choose to send authentication data with a different encoding using the `charset` attribute of the `Content-Type` header.
+====
+
+===== Custom `WebEnvironment` Class
+
+By default the `EnvironmentLoaderListener` will create an `IniWebEnvironment` instance, which assumes Shiro's INI-based link:configuration.html[Configuration]. If you like, you may specify a custom `WebEnvironment` instance instead by specifying a `ServletContext` `context-param` in `web.xml`:
+
+[source,xml]
+----
+<context-param>
+    <param-name>shiroEnvironmentClass</param-name>
+    <param-value>com.foo.bar.shiro.MyWebEnvironment</param-value>
+</context-param>
+----
+
+This allows you to customize how a configuration format is parsed and represented as a `WebEnvironment` instance. You could subclass the existing `IniWebEnvironment` for custom behavior, or support different configuration formats entirely. For example, if someone wanted to configure Shiro in XML instead of INI, they could create an XML-based implementation, e.g. `com.foo.bar.shiro.XmlWebEnvironment`.
+
+===== Custom Configuration Locations
+
+The `IniWebEnvironment` class expects to read and load INI configuration files. By default, this class will automatically look in the following two locations for the Shiro `.ini` configuration (in order):
+
+. `/WEB-INF/shiro.ini`
+. `classpath:shiro.ini`
+
+It will use whichever is found first.
+
+However, if you wish to place your config in another location, you may specify that location with another `context-param` in `web.xml`:
+
+[source,xml]
+----
+<context-param>
+    <param-name>shiroConfigLocations</param-name>
+    <param-value>YOUR_RESOURCE_LOCATION_HERE</param-value>
+</context-param>
+----
+
+By default, the `param-value` is expected to be resolvable by the rules defined by link:https://docs.oracle.com/javaee/6/api/javax/servlet/ServletContext.html#getResource(java.lang.String)[`ServletContext.getResource`] method.
+For example, `/WEB-INF/some/path/shiro.ini`
+
+But you may also specify specific file-system, classpath or URL locations by using an appropriate resource prefix supported by Shiro's link:static/current/apidocs/org/apache/shiro/io/ResourceUtils.html[ResourceUtils class], for example:
+
+* `file:/home/foobar/myapp/shiro.ini`
+* `classpath:com/foo/bar/shiro.ini`
+* `url:http://confighost.mycompany.com/myapp/shiro.ini`
+
+==== Shiro 1.1 and earlier
+
+The simplest way to enable Shiro in a 1.1 or earlier web application is to define the IniShiroFilter and specify a `filter-mapping`:
+
+[source,xml]
+----
+<filter>
+    <filter-name>ShiroFilter</filter-name>
+    <filter-class>org.apache.shiro.web.servlet.IniShiroFilter</filter-class>
+</filter>
+
+<!-- ... -->
+
+<!-- Make sure any request you want accessible to Shiro is filtered. /* catches all -->
+<!-- requests.  Usually this filter mapping is defined first (before all others) to -->
+<!-- ensure that Shiro works in subsequent filters in the filter chain:             -->
+<filter-mapping>
+    <filter-name>ShiroFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+</filter-mapping>
+----
+
+This definition expects your INI configuration to be in a shiro.ini file at the root of the classpath (e.g. `classpath:shiro.ini`).
+
+===== Custom Path
+
+If you do not want to place your INI config in `/WEB-INF/shiro.ini` or `classpath:shiro.ini`, you may specify a custom resource location as necessary. Add a `configPath init-param` and specify a resource location:
+
+[source,xml]
+----
+<filter>
+    <filter-name>ShiroFilter</filter-name>
+    <filter-class>org.apache.shiro.web.servlet.IniShiroFilter</filter-class>
+    <init-param>
+        <param-name>configPath</param-name>
+        <param-value>/WEB-INF/anotherFile.ini</param-value>
+    </init-param>
+</filter>
+
+...
+----
+
+Unqualified (schemeless or 'non-prefixed') `configPath` values are assumed to be `ServletContext` resource paths, resolvable via the rules defined by the
+link:https://docs.oracle.com/javaee/6/api/javax/servlet/ServletContext.html#getResource(java.lang.String)[`ServletContext.getResource`] method.
+
+[WARNING]
+.ServletContext resource paths - Shiro 1.2+
+====
+ServletContext resource paths are available in Shiro 1.2 and later. In 1.1 and earlier, all `configPath` definitions must specify a `classpath:`, `file:` or `url:` prefix.
+====
+
+You may also specify other non-`ServletContext` resource locations by using `classpath:`, `url:`, or `file:` prefixes indicating classpath, url, or filesystem locations respectively. For example:
+
+[source,xml]
+----
+...
+<init-param>
+    <param-name>configPath</param-name>
+    <param-value>url:http://configHost/myApp/shiro.ini</param-value>
+</init-param>
+...
+----
+
+===== Inline Config
+
+Finally, it is also possible to embed your INI configuration inline in web.xml without using an INI file at all. You do this by using the `config init-param` instead of `configPath`:
+
+[source,xml]
+----
+<filter>
+    <filter-name>ShiroFilter</filter-name>
+    <filter-class>org.apache.shiro.web.servlet.IniShiroFilter</filter-class>
+    <init-param><param-name>config</param-name><param-value>
+
+    # INI Config Here
+
+    </param-value></init-param>
+</filter>
+...
+----
+
+Inline config is often fine for small or simple applications, but it is usually more convenient to externalize it in a dedicated shiro.ini file for the following reasons:
+
+* You might edit security configuration a lot and don't want to add revision control 'noise' to the web.xml file
+* You might want to separate security config from the rest of web.xml config
+* Your security configuration might become large and you want to keep web.xml lean and easier to read
+* You have a complex build system where the same shiro config might need to be referenced in multiple places
+
+It is up to you - use what makes sense for your project.
+
+[#web_ini]
+=== Web INI configuration
+
+In addition to the standard `[main]`, `[users]` and `[roles]` sections already described in the main link:configuration.html[Configuration] chapter, you can additionally specify a web-specific `[urls]` section in your `shiro.ini` file:
+
+[source,ini]
+----
+# [main], [users] and [roles] above here
+...
+[urls]
+...
+----
+
+The `[urls]` section allows you to do something that doesn't exist in any web framework that we've seen yet: the ability to define ad-hoc filter chains for any matching URL path in your application!
+
+This is _far_ more flexible, powerful and concise than how you define filter chains normally in `web.xml`: even if you never used any other feature that Shiro provided and used only this, it alone would make it worth using.
+
+==== `[urls]`
+
+The format of each line in the `urls` section is as follows:
+
+[source,ini]
+----
+_URL_Ant_Path_Expression_ = _Path_Specific_Filter_Chain_
+----
+
+For example:
+
+[source,ini]
+----
+...
+[urls]
+
+/index.html = anon
+/user/create = anon
+/user/** = authc
+/admin/** = authc, roles[administrator]
+/rest/** = authc, rest
+/remoting/rpc/** = authc, perms["remote:invoke"]
+----
+
+Next we'll cover exactly what these lines mean.
+
+===== URL Path Expressions
+
+The token on the left of the equals sign (=) is an http://ant.apache.org[Ant]-style path expression relative to your web application's context root.
+
+For example, let's say you had the following `[urls]` line:
+
+[source,ini]
+----
+/account/** = ssl, authc
+----
+
+This line states that "Any request to my application's path of `/account` or any of it's sub paths (`/account/foo`, `/account/bar/baz`, etc) will trigger the 'ssl, authc' filter chain". We'll cover filter chains below.
+
+Note that all path expressions are relative to your application's context root. This means that if you deploy your application one day to, say, `www.somehost.com/myapp` and then later deploy it to `www.anotherhost.com` (no 'myapp' sub-path), the pattern matching will still work.
+All paths are relative to the link:https://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#getContextPath()[`HttpServletRequest.getContextPath()`] value.
+
+[CAUTION]
+.Order Matters!
+====
+URL path expressions are evaluated against an incoming request in the order they are defined and the _FIRST MATCH WINS_.
+For example, let's asume that there are the following chain definitions:
+
+[source,ini]
+----
+/account/** = ssl, authc
+/account/signup = anon
+----
+
+Always remember to define your filter chains based on a _FIRST MATCH WINS_ policy!
+====
+
+===== Filter Chain Definitions
+
+The token on the right of the equals sign (=) is comma-delimited list of filters to execute for a request matching that path. It must match the following format:
+
+[source,ini]
+----
+filter1[optional_config1], filter2[optional_config2], ..., filterN[optional_configN]
+----
+
+where:
+
+* _filterN_ is the name of a filter bean defined in the `[main]` section and
+* `[optional_configN]` is an optional bracketed string that has meaning for that particular filter for _that particular path_ (per-filter, _path-specific_ configuration!). If the filter does not need specific config for that URL path, you may discard the brackets so `filterN[]` just becomes `filterN`.
+
+And because filter tokens define chains (aka a List), remember that order matters! Define your comma-delimited list in the order that you want the request to flow through the chain.
+
+Finally, each filter is free to handle the response however it wants if its necessary conditions are not met (e.g. perform a redirect, respond with an HTTP error code, direct rendering, etc). Otherwise it is expected to allow the request to continue through the chain on to the final destination view.
+
+[TIP]
+.Tip
+====
+Being able to react to path specific configuration, i.e. the `[optional_configN]` part of a filter token, is a unique feature available to Shiro filters.
+
+If you want to create your own `javax.servlet.Filter` implementation that can also do this, make sure your filter subclasses link:static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html[org.apache.shiro.web.filter.PathMatchingFilter].
+====
+
+===== Available Filters
+
+The 'pool' of filters available for use in filter chain definitions are defined in the `[main]` section.
+The name assigned to them in the main section is the name to use in the filter chain definitions. For example:
+
+[source,ini]
+----
+[main]
+...
+myFilter = com.company.web.some.FilterImplementation
+myFilter.property1 = value1
+...
+
+[urls]
+...
+/some/path/** = myFilter
+----
+
+[#default_filters]
+== Default Filters
+
+When running a web-app, Shiro will create some useful default `Filter` instances and make them available in the `[main]` section automatically. You can configure them in `main` as you would any other bean and reference them in your chain definitions. For example:
+
+[source,ini]
+----
+[main]
+...
+# Notice how we didn't define the class for the FormAuthenticationFilter ('authc') - it is instantiated and available already:
+authc.loginUrl = /login.jsp
+...
+
+[urls]
+...
+# make sure the end-user is authenticated.  If not, redirect to the 'authc.loginUrl' above,
+# and after successful authentication, redirect them back to the original account page they
+# were trying to view:
+/account/** = authc
+...
+----
+
+The default Filter instances available automatically are defined by the link:static/current/apidocs/org/apache/shiro/web/filter/mgt/DefaultFilter.html[DefaultFilter enum] and the enum's `name` field is the name available for configuration. They are:
+
+|===
+|Filter Name |Class 
+
+|anon |link:static/current/apidocs/org/apache/shiro/web/filter/authc/AnonymousFilter.html[org.apache.shiro.web.filter.authc.AnonymousFilter] 
+|authc |link:static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html[org.apache.shiro.web.filter.authc.FormAuthenticationFilter] 
+|authcBasic |link:static/current/apidocs/org/apache/shiro/web/filter/authc/BasicHttpAuthenticationFilter.html[org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter] 
+|authcBearer |link:static/current/apidocs/org/apache/shiro/web/filter/authc/BearerHttpAuthenticationFilter.html[org.apache.shiro.web.filter.authc.BearerHttpAuthenticationFilter] 
+|invalidRequest |link:static/current/apidocs/org/apache/shiro/web/filter/InvalidRequestFilter.html[org.apache.shiro.web.filter.InvalidRequestFilter] 
+|logout |link:static/current/apidocs/org/apache/shiro/web/filter/authc/LogoutFilter.html[org.apache.shiro.web.filter.authc.LogoutFilter] 
+|noSessionCreation |link:static/current/apidocs/org/apache/shiro/web/filter/session/NoSessionCreationFilter.html[org.apache.shiro.web.filter.session.NoSessionCreationFilter] 
+|perms |link:static/current/apidocs/org/apache/shiro/web/filter/authz/PermissionsAuthorizationFilter.html[org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter] 
+|port |link:static/current/apidocs/org/apache/shiro/web/filter/authz/PortFilter.html[org.apache.shiro.web.filter.authz.PortFilter] 
+|rest |link:static/current/apidocs/org/apache/shiro/web/filter/authz/HttpMethodPermissionFilter.html[org.apache.shiro.web.filter.authz.HttpMethodPermissionFilter] 
+|roles |link:static/current/apidocs/org/apache/shiro/web/filter/authz/RolesAuthorizationFilter.html[org.apache.shiro.web.filter.authz.RolesAuthorizationFilter] 
+|ssl |link:static/current/apidocs/org/apache/shiro/web/filter/authz/SslFilter.html[org.apache.shiro.web.filter.authz.SslFilter] 
+|user |link:static/current/apidocs/org/apache/shiro/web/filter/authc/UserFilter.html[org.apache.shiro.web.filter.authc.UserFilter] 
+|===
+
+== Enabling and Disabling Filters
+
+As is the case with any filter chain definition mechanism (`web.xml`, Shiro's INI, etc), you enable a filter just by including it in the filter chain definition, and you disable it by removing it from the chain definition.
+
+But a new feature added in Shiro 1.2 is the ability to enable or disable filters without removing them from the filter chain. If enabled (the default setting), then a request will be filtered as expected. If disabled, then the filter will allow the request to pass through immediately to the next element in the `FilterChain`. You can trigger a filter's enabled state generally based on a configuration property, or you can even trigger it on a _per request_ basis.
+
+This is a powerful concept because it is often more convenient to enable or disable a filter based on certain requirements than to change the static filter chain definition, which would be permanent and inflexible.
+
+Shiro accomplishes this via its link:static/current/apidocs/org/apache/shiro/web/servlet/OncePerRequestFilter.html[OncePerRequestFilter] abstract parent class. All of Shiro's out-of-the-box Filter implementations subclass this one and therefore are able to be enabled or disabled without removing them from the filter chain. You can subclass this class for your own filter implementations if you need this functionality as well*.
+
+*https://issues.apache.org/jira/browse/SHIRO-224[SHIRO-224] will hopefully enable this feature for any filter, not just those subclassing `OncePerRequestFilter`. If this is important to you, please vote for the issue.
+
+=== General Enabling/Disabling
+
+The link:static/current/apidocs/org/apache/shiro/web/servlet/OncePerRequestFilter.html[OncePerRequestFilter] (and all of its subclasses) supports enabling/disabling across all requests as well as on a per-request basis.
+
+General enabling or disabling of a filter for all requests is done by setting its `enabled` property to true or false. The default setting is `true` since most filters inherently need to execute if they are configured in a chain.
+
+For example, in shiro.ini:
+
+[source,ini]
+----
+[main]
+...
+# configure Shiro's default 'ssl' filter to be disabled while testing:
+ssl.enabled = false
+
+[urls]
+...
+/some/path = ssl, authc
+/another/path = ssl, roles[admin]
+...
+----
+
+This example shows that potentially many URL paths can all require that a request must be secured by an SSL connection. Setting up SSL while in development can be frustrating and time consuming. While in development, you can disable the ssl filter. When deploying to production, you can enable it with one configuration property - something that is much easier than manually changing all of the URL paths or maintaining two Shiro configurations.
+
+=== Request-specific Enabling/Disabling
+
+`OncePerRequestFilter` actually determines if the filter is enabled or disabled based on its `isEnabled(request, response)` method.
+
+This method defaults to returning the value of the `enabled` property, which is used for generally enabling/disabling all requests as mentioned above. If you wanted to enable or disable a filter based on _request specific_ criteria, you can override the `OncePerRequestFilter` `isEnabled(request,response)` method to perform more specific checks.
+
+=== Path-specific Enabling/Disabling
+
+Shiro's link:static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html[PathMatchingFilter] (a subclass of `OncePerRequestFilter` has the ability to react to configuration based on a _specific path_ being filtered. This means you can enable or disable a filter based on the path and the path-specific configuration in addition to the incoming request and response.
+
+If you need to be able to react to the matching path and the path-specific configuration to determine if a filter is enabled or disabled, instead of overriding `OncePerRequestFilter` `isEnabled(request,response)` method, you would override the `PathMatchingFilter` `isEnabled(request,response,path,pathConfig)` method instead.
+
+=== Global Filters
+
+Starting with Shiro 1.6 the ability to define global filters has been added. Adding "global filters" will add additional filters to ALL routes, this includes previously configured filter chains as well as unconfigured paths.
+
+By default, the global filters contains the `invalidRequest` filter. This filter blocks known malicious attacks, see below for configuration details.
+
+Global filters can be customized or disabled, for example
+
+[source,ini]
+----
+[main]
+...
+# disable Global Filters
+filterChainResolver.globalFilters = null
+----
+
+Define the list of global filters:
+
+[source,ini]
+----
+[main]
+...
+filterChainResolver.globalFilters = invalidRequest, port
+----
+
+The `invalidRequest` filter blocks requests with non-ascii characters, semicolons, and backslashes, each of these can be disabled independently to allow for backward compatibility.
+
+[source,ini]
+----
+[main]
+...
+invalidRequest.blockBackslash = true
+invalidRequest.blockSemicolon = true
+invalidRequest.blockNonAscii = true
+...
+----
+
+[NOTE]
+====
+If you currently allowing URL rewriting to allow for a <code>jsessionid</code> in the URL, you must set `blockSemicolon` to `false`.
+
+URL rewriting for `jsessionid` is defined in section "7.1.3" of the Java Servlet Specification, but it is generally NOT recommended.
+====
+
+
+=== HTTP Strict Transport Security (HSTS)
+
+The link:static/current/apidocs/org/apache/shiro/web/filter/authz/SslFilter.html[SslFilter] (and all of its subclasses) supports enabling/disabling HTTP Strict Transport Security (HSTS).
+
+For example, in shiro.ini:
+
+[source,ini]
+----
+[main]
+...
+# configure Shiro's default 'ssl' filter to enabled HSTS:
+ssl.enabled = true
+ssl.hsts.enabled = true
+ssl.hsts.includeSubDomains = true
+
+[urls]
+...
+/some/path = ssl, authc
+/another/path = ssl, roles[admin]
+...
+----
+
+[#session_management]
+== Session Management
+
+=== Servlet Container Sessions
+
+In web environments, Shiro's default session manager link:static/current/apidocs/org/apache/shiro/session/mgt/SessionManager.html[`SessionManager`] implementation is the link:static/current/apidocs/org/apache/shiro/web/session/mgt/ServletContainerSessionManager.html[`ServletContainerSessionManager`].
+This very simple implementation delegates all session management duties (including session clustering if the servlet container supports it) to the runtime Servlet container.
+It is essentially a bridge for Shiro's session API to the servlet container and does little else.
+
+A benefit of using this default is that apps that work with existing servlet container session configuration (timeout, any container-specific clustering mechanisms, etc) will work as expected.
+
+A downside of this default is that you are tied to the servlet container's specific session behavior. For example, if you wanted to cluster sessions, but you used Jetty for testing and Tomcat in production, your container-specific configuration (or code) would not be portable.
+
+==== Servlet Container Session Timeout
+
+If using the default servlet container support, you configure session timeout as expected in your web application's `web.xml` file. For example:
+
+[source,xml]
+----
+<session-config>
+  <!-- web.xml expects the session timeout in minutes: -->
+  <session-timeout>30</session-timeout>
+</session-config>
+----
+
+=== Native Sessions
+
+If you want your session configuration settings and clustering to be portable across servlet containers (e.g. Jetty in testing, but Tomcat or JBoss in production), or you want to control specific session/clustering features, you can enable Shiro's native session management.
+
+The word 'Native' here means that Shiro's own enterprise session management implementation will be used to support all `Subject` and `HttpServletRequest` sessions and bypass the servlet container completely. But rest assured - Shiro implements the relevant parts of the Servlet specification directly so any existing web/http related code works as expected and never needs to 'know' that Shiro is transparently managing sessions.
+
+==== `DefaultWebSessionManager`
+
+To enable native session management for your web application, you will need to configure a native web-capable session manager to override the default servlet container-based one. You can do that by configuring an instance of link:static/current/apidocs/org/apache/shiro/web/session/mgt/DefaultWebSessionManager.html[`DefaultWebSessionManager`] on Shiro's `SecurityManager`. For example, in `shiro.ini`:
+
+*shiro.ini native web session management*
+
+[source,ini]
+----
+[main]
+...
+sessionManager = org.apache.shiro.web.session.mgt.DefaultWebSessionManager
+# configure properties (like session timeout) here if desired
+
+# Use the configured native session manager:
+securityManager.sessionManager = $sessionManager
+----
+
+Once declared, you can configure the `DefaultWebSessionManager` instance with native session options like session timeout and clustering configuration as described in the link:session-management.html[Session Management] section.
+
+===== Native Session Timeout
+
+After configuring the `DefaultWebSessionManager` instance, session timeout is configured as described in link:/session-management.html#SessionManagement-SessionManager-SessionTimeout[Session Management: Session Timeout]
+
+===== Session Cookie
+
+The `DefaultWebSessionManager` supports two web-specific configuration properties:
+
+* `sessionIdCookieEnabled` (a boolean)
+* `sessionIdCookie`, a link:static/current/apidocs/org/apache/shiro/web/servlet/Cookie.html[Cookie] instance.
+
+[INFO]
+.Cookie as a template
+====
+The `sessionIdCookie` property is essentially a template - you configure the `Cookie` instance properties, and this template will be used to set the actual HTTP `Cookie` header at runtime with an appropriate session ID value.
+====
+
+====== Session Cookie Configuration
+
+The DefaultWebSessionManager's `sessionIdCookie` default instance is a link:static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html[`SimpleCookie`]. This simple implementation allows JavaBeans-style property configuration for all of the relevant properties you would want to configure on an http Cookie.
+
+For example, you could set the Cookie domain:
+
+[source,ini]
+----
+[main]
+...
+securityManager.sessionManager.sessionIdCookie.domain = foo.com
+----
+
+See the link:static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html[SimpleCookie JavaDoc] for additional properties.
+
+The cookie's default name is `JSESSIONID` in accordance with the servlet specification. Additionally, Shiro's cookie supports the https://en.wikipedia.org/wiki/HTTP_cookie#HttpOnly_cookie[`HttpOnly`] and https://en.wikipedia.org/wiki/HTTP_cookie#Same-site_cookie[`SameSite`] flags. The `sessionIdCookie` sets `HttpOnly` to `true` and `SameSite` to `LAX` by default for extra security.
+
+[NOTE]
+====
+Shiro's `Cookie` concept supports the `HttpOnly` flag even in Servlet 2.4 and 2.5 environments (whereas the Servlet API only supports it natively in 2.6 or later).
+====
+
+====== Disabling the Session Cookie
+
+If you do not want session cookies to be used, you can disable their use by configuring the `sessionIdCookieEnabled` property to false. For example:
+
+*Disabling native session cookies*
+
+[source,ini]
+----
+[main]
+...
+securityManager.sessionManager.sessionIdCookieEnabled = false
+----
+
+== Remember Me Services
+
+Shiro will perform 'rememberMe' services if the `AuthenticationToken` implements the link:static/current/apidocs/org/apache/shiro/authc/RememberMeAuthenticationToken.html[`org.apache.shiro.authc.RememberMeAuthenticationToken`] interface. This interface specifies a method:
+
+[source,java]
+----
+boolean isRememberMe();
+----
+
+If this method returns `true`, Shiro will remember the end-user's identity across sessions.
+
+[TIP]
+.UsernamePasswordToken and RememberMe
+====
+The frequently-used `UsernamePasswordToken` already implements the `RememberMeAuthenticationToken` interface and supports rememberMe logins.
+====
+
+
+=== Programmatic Support
+
+To use rememberMe programmatically, you can set the value to `true` on a class that supports this configuration. For example, using the standard `UsernamePasswordToken`:
+
+[source,java]
+----
+UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+
+token.setRememberMe(true);
+
+SecurityUtils.getSubject().login(token);
+...
+----
+
+=== Form-based Login
+
+For web applications, the `authc` filter is by default a link:static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html[`FormAuthenticationFilter`]. This supports reading the 'rememberMe' boolean as a form/request parameter. By default, it expects the request param to be named `rememberMe`. Here is an example shiro.ini config supporting this:
+
+[source,ini]
+----
+[main]
+authc.loginUrl = /login.jsp
+
+[urls]
+
+# your login form page here:
+login.jsp = authc
+----
+
+And in your web form, have a checkbox named 'rememberMe':
+
+[source,html]
+----
+<form ...>
+
+   Username: <input type="text" name="username"/> <br/>
+   Password: <input type="password" name="password"/>
+    ...
+   <input type="checkbox" name="rememberMe" value="true"/>Remember Me?
+   ...
+</form>
+----
+
+By default, the `FormAuthenticationFilter` will look for request parameters named `username`, `password` and `rememberMe`. If these are different than the form field names that you use in your form, you'll want to configure the names on the `FormAuthenticationFilter`. For example, in `shiro.ini`:
+
+[source,ini]
+----
+[main]
+...
+authc.loginUrl = /whatever.jsp
+authc.usernameParam = somethingOtherThanUsername
+authc.passwordParam = somethingOtherThanPassword
+authc.rememberMeParam = somethingOtherThanRememberMe
+...
+----
+
+=== Cookie configuration
+
+You can configure how the `rememberMe` cookie functions by setting the default {{RememberMeManager}}s various cookie properties. For example, in shiro.ini:
+
+[source,ini]
+----
+[main]
+...
+
+securityManager.rememberMeManager.cookie.name = foo
+securityManager.rememberMeManager.cookie.maxAge = blah
+...
+----
+
+See the link:static/current/apidocs/org/apache/shiro/web/mgt/CookieRememberMeManager.html[`CookieRememberMeManager`] and the supporting link:static/current/apidocs/src-html/org/apache/shiro/web/servlet/SimpleCookie.html[`SimpleCookie`] JavaDoc for configuration properties.
+
+=== Custom `RememberMeManager`
+
+It should be noted that if the default cookie-based `RememberMeManager` implementation does not meet your needs, you can plug in any you like in to the `securityManager` like you would configure any other object reference:
+
+[source,ini]
+----
+[main]
+...
+rememberMeManager = com.my.impl.RememberMeManager
+securityManager.rememberMeManager = $rememberMeManager
+----
+
+[#tag_library]
+== JSP / GSP Tag Library
+
+Apache Shiro provides a `Subject`-aware JSP/GSP tag library that allows you to control your JSP, JSTL or GSP page output based on the current Subject's state. This is quite useful for personalizing views based on the identity and authorization state of the current user viewing the web page.
+
+=== Tag Library Configuration
+
+The Tag Library Descriptor (TLD) file is bundled in `shiro-web.jar` in the `META-INF/shiro.tld` file. To use any of the tags, add the following line to the top of your JSP page (or wherever you define page directives):
+
+[source,html]
+----
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+----
+
+We've used the `shiro` prefix to indicate the shiro tag library namespace, but you can assign whatever name you like.
+
+Now we'll cover each tag and show how it might be used to render a page.
+
+[#web_guesttag]
+===  The `guest` tag
+
+The `guest` tag will display its wrapped content only if the current `Subject` is considered a 'guest'. A guest is any `Subject` that does not have an identity. That is, we don't know who the user is because they have not logged in and they are not remembered (from Remember Me services) from a previous site visit.
+
+Example:
+
+[source,html]
+----
+<shiro:guest>
+    Hi there!  Please <a href="login.jsp">Login</a> or <a href="signup.jsp">Signup</a> today!
+</shiro:guest>
+----
+
+The `guest` tag is the logical opposite of the <<web_usertag,`user`>> tag.
+
+[#web_usertag]
+=== The `user` tag
+
+The `user` tag will display its wrapped content only if the current `Subject` is considered a 'user'. A 'user' in this context is defined as a `Subject` with a known identity, either from a successful authentication or from 'RememberMe' services. Note that this tag is semantically different from the <<web_authenticatedtag,authenticated>> tag, which is more restrictive than this tag.
+
+Example:
+
+[source,html]
+----
+<shiro:user>
+    Welcome back John!  Not John? Click <a href="login.jsp">here<a> to login.
+</shiro:user>
+----
+
+The `user` tag is the logical opposite of the <<web_guesttag,`guest`>> tag.
+
+[#web_authenticatedtag]
+=== The `authenticated` tag
+
+Displays body content only if the current user has successfully authenticated _during their current session_. It is more restrictive than the 'user' tag. It is logically opposite to the 'notAuthenticated' tag.
+
+The `authenticated` tag will display its wrapped content only if the current `Subject` has successfully authenticated _during their current session_. It is a more restrictive tag than the <<web_usertag,user>>, which is used to guarantee identity in sensitive workflows.
+
+Example:
+
+[source,html]
+----
+<shiro:authenticated>
+    <a href="updateAccount.jsp">Update your contact information</a>.
+</shiro:authenticated>
+----
+
+The `authenticated` tag is the logical opposite of the <<web_notauthenticatedtag,`notAuthenticated`>> tag.
+
+[#web_notauthenticatedtag]
+=== The `notAuthenticated` tag
+
+The `notAuthenticated` tag will display its wrapped content if the current `Subject` has *NOT* yet successfully authenticated during the current session.
+
+Example:
+
+[source,html]
+----
+<shiro:notAuthenticated>
+    Please <a href="login.jsp">login</a> in order to update your credit card information.
+</shiro:notAuthenticated>
+----
+
+The `notAuthenticated` tag is the logical opposite of the <<web_authenticatedtag,`authenticated`>> tag.
+
+=== The `principal` tag
+
+The `principal` tag will output the Subject's link:static/current/apidocs/org/apache/shiro/subject/Subject.html#[[#]]#getPrincipal--[`principal`] (identifying attribute) or a property of that principal.
+
+Without any tag attributes, the tag will render the `toString()` value of the principal. For example (assuming the principal is a String username):
+
+[source,html]
+----
+Hello, <shiro:principal/>, how are you today?
+----
+
+This is (mostly) equivalent to the following:
+
+[source,jsp]
+----
+Hello, <%= SecurityUtils.getSubject().getPrincipal().toString() %>, how are you today?
+----
+
+==== Typed principal
+
+The `principal` tag assumes by default that the principal to print is the `subject.getPrincipal()` value. But if you wanted to print a value that is _not_ the primary principal, but another in the Subject's {link:static/current/apidocs/org/apache/shiro/subject/Subject.html#[[#]]#getPrincipals--[principal collection], you can acquire that principal by type and print that value instead.
+
+For example, printing the Subject's user ID (and not the username), assuming the ID was in the principal collection:
+
+[source,html]
+----
+User ID: <principal type="java.lang.Integer"/>
+----
+
+This is (mostly) equivalent to the following:
+
+[source,jsp]
+----
+User ID: <%= SecurityUtils.getSubject().getPrincipals().oneByType(Integer.class).toString() %>
+----
+
+==== Principal property
+
+But what if the principal (either the default primary principal or 'typed' principal above) is a complex object and not a simple string, and you wanted to reference a property on that principal? You can use the `property` attribute to indicate the name of the property to read (must be accessible via a JavaBeans-compatible getter method). For example (assuming the primary principal is a User object):
+
+[source,html]
+----
+Hello, <shiro:principal property="firstName"/>, how are you today?
+----
+
+This is (mostly) equivalent to the following:
+
+[source,jsp]
+----
+Hello, <%= SecurityUtils.getSubject().getPrincipal().getFirstName().toString() %>, how are you today?
+----
+
+Or, combined with the type attribute:
+
+[source,html]
+----
+Hello, <shiro:principal type="com.foo.User" property="firstName"/>, how are you today?
+----
+
+this is largely equivalent to the following:
+
+[source,jsp]
+----
+Hello, <%= SecurityUtils.getSubject().getPrincipals().oneByType(com.foo.User.class).getFirstName().toString() %>, how are you today?
+----
+
+[#web_hasroletag]
+=== The `hasRole` tag
+
+The `hasRole` tag will display its wrapped content only if the current `Subject` is assigned the specified role.
+
+For example:
+
+[source,html]
+----
+<shiro:hasRole name="administrator">
+    <a href="admin.jsp">Administer the system</a>
+</shiro:hasRole>
+----
+
+The `hasRole` tag is the logical opposite of the <<web_lacksroletag,lacksRole>> tag.
+
+[#web_lacksroletag]
+=== The `lacksRole` tag
+
+The `lacksRole` tag will display its wrapped content only if the current `Subject` *is NOT* assigned the specified role.
+
+For example:
+
+[source,html]
+----
+<shiro:lacksRole name="administrator">
+    Sorry, you are not allowed to administer the system.
+</shiro:lacksRole>
+----
+
+The `lacksRole` tag is the logical opposite of the <<web_hasroletag,hasRole>> tag.
+
+=== The `hasAnyRole` tag
+
+The `hasAnyRole` tag will display its wrapped content if the current `Subject` is assigned _any_ of the specified roles from a comma-delimited list of role names.
+
+For example:
+
+[source,html]
+----
+<shiro:hasAnyRoles name="developer, project manager, administrator">
+    You are either a developer, project manager, or administrator.
+</shiro:hasAnyRoles>
+----
+
+The `hasAnyRole` tag does not currently have a logically opposite tag.
+
+[#web_haspermissiontag]
+=== The `hasPermission` tag
+
+The `hasPermission` tag will display its wrapped content only if the current `Subject` 'has' (implies) the specified permission. That is, the user has the specified ability.
+
+For example:
+
+[source,html]
+----
+<shiro:hasPermission name="user:create">
+    <a href="createUser.jsp">Create a new User</a>
+</shiro:hasPermission>
+----
+
+The `hasPermission` tag is the logical opposite of the <<web_lackspermissiontag,lacksPermission>> tag.
+
+[#web_lackspermissiontag]
+=== The `lacksPermission` tag
+
+The `lacksPermission` tag will display its wrapped content only if the current `Subject` *DOES NOT* have (imply) the specified permission. That is, the user *DOES NOT* have the specified ability.
+
+For example:
+
+[source,html]
+----
+<shiro:lacksPermission name="user:delete">
+    Sorry, you are not allowed to delete user accounts.
+</shiro:lacksPermission>
+----
+
+The `lacksPermission` tag is the logical opposite of the <<web_haspermissiontag,hasPermission>> tag.
+
+++++
+<@lendahand.lendahand />
+++++
