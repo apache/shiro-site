@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ThreadContext.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Shiro :: Core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.util</a> &gt; <span class="el_source">ThreadContext.java</span></div><h1>ThreadContext.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.util;
+
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+
+/**
+ * A ThreadContext provides a means of binding and unbinding objects to the
+ * current thread based on key/value pairs.
+ * &lt;p/&gt;
+ * &lt;p&gt;An internal {@link java.util.HashMap} is used to maintain the key/value pairs
+ * for each thread.&lt;/p&gt;
+ * &lt;p/&gt;
+ * &lt;p&gt;If the desired behavior is to ensure that bound data is not shared across
+ * threads in a pooled or reusable threaded environment, the application (or more likely a framework) must
+ * bind and remove any necessary values at the beginning and end of stack
+ * execution, respectively (i.e. individually explicitly or all via the &lt;tt&gt;clear&lt;/tt&gt; method).&lt;/p&gt;
+ *
+ * @see #remove()
+ * @since 0.1
+ */
+public abstract class ThreadContext {
+
+    /**
+     * Private internal log instance.
+     */
+<span class="fc" id="L51">    private static final Logger log = LoggerFactory.getLogger(ThreadContext.class);</span>
+
+<span class="fc" id="L53">    public static final String SECURITY_MANAGER_KEY = ThreadContext.class.getName() + &quot;_SECURITY_MANAGER_KEY&quot;;</span>
+<span class="fc" id="L54">    public static final String SUBJECT_KEY = ThreadContext.class.getName() + &quot;_SUBJECT_KEY&quot;;</span>
+
+<span class="fc" id="L56">    private static final ThreadLocal&lt;Map&lt;Object, Object&gt;&gt; resources = new InheritableThreadLocalMap&lt;Map&lt;Object, Object&gt;&gt;();</span>
+
+    /**
+     * Default no-argument constructor.
+     */
+<span class="nc" id="L61">    protected ThreadContext() {</span>
+<span class="nc" id="L62">    }</span>
+
+    /**
+     * Returns the ThreadLocal Map. This Map is used internally to bind objects
+     * to the current thread by storing each object under a unique key.
+     *
+     * @return the map of bound resources
+     */
+    public static Map&lt;Object, Object&gt; getResources() {
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">        if (resources.get() == null){</span>
+<span class="fc" id="L72">            return Collections.emptyMap();</span>
+        } else {
+<span class="nc" id="L74">            return new HashMap&lt;Object, Object&gt;(resources.get());</span>
+        }
+    }
+
+    /**
+     * Allows a caller to explicitly set the entire resource map.  This operation overwrites everything that existed
+     * previously in the ThreadContext - if you need to retain what was on the thread prior to calling this method,
+     * call the {@link #getResources()} method, which will give you the existing state.
+     *
+     * @param newResources the resources to replace the existing {@link #getResources() resources}.
+     * @since 1.0
+     */
+    public static void setResources(Map&lt;Object, Object&gt; newResources) {
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        if (CollectionUtils.isEmpty(newResources)) {</span>
+<span class="nc" id="L88">            return;</span>
+        }
+<span class="nc" id="L90">        ensureResourcesInitialized();</span>
+<span class="nc" id="L91">        resources.get().clear();</span>
+<span class="nc" id="L92">        resources.get().putAll(newResources);</span>
+<span class="nc" id="L93">    }</span>
+
+    /**
+     * Returns the value bound in the {@code ThreadContext} under the specified {@code key}, or {@code null} if there
+     * is no value for that {@code key}.
+     *
+     * @param key the map key to use to lookup the value
+     * @return the value bound in the {@code ThreadContext} under the specified {@code key}, or {@code null} if there
+     *         is no value for that {@code key}.
+     * @since 1.0
+     */
+    private static Object getValue(Object key) {
+<span class="fc" id="L105">        Map&lt;Object, Object&gt; perThreadResources = resources.get();</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        return perThreadResources != null ? perThreadResources.get(key) : null;</span>
+    }
+
+    private static void ensureResourcesInitialized(){
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        if (resources.get() == null){</span>
+<span class="fc" id="L111">           resources.set(new HashMap&lt;Object, Object&gt;());</span>
+        }
+<span class="fc" id="L113">    }</span>
+
+    /**
+     * Returns the object for the specified &lt;code&gt;key&lt;/code&gt; that is bound to
+     * the current thread.
+     *
+     * @param key the key that identifies the value to return
+     * @return the object keyed by &lt;code&gt;key&lt;/code&gt; or &lt;code&gt;null&lt;/code&gt; if
+     *         no value exists for the specified &lt;code&gt;key&lt;/code&gt;
+     */
+    public static Object get(Object key) {
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">        if (log.isTraceEnabled()) {</span>
+<span class="nc" id="L125">            String msg = &quot;get() - in thread [&quot; + Thread.currentThread().getName() + &quot;]&quot;;</span>
+<span class="nc" id="L126">            log.trace(msg);</span>
+        }
+
+<span class="fc" id="L129">        Object value = getValue(key);</span>
+<span class="pc bpc" id="L130" title="1 of 4 branches missed.">        if ((value != null) &amp;&amp; log.isTraceEnabled()) {</span>
+<span class="nc" id="L131">            String msg = &quot;Retrieved value of type [&quot; + value.getClass().getName() + &quot;] for key [&quot; +</span>
+<span class="nc" id="L132">                    key + &quot;] &quot; + &quot;bound to thread [&quot; + Thread.currentThread().getName() + &quot;]&quot;;</span>
+<span class="nc" id="L133">            log.trace(msg);</span>
+        }
+<span class="fc" id="L135">        return value;</span>
+    }
+
+    /**
+     * Binds &lt;tt&gt;value&lt;/tt&gt; for the given &lt;code&gt;key&lt;/code&gt; to the current thread.
+     * &lt;p/&gt;
+     * &lt;p&gt;A &lt;tt&gt;null&lt;/tt&gt; &lt;tt&gt;value&lt;/tt&gt; has the same effect as if &lt;tt&gt;remove&lt;/tt&gt; was called for the given
+     * &lt;tt&gt;key&lt;/tt&gt;, i.e.:
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * if ( value == null ) {
+     *     remove( key );
+     * }&lt;/pre&gt;
+     *
+     * @param key   The key with which to identify the &lt;code&gt;value&lt;/code&gt;.
+     * @param value The value to bind to the thread.
+     * @throws IllegalArgumentException if the &lt;code&gt;key&lt;/code&gt; argument is &lt;tt&gt;null&lt;/tt&gt;.
+     */
+    public static void put(Object key, Object value) {
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">        if (key == null) {</span>
+<span class="nc" id="L155">            throw new IllegalArgumentException(&quot;key cannot be null&quot;);</span>
+        }
+
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">        if (value == null) {</span>
+<span class="nc" id="L159">            remove(key);</span>
+<span class="nc" id="L160">            return;</span>
+        }
+
+<span class="fc" id="L163">        ensureResourcesInitialized();</span>
+<span class="fc" id="L164">        resources.get().put(key, value);</span>
+
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if (log.isTraceEnabled()) {</span>
+<span class="nc" id="L167">            String msg = &quot;Bound value of type [&quot; + value.getClass().getName() + &quot;] for key [&quot; +</span>
+<span class="nc" id="L168">                    key + &quot;] to thread &quot; + &quot;[&quot; + Thread.currentThread().getName() + &quot;]&quot;;</span>
+<span class="nc" id="L169">            log.trace(msg);</span>
+        }
+<span class="fc" id="L171">    }</span>
+
+    /**
+     * Unbinds the value for the given &lt;code&gt;key&lt;/code&gt; from the current
+     * thread.
+     *
+     * @param key The key identifying the value bound to the current thread.
+     * @return the object unbound or &lt;tt&gt;null&lt;/tt&gt; if there was nothing bound
+     *         under the specified &lt;tt&gt;key&lt;/tt&gt; name.
+     */
+    public static Object remove(Object key) {
+<span class="nc" id="L182">        Map&lt;Object, Object&gt; perThreadResources = resources.get();</span>
+<span class="nc bnc" id="L183" title="All 2 branches missed.">        Object value = perThreadResources != null ? perThreadResources.remove(key) : null;</span>
+
+<span class="nc bnc" id="L185" title="All 4 branches missed.">        if ((value != null) &amp;&amp; log.isTraceEnabled()) {</span>
+<span class="nc" id="L186">            String msg = &quot;Removed value of type [&quot; + value.getClass().getName() + &quot;] for key [&quot; +</span>
+<span class="nc" id="L187">                    key + &quot;]&quot; + &quot;from thread [&quot; + Thread.currentThread().getName() + &quot;]&quot;;</span>
+<span class="nc" id="L188">            log.trace(msg);</span>
+        }
+
+<span class="nc" id="L191">        return value;</span>
+    }
+
+    /**
+     * {@link ThreadLocal#remove Remove}s the underlying {@link ThreadLocal ThreadLocal} from the thread.
+     * &lt;p/&gt;
+     * This method is meant to be the final 'clean up' operation that is called at the end of thread execution to
+     * prevent thread corruption in pooled thread environments.
+     *
+     * @since 1.0
+     */
+    public static void remove() {
+<span class="fc" id="L203">        resources.remove();</span>
+<span class="fc" id="L204">    }</span>
+
+    /**
+     * Convenience method that simplifies retrieval of the application's SecurityManager instance from the current
+     * thread. If there is no SecurityManager bound to the thread (probably because framework code did not bind it
+     * to the thread), this method returns &lt;tt&gt;null&lt;/tt&gt;.
+     * &lt;p/&gt;
+     * It is merely a convenient wrapper for the following:
+     * &lt;p/&gt;
+     * &lt;code&gt;return (SecurityManager)get( SECURITY_MANAGER_KEY );&lt;/code&gt;
+     * &lt;p/&gt;
+     * This method only returns the bound value if it exists - it does not remove it
+     * from the thread.  To remove it, one must call {@link #unbindSecurityManager() unbindSecurityManager()} instead.
+     *
+     * @return the Subject object bound to the thread, or &lt;tt&gt;null&lt;/tt&gt; if there isn't one bound.
+     * @since 0.9
+     */
+    public static SecurityManager getSecurityManager() {
+<span class="fc" id="L222">        return (SecurityManager) get(SECURITY_MANAGER_KEY);</span>
+    }
+
+
+    /**
+     * Convenience method that simplifies binding the application's SecurityManager instance to the ThreadContext.
+     * &lt;p/&gt;
+     * &lt;p&gt;The method's existence is to help reduce casting in code and to simplify remembering of
+     * ThreadContext key names.  The implementation is simple in that, if the SecurityManager is not &lt;tt&gt;null&lt;/tt&gt;,
+     * it binds it to the thread, i.e.:
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * if (securityManager != null) {
+     *     put( SECURITY_MANAGER_KEY, securityManager);
+     * }&lt;/pre&gt;
+     *
+     * @param securityManager the application's SecurityManager instance to bind to the thread.  If the argument is
+     *                        null, nothing will be done.
+     * @since 0.9
+     */
+    public static void bind(SecurityManager securityManager) {
+<span class="pc bpc" id="L243" title="1 of 2 branches missed.">        if (securityManager != null) {</span>
+<span class="fc" id="L244">            put(SECURITY_MANAGER_KEY, securityManager);</span>
+        }
+<span class="fc" id="L246">    }</span>
+
+    /**
+     * Convenience method that simplifies removal of the application's SecurityManager instance from the thread.
+     * &lt;p/&gt;
+     * The implementation just helps reduce casting and remembering of the ThreadContext key name, i.e it is
+     * merely a convenient wrapper for the following:
+     * &lt;p/&gt;
+     * &lt;code&gt;return (SecurityManager)remove( SECURITY_MANAGER_KEY );&lt;/code&gt;
+     * &lt;p/&gt;
+     * If you wish to just retrieve the object from the thread without removing it (so it can be retrieved later
+     * during thread execution), use the {@link #getSecurityManager() getSecurityManager()} method instead.
+     *
+     * @return the application's SecurityManager instance previously bound to the thread, or &lt;tt&gt;null&lt;/tt&gt; if there
+     *         was none bound.
+     * @since 0.9
+     */
+    public static SecurityManager unbindSecurityManager() {
+<span class="nc" id="L264">        return (SecurityManager) remove(SECURITY_MANAGER_KEY);</span>
+    }
+
+    /**
+     * Convenience method that simplifies retrieval of a thread-bound Subject.  If there is no
+     * Subject bound to the thread, this method returns &lt;tt&gt;null&lt;/tt&gt;.  It is merely a convenient wrapper
+     * for the following:
+     * &lt;p/&gt;
+     * &lt;code&gt;return (Subject)get( SUBJECT_KEY );&lt;/code&gt;
+     * &lt;p/&gt;
+     * This method only returns the bound value if it exists - it does not remove it
+     * from the thread.  To remove it, one must call {@link #unbindSubject() unbindSubject()} instead.
+     *
+     * @return the Subject object bound to the thread, or &lt;tt&gt;null&lt;/tt&gt; if there isn't one bound.
+     * @since 0.2
+     */
+    public static Subject getSubject() {
+<span class="fc" id="L281">        return (Subject) get(SUBJECT_KEY);</span>
+    }
+
+
+    /**
+     * Convenience method that simplifies binding a Subject to the ThreadContext.
+     * &lt;p/&gt;
+     * &lt;p&gt;The method's existence is to help reduce casting in your own code and to simplify remembering of
+     * ThreadContext key names.  The implementation is simple in that, if the Subject is not &lt;tt&gt;null&lt;/tt&gt;,
+     * it binds it to the thread, i.e.:
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * if (subject != null) {
+     *     put( SUBJECT_KEY, subject );
+     * }&lt;/pre&gt;
+     *
+     * @param subject the Subject object to bind to the thread.  If the argument is null, nothing will be done.
+     * @since 0.2
+     */
+    public static void bind(Subject subject) {
+<span class="pc bpc" id="L301" title="1 of 2 branches missed.">        if (subject != null) {</span>
+<span class="fc" id="L302">            put(SUBJECT_KEY, subject);</span>
+        }
+<span class="fc" id="L304">    }</span>
+
+    /**
+     * Convenience method that simplifies removal of a thread-local Subject from the thread.
+     * &lt;p/&gt;
+     * The implementation just helps reduce casting and remembering of the ThreadContext key name, i.e it is
+     * merely a convenient wrapper for the following:
+     * &lt;p/&gt;
+     * &lt;code&gt;return (Subject)remove( SUBJECT_KEY );&lt;/code&gt;
+     * &lt;p/&gt;
+     * If you wish to just retrieve the object from the thread without removing it (so it can be retrieved later during
+     * thread execution), you should use the {@link #getSubject() getSubject()} method for that purpose.
+     *
+     * @return the Subject object previously bound to the thread, or &lt;tt&gt;null&lt;/tt&gt; if there was none bound.
+     * @since 0.2
+     */
+    public static Subject unbindSubject() {
+<span class="nc" id="L321">        return (Subject) remove(SUBJECT_KEY);</span>
+    }
+    
+<span class="fc" id="L324">    private static final class InheritableThreadLocalMap&lt;T extends Map&lt;Object, Object&gt;&gt; extends InheritableThreadLocal&lt;Map&lt;Object, Object&gt;&gt; {</span>
+
+        /**
+         * This implementation was added to address a
+         * &lt;a href=&quot;http://jsecurity.markmail.org/search/?q=#query:+page:1+mid:xqi2yxurwmrpqrvj+state:results&quot;&gt;
+         * user-reported issue&lt;/a&gt;.
+         * @param parentValue the parent value, a HashMap as defined in the {@link #initialValue()} method.
+         * @return the HashMap to be used by any parent-spawned child threads (a clone of the parent HashMap).
+         */
+        @SuppressWarnings({&quot;unchecked&quot;})
+        protected Map&lt;Object, Object&gt; childValue(Map&lt;Object, Object&gt; parentValue) {
+<span class="fc bfc" id="L335" title="All 2 branches covered.">            if (parentValue != null) {</span>
+<span class="fc" id="L336">                return (Map&lt;Object, Object&gt;) ((HashMap&lt;Object, Object&gt;) parentValue).clone();</span>
+            } else {
+<span class="fc" id="L338">                return null;</span>
+            }
+        }
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

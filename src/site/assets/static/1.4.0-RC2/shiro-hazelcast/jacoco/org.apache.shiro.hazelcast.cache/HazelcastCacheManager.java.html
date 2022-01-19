@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HazelcastCacheManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Shiro :: Support :: Hazelcast</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.hazelcast.cache</a> &gt; <span class="el_source">HazelcastCacheManager.java</span></div><h1>HazelcastCacheManager.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.hazelcast.cache;
+
+import com.hazelcast.config.Config;
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
+import org.apache.shiro.ShiroException;
+import org.apache.shiro.cache.Cache;
+import org.apache.shiro.cache.CacheException;
+import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.cache.MapCache;
+import org.apache.shiro.util.Destroyable;
+import org.apache.shiro.util.Initializable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+
+/**
+ * A {@code CacheManager} implementation backed by &lt;a href=&quot;http://www.hazelcast.com/&quot;&gt;Hazelcast&lt;/a&gt;,
+ * &amp;quot;an open source clustering and highly scalable data distribution platform for Java&amp;quot;
+ * &lt;p/&gt;
+ * This implementation interacts with a {@link HazelcastInstance} to
+ * {@link HazelcastInstance#getMap(String) acquire} named {@link java.util.concurrent.ConcurrentMap ConcurrentMap}
+ * instances.  Those clustered/distributed Map instances are then wrapped and made available to {@code CacheManager}
+ * callers as {@link MapCache} instances via {@link #getCache(String)}.
+ * &lt;h2&gt;Configuration&lt;/h2&gt;
+ * This implementation's backing {@code HazelcastInstance} can be configured in one of three ways:
+ * &lt;ol&gt;
+ * &lt;li&gt;Doing nothing and leveraging default Hazelcast configuration mechanisms&lt;/li&gt;
+ * &lt;li&gt;Supplying an already-existing {@code HazelcastInstance}&lt;/li&gt;
+ * &lt;li&gt;Supplying a {@link Config} instance and using that to create a new {@code HazelcastInstance}&lt;/li&gt;
+ * &lt;/ol&gt;
+ * &lt;h3&gt;Default Configuration&lt;/h3&gt;
+ * If you simply instantiate a {@code HazelcastCacheManager} and do nothing further, its backing
+ * {@link HazelcastInstance} instance will be created automatically by calling
+ * {@link Hazelcast#newHazelcastInstance(com.hazelcast.config.Config) Hazelcast.newHazelcastInstance(null)}.
+ * &lt;p/&gt;
+ * The null argument instructs Hazelcast to use whatever default configuration mechanism it has at its disposal,
+ * usually a {@code hazelcast.xml} file at the root of the classpath, or if that is not present, the
+ * {@code hazelcast-default.xml} file contained in the Hazelcast {@code .jar} file itself.
+ * &lt;p/&gt;
+ * &lt;h3&gt;An existing {@code HazelcastInstance}&lt;/h3&gt;
+ * If you have created a {@code HazelcastInstance} outside of Shiro's knowledge/control, you can simply configure it
+ * to be used by calling {@link #setHazelcastInstance(com.hazelcast.core.HazelcastInstance) setHazelcastInstance}.
+ * &lt;p/&gt;
+ * &lt;h3&gt;A {@link Config} instance&lt;/h3&gt;
+ * If you do not want to use the above two options, you can have programmatic control over all of Hazelcast's
+ * configuration by &lt;a href=&quot;http://www.hazelcast.com/docs/2.5/manual/multi_html/ch12.html&quot;&gt;creating and configuring a
+ * Config instance&lt;/a&gt;.
+ * &lt;p/&gt;
+ * Once constructed, you can set it via {@link #setConfig(com.hazelcast.config.Config) setConfig(config)}. This config
+ * instance will be used to acquire a new Hazelcast instance by calling
+ * {@link Hazelcast#newHazelcastInstance(Config) Hazelcast.newHazelcastInstance(config)}
+ *
+ * @see &lt;a href=&quot;http://www.hazelcast.com/docs/2.5/manual/multi_html/ch12.html&quot;&gt;Hazelcast Configuration Documentation&lt;/a&gt;
+ * @since 1.3
+ */
+<span class="fc" id="L76">public class HazelcastCacheManager implements CacheManager, Initializable, Destroyable {</span>
+
+<span class="fc" id="L78">    public static final Logger log = LoggerFactory.getLogger(HazelcastCacheManager.class);</span>
+
+<span class="fc" id="L80">    private boolean implicitlyCreated = false;</span>
+    private HazelcastInstance hazelcastInstance;
+    private Config config;
+
+    /**
+     * Returns a {@link MapCache} instance representing the named Hazelcast-managed
+     * {@link com.hazelcast.core.IMap IMap}.  The Hazelcast Map is obtained by calling
+     * {@link HazelcastInstance#getMap(String) hazelcastInstance.getMap(name)}.
+     *
+     * @param name the name of the cache to acquire.
+     * @param &lt;K&gt; the type of map key
+     * @param &lt;V&gt; the type of map value
+     * @return a {@link MapCache} instance representing the named Hazelcast-managed {@link com.hazelcast.core.IMap IMap}.
+     * @throws CacheException
+     * @see HazelcastInstance#getMap(String)
+     * @see #ensureHazelcastInstance()
+     *
+     */
+    public &lt;K, V&gt; Cache&lt;K, V&gt; getCache(String name) throws CacheException {
+<span class="fc" id="L99">        Map&lt;K, V&gt; map = ensureHazelcastInstance().getMap(name); //returned map is a ConcurrentMap</span>
+<span class="fc" id="L100">        return new MapCache&lt;K, V&gt;(name, map);</span>
+    }
+
+    /**
+     * Ensures that this implementation has a backing {@link HazelcastInstance}, and if not, implicitly creates one
+     * via {@link #createHazelcastInstance()}.
+     *
+     * @return the backing (potentially newly created) {@code HazelcastInstance}.
+     * @see #createHazelcastInstance()
+     * @see HazelcastInstance
+     */
+    protected HazelcastInstance ensureHazelcastInstance() {
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">        if (this.hazelcastInstance == null) {</span>
+<span class="fc" id="L113">            this.hazelcastInstance = createHazelcastInstance();</span>
+<span class="fc" id="L114">            this.implicitlyCreated = true;</span>
+        }
+<span class="fc" id="L116">        return this.hazelcastInstance;</span>
+    }
+
+    /**
+     * Initializes this instance by {@link #ensureHazelcastInstance() ensuring} there is a backing
+     * {@link HazelcastInstance}.
+     *
+     * @throws ShiroException
+     * @see #ensureHazelcastInstance()
+     * @see HazelcastInstance
+     */
+    public void init() throws ShiroException {
+<span class="fc" id="L128">        ensureHazelcastInstance();</span>
+<span class="fc" id="L129">    }</span>
+
+    /**
+     * Implicitly creates and returns a new {@link HazelcastInstance} that will be used to back this implementation.
+     * This implementation calls:
+     * &lt;pre&gt;
+     * return Hazelcast.newHazelcastInstance(this.config);
+     * &lt;/pre&gt;
+     * using any {@link #setConfig(com.hazelcast.config.Config) configured} {@code Config} object.  If no config
+     * object has been specified, {@code this.config} will be {@code null}, thereby using Hazelcast's
+     * &lt;a href=&quot;http://www.hazelcast.com/docs/2.5/manual/multi_html/ch12.html&quot;&gt;default configuration mechanism&lt;/a&gt;.
+     * &lt;p/&gt;
+     * Can be overridden by subclasses for custom creation behavior.
+     *
+     * @return a new {@link HazelcastInstance} that will be used to back this implementation
+     * @see Hazelcast#newHazelcastInstance(com.hazelcast.config.Config)
+     * @see Config
+     */
+    protected HazelcastInstance createHazelcastInstance() {
+<span class="fc" id="L148">        return Hazelcast.newHazelcastInstance(this.config);</span>
+    }
+
+    //needed for unit tests only - not part of Shiro's public API
+
+    /**
+     * NOT PART OF SHIRO'S ACCESSIBLE API.  DO NOT DEPEND ON THIS.  This method was added for testing purposes only.
+     * &lt;p/&gt;
+     * Returns {@code true} if this {@code HazelcastCacheManager} instance implicitly created the backing
+     * {@code HazelcastInstance}, or {@code false} if one was externally provided via
+     * {@link #setHazelcastInstance(com.hazelcast.core.HazelcastInstance) setHazelcastInstance}.
+     *
+     * @return {@code true} if this {@code HazelcastCacheManager} instance implicitly created the backing
+     *         {@code HazelcastInstance}, or {@code false} if one was externally provided via
+     *         {@link #setHazelcastInstance(com.hazelcast.core.HazelcastInstance) setHazelcastInstance}.
+     */
+    protected final boolean isImplicitlyCreated() {
+<span class="fc" id="L165">        return this.implicitlyCreated;</span>
+    }
+
+    /**
+     * Destroys any {@link #ensureHazelcastInstance() implicitly created} backing {@code HazelcastInstance}.  If the
+     * backing Hazelcast was not implicitly created (i.e. because it was configured externally and supplied via
+     * {@link #setHazelcastInstance(com.hazelcast.core.HazelcastInstance) setHazelcastInstance}), this method does
+     * nothing.
+     *
+     * @throws Exception if there is a problem shutting down
+     */
+    public void destroy() throws Exception {
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">        if (this.implicitlyCreated) {</span>
+            try {
+<span class="fc" id="L179">                this.hazelcastInstance.getLifecycleService().shutdown();</span>
+<span class="fc" id="L180">            } catch (Throwable t) {</span>
+<span class="pc bpc" id="L181" title="1 of 2 branches missed.">                if (log.isWarnEnabled()) {</span>
+<span class="fc" id="L182">                    log.warn(&quot;Unable to cleanly shutdown implicitly created HazelcastInstance.  &quot; +</span>
+                            &quot;Ignoring (shutting down)...&quot;, t);
+                }
+            } finally {
+<span class="pc" id="L186">                this.hazelcastInstance = null;</span>
+<span class="pc" id="L187">                this.implicitlyCreated = false;</span>
+<span class="fc" id="L188">            }</span>
+        }
+<span class="fc" id="L190">    }</span>
+
+    /**
+     * Returns the {@code HazelcastInstance} from which named {@link java.util.concurrent.ConcurrentMap ConcurrentMap}
+     * instances will be acquired to create {@link MapCache} instances.
+     *
+     * @return the {@code HazelcastInstance} from which named {@link java.util.concurrent.ConcurrentMap ConcurrentMap}
+     *         instances will be acquired to create {@link MapCache} instances.
+     */
+    public HazelcastInstance getHazelcastInstance() {
+<span class="fc" id="L200">        return hazelcastInstance;</span>
+    }
+
+    /**
+     * Sets the {@code HazelcastInstance} from which named {@link java.util.concurrent.ConcurrentMap ConcurrentMap}
+     * instances will be acquired to create {@link MapCache} instances.
+     *
+     * @param hazelcastInstance the {@code HazelcastInstance} from which named
+     *                          {@link java.util.concurrent.ConcurrentMap ConcurrentMap} instances will be acquired to create
+     *                          {@link MapCache} instances.
+     */
+    public void setHazelcastInstance(HazelcastInstance hazelcastInstance) {
+<span class="fc" id="L212">        this.hazelcastInstance = hazelcastInstance;</span>
+<span class="fc" id="L213">    }</span>
+
+    /**
+     * Returns the Hazelcast {@code Config} object to use to create a backing {@code HazelcastInstance} if one is not
+     * {@link #setHazelcastInstance(com.hazelcast.core.HazelcastInstance) supplied}, or {@code null} if the
+     * default &lt;a href=&quot;http://www.hazelcast.com/docs/2.5/manual/multi_html/ch12.html&quot;&gt;Hazelcast configuration
+     * mechanisms&lt;/a&gt; will be used.
+     *
+     * @return the Hazelcast {@code Config} object to use to create a backing {@code HazelcastInstance} if one is not
+     *         {@link #setHazelcastInstance(com.hazelcast.core.HazelcastInstance) supplied}, or {@code null} if the
+     *         default &lt;a href=&quot;http://www.hazelcast.com/docs/2.5/manual/multi_html/ch12.html&quot;&gt;Hazelcast configuration
+     *         mechanisms&lt;/a&gt; will be used.
+     * @see Hazelcast#newHazelcastInstance(com.hazelcast.config.Config)
+     */
+    public Config getConfig() {
+<span class="fc" id="L228">        return config;</span>
+    }
+
+    /**
+     * Sets the Hazelcast {@code Config} object to use to create a backing {@code HazelcastInstance} if one is not
+     * {@link #setHazelcastInstance(com.hazelcast.core.HazelcastInstance) supplied}.  {@code null} can be set if the
+     * default &lt;a href=&quot;http://www.hazelcast.com/docs/2.5/manual/multi_html/ch12.html&quot;&gt;Hazelcast configuration
+     * mechanisms&lt;/a&gt; will be used.
+     *
+     * @param config the Hazelcast {@code Config} object to use to create a backing {@code HazelcastInstance} if one is not
+     *               {@link #setHazelcastInstance(com.hazelcast.core.HazelcastInstance) supplied}, or {@code null} if the
+     *               default &lt;a href=&quot;http://www.hazelcast.com/docs/2.5/manual/multi_html/ch12.html&quot;&gt;Hazelcast configuration
+     *               mechanisms&lt;/a&gt; will be used.
+     */
+    public void setConfig(Config config) {
+<span class="fc" id="L243">        this.config = config;</span>
+<span class="fc" id="L244">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

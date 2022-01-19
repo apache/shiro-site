@@ -1,0 +1,286 @@
+<!DOCTYPE HTML>
+<html lang="fr">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<main role="main">
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a id="line.1">/*</a>
+<span class="sourceLineNo">002</span><a id="line.2"> * Licensed to the Apache Software Foundation (ASF) under one</a>
+<span class="sourceLineNo">003</span><a id="line.3"> * or more contributor license agreements.  See the NOTICE file</a>
+<span class="sourceLineNo">004</span><a id="line.4"> * distributed with this work for additional information</a>
+<span class="sourceLineNo">005</span><a id="line.5"> * regarding copyright ownership.  The ASF licenses this file</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * to you under the Apache License, Version 2.0 (the</a>
+<span class="sourceLineNo">007</span><a id="line.7"> * "License"); you may not use this file except in compliance</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * with the License.  You may obtain a copy of the License at</a>
+<span class="sourceLineNo">009</span><a id="line.9"> *</a>
+<span class="sourceLineNo">010</span><a id="line.10"> *     http://www.apache.org/licenses/LICENSE-2.0</a>
+<span class="sourceLineNo">011</span><a id="line.11"> *</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * Unless required by applicable law or agreed to in writing,</a>
+<span class="sourceLineNo">013</span><a id="line.13"> * software distributed under the License is distributed on an</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</a>
+<span class="sourceLineNo">015</span><a id="line.15"> * KIND, either express or implied.  See the License for the</a>
+<span class="sourceLineNo">016</span><a id="line.16"> * specific language governing permissions and limitations</a>
+<span class="sourceLineNo">017</span><a id="line.17"> * under the License.</a>
+<span class="sourceLineNo">018</span><a id="line.18"> */</a>
+<span class="sourceLineNo">019</span><a id="line.19">package org.apache.shiro.web.config;</a>
+<span class="sourceLineNo">020</span><a id="line.20"></a>
+<span class="sourceLineNo">021</span><a id="line.21">import org.apache.shiro.config.Ini;</a>
+<span class="sourceLineNo">022</span><a id="line.22">import org.apache.shiro.config.IniFactorySupport;</a>
+<span class="sourceLineNo">023</span><a id="line.23">import org.apache.shiro.config.IniSecurityManagerFactory;</a>
+<span class="sourceLineNo">024</span><a id="line.24">import org.apache.shiro.config.ReflectionBuilder;</a>
+<span class="sourceLineNo">025</span><a id="line.25">import org.apache.shiro.util.CollectionUtils;</a>
+<span class="sourceLineNo">026</span><a id="line.26">import org.apache.shiro.util.Factory;</a>
+<span class="sourceLineNo">027</span><a id="line.27">import org.apache.shiro.web.filter.mgt.DefaultFilter;</a>
+<span class="sourceLineNo">028</span><a id="line.28">import org.apache.shiro.web.filter.mgt.FilterChainManager;</a>
+<span class="sourceLineNo">029</span><a id="line.29">import org.apache.shiro.web.filter.mgt.FilterChainResolver;</a>
+<span class="sourceLineNo">030</span><a id="line.30">import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;</a>
+<span class="sourceLineNo">031</span><a id="line.31">import org.slf4j.Logger;</a>
+<span class="sourceLineNo">032</span><a id="line.32">import org.slf4j.LoggerFactory;</a>
+<span class="sourceLineNo">033</span><a id="line.33"></a>
+<span class="sourceLineNo">034</span><a id="line.34">import javax.servlet.Filter;</a>
+<span class="sourceLineNo">035</span><a id="line.35">import javax.servlet.FilterConfig;</a>
+<span class="sourceLineNo">036</span><a id="line.36">import java.util.Collections;</a>
+<span class="sourceLineNo">037</span><a id="line.37">import java.util.LinkedHashMap;</a>
+<span class="sourceLineNo">038</span><a id="line.38">import java.util.List;</a>
+<span class="sourceLineNo">039</span><a id="line.39">import java.util.Map;</a>
+<span class="sourceLineNo">040</span><a id="line.40"></a>
+<span class="sourceLineNo">041</span><a id="line.41">/**</a>
+<span class="sourceLineNo">042</span><a id="line.42"> * A {@link Factory} that creates {@link FilterChainResolver} instances based on {@link Ini} configuration.</a>
+<span class="sourceLineNo">043</span><a id="line.43"> *</a>
+<span class="sourceLineNo">044</span><a id="line.44"> * @since 1.0</a>
+<span class="sourceLineNo">045</span><a id="line.45"> */</a>
+<span class="sourceLineNo">046</span><a id="line.46">public class IniFilterChainResolverFactory extends IniFactorySupport&lt;FilterChainResolver&gt; {</a>
+<span class="sourceLineNo">047</span><a id="line.47"></a>
+<span class="sourceLineNo">048</span><a id="line.48">    public static final String FILTERS = "filters";</a>
+<span class="sourceLineNo">049</span><a id="line.49">    public static final String URLS = "urls";</a>
+<span class="sourceLineNo">050</span><a id="line.50"></a>
+<span class="sourceLineNo">051</span><a id="line.51">    private static transient final Logger log = LoggerFactory.getLogger(IniFilterChainResolverFactory.class);</a>
+<span class="sourceLineNo">052</span><a id="line.52"></a>
+<span class="sourceLineNo">053</span><a id="line.53">    private FilterConfig filterConfig;</a>
+<span class="sourceLineNo">054</span><a id="line.54"></a>
+<span class="sourceLineNo">055</span><a id="line.55">    private List&lt;String&gt; globalFilters = Collections.singletonList(DefaultFilter.invalidRequest.name());</a>
+<span class="sourceLineNo">056</span><a id="line.56"></a>
+<span class="sourceLineNo">057</span><a id="line.57">    public IniFilterChainResolverFactory() {</a>
+<span class="sourceLineNo">058</span><a id="line.58">        super();</a>
+<span class="sourceLineNo">059</span><a id="line.59">    }</a>
+<span class="sourceLineNo">060</span><a id="line.60"></a>
+<span class="sourceLineNo">061</span><a id="line.61">    public IniFilterChainResolverFactory(Ini ini) {</a>
+<span class="sourceLineNo">062</span><a id="line.62">        super(ini);</a>
+<span class="sourceLineNo">063</span><a id="line.63">    }</a>
+<span class="sourceLineNo">064</span><a id="line.64"></a>
+<span class="sourceLineNo">065</span><a id="line.65">    public IniFilterChainResolverFactory(Ini ini, Map&lt;String, ?&gt; defaultBeans) {</a>
+<span class="sourceLineNo">066</span><a id="line.66">        this(ini);</a>
+<span class="sourceLineNo">067</span><a id="line.67">        this.setDefaults(defaultBeans);</a>
+<span class="sourceLineNo">068</span><a id="line.68">    }</a>
+<span class="sourceLineNo">069</span><a id="line.69"></a>
+<span class="sourceLineNo">070</span><a id="line.70">    public FilterConfig getFilterConfig() {</a>
+<span class="sourceLineNo">071</span><a id="line.71">        return filterConfig;</a>
+<span class="sourceLineNo">072</span><a id="line.72">    }</a>
+<span class="sourceLineNo">073</span><a id="line.73"></a>
+<span class="sourceLineNo">074</span><a id="line.74">    public void setFilterConfig(FilterConfig filterConfig) {</a>
+<span class="sourceLineNo">075</span><a id="line.75">        this.filterConfig = filterConfig;</a>
+<span class="sourceLineNo">076</span><a id="line.76">    }</a>
+<span class="sourceLineNo">077</span><a id="line.77"></a>
+<span class="sourceLineNo">078</span><a id="line.78">    public List&lt;String&gt; getGlobalFilters() {</a>
+<span class="sourceLineNo">079</span><a id="line.79">        return globalFilters;</a>
+<span class="sourceLineNo">080</span><a id="line.80">    }</a>
+<span class="sourceLineNo">081</span><a id="line.81"></a>
+<span class="sourceLineNo">082</span><a id="line.82">    public void setGlobalFilters(List&lt;String&gt; globalFilters) {</a>
+<span class="sourceLineNo">083</span><a id="line.83">        this.globalFilters = globalFilters;</a>
+<span class="sourceLineNo">084</span><a id="line.84">    }</a>
+<span class="sourceLineNo">085</span><a id="line.85"></a>
+<span class="sourceLineNo">086</span><a id="line.86">    protected FilterChainResolver createInstance(Ini ini) {</a>
+<span class="sourceLineNo">087</span><a id="line.87">        FilterChainResolver filterChainResolver = createDefaultInstance();</a>
+<span class="sourceLineNo">088</span><a id="line.88">        if (filterChainResolver instanceof PathMatchingFilterChainResolver) {</a>
+<span class="sourceLineNo">089</span><a id="line.89">            PathMatchingFilterChainResolver resolver = (PathMatchingFilterChainResolver) filterChainResolver;</a>
+<span class="sourceLineNo">090</span><a id="line.90">            FilterChainManager manager = resolver.getFilterChainManager();</a>
+<span class="sourceLineNo">091</span><a id="line.91">            buildChains(manager, ini);</a>
+<span class="sourceLineNo">092</span><a id="line.92">        }</a>
+<span class="sourceLineNo">093</span><a id="line.93">        return filterChainResolver;</a>
+<span class="sourceLineNo">094</span><a id="line.94">    }</a>
+<span class="sourceLineNo">095</span><a id="line.95"></a>
+<span class="sourceLineNo">096</span><a id="line.96">    protected FilterChainResolver createDefaultInstance() {</a>
+<span class="sourceLineNo">097</span><a id="line.97">        FilterConfig filterConfig = getFilterConfig();</a>
+<span class="sourceLineNo">098</span><a id="line.98">        if (filterConfig != null) {</a>
+<span class="sourceLineNo">099</span><a id="line.99">            return new PathMatchingFilterChainResolver(filterConfig);</a>
+<span class="sourceLineNo">100</span><a id="line.100">        } else {</a>
+<span class="sourceLineNo">101</span><a id="line.101">            return new PathMatchingFilterChainResolver();</a>
+<span class="sourceLineNo">102</span><a id="line.102">        }</a>
+<span class="sourceLineNo">103</span><a id="line.103">    }</a>
+<span class="sourceLineNo">104</span><a id="line.104"></a>
+<span class="sourceLineNo">105</span><a id="line.105">    protected void buildChains(FilterChainManager manager, Ini ini) {</a>
+<span class="sourceLineNo">106</span><a id="line.106">        //filters section:</a>
+<span class="sourceLineNo">107</span><a id="line.107">        Ini.Section section = ini.getSection(FILTERS);</a>
+<span class="sourceLineNo">108</span><a id="line.108"></a>
+<span class="sourceLineNo">109</span><a id="line.109">        if (!CollectionUtils.isEmpty(section)) {</a>
+<span class="sourceLineNo">110</span><a id="line.110">            String msg = "The [{}] section has been deprecated and will be removed in a future release!  Please " +</a>
+<span class="sourceLineNo">111</span><a id="line.111">                    "move all object configuration (filters and all other objects) to the [{}] section.";</a>
+<span class="sourceLineNo">112</span><a id="line.112">            log.warn(msg, FILTERS, IniSecurityManagerFactory.MAIN_SECTION_NAME);</a>
+<span class="sourceLineNo">113</span><a id="line.113">        }</a>
+<span class="sourceLineNo">114</span><a id="line.114"></a>
+<span class="sourceLineNo">115</span><a id="line.115">        Map&lt;String, Object&gt; defaults = new LinkedHashMap&lt;String, Object&gt;();</a>
+<span class="sourceLineNo">116</span><a id="line.116"></a>
+<span class="sourceLineNo">117</span><a id="line.117">        Map&lt;String, Filter&gt; defaultFilters = manager.getFilters();</a>
+<span class="sourceLineNo">118</span><a id="line.118"></a>
+<span class="sourceLineNo">119</span><a id="line.119">        //now let's see if there are any object defaults in addition to the filters</a>
+<span class="sourceLineNo">120</span><a id="line.120">        //these can be used to configure the filters:</a>
+<span class="sourceLineNo">121</span><a id="line.121">        //create a Map of objects to use as the defaults:</a>
+<span class="sourceLineNo">122</span><a id="line.122">        if (!CollectionUtils.isEmpty(defaultFilters)) {</a>
+<span class="sourceLineNo">123</span><a id="line.123">            defaults.putAll(defaultFilters);</a>
+<span class="sourceLineNo">124</span><a id="line.124">        }</a>
+<span class="sourceLineNo">125</span><a id="line.125">        //User-provided objects must come _after_ the default filters - to allow the user-provided</a>
+<span class="sourceLineNo">126</span><a id="line.126">        //ones to override the default filters if necessary.</a>
+<span class="sourceLineNo">127</span><a id="line.127">        Map&lt;String, ?&gt; defaultBeans = getDefaults();</a>
+<span class="sourceLineNo">128</span><a id="line.128">        if (!CollectionUtils.isEmpty(defaultBeans)) {</a>
+<span class="sourceLineNo">129</span><a id="line.129">            defaults.putAll(defaultBeans);</a>
+<span class="sourceLineNo">130</span><a id="line.130">        }</a>
+<span class="sourceLineNo">131</span><a id="line.131"></a>
+<span class="sourceLineNo">132</span><a id="line.132">        Map&lt;String, Filter&gt; filters = getFilters(section, defaults);</a>
+<span class="sourceLineNo">133</span><a id="line.133"></a>
+<span class="sourceLineNo">134</span><a id="line.134">        //add the filters to the manager:</a>
+<span class="sourceLineNo">135</span><a id="line.135">        registerFilters(filters, manager);</a>
+<span class="sourceLineNo">136</span><a id="line.136"></a>
+<span class="sourceLineNo">137</span><a id="line.137">        manager.setGlobalFilters(getGlobalFilters());</a>
+<span class="sourceLineNo">138</span><a id="line.138"></a>
+<span class="sourceLineNo">139</span><a id="line.139">        //urls section:</a>
+<span class="sourceLineNo">140</span><a id="line.140">        section = ini.getSection(URLS);</a>
+<span class="sourceLineNo">141</span><a id="line.141">        createChains(section, manager);</a>
+<span class="sourceLineNo">142</span><a id="line.142"></a>
+<span class="sourceLineNo">143</span><a id="line.143">        // create the default chain, to match anything the path matching would have missed</a>
+<span class="sourceLineNo">144</span><a id="line.144">        manager.createDefaultChain("/**"); // TODO this assumes ANT path matching</a>
+<span class="sourceLineNo">145</span><a id="line.145">    }</a>
+<span class="sourceLineNo">146</span><a id="line.146"></a>
+<span class="sourceLineNo">147</span><a id="line.147">    protected void registerFilters(Map&lt;String, Filter&gt; filters, FilterChainManager manager) {</a>
+<span class="sourceLineNo">148</span><a id="line.148">        if (!CollectionUtils.isEmpty(filters)) {</a>
+<span class="sourceLineNo">149</span><a id="line.149">            boolean init = getFilterConfig() != null; //only call filter.init if there is a FilterConfig available</a>
+<span class="sourceLineNo">150</span><a id="line.150">            for (Map.Entry&lt;String, Filter&gt; entry : filters.entrySet()) {</a>
+<span class="sourceLineNo">151</span><a id="line.151">                String name = entry.getKey();</a>
+<span class="sourceLineNo">152</span><a id="line.152">                Filter filter = entry.getValue();</a>
+<span class="sourceLineNo">153</span><a id="line.153">                manager.addFilter(name, filter, init);</a>
+<span class="sourceLineNo">154</span><a id="line.154">            }</a>
+<span class="sourceLineNo">155</span><a id="line.155">        }</a>
+<span class="sourceLineNo">156</span><a id="line.156">    }</a>
+<span class="sourceLineNo">157</span><a id="line.157"></a>
+<span class="sourceLineNo">158</span><a id="line.158">    protected Map&lt;String, Filter&gt; getFilters(Map&lt;String, String&gt; section, Map&lt;String, ?&gt; defaults) {</a>
+<span class="sourceLineNo">159</span><a id="line.159"></a>
+<span class="sourceLineNo">160</span><a id="line.160">        Map&lt;String, Filter&gt; filters = extractFilters(defaults);</a>
+<span class="sourceLineNo">161</span><a id="line.161"></a>
+<span class="sourceLineNo">162</span><a id="line.162">        if (!CollectionUtils.isEmpty(section)) {</a>
+<span class="sourceLineNo">163</span><a id="line.163">            ReflectionBuilder builder = new ReflectionBuilder(defaults);</a>
+<span class="sourceLineNo">164</span><a id="line.164">            Map&lt;String, ?&gt; built = builder.buildObjects(section);</a>
+<span class="sourceLineNo">165</span><a id="line.165">            Map&lt;String,Filter&gt; sectionFilters = extractFilters(built);</a>
+<span class="sourceLineNo">166</span><a id="line.166"></a>
+<span class="sourceLineNo">167</span><a id="line.167">            if (CollectionUtils.isEmpty(filters)) {</a>
+<span class="sourceLineNo">168</span><a id="line.168">                filters = sectionFilters;</a>
+<span class="sourceLineNo">169</span><a id="line.169">            } else {</a>
+<span class="sourceLineNo">170</span><a id="line.170">                if (!CollectionUtils.isEmpty(sectionFilters)) {</a>
+<span class="sourceLineNo">171</span><a id="line.171">                    filters.putAll(sectionFilters);</a>
+<span class="sourceLineNo">172</span><a id="line.172">                }</a>
+<span class="sourceLineNo">173</span><a id="line.173">            }</a>
+<span class="sourceLineNo">174</span><a id="line.174">        }</a>
+<span class="sourceLineNo">175</span><a id="line.175"></a>
+<span class="sourceLineNo">176</span><a id="line.176">        return filters;</a>
+<span class="sourceLineNo">177</span><a id="line.177">    }</a>
+<span class="sourceLineNo">178</span><a id="line.178"></a>
+<span class="sourceLineNo">179</span><a id="line.179">    private Map&lt;String, Filter&gt; extractFilters(Map&lt;String, ?&gt; objects) {</a>
+<span class="sourceLineNo">180</span><a id="line.180">        if (CollectionUtils.isEmpty(objects)) {</a>
+<span class="sourceLineNo">181</span><a id="line.181">            return null;</a>
+<span class="sourceLineNo">182</span><a id="line.182">        }</a>
+<span class="sourceLineNo">183</span><a id="line.183">        Map&lt;String, Filter&gt; filterMap = new LinkedHashMap&lt;String, Filter&gt;();</a>
+<span class="sourceLineNo">184</span><a id="line.184">        for (Map.Entry&lt;String, ?&gt; entry : objects.entrySet()) {</a>
+<span class="sourceLineNo">185</span><a id="line.185">            String key = entry.getKey();</a>
+<span class="sourceLineNo">186</span><a id="line.186">            Object value = entry.getValue();</a>
+<span class="sourceLineNo">187</span><a id="line.187">            if (value instanceof Filter) {</a>
+<span class="sourceLineNo">188</span><a id="line.188">                filterMap.put(key, (Filter) value);</a>
+<span class="sourceLineNo">189</span><a id="line.189">            }</a>
+<span class="sourceLineNo">190</span><a id="line.190">        }</a>
+<span class="sourceLineNo">191</span><a id="line.191">        return filterMap;</a>
+<span class="sourceLineNo">192</span><a id="line.192">    }</a>
+<span class="sourceLineNo">193</span><a id="line.193"></a>
+<span class="sourceLineNo">194</span><a id="line.194">    protected void createChains(Map&lt;String, String&gt; urls, FilterChainManager manager) {</a>
+<span class="sourceLineNo">195</span><a id="line.195">        if (CollectionUtils.isEmpty(urls)) {</a>
+<span class="sourceLineNo">196</span><a id="line.196">            if (log.isDebugEnabled()) {</a>
+<span class="sourceLineNo">197</span><a id="line.197">                log.debug("No urls to process.");</a>
+<span class="sourceLineNo">198</span><a id="line.198">            }</a>
+<span class="sourceLineNo">199</span><a id="line.199">            return;</a>
+<span class="sourceLineNo">200</span><a id="line.200">        }</a>
+<span class="sourceLineNo">201</span><a id="line.201"></a>
+<span class="sourceLineNo">202</span><a id="line.202">        if (log.isTraceEnabled()) {</a>
+<span class="sourceLineNo">203</span><a id="line.203">            log.trace("Before url processing.");</a>
+<span class="sourceLineNo">204</span><a id="line.204">        }</a>
+<span class="sourceLineNo">205</span><a id="line.205"></a>
+<span class="sourceLineNo">206</span><a id="line.206">        for (Map.Entry&lt;String, String&gt; entry : urls.entrySet()) {</a>
+<span class="sourceLineNo">207</span><a id="line.207">            String path = entry.getKey();</a>
+<span class="sourceLineNo">208</span><a id="line.208">            String value = entry.getValue();</a>
+<span class="sourceLineNo">209</span><a id="line.209">            manager.createChain(path, value);</a>
+<span class="sourceLineNo">210</span><a id="line.210">        }</a>
+<span class="sourceLineNo">211</span><a id="line.211">    }</a>
+<span class="sourceLineNo">212</span><a id="line.212">}</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</main>
+</body>
+</html>

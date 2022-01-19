@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>PermissionAnnotationHandler.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.authz.aop</a> &gt; <span class="el_source">PermissionAnnotationHandler.java</span></div><h1>PermissionAnnotationHandler.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.authz.aop;
+
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
+
+import java.lang.annotation.Annotation;
+
+/**
+ * Checks to see if a @{@link org.apache.shiro.authz.annotation.RequiresPermissions RequiresPermissions} annotation is
+ * declared, and if so, performs a permission check to see if the calling &lt;code&gt;Subject&lt;/code&gt; is allowed continued
+ * access.
+ *
+ * @since 0.9.0
+ */
+public class PermissionAnnotationHandler extends AuthorizingAnnotationHandler {
+
+    /**
+     * Default no-argument constructor that ensures this handler looks for
+     * {@link org.apache.shiro.authz.annotation.RequiresPermissions RequiresPermissions} annotations.
+     */
+    public PermissionAnnotationHandler() {
+<span class="fc" id="L43">        super(RequiresPermissions.class);</span>
+<span class="fc" id="L44">    }</span>
+
+    /**
+     * Returns the annotation {@link RequiresPermissions#value value}, from which the Permission will be constructed.
+     *
+     * @param a the RequiresPermissions annotation being inspected.
+     * @return the annotation's &lt;code&gt;value&lt;/code&gt;, from which the Permission will be constructed.
+     */
+    protected String[] getAnnotationValue(Annotation a) {
+<span class="fc" id="L53">        RequiresPermissions rpAnnotation = (RequiresPermissions) a;</span>
+<span class="fc" id="L54">        return rpAnnotation.value();</span>
+    }
+
+    /**
+     * Ensures that the calling &lt;code&gt;Subject&lt;/code&gt; has the Annotation's specified permissions, and if not, throws an
+     * &lt;code&gt;AuthorizingException&lt;/code&gt; indicating access is denied.
+     *
+     * @param a the RequiresPermission annotation being inspected to check for one or more permissions
+     * @throws org.apache.shiro.authz.AuthorizationException
+     *          if the calling &lt;code&gt;Subject&lt;/code&gt; does not have the permission(s) necessary to
+     *          continue access or execution.
+     */
+    public void assertAuthorized(Annotation a) throws AuthorizationException {
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        if (!(a instanceof RequiresPermissions)) return;</span>
+
+<span class="fc" id="L69">        RequiresPermissions rpAnnotation = (RequiresPermissions) a;</span>
+<span class="fc" id="L70">        String[] perms = getAnnotationValue(a);</span>
+<span class="fc" id="L71">        Subject subject = getSubject();</span>
+
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        if (perms.length == 1) {</span>
+<span class="fc" id="L74">            subject.checkPermission(perms[0]);</span>
+<span class="fc" id="L75">            return;</span>
+        }
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if (Logical.AND.equals(rpAnnotation.logical())) {</span>
+<span class="nc" id="L78">            getSubject().checkPermissions(perms);</span>
+<span class="nc" id="L79">            return;</span>
+        }
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (Logical.OR.equals(rpAnnotation.logical())) {</span>
+            // Avoid processing exceptions unnecessarily - &quot;delay&quot; throwing the exception by calling hasRole first
+<span class="nc" id="L83">            boolean hasAtLeastOnePermission = false;</span>
+<span class="nc bnc" id="L84" title="All 4 branches missed.">            for (String permission : perms) if (getSubject().isPermitted(permission)) hasAtLeastOnePermission = true;</span>
+            // Cause the exception if none of the role match, note that the exception message will be a bit misleading
+<span class="nc bnc" id="L86" title="All 2 branches missed.">            if (!hasAtLeastOnePermission) getSubject().checkPermission(perms[0]);</span>
+            
+        }
+<span class="nc" id="L89">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

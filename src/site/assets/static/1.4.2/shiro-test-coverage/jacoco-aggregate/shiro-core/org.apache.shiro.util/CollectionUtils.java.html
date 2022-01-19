@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>CollectionUtils.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.util</a> &gt; <span class="el_source">CollectionUtils.java</span></div><h1>CollectionUtils.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.util;
+
+import org.apache.shiro.subject.PrincipalCollection;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * Static helper class for use dealing with Collections.
+ *
+ * @since 0.9
+ */
+<span class="nc" id="L36">public class CollectionUtils {</span>
+
+    //TODO - complete JavaDoc
+
+    public static &lt;E&gt; Set&lt;E&gt; asSet(E... elements) {
+<span class="pc bpc" id="L41" title="1 of 4 branches missed.">        if (elements == null || elements.length == 0) {</span>
+<span class="fc" id="L42">            return Collections.emptySet();</span>
+        }
+
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (elements.length == 1) {</span>
+<span class="fc" id="L46">            return Collections.singleton(elements[0]);</span>
+        }
+
+<span class="fc" id="L49">        LinkedHashSet&lt;E&gt; set = new LinkedHashSet&lt;E&gt;(elements.length * 4 / 3 + 1);</span>
+<span class="fc" id="L50">        Collections.addAll(set, elements);</span>
+<span class="fc" id="L51">        return set;</span>
+    }
+
+    /**
+     * Returns {@code true} if the specified {@code Collection} is {@code null} or {@link Collection#isEmpty empty},
+     * {@code false} otherwise.
+     *
+     * @param c the collection to check
+     * @return {@code true} if the specified {@code Collection} is {@code null} or {@link Collection#isEmpty empty},
+     *         {@code false} otherwise.
+     * @since 1.0
+     */
+    public static boolean isEmpty(Collection c) {
+<span class="fc bfc" id="L64" title="All 4 branches covered.">        return c == null || c.isEmpty();</span>
+    }
+
+    /**
+     * Returns {@code true} if the specified {@code Map} is {@code null} or {@link Map#isEmpty empty},
+     * {@code false} otherwise.
+     *
+     * @param m the {@code Map} to check
+     * @return {@code true} if the specified {@code Map} is {@code null} or {@link Map#isEmpty empty},
+     *         {@code false} otherwise.
+     * @since 1.0
+     */
+    public static boolean isEmpty(Map m) {
+<span class="fc bfc" id="L77" title="All 4 branches covered.">        return m == null || m.isEmpty();</span>
+    }
+
+    /**
+     * Returns the size of the specified collection or {@code 0} if the collection is {@code null}.
+     *
+     * @param c the collection to check
+     * @return the size of the specified collection or {@code 0} if the collection is {@code null}.
+     * @since 1.2
+     */
+    public static int size(Collection c) {
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        return c != null ? c.size() : 0;</span>
+    }
+
+    /**
+     * Returns the size of the specified map or {@code 0} if the map is {@code null}.
+     *
+     * @param m the map to check
+     * @return the size of the specified map or {@code 0} if the map is {@code null}.
+     * @since 1.2
+     */
+    public static int size(Map m) {
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        return m != null ? m.size() : 0;</span>
+    }
+
+
+    /**
+     * Returns {@code true} if the specified {@code PrincipalCollection} is {@code null} or
+     * {@link PrincipalCollection#isEmpty empty}, {@code false} otherwise.
+     *
+     * @param principals the principals to check.
+     * @return {@code true} if the specified {@code PrincipalCollection} is {@code null} or
+     *         {@link PrincipalCollection#isEmpty empty}, {@code false} otherwise.
+     * @since 1.0
+     * @deprecated Use PrincipalCollection.isEmpty() directly.
+     */
+    @Deprecated
+    public static boolean isEmpty(PrincipalCollection principals) {
+<span class="nc bnc" id="L115" title="All 4 branches missed.">        return principals == null || principals.isEmpty();</span>
+    }
+
+    public static &lt;E&gt; List&lt;E&gt; asList(E... elements) {
+<span class="pc bpc" id="L119" title="2 of 4 branches missed.">        if (elements == null || elements.length == 0) {</span>
+<span class="nc" id="L120">            return Collections.emptyList();</span>
+        }
+
+        // Integer overflow does not occur when a large array is passed in because the list array already exists
+<span class="fc" id="L124">        return Arrays.asList(elements);</span>
+    }
+
+    /*public static &lt;E&gt; Deque&lt;E&gt; asDeque(E... elements) {
+        if (elements == null || elements.length == 0) {
+            return new ArrayDeque&lt;E&gt;();
+        }
+        // Avoid integer overflow when a large array is passed in
+        int capacity = computeListCapacity(elements.length);
+        ArrayDeque&lt;E&gt; deque = new ArrayDeque&lt;E&gt;(capacity);
+        Collections.addAll(deque, elements);
+        return deque;
+    }*/
+
+    static int computeListCapacity(int arraySize) {
+<span class="nc" id="L139">        return (int) Math.min(5L + arraySize + (arraySize / 10), Integer.MAX_VALUE);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

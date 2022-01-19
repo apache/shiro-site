@@ -1,0 +1,594 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<span class="sourceLineNo">004</span> * distributed with this work for additional information<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<span class="sourceLineNo">009</span> *<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<span class="sourceLineNo">011</span> *<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * software distributed under the License is distributed on an<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<span class="sourceLineNo">016</span> * specific language governing permissions and limitations<a name="line.16"></a>
+<span class="sourceLineNo">017</span> * under the License.<a name="line.17"></a>
+<span class="sourceLineNo">018</span> */<a name="line.18"></a>
+<span class="sourceLineNo">019</span>package org.apache.shiro.util;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>import java.text.ParseException;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import java.util.*;<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>/**<a name="line.24"></a>
+<span class="sourceLineNo">025</span> * &lt;p&gt;Simple utility class for String operations useful across the framework.<a name="line.25"></a>
+<span class="sourceLineNo">026</span> * &lt;p/&gt;<a name="line.26"></a>
+<span class="sourceLineNo">027</span> * &lt;p&gt;Some methods in this class were copied from the Spring Framework so we didn't have to re-invent the wheel,<a name="line.27"></a>
+<span class="sourceLineNo">028</span> * and in these cases, we have retained all license, copyright and author information.<a name="line.28"></a>
+<span class="sourceLineNo">029</span> *<a name="line.29"></a>
+<span class="sourceLineNo">030</span> * @since 0.9<a name="line.30"></a>
+<span class="sourceLineNo">031</span> */<a name="line.31"></a>
+<span class="sourceLineNo">032</span>public class StringUtils {<a name="line.32"></a>
+<span class="sourceLineNo">033</span><a name="line.33"></a>
+<span class="sourceLineNo">034</span>    //TODO - complete JavaDoc<a name="line.34"></a>
+<span class="sourceLineNo">035</span><a name="line.35"></a>
+<span class="sourceLineNo">036</span>    /**<a name="line.36"></a>
+<span class="sourceLineNo">037</span>     * Constant representing the empty string, equal to &amp;quot;&amp;quot;<a name="line.37"></a>
+<span class="sourceLineNo">038</span>     */<a name="line.38"></a>
+<span class="sourceLineNo">039</span>    public static final String EMPTY_STRING = "";<a name="line.39"></a>
+<span class="sourceLineNo">040</span><a name="line.40"></a>
+<span class="sourceLineNo">041</span>    /**<a name="line.41"></a>
+<span class="sourceLineNo">042</span>     * Constant representing the default delimiter character (comma), equal to &lt;code&gt;','&lt;/code&gt;<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     */<a name="line.43"></a>
+<span class="sourceLineNo">044</span>    public static final char DEFAULT_DELIMITER_CHAR = ',';<a name="line.44"></a>
+<span class="sourceLineNo">045</span><a name="line.45"></a>
+<span class="sourceLineNo">046</span>    /**<a name="line.46"></a>
+<span class="sourceLineNo">047</span>     * Constant representing the default quote character (double quote), equal to '&amp;quot;'&lt;/code&gt;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>     */<a name="line.48"></a>
+<span class="sourceLineNo">049</span>    public static final char DEFAULT_QUOTE_CHAR = '"';<a name="line.49"></a>
+<span class="sourceLineNo">050</span><a name="line.50"></a>
+<span class="sourceLineNo">051</span>    /**<a name="line.51"></a>
+<span class="sourceLineNo">052</span>     * Check whether the given String has actual text.<a name="line.52"></a>
+<span class="sourceLineNo">053</span>     * More specifically, returns &lt;code&gt;true&lt;/code&gt; if the string not &lt;code&gt;null&lt;/code&gt;,<a name="line.53"></a>
+<span class="sourceLineNo">054</span>     * its length is greater than 0, and it contains at least one non-whitespace character.<a name="line.54"></a>
+<span class="sourceLineNo">055</span>     * &lt;p/&gt;<a name="line.55"></a>
+<span class="sourceLineNo">056</span>     * &lt;code&gt;StringUtils.hasText(null) == false&lt;br/&gt;<a name="line.56"></a>
+<span class="sourceLineNo">057</span>     * StringUtils.hasText("") == false&lt;br/&gt;<a name="line.57"></a>
+<span class="sourceLineNo">058</span>     * StringUtils.hasText(" ") == false&lt;br/&gt;<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     * StringUtils.hasText("12345") == true&lt;br/&gt;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>     * StringUtils.hasText(" 12345 ") == true&lt;/code&gt;<a name="line.60"></a>
+<span class="sourceLineNo">061</span>     * &lt;p/&gt;<a name="line.61"></a>
+<span class="sourceLineNo">062</span>     * &lt;p&gt;Copied from the Spring Framework while retaining all license, copyright and author information.<a name="line.62"></a>
+<span class="sourceLineNo">063</span>     *<a name="line.63"></a>
+<span class="sourceLineNo">064</span>     * @param str the String to check (may be &lt;code&gt;null&lt;/code&gt;)<a name="line.64"></a>
+<span class="sourceLineNo">065</span>     * @return &lt;code&gt;true&lt;/code&gt; if the String is not &lt;code&gt;null&lt;/code&gt;, its length is<a name="line.65"></a>
+<span class="sourceLineNo">066</span>     *         greater than 0, and it does not contain whitespace only<a name="line.66"></a>
+<span class="sourceLineNo">067</span>     * @see java.lang.Character#isWhitespace<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     */<a name="line.68"></a>
+<span class="sourceLineNo">069</span>    public static boolean hasText(String str) {<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        if (!hasLength(str)) {<a name="line.70"></a>
+<span class="sourceLineNo">071</span>            return false;<a name="line.71"></a>
+<span class="sourceLineNo">072</span>        }<a name="line.72"></a>
+<span class="sourceLineNo">073</span>        int strLen = str.length();<a name="line.73"></a>
+<span class="sourceLineNo">074</span>        for (int i = 0; i &lt; strLen; i++) {<a name="line.74"></a>
+<span class="sourceLineNo">075</span>            if (!Character.isWhitespace(str.charAt(i))) {<a name="line.75"></a>
+<span class="sourceLineNo">076</span>                return true;<a name="line.76"></a>
+<span class="sourceLineNo">077</span>            }<a name="line.77"></a>
+<span class="sourceLineNo">078</span>        }<a name="line.78"></a>
+<span class="sourceLineNo">079</span>        return false;<a name="line.79"></a>
+<span class="sourceLineNo">080</span>    }<a name="line.80"></a>
+<span class="sourceLineNo">081</span><a name="line.81"></a>
+<span class="sourceLineNo">082</span>    /**<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     * Check that the given String is neither &lt;code&gt;null&lt;/code&gt; nor of length 0.<a name="line.83"></a>
+<span class="sourceLineNo">084</span>     * Note: Will return &lt;code&gt;true&lt;/code&gt; for a String that purely consists of whitespace.<a name="line.84"></a>
+<span class="sourceLineNo">085</span>     * &lt;p/&gt;<a name="line.85"></a>
+<span class="sourceLineNo">086</span>     * &lt;code&gt;StringUtils.hasLength(null) == false&lt;br/&gt;<a name="line.86"></a>
+<span class="sourceLineNo">087</span>     * StringUtils.hasLength("") == false&lt;br/&gt;<a name="line.87"></a>
+<span class="sourceLineNo">088</span>     * StringUtils.hasLength(" ") == true&lt;br/&gt;<a name="line.88"></a>
+<span class="sourceLineNo">089</span>     * StringUtils.hasLength("Hello") == true&lt;/code&gt;<a name="line.89"></a>
+<span class="sourceLineNo">090</span>     * &lt;p/&gt;<a name="line.90"></a>
+<span class="sourceLineNo">091</span>     * Copied from the Spring Framework while retaining all license, copyright and author information.<a name="line.91"></a>
+<span class="sourceLineNo">092</span>     *<a name="line.92"></a>
+<span class="sourceLineNo">093</span>     * @param str the String to check (may be &lt;code&gt;null&lt;/code&gt;)<a name="line.93"></a>
+<span class="sourceLineNo">094</span>     * @return &lt;code&gt;true&lt;/code&gt; if the String is not null and has length<a name="line.94"></a>
+<span class="sourceLineNo">095</span>     * @see #hasText(String)<a name="line.95"></a>
+<span class="sourceLineNo">096</span>     */<a name="line.96"></a>
+<span class="sourceLineNo">097</span>    public static boolean hasLength(String str) {<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        return (str != null &amp;&amp; str.length() &gt; 0);<a name="line.98"></a>
+<span class="sourceLineNo">099</span>    }<a name="line.99"></a>
+<span class="sourceLineNo">100</span><a name="line.100"></a>
+<span class="sourceLineNo">101</span><a name="line.101"></a>
+<span class="sourceLineNo">102</span>    /**<a name="line.102"></a>
+<span class="sourceLineNo">103</span>     * Test if the given String starts with the specified prefix,<a name="line.103"></a>
+<span class="sourceLineNo">104</span>     * ignoring upper/lower case.<a name="line.104"></a>
+<span class="sourceLineNo">105</span>     * &lt;p/&gt;<a name="line.105"></a>
+<span class="sourceLineNo">106</span>     * &lt;p&gt;Copied from the Spring Framework while retaining all license, copyright and author information.<a name="line.106"></a>
+<span class="sourceLineNo">107</span>     *<a name="line.107"></a>
+<span class="sourceLineNo">108</span>     * @param str    the String to check<a name="line.108"></a>
+<span class="sourceLineNo">109</span>     * @param prefix the prefix to look for<a name="line.109"></a>
+<span class="sourceLineNo">110</span>     * @return &lt;code&gt;true&lt;/code&gt; starts with the specified prefix (ignoring case), &lt;code&gt;false&lt;/code&gt; if it does not.<a name="line.110"></a>
+<span class="sourceLineNo">111</span>     * @see java.lang.String#startsWith<a name="line.111"></a>
+<span class="sourceLineNo">112</span>     */<a name="line.112"></a>
+<span class="sourceLineNo">113</span>    public static boolean startsWithIgnoreCase(String str, String prefix) {<a name="line.113"></a>
+<span class="sourceLineNo">114</span>        if (str == null || prefix == null) {<a name="line.114"></a>
+<span class="sourceLineNo">115</span>            return false;<a name="line.115"></a>
+<span class="sourceLineNo">116</span>        }<a name="line.116"></a>
+<span class="sourceLineNo">117</span>        if (str.startsWith(prefix)) {<a name="line.117"></a>
+<span class="sourceLineNo">118</span>            return true;<a name="line.118"></a>
+<span class="sourceLineNo">119</span>        }<a name="line.119"></a>
+<span class="sourceLineNo">120</span>        if (str.length() &lt; prefix.length()) {<a name="line.120"></a>
+<span class="sourceLineNo">121</span>            return false;<a name="line.121"></a>
+<span class="sourceLineNo">122</span>        }<a name="line.122"></a>
+<span class="sourceLineNo">123</span>        String lcStr = str.substring(0, prefix.length()).toLowerCase();<a name="line.123"></a>
+<span class="sourceLineNo">124</span>        String lcPrefix = prefix.toLowerCase();<a name="line.124"></a>
+<span class="sourceLineNo">125</span>        return lcStr.equals(lcPrefix);<a name="line.125"></a>
+<span class="sourceLineNo">126</span>    }<a name="line.126"></a>
+<span class="sourceLineNo">127</span><a name="line.127"></a>
+<span class="sourceLineNo">128</span>    /**<a name="line.128"></a>
+<span class="sourceLineNo">129</span>     * Returns a 'cleaned' representation of the specified argument.  'Cleaned' is defined as the following:<a name="line.129"></a>
+<span class="sourceLineNo">130</span>     * &lt;p/&gt;<a name="line.130"></a>
+<span class="sourceLineNo">131</span>     * &lt;ol&gt;<a name="line.131"></a>
+<span class="sourceLineNo">132</span>     * &lt;li&gt;If the specified &lt;code&gt;String&lt;/code&gt; is &lt;code&gt;null&lt;/code&gt;, return &lt;code&gt;null&lt;/code&gt;&lt;/li&gt;<a name="line.132"></a>
+<span class="sourceLineNo">133</span>     * &lt;li&gt;If not &lt;code&gt;null&lt;/code&gt;, {@link String#trim() trim()} it.&lt;/li&gt;<a name="line.133"></a>
+<span class="sourceLineNo">134</span>     * &lt;li&gt;If the trimmed string is equal to the empty String (i.e. &amp;quot;&amp;quot;), return &lt;code&gt;null&lt;/code&gt;&lt;/li&gt;<a name="line.134"></a>
+<span class="sourceLineNo">135</span>     * &lt;li&gt;If the trimmed string is not the empty string, return the trimmed version&lt;/li&gt;.<a name="line.135"></a>
+<span class="sourceLineNo">136</span>     * &lt;/ol&gt;<a name="line.136"></a>
+<span class="sourceLineNo">137</span>     * &lt;p/&gt;<a name="line.137"></a>
+<span class="sourceLineNo">138</span>     * Therefore this method always ensures that any given string has trimmed text, and if it doesn't, &lt;code&gt;null&lt;/code&gt;<a name="line.138"></a>
+<span class="sourceLineNo">139</span>     * is returned.<a name="line.139"></a>
+<span class="sourceLineNo">140</span>     *<a name="line.140"></a>
+<span class="sourceLineNo">141</span>     * @param in the input String to clean.<a name="line.141"></a>
+<span class="sourceLineNo">142</span>     * @return a populated-but-trimmed String or &lt;code&gt;null&lt;/code&gt; otherwise<a name="line.142"></a>
+<span class="sourceLineNo">143</span>     */<a name="line.143"></a>
+<span class="sourceLineNo">144</span>    public static String clean(String in) {<a name="line.144"></a>
+<span class="sourceLineNo">145</span>        String out = in;<a name="line.145"></a>
+<span class="sourceLineNo">146</span><a name="line.146"></a>
+<span class="sourceLineNo">147</span>        if (in != null) {<a name="line.147"></a>
+<span class="sourceLineNo">148</span>            out = in.trim();<a name="line.148"></a>
+<span class="sourceLineNo">149</span>            if (out.equals(EMPTY_STRING)) {<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                out = null;<a name="line.150"></a>
+<span class="sourceLineNo">151</span>            }<a name="line.151"></a>
+<span class="sourceLineNo">152</span>        }<a name="line.152"></a>
+<span class="sourceLineNo">153</span><a name="line.153"></a>
+<span class="sourceLineNo">154</span>        return out;<a name="line.154"></a>
+<span class="sourceLineNo">155</span>    }<a name="line.155"></a>
+<span class="sourceLineNo">156</span><a name="line.156"></a>
+<span class="sourceLineNo">157</span>    /**<a name="line.157"></a>
+<span class="sourceLineNo">158</span>     * Returns the specified array as a comma-delimited (',') string.<a name="line.158"></a>
+<span class="sourceLineNo">159</span>     *<a name="line.159"></a>
+<span class="sourceLineNo">160</span>     * @param array the array whose contents will be converted to a string.<a name="line.160"></a>
+<span class="sourceLineNo">161</span>     * @return the array's contents as a comma-delimited (',') string.<a name="line.161"></a>
+<span class="sourceLineNo">162</span>     * @since 1.0<a name="line.162"></a>
+<span class="sourceLineNo">163</span>     */<a name="line.163"></a>
+<span class="sourceLineNo">164</span>    public static String toString(Object[] array) {<a name="line.164"></a>
+<span class="sourceLineNo">165</span>        return toDelimitedString(array, ",");<a name="line.165"></a>
+<span class="sourceLineNo">166</span>    }<a name="line.166"></a>
+<span class="sourceLineNo">167</span><a name="line.167"></a>
+<span class="sourceLineNo">168</span>    /**<a name="line.168"></a>
+<span class="sourceLineNo">169</span>     * Returns the array's contents as a string, with each element delimited by the specified<a name="line.169"></a>
+<span class="sourceLineNo">170</span>     * {@code delimiter} argument.  Useful for {@code toString()} implementations and log messages.<a name="line.170"></a>
+<span class="sourceLineNo">171</span>     *<a name="line.171"></a>
+<span class="sourceLineNo">172</span>     * @param array     the array whose contents will be converted to a string<a name="line.172"></a>
+<span class="sourceLineNo">173</span>     * @param delimiter the delimiter to use between each element<a name="line.173"></a>
+<span class="sourceLineNo">174</span>     * @return a single string, delimited by the specified {@code delimiter}.<a name="line.174"></a>
+<span class="sourceLineNo">175</span>     * @since 1.0<a name="line.175"></a>
+<span class="sourceLineNo">176</span>     */<a name="line.176"></a>
+<span class="sourceLineNo">177</span>    public static String toDelimitedString(Object[] array, String delimiter) {<a name="line.177"></a>
+<span class="sourceLineNo">178</span>        if (array == null || array.length == 0) {<a name="line.178"></a>
+<span class="sourceLineNo">179</span>            return EMPTY_STRING;<a name="line.179"></a>
+<span class="sourceLineNo">180</span>        }<a name="line.180"></a>
+<span class="sourceLineNo">181</span>        StringBuilder sb = new StringBuilder();<a name="line.181"></a>
+<span class="sourceLineNo">182</span>        for (int i = 0; i &lt; array.length; i++) {<a name="line.182"></a>
+<span class="sourceLineNo">183</span>            if (i &gt; 0) {<a name="line.183"></a>
+<span class="sourceLineNo">184</span>                sb.append(delimiter);<a name="line.184"></a>
+<span class="sourceLineNo">185</span>            }<a name="line.185"></a>
+<span class="sourceLineNo">186</span>            sb.append(array[i]);<a name="line.186"></a>
+<span class="sourceLineNo">187</span>        }<a name="line.187"></a>
+<span class="sourceLineNo">188</span>        return sb.toString();<a name="line.188"></a>
+<span class="sourceLineNo">189</span>    }<a name="line.189"></a>
+<span class="sourceLineNo">190</span><a name="line.190"></a>
+<span class="sourceLineNo">191</span>    /**<a name="line.191"></a>
+<span class="sourceLineNo">192</span>     * Returns the collection's contents as a string, with each element delimited by the specified<a name="line.192"></a>
+<span class="sourceLineNo">193</span>     * {@code delimiter} argument.  Useful for {@code toString()} implementations and log messages.<a name="line.193"></a>
+<span class="sourceLineNo">194</span>     *<a name="line.194"></a>
+<span class="sourceLineNo">195</span>     * @param c         the collection whose contents will be converted to a string<a name="line.195"></a>
+<span class="sourceLineNo">196</span>     * @param delimiter the delimiter to use between each element<a name="line.196"></a>
+<span class="sourceLineNo">197</span>     * @return a single string, delimited by the specified {@code delimiter}.<a name="line.197"></a>
+<span class="sourceLineNo">198</span>     * @since 1.2<a name="line.198"></a>
+<span class="sourceLineNo">199</span>     */<a name="line.199"></a>
+<span class="sourceLineNo">200</span>    public static String toDelimitedString(Collection c, String delimiter) {<a name="line.200"></a>
+<span class="sourceLineNo">201</span>        if (c == null || c.isEmpty()) {<a name="line.201"></a>
+<span class="sourceLineNo">202</span>            return EMPTY_STRING;<a name="line.202"></a>
+<span class="sourceLineNo">203</span>        }<a name="line.203"></a>
+<span class="sourceLineNo">204</span>        return join(c.iterator(), delimiter);<a name="line.204"></a>
+<span class="sourceLineNo">205</span>    }<a name="line.205"></a>
+<span class="sourceLineNo">206</span><a name="line.206"></a>
+<span class="sourceLineNo">207</span>    /**<a name="line.207"></a>
+<span class="sourceLineNo">208</span>     * Tokenize the given String into a String array via a StringTokenizer.<a name="line.208"></a>
+<span class="sourceLineNo">209</span>     * Trims tokens and omits empty tokens.<a name="line.209"></a>
+<span class="sourceLineNo">210</span>     * &lt;p&gt;The given delimiters string is supposed to consist of any number of<a name="line.210"></a>
+<span class="sourceLineNo">211</span>     * delimiter characters. Each of those characters can be used to separate<a name="line.211"></a>
+<span class="sourceLineNo">212</span>     * tokens. A delimiter is always a single character; for multi-character<a name="line.212"></a>
+<span class="sourceLineNo">213</span>     * delimiters, consider using &lt;code&gt;delimitedListToStringArray&lt;/code&gt;<a name="line.213"></a>
+<span class="sourceLineNo">214</span>     * &lt;p/&gt;<a name="line.214"></a>
+<span class="sourceLineNo">215</span>     * &lt;p&gt;Copied from the Spring Framework while retaining all license, copyright and author information.<a name="line.215"></a>
+<span class="sourceLineNo">216</span>     *<a name="line.216"></a>
+<span class="sourceLineNo">217</span>     * @param str        the String to tokenize<a name="line.217"></a>
+<span class="sourceLineNo">218</span>     * @param delimiters the delimiter characters, assembled as String<a name="line.218"></a>
+<span class="sourceLineNo">219</span>     *                   (each of those characters is individually considered as delimiter).<a name="line.219"></a>
+<span class="sourceLineNo">220</span>     * @return an array of the tokens<a name="line.220"></a>
+<span class="sourceLineNo">221</span>     * @see java.util.StringTokenizer<a name="line.221"></a>
+<span class="sourceLineNo">222</span>     * @see java.lang.String#trim()<a name="line.222"></a>
+<span class="sourceLineNo">223</span>     */<a name="line.223"></a>
+<span class="sourceLineNo">224</span>    public static String[] tokenizeToStringArray(String str, String delimiters) {<a name="line.224"></a>
+<span class="sourceLineNo">225</span>        return tokenizeToStringArray(str, delimiters, true, true);<a name="line.225"></a>
+<span class="sourceLineNo">226</span>    }<a name="line.226"></a>
+<span class="sourceLineNo">227</span><a name="line.227"></a>
+<span class="sourceLineNo">228</span>    /**<a name="line.228"></a>
+<span class="sourceLineNo">229</span>     * Tokenize the given String into a String array via a StringTokenizer.<a name="line.229"></a>
+<span class="sourceLineNo">230</span>     * &lt;p&gt;The given delimiters string is supposed to consist of any number of<a name="line.230"></a>
+<span class="sourceLineNo">231</span>     * delimiter characters. Each of those characters can be used to separate<a name="line.231"></a>
+<span class="sourceLineNo">232</span>     * tokens. A delimiter is always a single character; for multi-character<a name="line.232"></a>
+<span class="sourceLineNo">233</span>     * delimiters, consider using &lt;code&gt;delimitedListToStringArray&lt;/code&gt;<a name="line.233"></a>
+<span class="sourceLineNo">234</span>     * &lt;p/&gt;<a name="line.234"></a>
+<span class="sourceLineNo">235</span>     * &lt;p&gt;Copied from the Spring Framework while retaining all license, copyright and author information.<a name="line.235"></a>
+<span class="sourceLineNo">236</span>     *<a name="line.236"></a>
+<span class="sourceLineNo">237</span>     * @param str               the String to tokenize<a name="line.237"></a>
+<span class="sourceLineNo">238</span>     * @param delimiters        the delimiter characters, assembled as String<a name="line.238"></a>
+<span class="sourceLineNo">239</span>     *                          (each of those characters is individually considered as delimiter)<a name="line.239"></a>
+<span class="sourceLineNo">240</span>     * @param trimTokens        trim the tokens via String's &lt;code&gt;trim&lt;/code&gt;<a name="line.240"></a>
+<span class="sourceLineNo">241</span>     * @param ignoreEmptyTokens omit empty tokens from the result array<a name="line.241"></a>
+<span class="sourceLineNo">242</span>     *                          (only applies to tokens that are empty after trimming; StringTokenizer<a name="line.242"></a>
+<span class="sourceLineNo">243</span>     *                          will not consider subsequent delimiters as token in the first place).<a name="line.243"></a>
+<span class="sourceLineNo">244</span>     * @return an array of the tokens (&lt;code&gt;null&lt;/code&gt; if the input String<a name="line.244"></a>
+<span class="sourceLineNo">245</span>     *         was &lt;code&gt;null&lt;/code&gt;)<a name="line.245"></a>
+<span class="sourceLineNo">246</span>     * @see java.util.StringTokenizer<a name="line.246"></a>
+<span class="sourceLineNo">247</span>     * @see java.lang.String#trim()<a name="line.247"></a>
+<span class="sourceLineNo">248</span>     */<a name="line.248"></a>
+<span class="sourceLineNo">249</span>    @SuppressWarnings({"unchecked"})<a name="line.249"></a>
+<span class="sourceLineNo">250</span>    public static String[] tokenizeToStringArray(<a name="line.250"></a>
+<span class="sourceLineNo">251</span>            String str, String delimiters, boolean trimTokens, boolean ignoreEmptyTokens) {<a name="line.251"></a>
+<span class="sourceLineNo">252</span><a name="line.252"></a>
+<span class="sourceLineNo">253</span>        if (str == null) {<a name="line.253"></a>
+<span class="sourceLineNo">254</span>            return null;<a name="line.254"></a>
+<span class="sourceLineNo">255</span>        }<a name="line.255"></a>
+<span class="sourceLineNo">256</span>        StringTokenizer st = new StringTokenizer(str, delimiters);<a name="line.256"></a>
+<span class="sourceLineNo">257</span>        List tokens = new ArrayList();<a name="line.257"></a>
+<span class="sourceLineNo">258</span>        while (st.hasMoreTokens()) {<a name="line.258"></a>
+<span class="sourceLineNo">259</span>            String token = st.nextToken();<a name="line.259"></a>
+<span class="sourceLineNo">260</span>            if (trimTokens) {<a name="line.260"></a>
+<span class="sourceLineNo">261</span>                token = token.trim();<a name="line.261"></a>
+<span class="sourceLineNo">262</span>            }<a name="line.262"></a>
+<span class="sourceLineNo">263</span>            if (!ignoreEmptyTokens || token.length() &gt; 0) {<a name="line.263"></a>
+<span class="sourceLineNo">264</span>                tokens.add(token);<a name="line.264"></a>
+<span class="sourceLineNo">265</span>            }<a name="line.265"></a>
+<span class="sourceLineNo">266</span>        }<a name="line.266"></a>
+<span class="sourceLineNo">267</span>        return toStringArray(tokens);<a name="line.267"></a>
+<span class="sourceLineNo">268</span>    }<a name="line.268"></a>
+<span class="sourceLineNo">269</span><a name="line.269"></a>
+<span class="sourceLineNo">270</span>    /**<a name="line.270"></a>
+<span class="sourceLineNo">271</span>     * Copy the given Collection into a String array.<a name="line.271"></a>
+<span class="sourceLineNo">272</span>     * The Collection must contain String elements only.<a name="line.272"></a>
+<span class="sourceLineNo">273</span>     * &lt;p/&gt;<a name="line.273"></a>
+<span class="sourceLineNo">274</span>     * &lt;p&gt;Copied from the Spring Framework while retaining all license, copyright and author information.<a name="line.274"></a>
+<span class="sourceLineNo">275</span>     *<a name="line.275"></a>
+<span class="sourceLineNo">276</span>     * @param collection the Collection to copy<a name="line.276"></a>
+<span class="sourceLineNo">277</span>     * @return the String array (&lt;code&gt;null&lt;/code&gt; if the passed-in<a name="line.277"></a>
+<span class="sourceLineNo">278</span>     *         Collection was &lt;code&gt;null&lt;/code&gt;)<a name="line.278"></a>
+<span class="sourceLineNo">279</span>     */<a name="line.279"></a>
+<span class="sourceLineNo">280</span>    @SuppressWarnings({"unchecked"})<a name="line.280"></a>
+<span class="sourceLineNo">281</span>    public static String[] toStringArray(Collection collection) {<a name="line.281"></a>
+<span class="sourceLineNo">282</span>        if (collection == null) {<a name="line.282"></a>
+<span class="sourceLineNo">283</span>            return null;<a name="line.283"></a>
+<span class="sourceLineNo">284</span>        }<a name="line.284"></a>
+<span class="sourceLineNo">285</span>        return (String[]) collection.toArray(new String[collection.size()]);<a name="line.285"></a>
+<span class="sourceLineNo">286</span>    }<a name="line.286"></a>
+<span class="sourceLineNo">287</span><a name="line.287"></a>
+<span class="sourceLineNo">288</span>    public static String[] splitKeyValue(String aLine) throws ParseException {<a name="line.288"></a>
+<span class="sourceLineNo">289</span>        String line = clean(aLine);<a name="line.289"></a>
+<span class="sourceLineNo">290</span>        if (line == null) {<a name="line.290"></a>
+<span class="sourceLineNo">291</span>            return null;<a name="line.291"></a>
+<span class="sourceLineNo">292</span>        }<a name="line.292"></a>
+<span class="sourceLineNo">293</span>        String[] split = line.split(" ", 2);<a name="line.293"></a>
+<span class="sourceLineNo">294</span>        if (split.length != 2) {<a name="line.294"></a>
+<span class="sourceLineNo">295</span>            //fallback to checking for an equals sign<a name="line.295"></a>
+<span class="sourceLineNo">296</span>            split = line.split("=", 2);<a name="line.296"></a>
+<span class="sourceLineNo">297</span>            if (split.length != 2) {<a name="line.297"></a>
+<span class="sourceLineNo">298</span>                String msg = "Unable to determine Key/Value pair from line [" + line + "].  There is no space from " +<a name="line.298"></a>
+<span class="sourceLineNo">299</span>                        "which the split location could be determined.";<a name="line.299"></a>
+<span class="sourceLineNo">300</span>                throw new ParseException(msg, 0);<a name="line.300"></a>
+<span class="sourceLineNo">301</span>            }<a name="line.301"></a>
+<span class="sourceLineNo">302</span><a name="line.302"></a>
+<span class="sourceLineNo">303</span>        }<a name="line.303"></a>
+<span class="sourceLineNo">304</span><a name="line.304"></a>
+<span class="sourceLineNo">305</span>        split[0] = clean(split[0]);<a name="line.305"></a>
+<span class="sourceLineNo">306</span>        split[1] = clean(split[1]);<a name="line.306"></a>
+<span class="sourceLineNo">307</span>        if (split[1].startsWith("=")) {<a name="line.307"></a>
+<span class="sourceLineNo">308</span>            //they used spaces followed by an equals followed by zero or more spaces to split the key/value pair, so<a name="line.308"></a>
+<span class="sourceLineNo">309</span>            //remove the equals sign to result in only the key and values in the<a name="line.309"></a>
+<span class="sourceLineNo">310</span>            split[1] = clean(split[1].substring(1));<a name="line.310"></a>
+<span class="sourceLineNo">311</span>        }<a name="line.311"></a>
+<span class="sourceLineNo">312</span><a name="line.312"></a>
+<span class="sourceLineNo">313</span>        if (split[0] == null) {<a name="line.313"></a>
+<span class="sourceLineNo">314</span>            String msg = "No valid key could be found in line [" + line + "] to form a key/value pair.";<a name="line.314"></a>
+<span class="sourceLineNo">315</span>            throw new ParseException(msg, 0);<a name="line.315"></a>
+<span class="sourceLineNo">316</span>        }<a name="line.316"></a>
+<span class="sourceLineNo">317</span>        if (split[1] == null) {<a name="line.317"></a>
+<span class="sourceLineNo">318</span>            String msg = "No corresponding value could be found in line [" + line + "] for key [" + split[0] + "]";<a name="line.318"></a>
+<span class="sourceLineNo">319</span>            throw new ParseException(msg, 0);<a name="line.319"></a>
+<span class="sourceLineNo">320</span>        }<a name="line.320"></a>
+<span class="sourceLineNo">321</span><a name="line.321"></a>
+<span class="sourceLineNo">322</span>        return split;<a name="line.322"></a>
+<span class="sourceLineNo">323</span>    }<a name="line.323"></a>
+<span class="sourceLineNo">324</span><a name="line.324"></a>
+<span class="sourceLineNo">325</span>    public static String[] split(String line) {<a name="line.325"></a>
+<span class="sourceLineNo">326</span>        return split(line, DEFAULT_DELIMITER_CHAR);<a name="line.326"></a>
+<span class="sourceLineNo">327</span>    }<a name="line.327"></a>
+<span class="sourceLineNo">328</span><a name="line.328"></a>
+<span class="sourceLineNo">329</span>    public static String[] split(String line, char delimiter) {<a name="line.329"></a>
+<span class="sourceLineNo">330</span>        return split(line, delimiter, DEFAULT_QUOTE_CHAR);<a name="line.330"></a>
+<span class="sourceLineNo">331</span>    }<a name="line.331"></a>
+<span class="sourceLineNo">332</span><a name="line.332"></a>
+<span class="sourceLineNo">333</span>    public static String[] split(String line, char delimiter, char quoteChar) {<a name="line.333"></a>
+<span class="sourceLineNo">334</span>        return split(line, delimiter, quoteChar, quoteChar);<a name="line.334"></a>
+<span class="sourceLineNo">335</span>    }<a name="line.335"></a>
+<span class="sourceLineNo">336</span><a name="line.336"></a>
+<span class="sourceLineNo">337</span>    public static String[] split(String line, char delimiter, char beginQuoteChar, char endQuoteChar) {<a name="line.337"></a>
+<span class="sourceLineNo">338</span>        return split(line, delimiter, beginQuoteChar, endQuoteChar, false, true);<a name="line.338"></a>
+<span class="sourceLineNo">339</span>    }<a name="line.339"></a>
+<span class="sourceLineNo">340</span><a name="line.340"></a>
+<span class="sourceLineNo">341</span>    /**<a name="line.341"></a>
+<span class="sourceLineNo">342</span>     * Splits the specified delimited String into tokens, supporting quoted tokens so that quoted strings themselves<a name="line.342"></a>
+<span class="sourceLineNo">343</span>     * won't be tokenized.<a name="line.343"></a>
+<span class="sourceLineNo">344</span>     * &lt;p/&gt;<a name="line.344"></a>
+<span class="sourceLineNo">345</span>     * This method's implementation is very loosely based (with significant modifications) on<a name="line.345"></a>
+<span class="sourceLineNo">346</span>     * &lt;a href="http://blogs.bytecode.com.au/glen"&gt;Glen Smith&lt;/a&gt;'s open-source<a name="line.346"></a>
+<span class="sourceLineNo">347</span>     * &lt;a href="http://opencsv.svn.sourceforge.net/viewvc/opencsv/trunk/src/au/com/bytecode/opencsv/CSVReader.java?&amp;view=markup"&gt;CSVReader.java&lt;/a&gt;<a name="line.347"></a>
+<span class="sourceLineNo">348</span>     * file.<a name="line.348"></a>
+<span class="sourceLineNo">349</span>     * &lt;p/&gt;<a name="line.349"></a>
+<span class="sourceLineNo">350</span>     * That file is Apache 2.0 licensed as well, making Glen's code a great starting point for us to modify to<a name="line.350"></a>
+<span class="sourceLineNo">351</span>     * our needs.<a name="line.351"></a>
+<span class="sourceLineNo">352</span>     *<a name="line.352"></a>
+<span class="sourceLineNo">353</span>     * @param aLine          the String to parse<a name="line.353"></a>
+<span class="sourceLineNo">354</span>     * @param delimiter      the delimiter by which the &lt;tt&gt;line&lt;/tt&gt; argument is to be split<a name="line.354"></a>
+<span class="sourceLineNo">355</span>     * @param beginQuoteChar the character signifying the start of quoted text (so the quoted text will not be split)<a name="line.355"></a>
+<span class="sourceLineNo">356</span>     * @param endQuoteChar   the character signifying the end of quoted text<a name="line.356"></a>
+<span class="sourceLineNo">357</span>     * @param retainQuotes   if the quotes themselves should be retained when constructing the corresponding token<a name="line.357"></a>
+<span class="sourceLineNo">358</span>     * @param trimTokens     if leading and trailing whitespace should be trimmed from discovered tokens.<a name="line.358"></a>
+<span class="sourceLineNo">359</span>     * @return the tokens discovered from parsing the given delimited &lt;tt&gt;line&lt;/tt&gt;.<a name="line.359"></a>
+<span class="sourceLineNo">360</span>     */<a name="line.360"></a>
+<span class="sourceLineNo">361</span>    public static String[] split(String aLine, char delimiter, char beginQuoteChar, char endQuoteChar,<a name="line.361"></a>
+<span class="sourceLineNo">362</span>                                 boolean retainQuotes, boolean trimTokens) {<a name="line.362"></a>
+<span class="sourceLineNo">363</span>        String line = clean(aLine);<a name="line.363"></a>
+<span class="sourceLineNo">364</span>        if (line == null) {<a name="line.364"></a>
+<span class="sourceLineNo">365</span>            return null;<a name="line.365"></a>
+<span class="sourceLineNo">366</span>        }<a name="line.366"></a>
+<span class="sourceLineNo">367</span><a name="line.367"></a>
+<span class="sourceLineNo">368</span>        List&lt;String&gt; tokens = new ArrayList&lt;String&gt;();<a name="line.368"></a>
+<span class="sourceLineNo">369</span>        StringBuilder sb = new StringBuilder();<a name="line.369"></a>
+<span class="sourceLineNo">370</span>        boolean inQuotes = false;<a name="line.370"></a>
+<span class="sourceLineNo">371</span><a name="line.371"></a>
+<span class="sourceLineNo">372</span>        for (int i = 0; i &lt; line.length(); i++) {<a name="line.372"></a>
+<span class="sourceLineNo">373</span><a name="line.373"></a>
+<span class="sourceLineNo">374</span>            char c = line.charAt(i);<a name="line.374"></a>
+<span class="sourceLineNo">375</span>            if (c == beginQuoteChar) {<a name="line.375"></a>
+<span class="sourceLineNo">376</span>                // this gets complex... the quote may end a quoted block, or escape another quote.<a name="line.376"></a>
+<span class="sourceLineNo">377</span>                // do a 1-char lookahead:<a name="line.377"></a>
+<span class="sourceLineNo">378</span>                if (inQuotes  // we are in quotes, therefore there can be escaped quotes in here.<a name="line.378"></a>
+<span class="sourceLineNo">379</span>                        &amp;&amp; line.length() &gt; (i + 1)  // there is indeed another character to check.<a name="line.379"></a>
+<span class="sourceLineNo">380</span>                        &amp;&amp; line.charAt(i + 1) == beginQuoteChar) { // ..and that char. is a quote also.<a name="line.380"></a>
+<span class="sourceLineNo">381</span>                    // we have two quote chars in a row == one quote char, so consume them both and<a name="line.381"></a>
+<span class="sourceLineNo">382</span>                    // put one on the token. we do *not* exit the quoted text.<a name="line.382"></a>
+<span class="sourceLineNo">383</span>                    sb.append(line.charAt(i + 1));<a name="line.383"></a>
+<span class="sourceLineNo">384</span>                    i++;<a name="line.384"></a>
+<span class="sourceLineNo">385</span>                } else {<a name="line.385"></a>
+<span class="sourceLineNo">386</span>                    inQuotes = !inQuotes;<a name="line.386"></a>
+<span class="sourceLineNo">387</span>                    if (retainQuotes) {<a name="line.387"></a>
+<span class="sourceLineNo">388</span>                        sb.append(c);<a name="line.388"></a>
+<span class="sourceLineNo">389</span>                    }<a name="line.389"></a>
+<span class="sourceLineNo">390</span>                }<a name="line.390"></a>
+<span class="sourceLineNo">391</span>            } else if (c == endQuoteChar) {<a name="line.391"></a>
+<span class="sourceLineNo">392</span>                inQuotes = !inQuotes;<a name="line.392"></a>
+<span class="sourceLineNo">393</span>                if (retainQuotes) {<a name="line.393"></a>
+<span class="sourceLineNo">394</span>                    sb.append(c);<a name="line.394"></a>
+<span class="sourceLineNo">395</span>                }<a name="line.395"></a>
+<span class="sourceLineNo">396</span>            } else if (c == delimiter &amp;&amp; !inQuotes) {<a name="line.396"></a>
+<span class="sourceLineNo">397</span>                String s = sb.toString();<a name="line.397"></a>
+<span class="sourceLineNo">398</span>                if (trimTokens) {<a name="line.398"></a>
+<span class="sourceLineNo">399</span>                    s = s.trim();<a name="line.399"></a>
+<span class="sourceLineNo">400</span>                }<a name="line.400"></a>
+<span class="sourceLineNo">401</span>                tokens.add(s);<a name="line.401"></a>
+<span class="sourceLineNo">402</span>                sb = new StringBuilder(); // start work on next token<a name="line.402"></a>
+<span class="sourceLineNo">403</span>            } else {<a name="line.403"></a>
+<span class="sourceLineNo">404</span>                sb.append(c);<a name="line.404"></a>
+<span class="sourceLineNo">405</span>            }<a name="line.405"></a>
+<span class="sourceLineNo">406</span>        }<a name="line.406"></a>
+<span class="sourceLineNo">407</span>        String s = sb.toString();<a name="line.407"></a>
+<span class="sourceLineNo">408</span>        if (trimTokens) {<a name="line.408"></a>
+<span class="sourceLineNo">409</span>            s = s.trim();<a name="line.409"></a>
+<span class="sourceLineNo">410</span>        }<a name="line.410"></a>
+<span class="sourceLineNo">411</span>        tokens.add(s);<a name="line.411"></a>
+<span class="sourceLineNo">412</span>        return tokens.toArray(new String[tokens.size()]);<a name="line.412"></a>
+<span class="sourceLineNo">413</span>    }<a name="line.413"></a>
+<span class="sourceLineNo">414</span><a name="line.414"></a>
+<span class="sourceLineNo">415</span>    /**<a name="line.415"></a>
+<span class="sourceLineNo">416</span>     * Joins the elements of the provided {@code Iterator} into<a name="line.416"></a>
+<span class="sourceLineNo">417</span>     * a single String containing the provided elements.&lt;/p&gt;<a name="line.417"></a>
+<span class="sourceLineNo">418</span>     * &lt;p/&gt;<a name="line.418"></a>
+<span class="sourceLineNo">419</span>     * No delimiter is added before or after the list.<a name="line.419"></a>
+<span class="sourceLineNo">420</span>     * A {@code null} separator is the same as an empty String ("").&lt;/p&gt;<a name="line.420"></a>
+<span class="sourceLineNo">421</span>     * &lt;p/&gt;<a name="line.421"></a>
+<span class="sourceLineNo">422</span>     * Copied from Commons Lang, version 3 (r1138702).&lt;/p&gt;<a name="line.422"></a>
+<span class="sourceLineNo">423</span>     *<a name="line.423"></a>
+<span class="sourceLineNo">424</span>     * @param iterator  the {@code Iterator} of values to join together, may be null<a name="line.424"></a>
+<span class="sourceLineNo">425</span>     * @param separator the separator character to use, null treated as ""<a name="line.425"></a>
+<span class="sourceLineNo">426</span>     * @return the joined String, {@code null} if null iterator input<a name="line.426"></a>
+<span class="sourceLineNo">427</span>     * @since 1.2<a name="line.427"></a>
+<span class="sourceLineNo">428</span>     */<a name="line.428"></a>
+<span class="sourceLineNo">429</span>    public static String join(Iterator&lt;?&gt; iterator, String separator) {<a name="line.429"></a>
+<span class="sourceLineNo">430</span>        final String empty = "";<a name="line.430"></a>
+<span class="sourceLineNo">431</span><a name="line.431"></a>
+<span class="sourceLineNo">432</span>        // handle null, zero and one elements before building a buffer<a name="line.432"></a>
+<span class="sourceLineNo">433</span>        if (iterator == null) {<a name="line.433"></a>
+<span class="sourceLineNo">434</span>            return null;<a name="line.434"></a>
+<span class="sourceLineNo">435</span>        }<a name="line.435"></a>
+<span class="sourceLineNo">436</span>        if (!iterator.hasNext()) {<a name="line.436"></a>
+<span class="sourceLineNo">437</span>            return empty;<a name="line.437"></a>
+<span class="sourceLineNo">438</span>        }<a name="line.438"></a>
+<span class="sourceLineNo">439</span>        Object first = iterator.next();<a name="line.439"></a>
+<span class="sourceLineNo">440</span>        if (!iterator.hasNext()) {<a name="line.440"></a>
+<span class="sourceLineNo">441</span>            return first == null ? empty : first.toString();<a name="line.441"></a>
+<span class="sourceLineNo">442</span>        }<a name="line.442"></a>
+<span class="sourceLineNo">443</span><a name="line.443"></a>
+<span class="sourceLineNo">444</span>        // two or more elements<a name="line.444"></a>
+<span class="sourceLineNo">445</span>        StringBuilder buf = new StringBuilder(256); // Java default is 16, probably too small<a name="line.445"></a>
+<span class="sourceLineNo">446</span>        if (first != null) {<a name="line.446"></a>
+<span class="sourceLineNo">447</span>            buf.append(first);<a name="line.447"></a>
+<span class="sourceLineNo">448</span>        }<a name="line.448"></a>
+<span class="sourceLineNo">449</span><a name="line.449"></a>
+<span class="sourceLineNo">450</span>        while (iterator.hasNext()) {<a name="line.450"></a>
+<span class="sourceLineNo">451</span>            if (separator != null) {<a name="line.451"></a>
+<span class="sourceLineNo">452</span>                buf.append(separator);<a name="line.452"></a>
+<span class="sourceLineNo">453</span>            }<a name="line.453"></a>
+<span class="sourceLineNo">454</span>            Object obj = iterator.next();<a name="line.454"></a>
+<span class="sourceLineNo">455</span>            if (obj != null) {<a name="line.455"></a>
+<span class="sourceLineNo">456</span>                buf.append(obj);<a name="line.456"></a>
+<span class="sourceLineNo">457</span>            }<a name="line.457"></a>
+<span class="sourceLineNo">458</span>        }<a name="line.458"></a>
+<span class="sourceLineNo">459</span>        return buf.toString();<a name="line.459"></a>
+<span class="sourceLineNo">460</span>    }<a name="line.460"></a>
+<span class="sourceLineNo">461</span><a name="line.461"></a>
+<span class="sourceLineNo">462</span>    /**<a name="line.462"></a>
+<span class="sourceLineNo">463</span>     * Splits the {@code delimited} string (delimited by the specified {@code separator} character) and returns the<a name="line.463"></a>
+<span class="sourceLineNo">464</span>     * delimited values as a {@code Set}.<a name="line.464"></a>
+<span class="sourceLineNo">465</span>     * &lt;p/&gt;<a name="line.465"></a>
+<span class="sourceLineNo">466</span>     * If either argument is {@code null}, this method returns {@code null}.<a name="line.466"></a>
+<span class="sourceLineNo">467</span>     *<a name="line.467"></a>
+<span class="sourceLineNo">468</span>     * @param delimited the string to split<a name="line.468"></a>
+<span class="sourceLineNo">469</span>     * @param separator the character that delineates individual tokens to split<a name="line.469"></a>
+<span class="sourceLineNo">470</span>     * @return the delimited values as a {@code Set}.<a name="line.470"></a>
+<span class="sourceLineNo">471</span>     * @since 1.2<a name="line.471"></a>
+<span class="sourceLineNo">472</span>     */<a name="line.472"></a>
+<span class="sourceLineNo">473</span>    public static Set&lt;String&gt; splitToSet(String delimited, String separator) {<a name="line.473"></a>
+<span class="sourceLineNo">474</span>        if (delimited == null || separator == null) {<a name="line.474"></a>
+<span class="sourceLineNo">475</span>            return null;<a name="line.475"></a>
+<span class="sourceLineNo">476</span>        }<a name="line.476"></a>
+<span class="sourceLineNo">477</span>        String[] split = split(delimited, separator.charAt(0));<a name="line.477"></a>
+<span class="sourceLineNo">478</span>        return asSet(split);<a name="line.478"></a>
+<span class="sourceLineNo">479</span>    }<a name="line.479"></a>
+<span class="sourceLineNo">480</span><a name="line.480"></a>
+<span class="sourceLineNo">481</span>    /**<a name="line.481"></a>
+<span class="sourceLineNo">482</span>     * Returns the input argument, but ensures the first character is capitalized (if possible).<a name="line.482"></a>
+<span class="sourceLineNo">483</span>     * @param in the string to uppercase the first character.<a name="line.483"></a>
+<span class="sourceLineNo">484</span>     * @return the input argument, but with the first character capitalized (if possible).<a name="line.484"></a>
+<span class="sourceLineNo">485</span>     * @since 1.2<a name="line.485"></a>
+<span class="sourceLineNo">486</span>     */<a name="line.486"></a>
+<span class="sourceLineNo">487</span>    public static String uppercaseFirstChar(String in) {<a name="line.487"></a>
+<span class="sourceLineNo">488</span>        if (in == null || in.length() == 0) {<a name="line.488"></a>
+<span class="sourceLineNo">489</span>            return in;<a name="line.489"></a>
+<span class="sourceLineNo">490</span>        }<a name="line.490"></a>
+<span class="sourceLineNo">491</span>        int length = in.length();<a name="line.491"></a>
+<span class="sourceLineNo">492</span>        StringBuilder sb = new StringBuilder(length);<a name="line.492"></a>
+<span class="sourceLineNo">493</span><a name="line.493"></a>
+<span class="sourceLineNo">494</span>        sb.append(Character.toUpperCase(in.charAt(0)));<a name="line.494"></a>
+<span class="sourceLineNo">495</span>        if (length &gt; 1) {<a name="line.495"></a>
+<span class="sourceLineNo">496</span>            String remaining = in.substring(1);<a name="line.496"></a>
+<span class="sourceLineNo">497</span>            sb.append(remaining);<a name="line.497"></a>
+<span class="sourceLineNo">498</span>        }<a name="line.498"></a>
+<span class="sourceLineNo">499</span>        return sb.toString();<a name="line.499"></a>
+<span class="sourceLineNo">500</span>    }<a name="line.500"></a>
+<span class="sourceLineNo">501</span><a name="line.501"></a>
+<span class="sourceLineNo">502</span>    //////////////////////////<a name="line.502"></a>
+<span class="sourceLineNo">503</span>    // From CollectionUtils //<a name="line.503"></a>
+<span class="sourceLineNo">504</span>    //////////////////////////<a name="line.504"></a>
+<span class="sourceLineNo">505</span>    // CollectionUtils cannot be removed from shiro-core until 2.0 as it has a dependency on PrincipalCollection<a name="line.505"></a>
+<span class="sourceLineNo">506</span><a name="line.506"></a>
+<span class="sourceLineNo">507</span><a name="line.507"></a>
+<span class="sourceLineNo">508</span>    private static &lt;E&gt; Set&lt;E&gt; asSet(E... elements) {<a name="line.508"></a>
+<span class="sourceLineNo">509</span>        if (elements == null || elements.length == 0) {<a name="line.509"></a>
+<span class="sourceLineNo">510</span>            return Collections.emptySet();<a name="line.510"></a>
+<span class="sourceLineNo">511</span>        }<a name="line.511"></a>
+<span class="sourceLineNo">512</span><a name="line.512"></a>
+<span class="sourceLineNo">513</span>        if (elements.length == 1) {<a name="line.513"></a>
+<span class="sourceLineNo">514</span>            return Collections.singleton(elements[0]);<a name="line.514"></a>
+<span class="sourceLineNo">515</span>        }<a name="line.515"></a>
+<span class="sourceLineNo">516</span><a name="line.516"></a>
+<span class="sourceLineNo">517</span>        LinkedHashSet&lt;E&gt; set = new LinkedHashSet&lt;E&gt;(elements.length * 4 / 3 + 1);<a name="line.517"></a>
+<span class="sourceLineNo">518</span>        Collections.addAll(set, elements);<a name="line.518"></a>
+<span class="sourceLineNo">519</span>        return set;<a name="line.519"></a>
+<span class="sourceLineNo">520</span>    }<a name="line.520"></a>
+<span class="sourceLineNo">521</span><a name="line.521"></a>
+<span class="sourceLineNo">522</span>}<a name="line.522"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

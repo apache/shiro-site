@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SimpleRole.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Shiro :: Core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.authz</a> &gt; <span class="el_source">SimpleRole.java</span></div><h1>SimpleRole.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.authz;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+/**
+ * A simple representation of a security role that has a name and a collection of permissions.  This object can be
+ * used internally by Realms to maintain authorization state.
+ *
+ * @since 0.2
+ */
+public class SimpleRole implements Serializable {
+
+<span class="pc" id="L34">    protected String name = null;</span>
+    protected Set&lt;Permission&gt; permissions;
+
+<span class="nc" id="L37">    public SimpleRole() {</span>
+<span class="nc" id="L38">    }</span>
+
+<span class="fc" id="L40">    public SimpleRole(String name) {</span>
+<span class="fc" id="L41">        setName(name);</span>
+<span class="fc" id="L42">    }</span>
+
+<span class="nc" id="L44">    public SimpleRole(String name, Set&lt;Permission&gt; permissions) {</span>
+<span class="nc" id="L45">        setName(name);</span>
+<span class="nc" id="L46">        setPermissions(permissions);</span>
+<span class="nc" id="L47">    }</span>
+
+    public String getName() {
+<span class="fc" id="L50">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="fc" id="L54">        this.name = name;</span>
+<span class="fc" id="L55">    }</span>
+
+    public Set&lt;Permission&gt; getPermissions() {
+<span class="fc" id="L58">        return permissions;</span>
+    }
+
+    public void setPermissions(Set&lt;Permission&gt; permissions) {
+<span class="fc" id="L62">        this.permissions = permissions;</span>
+<span class="fc" id="L63">    }</span>
+
+    public void add(Permission permission) {
+<span class="nc" id="L66">        Set&lt;Permission&gt; permissions = getPermissions();</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (permissions == null) {</span>
+<span class="nc" id="L68">            permissions = new LinkedHashSet&lt;Permission&gt;();</span>
+<span class="nc" id="L69">            setPermissions(permissions);</span>
+        }
+<span class="nc" id="L71">        permissions.add(permission);</span>
+<span class="nc" id="L72">    }</span>
+
+    public void addAll(Collection&lt;Permission&gt; perms) {
+<span class="nc bnc" id="L75" title="All 4 branches missed.">        if (perms != null &amp;&amp; !perms.isEmpty()) {</span>
+<span class="nc" id="L76">            Set&lt;Permission&gt; permissions = getPermissions();</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">            if (permissions == null) {</span>
+<span class="nc" id="L78">                permissions = new LinkedHashSet&lt;Permission&gt;(perms.size());</span>
+<span class="nc" id="L79">                setPermissions(permissions);</span>
+            }
+<span class="nc" id="L81">            permissions.addAll(perms);</span>
+        }
+<span class="nc" id="L83">    }</span>
+
+    public boolean isPermitted(Permission p) {
+<span class="nc" id="L86">        Collection&lt;Permission&gt; perms = getPermissions();</span>
+<span class="nc bnc" id="L87" title="All 4 branches missed.">        if (perms != null &amp;&amp; !perms.isEmpty()) {</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">            for (Permission perm : perms) {</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">                if (perm.implies(p)) {</span>
+<span class="nc" id="L90">                    return true;</span>
+                }
+<span class="nc" id="L92">            }</span>
+        }
+<span class="nc" id="L94">        return false;</span>
+    }
+
+    public int hashCode() {
+<span class="nc bnc" id="L98" title="All 2 branches missed.">        return (getName() != null ? getName().hashCode() : 0);</span>
+    }
+
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L102" title="All 2 branches missed.">        if (o == this) {</span>
+<span class="nc" id="L103">            return true;</span>
+        }
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        if (o instanceof SimpleRole) {</span>
+<span class="nc" id="L106">            SimpleRole sr = (SimpleRole) o;</span>
+            //only check name, since role names should be unique across an entire application:
+<span class="nc bnc" id="L108" title="All 4 branches missed.">            return (getName() != null ? getName().equals(sr.getName()) : sr.getName() == null);</span>
+        }
+<span class="nc" id="L110">        return false;</span>
+    }
+
+    public String toString() {
+<span class="nc" id="L114">        return getName();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

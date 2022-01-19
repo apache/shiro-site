@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>HttpMethodPermissionFilter.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: All (aggregate jar)</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.filter.authz</a> &gt; <span class="el_source">HttpMethodPermissionFilter.java</span></div><h1>HttpMethodPermissionFilter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.filter.authz;
+
+import org.apache.shiro.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * A filter that translates an HTTP Request's Method (eg GET, POST, etc)
+ * into an corresponding action (verb) and uses that verb to construct a permission that will be checked to determine
+ * access.
+ * &lt;p/&gt;
+ * This Filter is primarily provided to support REST environments where the type (Method)
+ * of request translates to an action being performed on one or more resources.  This paradigm works well with Shiro's
+ * concepts of using permissions for access control and can be leveraged to easily perform permission checks.
+ * &lt;p/&gt;
+ * This filter functions as follows:
+ * &lt;ol&gt;
+ * &lt;li&gt;The incoming HTTP request's Method (GET, POST, PUT, DELETE, etc) is discovered.&lt;/li&gt;
+ * &lt;li&gt;The Method is translated into a more 'application friendly' verb, such as 'create', edit', 'delete', etc.&lt;/li&gt;
+ * &lt;li&gt;The verb is appended to any configured permissions for the
+ * {@link org.apache.shiro.web.filter.PathMatchingFilter currently matching path}.&lt;/li&gt;
+ * &lt;li&gt;If the current {@code Subject} {@link org.apache.shiro.subject.Subject#isPermitted(String) isPermitted} to
+ * perform the resolved action, the request is allowed to continue.&lt;/li&gt;
+ * &lt;/ol&gt;
+ * &lt;p/&gt;
+ * For example, if the following filter chain was defined, where 'rest' was the name given to a filter instance of
+ * this class:
+ * &lt;pre&gt;
+ * /user/** = rest[user]&lt;/pre&gt;
+ * Then an HTTP {@code GET} request to {@code /user/1234} would translate to the constructed permission
+ * {@code user:read} (GET is mapped to the 'read' action) and execute the permission check
+ * &lt;code&gt;Subject.isPermitted(&amp;quot;user:read&amp;quot;)&lt;/code&gt; in order to allow the request to continue.
+ * &lt;p/&gt;
+ * Similarly, an HTTP {@code POST} to {@code /user} would translate to the constructed permission
+ * {@code user:create} (POST is mapped to the 'create' action) and execute the permission check
+ * &lt;code&gt;Subject.isPermitted(&amp;quot;user:create&amp;quot;)&lt;/code&gt; in order to allow the request to continue.
+ * &lt;p/&gt;
+ * &lt;h3&gt;Method To Verb Mapping&lt;/h3&gt;
+ * The following table represents the default HTTP Method-to-action verb mapping:
+ * &lt;table&gt;
+ * &lt;tr&gt;&lt;th&gt;HTTP Method&lt;/th&gt;&lt;th&gt;Mapped Action&lt;/th&gt;&lt;th&gt;Example Permission&lt;/th&gt;&lt;th&gt;Runtime Check&lt;/th&gt;&lt;/tr&gt;
+ * &lt;tr&gt;&lt;td&gt;head&lt;/td&gt;&lt;td&gt;read&lt;/td&gt;&lt;td&gt;perm1&lt;/td&gt;&lt;td&gt;perm1:read&lt;/td&gt;&lt;/tr&gt;
+ * &lt;tr&gt;&lt;td&gt;get&lt;/td&gt;&lt;td&gt;read&lt;/td&gt;&lt;td&gt;perm2&lt;/td&gt;&lt;td&gt;perm2:read&lt;/td&gt;&lt;/tr&gt;
+ * &lt;tr&gt;&lt;td&gt;put&lt;/td&gt;&lt;td&gt;update&lt;/td&gt;&lt;td&gt;perm3&lt;/td&gt;&lt;td&gt;perm3:update&lt;/td&gt;&lt;/tr&gt;
+ * &lt;tr&gt;&lt;td&gt;post&lt;/td&gt;&lt;td&gt;create&lt;/td&gt;&lt;td&gt;perm4&lt;/td&gt;&lt;td&gt;perm4:create&lt;/td&gt;&lt;/tr&gt;
+ * &lt;tr&gt;&lt;td&gt;mkcol&lt;/td&gt;&lt;td&gt;create&lt;/td&gt;&lt;td&gt;perm5&lt;/td&gt;&lt;td&gt;perm5:create&lt;/td&gt;&lt;/tr&gt;
+ * &lt;tr&gt;&lt;td&gt;options&lt;/td&gt;&lt;td&gt;read&lt;/td&gt;&lt;td&gt;perm6&lt;/td&gt;&lt;td&gt;perm6:read&lt;/td&gt;&lt;/tr&gt;
+ * &lt;tr&gt;&lt;td&gt;trace&lt;/td&gt;&lt;td&gt;read&lt;/td&gt;&lt;td&gt;perm7&lt;/td&gt;&lt;td&gt;perm7:read&lt;/td&gt;&lt;/tr&gt;
+ * &lt;/table&gt;
+ *
+ * @since 1.0
+ */
+public class HttpMethodPermissionFilter extends PermissionsAuthorizationFilter {
+
+    /**
+     * This class's private logger.
+     */
+<span class="fc" id="L83">    private static final Logger log = LoggerFactory.getLogger(HttpMethodPermissionFilter.class);</span>
+
+    /**
+     * Map that contains a mapping between http methods to permission actions (verbs)
+     */
+<span class="fc" id="L88">    private final Map&lt;String, String&gt; httpMethodActions = new HashMap&lt;String, String&gt;();</span>
+
+    //Actions representing HTTP Method values (GET -&gt; read, POST -&gt; create, etc)
+    private static final String CREATE_ACTION = &quot;create&quot;;
+    private static final String READ_ACTION = &quot;read&quot;;
+    private static final String UPDATE_ACTION = &quot;update&quot;;
+    private static final String DELETE_ACTION = &quot;delete&quot;;
+
+    /**
+     * Enum of constants for well-defined mapping values.  Used in the Filter's constructor to perform the map instance
+     * used at runtime.
+     */
+<span class="fc" id="L100">    private static enum HttpMethodAction {</span>
+
+<span class="fc" id="L102">        DELETE(DELETE_ACTION),</span>
+<span class="fc" id="L103">        GET(READ_ACTION),</span>
+<span class="fc" id="L104">        HEAD(READ_ACTION),</span>
+<span class="fc" id="L105">        MKCOL(CREATE_ACTION), //webdav, but useful here</span>
+<span class="fc" id="L106">        OPTIONS(READ_ACTION),</span>
+<span class="fc" id="L107">        POST(CREATE_ACTION),</span>
+<span class="fc" id="L108">        PUT(UPDATE_ACTION),</span>
+<span class="fc" id="L109">        TRACE(READ_ACTION);</span>
+
+        private final String action;
+
+<span class="fc" id="L113">        private HttpMethodAction(String action) {</span>
+<span class="fc" id="L114">            this.action = action;</span>
+<span class="fc" id="L115">        }</span>
+
+        public String getAction() {
+<span class="fc" id="L118">            return this.action;</span>
+        }
+    }
+
+    /**
+     * Creates the filter instance with default method-to-action values in the instance's
+     * {@link #getHttpMethodActions() http method actions map}.
+     */
+<span class="fc" id="L126">    public HttpMethodPermissionFilter() {</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        for (HttpMethodAction methodAction : HttpMethodAction.values()) {</span>
+<span class="fc" id="L128">            httpMethodActions.put(methodAction.name().toLowerCase(), methodAction.getAction());</span>
+        }
+<span class="fc" id="L130">    }</span>
+
+    /**
+     * Returns the HTTP Method name (key) to action verb (value) mapping used to resolve actions based on an
+     * incoming {@code HttpServletRequest}.  All keys and values are lower-case.  The
+     * default key/value pairs are defined in the top class-level JavaDoc.
+     *
+     * @return the HTTP Method lower-case name (key) to lower-case action verb (value) mapping
+     */
+    protected Map&lt;String, String&gt; getHttpMethodActions() {
+<span class="fc" id="L140">        return this.httpMethodActions;</span>
+    }
+
+    /**
+     * Determines the action (verb) attempting to be performed on the filtered resource by the current request.
+     * &lt;p/&gt;
+     * This implementation expects the incoming request to be an {@link HttpServletRequest} and returns a mapped
+     * action based on the HTTP request {@link javax.servlet.http.HttpServletRequest#getMethod() method}.
+     *
+     * @param request to pull the method from.
+     * @return The string equivalent verb of the http method.
+     */
+    protected String getHttpMethodAction(ServletRequest request) {
+<span class="nc" id="L153">        String method = ((HttpServletRequest) request).getMethod();</span>
+<span class="nc" id="L154">        return getHttpMethodAction(method);</span>
+    }
+
+    /**
+     * Determines the corresponding application action that will be performed on the filtered resource based on the
+     * specified HTTP method (GET, POST, etc).
+     *
+     * @param method to be translated into the verb.
+     * @return The string equivalent verb of the method.
+     */
+    protected String getHttpMethodAction(String method) {
+<span class="fc" id="L165">        String lc = method.toLowerCase();</span>
+<span class="fc" id="L166">        String resolved = getHttpMethodActions().get(lc);</span>
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">        return resolved != null ? resolved : method;</span>
+    }
+
+    /**
+     * Returns a collection of String permissions with which to perform a permission check to determine if the filter
+     * will allow the request to continue.
+     * &lt;p/&gt;
+     * This implementation merely delegates to {@link #buildPermissions(String[], String)} and ignores the inbound
+     * HTTP servlet request, but it can be overridden by subclasses for more complex request-specific building logic
+     * if necessary.
+     *
+     * @param request         the inbound HTTP request - ignored in this implementation, but available to
+     *                        subclasses for more complex construction building logic if necessary
+     * @param configuredPerms any url-specific permissions mapped to this filter in the URL rules mappings.
+     * @param action          the application-friendly action (verb) resolved based on the HTTP Method name.
+     * @return a collection of String permissions with which to perform a permission check to determine if the filter
+     *         will allow the request to continue.
+     */
+    protected String[] buildPermissions(HttpServletRequest request, String[] configuredPerms, String action) {
+<span class="nc" id="L186">        return buildPermissions(configuredPerms, action);</span>
+    }
+
+    /**
+     * Builds a new array of permission strings based on the original argument, appending the specified action verb
+     * to each one per {@link org.apache.shiro.authz.permission.WildcardPermission WildcardPermission} conventions.  The
+     * built permission strings will be the ones used at runtime during the permission check that determines if filter
+     * access should be allowed to continue or not.
+     * &lt;p/&gt;
+     * For example, if the {@code configuredPerms} argument contains the following 3 permission strings:
+     * &lt;p/&gt;
+     * &lt;ol&gt;
+     * &lt;li&gt;permission:one&lt;/li&gt;
+     * &lt;li&gt;permission:two&lt;/li&gt;
+     * &lt;li&gt;permission:three&lt;/li&gt;
+     * &lt;/ol&gt;
+     * And the action is {@code read}, then the return value will be:
+     * &lt;ol&gt;
+     * &lt;li&gt;permission:one:read&lt;/li&gt;
+     * &lt;li&gt;permission:two:read&lt;/li&gt;
+     * &lt;li&gt;permission:three:read&lt;/li&gt;
+     * &lt;/ol&gt;
+     * per {@link org.apache.shiro.authz.permission.WildcardPermission WildcardPermission} conventions.  Subclasses
+     * are of course free to override this method or the
+     * {@link #buildPermissions(javax.servlet.http.HttpServletRequest, String[], String) buildPermissions} request
+     * variant for custom building logic or with different permission formats.
+     *
+     * @param configuredPerms list of configuredPerms to be converted.
+     * @param action          the resolved action based on the request method to be appended to permission strings.
+     * @return an array of permission strings with each element appended with the action.
+     */
+    protected String[] buildPermissions(String[] configuredPerms, String action) {
+<span class="pc bpc" id="L218" title="3 of 6 branches missed.">        if (configuredPerms == null || configuredPerms.length &lt;= 0 || !StringUtils.hasText(action)) {</span>
+<span class="nc" id="L219">            return configuredPerms;</span>
+        }
+
+<span class="fc" id="L222">        String[] mappedPerms = new String[configuredPerms.length];</span>
+
+        // loop and append :action
+<span class="fc bfc" id="L225" title="All 2 branches covered.">        for (int i = 0; i &lt; configuredPerms.length; i++) {</span>
+<span class="fc" id="L226">            mappedPerms[i] = configuredPerms[i] + &quot;:&quot; + action;</span>
+        }
+
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">        if (log.isTraceEnabled()) {</span>
+<span class="fc" id="L230">            StringBuilder sb = new StringBuilder();</span>
+<span class="fc bfc" id="L231" title="All 2 branches covered.">            for (int i = 0; i &lt; mappedPerms.length; i++) {</span>
+<span class="fc bfc" id="L232" title="All 2 branches covered.">                if (i &gt; 0) {</span>
+<span class="fc" id="L233">                    sb.append(&quot;, &quot;);</span>
+                }
+<span class="fc" id="L235">                sb.append(mappedPerms[i]);</span>
+            }
+<span class="fc" id="L237">            log.trace(&quot;MAPPED '{}' action to permission(s) '{}'&quot;, action, sb);</span>
+        }
+
+<span class="fc" id="L240">        return mappedPerms;</span>
+    }
+
+    /**
+     * Resolves an 'application friendly' action verb based on the {@code HttpServletRequest}'s method, appends that
+     * action to each configured permission (the {@code mappedValue} argument is a {@code String[]} array), and
+     * delegates the permission check for the newly constructed permission(s) to the superclass
+     * {@link PermissionsAuthorizationFilter#isAccessAllowed(javax.servlet.ServletRequest, javax.servlet.ServletResponse, Object) isAccessAllowed}
+     * implementation to perform the actual permission check.
+     *
+     * @param request     the inbound {@code ServletRequest}
+     * @param response    the outbound {@code ServletResponse}
+     * @param mappedValue the filter-specific config value mapped to this filter in the URL rules mappings.
+     * @return {@code true} if the request should proceed through the filter normally, {@code false} if the
+     *         request should be processed by this filter's
+     *         {@link #onAccessDenied(ServletRequest,ServletResponse,Object)} method instead.
+     * @throws IOException
+     */
+    @Override
+    public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
+<span class="nc" id="L260">        String[] perms = (String[]) mappedValue;</span>
+        // append the http action to the end of the permissions and then back to super
+<span class="nc" id="L262">        String action = getHttpMethodAction(request);</span>
+<span class="nc" id="L263">        String[] resolvedPerms = buildPermissions(perms, action);</span>
+<span class="nc" id="L264">        return super.isAccessAllowed(request, response, resolvedPerms);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

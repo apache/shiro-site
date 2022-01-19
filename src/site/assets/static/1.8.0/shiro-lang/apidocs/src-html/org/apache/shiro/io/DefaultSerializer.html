@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<main role="main">
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a id="line.1">/*</a>
+<span class="sourceLineNo">002</span><a id="line.2"> * Licensed to the Apache Software Foundation (ASF) under one</a>
+<span class="sourceLineNo">003</span><a id="line.3"> * or more contributor license agreements.  See the NOTICE file</a>
+<span class="sourceLineNo">004</span><a id="line.4"> * distributed with this work for additional information</a>
+<span class="sourceLineNo">005</span><a id="line.5"> * regarding copyright ownership.  The ASF licenses this file</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * to you under the Apache License, Version 2.0 (the</a>
+<span class="sourceLineNo">007</span><a id="line.7"> * "License"); you may not use this file except in compliance</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * with the License.  You may obtain a copy of the License at</a>
+<span class="sourceLineNo">009</span><a id="line.9"> *</a>
+<span class="sourceLineNo">010</span><a id="line.10"> *     http://www.apache.org/licenses/LICENSE-2.0</a>
+<span class="sourceLineNo">011</span><a id="line.11"> *</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * Unless required by applicable law or agreed to in writing,</a>
+<span class="sourceLineNo">013</span><a id="line.13"> * software distributed under the License is distributed on an</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</a>
+<span class="sourceLineNo">015</span><a id="line.15"> * KIND, either express or implied.  See the License for the</a>
+<span class="sourceLineNo">016</span><a id="line.16"> * specific language governing permissions and limitations</a>
+<span class="sourceLineNo">017</span><a id="line.17"> * under the License.</a>
+<span class="sourceLineNo">018</span><a id="line.18"> */</a>
+<span class="sourceLineNo">019</span><a id="line.19">package org.apache.shiro.io;</a>
+<span class="sourceLineNo">020</span><a id="line.20"></a>
+<span class="sourceLineNo">021</span><a id="line.21">import java.io.*;</a>
+<span class="sourceLineNo">022</span><a id="line.22"></a>
+<span class="sourceLineNo">023</span><a id="line.23">/**</a>
+<span class="sourceLineNo">024</span><a id="line.24"> * Serializer implementation that uses the default JVM serialization mechanism (Object Input/Output Streams).</a>
+<span class="sourceLineNo">025</span><a id="line.25"> *</a>
+<span class="sourceLineNo">026</span><a id="line.26"> * @since 0.9</a>
+<span class="sourceLineNo">027</span><a id="line.27"> */</a>
+<span class="sourceLineNo">028</span><a id="line.28">public class DefaultSerializer&lt;T&gt; implements Serializer&lt;T&gt; {</a>
+<span class="sourceLineNo">029</span><a id="line.29"></a>
+<span class="sourceLineNo">030</span><a id="line.30">    /**</a>
+<span class="sourceLineNo">031</span><a id="line.31">     * This implementation serializes the Object by using an {@link ObjectOutputStream} backed by a</a>
+<span class="sourceLineNo">032</span><a id="line.32">     * {@link ByteArrayOutputStream}.  The {@code ByteArrayOutputStream}'s backing byte array is returned.</a>
+<span class="sourceLineNo">033</span><a id="line.33">     *</a>
+<span class="sourceLineNo">034</span><a id="line.34">     * @param o the Object to convert into a byte[] array.</a>
+<span class="sourceLineNo">035</span><a id="line.35">     * @return the bytes representing the serialized object using standard JVM serialization.</a>
+<span class="sourceLineNo">036</span><a id="line.36">     * @throws SerializationException wrapping a {@link IOException} if something goes wrong with the streams.</a>
+<span class="sourceLineNo">037</span><a id="line.37">     */</a>
+<span class="sourceLineNo">038</span><a id="line.38">    public byte[] serialize(T o) throws SerializationException {</a>
+<span class="sourceLineNo">039</span><a id="line.39">        if (o == null) {</a>
+<span class="sourceLineNo">040</span><a id="line.40">            String msg = "argument cannot be null.";</a>
+<span class="sourceLineNo">041</span><a id="line.41">            throw new IllegalArgumentException(msg);</a>
+<span class="sourceLineNo">042</span><a id="line.42">        }</a>
+<span class="sourceLineNo">043</span><a id="line.43">        ByteArrayOutputStream baos = new ByteArrayOutputStream();</a>
+<span class="sourceLineNo">044</span><a id="line.44">        BufferedOutputStream bos = new BufferedOutputStream(baos);</a>
+<span class="sourceLineNo">045</span><a id="line.45"></a>
+<span class="sourceLineNo">046</span><a id="line.46">        try {</a>
+<span class="sourceLineNo">047</span><a id="line.47">            ObjectOutputStream oos = new ObjectOutputStream(bos);</a>
+<span class="sourceLineNo">048</span><a id="line.48">            oos.writeObject(o);</a>
+<span class="sourceLineNo">049</span><a id="line.49">            oos.close();</a>
+<span class="sourceLineNo">050</span><a id="line.50">            return baos.toByteArray();</a>
+<span class="sourceLineNo">051</span><a id="line.51">        } catch (IOException e) {</a>
+<span class="sourceLineNo">052</span><a id="line.52">            String msg = "Unable to serialize object [" + o + "].  " +</a>
+<span class="sourceLineNo">053</span><a id="line.53">                    "In order for the DefaultSerializer to serialize this object, the [" + o.getClass().getName() + "] " +</a>
+<span class="sourceLineNo">054</span><a id="line.54">                    "class must implement java.io.Serializable.";</a>
+<span class="sourceLineNo">055</span><a id="line.55">            throw new SerializationException(msg, e);</a>
+<span class="sourceLineNo">056</span><a id="line.56">        }</a>
+<span class="sourceLineNo">057</span><a id="line.57">    }</a>
+<span class="sourceLineNo">058</span><a id="line.58"></a>
+<span class="sourceLineNo">059</span><a id="line.59">    /**</a>
+<span class="sourceLineNo">060</span><a id="line.60">     * This implementation deserializes the byte array using a {@link ObjectInputStream} using a source</a>
+<span class="sourceLineNo">061</span><a id="line.61">     * {@link ByteArrayInputStream} constructed with the argument byte array.</a>
+<span class="sourceLineNo">062</span><a id="line.62">     *</a>
+<span class="sourceLineNo">063</span><a id="line.63">     * @param serialized the raw data resulting from a previous {@link #serialize(Object) serialize} call.</a>
+<span class="sourceLineNo">064</span><a id="line.64">     * @return the deserialized/reconstituted object based on the given byte array</a>
+<span class="sourceLineNo">065</span><a id="line.65">     * @throws SerializationException if anything goes wrong using the streams.</a>
+<span class="sourceLineNo">066</span><a id="line.66">     */</a>
+<span class="sourceLineNo">067</span><a id="line.67">    public T deserialize(byte[] serialized) throws SerializationException {</a>
+<span class="sourceLineNo">068</span><a id="line.68">        if (serialized == null) {</a>
+<span class="sourceLineNo">069</span><a id="line.69">            String msg = "argument cannot be null.";</a>
+<span class="sourceLineNo">070</span><a id="line.70">            throw new IllegalArgumentException(msg);</a>
+<span class="sourceLineNo">071</span><a id="line.71">        }</a>
+<span class="sourceLineNo">072</span><a id="line.72">        ByteArrayInputStream bais = new ByteArrayInputStream(serialized);</a>
+<span class="sourceLineNo">073</span><a id="line.73">        BufferedInputStream bis = new BufferedInputStream(bais);</a>
+<span class="sourceLineNo">074</span><a id="line.74">        try {</a>
+<span class="sourceLineNo">075</span><a id="line.75">            ObjectInputStream ois = new ClassResolvingObjectInputStream(bis);</a>
+<span class="sourceLineNo">076</span><a id="line.76">            @SuppressWarnings({"unchecked"})</a>
+<span class="sourceLineNo">077</span><a id="line.77">            T deserialized = (T) ois.readObject();</a>
+<span class="sourceLineNo">078</span><a id="line.78">            ois.close();</a>
+<span class="sourceLineNo">079</span><a id="line.79">            return deserialized;</a>
+<span class="sourceLineNo">080</span><a id="line.80">        } catch (Exception e) {</a>
+<span class="sourceLineNo">081</span><a id="line.81">            String msg = "Unable to deserialize argument byte array.";</a>
+<span class="sourceLineNo">082</span><a id="line.82">            throw new SerializationException(msg, e);</a>
+<span class="sourceLineNo">083</span><a id="line.83">        }</a>
+<span class="sourceLineNo">084</span><a id="line.84">    }</a>
+<span class="sourceLineNo">085</span><a id="line.85">}</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</main>
+</body>
+</html>

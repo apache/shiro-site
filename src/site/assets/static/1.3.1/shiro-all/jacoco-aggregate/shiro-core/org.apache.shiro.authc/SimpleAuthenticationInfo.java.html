@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>SimpleAuthenticationInfo.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Jar Bundle</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.authc</a> &gt; <span class="el_source">SimpleAuthenticationInfo.java</span></div><h1>SimpleAuthenticationInfo.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.authc;
+
+import org.apache.shiro.subject.MutablePrincipalCollection;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.util.ByteSource;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+
+/**
+ * Simple implementation of the {@link org.apache.shiro.authc.MergableAuthenticationInfo} interface that holds the principals and
+ * credentials.
+ *
+ * @see org.apache.shiro.realm.AuthenticatingRealm
+ * @since 0.9
+ */
+public class SimpleAuthenticationInfo implements MergableAuthenticationInfo, SaltedAuthenticationInfo {
+
+    /**
+     * The principals identifying the account associated with this AuthenticationInfo instance.
+     */
+    protected PrincipalCollection principals;
+    /**
+     * The credentials verifying the account principals.
+     */
+    protected Object credentials;
+
+    /**
+     * Any salt used in hashing the credentials.
+     *
+     * @since 1.1
+     */
+    protected ByteSource credentialsSalt;
+
+    /**
+     * Default no-argument constructor.
+     */
+<span class="fc" id="L59">    public SimpleAuthenticationInfo() {</span>
+<span class="fc" id="L60">    }</span>
+
+    /**
+     * Constructor that takes in a single 'primary' principal of the account and its corresponding credentials,
+     * associated with the specified realm.
+     * &lt;p/&gt;
+     * This is a convenience constructor and will construct a {@link PrincipalCollection PrincipalCollection} based
+     * on the {@code principal} and {@code realmName} argument.
+     *
+     * @param principal   the 'primary' principal associated with the specified realm.
+     * @param credentials the credentials that verify the given principal.
+     * @param realmName   the realm from where the principal and credentials were acquired.
+     */
+<span class="fc" id="L73">    public SimpleAuthenticationInfo(Object principal, Object credentials, String realmName) {</span>
+<span class="fc" id="L74">        this.principals = new SimplePrincipalCollection(principal, realmName);</span>
+<span class="fc" id="L75">        this.credentials = credentials;</span>
+<span class="fc" id="L76">    }</span>
+
+    /**
+     * Constructor that takes in a single 'primary' principal of the account, its corresponding hashed credentials,
+     * the salt used to hash the credentials, and the name of the realm to associate with the principals.
+     * &lt;p/&gt;
+     * This is a convenience constructor and will construct a {@link PrincipalCollection PrincipalCollection} based
+     * on the &lt;code&gt;principal&lt;/code&gt; and &lt;code&gt;realmName&lt;/code&gt; argument.
+     *
+     * @param principal         the 'primary' principal associated with the specified realm.
+     * @param hashedCredentials the hashed credentials that verify the given principal.
+     * @param credentialsSalt   the salt used when hashing the given hashedCredentials
+     * @param realmName         the realm from where the principal and credentials were acquired.
+     * @see org.apache.shiro.authc.credential.HashedCredentialsMatcher HashedCredentialsMatcher
+     * @since 1.1
+     */
+<span class="fc" id="L92">    public SimpleAuthenticationInfo(Object principal, Object hashedCredentials, ByteSource credentialsSalt, String realmName) {</span>
+<span class="fc" id="L93">        this.principals = new SimplePrincipalCollection(principal, realmName);</span>
+<span class="fc" id="L94">        this.credentials = hashedCredentials;</span>
+<span class="fc" id="L95">        this.credentialsSalt = credentialsSalt;</span>
+<span class="fc" id="L96">    }</span>
+
+    /**
+     * Constructor that takes in an account's identifying principal(s) and its corresponding credentials that verify
+     * the principals.
+     *
+     * @param principals  a Realm's account's identifying principal(s)
+     * @param credentials the accounts corresponding principals that verify the principals.
+     */
+<span class="fc" id="L105">    public SimpleAuthenticationInfo(PrincipalCollection principals, Object credentials) {</span>
+<span class="fc" id="L106">        this.principals = new SimplePrincipalCollection(principals);</span>
+<span class="fc" id="L107">        this.credentials = credentials;</span>
+<span class="fc" id="L108">    }</span>
+
+    /**
+     * Constructor that takes in an account's identifying principal(s), hashed credentials used to verify the
+     * principals, and the salt used when hashing the credentials.
+     *
+     * @param principals        a Realm's account's identifying principal(s)
+     * @param hashedCredentials the hashed credentials that verify the principals.
+     * @param credentialsSalt   the salt used when hashing the hashedCredentials.
+     * @see org.apache.shiro.authc.credential.HashedCredentialsMatcher HashedCredentialsMatcher
+     * @since 1.1
+     */
+<span class="nc" id="L120">    public SimpleAuthenticationInfo(PrincipalCollection principals, Object hashedCredentials, ByteSource credentialsSalt) {</span>
+<span class="nc" id="L121">        this.principals = new SimplePrincipalCollection(principals);</span>
+<span class="nc" id="L122">        this.credentials = hashedCredentials;</span>
+<span class="nc" id="L123">        this.credentialsSalt = credentialsSalt;</span>
+<span class="nc" id="L124">    }</span>
+
+
+    public PrincipalCollection getPrincipals() {
+<span class="fc" id="L128">        return principals;</span>
+    }
+
+    /**
+     * Sets the identifying principal(s) represented by this instance.
+     *
+     * @param principals the indentifying attributes of the corresponding Realm account.
+     */
+    public void setPrincipals(PrincipalCollection principals) {
+<span class="fc" id="L137">        this.principals = principals;</span>
+<span class="fc" id="L138">    }</span>
+
+    public Object getCredentials() {
+<span class="fc" id="L141">        return credentials;</span>
+    }
+
+    /**
+     * Sets the credentials that verify the principals/identity of the associated Realm account.
+     *
+     * @param credentials attribute(s) that verify the account's identity/principals, such as a password or private key.
+     */
+    public void setCredentials(Object credentials) {
+<span class="fc" id="L150">        this.credentials = credentials;</span>
+<span class="fc" id="L151">    }</span>
+
+    /**
+     * Returns the salt used to hash the credentials, or {@code null} if no salt was used or credentials were not
+     * hashed at all.
+     * &lt;p/&gt;
+     * Note that this attribute is &lt;em&gt;NOT&lt;/em&gt; handled in the
+     * {@link #merge(AuthenticationInfo) merge} method - a hash salt is only useful within a single realm (as each
+     * realm will perform it's own Credentials Matching logic), and once finished in that realm, Shiro has no further
+     * use for salts.  Therefore it doesn't make sense to 'merge' salts in a multi-realm scenario.
+     *
+     * @return the salt used to hash the credentials, or {@code null} if no salt was used or credentials were not
+     *         hashed at all.
+     * @since 1.1
+     */
+    public ByteSource getCredentialsSalt() {
+<span class="fc" id="L167">        return credentialsSalt;</span>
+    }
+
+    /**
+     * Sets the salt used to hash the credentials, or {@code null} if no salt was used or credentials were not
+     * hashed at all.
+     * &lt;p/&gt;
+     * Note that this attribute is &lt;em&gt;NOT&lt;/em&gt; handled in the
+     * {@link #merge(AuthenticationInfo) merge} method - a hash salt is only useful within a single realm (as each
+     * realm will perform it's own Credentials Matching logic), and once finished in that realm, Shiro has no further
+     * use for salts.  Therefore it doesn't make sense to 'merge' salts in a multi-realm scenario.
+     *
+     * @param salt the salt used to hash the credentials, or {@code null} if no salt was used or credentials were not
+     *             hashed at all.
+     * @since 1.1
+     */
+    public void setCredentialsSalt(ByteSource salt) {
+<span class="fc" id="L184">        this.credentialsSalt = salt;</span>
+<span class="fc" id="L185">    }</span>
+
+    /**
+     * Takes the specified &lt;code&gt;info&lt;/code&gt; argument and adds its principals and credentials into this instance.
+     *
+     * @param info the &lt;code&gt;AuthenticationInfo&lt;/code&gt; to add into this instance.
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public void merge(AuthenticationInfo info) {
+<span class="pc bpc" id="L194" title="2 of 6 branches missed.">        if (info == null || info.getPrincipals() == null || info.getPrincipals().isEmpty()) {</span>
+<span class="fc" id="L195">            return;</span>
+        }
+
+<span class="fc bfc" id="L198" title="All 2 branches covered.">        if (this.principals == null) {</span>
+<span class="fc" id="L199">            this.principals = info.getPrincipals();</span>
+        } else {
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">            if (!(this.principals instanceof MutablePrincipalCollection)) {</span>
+<span class="fc" id="L202">                this.principals = new SimplePrincipalCollection(this.principals);</span>
+            }
+<span class="fc" id="L204">            ((MutablePrincipalCollection) this.principals).addAll(info.getPrincipals());</span>
+        }
+
+        //only mess with a salt value if we don't have one yet.  It doesn't make sense
+        //to merge salt values from different realms because a salt is used only within
+        //the realm's credential matching process.  But if the current instance's salt
+        //is null, then it can't hurt to pull in a non-null value if one exists.
+        //
+        //since 1.1:
+<span class="pc bpc" id="L213" title="2 of 4 branches missed.">        if (this.credentialsSalt == null &amp;&amp; info instanceof SaltedAuthenticationInfo) {</span>
+<span class="fc" id="L214">            this.credentialsSalt = ((SaltedAuthenticationInfo) info).getCredentialsSalt();</span>
+        }
+
+<span class="fc" id="L217">        Object thisCredentials = getCredentials();</span>
+<span class="fc" id="L218">        Object otherCredentials = info.getCredentials();</span>
+
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">        if (otherCredentials == null) {</span>
+<span class="nc" id="L221">            return;</span>
+        }
+
+<span class="pc bpc" id="L224" title="1 of 2 branches missed.">        if (thisCredentials == null) {</span>
+<span class="fc" id="L225">            this.credentials = otherCredentials;</span>
+<span class="fc" id="L226">            return;</span>
+        }
+
+<span class="nc bnc" id="L229" title="All 2 branches missed.">        if (!(thisCredentials instanceof Collection)) {</span>
+<span class="nc" id="L230">            Set newSet = new HashSet();</span>
+<span class="nc" id="L231">            newSet.add(thisCredentials);</span>
+<span class="nc" id="L232">            setCredentials(newSet);</span>
+        }
+
+        // At this point, the credentials should be a collection
+<span class="nc" id="L236">        Collection credentialCollection = (Collection) getCredentials();</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">        if (otherCredentials instanceof Collection) {</span>
+<span class="nc" id="L238">            credentialCollection.addAll((Collection) otherCredentials);</span>
+        } else {
+<span class="nc" id="L240">            credentialCollection.add(otherCredentials);</span>
+        }
+<span class="nc" id="L242">    }</span>
+
+    /**
+     * Returns &lt;code&gt;true&lt;/code&gt; if the Object argument is an &lt;code&gt;instanceof SimpleAuthenticationInfo&lt;/code&gt; and
+     * its {@link #getPrincipals() principals} are equal to this instance's principals, &lt;code&gt;false&lt;/code&gt; otherwise.
+     *
+     * @param o the object to compare for equality.
+     * @return &lt;code&gt;true&lt;/code&gt; if the Object argument is an &lt;code&gt;instanceof SimpleAuthenticationInfo&lt;/code&gt; and
+     *         its {@link #getPrincipals() principals} are equal to this instance's principals, &lt;code&gt;false&lt;/code&gt; otherwise.
+     */
+    public boolean equals(Object o) {
+<span class="pc bpc" id="L253" title="1 of 2 branches missed.">        if (this == o) return true;</span>
+<span class="nc bnc" id="L254" title="All 2 branches missed.">        if (!(o instanceof SimpleAuthenticationInfo)) return false;</span>
+
+<span class="nc" id="L256">        SimpleAuthenticationInfo that = (SimpleAuthenticationInfo) o;</span>
+
+        //noinspection RedundantIfStatement
+<span class="nc bnc" id="L259" title="All 6 branches missed.">        if (principals != null ? !principals.equals(that.principals) : that.principals != null) return false;</span>
+
+<span class="nc" id="L261">        return true;</span>
+    }
+
+    /**
+     * Returns the hashcode of the internal {@link #getPrincipals() principals} instance.
+     *
+     * @return the hashcode of the internal {@link #getPrincipals() principals} instance.
+     */
+    public int hashCode() {
+<span class="nc bnc" id="L270" title="All 2 branches missed.">        return (principals != null ? principals.hashCode() : 0);</span>
+    }
+
+    /**
+     * Simple implementation that merely returns &lt;code&gt;{@link #getPrincipals() principals}.toString()&lt;/code&gt;
+     *
+     * @return &lt;code&gt;{@link #getPrincipals() principals}.toString()&lt;/code&gt;
+     */
+    public String toString() {
+<span class="fc" id="L279">        return principals.toString();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

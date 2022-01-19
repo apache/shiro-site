@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>SubjectRunnable.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.subject.support</a> &gt; <span class="el_source">SubjectRunnable.java</span></div><h1>SubjectRunnable.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.subject.support;
+
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadState;
+
+/**
+ * A {@code SubjectRunnable} ensures that a target/delegate {@link Runnable Runnable} will execute such that any
+ * call to {@code SecurityUtils.}{@link org.apache.shiro.SecurityUtils#getSubject() getSubject()} during the
+ * {@code Runnable}'s execution will return the associated {@code Subject} instance.  The {@code SubjectRunnable}
+ * instance can be run on any thread (the current thread or asynchronously on another thread) and the
+ * {@code SecurityUtils.getSubject()} call will still work properly.  This implementation also guarantees that Shiro's
+ * thread state will be identical before and after execution to ensure threads remain clean in any thread-pooled
+ * environment.
+ * &lt;p/&gt;
+ * When instances of this class {@link Runnable#run() run()}, the following occurs:
+ * &lt;ol&gt;
+ * &lt;li&gt;The Subject and any of its associated thread state is first bound to the thread that executes the
+ * {@code Runnable}.&lt;/li&gt;
+ * &lt;li&gt;The delegate/target {@code Runnable} is {@link #doRun(Runnable) run}&lt;/li&gt;
+ * &lt;li&gt;Any previous thread state that might have existed before the {@code Subject} was bound is fully restored&lt;/li&gt;
+ * &lt;/ol&gt;
+ * &lt;p/&gt;
+ *
+ * &lt;h3&gt;Usage&lt;/h3&gt;
+ *
+ * This is typically considered a support class and is not often directly referenced.  Most people prefer to use
+ * the {@code Subject.}{@link Subject#execute(Runnable) execute} or
+ * {@code Subject.}{@link Subject#associateWith(Runnable) associateWith} methods, which transparently perform the
+ * necessary association logic.
+ * &lt;p/&gt;
+ * An even more convenient alternative is to use a
+ * {@link org.apache.shiro.concurrent.SubjectAwareExecutor SubjectAwareExecutor}, which transparently uses
+ * instances of this class but does not require referencing Shiro's API at all.
+ *
+ * @see Subject#associateWith(Runnable)
+ * @see org.apache.shiro.concurrent.SubjectAwareExecutor SubjectAwareExecutor
+ * @since 1.0
+ */
+public class SubjectRunnable implements Runnable {
+
+    protected final ThreadState threadState;
+    private final Runnable runnable;
+
+    /**
+     * Creates a new {@code SubjectRunnable} that, when executed, will execute the target {@code delegate}, but
+     * guarantees that it will run associated with the specified {@code Subject}.
+     *
+     * @param subject  the Subject to associate with the delegate's execution.
+     * @param delegate the runnable to run.
+     */
+    public SubjectRunnable(Subject subject, Runnable delegate) {
+<span class="fc" id="L70">        this(new SubjectThreadState(subject), delegate);</span>
+<span class="fc" id="L71">    }</span>
+
+    /**
+     * Creates a new {@code SubjectRunnable} that, when executed, will perform thread state
+     * {@link ThreadState#bind binding} and guaranteed {@link ThreadState#restore restoration} before and after the
+     * {@link Runnable Runnable}'s execution, respectively.
+     *
+     * @param threadState the thread state to bind and unbind before and after the runnable's execution.
+     * @param delegate    the delegate {@code Runnable} to execute when this instance is {@link #run() run()}.
+     * @throws IllegalArgumentException if either the {@code ThreadState} or {@link Runnable} arguments are {@code null}.
+     */
+<span class="fc" id="L82">    protected SubjectRunnable(ThreadState threadState, Runnable delegate) throws IllegalArgumentException {</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if (threadState == null) {</span>
+<span class="nc" id="L84">            throw new IllegalArgumentException(&quot;ThreadState argument cannot be null.&quot;);</span>
+        }
+<span class="fc" id="L86">        this.threadState = threadState;</span>
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">        if (delegate == null) {</span>
+<span class="nc" id="L88">            throw new IllegalArgumentException(&quot;Runnable argument cannot be null.&quot;);</span>
+        }
+<span class="fc" id="L90">        this.runnable = delegate;</span>
+<span class="fc" id="L91">    }</span>
+
+    /**
+     * {@link ThreadState#bind Bind}s the Subject thread state, executes the target {@code Runnable} and then guarantees
+     * the previous thread state's {@link ThreadState#restore restoration}:
+     * &lt;pre&gt;
+     * try {
+     *     threadState.{@link ThreadState#bind bind()};
+     *     {@link #doRun doRun}(targetRunnable);
+     * } finally {
+     *     threadState.{@link ThreadState#restore restore()}
+     * }
+     * &lt;/pre&gt;
+     */
+    public void run() {
+        try {
+<span class="fc" id="L107">            threadState.bind();</span>
+<span class="fc" id="L108">            doRun(this.runnable);</span>
+        } finally {
+<span class="pc" id="L110">            threadState.restore();</span>
+<span class="fc" id="L111">        }</span>
+<span class="fc" id="L112">    }</span>
+
+    /**
+     * Simply calls the target {@link Runnable Runnable}'s {@link Runnable#run run()} method.
+     *
+     * @param runnable the target runnable to run.
+     */
+    protected void doRun(Runnable runnable) {
+<span class="fc" id="L120">        runnable.run();</span>
+<span class="fc" id="L121">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

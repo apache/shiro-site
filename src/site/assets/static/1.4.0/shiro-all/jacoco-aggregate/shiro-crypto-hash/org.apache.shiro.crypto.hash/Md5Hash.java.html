@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>Md5Hash.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: All (aggregate jar)</a> &gt; <a href="../index.html" class="el_bundle">shiro-crypto-hash</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.crypto.hash</a> &gt; <span class="el_source">Md5Hash.java</span></div><h1>Md5Hash.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.crypto.hash;
+
+import org.apache.shiro.codec.Base64;
+import org.apache.shiro.codec.Hex;
+
+/**
+ * Generates an MD5 Hash (RFC 1321) from a given input &lt;tt&gt;source&lt;/tt&gt; with an optional &lt;tt&gt;salt&lt;/tt&gt; and
+ * hash iterations.
+ * &lt;p/&gt;
+ * See the {@link SimpleHash SimpleHash} parent class JavaDoc for a detailed explanation of Hashing
+ * techniques and how the overloaded constructors function.
+ *
+ * @since 0.9
+ */
+public class Md5Hash extends SimpleHash {
+
+    //TODO - complete JavaDoc
+
+    public static final String ALGORITHM_NAME = &quot;MD5&quot;;
+
+    public Md5Hash() {
+<span class="nc" id="L40">        super(ALGORITHM_NAME);</span>
+<span class="nc" id="L41">    }</span>
+
+    public Md5Hash(Object source) {
+<span class="fc" id="L44">        super(ALGORITHM_NAME, source);</span>
+<span class="fc" id="L45">    }</span>
+
+    public Md5Hash(Object source, Object salt) {
+<span class="nc" id="L48">        super(ALGORITHM_NAME, source, salt);</span>
+<span class="nc" id="L49">    }</span>
+
+    public Md5Hash(Object source, Object salt, int hashIterations) {
+<span class="nc" id="L52">        super(ALGORITHM_NAME, source, salt, hashIterations);</span>
+<span class="nc" id="L53">    }</span>
+
+    public static Md5Hash fromHexString(String hex) {
+<span class="nc" id="L56">        Md5Hash hash = new Md5Hash();</span>
+<span class="nc" id="L57">        hash.setBytes(Hex.decode(hex));</span>
+<span class="nc" id="L58">        return hash;</span>
+    }
+
+    public static Md5Hash fromBase64String(String base64) {
+<span class="nc" id="L62">        Md5Hash hash = new Md5Hash();</span>
+<span class="nc" id="L63">        hash.setBytes(Base64.decode(base64));</span>
+<span class="nc" id="L64">        return hash;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

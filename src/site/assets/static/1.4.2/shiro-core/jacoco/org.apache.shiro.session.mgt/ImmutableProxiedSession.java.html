@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImmutableProxiedSession.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Shiro :: Core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.session.mgt</a> &gt; <span class="el_source">ImmutableProxiedSession.java</span></div><h1>ImmutableProxiedSession.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.session.mgt;
+
+import org.apache.shiro.session.InvalidSessionException;
+import org.apache.shiro.session.ProxiedSession;
+import org.apache.shiro.session.Session;
+
+
+/**
+ * Implementation of the {@link Session Session} interface that proxies another &lt;code&gt;Session&lt;/code&gt;, but does not
+ * allow any 'write' operations to the underlying session. It allows 'read' operations only.
+ * &lt;p/&gt;
+ * The &lt;code&gt;Session&lt;/code&gt; write operations are defined as follows.  A call to any of these methods on this
+ * proxy will immediately result in an {@link InvalidSessionException} being thrown:
+ * &lt;ul&gt;
+ * &lt;li&gt;{@link Session#setTimeout(long) Session.setTimeout(long)}&lt;/li&gt;
+ * &lt;li&gt;{@link Session#touch() Session.touch()}&lt;/li&gt;
+ * &lt;li&gt;{@link Session#stop() Session.stop()}&lt;/li&gt;
+ * &lt;li&gt;{@link Session#setAttribute(Object, Object) Session.setAttribute(key,value)}&lt;/li&gt;
+ * &lt;li&gt;{@link Session#removeAttribute(Object) Session.removeAttribute(key)}&lt;/li&gt;
+ * &lt;/ul&gt;
+ * Any other method invocation not listed above will result in a corresponding call to the underlying &lt;code&gt;Session&lt;/code&gt;.
+ *
+ * @since 0.9
+ */
+public class ImmutableProxiedSession extends ProxiedSession {
+
+    /**
+     * Constructs a new instance of this class proxying the specified &lt;code&gt;Session&lt;/code&gt;.
+     *
+     * @param target the target &lt;code&gt;Session&lt;/code&gt; to proxy.
+     */
+    public ImmutableProxiedSession(Session target) {
+<span class="fc" id="L51">        super(target);</span>
+<span class="fc" id="L52">    }</span>
+
+    /**
+     * Simply throws an &lt;code&gt;InvalidSessionException&lt;/code&gt; indicating that this proxy is immutable.  Used
+     * only in the Session's 'write' methods documented in the top class-level JavaDoc.
+     *
+     * @throws InvalidSessionException in all cases - used by the Session 'write' method implementations.
+     */
+    protected void throwImmutableException() throws InvalidSessionException {
+<span class="fc" id="L61">        String msg = &quot;This session is immutable and read-only - it cannot be altered.  This is usually because &quot; +</span>
+                &quot;the session has been stopped or expired already.&quot;;
+<span class="fc" id="L63">        throw new InvalidSessionException(msg);</span>
+    }
+
+    /**
+     * Immediately {@link #throwImmutableException() throws} an &lt;code&gt;InvalidSessionException&lt;/code&gt; in all
+     * cases because this proxy is immutable.
+     */
+    public void setTimeout(long maxIdleTimeInMillis) throws InvalidSessionException {
+<span class="nc" id="L71">        throwImmutableException();</span>
+<span class="nc" id="L72">    }</span>
+
+    /**
+     * Immediately {@link #throwImmutableException() throws} an &lt;code&gt;InvalidSessionException&lt;/code&gt; in all
+     * cases because this proxy is immutable.
+     */
+    public void touch() throws InvalidSessionException {
+<span class="nc" id="L79">        throwImmutableException();</span>
+<span class="nc" id="L80">    }</span>
+
+    /**
+     * Immediately {@link #throwImmutableException() throws} an &lt;code&gt;InvalidSessionException&lt;/code&gt; in all
+     * cases because this proxy is immutable.
+     */
+    public void stop() throws InvalidSessionException {
+<span class="nc" id="L87">        throwImmutableException();</span>
+<span class="nc" id="L88">    }</span>
+
+    /**
+     * Immediately {@link #throwImmutableException() throws} an &lt;code&gt;InvalidSessionException&lt;/code&gt; in all
+     * cases because this proxy is immutable.
+     */
+    public void setAttribute(Object key, Object value) throws InvalidSessionException {
+<span class="nc" id="L95">        throwImmutableException();</span>
+<span class="nc" id="L96">    }</span>
+
+    /**
+     * Immediately {@link #throwImmutableException() throws} an &lt;code&gt;InvalidSessionException&lt;/code&gt; in all
+     * cases because this proxy is immutable.
+     */
+    public Object removeAttribute(Object key) throws InvalidSessionException {
+<span class="nc" id="L103">        throwImmutableException();</span>
+        //we should never ever reach this point due to the exception being thrown.
+<span class="nc" id="L105">        throw new InternalError(&quot;This code should never execute - please report this as a bug!&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

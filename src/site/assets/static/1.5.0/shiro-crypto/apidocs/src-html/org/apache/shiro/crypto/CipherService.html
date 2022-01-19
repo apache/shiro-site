@@ -1,0 +1,249 @@
+<!DOCTYPE HTML>
+<html lang="fr">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<main role="main">
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a id="line.1">/*</a>
+<span class="sourceLineNo">002</span><a id="line.2"> * Licensed to the Apache Software Foundation (ASF) under one</a>
+<span class="sourceLineNo">003</span><a id="line.3"> * or more contributor license agreements.  See the NOTICE file</a>
+<span class="sourceLineNo">004</span><a id="line.4"> * distributed with this work for additional information</a>
+<span class="sourceLineNo">005</span><a id="line.5"> * regarding copyright ownership.  The ASF licenses this file</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * to you under the Apache License, Version 2.0 (the</a>
+<span class="sourceLineNo">007</span><a id="line.7"> * "License"); you may not use this file except in compliance</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * with the License.  You may obtain a copy of the License at</a>
+<span class="sourceLineNo">009</span><a id="line.9"> *</a>
+<span class="sourceLineNo">010</span><a id="line.10"> *     http://www.apache.org/licenses/LICENSE-2.0</a>
+<span class="sourceLineNo">011</span><a id="line.11"> *</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * Unless required by applicable law or agreed to in writing,</a>
+<span class="sourceLineNo">013</span><a id="line.13"> * software distributed under the License is distributed on an</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</a>
+<span class="sourceLineNo">015</span><a id="line.15"> * KIND, either express or implied.  See the License for the</a>
+<span class="sourceLineNo">016</span><a id="line.16"> * specific language governing permissions and limitations</a>
+<span class="sourceLineNo">017</span><a id="line.17"> * under the License.</a>
+<span class="sourceLineNo">018</span><a id="line.18"> */</a>
+<span class="sourceLineNo">019</span><a id="line.19">package org.apache.shiro.crypto;</a>
+<span class="sourceLineNo">020</span><a id="line.20"></a>
+<span class="sourceLineNo">021</span><a id="line.21">import org.apache.shiro.util.ByteSource;</a>
+<span class="sourceLineNo">022</span><a id="line.22"></a>
+<span class="sourceLineNo">023</span><a id="line.23">import java.io.InputStream;</a>
+<span class="sourceLineNo">024</span><a id="line.24">import java.io.OutputStream;</a>
+<span class="sourceLineNo">025</span><a id="line.25"></a>
+<span class="sourceLineNo">026</span><a id="line.26">/**</a>
+<span class="sourceLineNo">027</span><a id="line.27"> * A {@code CipherService} uses a cryptographic algorithm called a</a>
+<span class="sourceLineNo">028</span><a id="line.28"> * &lt;a href="http://en.wikipedia.org/wiki/Cipher"&gt;Cipher&lt;/a&gt; to convert an original input source using a {@code key} to</a>
+<span class="sourceLineNo">029</span><a id="line.29"> * an uninterpretable format.  The resulting encrypted output is only able to be converted back to original form with</a>
+<span class="sourceLineNo">030</span><a id="line.30"> * a {@code key} as well.  {@code CipherService}s can perform both encryption and decryption.</a>
+<span class="sourceLineNo">031</span><a id="line.31"> * &lt;h2&gt;Cipher Basics&lt;/h2&gt;</a>
+<span class="sourceLineNo">032</span><a id="line.32"> * For what is known as &lt;em&gt;Symmetric&lt;/em&gt; {@code Cipher}s, the {@code Key} used to encrypt the source is the same</a>
+<span class="sourceLineNo">033</span><a id="line.33"> * as (or trivially similar to) the {@code Key} used to decrypt it.</a>
+<span class="sourceLineNo">034</span><a id="line.34"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">035</span><a id="line.35"> * For &lt;em&gt;Asymmetric&lt;/em&gt; {@code Cipher}s, the encryption {@code Key} is not the same as the decryption {@code Key}.</a>
+<span class="sourceLineNo">036</span><a id="line.36"> * The most common type of Asymmetric Ciphers are based on what is called public/private key pairs:</a>
+<span class="sourceLineNo">037</span><a id="line.37"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">038</span><a id="line.38"> * A &lt;em&gt;private&lt;/em&gt; key is known only to a single party, and as its name implies, is supposed be kept very private</a>
+<span class="sourceLineNo">039</span><a id="line.39"> * and secure.  A &lt;em&gt;public&lt;/em&gt; key that is associated with the private key can be disseminated freely to anyone.</a>
+<span class="sourceLineNo">040</span><a id="line.40"> * Then data encrypted by the public key can only be decrypted by the private key and vice versa, but neither party</a>
+<span class="sourceLineNo">041</span><a id="line.41"> * need share their private key with anyone else.  By not sharing a private key, you can guarantee no 3rd party can</a>
+<span class="sourceLineNo">042</span><a id="line.42"> * intercept the key and therefore use it to decrypt a message.</a>
+<span class="sourceLineNo">043</span><a id="line.43"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">044</span><a id="line.44"> * This asymmetric key technology was created as a</a>
+<span class="sourceLineNo">045</span><a id="line.45"> * more secure alternative to symmetric ciphers that sometimes suffer from man-in-the-middle attacks since, for</a>
+<span class="sourceLineNo">046</span><a id="line.46"> * data shared between two parties, the same Key must also be shared and may be compromised.</a>
+<span class="sourceLineNo">047</span><a id="line.47"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">048</span><a id="line.48"> * Note that a symmetric cipher is perfectly fine to use if you just want to encode data in a format no one else</a>
+<span class="sourceLineNo">049</span><a id="line.49"> * can understand and you never give away the key.  Shiro uses a symmetric cipher when creating certain</a>
+<span class="sourceLineNo">050</span><a id="line.50"> * HTTP Cookies for example - because it is often undesirable to have user's identity stored in a plain-text cookie,</a>
+<span class="sourceLineNo">051</span><a id="line.51"> * that identity can be converted via a symmetric cipher.  Since the the same exact Shiro application will receive</a>
+<span class="sourceLineNo">052</span><a id="line.52"> * the cookie, it can decrypt it via the same {@code Key} and there is no potential for discovery since that Key</a>
+<span class="sourceLineNo">053</span><a id="line.53"> * is never shared with anyone.</a>
+<span class="sourceLineNo">054</span><a id="line.54"> * &lt;h2&gt;{@code CipherService}s vs JDK {@link javax.crypto.Cipher Cipher}s&lt;/h2&gt;</a>
+<span class="sourceLineNo">055</span><a id="line.55"> * Shiro {@code CipherService}s essentially do the same things as JDK {@link javax.crypto.Cipher Cipher}s, but in</a>
+<span class="sourceLineNo">056</span><a id="line.56"> * simpler and easier-to-use ways for most application developers.  When thinking about encrypting and decrypting data</a>
+<span class="sourceLineNo">057</span><a id="line.57"> * in an application, most app developers want what a {@code CipherService} provides, rather than having to manage the</a>
+<span class="sourceLineNo">058</span><a id="line.58"> * lower-level intricacies of the JDK's {@code Cipher} API.  Here are a few reasons why most people prefer</a>
+<span class="sourceLineNo">059</span><a id="line.59"> * {@code CipherService}s:</a>
+<span class="sourceLineNo">060</span><a id="line.60"> * &lt;ul&gt;</a>
+<span class="sourceLineNo">061</span><a id="line.61"> * &lt;li&gt;&lt;b&gt;Stateless Methods&lt;/b&gt; - {@code CipherService} method calls do not retain state between method invocations.</a>
+<span class="sourceLineNo">062</span><a id="line.62"> * JDK {@code Cipher} instances do retain state across invocations, requiring its end-users to manage the instance</a>
+<span class="sourceLineNo">063</span><a id="line.63"> * and its state themselves.&lt;/li&gt;</a>
+<span class="sourceLineNo">064</span><a id="line.64"> * &lt;li&gt;&lt;b&gt;Thread Safety&lt;/b&gt; - {@code CipherService} instances are thread-safe inherently because no state is</a>
+<span class="sourceLineNo">065</span><a id="line.65"> * retained across method invocations.  JDK {@code Cipher} instances retain state and cannot be used by multiple</a>
+<span class="sourceLineNo">066</span><a id="line.66"> * threads concurrently.&lt;/li&gt;</a>
+<span class="sourceLineNo">067</span><a id="line.67"> * &lt;li&gt;&lt;b&gt;Single Operation&lt;/b&gt; - {@code CipherService} method calls are single operation methods: encryption or</a>
+<span class="sourceLineNo">068</span><a id="line.68"> * decryption in their entirety are done as a single method call.  This is ideal for the large majority of developer</a>
+<span class="sourceLineNo">069</span><a id="line.69"> * needs where you have something unencrypted and just want it decrypted (or vice versa) in a single method call.  In</a>
+<span class="sourceLineNo">070</span><a id="line.70"> * contrast, JDK {@code Cipher} instances can support encrypting/decrypting data in chunks over time (because it</a>
+<span class="sourceLineNo">071</span><a id="line.71"> * retains state), but this often introduces API clutter and confusion for most application developers.&lt;/li&gt;</a>
+<span class="sourceLineNo">072</span><a id="line.72"> * &lt;li&gt;&lt;b&gt;Type Safe&lt;/b&gt; - There are {@code CipherService} implementations for different Cipher algorithms</a>
+<span class="sourceLineNo">073</span><a id="line.73"> * ({@code AesCipherService}, {@code BlowfishCipherService}, etc).  There is only one JDK {@code Cipher} class to</a>
+<span class="sourceLineNo">074</span><a id="line.74"> * represent all cipher algorithms/instances.</a>
+<span class="sourceLineNo">075</span><a id="line.75"> * &lt;li&gt;&lt;b&gt;Simple Construction&lt;/b&gt; - Because {@code CipherService} instances are type-safe, instantiating and using</a>
+<span class="sourceLineNo">076</span><a id="line.76"> * one is often as simple as calling the default constructor, for example, &lt;code&gt;new AesCipherService();&lt;/code&gt;.  The</a>
+<span class="sourceLineNo">077</span><a id="line.77"> * JDK {@code Cipher} class however requires using a procedural factory method with String arguments to indicate how</a>
+<span class="sourceLineNo">078</span><a id="line.78"> * the instance should be created.  The String arguments themselves are somewhat cryptic and hard to</a>
+<span class="sourceLineNo">079</span><a id="line.79"> * understand unless you're a security expert.  Shiro hides these details from you, but allows you to configure them</a>
+<span class="sourceLineNo">080</span><a id="line.80"> * if you want.&lt;/li&gt;</a>
+<span class="sourceLineNo">081</span><a id="line.81"> * &lt;/ul&gt;</a>
+<span class="sourceLineNo">082</span><a id="line.82"> *</a>
+<span class="sourceLineNo">083</span><a id="line.83"> * @see BlowfishCipherService</a>
+<span class="sourceLineNo">084</span><a id="line.84"> * @see AesCipherService</a>
+<span class="sourceLineNo">085</span><a id="line.85"> * @since 1.0</a>
+<span class="sourceLineNo">086</span><a id="line.86"> */</a>
+<span class="sourceLineNo">087</span><a id="line.87">public interface CipherService {</a>
+<span class="sourceLineNo">088</span><a id="line.88"></a>
+<span class="sourceLineNo">089</span><a id="line.89">    /**</a>
+<span class="sourceLineNo">090</span><a id="line.90">     * Decrypts encrypted data via the specified cipher key and returns the original (pre-encrypted) data.</a>
+<span class="sourceLineNo">091</span><a id="line.91">     * Note that the key must be in a format understood by the CipherService implementation.</a>
+<span class="sourceLineNo">092</span><a id="line.92">     *</a>
+<span class="sourceLineNo">093</span><a id="line.93">     * @param encrypted     the previously encrypted data to decrypt</a>
+<span class="sourceLineNo">094</span><a id="line.94">     * @param decryptionKey the cipher key used during decryption.</a>
+<span class="sourceLineNo">095</span><a id="line.95">     * @return a byte source representing the original form of the specified encrypted data.</a>
+<span class="sourceLineNo">096</span><a id="line.96">     * @throws CryptoException if there is an error during decryption</a>
+<span class="sourceLineNo">097</span><a id="line.97">     */</a>
+<span class="sourceLineNo">098</span><a id="line.98">    ByteSource decrypt(byte[] encrypted, byte[] decryptionKey) throws CryptoException;</a>
+<span class="sourceLineNo">099</span><a id="line.99"></a>
+<span class="sourceLineNo">100</span><a id="line.100">    /**</a>
+<span class="sourceLineNo">101</span><a id="line.101">     * Receives encrypted data from the given {@code InputStream}, decrypts it, and sends the resulting decrypted data</a>
+<span class="sourceLineNo">102</span><a id="line.102">     * to the given {@code OutputStream}.</a>
+<span class="sourceLineNo">103</span><a id="line.103">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">104</span><a id="line.104">     * &lt;b&gt;NOTE:&lt;/b&gt; This method &lt;em&gt;does NOT&lt;/em&gt; flush or close either stream prior to returning - the caller must</a>
+<span class="sourceLineNo">105</span><a id="line.105">     * do so when they are finished with the streams.  For example:</a>
+<span class="sourceLineNo">106</span><a id="line.106">     * &lt;pre&gt;</a>
+<span class="sourceLineNo">107</span><a id="line.107">     * try {</a>
+<span class="sourceLineNo">108</span><a id="line.108">     *     InputStream in = ...</a>
+<span class="sourceLineNo">109</span><a id="line.109">     *     OutputStream out = ...</a>
+<span class="sourceLineNo">110</span><a id="line.110">     *     cipherService.decrypt(in, out, decryptionKey);</a>
+<span class="sourceLineNo">111</span><a id="line.111">     * } finally {</a>
+<span class="sourceLineNo">112</span><a id="line.112">     *     if (in != null) {</a>
+<span class="sourceLineNo">113</span><a id="line.113">     *         try {</a>
+<span class="sourceLineNo">114</span><a id="line.114">     *             in.close();</a>
+<span class="sourceLineNo">115</span><a id="line.115">     *         } catch (IOException ioe1) { ... log, trigger event, etc }</a>
+<span class="sourceLineNo">116</span><a id="line.116">     *     }</a>
+<span class="sourceLineNo">117</span><a id="line.117">     *     if (out != null) {</a>
+<span class="sourceLineNo">118</span><a id="line.118">     *         try {</a>
+<span class="sourceLineNo">119</span><a id="line.119">     *             out.close();</a>
+<span class="sourceLineNo">120</span><a id="line.120">     *         } catch (IOException ioe2) { ... log, trigger event, etc }</a>
+<span class="sourceLineNo">121</span><a id="line.121">     *     }</a>
+<span class="sourceLineNo">122</span><a id="line.122">     * }</a>
+<span class="sourceLineNo">123</span><a id="line.123">     * &lt;/pre&gt;</a>
+<span class="sourceLineNo">124</span><a id="line.124">     *</a>
+<span class="sourceLineNo">125</span><a id="line.125">     * @param in            the stream supplying the data to decrypt</a>
+<span class="sourceLineNo">126</span><a id="line.126">     * @param out           the stream to send the decrypted data</a>
+<span class="sourceLineNo">127</span><a id="line.127">     * @param decryptionKey the cipher key to use for decryption</a>
+<span class="sourceLineNo">128</span><a id="line.128">     * @throws CryptoException if there is any problem during decryption.</a>
+<span class="sourceLineNo">129</span><a id="line.129">     */</a>
+<span class="sourceLineNo">130</span><a id="line.130">    void decrypt(InputStream in, OutputStream out, byte[] decryptionKey) throws CryptoException;</a>
+<span class="sourceLineNo">131</span><a id="line.131"></a>
+<span class="sourceLineNo">132</span><a id="line.132">    /**</a>
+<span class="sourceLineNo">133</span><a id="line.133">     * Encrypts data via the specified cipher key.  Note that the key must be in a format understood by</a>
+<span class="sourceLineNo">134</span><a id="line.134">     * the {@code CipherService} implementation.</a>
+<span class="sourceLineNo">135</span><a id="line.135">     *</a>
+<span class="sourceLineNo">136</span><a id="line.136">     * @param raw           the data to encrypt</a>
+<span class="sourceLineNo">137</span><a id="line.137">     * @param encryptionKey the cipher key used during encryption.</a>
+<span class="sourceLineNo">138</span><a id="line.138">     * @return a byte source with the encrypted representation of the specified raw data.</a>
+<span class="sourceLineNo">139</span><a id="line.139">     * @throws CryptoException if there is an error during encryption</a>
+<span class="sourceLineNo">140</span><a id="line.140">     */</a>
+<span class="sourceLineNo">141</span><a id="line.141">    ByteSource encrypt(byte[] raw, byte[] encryptionKey) throws CryptoException;</a>
+<span class="sourceLineNo">142</span><a id="line.142"></a>
+<span class="sourceLineNo">143</span><a id="line.143">    /**</a>
+<span class="sourceLineNo">144</span><a id="line.144">     * Receives the data from the given {@code InputStream}, encrypts it, and sends the resulting encrypted data to the</a>
+<span class="sourceLineNo">145</span><a id="line.145">     * given {@code OutputStream}.</a>
+<span class="sourceLineNo">146</span><a id="line.146">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">147</span><a id="line.147">     * &lt;b&gt;NOTE:&lt;/b&gt; This method &lt;em&gt;does NOT&lt;/em&gt; flush or close either stream prior to returning - the caller must</a>
+<span class="sourceLineNo">148</span><a id="line.148">     * do so when they are finished with the streams.  For example:</a>
+<span class="sourceLineNo">149</span><a id="line.149">     * &lt;pre&gt;</a>
+<span class="sourceLineNo">150</span><a id="line.150">     * try {</a>
+<span class="sourceLineNo">151</span><a id="line.151">     *     InputStream in = ...</a>
+<span class="sourceLineNo">152</span><a id="line.152">     *     OutputStream out = ...</a>
+<span class="sourceLineNo">153</span><a id="line.153">     *     cipherService.encrypt(in, out, encryptionKey);</a>
+<span class="sourceLineNo">154</span><a id="line.154">     * } finally {</a>
+<span class="sourceLineNo">155</span><a id="line.155">     *     if (in != null) {</a>
+<span class="sourceLineNo">156</span><a id="line.156">     *         try {</a>
+<span class="sourceLineNo">157</span><a id="line.157">     *             in.close();</a>
+<span class="sourceLineNo">158</span><a id="line.158">     *         } catch (IOException ioe1) { ... log, trigger event, etc }</a>
+<span class="sourceLineNo">159</span><a id="line.159">     *     }</a>
+<span class="sourceLineNo">160</span><a id="line.160">     *     if (out != null) {</a>
+<span class="sourceLineNo">161</span><a id="line.161">     *         try {</a>
+<span class="sourceLineNo">162</span><a id="line.162">     *             out.close();</a>
+<span class="sourceLineNo">163</span><a id="line.163">     *         } catch (IOException ioe2) { ... log, trigger event, etc }</a>
+<span class="sourceLineNo">164</span><a id="line.164">     *     }</a>
+<span class="sourceLineNo">165</span><a id="line.165">     * }</a>
+<span class="sourceLineNo">166</span><a id="line.166">     * &lt;/pre&gt;</a>
+<span class="sourceLineNo">167</span><a id="line.167">     *</a>
+<span class="sourceLineNo">168</span><a id="line.168">     * @param in            the stream supplying the data to encrypt</a>
+<span class="sourceLineNo">169</span><a id="line.169">     * @param out           the stream to send the encrypted data</a>
+<span class="sourceLineNo">170</span><a id="line.170">     * @param encryptionKey the cipher key to use for encryption</a>
+<span class="sourceLineNo">171</span><a id="line.171">     * @throws CryptoException if there is any problem during encryption.</a>
+<span class="sourceLineNo">172</span><a id="line.172">     */</a>
+<span class="sourceLineNo">173</span><a id="line.173">    void encrypt(InputStream in, OutputStream out, byte[] encryptionKey) throws CryptoException;</a>
+<span class="sourceLineNo">174</span><a id="line.174"></a>
+<span class="sourceLineNo">175</span><a id="line.175">}</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</main>
+</body>
+</html>
