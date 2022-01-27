@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>EventListenerComparator.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-event</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.event.support</a> &gt; <span class="el_source">EventListenerComparator.java</span></div><h1>EventListenerComparator.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.event.support;
+
+import java.util.Comparator;
+
+/**
+ * Compares two event listeners to determine the order in which they should be invoked when an event is dispatched.
+ * The lower the order, the sooner it will be invoked (the higher its precedence).  The higher the order, the later
+ * it will be invoked (the lower its precedence).
+ * &lt;p/&gt;
+ * TypedEventListeners have a higher precedence (i.e. a lower order) than standard EventListener instances.  Standard
+ * EventListener instances have the same order priority.
+ * &lt;p/&gt;
+ * When both objects being compared are TypedEventListeners, they are ordered according to the rules of the
+ * {@link EventClassComparator}, using the TypedEventListeners'
+ * {@link TypedEventListener#getEventType() eventType}.
+ *
+ * @since 1.3
+ */
+<span class="fc" id="L37">public class EventListenerComparator implements Comparator&lt;EventListener&gt; {</span>
+
+    //event class comparator is stateless, so we can retain an instance:
+<span class="fc" id="L40">    private static final EventClassComparator EVENT_CLASS_COMPARATOR = new EventClassComparator();</span>
+
+    public int compare(EventListener a, EventListener b) {
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        if (a == null) {</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">            if (b == null) {</span>
+<span class="fc" id="L45">                return 0;</span>
+            } else {
+<span class="fc" id="L47">                return -1;</span>
+            }
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        } else if (b == null) {</span>
+<span class="fc" id="L50">            return 1;</span>
+<span class="pc bpc" id="L51" title="1 of 4 branches missed.">        } else if (a == b || a.equals(b)) {</span>
+<span class="fc" id="L52">            return 0;</span>
+        } else {
+<span class="fc bfc" id="L54" title="All 2 branches covered.">            if (a instanceof TypedEventListener) {</span>
+<span class="fc" id="L55">                TypedEventListener ta = (TypedEventListener)a;</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">                if (b instanceof TypedEventListener) {</span>
+<span class="fc" id="L57">                    TypedEventListener tb = (TypedEventListener)b;</span>
+<span class="fc" id="L58">                    return EVENT_CLASS_COMPARATOR.compare(ta.getEventType(), tb.getEventType());</span>
+                } else {
+<span class="fc" id="L60">                    return -1; //TypedEventListeners are 'less than' (higher priority) than non typed</span>
+                }
+            } else {
+<span class="fc bfc" id="L63" title="All 2 branches covered.">                if (b instanceof TypedEventListener) {</span>
+<span class="fc" id="L64">                    return 1;</span>
+                } else {
+<span class="fc" id="L66">                    return 0;</span>
+                }
+            }
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>HttpServletSession.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: All (aggregate jar)</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.session</a> &gt; <span class="el_source">HttpServletSession.java</span></div><h1>HttpServletSession.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.session;
+
+import org.apache.shiro.session.InvalidSessionException;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.util.StringUtils;
+import org.apache.shiro.web.servlet.ShiroHttpSession;
+
+import javax.servlet.http.HttpSession;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Enumeration;
+
+/**
+ * {@link Session Session} implementation that is backed entirely by a standard servlet container
+ * {@link HttpSession HttpSession} instance.  It does not interact with any of Shiro's session-related components
+ * {@code SessionManager}, {@code SecurityManager}, etc, and instead satisfies all method implementations by interacting
+ * with a servlet container provided {@link HttpSession HttpSession} instance.
+ *
+ * @since 1.0
+ */
+public class HttpServletSession implements Session {
+
+<span class="fc" id="L43">    private static final String HOST_SESSION_KEY = HttpServletSession.class.getName() + &quot;.HOST_SESSION_KEY&quot;;</span>
+<span class="fc" id="L44">    private static final String TOUCH_OBJECT_SESSION_KEY = HttpServletSession.class.getName() + &quot;.TOUCH_OBJECT_SESSION_KEY&quot;;</span>
+
+<span class="fc" id="L46">    private HttpSession httpSession = null;</span>
+
+<span class="fc" id="L48">    public HttpServletSession(HttpSession httpSession, String host) {</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        if (httpSession == null) {</span>
+<span class="nc" id="L50">            String msg = &quot;HttpSession constructor argument cannot be null.&quot;;</span>
+<span class="nc" id="L51">            throw new IllegalArgumentException(msg);</span>
+        }
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (httpSession instanceof ShiroHttpSession) {</span>
+<span class="nc" id="L54">            String msg = &quot;HttpSession constructor argument cannot be an instance of ShiroHttpSession.  This &quot; +</span>
+                    &quot;is enforced to prevent circular dependencies and infinite loops.&quot;;
+<span class="nc" id="L56">            throw new IllegalArgumentException(msg);</span>
+        }
+<span class="fc" id="L58">        this.httpSession = httpSession;</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (StringUtils.hasText(host)) {</span>
+<span class="fc" id="L60">            setHost(host);</span>
+        }
+<span class="fc" id="L62">    }</span>
+
+    public Serializable getId() {
+<span class="nc" id="L65">        return httpSession.getId();</span>
+    }
+
+    public Date getStartTimestamp() {
+<span class="nc" id="L69">        return new Date(httpSession.getCreationTime());</span>
+    }
+
+    public Date getLastAccessTime() {
+<span class="nc" id="L73">        return new Date(httpSession.getLastAccessedTime());</span>
+    }
+
+    public long getTimeout() throws InvalidSessionException {
+        try {
+<span class="fc" id="L78">            return httpSession.getMaxInactiveInterval() * 1000L;</span>
+<span class="nc" id="L79">        } catch (Exception e) {</span>
+<span class="nc" id="L80">            throw new InvalidSessionException(e);</span>
+        }
+    }
+
+    public void setTimeout(long maxIdleTimeInMillis) throws InvalidSessionException {
+        try {
+<span class="fc" id="L86">            int timeout = Long.valueOf(maxIdleTimeInMillis / 1000).intValue();</span>
+<span class="fc" id="L87">            httpSession.setMaxInactiveInterval(timeout);</span>
+<span class="nc" id="L88">        } catch (Exception e) {</span>
+<span class="nc" id="L89">            throw new InvalidSessionException(e);</span>
+<span class="fc" id="L90">        }</span>
+<span class="fc" id="L91">    }</span>
+
+    protected void setHost(String host) {
+<span class="fc" id="L94">        setAttribute(HOST_SESSION_KEY, host);</span>
+<span class="fc" id="L95">    }</span>
+
+    public String getHost() {
+<span class="fc" id="L98">        return (String) getAttribute(HOST_SESSION_KEY);</span>
+    }
+
+    public void touch() throws InvalidSessionException {
+        //just manipulate the session to update the access time:
+        try {
+<span class="nc" id="L104">            httpSession.setAttribute(TOUCH_OBJECT_SESSION_KEY, TOUCH_OBJECT_SESSION_KEY);</span>
+<span class="nc" id="L105">            httpSession.removeAttribute(TOUCH_OBJECT_SESSION_KEY);</span>
+<span class="nc" id="L106">        } catch (Exception e) {</span>
+<span class="nc" id="L107">            throw new InvalidSessionException(e);</span>
+<span class="nc" id="L108">        }</span>
+<span class="nc" id="L109">    }</span>
+
+    public void stop() throws InvalidSessionException {
+        try {
+<span class="nc" id="L113">            httpSession.invalidate();</span>
+<span class="nc" id="L114">        } catch (Exception e) {</span>
+<span class="nc" id="L115">            throw new InvalidSessionException(e);</span>
+<span class="nc" id="L116">        }</span>
+<span class="nc" id="L117">    }</span>
+
+    public Collection&lt;Object&gt; getAttributeKeys() throws InvalidSessionException {
+        try {
+<span class="nc" id="L121">            Enumeration namesEnum = httpSession.getAttributeNames();</span>
+<span class="nc" id="L122">            Collection&lt;Object&gt; keys = null;</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">            if (namesEnum != null) {</span>
+<span class="nc" id="L124">                keys = new ArrayList&lt;Object&gt;();</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">                while (namesEnum.hasMoreElements()) {</span>
+<span class="nc" id="L126">                    keys.add(namesEnum.nextElement());</span>
+                }
+            }
+<span class="nc" id="L129">            return keys;</span>
+<span class="nc" id="L130">        } catch (Exception e) {</span>
+<span class="nc" id="L131">            throw new InvalidSessionException(e);</span>
+        }
+    }
+
+    private static String assertString(Object key) {
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">        if (!(key instanceof String)) {</span>
+<span class="nc" id="L137">            String msg = &quot;HttpSession based implementations of the Shiro Session interface requires attribute keys &quot; +</span>
+                    &quot;to be String objects.  The HttpSession class does not support anything other than String keys.&quot;;
+<span class="nc" id="L139">            throw new IllegalArgumentException(msg);</span>
+        }
+<span class="fc" id="L141">        return (String) key;</span>
+    }
+
+    public Object getAttribute(Object key) throws InvalidSessionException {
+        try {
+<span class="fc" id="L146">            return httpSession.getAttribute(assertString(key));</span>
+<span class="nc" id="L147">        } catch (Exception e) {</span>
+<span class="nc" id="L148">            throw new InvalidSessionException(e);</span>
+        }
+    }
+
+    public void setAttribute(Object key, Object value) throws InvalidSessionException {
+        try {
+<span class="fc" id="L154">            httpSession.setAttribute(assertString(key), value);</span>
+<span class="nc" id="L155">        } catch (Exception e) {</span>
+<span class="nc" id="L156">            throw new InvalidSessionException(e);</span>
+<span class="fc" id="L157">        }</span>
+<span class="fc" id="L158">    }</span>
+
+    public Object removeAttribute(Object key) throws InvalidSessionException {
+        try {
+<span class="nc" id="L162">            String sKey = assertString(key);</span>
+<span class="nc" id="L163">            Object removed = httpSession.getAttribute(sKey);</span>
+<span class="nc" id="L164">            httpSession.removeAttribute(sKey);</span>
+<span class="nc" id="L165">            return removed;</span>
+<span class="nc" id="L166">        } catch (Exception e) {</span>
+<span class="nc" id="L167">            throw new InvalidSessionException(e);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

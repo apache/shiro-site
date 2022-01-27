@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>EhCacheManager.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-ehcache</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.cache.ehcache</a> &gt; <span class="el_source">EhCacheManager.java</span></div><h1>EhCacheManager.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.cache.ehcache;
+
+import org.apache.shiro.cache.Cache;
+import org.apache.shiro.cache.CacheException;
+import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.io.ResourceUtils;
+import org.apache.shiro.util.Destroyable;
+import org.apache.shiro.util.Initializable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+/**
+ * Shiro {@code CacheManager} implementation utilizing the Ehcache framework for all cache functionality.
+ * &lt;p/&gt;
+ * This class can {@link #setCacheManager(net.sf.ehcache.CacheManager) accept} a manually configured
+ * {@link net.sf.ehcache.CacheManager net.sf.ehcache.CacheManager} instance,
+ * or an {@code ehcache.xml} path location can be specified instead and one will be constructed. If neither are
+ * specified, Shiro's failsafe &lt;code&gt;&lt;a href=&quot;./ehcache.xml&quot;&gt;ehcache.xml&lt;/a&gt;&lt;/code&gt; file will be used by default.
+ * &lt;p/&gt;
+ * This implementation requires EhCache 1.2 and above. Make sure EhCache 1.1 or earlier
+ * is not in the classpath or it will not work.
+ * &lt;p/&gt;
+ * Please see the &lt;a href=&quot;http://ehcache.sf.net&quot; target=&quot;_top&quot;&gt;Ehcache website&lt;/a&gt; for their documentation.
+ *
+ * @see &lt;a href=&quot;http://ehcache.sf.net&quot; target=&quot;_top&quot;&gt;The Ehcache website&lt;/a&gt;
+ * @since 0.2
+ */
+public class EhCacheManager implements CacheManager, Initializable, Destroyable {
+
+    /**
+     * This class's private log instance.
+     */
+<span class="fc" id="L54">    private static final Logger log = LoggerFactory.getLogger(EhCacheManager.class);</span>
+
+    /**
+     * The EhCache cache manager used by this implementation to create caches.
+     */
+    protected net.sf.ehcache.CacheManager manager;
+
+    /**
+     * Indicates if the CacheManager instance was implicitly/automatically created by this instance, indicating that
+     * it should be automatically cleaned up as well on shutdown.
+     */
+<span class="fc" id="L65">    private boolean cacheManagerImplicitlyCreated = false;</span>
+
+    /**
+     * Classpath file location of the ehcache CacheManager config file.
+     */
+<span class="fc" id="L70">    private String cacheManagerConfigFile = &quot;classpath:org/apache/shiro/cache/ehcache/ehcache.xml&quot;;</span>
+
+    /**
+     * Default no argument constructor
+     */
+<span class="fc" id="L75">    public EhCacheManager() {</span>
+<span class="fc" id="L76">    }</span>
+
+    /**
+     * Returns the wrapped Ehcache {@link net.sf.ehcache.CacheManager CacheManager} instance.
+     *
+     * @return the wrapped Ehcache {@link net.sf.ehcache.CacheManager CacheManager} instance.
+     */
+    public net.sf.ehcache.CacheManager getCacheManager() {
+<span class="fc" id="L84">        return manager;</span>
+    }
+
+    /**
+     * Sets the wrapped Ehcache {@link net.sf.ehcache.CacheManager CacheManager} instance.
+     *
+     * @param manager the wrapped Ehcache {@link net.sf.ehcache.CacheManager CacheManager} instance.
+     */
+    public void setCacheManager(net.sf.ehcache.CacheManager manager) {
+<span class="nc" id="L93">        this.manager = manager;</span>
+<span class="nc" id="L94">    }</span>
+
+    /**
+     * Returns the resource location of the config file used to initialize a new
+     * EhCache CacheManager instance.  The string can be any resource path supported by the
+     * {@link org.apache.shiro.io.ResourceUtils#getInputStreamForPath(String)} call.
+     * &lt;p/&gt;
+     * This property is ignored if the CacheManager instance is injected directly - that is, it is only used to
+     * lazily create a CacheManager if one is not already provided.
+     *
+     * @return the resource location of the config file used to initialize the wrapped
+     *         EhCache CacheManager instance.
+     */
+    public String getCacheManagerConfigFile() {
+<span class="fc" id="L108">        return this.cacheManagerConfigFile;</span>
+    }
+
+    /**
+     * Sets the resource location of the config file used to initialize the wrapped
+     * EhCache CacheManager instance.  The string can be any resource path supported by the
+     * {@link org.apache.shiro.io.ResourceUtils#getInputStreamForPath(String)} call.
+     * &lt;p/&gt;
+     * This property is ignored if the CacheManager instance is injected directly - that is, it is only used to
+     * lazily create a CacheManager if one is not already provided.
+     *
+     * @param classpathLocation resource location of the config file used to create the wrapped
+     *                          EhCache CacheManager instance.
+     */
+    public void setCacheManagerConfigFile(String classpathLocation) {
+<span class="nc" id="L123">        this.cacheManagerConfigFile = classpathLocation;</span>
+<span class="nc" id="L124">    }</span>
+
+    /**
+     * Acquires the InputStream for the ehcache configuration file using
+     * {@link ResourceUtils#getInputStreamForPath(String) ResourceUtils.getInputStreamForPath} with the
+     * path returned from {@link #getCacheManagerConfigFile() getCacheManagerConfigFile()}.
+     *
+     * @return the InputStream for the ehcache configuration file.
+     */
+    protected InputStream getCacheManagerConfigFileInputStream() {
+<span class="fc" id="L134">        String configFile = getCacheManagerConfigFile();</span>
+        try {
+<span class="fc" id="L136">            return ResourceUtils.getInputStreamForPath(configFile);</span>
+<span class="nc" id="L137">        } catch (IOException e) {</span>
+<span class="nc" id="L138">            throw new IllegalStateException(&quot;Unable to obtain input stream for cacheManagerConfigFile [&quot; +</span>
+                    configFile + &quot;]&quot;, e);
+        }
+    }
+
+    /**
+     * Loads an existing EhCache from the cache manager, or starts a new cache if one is not found.
+     *
+     * @param name the name of the cache to load/create.
+     */
+    public final &lt;K, V&gt; Cache&lt;K, V&gt; getCache(String name) throws CacheException {
+
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">        if (log.isTraceEnabled()) {</span>
+<span class="fc" id="L151">            log.trace(&quot;Acquiring EhCache instance named [&quot; + name + &quot;]&quot;);</span>
+        }
+
+        try {
+<span class="fc" id="L155">            net.sf.ehcache.Ehcache cache = ensureCacheManager().getEhcache(name);</span>
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">            if (cache == null) {</span>
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">                if (log.isInfoEnabled()) {</span>
+<span class="fc" id="L158">                    log.info(&quot;Cache with name '{}' does not yet exist.  Creating now.&quot;, name);</span>
+                }
+<span class="fc" id="L160">                this.manager.addCache(name);</span>
+
+<span class="fc" id="L162">                cache = manager.getCache(name);</span>
+
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">                if (log.isInfoEnabled()) {</span>
+<span class="fc" id="L165">                    log.info(&quot;Added EhCache named [&quot; + name + &quot;]&quot;);</span>
+                }
+            } else {
+<span class="nc bnc" id="L168" title="All 2 branches missed.">                if (log.isInfoEnabled()) {</span>
+<span class="nc" id="L169">                    log.info(&quot;Using existing EHCache named [&quot; + cache.getName() + &quot;]&quot;);</span>
+                }
+            }
+<span class="fc" id="L172">            return new EhCache&lt;K, V&gt;(cache);</span>
+<span class="nc" id="L173">        } catch (net.sf.ehcache.CacheException e) {</span>
+<span class="nc" id="L174">            throw new CacheException(e);</span>
+        }
+    }
+
+    /**
+     * Initializes this instance.
+     * &lt;p/&gt;
+     * If a {@link #setCacheManager CacheManager} has been
+     * explicitly set (e.g. via Dependency Injection or programmatically) prior to calling this
+     * method, this method does nothing.
+     * &lt;p/&gt;
+     * However, if no {@code CacheManager} has been set, the default Ehcache singleton will be initialized, where
+     * Ehcache will look for an {@code ehcache.xml} file at the root of the classpath.  If one is not found,
+     * Ehcache will use its own failsafe configuration file.
+     * &lt;p/&gt;
+     * Because Shiro cannot use the failsafe defaults (fail-safe expunges cached objects after 2 minutes,
+     * something not desirable for Shiro sessions), this class manages an internal default configuration for
+     * this case.
+     *
+     * @throws org.apache.shiro.cache.CacheException
+     *          if there are any CacheExceptions thrown by EhCache.
+     * @see net.sf.ehcache.CacheManager#create
+     */
+    public final void init() throws CacheException {
+<span class="fc" id="L198">        ensureCacheManager();</span>
+<span class="fc" id="L199">    }</span>
+
+    private net.sf.ehcache.CacheManager ensureCacheManager() {
+        try {
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">            if (this.manager == null) {</span>
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">                if (log.isDebugEnabled()) {</span>
+<span class="fc" id="L205">                    log.debug(&quot;cacheManager property not set.  Constructing CacheManager instance... &quot;);</span>
+                }
+                //using the CacheManager constructor, the resulting instance is _not_ a VM singleton
+                //(as would be the case by calling CacheManager.getInstance().  We do not use the getInstance here
+                //because we need to know if we need to destroy the CacheManager instance - using the static call,
+                //we don't know which component is responsible for shutting it down.  By using a single EhCacheManager,
+                //it will always know to shut down the instance if it was responsible for creating it.
+<span class="fc" id="L212">                this.manager = new net.sf.ehcache.CacheManager(getCacheManagerConfigFileInputStream());</span>
+<span class="pc bpc" id="L213" title="1 of 2 branches missed.">                if (log.isTraceEnabled()) {</span>
+<span class="fc" id="L214">                    log.trace(&quot;instantiated Ehcache CacheManager instance.&quot;);</span>
+                }
+<span class="fc" id="L216">                cacheManagerImplicitlyCreated = true;</span>
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">                if (log.isDebugEnabled()) {</span>
+<span class="fc" id="L218">                    log.debug(&quot;implicit cacheManager created successfully.&quot;);</span>
+                }
+            }
+<span class="fc" id="L221">            return this.manager;</span>
+<span class="nc" id="L222">        } catch (Exception e) {</span>
+<span class="nc" id="L223">            throw new CacheException(e);</span>
+        }
+    }
+
+    /**
+     * Shuts-down the wrapped Ehcache CacheManager &lt;b&gt;only if implicitly created&lt;/b&gt;.
+     * &lt;p/&gt;
+     * If another component injected
+     * a non-null CacheManager into this instance before calling {@link #init() init}, this instance expects that same
+     * component to also destroy the CacheManager instance, and it will not attempt to do so.
+     */
+    public void destroy() {
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">        if (cacheManagerImplicitlyCreated) {</span>
+            try {
+<span class="fc" id="L237">                net.sf.ehcache.CacheManager cacheMgr = getCacheManager();</span>
+<span class="fc" id="L238">                cacheMgr.shutdown();</span>
+<span class="nc" id="L239">            } catch (Throwable t) {</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">                if (log.isWarnEnabled()) {</span>
+<span class="nc" id="L241">                    log.warn(&quot;Unable to cleanly shutdown implicitly created CacheManager instance.  &quot; +</span>
+                            &quot;Ignoring (shutting down)...&quot;, t);
+                }
+            } finally {
+<span class="pc" id="L245">                this.manager = null;</span>
+<span class="pc" id="L246">                this.cacheManagerImplicitlyCreated = false;</span>
+<span class="pc" id="L247">            }</span>
+        }
+<span class="fc" id="L249">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

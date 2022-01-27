@@ -1,0 +1,303 @@
+[#Realm-ApacheShiroRealms]
+= Apache Shiro Realms
+:jbake-type: page
+:jbake-status: published
+:jbake-tags: documentation, support, community, mailing lists, forums, issues, bugs
+:idprefix:
+:icons: font
+:toc:
+
+A `Realm` is a component that can access application-specific security data such as users, roles and permissions.
+The `Realm` translates this application-specific data into a format that Shiro understands so Shiro can in turn provide a single easy-to-understand link:/subject.html[Subject] programming API no matter how many data sources exist or how application-specific your data might be.
+
+Realms usually have a 1-to-1 correlation with a data source such as a relational database, LDAP directory, file system, or other similar resource.
+As such, implementations of the `Realm` interface use data source-specific APIs to discover authorization data (roles, permissions, etc), such as JDBC, File IO, Hibernate or JPA, or any other Data Access API.
+
+[TIP]
+====
+A Realm is essentially a security-specific link:http://en.wikipedia.org/wiki/Data_Access_Object[DAO].
+====
+
+Because most of these data sources usually store both authentication data (credentials such as passwords) as well as authorization data (such as roles or permissions), every Shiro `Realm` can perform _both_ authentication and authorization operations.
+
+[#Realm-RealmConfiguration]
+== Realm Configuration
+
+If using Shiro's INI configuration, you define and reference `Realms` like any other object in the `[main]` section, but they are configured on the `securityManager` in one of two ways: explicitly or implicitly.
+
+[#Realm-ExplicitAssignment]
+=== Explicit Assignment
+
+Based on knowledge of INI configuration thus far, this is an obvious configuration approach.
+After defining one or more Realms, you set them as a collection property on the `securityManager` object.
+
+For example:
+
+[source,ini]
+----
+fooRealm = com.company.foo.Realm
+barRealm = com.company.another.Realm
+bazRealm = com.company.baz.Realm
+
+securityManager.realms = $fooRealm, $barRealm, $bazRealm
+----
+
+Explicit assignment is deterministic - you control exactly which realms are used as well as _the order_ that they will be used for authentication and authorization.
+Realm ordering effects are described in detail in the Authentication chapter's link:authentication.html#Authentication-AuthenticationSequence[Authentication Sequence] section.
+
+[#Realm-ImplicitAssignment]
+=== Implicit Assignment
+
+[CAUTION]
+.Not Preferred
+====
+Implicit assignment can cause unexpected behavior if you change the order in which realms are defined.
+It is recommended that you avoid this approach and use Explicit Assignment, which has deterministic behavior.
+It is likely Implicit Assignment will be deprecated/removed from a future Shiro release.
+====
+
+If for some reason you don't want to explicitly configure the `securityManager.realms` property, you can allow Shiro to detect all configured realms and assign them to the `securityManager` directly.
+
+Using this approach, realms are assigned to the `securityManager` instance in the _order that they are defined_.
+
+That is, for the following `shiro.ini` example:
+
+[source,ini]
+----
+blahRealm = com.company.blah.Realm
+fooRealm = com.company.foo.Realm
+barRealm = com.company.another.Realm
+
+# no securityManager.realms assignment here
+----
+
+basically has the same effect as if the following line were appended:
+
+[source,java]
+----
+securityManager.realms = $blahRealm, $fooRealm, $barRealm
+----
+
+However, realize that with implicit assignment, just the order that the realms are defined directly affects how they are consulted during authentication and authorization attempts.
+If you change their definition order, you will change how the main `Authenticator`'s link:authentication.html#Authentication-AuthenticationSequence[Authentication Sequence] functions.
+
+For this reason, and to ensure deterministic behavior, we recommend using Explicit Assignment instead of Implicit Assignment.
+
+[#Realm-RealmAuthentication]
+== Realm Authentication
+
+Once you understand Shiro's main link:/authentication.html#Authentication-sequence[Authentication workflow], it is important to know exactly what happens when the `Authenticator` interacts with a `Realm` during an authentication attempt.
+
+[#realm_supporting_authentication_Tokens]
+=== Supporting `AuthenticationTokens`
+
+As mentioned in the link:/authentication.html#Authentication-AuthenticationSequence[authentication sequence], just before a `Realm` is consulted to perform an authentication attempt, its link:static/current/apidocs/org/apache/shiro/realm/Realm.html#supports(org.apache.shiro.authc.AuthenticationToken)[`supports`] method is called.
+If the return value is `true`, only then will its `getAuthenticationInfo(token)` method be invoked.
+
+Typically a realm will check the type (interface or class) of the submitted token to see if it can process it.
+For example, a Realm that processes biometric data may not understand `UsernamePasswordTokens` at all, in which case it would return `false` from the `supports` method.
+
+[#Realm-Handling-supported-AuthenticationTokens]
+=== Handling supported `AuthenticationTokens`
+
+If a `Realm` `supports` a submitted `AuthenticationToken`, the `Authenticator` will call the Realm's link:static/current/apidocs/org/apache/shiro/realm/Realm.html#getAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken)[getAuthenticationInfo(token)] method.
+This effectively represents an authentication attempt with the `Realm's` backing data source.
+The method, in order:
+
+. Inspects the `token` for the identifying principal (account identifying information)
+. Based on the `principal`, looks up corresponding account data in the data source
+. Ensures that the token's supplied `credentials` matches those stored in the data store
+. If the credentials match, an link:/static/current/apidocs/org/apache/shiro/authc/AuthenticationInfo.html[AuthenticationInfo] instance is returned that encapsulates the account data in a format Shiro understands
+. If the credentials DO NOT match, an link:/static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html[AuthenticationException] is thrown
+
+This is the highest-level workflow for all Realm `getAuthenticationInfo` implementations.
+Realms are free to do whatever they want during this method, such as record the attempt in an audit log, update data records, or anything else that makes sense for the authentication attempt for that data store.
+
+The only thing required is that, if the credentials match for the given principal(s), that a non-null `AuthenticationInfo` instance is returned that represents Subject account information from that data source.
+
+[TIP]
+.Saving Time
+====
+Implementing
+link:/static/current/apidocs/org/apache/shiro/realm/Realm.html[Realm]
+interface directly might be time consuming and error prone.
+Most people choose to subclass the
+link:/static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html[AuthorizingRealm]
+abstract class instead of starting from scratch.
+This class implements common authentication and authorization workflow to save you time and effort.
+====
+
+[#Realm-CredentialsMatching]
+=== Credentials Matching
+
+In the above realm authentication workflow, a Realm has to verify that the link:subject.html[Subject]'s submitted credentials (e.g. password) must match the credentials stored in the data store.
+If they match, authentication is considered successful, and the system has verified the end-user's identity.
+
+[WARNING]
+.Realm Credentials Matching
+====
+It is each Realm''s responsibility to match submitted credentials with those stored in the Realm''s backing data store, and not the `Authenticator's` responsibility.
+Each `Realm` has intimate knowledge of credentials format and storage and can perform detailed credentials matching, whereas the `Authenticator` is a generic workflow component.
+====
+
+The credentials matching process is nearly identical in all applications and usually only differs by the data compared.
+To ensure this process is pluggable and customizable if necessary, the link:static/current/apidocs/org/apache/shiro/realm/AuthenticatingRealm.html[AuthenticatingRealm] and its subclasses support the concept of a link:static/current/apidocs/org/apache/shiro/authc/credential/CredentialsMatcher.html[CredentialsMatcher] to perform the credentials comparison.
+
+After discovering account data, it and the submitted `AuthenticationToken` are presented to a `CredentialsMatcher` to see if what was submitted matches what is stored in the data store.
+
+Shiro has some `CredentialsMatcher` implementations to get you started out of the box, such as the link:/static/current/apidocs/org/apache/shiro/authc/credential/SimpleCredentialsMatcher.html[SimpleCredentialsMatcher] and link:/static/current/apidocs/org/apache/shiro/authc/credential/HashedCredentialsMatcher.html[HashedCredentialsMatcher] implementations, but if you wanted to configure a custom implementation for custom matching logic, you could do so directly:
+
+[source,java]
+----
+Realm myRealm = new com.company.shiro.realm.MyRealm();
+CredentialsMatcher customMatcher = new com.company.shiro.realm.CustomCredentialsMatcher();
+myRealm.setCredentialsMatcher(customMatcher);
+----
+
+Or, if using Shiro's INI link:/configuration.html[configuration]:
+
+[source,ini]
+----
+[main]
+...
+customMatcher = com.company.shiro.realm.CustomCredentialsMatcher
+myRealm = com.company.shiro.realm.MyRealm
+myRealm.credentialsMatcher = $customMatcher
+...
+----
+
+[#Realm-SimpleEqualityCheck]
+==== Simple Equality Check
+
+All of Shiro's out-of-the-box `Realm` implementations default to using a link:static/current/apidocs/org/apache/shiro/authc/credential/SimpleCredentialsMatcher.html[SimpleCredentialsMatcher].
+The `SimpleCredentialsMatcher` performs a plain direct equality check of the stored account credentials with what was submitted in the `AuthenticationToken`.
+
+For example, if a link:/static/current/apidocs/org/apache/shiro/authc/UsernamePasswordToken.html[UsernamePasswordToken] was submitted, the `SimpleCredentialsMatcher` verifies that the password submitted is exactly equal to the password stored in the database.
+
+The `SimpleCredentialsMatcher` performs direct equality comparisons for more than just Strings though.
+It can work with most common byte sources, such as Strings, character arrays, byte arrays, Files and InputStreams.
+See its JavaDoc for more.
+
+[#Realm-HashingCredentials]
+==== Hashing Credentials
+
+Instead of storing credentials in their raw form and performing raw/plain comparisons, a much more secure way of storing end-user's credentials (e.g. passwords) is to one-way hash them first before storing them in the data store.
+
+This ensures that end-users' credentials are never stored in their raw form and that no one can know the original/raw value.
+This is a much more secure mechanism than plain-text or raw comparisons, and all security-conscious applications should favor this approach over non-hashed storage.
+
+To support these preferred cryptographic hashing strategies, Shiro provides link:/static/current/apidocs/org/apache/shiro/authc/credential/HashedCredentialsMatcher.html[HashedCredentialsMatcher] implementations to be configured on realms instead of the aforementioned `SimpleCredentialsMatcher`.
+
+Hashing credentials and the benefits of salting and multiple hash iterations are outside the scope of this `Realm` documentation, but definitely read the link:static/current/apidocs/org/apache/shiro/authc/credential/HashedCredentialsMatcher.html[HashedCredentialsMatcher JavaDoc] which covers these principles in detail.
+
+[#Realm-HashingandCorrespondingMatchers]
+===== Hashing and Corresponding Matchers
+
+So how do you configure a Shiro-enabled application to do this easily?
+
+Shiro provides multiple `HashedCredentialsMatcher` subclass implementations.
+You must configure the specific implementation on your realm to match the hashing algorithm you use to hash your users' credentials.
+
+For example, let's say your application uses username/password pairs for authentication.
+And due to the benefits of hashing credentials described above, let's say you want to one-way hash a user's password using the https://en.wikipedia.org/wiki/SHA_hash_functions[SHA-256] algorithm when you create a user account.
+You would hash the user's entered plain-text password and save that value:
+
+[source,java]
+----
+import org.apache.shiro.crypto.hash.Sha256Hash;
+import org.apache.shiro.crypto.RandomNumberGenerator;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+...
+
+//We'll use a Random Number Generator to generate salts.  This 
+//is much more secure than using a username as a salt or not 
+//having a salt at all.  Shiro makes this easy. 
+//
+//Note that a normal app would reference an attribute rather 
+//than create a new RNG every time: 
+RandomNumberGenerator rng = new SecureRandomNumberGenerator();
+Object salt = rng.nextBytes();
+
+//Now hash the plain-text password with the random salt and multiple 
+//iterations and then Base64-encode the value (requires less space than Hex): 
+String hashedPasswordBase64 = new Sha256Hash(plainTextPassword, salt, 1024).toBase64();
+
+User user = new User(username, hashedPasswordBase64);
+//save the salt with the new account.  The HashedCredentialsMatcher 
+//will need it later when handling login attempts: 
+user.setPasswordSalt(salt);
+userDAO.create(user);
+----
+
+Since you're `SHA-256` hashing your user's passwords, you need to tell Shiro to use the appropriate `HashedCredentialsMatcher` to match your hashing preferences.
+In this example, we create a random salt and perform 1024 hash iterations for strong security (see the `HashedCredentialsMatcher` JavaDoc for why).
+Here is the Shiro INI configuration to make this work:
+
+[source,ini]
+----
+[main]
+...
+credentialsMatcher = org.apache.shiro.authc.credential.Sha256CredentialsMatcher
+# base64 encoding, not hex in this example:
+credentialsMatcher.storedCredentialsHexEncoded = false
+credentialsMatcher.hashIterations = 1024
+# This next property is only needed in Shiro 1.0\.  Remove it in 1.1 and later:
+credentialsMatcher.hashSalted = true
+
+...
+myRealm = com.company.....
+myRealm.credentialsMatcher = $credentialsMatcher
+...
+----
+
+[#Realm-%7B%7BSaltedAuthenticationInfo%7D%7D]
+===== `SaltedAuthenticationInfo`
+
+The last thing to do to ensure this works is that your `Realm` implementation must return a link:/static/current/apidocs/org/apache/shiro/authc/SaltedAuthenticationInfo.html[SaltedAuthenticationInfo] instance instead of a normal `AuthenticationInfo` one.
+The `SaltedAuthenticationInfo` interface ensures that the salt that you used when you created the user account (e.g. the `user.setPasswordSalt(salt);` call above) can be referenced by the `HashedCredentialsMatcher`.
+
+The `HashedCredentialsMatcher` needs the salt in order to perform the same hashing technique on the submitted `AuthenticationToken` to see if the token matches what you saved in the data store.
+So if you use salting for user passwords (and you should!!!), ensure your `Realm` implementation represents that by returning `SaltedAuthenticationInfo` instances.
+
+[#Realm-DisablingAuthentication]
+=== Disabling Authentication
+
+If for some reason, you don't want a Realm to perform authentication for a data source (maybe because you only want the Realm to perform authorization), you can disable a Realm's support for authentication entirely by always returning `false` from the Realm's `supports` method.
+Then your realm will never be consulted during an authentication attempt.
+
+Of course at least one configured `Realm` needs to be able to support AuthenticationTokens if you want to authenticate Subjects.
+
+[#Realm-RealmAuthorization]
+== Realm Authorization
+
+`SecurityManager` delegates the task of `Permission` or `Role` checking to link:/static/current/apidocs/org/apache/shiro/authz/Authorizer.html[Authorizer], defaulted to link:/static/current/apidocs/org/apache/shiro/authz/ModularRealmAuthorizer.html[ModularRealmAuthorizer].
+
+[#Realm-RoleBasedAuthorization]
+=== Role based Authorization
+
+When one of the overloaded method hasRoles or checkRoles method is called on Subject
+
+. `Subject` delegates to `SecurityManager` for identifying if the given Role is assigned
+. `SecurityManager` then delegates to `Authorizer`
+. link:static/current/apidocs/org/apache/shiro/authz/Authorizer.html[Authorizer] then referrers to all the Authorizing Realms one by one until it found given role assigned to the subject.
+Deny access by returning false if no none of the Realm grants Subject given Role
+. Authorizing Realm link:static/current/apidocs/org/apache/shiro/authz/AuthorizationInfo.html[AuthorizationInfo] getRoles() method to get all Roles assigned to Subject
+. Grant access if it found the given Role in list of roles returned from AuthorizationInfo.getRoles call.
+
+[#Realm-PermissionBasedAuthorization]
+=== Permission based Authorization
+
+When one of the overloaded method `isPermitted()` or `checkPermission()` method are called on Subject:
+
+. `Subject` delegates the task to grant or deny Permission to SecurityManager
+. `SecurityManager` then delegates to Authorizer
+. Authorizer then referrers to all of the Authorizer Realms one by one until it Permission is granted If Permission is not granted by any of the Authorizing Realm, Subject is denied Permission
+. Authorizing Realm does the following in order to check if a Subject is permitted:
+
+a. First it gets identify all Permissions assigned to Subject directly by calling getObjectPermissions() and getStringPermissions methods on link:/static/current/apidocs/org/apache/shiro/authz/AuthorizationInfo.html[AuthorizationInfo] and aggregating the results.
+
+b. If a link:/static/current/apidocs/org/apache/shiro/authz/permission/RolePermissionResolver.html[RolePermissionResolver] is registered, it is used to retrieve Permissions based on all of the roles assigned to Subject by calling the `RolePermissionResolver.resolvePermissionsInRole()`
+
+c. For aggregated Permissions from a. and b. the implies() method is called to check if any of these permission are implied the checked permission.
+See link:/permissions.html#wildcard_permissions[WildcardPermission]
+

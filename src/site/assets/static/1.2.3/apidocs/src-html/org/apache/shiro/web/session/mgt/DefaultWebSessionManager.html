@@ -1,0 +1,382 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<FONT color="green">007</FONT>     * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<FONT color="green">008</FONT>     * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<FONT color="green">013</FONT>     * software distributed under the License is distributed on an<a name="line.13"></a>
+<FONT color="green">014</FONT>     * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<FONT color="green">015</FONT>     * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<FONT color="green">016</FONT>     * specific language governing permissions and limitations<a name="line.16"></a>
+<FONT color="green">017</FONT>     * under the License.<a name="line.17"></a>
+<FONT color="green">018</FONT>     */<a name="line.18"></a>
+<FONT color="green">019</FONT>    package org.apache.shiro.web.session.mgt;<a name="line.19"></a>
+<FONT color="green">020</FONT>    <a name="line.20"></a>
+<FONT color="green">021</FONT>    import org.apache.shiro.session.ExpiredSessionException;<a name="line.21"></a>
+<FONT color="green">022</FONT>    import org.apache.shiro.session.InvalidSessionException;<a name="line.22"></a>
+<FONT color="green">023</FONT>    import org.apache.shiro.session.Session;<a name="line.23"></a>
+<FONT color="green">024</FONT>    import org.apache.shiro.session.mgt.DefaultSessionManager;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import org.apache.shiro.session.mgt.DelegatingSession;<a name="line.25"></a>
+<FONT color="green">026</FONT>    import org.apache.shiro.session.mgt.SessionContext;<a name="line.26"></a>
+<FONT color="green">027</FONT>    import org.apache.shiro.session.mgt.SessionKey;<a name="line.27"></a>
+<FONT color="green">028</FONT>    import org.apache.shiro.web.servlet.Cookie;<a name="line.28"></a>
+<FONT color="green">029</FONT>    import org.apache.shiro.web.servlet.ShiroHttpServletRequest;<a name="line.29"></a>
+<FONT color="green">030</FONT>    import org.apache.shiro.web.servlet.ShiroHttpSession;<a name="line.30"></a>
+<FONT color="green">031</FONT>    import org.apache.shiro.web.servlet.SimpleCookie;<a name="line.31"></a>
+<FONT color="green">032</FONT>    import org.apache.shiro.web.util.WebUtils;<a name="line.32"></a>
+<FONT color="green">033</FONT>    import org.slf4j.Logger;<a name="line.33"></a>
+<FONT color="green">034</FONT>    import org.slf4j.LoggerFactory;<a name="line.34"></a>
+<FONT color="green">035</FONT>    <a name="line.35"></a>
+<FONT color="green">036</FONT>    import javax.servlet.ServletRequest;<a name="line.36"></a>
+<FONT color="green">037</FONT>    import javax.servlet.ServletResponse;<a name="line.37"></a>
+<FONT color="green">038</FONT>    import javax.servlet.http.HttpServletRequest;<a name="line.38"></a>
+<FONT color="green">039</FONT>    import javax.servlet.http.HttpServletResponse;<a name="line.39"></a>
+<FONT color="green">040</FONT>    import java.io.Serializable;<a name="line.40"></a>
+<FONT color="green">041</FONT>    <a name="line.41"></a>
+<FONT color="green">042</FONT>    <a name="line.42"></a>
+<FONT color="green">043</FONT>    /**<a name="line.43"></a>
+<FONT color="green">044</FONT>     * Web-application capable {@link org.apache.shiro.session.mgt.SessionManager SessionManager} implementation.<a name="line.44"></a>
+<FONT color="green">045</FONT>     *<a name="line.45"></a>
+<FONT color="green">046</FONT>     * @since 0.9<a name="line.46"></a>
+<FONT color="green">047</FONT>     */<a name="line.47"></a>
+<FONT color="green">048</FONT>    public class DefaultWebSessionManager extends DefaultSessionManager implements WebSessionManager {<a name="line.48"></a>
+<FONT color="green">049</FONT>    <a name="line.49"></a>
+<FONT color="green">050</FONT>        private static final Logger log = LoggerFactory.getLogger(DefaultWebSessionManager.class);<a name="line.50"></a>
+<FONT color="green">051</FONT>    <a name="line.51"></a>
+<FONT color="green">052</FONT>        private Cookie sessionIdCookie;<a name="line.52"></a>
+<FONT color="green">053</FONT>        private boolean sessionIdCookieEnabled;<a name="line.53"></a>
+<FONT color="green">054</FONT>    <a name="line.54"></a>
+<FONT color="green">055</FONT>        public DefaultWebSessionManager() {<a name="line.55"></a>
+<FONT color="green">056</FONT>            Cookie cookie = new SimpleCookie(ShiroHttpSession.DEFAULT_SESSION_ID_NAME);<a name="line.56"></a>
+<FONT color="green">057</FONT>            cookie.setHttpOnly(true); //more secure, protects against XSS attacks<a name="line.57"></a>
+<FONT color="green">058</FONT>            this.sessionIdCookie = cookie;<a name="line.58"></a>
+<FONT color="green">059</FONT>            this.sessionIdCookieEnabled = true;<a name="line.59"></a>
+<FONT color="green">060</FONT>        }<a name="line.60"></a>
+<FONT color="green">061</FONT>    <a name="line.61"></a>
+<FONT color="green">062</FONT>        public Cookie getSessionIdCookie() {<a name="line.62"></a>
+<FONT color="green">063</FONT>            return sessionIdCookie;<a name="line.63"></a>
+<FONT color="green">064</FONT>        }<a name="line.64"></a>
+<FONT color="green">065</FONT>    <a name="line.65"></a>
+<FONT color="green">066</FONT>        @SuppressWarnings({"UnusedDeclaration"})<a name="line.66"></a>
+<FONT color="green">067</FONT>        public void setSessionIdCookie(Cookie sessionIdCookie) {<a name="line.67"></a>
+<FONT color="green">068</FONT>            this.sessionIdCookie = sessionIdCookie;<a name="line.68"></a>
+<FONT color="green">069</FONT>        }<a name="line.69"></a>
+<FONT color="green">070</FONT>    <a name="line.70"></a>
+<FONT color="green">071</FONT>        public boolean isSessionIdCookieEnabled() {<a name="line.71"></a>
+<FONT color="green">072</FONT>            return sessionIdCookieEnabled;<a name="line.72"></a>
+<FONT color="green">073</FONT>        }<a name="line.73"></a>
+<FONT color="green">074</FONT>    <a name="line.74"></a>
+<FONT color="green">075</FONT>        @SuppressWarnings({"UnusedDeclaration"})<a name="line.75"></a>
+<FONT color="green">076</FONT>        public void setSessionIdCookieEnabled(boolean sessionIdCookieEnabled) {<a name="line.76"></a>
+<FONT color="green">077</FONT>            this.sessionIdCookieEnabled = sessionIdCookieEnabled;<a name="line.77"></a>
+<FONT color="green">078</FONT>        }<a name="line.78"></a>
+<FONT color="green">079</FONT>    <a name="line.79"></a>
+<FONT color="green">080</FONT>        private void storeSessionId(Serializable currentId, HttpServletRequest request, HttpServletResponse response) {<a name="line.80"></a>
+<FONT color="green">081</FONT>            if (currentId == null) {<a name="line.81"></a>
+<FONT color="green">082</FONT>                String msg = "sessionId cannot be null when persisting for subsequent requests.";<a name="line.82"></a>
+<FONT color="green">083</FONT>                throw new IllegalArgumentException(msg);<a name="line.83"></a>
+<FONT color="green">084</FONT>            }<a name="line.84"></a>
+<FONT color="green">085</FONT>            Cookie template = getSessionIdCookie();<a name="line.85"></a>
+<FONT color="green">086</FONT>            Cookie cookie = new SimpleCookie(template);<a name="line.86"></a>
+<FONT color="green">087</FONT>            String idString = currentId.toString();<a name="line.87"></a>
+<FONT color="green">088</FONT>            cookie.setValue(idString);<a name="line.88"></a>
+<FONT color="green">089</FONT>            cookie.saveTo(request, response);<a name="line.89"></a>
+<FONT color="green">090</FONT>            log.trace("Set session ID cookie for session with id {}", idString);<a name="line.90"></a>
+<FONT color="green">091</FONT>        }<a name="line.91"></a>
+<FONT color="green">092</FONT>    <a name="line.92"></a>
+<FONT color="green">093</FONT>        private void removeSessionIdCookie(HttpServletRequest request, HttpServletResponse response) {<a name="line.93"></a>
+<FONT color="green">094</FONT>            getSessionIdCookie().removeFrom(request, response);<a name="line.94"></a>
+<FONT color="green">095</FONT>        }<a name="line.95"></a>
+<FONT color="green">096</FONT>    <a name="line.96"></a>
+<FONT color="green">097</FONT>        private String getSessionIdCookieValue(ServletRequest request, ServletResponse response) {<a name="line.97"></a>
+<FONT color="green">098</FONT>            if (!isSessionIdCookieEnabled()) {<a name="line.98"></a>
+<FONT color="green">099</FONT>                log.debug("Session ID cookie is disabled - session id will not be acquired from a request cookie.");<a name="line.99"></a>
+<FONT color="green">100</FONT>                return null;<a name="line.100"></a>
+<FONT color="green">101</FONT>            }<a name="line.101"></a>
+<FONT color="green">102</FONT>            if (!(request instanceof HttpServletRequest)) {<a name="line.102"></a>
+<FONT color="green">103</FONT>                log.debug("Current request is not an HttpServletRequest - cannot get session ID cookie.  Returning null.");<a name="line.103"></a>
+<FONT color="green">104</FONT>                return null;<a name="line.104"></a>
+<FONT color="green">105</FONT>            }<a name="line.105"></a>
+<FONT color="green">106</FONT>            HttpServletRequest httpRequest = (HttpServletRequest) request;<a name="line.106"></a>
+<FONT color="green">107</FONT>            return getSessionIdCookie().readValue(httpRequest, WebUtils.toHttp(response));<a name="line.107"></a>
+<FONT color="green">108</FONT>        }<a name="line.108"></a>
+<FONT color="green">109</FONT>    <a name="line.109"></a>
+<FONT color="green">110</FONT>        private Serializable getReferencedSessionId(ServletRequest request, ServletResponse response) {<a name="line.110"></a>
+<FONT color="green">111</FONT>    <a name="line.111"></a>
+<FONT color="green">112</FONT>            String id = getSessionIdCookieValue(request, response);<a name="line.112"></a>
+<FONT color="green">113</FONT>            if (id != null) {<a name="line.113"></a>
+<FONT color="green">114</FONT>                request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_SOURCE,<a name="line.114"></a>
+<FONT color="green">115</FONT>                        ShiroHttpServletRequest.COOKIE_SESSION_ID_SOURCE);<a name="line.115"></a>
+<FONT color="green">116</FONT>            } else {<a name="line.116"></a>
+<FONT color="green">117</FONT>                //not in a cookie, or cookie is disabled - try the request URI as a fallback (i.e. due to URL rewriting):<a name="line.117"></a>
+<FONT color="green">118</FONT>    <a name="line.118"></a>
+<FONT color="green">119</FONT>                //try the URI path segment parameters first:<a name="line.119"></a>
+<FONT color="green">120</FONT>                id = getUriPathSegmentParamValue(request, ShiroHttpSession.DEFAULT_SESSION_ID_NAME);<a name="line.120"></a>
+<FONT color="green">121</FONT>    <a name="line.121"></a>
+<FONT color="green">122</FONT>                if (id == null) {<a name="line.122"></a>
+<FONT color="green">123</FONT>                    //not a URI path segment parameter, try the query parameters:<a name="line.123"></a>
+<FONT color="green">124</FONT>                    String name = getSessionIdName();<a name="line.124"></a>
+<FONT color="green">125</FONT>                    id = request.getParameter(name);<a name="line.125"></a>
+<FONT color="green">126</FONT>                    if (id == null) {<a name="line.126"></a>
+<FONT color="green">127</FONT>                        //try lowercase:<a name="line.127"></a>
+<FONT color="green">128</FONT>                        id = request.getParameter(name.toLowerCase());<a name="line.128"></a>
+<FONT color="green">129</FONT>                    }<a name="line.129"></a>
+<FONT color="green">130</FONT>                }<a name="line.130"></a>
+<FONT color="green">131</FONT>                if (id != null) {<a name="line.131"></a>
+<FONT color="green">132</FONT>                    request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_SOURCE,<a name="line.132"></a>
+<FONT color="green">133</FONT>                            ShiroHttpServletRequest.URL_SESSION_ID_SOURCE);<a name="line.133"></a>
+<FONT color="green">134</FONT>                }<a name="line.134"></a>
+<FONT color="green">135</FONT>            }<a name="line.135"></a>
+<FONT color="green">136</FONT>            if (id != null) {<a name="line.136"></a>
+<FONT color="green">137</FONT>                request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID, id);<a name="line.137"></a>
+<FONT color="green">138</FONT>                //automatically mark it valid here.  If it is invalid, the<a name="line.138"></a>
+<FONT color="green">139</FONT>                //onUnknownSession method below will be invoked and we'll remove the attribute at that time.<a name="line.139"></a>
+<FONT color="green">140</FONT>                request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_IS_VALID, Boolean.TRUE);<a name="line.140"></a>
+<FONT color="green">141</FONT>            }<a name="line.141"></a>
+<FONT color="green">142</FONT>            return id;<a name="line.142"></a>
+<FONT color="green">143</FONT>        }<a name="line.143"></a>
+<FONT color="green">144</FONT>    <a name="line.144"></a>
+<FONT color="green">145</FONT>        //SHIRO-351<a name="line.145"></a>
+<FONT color="green">146</FONT>        //also see http://cdivilly.wordpress.com/2011/04/22/java-servlets-uri-parameters/<a name="line.146"></a>
+<FONT color="green">147</FONT>        //since 1.2.2<a name="line.147"></a>
+<FONT color="green">148</FONT>        private String getUriPathSegmentParamValue(ServletRequest servletRequest, String paramName) {<a name="line.148"></a>
+<FONT color="green">149</FONT>    <a name="line.149"></a>
+<FONT color="green">150</FONT>            if (!(servletRequest instanceof HttpServletRequest)) {<a name="line.150"></a>
+<FONT color="green">151</FONT>                return null;<a name="line.151"></a>
+<FONT color="green">152</FONT>            }<a name="line.152"></a>
+<FONT color="green">153</FONT>            HttpServletRequest request = (HttpServletRequest)servletRequest;<a name="line.153"></a>
+<FONT color="green">154</FONT>            String uri = request.getRequestURI();<a name="line.154"></a>
+<FONT color="green">155</FONT>            if (uri == null) {<a name="line.155"></a>
+<FONT color="green">156</FONT>                return null;<a name="line.156"></a>
+<FONT color="green">157</FONT>            }<a name="line.157"></a>
+<FONT color="green">158</FONT>    <a name="line.158"></a>
+<FONT color="green">159</FONT>            int queryStartIndex = uri.indexOf('?');<a name="line.159"></a>
+<FONT color="green">160</FONT>            if (queryStartIndex &gt;= 0) { //get rid of the query string<a name="line.160"></a>
+<FONT color="green">161</FONT>                uri = uri.substring(0, queryStartIndex);<a name="line.161"></a>
+<FONT color="green">162</FONT>            }<a name="line.162"></a>
+<FONT color="green">163</FONT>    <a name="line.163"></a>
+<FONT color="green">164</FONT>            int index = uri.indexOf(';'); //now check for path segment parameters:<a name="line.164"></a>
+<FONT color="green">165</FONT>            if (index &lt; 0) {<a name="line.165"></a>
+<FONT color="green">166</FONT>                //no path segment params - return:<a name="line.166"></a>
+<FONT color="green">167</FONT>                return null;<a name="line.167"></a>
+<FONT color="green">168</FONT>            }<a name="line.168"></a>
+<FONT color="green">169</FONT>    <a name="line.169"></a>
+<FONT color="green">170</FONT>            //there are path segment params, let's get the last one that may exist:<a name="line.170"></a>
+<FONT color="green">171</FONT>    <a name="line.171"></a>
+<FONT color="green">172</FONT>            final String TOKEN = paramName + "=";<a name="line.172"></a>
+<FONT color="green">173</FONT>    <a name="line.173"></a>
+<FONT color="green">174</FONT>            uri = uri.substring(index+1); //uri now contains only the path segment params<a name="line.174"></a>
+<FONT color="green">175</FONT>    <a name="line.175"></a>
+<FONT color="green">176</FONT>            //we only care about the last JSESSIONID param:<a name="line.176"></a>
+<FONT color="green">177</FONT>            index = uri.lastIndexOf(TOKEN);<a name="line.177"></a>
+<FONT color="green">178</FONT>            if (index &lt; 0) {<a name="line.178"></a>
+<FONT color="green">179</FONT>                //no segment param:<a name="line.179"></a>
+<FONT color="green">180</FONT>                return null;<a name="line.180"></a>
+<FONT color="green">181</FONT>            }<a name="line.181"></a>
+<FONT color="green">182</FONT>    <a name="line.182"></a>
+<FONT color="green">183</FONT>            uri = uri.substring(index + TOKEN.length());<a name="line.183"></a>
+<FONT color="green">184</FONT>    <a name="line.184"></a>
+<FONT color="green">185</FONT>            index = uri.indexOf(';'); //strip off any remaining segment params:<a name="line.185"></a>
+<FONT color="green">186</FONT>            if(index &gt;= 0) {<a name="line.186"></a>
+<FONT color="green">187</FONT>                uri = uri.substring(0, index);<a name="line.187"></a>
+<FONT color="green">188</FONT>            }<a name="line.188"></a>
+<FONT color="green">189</FONT>    <a name="line.189"></a>
+<FONT color="green">190</FONT>            return uri; //what remains is the value<a name="line.190"></a>
+<FONT color="green">191</FONT>        }<a name="line.191"></a>
+<FONT color="green">192</FONT>    <a name="line.192"></a>
+<FONT color="green">193</FONT>        //since 1.2.1<a name="line.193"></a>
+<FONT color="green">194</FONT>        private String getSessionIdName() {<a name="line.194"></a>
+<FONT color="green">195</FONT>            String name = this.sessionIdCookie != null ? this.sessionIdCookie.getName() : null;<a name="line.195"></a>
+<FONT color="green">196</FONT>            if (name == null) {<a name="line.196"></a>
+<FONT color="green">197</FONT>                name = ShiroHttpSession.DEFAULT_SESSION_ID_NAME;<a name="line.197"></a>
+<FONT color="green">198</FONT>            }<a name="line.198"></a>
+<FONT color="green">199</FONT>            return name;<a name="line.199"></a>
+<FONT color="green">200</FONT>        }<a name="line.200"></a>
+<FONT color="green">201</FONT>    <a name="line.201"></a>
+<FONT color="green">202</FONT>        protected Session createExposedSession(Session session, SessionContext context) {<a name="line.202"></a>
+<FONT color="green">203</FONT>            if (!WebUtils.isWeb(context)) {<a name="line.203"></a>
+<FONT color="green">204</FONT>                return super.createExposedSession(session, context);<a name="line.204"></a>
+<FONT color="green">205</FONT>            }<a name="line.205"></a>
+<FONT color="green">206</FONT>            ServletRequest request = WebUtils.getRequest(context);<a name="line.206"></a>
+<FONT color="green">207</FONT>            ServletResponse response = WebUtils.getResponse(context);<a name="line.207"></a>
+<FONT color="green">208</FONT>            SessionKey key = new WebSessionKey(session.getId(), request, response);<a name="line.208"></a>
+<FONT color="green">209</FONT>            return new DelegatingSession(this, key);<a name="line.209"></a>
+<FONT color="green">210</FONT>        }<a name="line.210"></a>
+<FONT color="green">211</FONT>    <a name="line.211"></a>
+<FONT color="green">212</FONT>        protected Session createExposedSession(Session session, SessionKey key) {<a name="line.212"></a>
+<FONT color="green">213</FONT>            if (!WebUtils.isWeb(key)) {<a name="line.213"></a>
+<FONT color="green">214</FONT>                return super.createExposedSession(session, key);<a name="line.214"></a>
+<FONT color="green">215</FONT>            }<a name="line.215"></a>
+<FONT color="green">216</FONT>    <a name="line.216"></a>
+<FONT color="green">217</FONT>            ServletRequest request = WebUtils.getRequest(key);<a name="line.217"></a>
+<FONT color="green">218</FONT>            ServletResponse response = WebUtils.getResponse(key);<a name="line.218"></a>
+<FONT color="green">219</FONT>            SessionKey sessionKey = new WebSessionKey(session.getId(), request, response);<a name="line.219"></a>
+<FONT color="green">220</FONT>            return new DelegatingSession(this, sessionKey);<a name="line.220"></a>
+<FONT color="green">221</FONT>        }<a name="line.221"></a>
+<FONT color="green">222</FONT>    <a name="line.222"></a>
+<FONT color="green">223</FONT>        /**<a name="line.223"></a>
+<FONT color="green">224</FONT>         * Stores the Session's ID, usually as a Cookie, to associate with future requests.<a name="line.224"></a>
+<FONT color="green">225</FONT>         *<a name="line.225"></a>
+<FONT color="green">226</FONT>         * @param session the session that was just {@link #createSession created}.<a name="line.226"></a>
+<FONT color="green">227</FONT>         */<a name="line.227"></a>
+<FONT color="green">228</FONT>        @Override<a name="line.228"></a>
+<FONT color="green">229</FONT>        protected void onStart(Session session, SessionContext context) {<a name="line.229"></a>
+<FONT color="green">230</FONT>            super.onStart(session, context);<a name="line.230"></a>
+<FONT color="green">231</FONT>    <a name="line.231"></a>
+<FONT color="green">232</FONT>            if (!WebUtils.isHttp(context)) {<a name="line.232"></a>
+<FONT color="green">233</FONT>                log.debug("SessionContext argument is not HTTP compatible or does not have an HTTP request/response " +<a name="line.233"></a>
+<FONT color="green">234</FONT>                        "pair. No session ID cookie will be set.");<a name="line.234"></a>
+<FONT color="green">235</FONT>                return;<a name="line.235"></a>
+<FONT color="green">236</FONT>    <a name="line.236"></a>
+<FONT color="green">237</FONT>            }<a name="line.237"></a>
+<FONT color="green">238</FONT>            HttpServletRequest request = WebUtils.getHttpRequest(context);<a name="line.238"></a>
+<FONT color="green">239</FONT>            HttpServletResponse response = WebUtils.getHttpResponse(context);<a name="line.239"></a>
+<FONT color="green">240</FONT>    <a name="line.240"></a>
+<FONT color="green">241</FONT>            if (isSessionIdCookieEnabled()) {<a name="line.241"></a>
+<FONT color="green">242</FONT>                Serializable sessionId = session.getId();<a name="line.242"></a>
+<FONT color="green">243</FONT>                storeSessionId(sessionId, request, response);<a name="line.243"></a>
+<FONT color="green">244</FONT>            } else {<a name="line.244"></a>
+<FONT color="green">245</FONT>                log.debug("Session ID cookie is disabled.  No cookie has been set for new session with id {}", session.getId());<a name="line.245"></a>
+<FONT color="green">246</FONT>            }<a name="line.246"></a>
+<FONT color="green">247</FONT>    <a name="line.247"></a>
+<FONT color="green">248</FONT>            request.removeAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_SOURCE);<a name="line.248"></a>
+<FONT color="green">249</FONT>            request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_IS_NEW, Boolean.TRUE);<a name="line.249"></a>
+<FONT color="green">250</FONT>        }<a name="line.250"></a>
+<FONT color="green">251</FONT>    <a name="line.251"></a>
+<FONT color="green">252</FONT>        @Override<a name="line.252"></a>
+<FONT color="green">253</FONT>        public Serializable getSessionId(SessionKey key) {<a name="line.253"></a>
+<FONT color="green">254</FONT>            Serializable id = super.getSessionId(key);<a name="line.254"></a>
+<FONT color="green">255</FONT>            if (id == null &amp;&amp; WebUtils.isWeb(key)) {<a name="line.255"></a>
+<FONT color="green">256</FONT>                ServletRequest request = WebUtils.getRequest(key);<a name="line.256"></a>
+<FONT color="green">257</FONT>                ServletResponse response = WebUtils.getResponse(key);<a name="line.257"></a>
+<FONT color="green">258</FONT>                id = getSessionId(request, response);<a name="line.258"></a>
+<FONT color="green">259</FONT>            }<a name="line.259"></a>
+<FONT color="green">260</FONT>            return id;<a name="line.260"></a>
+<FONT color="green">261</FONT>        }<a name="line.261"></a>
+<FONT color="green">262</FONT>    <a name="line.262"></a>
+<FONT color="green">263</FONT>        protected Serializable getSessionId(ServletRequest request, ServletResponse response) {<a name="line.263"></a>
+<FONT color="green">264</FONT>            return getReferencedSessionId(request, response);<a name="line.264"></a>
+<FONT color="green">265</FONT>        }<a name="line.265"></a>
+<FONT color="green">266</FONT>    <a name="line.266"></a>
+<FONT color="green">267</FONT>        @Override<a name="line.267"></a>
+<FONT color="green">268</FONT>        protected void onExpiration(Session s, ExpiredSessionException ese, SessionKey key) {<a name="line.268"></a>
+<FONT color="green">269</FONT>            super.onExpiration(s, ese, key);<a name="line.269"></a>
+<FONT color="green">270</FONT>            onInvalidation(key);<a name="line.270"></a>
+<FONT color="green">271</FONT>        }<a name="line.271"></a>
+<FONT color="green">272</FONT>    <a name="line.272"></a>
+<FONT color="green">273</FONT>        @Override<a name="line.273"></a>
+<FONT color="green">274</FONT>        protected void onInvalidation(Session session, InvalidSessionException ise, SessionKey key) {<a name="line.274"></a>
+<FONT color="green">275</FONT>            super.onInvalidation(session, ise, key);<a name="line.275"></a>
+<FONT color="green">276</FONT>            onInvalidation(key);<a name="line.276"></a>
+<FONT color="green">277</FONT>        }<a name="line.277"></a>
+<FONT color="green">278</FONT>    <a name="line.278"></a>
+<FONT color="green">279</FONT>        private void onInvalidation(SessionKey key) {<a name="line.279"></a>
+<FONT color="green">280</FONT>            ServletRequest request = WebUtils.getRequest(key);<a name="line.280"></a>
+<FONT color="green">281</FONT>            if (request != null) {<a name="line.281"></a>
+<FONT color="green">282</FONT>                request.removeAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_IS_VALID);<a name="line.282"></a>
+<FONT color="green">283</FONT>            }<a name="line.283"></a>
+<FONT color="green">284</FONT>            if (WebUtils.isHttp(key)) {<a name="line.284"></a>
+<FONT color="green">285</FONT>                log.debug("Referenced session was invalid.  Removing session ID cookie.");<a name="line.285"></a>
+<FONT color="green">286</FONT>                removeSessionIdCookie(WebUtils.getHttpRequest(key), WebUtils.getHttpResponse(key));<a name="line.286"></a>
+<FONT color="green">287</FONT>            } else {<a name="line.287"></a>
+<FONT color="green">288</FONT>                log.debug("SessionKey argument is not HTTP compatible or does not have an HTTP request/response " +<a name="line.288"></a>
+<FONT color="green">289</FONT>                        "pair. Session ID cookie will not be removed due to invalidated session.");<a name="line.289"></a>
+<FONT color="green">290</FONT>            }<a name="line.290"></a>
+<FONT color="green">291</FONT>        }<a name="line.291"></a>
+<FONT color="green">292</FONT>    <a name="line.292"></a>
+<FONT color="green">293</FONT>        @Override<a name="line.293"></a>
+<FONT color="green">294</FONT>        protected void onStop(Session session, SessionKey key) {<a name="line.294"></a>
+<FONT color="green">295</FONT>            super.onStop(session, key);<a name="line.295"></a>
+<FONT color="green">296</FONT>            if (WebUtils.isHttp(key)) {<a name="line.296"></a>
+<FONT color="green">297</FONT>                HttpServletRequest request = WebUtils.getHttpRequest(key);<a name="line.297"></a>
+<FONT color="green">298</FONT>                HttpServletResponse response = WebUtils.getHttpResponse(key);<a name="line.298"></a>
+<FONT color="green">299</FONT>                log.debug("Session has been stopped (subject logout or explicit stop).  Removing session ID cookie.");<a name="line.299"></a>
+<FONT color="green">300</FONT>                removeSessionIdCookie(request, response);<a name="line.300"></a>
+<FONT color="green">301</FONT>            } else {<a name="line.301"></a>
+<FONT color="green">302</FONT>                log.debug("SessionKey argument is not HTTP compatible or does not have an HTTP request/response " +<a name="line.302"></a>
+<FONT color="green">303</FONT>                        "pair. Session ID cookie will not be removed due to stopped session.");<a name="line.303"></a>
+<FONT color="green">304</FONT>            }<a name="line.304"></a>
+<FONT color="green">305</FONT>        }<a name="line.305"></a>
+<FONT color="green">306</FONT>    <a name="line.306"></a>
+<FONT color="green">307</FONT>        /**<a name="line.307"></a>
+<FONT color="green">308</FONT>         * This is a native session manager implementation, so this method returns {@code false} always.<a name="line.308"></a>
+<FONT color="green">309</FONT>         *<a name="line.309"></a>
+<FONT color="green">310</FONT>         * @return {@code false} always<a name="line.310"></a>
+<FONT color="green">311</FONT>         * @since 1.2<a name="line.311"></a>
+<FONT color="green">312</FONT>         */<a name="line.312"></a>
+<FONT color="green">313</FONT>        public boolean isServletContainerSessions() {<a name="line.313"></a>
+<FONT color="green">314</FONT>            return false;<a name="line.314"></a>
+<FONT color="green">315</FONT>        }<a name="line.315"></a>
+<FONT color="green">316</FONT>    }<a name="line.316"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

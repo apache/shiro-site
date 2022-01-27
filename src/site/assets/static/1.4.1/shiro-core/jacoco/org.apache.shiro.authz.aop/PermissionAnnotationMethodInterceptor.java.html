@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PermissionAnnotationMethodInterceptor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Shiro :: Core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.authz.aop</a> &gt; <span class="el_source">PermissionAnnotationMethodInterceptor.java</span></div><h1>PermissionAnnotationMethodInterceptor.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.authz.aop;
+
+import org.apache.shiro.aop.AnnotationResolver;
+
+/**
+ * Checks to see if a @{@link org.apache.shiro.authz.annotation.RequiresPermissions RequiresPermissions} annotation is declared, and if so, performs
+ * a permission check to see if the calling &lt;code&gt;Subject&lt;/code&gt; is allowed to call the method.
+ * @since 0.9
+ */
+public class PermissionAnnotationMethodInterceptor extends AuthorizingAnnotationMethodInterceptor {
+
+    /*
+     * The character to look for that closes a permission definition.
+     **/
+    //private static final char ARRAY_CLOSE_CHAR = ']';
+
+    /**
+     * Default no-argument constructor that ensures this interceptor looks for
+     * {@link org.apache.shiro.authz.annotation.RequiresPermissions RequiresPermissions} annotations in a method declaration.
+     */
+    public PermissionAnnotationMethodInterceptor() {
+<span class="nc" id="L40">        super( new PermissionAnnotationHandler() );</span>
+<span class="nc" id="L41">    }</span>
+
+    /**
+     * @param resolver
+     * @since 1.1
+     */
+    public PermissionAnnotationMethodInterceptor(AnnotationResolver resolver) {
+<span class="nc" id="L48">        super( new PermissionAnnotationHandler(), resolver);</span>
+<span class="nc" id="L49">    }</span>
+
+    /*
+     * Infers the permission from the specified name path in the annotation.
+     * @param methodArgs the &lt;code&gt;MethodInvocation&lt;/code&gt; method arguments.
+     * @param namePath the Annotation 'name' value, which is a string-based permission definition.
+     * @return the String permission representation.
+     * @throws Exception if there is an error infering the target.
+     *
+    protected String inferTargetFromPath(Object[] methodArgs, String namePath) throws Exception {
+        int propertyStartIndex = -1;
+
+        char[] chars = namePath.toCharArray();
+        StringBuilder buf = new StringBuilder();
+        //init iteration at index 1 (instead of 0).  This is because the first
+        //character must be the ARRAY_OPEN_CHAR (eliminates unnecessary iteration)
+        for (int i = 1; i &lt; chars.length; i++) {
+            if (chars[i] == ARRAY_CLOSE_CHAR) {
+                // skip the delimiting period after the ARRAY_CLOSE_CHAR.  The resulting
+                // index is the init of the property path that we'll use with
+                // BeanUtils.getProperty:
+                propertyStartIndex = i + 2;
+                break;
+            } else {
+                buf.append(chars[i]);
+            }
+        }
+
+        Integer methodArgIndex = Integer.parseInt(buf.toString());
+        String beanUtilsPath = new String(chars, propertyStartIndex,
+                chars.length - propertyStartIndex);
+        Object targetValue = PropertyUtils.getProperty(methodArgs[methodArgIndex], beanUtilsPath);
+        return targetValue.toString();
+    }
+
+    /*
+     * Returns the &lt;code&gt;MethodInvocation&lt;/code&gt;'s arguments, or &lt;code&gt;null&lt;/code&gt; if there were none.
+     * @param invocation the methodInvocation to inspect.
+     * @return the method invocation's method arguments, or &lt;code&gt;null&lt;/code&gt; if there were none.
+     *
+    protected Object[] getMethodArguments(MethodInvocation invocation) {
+        if (invocation != null) {
+            return invocation.getArguments();
+        } else {
+            return null;
+        }
+    }
+
+    /*
+     * Returns the annotation {@link RequiresPermissions#value value}, from which the Permission will be constructed.
+     *
+     * @param invocation the method being invoked.
+     * @return the method annotation's &lt;code&gt;value&lt;/code&gt;, from which the Permission will be constructed.
+     *
+    protected String getAnnotationValue(MethodInvocation invocation) {
+        RequiresPermissions prAnnotation = (RequiresPermissions) getAnnotation(invocation);
+        return prAnnotation.value();
+    } */
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

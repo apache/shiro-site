@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>ShiroHttpSession.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: All (aggregate jar)</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.servlet</a> &gt; <span class="el_source">ShiroHttpSession.java</span></div><h1>ShiroHttpSession.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.servlet;
+
+import org.apache.shiro.session.InvalidSessionException;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.web.session.HttpServletSession;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
+import java.util.*;
+
+
+/**
+ * Wrapper class that uses a Shiro {@link Session Session} under the hood for all session operations instead of the
+ * Servlet Container's session mechanism.  This is required in heterogeneous client environments where the Session
+ * is used on both the business tier as well as in multiple client technologies (web, swing, flash, etc) since
+ * Servlet container sessions alone cannot support this feature.
+ *
+ * @since 0.2
+ */
+public class ShiroHttpSession implements HttpSession {
+
+    //TODO - complete JavaDoc
+
+    public static final String DEFAULT_SESSION_ID_NAME = &quot;JSESSIONID&quot;;
+
+<span class="fc" id="L47">    private static final Enumeration EMPTY_ENUMERATION = new Enumeration() {</span>
+        public boolean hasMoreElements() {
+<span class="nc" id="L49">            return false;</span>
+        }
+
+        public Object nextElement() {
+<span class="nc" id="L53">            return null;</span>
+        }
+    };
+
+    @SuppressWarnings({&quot;deprecation&quot;})
+<span class="fc" id="L58">    private static final javax.servlet.http.HttpSessionContext HTTP_SESSION_CONTEXT =</span>
+<span class="fc" id="L59">            new javax.servlet.http.HttpSessionContext() {</span>
+                public HttpSession getSession(String s) {
+<span class="nc" id="L61">                    return null;</span>
+                }
+
+                public Enumeration getIds() {
+<span class="nc" id="L65">                    return EMPTY_ENUMERATION;</span>
+                }
+            };
+
+<span class="fc" id="L69">    protected ServletContext servletContext = null;</span>
+<span class="fc" id="L70">    protected HttpServletRequest currentRequest = null;</span>
+<span class="fc" id="L71">    protected Session session = null; //'real' Shiro Session</span>
+
+<span class="fc" id="L73">    public ShiroHttpSession(Session session, HttpServletRequest currentRequest, ServletContext servletContext) {</span>
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (session instanceof HttpServletSession) {</span>
+<span class="nc" id="L75">            String msg = &quot;Session constructor argument cannot be an instance of HttpServletSession.  This is enforced to &quot; +</span>
+                    &quot;prevent circular dependencies and infinite loops.&quot;;
+<span class="nc" id="L77">            throw new IllegalArgumentException(msg);</span>
+        }
+<span class="fc" id="L79">        this.session = session;</span>
+<span class="fc" id="L80">        this.currentRequest = currentRequest;</span>
+<span class="fc" id="L81">        this.servletContext = servletContext;</span>
+<span class="fc" id="L82">    }</span>
+
+    public Session getSession() {
+<span class="nc" id="L85">        return this.session;</span>
+    }
+
+    public long getCreationTime() {
+        try {
+<span class="nc" id="L90">            return getSession().getStartTimestamp().getTime();</span>
+<span class="nc" id="L91">        } catch (Exception e) {</span>
+<span class="nc" id="L92">            throw new IllegalStateException(e);</span>
+        }
+    }
+
+    public String getId() {
+<span class="nc" id="L97">        return getSession().getId().toString();</span>
+    }
+
+    public long getLastAccessedTime() {
+<span class="nc" id="L101">        return getSession().getLastAccessTime().getTime();</span>
+    }
+
+    public ServletContext getServletContext() {
+<span class="fc" id="L105">        return this.servletContext;</span>
+    }
+
+    public void setMaxInactiveInterval(int i) {
+        try {
+<span class="nc" id="L110">            getSession().setTimeout(i * 1000);</span>
+<span class="nc" id="L111">        } catch (InvalidSessionException e) {</span>
+<span class="nc" id="L112">            throw new IllegalStateException(e);</span>
+<span class="nc" id="L113">        }</span>
+<span class="nc" id="L114">    }</span>
+
+    public int getMaxInactiveInterval() {
+        try {
+<span class="nc" id="L118">            return (new Long(getSession().getTimeout() / 1000)).intValue();</span>
+<span class="nc" id="L119">        } catch (InvalidSessionException e) {</span>
+<span class="nc" id="L120">            throw new IllegalStateException(e);</span>
+        }
+    }
+
+    @SuppressWarnings({&quot;deprecation&quot;})
+    public javax.servlet.http.HttpSessionContext getSessionContext() {
+<span class="nc" id="L126">        return HTTP_SESSION_CONTEXT;</span>
+    }
+
+    public Object getAttribute(String s) {
+        try {
+<span class="nc" id="L131">            return getSession().getAttribute(s);</span>
+<span class="nc" id="L132">        } catch (InvalidSessionException e) {</span>
+<span class="nc" id="L133">            throw new IllegalStateException(e);</span>
+        }
+    }
+
+    public Object getValue(String s) {
+<span class="nc" id="L138">        return getAttribute(s);</span>
+    }
+
+    @SuppressWarnings({&quot;unchecked&quot;})
+    protected Set&lt;String&gt; getKeyNames() {
+        Collection&lt;Object&gt; keySet;
+        try {
+<span class="nc" id="L145">            keySet = getSession().getAttributeKeys();</span>
+<span class="nc" id="L146">        } catch (InvalidSessionException e) {</span>
+<span class="nc" id="L147">            throw new IllegalStateException(e);</span>
+<span class="nc" id="L148">        }</span>
+        Set&lt;String&gt; keyNames;
+<span class="nc bnc" id="L150" title="All 4 branches missed.">        if (keySet != null &amp;&amp; !keySet.isEmpty()) {</span>
+<span class="nc" id="L151">            keyNames = new HashSet&lt;String&gt;(keySet.size());</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">            for (Object o : keySet) {</span>
+<span class="nc" id="L153">                keyNames.add(o.toString());</span>
+<span class="nc" id="L154">            }</span>
+        } else {
+<span class="nc" id="L156">            keyNames = Collections.EMPTY_SET;</span>
+        }
+<span class="nc" id="L158">        return keyNames;</span>
+    }
+
+    public Enumeration getAttributeNames() {
+<span class="nc" id="L162">        Set&lt;String&gt; keyNames = getKeyNames();</span>
+<span class="nc" id="L163">        final Iterator iterator = keyNames.iterator();</span>
+<span class="nc" id="L164">        return new Enumeration() {</span>
+            public boolean hasMoreElements() {
+<span class="nc" id="L166">                return iterator.hasNext();</span>
+            }
+
+            public Object nextElement() {
+<span class="nc" id="L170">                return iterator.next();</span>
+            }
+        };
+    }
+
+    public String[] getValueNames() {
+<span class="nc" id="L176">        Set&lt;String&gt; keyNames = getKeyNames();</span>
+<span class="nc" id="L177">        String[] array = new String[keyNames.size()];</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        if (keyNames.size() &gt; 0) {</span>
+<span class="nc" id="L179">            array = keyNames.toArray(array);</span>
+        }
+<span class="nc" id="L181">        return array;</span>
+    }
+
+    protected void afterBound(String s, Object o) {
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        if (o instanceof HttpSessionBindingListener) {</span>
+<span class="nc" id="L186">            HttpSessionBindingListener listener = (HttpSessionBindingListener) o;</span>
+<span class="nc" id="L187">            HttpSessionBindingEvent event = new HttpSessionBindingEvent(this, s, o);</span>
+<span class="nc" id="L188">            listener.valueBound(event);</span>
+        }
+<span class="nc" id="L190">    }</span>
+
+    protected void afterUnbound(String s, Object o) {
+<span class="nc bnc" id="L193" title="All 2 branches missed.">        if (o instanceof HttpSessionBindingListener) {</span>
+<span class="nc" id="L194">            HttpSessionBindingListener listener = (HttpSessionBindingListener) o;</span>
+<span class="nc" id="L195">            HttpSessionBindingEvent event = new HttpSessionBindingEvent(this, s, o);</span>
+<span class="nc" id="L196">            listener.valueUnbound(event);</span>
+        }
+<span class="nc" id="L198">    }</span>
+
+    public void setAttribute(String s, Object o) {
+        try {
+<span class="nc" id="L202">            getSession().setAttribute(s, o);</span>
+<span class="nc" id="L203">            afterBound(s, o);</span>
+<span class="nc" id="L204">        } catch (InvalidSessionException e) {</span>
+            //noinspection finally
+            try {
+<span class="nc" id="L207">                afterUnbound(s, o);</span>
+            } finally {
+                //noinspection ThrowFromFinallyBlock
+<span class="nc" id="L210">                throw new IllegalStateException(e);</span>
+            }
+<span class="nc" id="L212">        }</span>
+<span class="nc" id="L213">    }</span>
+
+    public void putValue(String s, Object o) {
+<span class="nc" id="L216">        setAttribute(s, o);</span>
+<span class="nc" id="L217">    }</span>
+
+    public void removeAttribute(String s) {
+        try {
+<span class="nc" id="L221">            Object attribute = getSession().removeAttribute(s);</span>
+<span class="nc" id="L222">            afterUnbound(s, attribute);</span>
+<span class="nc" id="L223">        } catch (InvalidSessionException e) {</span>
+<span class="nc" id="L224">            throw new IllegalStateException(e);</span>
+<span class="nc" id="L225">        }</span>
+<span class="nc" id="L226">    }</span>
+
+    public void removeValue(String s) {
+<span class="nc" id="L229">        removeAttribute(s);</span>
+<span class="nc" id="L230">    }</span>
+
+    public void invalidate() {
+        try {
+<span class="nc" id="L234">            getSession().stop();</span>
+<span class="nc" id="L235">        } catch (InvalidSessionException e) {</span>
+<span class="nc" id="L236">            throw new IllegalStateException(e);</span>
+<span class="nc" id="L237">        }</span>
+<span class="nc" id="L238">    }</span>
+
+    public boolean isNew() {
+<span class="nc" id="L241">        Boolean value = (Boolean) currentRequest.getAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_IS_NEW);</span>
+<span class="nc bnc" id="L242" title="All 4 branches missed.">        return value != null &amp;&amp; value.equals(Boolean.TRUE);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

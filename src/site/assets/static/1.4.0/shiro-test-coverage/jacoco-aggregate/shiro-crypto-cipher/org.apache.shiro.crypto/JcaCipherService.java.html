@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>JcaCipherService.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-crypto-cipher</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.crypto</a> &gt; <span class="el_source">JcaCipherService.java</span></div><h1>JcaCipherService.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.crypto;
+
+import org.apache.shiro.util.ByteSource;
+import org.apache.shiro.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.crypto.CipherInputStream;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.Key;
+import java.security.SecureRandom;
+import java.security.spec.AlgorithmParameterSpec;
+
+/**
+ * Abstract {@code CipherService} implementation utilizing Java's JCA APIs.
+ * &lt;h2&gt;Auto-generated Initialization Vectors&lt;/h2&gt;
+ * Shiro does something by default for all of its {@code CipherService} implementations that the JCA
+ * {@link javax.crypto.Cipher Cipher} does not do:  by default,
+ * &lt;a href=&quot;http://en.wikipedia.org/wiki/Initialization_vector&quot;&gt;initialization vector&lt;/a&gt;s are automatically randomly
+ * generated and prepended to encrypted data before returning from the {@code encrypt} methods.  That is, the returned
+ * byte array or {@code OutputStream} is actually a concatenation of an initialization vector byte array plus the actual
+ * encrypted data byte array.  The {@code decrypt} methods in turn know to read this prepended initialization vector
+ * before decrypting the real data that follows.
+ * &lt;p/&gt;
+ * This is highly desirable because initialization vectors guarantee that, for a key and any plaintext, the encrypted
+ * output will always be different &lt;em&gt;even if you call {@code encrypt} multiple times with the exact same arguments&lt;/em&gt;.
+ * This is essential in cryptography to ensure that data patterns cannot be identified across multiple input sources
+ * that are the same or similar.
+ * &lt;p/&gt;
+ * You can turn off this behavior by setting the
+ * {@link #setGenerateInitializationVectors(boolean) generateInitializationVectors} property to {@code false}, but it
+ * is highly recommended that you do not do this unless you have a very good reason to do so, since you would be losing
+ * a critical security feature.
+ * &lt;h3&gt;Initialization Vector Size&lt;/h3&gt;
+ * This implementation defaults the {@link #setInitializationVectorSize(int) initializationVectorSize} attribute to
+ * {@code 128} bits, a fairly common size.  Initialization vector sizes are very algorithm specific however, so subclass
+ * implementations will often override this value in their constructor if necessary.
+ * &lt;p/&gt;
+ * Also note that {@code initializationVectorSize} values are specified in the number of
+ * bits (not bytes!) to match common references in most cryptography documentation.  In practice though, initialization
+ * vectors are always specified as a byte array, so ensure that if you set this property, that the value is a multiple
+ * of {@code 8} to ensure that the IV can be correctly represented as a byte array (the
+ * {@link #setInitializationVectorSize(int) setInitializationVectorSize} mutator method enforces this).
+ *
+ * @since 1.0
+ */
+public abstract class JcaCipherService implements CipherService {
+
+    /**
+     * Internal private log instance.
+     */
+<span class="fc" id="L74">    private static final Logger log = LoggerFactory.getLogger(JcaCipherService.class);</span>
+
+    /**
+     * Default key size (in bits) for generated keys.
+     */
+    private static final int DEFAULT_KEY_SIZE = 128;
+
+    /**
+     * Default size of the internal buffer (in bytes) used to transfer data between streams during stream operations
+     */
+    private static final int DEFAULT_STREAMING_BUFFER_SIZE = 512;
+
+    private static final int BITS_PER_BYTE = 8;
+
+    /**
+     * Default SecureRandom algorithm name to use when acquiring the SecureRandom instance.
+     */
+    private static final String RANDOM_NUM_GENERATOR_ALGORITHM_NAME = &quot;SHA1PRNG&quot;;
+
+    /**
+     * The name of the cipher algorithm to use for all encryption, decryption, and key operations
+     */
+    private String algorithmName;
+
+    /**
+     * The size in bits (not bytes) of generated cipher keys
+     */
+    private int keySize;
+
+    /**
+     * The size of the internal buffer (in bytes) used to transfer data from one stream to another during stream operations
+     */
+    private int streamingBufferSize;
+
+    private boolean generateInitializationVectors;
+    private int initializationVectorSize;
+
+
+    private SecureRandom secureRandom;
+
+    /**
+     * Creates a new {@code JcaCipherService} instance which will use the specified cipher {@code algorithmName}
+     * for all encryption, decryption, and key operations.  Also, the following defaults are set:
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link #setKeySize keySize} = 128 bits&lt;/li&gt;
+     * &lt;li&gt;{@link #setInitializationVectorSize(int) initializationVectorSize} = 128 bits&lt;/li&gt;
+     * &lt;li&gt;{@link #setStreamingBufferSize(int) streamingBufferSize} = 512 bytes&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param algorithmName the name of the cipher algorithm to use for all encryption, decryption, and key operations
+     */
+<span class="fc" id="L125">    protected JcaCipherService(String algorithmName) {</span>
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">        if (!StringUtils.hasText(algorithmName)) {</span>
+<span class="nc" id="L127">            throw new IllegalArgumentException(&quot;algorithmName argument cannot be null or empty.&quot;);</span>
+        }
+<span class="fc" id="L129">        this.algorithmName = algorithmName;</span>
+<span class="fc" id="L130">        this.keySize = DEFAULT_KEY_SIZE;</span>
+<span class="fc" id="L131">        this.initializationVectorSize = DEFAULT_KEY_SIZE; //default to same size as the key size (a common algorithm practice)</span>
+<span class="fc" id="L132">        this.streamingBufferSize = DEFAULT_STREAMING_BUFFER_SIZE;</span>
+<span class="fc" id="L133">        this.generateInitializationVectors = true;</span>
+<span class="fc" id="L134">    }</span>
+
+    /**
+     * Returns the cipher algorithm name that will be used for all encryption, decryption, and key operations (for
+     * example, 'AES', 'Blowfish', 'RSA', 'DSA', 'TripleDES', etc).
+     *
+     * @return the cipher algorithm name that will be used for all encryption, decryption, and key operations
+     */
+    public String getAlgorithmName() {
+<span class="fc" id="L143">        return algorithmName;</span>
+    }
+
+    /**
+     * Returns the size in bits (not bytes) of generated cipher keys.
+     *
+     * @return the size in bits (not bytes) of generated cipher keys.
+     */
+    public int getKeySize() {
+<span class="fc" id="L152">        return keySize;</span>
+    }
+
+    /**
+     * Sets the size in bits (not bytes) of generated cipher keys.
+     *
+     * @param keySize the size in bits (not bytes) of generated cipher keys.
+     */
+    public void setKeySize(int keySize) {
+<span class="nc" id="L161">        this.keySize = keySize;</span>
+<span class="nc" id="L162">    }</span>
+
+    public boolean isGenerateInitializationVectors() {
+<span class="fc" id="L165">        return generateInitializationVectors;</span>
+    }
+
+    public void setGenerateInitializationVectors(boolean generateInitializationVectors) {
+<span class="nc" id="L169">        this.generateInitializationVectors = generateInitializationVectors;</span>
+<span class="nc" id="L170">    }</span>
+
+    /**
+     * Returns the algorithm-specific size in bits of generated initialization vectors.
+     *
+     * @return the algorithm-specific size in bits of generated initialization vectors.
+     */
+    public int getInitializationVectorSize() {
+<span class="fc" id="L178">        return initializationVectorSize;</span>
+    }
+
+    /**
+     * Sets the algorithm-specific initialization vector size in bits (not bytes!) to be used when generating
+     * initialization vectors.  The  value must be a multiple of {@code 8} to ensure that the IV can be represented
+     * as a byte array.
+     *
+     * @param initializationVectorSize the size in bits (not bytes) of generated initialization vectors.
+     * @throws IllegalArgumentException if the size is not a multiple of {@code 8}.
+     */
+    public void setInitializationVectorSize(int initializationVectorSize) throws IllegalArgumentException {
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">        if (initializationVectorSize % BITS_PER_BYTE != 0) {</span>
+<span class="nc" id="L191">            String msg = &quot;Initialization vector sizes are specified in bits, but must be a multiple of 8 so they &quot; +</span>
+                    &quot;can be easily represented as a byte array.&quot;;
+<span class="nc" id="L193">            throw new IllegalArgumentException(msg);</span>
+        }
+<span class="fc" id="L195">        this.initializationVectorSize = initializationVectorSize;</span>
+<span class="fc" id="L196">    }</span>
+
+    protected boolean isGenerateInitializationVectors(boolean streaming) {
+<span class="fc" id="L199">        return isGenerateInitializationVectors();</span>
+    }
+
+    /**
+     * Returns the size in bytes of the internal buffer used to transfer data from one stream to another during stream
+     * operations ({@link #encrypt(java.io.InputStream, java.io.OutputStream, byte[])} and
+     * {@link #decrypt(java.io.InputStream, java.io.OutputStream, byte[])}).
+     * &lt;p/&gt;
+     * Default size is {@code 512} bytes.
+     *
+     * @return the size of the internal buffer used to transfer data from one stream to another during stream
+     *         operations
+     */
+    public int getStreamingBufferSize() {
+<span class="fc" id="L213">        return streamingBufferSize;</span>
+    }
+
+    /**
+     * Sets the size in bytes of the internal buffer used to transfer data from one stream to another during stream
+     * operations ({@link #encrypt(java.io.InputStream, java.io.OutputStream, byte[])} and
+     * {@link #decrypt(java.io.InputStream, java.io.OutputStream, byte[])}).
+     * &lt;p/&gt;
+     * Default size is {@code 512} bytes.
+     *
+     * @param streamingBufferSize the size of the internal buffer used to transfer data from one stream to another
+     *                            during stream operations
+     */
+    public void setStreamingBufferSize(int streamingBufferSize) {
+<span class="nc" id="L227">        this.streamingBufferSize = streamingBufferSize;</span>
+<span class="nc" id="L228">    }</span>
+
+    /**
+     * Returns a source of randomness for encryption operations.  If one is not configured, and the underlying
+     * algorithm needs one, the JDK {@code SHA1PRNG} instance will be used by default.
+     *
+     * @return a source of randomness for encryption operations.  If one is not configured, and the underlying
+     *         algorithm needs one, the JDK {@code SHA1PRNG} instance will be used by default.
+     */
+    public SecureRandom getSecureRandom() {
+<span class="fc" id="L238">        return secureRandom;</span>
+    }
+
+    /**
+     * Sets a source of randomness for encryption operations.  If one is not configured, and the underlying
+     * algorithm needs one, the JDK {@code SHA1PRNG} instance will be used by default.
+     *
+     * @param secureRandom a source of randomness for encryption operations.  If one is not configured, and the
+     *                     underlying algorithm needs one, the JDK {@code SHA1PRNG} instance will be used by default.
+     */
+    public void setSecureRandom(SecureRandom secureRandom) {
+<span class="nc" id="L249">        this.secureRandom = secureRandom;</span>
+<span class="nc" id="L250">    }</span>
+
+    protected static SecureRandom getDefaultSecureRandom() {
+        try {
+<span class="fc" id="L254">            return java.security.SecureRandom.getInstance(RANDOM_NUM_GENERATOR_ALGORITHM_NAME);</span>
+<span class="nc" id="L255">        } catch (java.security.NoSuchAlgorithmException e) {</span>
+<span class="nc" id="L256">            log.debug(&quot;The SecureRandom SHA1PRNG algorithm is not available on the current platform.  Using the &quot; +</span>
+                    &quot;platform's default SecureRandom algorithm.&quot;, e);
+<span class="nc" id="L258">            return new java.security.SecureRandom();</span>
+        }
+    }
+
+    protected SecureRandom ensureSecureRandom() {
+<span class="fc" id="L263">        SecureRandom random = getSecureRandom();</span>
+<span class="pc bpc" id="L264" title="1 of 2 branches missed.">        if (random == null) {</span>
+<span class="fc" id="L265">            random = getDefaultSecureRandom();</span>
+        }
+<span class="fc" id="L267">        return random;</span>
+    }
+
+    /**
+     * Returns the transformation string to use with the {@link javax.crypto.Cipher#getInstance} invocation when
+     * creating a new {@code Cipher} instance.  This default implementation always returns
+     * {@link #getAlgorithmName() getAlgorithmName()}.  Block cipher implementations will want to override this method
+     * to support appending cipher operation modes and padding schemes.
+     *
+     * @param streaming if the transformation string is going to be used for a Cipher for stream-based encryption or not.
+     * @return the transformation string to use with the {@link javax.crypto.Cipher#getInstance} invocation when
+     *         creating a new {@code Cipher} instance.
+     */
+    protected String getTransformationString(boolean streaming) {
+<span class="nc" id="L281">        return getAlgorithmName();</span>
+    }
+
+    protected byte[] generateInitializationVector(boolean streaming) {
+<span class="fc" id="L285">        int size = getInitializationVectorSize();</span>
+<span class="pc bpc" id="L286" title="1 of 2 branches missed.">        if (size &lt;= 0) {</span>
+<span class="nc" id="L287">            String msg = &quot;initializationVectorSize property must be greater than zero.  This number is &quot; +</span>
+<span class="nc" id="L288">                    &quot;typically set in the &quot; + CipherService.class.getSimpleName() + &quot; subclass constructor.  &quot; +</span>
+                    &quot;Also check your configuration to ensure that if you are setting a value, it is positive.&quot;;
+<span class="nc" id="L290">            throw new IllegalStateException(msg);</span>
+        }
+<span class="pc bpc" id="L292" title="1 of 2 branches missed.">        if (size % BITS_PER_BYTE != 0) {</span>
+<span class="nc" id="L293">            String msg = &quot;initializationVectorSize property must be a multiple of 8 to represent as a byte array.&quot;;</span>
+<span class="nc" id="L294">            throw new IllegalStateException(msg);</span>
+        }
+<span class="fc" id="L296">        int sizeInBytes = size / BITS_PER_BYTE;</span>
+<span class="fc" id="L297">        byte[] ivBytes = new byte[sizeInBytes];</span>
+<span class="fc" id="L298">        SecureRandom random = ensureSecureRandom();</span>
+<span class="fc" id="L299">        random.nextBytes(ivBytes);</span>
+<span class="fc" id="L300">        return ivBytes;</span>
+    }
+
+    public ByteSource encrypt(byte[] plaintext, byte[] key) {
+<span class="fc" id="L304">        byte[] ivBytes = null;</span>
+<span class="fc" id="L305">        boolean generate = isGenerateInitializationVectors(false);</span>
+<span class="pc bpc" id="L306" title="1 of 2 branches missed.">        if (generate) {</span>
+<span class="fc" id="L307">            ivBytes = generateInitializationVector(false);</span>
+<span class="pc bpc" id="L308" title="2 of 4 branches missed.">            if (ivBytes == null || ivBytes.length == 0) {</span>
+<span class="nc" id="L309">                throw new IllegalStateException(&quot;Initialization vector generation is enabled - generated vector&quot; +</span>
+                        &quot;cannot be null or empty.&quot;);
+            }
+        }
+<span class="fc" id="L313">        return encrypt(plaintext, key, ivBytes, generate);</span>
+    }
+
+    private ByteSource encrypt(byte[] plaintext, byte[] key, byte[] iv, boolean prependIv) throws CryptoException {
+
+<span class="fc" id="L318">        final int MODE = javax.crypto.Cipher.ENCRYPT_MODE;</span>
+
+        byte[] output;
+
+<span class="pc bpc" id="L322" title="3 of 6 branches missed.">        if (prependIv &amp;&amp; iv != null &amp;&amp; iv.length &gt; 0) {</span>
+
+<span class="fc" id="L324">            byte[] encrypted = crypt(plaintext, key, iv, MODE);</span>
+
+<span class="fc" id="L326">            output = new byte[iv.length + encrypted.length];</span>
+
+            //now copy the iv bytes + encrypted bytes into one output array:
+
+            // iv bytes:
+<span class="fc" id="L331">            System.arraycopy(iv, 0, output, 0, iv.length);</span>
+
+            // + encrypted bytes:
+<span class="fc" id="L334">            System.arraycopy(encrypted, 0, output, iv.length, encrypted.length);</span>
+<span class="fc" id="L335">        } else {</span>
+<span class="nc" id="L336">            output = crypt(plaintext, key, iv, MODE);</span>
+        }
+
+<span class="fc bfc" id="L339" title="All 2 branches covered.">        if (log.isTraceEnabled()) {</span>
+<span class="pc bpc" id="L340" title="2 of 4 branches missed.">            log.trace(&quot;Incoming plaintext of size &quot; + (plaintext != null ? plaintext.length : 0) + &quot;.  Ciphertext &quot; +</span>
+                    &quot;byte array is size &quot; + (output != null ? output.length : 0));
+        }
+
+<span class="fc" id="L344">        return ByteSource.Util.bytes(output);</span>
+    }
+
+    public ByteSource decrypt(byte[] ciphertext, byte[] key) throws CryptoException {
+
+<span class="fc" id="L349">        byte[] encrypted = ciphertext;</span>
+
+        //No IV, check if we need to read the IV from the stream:
+<span class="fc" id="L352">        byte[] iv = null;</span>
+
+<span class="pc bpc" id="L354" title="1 of 2 branches missed.">        if (isGenerateInitializationVectors(false)) {</span>
+            try {
+                //We are generating IVs, so the ciphertext argument array is not actually 100% cipher text.  Instead, it
+                //is:
+                // - the first N bytes is the initialization vector, where N equals the value of the
+                // 'initializationVectorSize' attribute.
+                // - the remaining bytes in the method argument (arg.length - N) is the real cipher text.
+
+                //So we need to chunk the method argument into its constituent parts to find the IV and then use
+                //the IV to decrypt the real ciphertext:
+
+<span class="fc" id="L365">                int ivSize = getInitializationVectorSize();</span>
+<span class="fc" id="L366">                int ivByteSize = ivSize / BITS_PER_BYTE;</span>
+
+                //now we know how large the iv is, so extract the iv bytes:
+<span class="fc" id="L369">                iv = new byte[ivByteSize];</span>
+<span class="fc" id="L370">                System.arraycopy(ciphertext, 0, iv, 0, ivByteSize);</span>
+
+                //remaining data is the actual encrypted ciphertext.  Isolate it:
+<span class="fc" id="L373">                int encryptedSize = ciphertext.length - ivByteSize;</span>
+<span class="fc" id="L374">                encrypted = new byte[encryptedSize];</span>
+<span class="fc" id="L375">                System.arraycopy(ciphertext, ivByteSize, encrypted, 0, encryptedSize);</span>
+<span class="fc" id="L376">            } catch (Exception e) {</span>
+<span class="fc" id="L377">                String msg = &quot;Unable to correctly extract the Initialization Vector or ciphertext.&quot;;</span>
+<span class="fc" id="L378">                throw new CryptoException(msg, e);</span>
+<span class="fc" id="L379">            }</span>
+        }
+
+<span class="fc" id="L382">        return decrypt(encrypted, key, iv);</span>
+    }
+
+    private ByteSource decrypt(byte[] ciphertext, byte[] key, byte[] iv) throws CryptoException {
+<span class="fc bfc" id="L386" title="All 2 branches covered.">        if (log.isTraceEnabled()) {</span>
+<span class="pc bpc" id="L387" title="1 of 2 branches missed.">            log.trace(&quot;Attempting to decrypt incoming byte array of length &quot; +</span>
+                    (ciphertext != null ? ciphertext.length : 0));
+        }
+<span class="fc" id="L390">        byte[] decrypted = crypt(ciphertext, key, iv, javax.crypto.Cipher.DECRYPT_MODE);</span>
+<span class="pc bpc" id="L391" title="1 of 2 branches missed.">        return decrypted == null ? null : ByteSource.Util.bytes(decrypted);</span>
+    }
+
+    /**
+     * Returns a new {@link javax.crypto.Cipher Cipher} instance to use for encryption/decryption operations.  The
+     * Cipher's {@code transformationString} for the {@code Cipher}.{@link javax.crypto.Cipher#getInstance getInstance}
+     * call is obtaind via the {@link #getTransformationString(boolean) getTransformationString} method.
+     *
+     * @param streaming {@code true} if the cipher instance will be used as a stream cipher, {@code false} if it will be
+     *                  used as a block cipher.
+     * @return a new JDK {@code Cipher} instance.
+     * @throws CryptoException if a new Cipher instance cannot be constructed based on the
+     *                         {@link #getTransformationString(boolean) getTransformationString} value.
+     */
+    private javax.crypto.Cipher newCipherInstance(boolean streaming) throws CryptoException {
+<span class="fc" id="L406">        String transformationString = getTransformationString(streaming);</span>
+        try {
+<span class="fc" id="L408">            return javax.crypto.Cipher.getInstance(transformationString);</span>
+<span class="nc" id="L409">        } catch (Exception e) {</span>
+<span class="nc" id="L410">            String msg = &quot;Unable to acquire a Java JCA Cipher instance using &quot; +</span>
+<span class="nc" id="L411">                    javax.crypto.Cipher.class.getName() + &quot;.getInstance( \&quot;&quot; + transformationString + &quot;\&quot; ). &quot; +</span>
+<span class="nc" id="L412">                    getAlgorithmName() + &quot; under this configuration is required for the &quot; +</span>
+<span class="nc" id="L413">                    getClass().getName() + &quot; instance to function.&quot;;</span>
+<span class="nc" id="L414">            throw new CryptoException(msg, e);</span>
+        }
+    }
+
+    /**
+     * Functions as follows:
+     * &lt;ol&gt;
+     * &lt;li&gt;Creates a {@link #newCipherInstance(boolean) new JDK cipher instance}&lt;/li&gt;
+     * &lt;li&gt;Converts the specified key bytes into an {@link #getAlgorithmName() algorithm}-compatible JDK
+     * {@link Key key} instance&lt;/li&gt;
+     * &lt;li&gt;{@link #init(javax.crypto.Cipher, int, java.security.Key, AlgorithmParameterSpec, SecureRandom) Initializes}
+     * the JDK cipher instance with the JDK key&lt;/li&gt;
+     * &lt;li&gt;Calls the {@link #crypt(javax.crypto.Cipher, byte[]) crypt(cipher,bytes)} method to either encrypt or
+     * decrypt the data based on the specified Cipher behavior mode
+     * ({@link javax.crypto.Cipher#ENCRYPT_MODE Cipher.ENCRYPT_MODE} or
+     * {@link javax.crypto.Cipher#DECRYPT_MODE Cipher.DECRYPT_MODE})&lt;/li&gt;
+     * &lt;/ol&gt;
+     *
+     * @param bytes the bytes to crypt
+     * @param key   the key to use to perform the encryption or decryption.
+     * @param iv    the initialization vector to use for the crypt operation (optional, may be {@code null}).
+     * @param mode  the JDK Cipher behavior mode (Cipher.ENCRYPT_MODE or Cipher.DECRYPT_MODE).
+     * @return the resulting crypted byte array
+     * @throws IllegalArgumentException if {@code bytes} are null or empty.
+     * @throws CryptoException          if Cipher initialization or the crypt operation fails
+     */
+    private byte[] crypt(byte[] bytes, byte[] key, byte[] iv, int mode) throws IllegalArgumentException, CryptoException {
+<span class="pc bpc" id="L441" title="2 of 4 branches missed.">        if (key == null || key.length == 0) {</span>
+<span class="nc" id="L442">            throw new IllegalArgumentException(&quot;key argument cannot be null or empty.&quot;);</span>
+        }
+<span class="fc" id="L444">        javax.crypto.Cipher cipher = initNewCipher(mode, key, iv, false);</span>
+<span class="fc" id="L445">        return crypt(cipher, bytes);</span>
+    }
+
+    /**
+     * Calls the {@link javax.crypto.Cipher#doFinal(byte[]) doFinal(bytes)} method, propagating any exception that
+     * might arise in an {@link CryptoException}
+     *
+     * @param cipher the JDK Cipher to finalize (perform the actual cryption)
+     * @param bytes  the bytes to crypt
+     * @return the resulting crypted byte array.
+     * @throws CryptoException if there is an illegal block size or bad padding
+     */
+    private byte[] crypt(javax.crypto.Cipher cipher, byte[] bytes) throws CryptoException {
+        try {
+<span class="fc" id="L459">            return cipher.doFinal(bytes);</span>
+<span class="fc" id="L460">        } catch (Exception e) {</span>
+<span class="fc" id="L461">            String msg = &quot;Unable to execute 'doFinal' with cipher instance [&quot; + cipher + &quot;].&quot;;</span>
+<span class="fc" id="L462">            throw new CryptoException(msg, e);</span>
+        }
+    }
+
+    /**
+     * Initializes the JDK Cipher with the specified mode and key.  This is primarily a utility method to catch any
+     * potential {@link java.security.InvalidKeyException InvalidKeyException} that might arise.
+     *
+     * @param cipher the JDK Cipher to {@link javax.crypto.Cipher#init(int, java.security.Key) init}.
+     * @param mode   the Cipher mode
+     * @param key    the Cipher's Key
+     * @param spec   the JDK AlgorithmParameterSpec for cipher initialization (optional, may be null).
+     * @param random the SecureRandom to use for cipher initialization (optional, may be null).
+     * @throws CryptoException if the key is invalid
+     */
+    private void init(javax.crypto.Cipher cipher, int mode, java.security.Key key,
+                      AlgorithmParameterSpec spec, SecureRandom random) throws CryptoException {
+        try {
+<span class="pc bpc" id="L480" title="1 of 2 branches missed.">            if (random != null) {</span>
+<span class="nc bnc" id="L481" title="All 2 branches missed.">                if (spec != null) {</span>
+<span class="nc" id="L482">                    cipher.init(mode, key, spec, random);</span>
+                } else {
+<span class="nc" id="L484">                    cipher.init(mode, key, random);</span>
+                }
+            } else {
+<span class="pc bpc" id="L487" title="1 of 2 branches missed.">                if (spec != null) {</span>
+<span class="fc" id="L488">                    cipher.init(mode, key, spec);</span>
+                } else {
+<span class="nc" id="L490">                    cipher.init(mode, key);</span>
+                }
+            }
+<span class="nc" id="L493">        } catch (Exception e) {</span>
+<span class="nc" id="L494">            String msg = &quot;Unable to init cipher instance.&quot;;</span>
+<span class="nc" id="L495">            throw new CryptoException(msg, e);</span>
+<span class="fc" id="L496">        }</span>
+<span class="fc" id="L497">    }</span>
+
+
+    public void encrypt(InputStream in, OutputStream out, byte[] key) throws CryptoException {
+<span class="fc" id="L501">        byte[] iv = null;</span>
+<span class="fc" id="L502">        boolean generate = isGenerateInitializationVectors(true);</span>
+<span class="pc bpc" id="L503" title="1 of 2 branches missed.">        if (generate) {</span>
+<span class="fc" id="L504">            iv = generateInitializationVector(true);</span>
+<span class="pc bpc" id="L505" title="2 of 4 branches missed.">            if (iv == null || iv.length == 0) {</span>
+<span class="nc" id="L506">                throw new IllegalStateException(&quot;Initialization vector generation is enabled - generated vector&quot; +</span>
+                        &quot;cannot be null or empty.&quot;);
+            }
+        }
+<span class="fc" id="L510">        encrypt(in, out, key, iv, generate);</span>
+<span class="fc" id="L511">    }</span>
+
+    private void encrypt(InputStream in, OutputStream out, byte[] key, byte[] iv, boolean prependIv) throws CryptoException {
+<span class="pc bpc" id="L514" title="3 of 6 branches missed.">        if (prependIv &amp;&amp; iv != null &amp;&amp; iv.length &gt; 0) {</span>
+            try {
+                //first write the IV:
+<span class="fc" id="L517">                out.write(iv);</span>
+<span class="nc" id="L518">            } catch (IOException e) {</span>
+<span class="nc" id="L519">                throw new CryptoException(e);</span>
+<span class="fc" id="L520">            }</span>
+        }
+
+<span class="fc" id="L523">        crypt(in, out, key, iv, javax.crypto.Cipher.ENCRYPT_MODE);</span>
+<span class="fc" id="L524">    }</span>
+
+    public void decrypt(InputStream in, OutputStream out, byte[] key) throws CryptoException {
+<span class="fc" id="L527">        decrypt(in, out, key, isGenerateInitializationVectors(true));</span>
+<span class="fc" id="L528">    }</span>
+
+    private void decrypt(InputStream in, OutputStream out, byte[] key, boolean ivPrepended) throws CryptoException {
+
+<span class="fc" id="L532">        byte[] iv = null;</span>
+        //No Initialization Vector provided as a method argument - check if we need to read the IV from the stream:
+<span class="pc bpc" id="L534" title="1 of 2 branches missed.">        if (ivPrepended) {</span>
+            //we are generating IVs, so we need to read the previously-generated IV from the stream before
+            //we decrypt the rest of the stream (we need the IV to decrypt):
+<span class="fc" id="L537">            int ivSize = getInitializationVectorSize();</span>
+<span class="fc" id="L538">            int ivByteSize = ivSize / BITS_PER_BYTE;</span>
+<span class="fc" id="L539">            iv = new byte[ivByteSize];</span>
+            int read;
+
+            try {
+<span class="fc" id="L543">                read = in.read(iv);</span>
+<span class="nc" id="L544">            } catch (IOException e) {</span>
+<span class="nc" id="L545">                String msg = &quot;Unable to correctly read the Initialization Vector from the input stream.&quot;;</span>
+<span class="nc" id="L546">                throw new CryptoException(msg, e);</span>
+<span class="fc" id="L547">            }</span>
+
+<span class="pc bpc" id="L549" title="1 of 2 branches missed.">            if (read != ivByteSize) {</span>
+<span class="nc" id="L550">                throw new CryptoException(&quot;Unable to read initialization vector bytes from the InputStream.  &quot; +</span>
+                        &quot;This is required when initialization vectors are autogenerated during an encryption &quot; +
+                        &quot;operation.&quot;);
+            }
+        }
+
+<span class="fc" id="L556">        decrypt(in, out, key, iv);</span>
+<span class="fc" id="L557">    }</span>
+
+    private void decrypt(InputStream in, OutputStream out, byte[] decryptionKey, byte[] iv) throws CryptoException {
+<span class="fc" id="L560">        crypt(in, out, decryptionKey, iv, javax.crypto.Cipher.DECRYPT_MODE);</span>
+<span class="fc" id="L561">    }</span>
+
+    private void crypt(InputStream in, OutputStream out, byte[] keyBytes, byte[] iv, int cryptMode) throws CryptoException {
+<span class="pc bpc" id="L564" title="1 of 2 branches missed.">        if (in == null) {</span>
+<span class="nc" id="L565">            throw new NullPointerException(&quot;InputStream argument cannot be null.&quot;);</span>
+        }
+<span class="pc bpc" id="L567" title="1 of 2 branches missed.">        if (out == null) {</span>
+<span class="nc" id="L568">            throw new NullPointerException(&quot;OutputStream argument cannot be null.&quot;);</span>
+        }
+
+<span class="fc" id="L571">        javax.crypto.Cipher cipher = initNewCipher(cryptMode, keyBytes, iv, true);</span>
+
+<span class="fc" id="L573">        CipherInputStream cis = new CipherInputStream(in, cipher);</span>
+
+<span class="fc" id="L575">        int bufSize = getStreamingBufferSize();</span>
+<span class="fc" id="L576">        byte[] buffer = new byte[bufSize];</span>
+
+        int bytesRead;
+        try {
+<span class="fc bfc" id="L580" title="All 2 branches covered.">            while ((bytesRead = cis.read(buffer)) != -1) {</span>
+<span class="fc" id="L581">                out.write(buffer, 0, bytesRead);</span>
+            }
+<span class="nc" id="L583">        } catch (IOException e) {</span>
+<span class="nc" id="L584">            throw new CryptoException(e);</span>
+<span class="fc" id="L585">        }</span>
+<span class="fc" id="L586">    }</span>
+
+    private javax.crypto.Cipher initNewCipher(int jcaCipherMode, byte[] key, byte[] iv, boolean streaming)
+            throws CryptoException {
+
+<span class="fc" id="L591">        javax.crypto.Cipher cipher = newCipherInstance(streaming);</span>
+<span class="fc" id="L592">        java.security.Key jdkKey = new SecretKeySpec(key, getAlgorithmName());</span>
+<span class="fc" id="L593">        IvParameterSpec ivSpec = null;</span>
+<span class="pc bpc" id="L594" title="2 of 4 branches missed.">        if (iv != null &amp;&amp; iv.length &gt; 0) {</span>
+<span class="fc" id="L595">            ivSpec = new IvParameterSpec(iv);</span>
+        }
+
+<span class="fc" id="L598">        init(cipher, jcaCipherMode, jdkKey, ivSpec, getSecureRandom());</span>
+
+<span class="fc" id="L600">        return cipher;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

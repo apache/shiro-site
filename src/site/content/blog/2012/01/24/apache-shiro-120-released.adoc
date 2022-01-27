@@ -1,0 +1,62 @@
+= Apache Shiro 1.2.0 Released!
+:jbake-author: Lez Hazelwood
+:jbake-date: 2012-01-24
+:jbake-type: post
+:jbake-status: published
+:jbake-tags: blog
+:idprefix:
+
+Dear Apache Shiro Community,
+
+The Shiro team is pleased to announce the release of Apache Shiro version 1.2.0!
+
+This release includes a number of bug fixes and new features since the&nbsp;1.1.0 release.
+The 1.2.0 release is available from link:/download.html[the Download page].
+
+All binaries (.jars) are available in Maven Central already.
+Please note that the Apache mirrors are still updating to reflect the source&nbsp;distribution, but some mirrors may not be updated yet.
+If a mirror&nbsp;download link does not work, please try another or wait another 12 to&nbsp;24 hours.
+
+== New Features
+
+* The ability to disable sessions per filter chain or entirely for an application.
+* Servlet Context Listener initialization in web apps (to allow components to utilize Shiro before Filter initialization)
+* A command line program to securely hash passwords (or any url, file or stream input for that matter).
+* New secure password hash formats that adhere to Modular Crypt Format conventions. +
+These secure password hashes can be computed with the above named command line program and saved in text config (e.g. shiro.ini) directly. +
+Plaintext passwords should never be stored. +
+For those familiar with the Apache HTTPD passwd program, this achieves the same benefits.
+* A new LogoutFilter, as many apps don't need to show a view during logout (just logout and redirect to some known location).
+* Shiro filters can be enabled or disabled without removing them from the filter chain - useful in development (e.g. turn ssl requirement off in dev, but keep it on in production).
+* A lot of work has gone into making secure password hash storage and comparison a much simpler task in Shiro, focused around the new concept of a PasswordService. +
+You can use a PasswordService directly in your application code to hash passwords securely. +
+You can then configure a PasswordMatcher on your Realm(s) to use the same PasswordService for password comparisons. +
+See the PasswordService JavaDoc for example .ini configuration:
+** PasswordService: link:/static/current/apidocs/org/apache/shiro/authc/credential/PasswordService.html[]
+** PasswordMatcher: link:/static/current/apidocs/org/apache/shiro/authc/credential/PasswordMatcher.html[]
+
+More complete PasswordService and related config documentation will be&nbsp;added to the Shiro website in the next few days - it was better to&nbsp;release now for the many who are waiting on the release, and follow up&nbsp;with this part of the documentation shortly.
+
+* Three new 'support' modules:
+** Apache Karaf features (shiro-features-1.2.0.jar)
+** Google Guice: link:/guice.html[]
+** Jasig CAS: link:/cas.html[]
+
+And even more new features!
+See the 'Resolved Issues' below for a&nbsp;complete list.
+
+== Backwards-incompatible or potential breaking changes
+
+There are only a few small cases where breakage could occur - please&nbsp;view the release notes to ensure you mitigate any potential breaking&nbsp;change - particularly if you are using the SecureRandomNumberGenerator or Shiro's Block Cipher Services (AES, Blowfish):
+
+link:https://raw.githubusercontent.com/apache/shiro/shiro-root-1.2.0/RELEASE-NOTES[https://raw.githubusercontent.com/apache/shiro/shiro-root-1.2.0/RELEASE-NOTES]
+
+== Resolved Issues
+
+Jira resolved issue report:
+
+link:https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12310950&amp;version=12315478[https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12310950&amp;version=12315478]
+
+Enjoy!
+
+The Apache Shiro Team

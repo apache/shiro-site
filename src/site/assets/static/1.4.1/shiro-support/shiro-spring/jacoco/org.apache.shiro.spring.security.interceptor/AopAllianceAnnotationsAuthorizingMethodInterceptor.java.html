@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AopAllianceAnnotationsAuthorizingMethodInterceptor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Shiro :: Support :: Spring</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.spring.security.interceptor</a> &gt; <span class="el_source">AopAllianceAnnotationsAuthorizingMethodInterceptor.java</span></div><h1>AopAllianceAnnotationsAuthorizingMethodInterceptor.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.spring.security.interceptor;
+
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+import org.apache.shiro.aop.AnnotationResolver;
+import org.apache.shiro.authz.aop.*;
+import org.apache.shiro.spring.aop.SpringAnnotationResolver;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Allows Shiro Annotations to work in any &lt;a href=&quot;http://aopalliance.sourceforge.net/&quot;&gt;AOP Alliance&lt;/a&gt;
+ * specific implementation environment (for example, Spring).
+ *
+ * @since 0.2
+ */
+public class AopAllianceAnnotationsAuthorizingMethodInterceptor
+        extends AnnotationsAuthorizingMethodInterceptor implements MethodInterceptor {
+
+<span class="fc" id="L40">    public AopAllianceAnnotationsAuthorizingMethodInterceptor() {</span>
+<span class="fc" id="L41">        List&lt;AuthorizingAnnotationMethodInterceptor&gt; interceptors =</span>
+                new ArrayList&lt;AuthorizingAnnotationMethodInterceptor&gt;(5);
+
+        //use a Spring-specific Annotation resolver - Spring's AnnotationUtils is nicer than the
+        //raw JDK resolution process.
+<span class="fc" id="L46">        AnnotationResolver resolver = new SpringAnnotationResolver();</span>
+        //we can re-use the same resolver instance - it does not retain state:
+<span class="fc" id="L48">        interceptors.add(new RoleAnnotationMethodInterceptor(resolver));</span>
+<span class="fc" id="L49">        interceptors.add(new PermissionAnnotationMethodInterceptor(resolver));</span>
+<span class="fc" id="L50">        interceptors.add(new AuthenticatedAnnotationMethodInterceptor(resolver));</span>
+<span class="fc" id="L51">        interceptors.add(new UserAnnotationMethodInterceptor(resolver));</span>
+<span class="fc" id="L52">        interceptors.add(new GuestAnnotationMethodInterceptor(resolver));</span>
+
+<span class="fc" id="L54">        setMethodInterceptors(interceptors);</span>
+<span class="fc" id="L55">    }</span>
+    /**
+     * Creates a {@link MethodInvocation MethodInvocation} that wraps an
+     * {@link org.aopalliance.intercept.MethodInvocation org.aopalliance.intercept.MethodInvocation} instance,
+     * enabling Shiro Annotations in &lt;a href=&quot;http://aopalliance.sourceforge.net/&quot;&gt;AOP Alliance&lt;/a&gt; environments
+     * (Spring, etc).
+     *
+     * @param implSpecificMethodInvocation AOP Alliance {@link org.aopalliance.intercept.MethodInvocation MethodInvocation}
+     * @return a Shiro {@link MethodInvocation MethodInvocation} instance that wraps the AOP Alliance instance.
+     */
+    protected org.apache.shiro.aop.MethodInvocation createMethodInvocation(Object implSpecificMethodInvocation) {
+<span class="fc" id="L66">        final MethodInvocation mi = (MethodInvocation) implSpecificMethodInvocation;</span>
+
+<span class="fc" id="L68">        return new org.apache.shiro.aop.MethodInvocation() {</span>
+            public Method getMethod() {
+<span class="fc" id="L70">                return mi.getMethod();</span>
+            }
+
+            public Object[] getArguments() {
+<span class="nc" id="L74">                return mi.getArguments();</span>
+            }
+
+            public String toString() {
+<span class="nc" id="L78">                return &quot;Method invocation [&quot; + mi.getMethod() + &quot;]&quot;;</span>
+            }
+
+            public Object proceed() throws Throwable {
+<span class="fc" id="L82">                return mi.proceed();</span>
+            }
+
+            public Object getThis() {
+<span class="fc" id="L86">                return mi.getThis();</span>
+            }
+        };
+    }
+
+    /**
+     * Simply casts the method argument to an
+     * {@link org.aopalliance.intercept.MethodInvocation org.aopalliance.intercept.MethodInvocation} and then
+     * calls &lt;code&gt;methodInvocation.{@link org.aopalliance.intercept.MethodInvocation#proceed proceed}()&lt;/code&gt;
+     *
+     * @param aopAllianceMethodInvocation the {@link org.aopalliance.intercept.MethodInvocation org.aopalliance.intercept.MethodInvocation}
+     * @return the {@link org.aopalliance.intercept.MethodInvocation#proceed() org.aopalliance.intercept.MethodInvocation.proceed()} method call result.
+     * @throws Throwable if the underlying AOP Alliance &lt;code&gt;proceed()&lt;/code&gt; call throws a &lt;code&gt;Throwable&lt;/code&gt;.
+     */
+    protected Object continueInvocation(Object aopAllianceMethodInvocation) throws Throwable {
+<span class="nc" id="L101">        MethodInvocation mi = (MethodInvocation) aopAllianceMethodInvocation;</span>
+<span class="nc" id="L102">        return mi.proceed();</span>
+    }
+
+    /**
+     * Creates a Shiro {@link MethodInvocation MethodInvocation} instance and then immediately calls
+     * {@link org.apache.shiro.authz.aop.AuthorizingMethodInterceptor#invoke super.invoke}.
+     *
+     * @param methodInvocation the AOP Alliance-specific &lt;code&gt;methodInvocation&lt;/code&gt; instance.
+     * @return the return value from invoking the method invocation.
+     * @throws Throwable if the underlying AOP Alliance method invocation throws a &lt;code&gt;Throwable&lt;/code&gt;.
+     */
+    public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+<span class="fc" id="L114">        org.apache.shiro.aop.MethodInvocation mi = createMethodInvocation(methodInvocation);</span>
+<span class="fc" id="L115">        return super.invoke(mi);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

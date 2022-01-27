@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>DefaultWebSessionManager.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Jar Bundle</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.session.mgt</a> &gt; <span class="el_source">DefaultWebSessionManager.java</span></div><h1>DefaultWebSessionManager.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.session.mgt;
+
+import org.apache.shiro.session.ExpiredSessionException;
+import org.apache.shiro.session.InvalidSessionException;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
+import org.apache.shiro.session.mgt.DelegatingSession;
+import org.apache.shiro.session.mgt.SessionContext;
+import org.apache.shiro.session.mgt.SessionKey;
+import org.apache.shiro.web.servlet.Cookie;
+import org.apache.shiro.web.servlet.ShiroHttpServletRequest;
+import org.apache.shiro.web.servlet.ShiroHttpSession;
+import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.util.WebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.Serializable;
+
+
+/**
+ * Web-application capable {@link org.apache.shiro.session.mgt.SessionManager SessionManager} implementation.
+ *
+ * @since 0.9
+ */
+public class DefaultWebSessionManager extends DefaultSessionManager implements WebSessionManager {
+
+<span class="fc" id="L50">    private static final Logger log = LoggerFactory.getLogger(DefaultWebSessionManager.class);</span>
+
+    private Cookie sessionIdCookie;
+    private boolean sessionIdCookieEnabled;
+    private boolean sessionIdUrlRewritingEnabled;
+
+<span class="fc" id="L56">    public DefaultWebSessionManager() {</span>
+<span class="fc" id="L57">        Cookie cookie = new SimpleCookie(ShiroHttpSession.DEFAULT_SESSION_ID_NAME);</span>
+<span class="fc" id="L58">        cookie.setHttpOnly(true); //more secure, protects against XSS attacks</span>
+<span class="fc" id="L59">        this.sessionIdCookie = cookie;</span>
+<span class="fc" id="L60">        this.sessionIdCookieEnabled = true;</span>
+<span class="fc" id="L61">        this.sessionIdUrlRewritingEnabled = true;</span>
+<span class="fc" id="L62">    }</span>
+
+    public Cookie getSessionIdCookie() {
+<span class="fc" id="L65">        return sessionIdCookie;</span>
+    }
+
+    @SuppressWarnings({&quot;UnusedDeclaration&quot;})
+    public void setSessionIdCookie(Cookie sessionIdCookie) {
+<span class="fc" id="L70">        this.sessionIdCookie = sessionIdCookie;</span>
+<span class="fc" id="L71">    }</span>
+
+    public boolean isSessionIdCookieEnabled() {
+<span class="fc" id="L74">        return sessionIdCookieEnabled;</span>
+    }
+
+    @SuppressWarnings({&quot;UnusedDeclaration&quot;})
+    public void setSessionIdCookieEnabled(boolean sessionIdCookieEnabled) {
+<span class="fc" id="L79">        this.sessionIdCookieEnabled = sessionIdCookieEnabled;</span>
+<span class="fc" id="L80">    }</span>
+
+    public boolean isSessionIdUrlRewritingEnabled() {
+<span class="fc" id="L83">        return sessionIdUrlRewritingEnabled;</span>
+    }
+
+    @SuppressWarnings({&quot;UnusedDeclaration&quot;})
+    public void setSessionIdUrlRewritingEnabled(boolean sessionIdUrlRewritingEnabled) {
+<span class="nc" id="L88">        this.sessionIdUrlRewritingEnabled = sessionIdUrlRewritingEnabled;</span>
+<span class="nc" id="L89">    }</span>
+
+    private void storeSessionId(Serializable currentId, HttpServletRequest request, HttpServletResponse response) {
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">        if (currentId == null) {</span>
+<span class="nc" id="L93">            String msg = &quot;sessionId cannot be null when persisting for subsequent requests.&quot;;</span>
+<span class="nc" id="L94">            throw new IllegalArgumentException(msg);</span>
+        }
+<span class="fc" id="L96">        Cookie template = getSessionIdCookie();</span>
+<span class="fc" id="L97">        Cookie cookie = new SimpleCookie(template);</span>
+<span class="fc" id="L98">        String idString = currentId.toString();</span>
+<span class="fc" id="L99">        cookie.setValue(idString);</span>
+<span class="fc" id="L100">        cookie.saveTo(request, response);</span>
+<span class="fc" id="L101">        log.trace(&quot;Set session ID cookie for session with id {}&quot;, idString);</span>
+<span class="fc" id="L102">    }</span>
+
+    private void removeSessionIdCookie(HttpServletRequest request, HttpServletResponse response) {
+<span class="fc" id="L105">        getSessionIdCookie().removeFrom(request, response);</span>
+<span class="fc" id="L106">    }</span>
+
+    private String getSessionIdCookieValue(ServletRequest request, ServletResponse response) {
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        if (!isSessionIdCookieEnabled()) {</span>
+<span class="fc" id="L110">            log.debug(&quot;Session ID cookie is disabled - session id will not be acquired from a request cookie.&quot;);</span>
+<span class="fc" id="L111">            return null;</span>
+        }
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">        if (!(request instanceof HttpServletRequest)) {</span>
+<span class="nc" id="L114">            log.debug(&quot;Current request is not an HttpServletRequest - cannot get session ID cookie.  Returning null.&quot;);</span>
+<span class="nc" id="L115">            return null;</span>
+        }
+<span class="fc" id="L117">        HttpServletRequest httpRequest = (HttpServletRequest) request;</span>
+<span class="fc" id="L118">        return getSessionIdCookie().readValue(httpRequest, WebUtils.toHttp(response));</span>
+    }
+
+    private Serializable getReferencedSessionId(ServletRequest request, ServletResponse response) {
+
+<span class="fc" id="L123">        String id = getSessionIdCookieValue(request, response);</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if (id != null) {</span>
+<span class="fc" id="L125">            request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_SOURCE,</span>
+                    ShiroHttpServletRequest.COOKIE_SESSION_ID_SOURCE);
+        } else {
+            //not in a cookie, or cookie is disabled - try the request URI as a fallback (i.e. due to URL rewriting):
+
+            //try the URI path segment parameters first:
+<span class="fc" id="L131">            id = getUriPathSegmentParamValue(request, ShiroHttpSession.DEFAULT_SESSION_ID_NAME);</span>
+
+<span class="fc bfc" id="L133" title="All 2 branches covered.">            if (id == null) {</span>
+                //not a URI path segment parameter, try the query parameters:
+<span class="fc" id="L135">                String name = getSessionIdName();</span>
+<span class="fc" id="L136">                id = request.getParameter(name);</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">                if (id == null) {</span>
+                    //try lowercase:
+<span class="fc" id="L139">                    id = request.getParameter(name.toLowerCase());</span>
+                }
+            }
+<span class="fc bfc" id="L142" title="All 2 branches covered.">            if (id != null) {</span>
+<span class="fc" id="L143">                request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_SOURCE,</span>
+                        ShiroHttpServletRequest.URL_SESSION_ID_SOURCE);
+            }
+        }
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        if (id != null) {</span>
+<span class="fc" id="L148">            request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID, id);</span>
+            //automatically mark it valid here.  If it is invalid, the
+            //onUnknownSession method below will be invoked and we'll remove the attribute at that time.
+<span class="fc" id="L151">            request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_IS_VALID, Boolean.TRUE);</span>
+        }
+
+        // always set rewrite flag - SHIRO-361
+<span class="fc" id="L155">        request.setAttribute(ShiroHttpServletRequest.SESSION_ID_URL_REWRITING_ENABLED, isSessionIdUrlRewritingEnabled());</span>
+
+<span class="fc" id="L157">        return id;</span>
+    }
+
+    //SHIRO-351
+    //also see http://cdivilly.wordpress.com/2011/04/22/java-servlets-uri-parameters/
+    //since 1.2.2
+    private String getUriPathSegmentParamValue(ServletRequest servletRequest, String paramName) {
+
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        if (!(servletRequest instanceof HttpServletRequest)) {</span>
+<span class="fc" id="L166">            return null;</span>
+        }
+<span class="fc" id="L168">        HttpServletRequest request = (HttpServletRequest)servletRequest;</span>
+<span class="fc" id="L169">        String uri = request.getRequestURI();</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">        if (uri == null) {</span>
+<span class="fc" id="L171">            return null;</span>
+        }
+
+<span class="fc" id="L174">        int queryStartIndex = uri.indexOf('?');</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">        if (queryStartIndex &gt;= 0) { //get rid of the query string</span>
+<span class="fc" id="L176">            uri = uri.substring(0, queryStartIndex);</span>
+        }
+
+<span class="fc" id="L179">        int index = uri.indexOf(';'); //now check for path segment parameters:</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">        if (index &lt; 0) {</span>
+            //no path segment params - return:
+<span class="fc" id="L182">            return null;</span>
+        }
+
+        //there are path segment params, let's get the last one that may exist:
+
+<span class="fc" id="L187">        final String TOKEN = paramName + &quot;=&quot;;</span>
+
+<span class="fc" id="L189">        uri = uri.substring(index+1); //uri now contains only the path segment params</span>
+
+        //we only care about the last JSESSIONID param:
+<span class="fc" id="L192">        index = uri.lastIndexOf(TOKEN);</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        if (index &lt; 0) {</span>
+            //no segment param:
+<span class="fc" id="L195">            return null;</span>
+        }
+
+<span class="fc" id="L198">        uri = uri.substring(index + TOKEN.length());</span>
+
+<span class="fc" id="L200">        index = uri.indexOf(';'); //strip off any remaining segment params:</span>
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">        if(index &gt;= 0) {</span>
+<span class="fc" id="L202">            uri = uri.substring(0, index);</span>
+        }
+
+<span class="fc" id="L205">        return uri; //what remains is the value</span>
+    }
+
+    //since 1.2.1
+    private String getSessionIdName() {
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">        String name = this.sessionIdCookie != null ? this.sessionIdCookie.getName() : null;</span>
+<span class="pc bpc" id="L211" title="1 of 2 branches missed.">        if (name == null) {</span>
+<span class="nc" id="L212">            name = ShiroHttpSession.DEFAULT_SESSION_ID_NAME;</span>
+        }
+<span class="fc" id="L214">        return name;</span>
+    }
+
+    protected Session createExposedSession(Session session, SessionContext context) {
+<span class="pc bpc" id="L218" title="1 of 2 branches missed.">        if (!WebUtils.isWeb(context)) {</span>
+<span class="nc" id="L219">            return super.createExposedSession(session, context);</span>
+        }
+<span class="fc" id="L221">        ServletRequest request = WebUtils.getRequest(context);</span>
+<span class="fc" id="L222">        ServletResponse response = WebUtils.getResponse(context);</span>
+<span class="fc" id="L223">        SessionKey key = new WebSessionKey(session.getId(), request, response);</span>
+<span class="fc" id="L224">        return new DelegatingSession(this, key);</span>
+    }
+
+    protected Session createExposedSession(Session session, SessionKey key) {
+<span class="pc bpc" id="L228" title="1 of 2 branches missed.">        if (!WebUtils.isWeb(key)) {</span>
+<span class="nc" id="L229">            return super.createExposedSession(session, key);</span>
+        }
+
+<span class="fc" id="L232">        ServletRequest request = WebUtils.getRequest(key);</span>
+<span class="fc" id="L233">        ServletResponse response = WebUtils.getResponse(key);</span>
+<span class="fc" id="L234">        SessionKey sessionKey = new WebSessionKey(session.getId(), request, response);</span>
+<span class="fc" id="L235">        return new DelegatingSession(this, sessionKey);</span>
+    }
+
+    /**
+     * Stores the Session's ID, usually as a Cookie, to associate with future requests.
+     *
+     * @param session the session that was just {@link #createSession created}.
+     */
+    @Override
+    protected void onStart(Session session, SessionContext context) {
+<span class="fc" id="L245">        super.onStart(session, context);</span>
+
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">        if (!WebUtils.isHttp(context)) {</span>
+<span class="nc" id="L248">            log.debug(&quot;SessionContext argument is not HTTP compatible or does not have an HTTP request/response &quot; +</span>
+                    &quot;pair. No session ID cookie will be set.&quot;);
+<span class="nc" id="L250">            return;</span>
+
+        }
+<span class="fc" id="L253">        HttpServletRequest request = WebUtils.getHttpRequest(context);</span>
+<span class="fc" id="L254">        HttpServletResponse response = WebUtils.getHttpResponse(context);</span>
+
+<span class="fc bfc" id="L256" title="All 2 branches covered.">        if (isSessionIdCookieEnabled()) {</span>
+<span class="fc" id="L257">            Serializable sessionId = session.getId();</span>
+<span class="fc" id="L258">            storeSessionId(sessionId, request, response);</span>
+<span class="fc" id="L259">        } else {</span>
+<span class="fc" id="L260">            log.debug(&quot;Session ID cookie is disabled.  No cookie has been set for new session with id {}&quot;, session.getId());</span>
+        }
+
+<span class="fc" id="L263">        request.removeAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_SOURCE);</span>
+<span class="fc" id="L264">        request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_IS_NEW, Boolean.TRUE);</span>
+<span class="fc" id="L265">    }</span>
+
+    @Override
+    public Serializable getSessionId(SessionKey key) {
+<span class="fc" id="L269">        Serializable id = super.getSessionId(key);</span>
+<span class="pc bpc" id="L270" title="1 of 4 branches missed.">        if (id == null &amp;&amp; WebUtils.isWeb(key)) {</span>
+<span class="fc" id="L271">            ServletRequest request = WebUtils.getRequest(key);</span>
+<span class="fc" id="L272">            ServletResponse response = WebUtils.getResponse(key);</span>
+<span class="fc" id="L273">            id = getSessionId(request, response);</span>
+        }
+<span class="fc" id="L275">        return id;</span>
+    }
+
+    protected Serializable getSessionId(ServletRequest request, ServletResponse response) {
+<span class="fc" id="L279">        return getReferencedSessionId(request, response);</span>
+    }
+
+    @Override
+    protected void onExpiration(Session s, ExpiredSessionException ese, SessionKey key) {
+<span class="fc" id="L284">        super.onExpiration(s, ese, key);</span>
+<span class="fc" id="L285">        onInvalidation(key);</span>
+<span class="fc" id="L286">    }</span>
+
+    @Override
+    protected void onInvalidation(Session session, InvalidSessionException ise, SessionKey key) {
+<span class="nc" id="L290">        super.onInvalidation(session, ise, key);</span>
+<span class="nc" id="L291">        onInvalidation(key);</span>
+<span class="nc" id="L292">    }</span>
+
+    private void onInvalidation(SessionKey key) {
+<span class="fc" id="L295">        ServletRequest request = WebUtils.getRequest(key);</span>
+<span class="pc bpc" id="L296" title="1 of 2 branches missed.">        if (request != null) {</span>
+<span class="fc" id="L297">            request.removeAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_IS_VALID);</span>
+        }
+<span class="pc bpc" id="L299" title="1 of 2 branches missed.">        if (WebUtils.isHttp(key)) {</span>
+<span class="fc" id="L300">            log.debug(&quot;Referenced session was invalid.  Removing session ID cookie.&quot;);</span>
+<span class="fc" id="L301">            removeSessionIdCookie(WebUtils.getHttpRequest(key), WebUtils.getHttpResponse(key));</span>
+        } else {
+<span class="nc" id="L303">            log.debug(&quot;SessionKey argument is not HTTP compatible or does not have an HTTP request/response &quot; +</span>
+                    &quot;pair. Session ID cookie will not be removed due to invalidated session.&quot;);
+        }
+<span class="fc" id="L306">    }</span>
+
+    @Override
+    protected void onStop(Session session, SessionKey key) {
+<span class="nc" id="L310">        super.onStop(session, key);</span>
+<span class="nc bnc" id="L311" title="All 2 branches missed.">        if (WebUtils.isHttp(key)) {</span>
+<span class="nc" id="L312">            HttpServletRequest request = WebUtils.getHttpRequest(key);</span>
+<span class="nc" id="L313">            HttpServletResponse response = WebUtils.getHttpResponse(key);</span>
+<span class="nc" id="L314">            log.debug(&quot;Session has been stopped (subject logout or explicit stop).  Removing session ID cookie.&quot;);</span>
+<span class="nc" id="L315">            removeSessionIdCookie(request, response);</span>
+<span class="nc" id="L316">        } else {</span>
+<span class="nc" id="L317">            log.debug(&quot;SessionKey argument is not HTTP compatible or does not have an HTTP request/response &quot; +</span>
+                    &quot;pair. Session ID cookie will not be removed due to stopped session.&quot;);
+        }
+<span class="nc" id="L320">    }</span>
+
+    /**
+     * This is a native session manager implementation, so this method returns {@code false} always.
+     *
+     * @return {@code false} always
+     * @since 1.2
+     */
+    public boolean isServletContainerSessions() {
+<span class="fc" id="L329">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

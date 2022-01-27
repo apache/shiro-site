@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>MapCache.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Jar Bundle</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.cache</a> &gt; <span class="el_source">MapCache.java</span></div><h1>MapCache.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.cache;
+
+import org.apache.shiro.util.CollectionUtils;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * A &lt;code&gt;MapCache&lt;/code&gt; is a {@link Cache Cache} implementation that uses a backing {@link Map} instance to store
+ * and retrieve cached data.
+ *
+ * @since 1.0
+ */
+public class MapCache&lt;K, V&gt; implements Cache&lt;K, V&gt; {
+
+    /**
+     * Backing instance.
+     */
+    private final Map&lt;K, V&gt; map;
+
+    /**
+     * The name of this cache.
+     */
+    private final String name;
+
+<span class="fc" id="L46">    public MapCache(String name, Map&lt;K, V&gt; backingMap) {</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        if (name == null) {</span>
+<span class="nc" id="L48">            throw new IllegalArgumentException(&quot;Cache name cannot be null.&quot;);</span>
+        }
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if (backingMap == null) {</span>
+<span class="nc" id="L51">            throw new IllegalArgumentException(&quot;Backing map cannot be null.&quot;);</span>
+        }
+<span class="fc" id="L53">        this.name = name;</span>
+<span class="fc" id="L54">        this.map = backingMap;</span>
+<span class="fc" id="L55">    }</span>
+
+    public V get(K key) throws CacheException {
+<span class="fc" id="L58">        return map.get(key);</span>
+    }
+
+    public V put(K key, V value) throws CacheException {
+<span class="fc" id="L62">        return map.put(key, value);</span>
+    }
+
+    public V remove(K key) throws CacheException {
+<span class="nc" id="L66">        return map.remove(key);</span>
+    }
+
+    public void clear() throws CacheException {
+<span class="nc" id="L70">        map.clear();</span>
+<span class="nc" id="L71">    }</span>
+
+    public int size() {
+<span class="nc" id="L74">        return map.size();</span>
+    }
+
+    public Set&lt;K&gt; keys() {
+<span class="nc" id="L78">        Set&lt;K&gt; keys = map.keySet();</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (!keys.isEmpty()) {</span>
+<span class="nc" id="L80">            return Collections.unmodifiableSet(keys);</span>
+        }
+<span class="nc" id="L82">        return Collections.emptySet();</span>
+    }
+
+    public Collection&lt;V&gt; values() {
+<span class="nc" id="L86">        Collection&lt;V&gt; values = map.values();</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        if (!CollectionUtils.isEmpty(values)) {</span>
+<span class="nc" id="L88">            return Collections.unmodifiableCollection(values);</span>
+        }
+<span class="nc" id="L90">        return Collections.emptySet();</span>
+    }
+
+    public String toString() {
+<span class="nc" id="L94">        return new StringBuilder(&quot;MapCache '&quot;)</span>
+<span class="nc" id="L95">                .append(name).append(&quot;' (&quot;)</span>
+<span class="nc" id="L96">                .append(map.size())</span>
+<span class="nc" id="L97">                .append(&quot; entries)&quot;)</span>
+<span class="nc" id="L98">                .toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
