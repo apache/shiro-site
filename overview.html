@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
@@ -14,323 +15,403 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Overview of Apache Shiro | Apache Shiro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="description" content="Apache Shiro is a powerful and easy-to-use Java security framework that performs authentication, authorization, cryptography, and session management.">
+    <meta name="keywords" content='documentation,overview'>
+    <meta name="generator" content="JBake">
     <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
     <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
     <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
-    <meta name="y_key" content="e47896cd6bae4920">
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 
-    <title>
-                    Apache Shiro | Simple. Java. Security.
-        </title>
+    <meta property="og:title" content="Overview of Apache Shiro | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2022-01-27"/>
+    <meta property="article:tag" content='documentation'/>
+    <meta property="article:tag" content='overview'/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content='https://shiro.apache.org/overview.html'/>
+    <meta property="og:image" content='images/shiro-featured-image.png'/>
+    <meta property="og:image:width" content='1200'/>
+    <meta property="og:image:height" content='628'/>
+    <meta property="og:site_name" content="Apache Shiro"/>
 
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/asciidoctor.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="highlight.js-11.2.0/styles/default.min.css" rel="stylesheet">
+    <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
 
-    <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-
-    <!-- site styles and  -->
-    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
-    <script type="text/javascript" src="./assets/js/shiro-site.js"></script>
-
-    <!-- github ribbon -->
-    <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.css" />
-    <!--[if lt IE 9]>
-      <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.ie.css" />
-    <![endif]-->
-
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-
-    <!-- bootstrap -->
-    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap-theme.min.css">
-    <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
-
-    <link rel="stylesheet" href="./assets/css/bootstrap-social.css">
-
-    <!-- Google Analytics -->
-    <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-XXXXX-Y', 'auto');
-    ga('send', 'pageview');
-    </script>
-    <!-- End Google Analytics -->
-
-
-
-    <!-- syntax highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css" integrity="sha256-Zd1icfZ72UBmsId/mUcagrmN7IN5Qkrvh75ICHIQVTk=" crossorigin="anonymous" />
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js" integrity="sha256-s63qpgPYoQk+wv3U6WZqioVJrwFNBTgD4dkeegLuwvo=" crossorigin="anonymous"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
-
-    <script type="text/javascript">
-
-        $( document ).ready(function() {
-            addPageEditLink();
-        });
-    </script>
-</head>
-
-<body>
-
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="favicon.ico">
+  </head>
+  <body>
     <div id="top-bar"></div>
-
-    <div class="container" style="max-width: 1200px;">
-
     <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
 
+    <div id="wrap">
 
-
-    <div class="masthead">
+      <div class="masthead">
         <p class="lead">
-            <a href="./index.html">
-                <img src="./assets/images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;">
-            </a>
-            <span class="tagline">Simple. Java. Security.</span>
-            <a class="pull-right" href="https://www.apache.org/events/current-event.html">
-                <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png"/>
-            </a>
+          <a href="index.html"><img src="images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <span class="tagline">Simple. Java. Security.</span>
+          <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
+          </a>
         </p>
+      </div>
+
+	<!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="get-started.html">Get Started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="documentation.html">Docs</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-webapps" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Web Apps
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
+                <li><a class="dropdown-item" href="web.html">General</a></li>
+                <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="web-features.html">Features</a></li>
+              </ul>
+            </li>
+
+            <li><a class="nav-link" href="features.html">Features</a></li>
+
+            <!-- integrations -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-integrations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Integrations
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
+                <li><a class="dropdown-item" href="spring-boot.html">Spring</a></li>
+                <li><a class="dropdown-item" href="guice.html">Guice</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="integration.html">Third-Party Integrations</a></li>
+              </ul>
+            </li>
+
+            <!-- Community -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-community" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Community
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
+                <li><a class="dropdown-item" href="forums.html">Community Forums</a></li>
+                <li><a class="dropdown-item" href="mailing-lists.html">Mailing Lists</a></li>
+                <li><a class="dropdown-item" href="articles.html">Articles</a></li>
+                <li><a class="dropdown-item" href="news.html">News</a></li>
+                <li><a class="dropdown-item" href="events.html">Events</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="community.html">More</a></li>
+              </ul>
+            </li>
+
+            <!-- About -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-about" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                About
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
+                <li><a class="dropdown-item" href="about.html">About</a></li>
+                <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="d-flex justify-content-end navbar-nav mb-2 mb-lg-0">
+            <!-- The ASF -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-asf" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apache Software Foundation
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
+                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+	<div class="page-header">
+		<h1>Overview of Apache Shiro</h1>
+	</div>
+
+
+<div class="sect1">
+<h2 id="introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apache Shiro is a powerful and flexible open-source security framework that cleanly handles authentication, authorization, enterprise session management and cryptography.</p>
+</div>
+<div class="paragraph">
+<p>Apache Shiro&#8217;s first and foremost goal is to be easy to use and understand. Security can be very complex at times, even painful, but it doesn&#8217;t have to be. A framework should mask complexities where possible and expose a clean and intuitive API that simplifies the developer&#8217;s effort to make their application(s) secure.</p>
+</div>
+<div class="paragraph">
+<p>Here are some things that you can do with Apache Shiro:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Authenticate a user to verify their identity</p>
+</li>
+<li>
+<p>Perform access control for a user, such as:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Determine if a user is assigned a certain security role or not</p>
+</li>
+<li>
+<p>Determine if a user is permitted to do something or not</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Use a Session API in any environment, even without web or EJB containers.</p>
+</li>
+<li>
+<p>React to events during authentication, access control, or during a session&#8217;s lifetime.</p>
+</li>
+<li>
+<p>Aggregate 1 or more data sources of user security data and present this all as a single composite user 'view'.</p>
+</li>
+<li>
+<p>Enable Single Sign On (SSO) functionality</p>
+</li>
+<li>
+<p>Enable 'Remember Me' services for user association without login
+…
+and much more - all integrated into a cohesive easy-to-use API.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Shiro attempts to achieve these goals for all application environments - from the simplest command line application to the largest enterprise applications, without forcing dependencies on other 3rd party frameworks, containers, or application servers. Of course the project aims to integrate into these environments wherever possible, but it could be used out-of-the-box in any environment.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="features">Features</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apache Shiro is a comprehensive application security framework with many features. The following diagram shows where Shiro focuses its energy, and this reference manual will be organized similarly:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/ShiroFeatures.png" alt="Apache Shiro Features">
+</div>
+</div>
+<div class="paragraph">
+<p>Shiro targets what the Shiro development team calls "the four cornerstones of application security" - Authentication, Authorization, Session Management, and Cryptography:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Authentication:</strong> Sometimes referred to as 'login', this is the act of proving a user is who they say they are.</p>
+</li>
+<li>
+<p><strong>Authorization:</strong> The process of access control, i.e. determining 'who' has access to 'what'.</p>
+</li>
+<li>
+<p><strong>Session Management:</strong> Managing user-specific sessions, even in non-web or EJB applications.</p>
+</li>
+<li>
+<p><strong>Cryptography:</strong> Keeping data secure using cryptographic algorithms while still being easy to use.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There are also additional features to support and reinforce these concerns in different application environments, especially:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Web Support: Shiro&#8217;s web support APIs help easily secure web applications.</p>
+</li>
+<li>
+<p>Caching: Caching is a first-tier citizen in Apache Shiro&#8217;s API to ensure that security operations remain fast and efficient.</p>
+</li>
+<li>
+<p>Concurrency: Apache Shiro supports multi-threaded applications with its concurrency features.</p>
+</li>
+<li>
+<p>Testing: Test support exists to help you write unit and integration tests and ensure your code will be secured as expected.</p>
+</li>
+<li>
+<p>"Run As": A feature that allows users to assume the identity of another user (if they are allowed), sometimes useful in administrative scenarios.</p>
+</li>
+<li>
+<p>"Remember Me": Remember users' identities across sessions so they only need to log in when mandatory.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="a_first_look_at_apache_shiro">A First Look at Apache Shiro</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apache Shiro&#8217;s design goals are to simplify application security by being intuitive and easy to use. Shiro&#8217;s core design models how most people think about application security - in the context of someone (or something) interacting with an application.</p>
+</div>
+<div class="paragraph">
+<p>Software applications are usually designed based on user stories. That is, you&#8217;ll often design user interfaces or service APIs based on how a user would (or should) interact with the software. For example, you might say, "If the user interacting with my application is logged in, I will show them a button they can click to view their account information. If they are not logged in, I will show a sign-up button."</p>
+</div>
+<div class="paragraph">
+<p>This example statement indicates that applications are largely written to satisfy user requirements and needs. Even if the 'user' is another software system and not a human being, you still write code to reflect behavior based on who (or what) is currently interacting with your software.</p>
+</div>
+<div class="paragraph">
+<p>Shiro largely reflects these concepts in its own design. By matching what is already intuitive for software developers, Apache Shiro remains intuitive and easy to use in practically any application.</p>
+</div>
+<div class="sect2">
+<h3 id="bsic_design">Bsic Design</h3>
+<div class="paragraph">
+<p>Shiro&#8217;s architecture has 3 primary concepts: the <code>Subject</code>, <code>SecurityManager</code> and <code>Realm</code> s. The following diagram is a high-level overview of how these concepts interact, and we&#8217;ll cover each concept below:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/ShiroArchitecture.png" alt="Apache Shiro Architecture">
+</div>
+</div>
+<div class="sect3">
+<h4 id="subject">Subject</h4>
+<div class="paragraph">
+<p>The <code>Subject</code> is essentially a security specific 'view' of the the currently executing user. Notice that it is not actually named <em>User</em> however. The name <em>Subject</em> was chosen for two reasons:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The word 'User' often implies a human being in many software systems. But sometimes the 'currently executing user' isn&#8217;t a human being at all - maybe it is a 3rd-party process or remote server or daemon account. The word 'Subject' is more general and can mean 'the entity interacting with the software'.</p>
+</li>
+<li>
+<p>The word 'Subject', because it is a general-purpose concept, is the actual term most often used in the security world. We retain that definition to be consistent.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>You can acquire the current <code>Subject</code> anywhere in your application code as shown here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.apache.shiro.subject.Subject;
+import org.apache.shiro.SecurityUtils;
+...
+Subject currentUser = SecurityUtils.getSubject();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once you have a <code>Subject</code> instance, you immediately have access to 90% of everything you would ever need to do to perform security for that Subject, such as login and logout, perform role and permission checks, access their session, and more - but more about this later. The most important thing to know is that the <code>Subject</code> is your 'security-specific view' of an application 'user' and that you can essentially access this anywhere in application code to perform whatever security operations you need.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="the_securitymanager">The SecurityManager</h4>
+<div class="paragraph">
+<p>While application developers almost exclusively interact with <code>Subject</code> instances in their code, Subjects have a 'behind the scenes' counterpart that makes them work - the Shiro <code>SecurityManager</code> (note this is <em>not</em> the same thing as the <code>java.lang.SecurityManager</code>).</p>
+</div>
+<div class="paragraph">
+<p>While a <code>Subject</code> instance represents security information and operations for a single user, the Shiro <code>SecurityManager</code> manages security operations for <em>all</em> users. It is essentially the 'man behind the curtain' that manages all features in Shiro for all Subjects. Each software application that uses Shiro typically has one and only one <code>SecurityManager</code> instance.</p>
+</div>
+<div class="paragraph">
+<p>The <code>SecurityManager</code> is the heart of Shiro’s architecture and acts as a sort of 'umbrella’ object that coordinates internally nested security components that form an object graph. However, once the SecurityManager and its internal object graph is configured, it is usually left alone and application developers spend almost all of their time with the <code>Subject</code> API.</p>
+</div>
+<div class="paragraph">
+<p>We will talk about the <code>SecurityManager</code> in detail later on, but it is important to realize that when you interact with a <code>Subject</code>, it is really the <code>SecurityManager</code> behind the scenes that does all the heavy lifting for any <code>Subject</code> security operation. This is reflected in the basic flow diagram above.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="realms">Realms</h4>
+<div class="paragraph">
+<p>The third and final core concept in Shiro is that of a Realm. A Realm acts as the ‘bridge’ or ‘connector’ between Shiro and your application’s security data. That is, when it comes time to actually interact with security-related data like user accounts to perform authentication (login) and authorization (access control), Shiro looks up many of these things from one or more Realms configured for an application.</p>
+</div>
+<div class="paragraph">
+<p>In this sense a Realm is essentially a security-specific <a href="https://en.wikipedia.org/wiki/Data_access_object">DAO</a>: it encapsulates connection details for data sources and makes the associated data available to Shiro as needed. When configuring Shiro, you must specify at least one Realm to use for authentication and/or authorization. More than one Realm may be configured, but at least one is required.</p>
+</div>
+<div class="paragraph">
+<p>Shiro provides out-of-the-box Realms to connect to a number of security data sources (aka directories) such as LDAP, relational databases (JDBC), text configuration sources like INI and properties files, and more. You can plug-in your own Realm implementations to represent custom data sources if the default Realms do not meet your needs.</p>
+</div>
+<div class="paragraph">
+<p>Like other internal components, the Shiro <code>SecurityManager</code> manages how Realms are used to acquire security data and then represented as <code>Subject</code> instances.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+	<hr />
+
+</div> 
+
+    <div class="footer-padding"></div>
+
+    <div class="container-fluid pt-2 border-top" id="custom-footer">
+      <footer class="row justify-content-between align-items-center">
+        <div class=" col-md-5">
+          <div class="copyright-footer justify-content-start">
+            <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
+            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center col-md-1">
+          <a class="btn btn-social"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
+        </div>
+
+        <div class="d-flex justify-content-end col-md-4" id="editThisPage">
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/overview.adoc"/>
+        </div>
+
+        <div class="d-flex col-md-2 justify-content-end" style="position: relative">
+          <div class="footer-shield"></div>
+        </div>
+      </footer>
     </div>
 
 
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="highlight.js-11.2.0/highlight.min.js"></script>
+    <script src="js/shiro.js"></script>
 
-    <nav class="navbar navbar-default" role="navigation">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
+    <script>
+        docReady(
+          addPageEditLink()
+      );
+    </script>
+    <script>hljs.highlightAll();</script>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li><a href="./get-started.html">Get Started</a></li>
-                <li><a href="./documentation.html">Docs</a></li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Web Apps <b class="caret"></b>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="./web.html">General</a></li>
-                        <li class="divider"></li>
-                        <li><a href="./web-features.html">Features</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Integrations <b class="caret"></b>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="./spring-boot.html">Spring</a></li>
-                        <li><a href="./guice.html">Guice</a></li>
-                        <li class="divider"></li>
-                        <li><a href="./integration.html">Third-Party Integrations</a></li>
-                    </ul>
-                </li>
-
-                <li><a href="./features.html">Features</a></li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Community <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="./forums.html">Community Forums</a></li>
-                        <li><a href="./mailing-lists.html">Mailing Lists</a></li>
-                        <li><a href="./articles.html">Articles</a></li>
-                        <li><a href="./news.html">News</a></li>
-                        <li><a href="./events.html">Events</a></li>
-                        <li class="divider"></li>
-                        <li><a href="./community.html">More</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        About <b class="caret"></b>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="./about.html">About</a></li>
-                        <li><a href="./security-reports.html">Vulnerability Reports</a></li>
-                    </ul>
-                </li>
-
-            </ul>
-
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="http://www.apache.org/" class="dropdown-toggle" data-toggle="dropdown">
-                        Apache Software Foundation <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="http://www.apache.org/">Apache Homepage</a></li>
-                        <li><a href="http://www.apache.org/licenses/">License</a></li>
-                        <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
-                        <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
-                        <li><a href="http://www.apache.org/security/">Security</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
-    </nav>
-
-
-            <a name="Overview-OverviewofApacheShiro"></a>
-<h1><a href="#overview-of-apache-shiro" name="overview-of-apache-shiro">Overview of Apache Shiro</a></h1>
-<a name="Overview-Introduction"></a>
-<h2><a href="#introduction" name="introduction">Introduction</a></h2>
-<p>Apache Shiro is a powerful and flexible open-source security framework that cleanly handles authentication, authorization, enterprise session management and cryptography.</p>
-<p>Apache Shiro&rsquo;s first and foremost goal is to be easy to use and understand. Security can be very complex at times, even painful, but it doesn&rsquo;t have to be. A framework should mask complexities where possible and expose a clean and intuitive API that simplifies the developer&rsquo;s effort to make their application(s) secure.</p>
-<p>Here are some things that you can do with Apache Shiro:</p>
-<ul>
-  <li>Authenticate a user to verify their identity</li>
-  <li>Perform access control for a user, such as:
-    <ul>
-      <li>Determine if a user is assigned a certain security role or not</li>
-      <li>Determine if a user is permitted to do something or not</li>
-    </ul>
-  </li>
-  <li>Use a Session API in any environment, even without web or EJB containers.</li>
-  <li>React to events during authentication, access control, or during a session&rsquo;s lifetime.</li>
-  <li>Aggregate 1 or more data sources of user security data and present this all as a single composite user &lsquo;view&rsquo;.</li>
-  <li>Enable Single Sign On (SSO) functionality</li>
-  <li>Enable &lsquo;Remember Me&rsquo; services for user association without login<br/>&hellip;<br/>and much more - all integrated into a cohesive easy-to-use API.</li>
-</ul>
-<p>Shiro attempts to achieve these goals for all application environments - from the simplest command line application to the largest enterprise applications, without forcing dependencies on other 3rd party frameworks, containers, or application servers. Of course the project aims to integrate into these environments wherever possible, but it could be used out-of-the-box in any environment.</p>
-<a name="Overview-Features"></a>
-<h2><a href="#features" name="features">Features</a></h2>
-<p>Apache Shiro is a comprehensive application security framework with many features. The following diagram shows where Shiro focuses its energy, and this reference manual will be organized similarly:</p>
-<img src="assets/images/ShiroFeatures.png" style="margin:0px auto;display:block"></img>
-<p>Shiro targets what the Shiro development team calls &ldquo;the four cornerstones of application security&rdquo; - Authentication, Authorization, Session Management, and Cryptography:</p>
-<ul>
-  <li>
-  <p><strong>Authentication:</strong> Sometimes referred to as &lsquo;login&rsquo;, this is the act of proving a user is who they say they are.</p></li>
-  <li>
-  <p><strong>Authorization:</strong> The process of access control, i.e. determining &lsquo;who&rsquo; has access to &lsquo;what&rsquo;.</p></li>
-  <li>
-  <p><strong>Session Management:</strong> Managing user-specific sessions, even in non-web or EJB applications.</p></li>
-  <li>
-  <p><strong>Cryptography:</strong> Keeping data secure using cryptographic algorithms while still being easy to use.</p></li>
-</ul>
-<p>There are also additional features to support and reinforce these concerns in different application environments, especially:</p>
-<ul>
-  <li>Web Support: Shiro&rsquo;s web support APIs help easily secure web applications.</li>
-  <li>Caching: Caching is a first-tier citizen in Apache Shiro&rsquo;s API to ensure that security operations remain fast and efficient.</li>
-  <li>Concurrency: Apache Shiro supports multi-threaded applications with its concurrency features.</li>
-  <li>Testing: Test support exists to help you write unit and integration tests and ensure your code will be secured as expected.</li>
-  <li>&ldquo;Run As&rdquo;: A feature that allows users to assume the identity of another user (if they are allowed), sometimes useful in administrative scenarios.</li>
-  <li>&ldquo;Remember Me&rdquo;: Remember users&rsquo; identities across sessions so they only need to log in when mandatory.</li>
-</ul>
-<a name="Overview-AFirstLookatApacheShiro"></a>
-<h2><a href="#a-first-look-at-apache-shiro" name="a-first-look-at-apache-shiro">A First Look at Apache Shiro</a></h2>
-<p>Apache Shiro&rsquo;s design goals are to simplify application security by being intuitive and easy to use. Shiro&rsquo;s core design models how most people think about application security - in the context of someone (or something) interacting with an application.</p>
-<p>Software applications are usually designed based on user stories. That is, you&rsquo;ll often design user interfaces or service APIs based on how a user would (or should) interact with the software. For example, you might say, &ldquo;If the user interacting with my application is logged in, I will show them a button they can click to view their account information. If they are not logged in, I will show a sign-up button.&rdquo;</p>
-<p>This example statement indicates that applications are largely written to satisfy user requirements and needs. Even if the &lsquo;user&rsquo; is another software system and not a human being, you still write code to reflect behavior based on who (or what) is currently interacting with your software.</p>
-<p>Shiro largely reflects these concepts in its own design. By matching what is already intuitive for software developers, Apache Shiro remains intuitive and easy to use in practically any application.</p>
-<a name="Overview-BasicDesign"></a>
-<h3><a href="#basic-design" name="basic-design">Basic Design</a></h3>
-<p>Shiro&rsquo;s architecture has 3 primary concepts: the <code>Subject</code>, <code>SecurityManager</code> and <code>Realm</code> s. The following diagram is a high-level overview of how these concepts interact, and we&rsquo;ll cover each concept below:</p>
-<img src="assets/images/ShiroBasicArchitecture.png" style="margin:0px auto;display:block"></img>
-<a name="Overview-Subject"></a>
-<h4><a href="#subject" name="subject">Subject</a></h4>
-<p>The <code>Subject</code> is essentially a security specific &lsquo;view&rsquo; of the the currently executing user. Notice that it is not actually named <em>User</em> however. The name <em>Subject</em> was chosen for two reasons:</p>
-<ol>
-  <li>The word &lsquo;User&rsquo; often implies a human being in many software systems. But sometimes the &lsquo;currently executing user&rsquo; isn&rsquo;t a human being at all - maybe it is a 3rd-party process or remote server or daemon account. The word &lsquo;Subject&rsquo; is more general and can mean &lsquo;the entity interacting with the software&rsquo;.</li>
-  <li>The word &lsquo;Subject&rsquo;, because it is a general-purpose concept, is the actual term most often used in the security world. We retain that definition to be consistent.</li>
-</ol>
-<p>You can acquire the current <code>Subject</code> anywhere in your application code as shown here:</p>
-<pre><code class="java">import org.apache.shiro.subject.Subject;
-import org.apache.shiro.SecurityUtils;
-...
-Subject currentUser = SecurityUtils.getSubject();
-</code></pre>
-<p>Once you have a <code>Subject</code> instance, you immediately have access to 90% of everything you would ever need to do to perform security for that Subject, such as login and logout, perform role and permission checks, access their session, and more - but more about this later. The most important thing to know is that the <code>Subject</code> is your &lsquo;security-specific view&rsquo; of an application &lsquo;user&rsquo; and that you can essentially access this anywhere in application code to perform whatever security operations you need.</p>
-<a name="Overview-TheSecurityManager"></a>
-<h4><a href="#the-securitymanager" name="the-securitymanager">The SecurityManager</a></h4>
-<p>While application developers almost exclusively interact with <code>Subject</code> instances in their code, Subjects have a &lsquo;behind the scenes&rsquo; counterpart that makes them work - the Shiro <code>SecurityManager</code> (note this is <em>not</em> the same thing as the <code>java.lang.SecurityManager</code>).</p>
-<p>While a <code>Subject</code> instance represents security information and operations for a single user, the Shiro <code>SecurityManager</code> manages security operations for <em>all</em> users. It is essentially the &lsquo;man behind the curtain&rsquo; that manages all features in Shiro for all Subjects. Each software application that uses Shiro typically has one and only one <code>SecurityManager</code> instance.</p>
-<p>The <code>SecurityManager</code> is the heart of Shiro’s architecture and acts as a sort of &rsquo;umbrella’ object that coordinates internally nested security components that form an object graph. However, once the SecurityManager and its internal object graph is configured, it is usually left alone and application developers spend almost all of their time with the <code>Subject</code> API.</p>
-<p>We will talk about the <code>SecurityManager</code> in detail later on, but it is important to realize that when you interact with a <code>Subject</code>, it is really the <code>SecurityManager</code> behind the scenes that does all the heavy lifting for any <code>Subject</code> security operation. This is reflected in the basic flow diagram above.</p>
-<a name="Overview-Realms"></a>
-<h4><a href="#realms" name="realms">Realms</a></h4>
-<p>The third and final core concept in Shiro is that of a Realm. A Realm acts as the ‘bridge’ or ‘connector’ between Shiro and your application’s security data. That is, when it comes time to actually interact with security-related data like user accounts to perform authentication (login) and authorization (access control), Shiro looks up many of these things from one or more Realms configured for an application.</p>
-<p>In this sense a Realm is essentially a security-specific <a href="https://en.wikipedia.org/wiki/Data_access_object">DAO</a>: it encapsulates connection details for data sources and makes the associated data available to Shiro as needed. When configuring Shiro, you must specify at least one Realm to use for authentication and/or authorization. More than one Realm may be configured, but at least one is required.</p>
-<p>Shiro provides out-of-the-box Realms to connect to a number of security data sources (aka directories) such as LDAP, relational databases (JDBC), text configuration sources like INI and properties files, and more. You can plug-in your own Realm implementations to represent custom data sources if the default Realms do not meet your needs.</p>
-<p>Like other internal components, the Shiro <code>SecurityManager</code> manages how Realms are used to acquire security data and then represented as <code>Subject</code> instances.<br/><input type="hidden" id="ghEditPage" value="overview.md"></input></p>
-    
-</div>
-
-    <div class="footer-padding"></div>
-    <footer class="custom-footer">
-
-        <div class="col-md-5">
-            <div class="copyright-footer">
-            <a href="http://www.apache.org/foundation/contributing.html">Donate to the ASF</a> |
-            <a href="http://www.apache.org/licenses/LICENSE-2.0.html">License</a>
-            <p>Copyright &copy; 2008-2021 The Apache Software Foundation</p>
-                </div>
-        </div>
-
-        <div class="social col-md-2">
-            <a class="btn btn-social-icon btn-sm btn-twitter" target="_blank" href="https://twitter.com/ApacheShiro"><span class="fa fa-twitter"></span></a>
-            <a class="btn btn-social-icon btn-sm btn-facebook" target="_blank" href="https://www.facebook.com/ApacheShiro"><span class="fa fa-facebook"></span></a>
-            <a class="btn btn-social-icon btn-sm btn-linkedin" target="_blank" href="https://www.linkedin.com/groups/4382576"><span class="fa fa-linkedin"></span></a>
-        </div>
-
-
-        <div class="col-md-2"></div>
-        <div class="col-md-2 editThisPage">
-            <div class="footer-shield"></div>
-        </div>
-
-    </footer> <!--END FOOTER-->
-
-</body>
+    </body>
 </html>

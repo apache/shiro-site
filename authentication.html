@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
@@ -14,315 +15,328 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Apache Shiro Authentication | Apache Shiro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="description" content="Apache Shiro is a powerful and easy-to-use Java security framework that performs authentication, authorization, cryptography, and session management.">
+    <meta name="keywords" content='documentation'>
+    <meta name="generator" content="JBake">
     <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
     <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
     <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
-    <meta name="y_key" content="e47896cd6bae4920">
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 
-    <title>
-                    Apache Shiro | Simple. Java. Security.
-        </title>
+    <meta property="og:title" content="Apache Shiro Authentication | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2022-01-27"/>
+    <meta property="article:tag" content='documentation'/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content='https://shiro.apache.org/authentication.html'/>
+    <meta property="og:image" content='images/shiro-featured-image.png'/>
+    <meta property="og:image:width" content='1200'/>
+    <meta property="og:image:height" content='628'/>
+    <meta property="og:site_name" content="Apache Shiro"/>
 
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/asciidoctor.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="highlight.js-11.2.0/styles/default.min.css" rel="stylesheet">
+    <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
 
-    <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-
-    <!-- site styles and  -->
-    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
-    <script type="text/javascript" src="./assets/js/shiro-site.js"></script>
-
-    <!-- github ribbon -->
-    <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.css" />
-    <!--[if lt IE 9]>
-      <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.ie.css" />
-    <![endif]-->
-
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-
-    <!-- bootstrap -->
-    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap-theme.min.css">
-    <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
-
-    <link rel="stylesheet" href="./assets/css/bootstrap-social.css">
-
-    <!-- Google Analytics -->
-    <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-XXXXX-Y', 'auto');
-    ga('send', 'pageview');
-    </script>
-    <!-- End Google Analytics -->
-
-
-
-    <!-- syntax highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css" integrity="sha256-Zd1icfZ72UBmsId/mUcagrmN7IN5Qkrvh75ICHIQVTk=" crossorigin="anonymous" />
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js" integrity="sha256-s63qpgPYoQk+wv3U6WZqioVJrwFNBTgD4dkeegLuwvo=" crossorigin="anonymous"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
-
-    <script type="text/javascript">
-
-        $( document ).ready(function() {
-            addPageEditLink();
-        });
-    </script>
-</head>
-
-<body>
-
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="favicon.ico">
+  </head>
+  <body>
     <div id="top-bar"></div>
-
-    <div class="container" style="max-width: 1200px;">
-
     <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
 
+    <div id="wrap">
 
-
-    <div class="masthead">
+      <div class="masthead">
         <p class="lead">
-            <a href="./index.html">
-                <img src="./assets/images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;">
-            </a>
-            <span class="tagline">Simple. Java. Security.</span>
-            <a class="pull-right" href="https://www.apache.org/events/current-event.html">
-                <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png"/>
-            </a>
+          <a href="index.html"><img src="images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <span class="tagline">Simple. Java. Security.</span>
+          <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
+          </a>
         </p>
-    </div>
+      </div>
 
+	<!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="get-started.html">Get Started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="documentation.html">Docs</a>
+            </li>
 
-    <nav class="navbar navbar-default" role="navigation">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-webapps" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Web Apps
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
+                <li><a class="dropdown-item" href="web.html">General</a></li>
+                <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="web-features.html">Features</a></li>
+              </ul>
+            </li>
+
+            <li><a class="nav-link" href="features.html">Features</a></li>
+
+            <!-- integrations -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-integrations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Integrations
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
+                <li><a class="dropdown-item" href="spring-boot.html">Spring</a></li>
+                <li><a class="dropdown-item" href="guice.html">Guice</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="integration.html">Third-Party Integrations</a></li>
+              </ul>
+            </li>
+
+            <!-- Community -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-community" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Community
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
+                <li><a class="dropdown-item" href="forums.html">Community Forums</a></li>
+                <li><a class="dropdown-item" href="mailing-lists.html">Mailing Lists</a></li>
+                <li><a class="dropdown-item" href="articles.html">Articles</a></li>
+                <li><a class="dropdown-item" href="news.html">News</a></li>
+                <li><a class="dropdown-item" href="events.html">Events</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="community.html">More</a></li>
+              </ul>
+            </li>
+
+            <!-- About -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-about" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                About
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
+                <li><a class="dropdown-item" href="about.html">About</a></li>
+                <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="d-flex justify-content-end navbar-nav mb-2 mb-lg-0">
+            <!-- The ASF -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-asf" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apache Software Foundation
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
+                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+              </ul>
+            </li>
+          </ul>
         </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li><a href="./get-started.html">Get Started</a></li>
-                <li><a href="./documentation.html">Docs</a></li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Web Apps <b class="caret"></b>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="./web.html">General</a></li>
-                        <li class="divider"></li>
-                        <li><a href="./web-features.html">Features</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Integrations <b class="caret"></b>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="./spring-boot.html">Spring</a></li>
-                        <li><a href="./guice.html">Guice</a></li>
-                        <li class="divider"></li>
-                        <li><a href="./integration.html">Third-Party Integrations</a></li>
-                    </ul>
-                </li>
-
-                <li><a href="./features.html">Features</a></li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Community <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="./forums.html">Community Forums</a></li>
-                        <li><a href="./mailing-lists.html">Mailing Lists</a></li>
-                        <li><a href="./articles.html">Articles</a></li>
-                        <li><a href="./news.html">News</a></li>
-                        <li><a href="./events.html">Events</a></li>
-                        <li class="divider"></li>
-                        <li><a href="./community.html">More</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        About <b class="caret"></b>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="./about.html">About</a></li>
-                        <li><a href="./security-reports.html">Vulnerability Reports</a></li>
-                    </ul>
-                </li>
-
-            </ul>
-
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="http://www.apache.org/" class="dropdown-toggle" data-toggle="dropdown">
-                        Apache Software Foundation <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="http://www.apache.org/">Apache Homepage</a></li>
-                        <li><a href="http://www.apache.org/licenses/">License</a></li>
-                        <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
-                        <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
-                        <li><a href="http://www.apache.org/security/">Security</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
+      </div>
     </nav>
 
+	<div class="page-header">
+		<h1>Apache Shiro Authentication</h1>
+	</div>
 
-            <!-- Work around for table styling until, all pages are updated. -->
-<style>
 
-    table, th, td {
-        border: 1px solid black;
-        border-collapse: collapse;
-        border-color: #ccc;
-    }
-    th {
-        background-color: #f0f0f0
-    }
-    th, td {
-        padding: 8px;
-    }
-</style>
-<a name="Authentication-ApacheShiroAuthentication"></a>
-<h1><a href="#apache-shiro-authentication" name="apache-shiro-authentication">Apache Shiro Authentication</a></h1>
-<ul>
-  <li>
-    <p><a href="#Authentication-Authenticating%7B%7BSubjects%7D%7D">Authenticating <code>Subjects</code></a></p>
-    <ul>
-      <li><a href="#Authentication-Step1%3ACollecttheSubject%27sprincipalsandcredentials">Step 1: Collect the Subject&rsquo;s principals and credentials</a></li>
-      <li><a href="#Authentication-Step2%3ASubmittheprincipalsandcredentials">Step 2: Submit the principals and credentials</a></li>
-      <li><a href="#Authentication-Step3%3AHandlingSuccessorFailure">Step 3: Handling Success or Failure</a></li>
-    </ul>
-  </li>
-  <li>
-    <p><a href="#Authentication-Rememberedvs.Authenticated">Remembered vs. Authenticated</a></p>
-    <ul>
-      <li><a href="#Authentication-Whythedistinction%3F">Why the distinction?</a></li>
-      <li><a href="#Authentication-Anillustratingexample">An illustrating example</a></li>
-    </ul>
-  </li>
-  <li>
-  <p><a href="#Authentication-LoggingOut">Logging Out</a></p></li>
-  <li><a href="#Authentication-AuthenticationSequence">Authentication Sequence</a>
-    <ul>
-      <li><a href="#Authentication-%7B%7BAuthenticator%7D%7D"><code>Authenticator</code></a></li>
-      <li><a href="#Authentication-%7B%7BAuthenticationStrategy%7D%7D"><code>AuthenticationStrategy</code></a></li>
-      <li><a href="#Authentication-RealmAuthenticationOrder">Realm Authentication Order</a>
-        <ul>
-          <li><a href="#Authentication-ImplicitOrdering">Implicit Ordering</a></li>
-          <li><a href="#Authentication-ExplicitOrdering">Explicit Ordering</a></li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-  <li>
-  <p><a href="#Authentication-RealmAuthentication">Realm Authentication</a></p></li>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#authenticating_subjects">Authenticating Subjects</a>
+<ul class="sectlevel2">
+<li><a href="#Authentication-AuthenticatingSubject-Step1">Step 1: Collect the Subject&#8217;s principals and credentials</a></li>
+<li><a href="#Authentication-AuthenticatingSubject-Step2">Step 2: Submit the principals and credentials</a></li>
+<li><a href="#Authentication-AuthenticatingSubject-Step3">Step 3: Handling Success or Failure</a></li>
 </ul>
-<img style="margin:0px auto;display:block" src="assets/images/ShiroFeatures_Authentication.png"/>
-<p>Authentication is the process of identity verification - that is, proving a user actually is who they say they are. For a user to prove their identity, they need to provide some identifying information as well as some sort of proof of that identity that your system understands and trusts.</p>
-<p>This is done by submitting a user&rsquo;s <em>principals</em> and <em>credentials</em> to Shiro to see if they match what is expected by the application.</p>
-<ul>
-  <li><strong>Principals</strong> are a Subject&rsquo;s &lsquo;identifying attributes&rsquo;. Principals can be anything that identifies a Subject, such as a first name (given name), last name (surname or family name), a username, Social Security Number, etc. Of course things like family names are not very good at uniquely identifying a <code>Subject</code>, so the best principals to use for authentication are unique for an application - typically a username or email address.</li>
+</li>
+<li><a href="#Authentication-RememberedVsAuthenticated">Remembered vs. Authenticated</a>
+<ul class="sectlevel2">
+<li><a href="#Authentication-RememberedVsAuthenticated-WhyTheDistinction">Why the distinction?</a></li>
+<li><a href="#Authentication-RememberedVsAuthenticated-AnIllustratingExample">An illustrating example</a></li>
 </ul>
-<div class="alert alert-info">
-    <span class="glyphicon glyphicon-info-sign"></span> <strong>Primary Principal</strong>
-    <hr class="message-inner-separator">
-    <p>While Shiro can represent any number of principals, Shiro expects an application to have exactly one 'Primary' principal - a single value that uniquely identifies the `Subject` within the application. This is typically a username, email address or globally unique user id in most applications.</p>
+</li>
+<li><a href="#Authentication-LoggingOut">Logging Out</a></li>
+<li><a href="#Authentication-AuthenticationSequence">Authentication Sequence</a>
+<ul class="sectlevel2">
+<li><a href="#Authentication-AuthenticationSequence-Authenticator">Authenticator</a></li>
+<li><a href="#Authentication-AuthenticationSequence-AuthenticationStrategy">AuthenticationStrategy</a></li>
+<li><a href="#Authentication-AuthenticationSequence-RealmAuthenticationOrder">Realm Authentication Order</a></li>
+</ul>
+</li>
+<li><a href="#Authentication-RealmAuthentication">Realm Authentication</a></li>
+</ul>
 </div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="imageblock text-center">
+<div class="content">
+<img src="/images/ShiroFeatures_Authentication.png" alt="Shiro features authentication graphic">
+</div>
+</div>
+<div class="paragraph">
+<p>Authentication is the process of identity verification - that is, proving a user actually is who they say they are.</p>
+</div>
+<div class="paragraph">
+<p>For a user to prove their identity, they need to provide some identifying information as well as some sort of proof of that identity that your system understands and trusts.</p>
+</div>
+<div class="paragraph">
+<p>This is done by submitting a user&#8217;s <em>principals</em> and <em>credentials</em> to Shiro to see if they match what is expected by the application.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><strong>Credentials</strong> are usually secret values known only by the <code>Subject</code> which are used as supporting evidence that they in fact &lsquo;own&rsquo; the claimed identity. Some common examples of credentials are passwords, biometric data such as fingerprints and retina scans, and X.509 certificates.</li>
+<li>
+<p><strong>Principals</strong> are a Subject&#8217;s 'identifying attributes'.
+Principals can be anything that identifies a Subject, such as a first name (given name), last name (surname or family name), a username, Social Security Number, etc.
+Of course things like family names are not very good at uniquely identifying a <code>Subject</code>, so the best principals to use for authentication are unique for an application - typically a username or email address.</p>
+</li>
 </ul>
-<p>The most common example of a principal/credential pairing is that of a username and password. The username is the claimed identity, and the password is the proof matching the claimed identity. If a submitted password matches what is expected by the application, the application can largely assume that the user really is who they say they are because no-one else should know the same password.</p>
-<a name="Authentication-Authenticating%7B%7BSubjects%7D%7D"></a>
-<h2>Authenticating <code>Subject</code>s</h2>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">Primary Principal</div>
+<p>While Shiro can represent any number of principals, Shiro expects an application to have exactly one 'Primary' principal - a single value that uniquely identifies the <code>Subject</code> within the application.
+This is typically a username, email address or globally unique user id in most applications.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Credentials</strong> are usually secret values known only by the <code>Subject</code> which are used as supporting evidence that they in fact 'own' the claimed identity.
+Some common examples of credentials are passwords, biometric data such as fingerprints and retina scans, and X.509 certificates.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The most common example of a principal/credential pairing is that of a username and password.
+The username is the claimed identity, and the password is the proof matching the claimed identity.
+If a submitted password matches what is expected by the application, the application can largely assume that the user really is who they say they are because no-one else should know the same password.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="authenticating_subjects">Authenticating Subjects</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>The process of authenticating a <code>Subject</code> can effectively broken down into three distinct steps:</p>
-<ol>
-  <li>Collect the Subject&rsquo;s submitted principals and credentials</li>
-  <li>Submit the principals and credentials for authentication.</li>
-  <li>If the submission is successful, allow access, otherwise retry authentication or block access.</li>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Collect the Subject&#8217;s submitted principals and credentials</p>
+</li>
+<li>
+<p>Submit the principals and credentials for authentication.</p>
+</li>
+<li>
+<p>If the submission is successful, allow access, otherwise retry authentication or block access.</p>
+</li>
 </ol>
-<p>The following code demonstrates how Shiro&rsquo;s API reflects these steps:</p>
-<a name="Authentication-Step1%3ACollecttheSubject%27sprincipalsandcredentials"></a>
-<h3>Step 1: Collect the Subject&rsquo;s principals and credentials</h3>
-<pre><code class="java">//Example using most common scenario of username/password pair:
+</div>
+<div class="paragraph">
+<p>The following code demonstrates how Shiro&#8217;s API reflects these steps:</p>
+</div>
+<div class="sect2">
+<h3 id="Authentication-AuthenticatingSubject-Step1">Step 1: Collect the Subject&#8217;s principals and credentials</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">//Example using most common scenario of username/password pair:
 UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 
-//&quot;Remember Me&quot; built-in: 
-token.setRememberMe(true);
-</code></pre>
-<p>In this particular case, we’re using the <a href="static/current/apidocs/org/apache/shiro/authc/UsernamePasswordToken.html">UsernamePasswordToken</a>, supporting the most common username/password authentication approach. This is an implementation of Shiro&rsquo;s <a href="static/current/apidocs/org/apache/shiro/authc/AuthenticationToken.html">org.apache.shiro.authc.AuthenticationToken</a> interface, which is the base interface used by Shiro&rsquo;s authentication system to represent submitted principals and credentials.</p>
-<p>It is important to note here that Shiro does not care how you acquire this information: perhaps the data was acquired by a user submitting an HTML form, or maybe it was retrieved from an HTTP header, or perhaps it was read from a Swing or Flex GUI password form, or maybe via command line arguments. The process of collecting information from an application end-user is completely decoupled from Shiro&rsquo;s <code>AuthenticationToken</code> concept.</p>
+//"Remember Me" built-in:
+token.setRememberMe(true);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this particular case, we’re using the <a href="/static/current/apidocs/org/apache/shiro/authc/UsernamePasswordToken.html">UsernamePasswordToken</a>, supporting the most common username/password authentication approach.
+This is an implementation of Shiro&#8217;s <a href="/static/current/apidocs/org/apache/shiro/authc/AuthenticationToken.html">org.apache.shiro.authc.AuthenticationToken</a> interface, which is the base interface used by Shiro&#8217;s authentication system to represent submitted principals and credentials.</p>
+</div>
+<div class="paragraph">
+<p>It is important to note here that Shiro does not care how you acquire this information: perhaps the data was acquired by a user submitting an HTML form, or maybe it was retrieved from an HTTP header, or perhaps it was read from a Swing or Flex GUI password form, or maybe via command line arguments.
+The process of collecting information from an application end-user is completely decoupled from Shiro&#8217;s <code>AuthenticationToken</code> concept.</p>
+</div>
+<div class="paragraph">
 <p>You may construct and represent <code>AuthenticationToken</code> instances however you like - it is protocol agnostic.</p>
-<p>This example also shows that we have indicated that we wish Shiro to perform &lsquo;Remember Me&rsquo; services for the authentication attempt. This ensures that Shiro remembers the user identity if they return to the application at a later date. We will cover Remember Me services in a later chapter.</p>
-<a name="Authentication-Step2%3ASubmittheprincipalsandcredentials"></a>
-<h3>Step 2: Submit the principals and credentials</h3>
+</div>
+<div class="paragraph">
+<p>This example also shows that we have indicated that we wish Shiro to perform 'Remember Me' services for the authentication attempt.
+This ensures that Shiro remembers the user identity if they return to the application at a later date.
+We will cover Remember Me services in a later chapter.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Authentication-AuthenticatingSubject-Step2">Step 2: Submit the principals and credentials</h3>
+<div class="paragraph">
 <p>After the principals and credentials have been collected and represented as an <code>AuthenticationToken</code> instance, we need to submit the token to Shiro to perform the actual authentication attempt:</p>
-<pre><code class="java">Subject currentUser = SecurityUtils.getSubject();
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Subject currentUser = SecurityUtils.getSubject();
 
-currentUser.login(token);
-</code></pre>
-<p>After acquiring the currently-executing <code>Subject</code>, we make a single <a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#login-org.apache.shiro.authc.AuthenticationToken-"><code>login</code></a> call, passing in the <code>AuthenticationToken</code> instance we created earlier.</p>
+currentUser.login(token);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After acquiring the currently-executing <code>Subject</code>, we make a single <code><a href="/static/current/apidocs/org/apache/shiro/subject/Subject.html#login(org.apache.shiro.authc.AuthenticationToken)">login</a></code> call, passing in the <code>AuthenticationToken</code> instance we created earlier.</p>
+</div>
+<div class="paragraph">
 <p>An invocation to the <code>login</code> method effectively represents an authentication attempt.</p>
-<a name="Authentication-Step3%3AHandlingSuccessorFailure"></a>
-<h3>Step 3: Handling Success or Failure</h3>
-<p>If the <code>login</code> method returns quietly, that&rsquo;s it - we&rsquo;re done! The <code>Subject</code> has been authenticated. The application thread can continue uninterrupted and all further calls to <code>SecurityUtils.getSubject()</code> will return the authenticated <code>Subject</code> instance, and any calls to <code>subject.</code> <a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#isAuthenticated--"><code>isAuthenticated()</code></a> will return <code>true</code>.</p>
-<p>But what happens if the login attempt failed? For example, what if the end-user supplied an incorrect password, or accessed the system too many times and maybe their account is locked?</p>
-<p>Shiro has a rich runtime <a href="static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html"><code>AuthenticationException</code></a> hierarchy that can indicate exactly why the attempt failed. You can wrap <code>login</code> in a <code>try/catch</code> block and catch any exception you wish and react to them accordingly. For example:</p>
-<pre><code class="java">try {
+</div>
+</div>
+<div class="sect2">
+<h3 id="Authentication-AuthenticatingSubject-Step3">Step 3: Handling Success or Failure</h3>
+<div class="paragraph">
+<p>If the <code>login</code> method returns quietly, that&#8217;s it - we&#8217;re done!
+The <code>Subject</code> has been authenticated.
+The application thread can continue uninterrupted and all further calls to <code>SecurityUtils.getSubject()</code> will return the authenticated <code>Subject</code> instance, and any calls to <code>subject.<a href="/static/current/apidocs/org/apache/shiro/subject/Subject.html#isAuthenticated()">isAuthenticated()</a></code> will return <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>But what happens if the login attempt failed?
+For example, what if the end-user supplied an incorrect password, or accessed the system too many times and maybe their account is locked?</p>
+</div>
+<div class="paragraph">
+<p>Shiro has a rich runtime <a href="/static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html"><code>AuthenticationException</code></a> hierarchy that can indicate exactly why the attempt failed.
+You can wrap <code>login</code> in a <code>try/catch</code> block and catch any exception you wish and react to them accordingly.
+For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">try {
     currentUser.login(token);
 } catch ( UnknownAccountException uae ) { ...
 } catch ( IncorrectCredentialsException ice ) { ...
@@ -333,204 +347,480 @@ currentUser.login(token);
     //unexpected error?
 }
 
-//No problems, continue on as expected...
-</code></pre>
+//No problems, continue on as expected...</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>If one of the existing exception classes do not meet your needs, custom <code>AuthenticationExceptions</code> can be created to represent specific failure scenarios.</p>
-<div class="alert alert-success">
-    <span class="glyphicon glyphicon-ok"></span> <strong>Login Failure Tip</strong>
-    <hr class="message-inner-separator">
-    <p>While your code can react to specific exceptions and execute logic as necessary, a security best practice is to only show a generic failure message to an end user in the event of a failure, for example, "Incorrect username or password.".  This ensures no specific information is available to hackers that may be attempting an attack vector.</p>
 </div>
-<a name="Authentication-Rememberedvs.Authenticated"></a>
-<h2>Remembered vs. Authenticated</h2>
-<p>As shown in the example above, Shiro supports the notion of &ldquo;remember me&rdquo; in addition to the normal login process. It is worth pointing out at this time that Shiro makes a very precise distinction between a <em>remembered</em> Subject and an actual <em>authenticated</em> Subject:</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">Login Failure Tip</div>
+<p>While your code can react to specific exceptions and execute logic as necessary, a security best practice is to only show a generic failure message to an end user in the event of a failure, for example, "Incorrect username or password.".
+This ensures no specific information is available to hackers that may be attempting an attack vector.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Authentication-RememberedVsAuthenticated">Remembered vs. Authenticated</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As shown in the example above, Shiro supports the notion of "remember me" in addition to the normal login process.
+It is worth pointing out at this time that Shiro makes a very precise distinction between a <em>remembered</em> Subject and an actual <em>authenticated</em> Subject:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>
-  <p><strong>Remembered</strong>: A remembered <code>Subject</code> is not anonymous and has a known identity (i.e. <code>subject.</code><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#getPrincipals--"><code>getPrincipals()</code></a> is non-empty). But this identity is remembered from a previous authentication during a <strong>previous</strong> session. A subject is considered remembered if <code>subject.</code><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#isRemembered--"><code>isRemembered()</code></a> returns <code>true</code>.</p></li>
-  <li>
-  <p><strong>Authenticated</strong>: An authenticated <code>Subject</code> is one that has been successfully authenticated (i.e. the <code>login</code> method was invoked without throwing an exception) <em>during the Subject&rsquo;s current session</em>. A subject is considered authenticated if <code>subject.</code><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#isAuthenticated--"><code>isAuthenticated()</code></a> returns <code>true</code>.</p></li>
+<li>
+<p><strong>Remembered</strong>: A remembered <code>Subject</code> is not anonymous and has a known identity (i.e. <code>subject.<a href="/static/current/apidocs/org/apache/shiro/subject/Subject.html#getPrincipals()">getPrincipals()</a></code> is non-empty).
+But this identity is remembered from a previous authentication during a <strong>previous</strong> session.
+A subject is considered remembered if <code>subject.<a href="/static/current/apidocs/org/apache/shiro/subject/Subject.html#isRemembered()">isRemembered()</a></code> returns <code>true</code>.</p>
+</li>
+<li>
+<p><strong>Authenticated</strong>: An authenticated <code>Subject</code> is one that has been successfully authenticated (i.e. the <code>login</code> method was invoked without throwing an exception) <em>during the Subject&#8217;s current session</em>.
+A subject is considered authenticated if <code>subject.<a href="/static/current/apidocs/org/apache/shiro/subject/Subject.html#isAuthenticated()">isAuthenticated()</a></code> returns <code>true</code>.</p>
+</li>
 </ul>
-<div class="alert alert-warning">
-    <span class="glyphicon glyphicon-warning-sign"></span> <strong>Mutually Exclusive</strong>
-    <hr class="message-inner-separator">
-    <p>Remembered and authenticated states are mutually exclusive - a <code>true</code> value for one indicates a <code>false</code> value for the other and vice versa.</p>
 </div>
-<a name="Authentication-Whythedistinction%3F"></a>
-<h3><a href="#why-the-distinction-" name="why-the-distinction-">Why the distinction?</a></h3>
-<p>The word &lsquo;authentication&rsquo; has a very strong connotation of <em>proof</em>. That is, there is an expected <em>guarantee</em> that the <code>Subject</code> has proven they are who they say they are.</p>
-<p>When a user is only remembered from a previous interaction with the application, the state of proof no longer exists: the remembered identity gives the system an idea who that user probably is, but in reality, has no way of absolutely <em>guaranteeing</em> if the remembered Subject represents the expected user. Once the subject is authenticated, they are no longer considered only remembered because their identity would have been verified during the current session.</p>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">Mutually Exclusive</div>
+<p>Remembered and authenticated states are mutually exclusive - a <code>true</code> value for one indicates a <code>false</code> value for the other and vice versa.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="Authentication-RememberedVsAuthenticated-WhyTheDistinction">Why the distinction?</h3>
+<div class="paragraph">
+<p>The word 'authentication' has a very strong connotation of <em>proof</em>.
+That is, there is an expected <em>guarantee</em> that the <code>Subject</code> has proven they are who they say they are.</p>
+</div>
+<div class="paragraph">
+<p>When a user is only remembered from a previous interaction with the application, the state of proof no longer exists: the remembered identity gives the system an idea who that user probably is, but in reality, has no way of absolutely <em>guaranteeing</em> if the remembered Subject represents the expected user.
+Once the subject is authenticated, they are no longer considered only remembered because their identity would have been verified during the current session.</p>
+</div>
+<div class="paragraph">
 <p>So although many parts of the application can still perform user-specific logic based on the remembered principals, such as customized views, it should typically never perform highly-sensitive operations until the user has legitimately verified their identity by executing a successful authentication attempt.</p>
+</div>
+<div class="paragraph">
 <p>For example, a check to see if a <code>Subject</code> can access financial information should almost always depend on <code>isAuthenticated()</code>, not <code>isRemembered()</code>, to guarantee an expected and verified identity.</p>
-<a name="Authentication-Anillustratingexample"></a>
-<h3><a href="#an-illustrating-example" name="an-illustrating-example">An illustrating example</a></h3>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Authentication-RememberedVsAuthenticated-AnIllustratingExample">An illustrating example</h3>
+<div class="paragraph">
 <p>The following is a fairly common scenario that helps illustrate why the the distinction between remembered and authenticated is important.</p>
-<p>Let&rsquo;s say you&rsquo;re using <a href="https://www.amazon.com">Amazon.com</a>. You&rsquo;ve logged-in successfully and have added a few books to your shopping cart. But you have to run off to a meeting, but forget to log out. By the time the meeting is over, it&rsquo;s time to go home and you leave the office.</p>
-<p>The next day when you come in to work, you realize you didn&rsquo;t complete your purchase, so you go back to amazon.com. This time, Amazon &lsquo;remembers&rsquo; who you are, greets you by name, and still gives you some personalized book recommendations. To Amazon, <code>subject.isRemembered()</code> would return <code>true</code>.</p>
-<p>But, what happens if you try to access your account to update your credit card information to make your book purchase? While Amazon &lsquo;remembers&rsquo; you (<code>isRemembered()</code> == <code>true</code>), it cannot guarantee that you are in fact you (for example, maybe a co-worker is using your computer).</p>
-<p>So before you can perform a sensitive action like updating credit card information, Amazon will force you to login so they can guarantee your identity. After you login, your identity has been verified and to Amazon, <code>isAuthenticated()</code> would now be <code>true</code>.</p>
-<p>This scenario happens so frequently for many types of applications, so the functionality is built in to Shiro so you can leverage it for your own application. Now, whether you use <code>isRemembered()</code> or <code>isAuthenticated()</code> to customize your views and workflows is up to you, but Shiro will maintain this fundamental state in case you need it.</p>
-<a name="Authentication-LoggingOut"></a>
-<h2><a href="#logging-out" name="logging-out">Logging Out</a></h2>
-<p>The opposite of authenticating is releasing all known identifying state. When the <code>Subject</code> is done interacting with the application, you can call <code>subject.</code><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#logout--"><code>logout()</code></a> to relinquish all identifying information:</p>
-<pre><code class="java">currentUser.logout(); //removes all identifying information and invalidates their session too.
-</code></pre>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s say you&#8217;re using <a href="https://www.amazon.com">Amazon.com</a>.
+You&#8217;ve logged-in successfully and have added a few books to your shopping cart.
+But you have to run off to a meeting, but forget to log out.
+By the time the meeting is over, it&#8217;s time to go home and you leave the office.</p>
+</div>
+<div class="paragraph">
+<p>The next day when you come in to work, you realize you didn&#8217;t complete your purchase, so you go back to amazon.com.
+This time, Amazon 'remembers' who you are, greets you by name, and still gives you some personalized book recommendations.
+To Amazon, <code>subject.isRemembered()</code> would return <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>But, what happens if you try to access your account to update your credit card information to make your book purchase?
+While Amazon 'remembers' you (<code>isRemembered()</code> == <code>true</code>), it cannot guarantee that you are in fact you (for example, maybe a co-worker is using your computer).</p>
+</div>
+<div class="paragraph">
+<p>So before you can perform a sensitive action like updating credit card information, Amazon will force you to login so they can guarantee your identity.
+After you login, your identity has been verified and to Amazon, <code>isAuthenticated()</code> would now be <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>This scenario happens so frequently for many types of applications, so the functionality is built in to Shiro so you can leverage it for your own application.
+Now, whether you use <code>isRemembered()</code> or <code>isAuthenticated()</code> to customize your views and workflows is up to you, but Shiro will maintain this fundamental state in case you need it.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Authentication-LoggingOut">Logging Out</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The opposite of authenticating is releasing all known identifying state.
+When the <code>Subject</code> is done interacting with the application, you can call <code>subject.<a href="/static/current/apidocs/org/apache/shiro/subject/Subject.html#logout()">logout()</a></code> to relinquish all identifying information:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">currentUser.logout(); //removes all identifying information and invalidates their session too.</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>When you call <code>logout</code>, any existing <code>Session</code> will be invalidated and any identity will be disassociated (e.g. in a web app, the RememberMe cookie will also be deleted).</p>
+</div>
+<div class="paragraph">
 <p>After a <code>Subject</code> logs-out, the <code>Subject</code> instance is considered anonymous again and, except for web applications, can be re-used for <code>login</code> again if desired.</p>
-<div class="alert alert-danger">
-    <span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Web Application Notice</strong>
-    <hr class="message-inner-separator">
-    <p>Because remembered identity in web applications is often persisted with cookies, and cookies can only be deleted before a Response body is committed, it is highly recommended to redirect the end-user to a new view or page immediately after calling <code>subject.logout()</code>.  This guarantees that any security-related cookies are deleted as expected. This is a limitation of how HTTP cookies function and not a limitation of Shiro.</p>
 </div>
-<a name="Authentication-sequence"></a>
-<a name="Authentication-AuthenticationSequence"></a>
-<h2><a href="#authentication-sequence" name="authentication-sequence">Authentication Sequence</a></h2>
-<p>Until now, we&rsquo;ve only looked at how to authenticate a <code>Subject</code> from within application code. Now we&rsquo;ll cover what happens inside Shiro when an authentication attempt occurs.</p>
-<p>We&rsquo;ve taken our previous architecture diagram from the <a href="architecture.html" title="Architecture">Architecture</a> chapter, and left only the components relevant to authentication highlighted. Each number represents a step during an authentication attempt:</p>
-<img style="margin:0px auto;display:block" src="assets/images/ShiroAuthenticationSequence.png"/>
-<p><strong>Step 1</strong>: Application code invokes the <code>Subject.login</code> method, passing in the constructed <code>AuthenticationToken</code> instance representing the end-user&rsquo;s principals and credentials.</p>
-<p><strong>Step 2</strong>: The <code>Subject</code> instance, typically a <a href="static/current/apidocs/org/apache/shiro/subject/support/DelegatingSubject.html"><code>DelegatingSubject</code></a> (or a subclass) delegates to the application&rsquo;s <code>SecurityManager</code> by calling <code>securityManager.login(token)</code>, where the actual authentication work begins.</p>
-<p><strong>Step 3</strong>: The <code>SecurityManager</code>, being a basic &lsquo;umbrella&rsquo; component, receives the token and simply delegates to its internal <a href="static/current/apidocs/org/apache/shiro/authc/Authenticator.html"><code>Authenticator</code></a> instance by calling <a href="static/current/apidocs/org/apache/shiro/authc/Authenticator.html#authenticate-org.apache.shiro.authc.AuthenticationToken-"><code>authenticator.authenticate(token)</code></a>. This is almost always a <a href="static/current/apidocs/org/apache/shiro/authc/pam/ModularRealmAuthenticator.html"><code>ModularRealmAuthenticator</code></a> instance, which supports coordinating one or more <code>Realm</code> instances during authentication. The <code>ModularRealmAuthenticator</code> essentially provides a <a href="https://en.wikipedia.org/wiki/Pluggable_Authentication_Modules">PAM</a>-style paradigm for Apache Shiro (where each <code>Realm</code> is a &lsquo;module&rsquo; in PAM terminology).</p>
-<p><strong>Step 4</strong>: If more than one <code>Realm</code> is configured for the application, the <code>ModularRealmAuthenticator</code> instance will initiate a multi-<code>Realm</code> authentication attempt utilizing its configured <a href="static/current/apidocs/org/apache/shiro/authc/pam/AuthenticationStrategy.html"><code>AuthenticationStrategy</code></a>. Before, during and after the <code>Realms</code> are invoked for authentication, the <code>AuthenticationStrategy</code> will be called to allow it to react to each Realm&rsquo;s results. We will cover <code>AuthenticationStrategies</code> soon.</p>
-<div class="alert alert-warning">
-    <span class="glyphicon glyphicon-warning-sign"></span> <strong>Single-Realm Application</strong>
-    <hr class="message-inner-separator">
-    <p>If only a single Realm is configured, it is called directly - there is no need for an <code>AuthenticationStrategy</code> in a single-Realm application.</p>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">Web Application Notice</div>
+<p>Because remembered identity in web applications is often persisted with cookies, and cookies can only be deleted before a Response body is committed, it is highly recommended to redirect the end-user to a new view or page immediately after calling <code>subject.logout()</code>.
+This guarantees that any security-related cookies are deleted as expected.
+This is a limitation of how HTTP cookies function and not a limitation of Shiro.</p>
 </div>
-<p><strong>Step 5</strong>: Each configured <code>Realm</code> is consulted to see if it <a href="static/current/apidocs/org/apache/shiro/realm/Realm.html#supports-org.apache.shiro.authc.AuthenticationToken-"><code>supports</code></a> the submitted <code>AuthenticationToken</code>. If so, the supporting Realm&rsquo;s <a href="static/current/apidocs/org/apache/shiro/realm/Realm.html#getAuthenticationInfo-org.apache.shiro.authc.AuthenticationToken-"><code>getAuthenticationInfo</code></a> method will be invoked with the submitted <code>token</code>. The <code>getAuthenticationInfo</code> method effectively represents a single authentication attempt for that particular <code>Realm</code>. We will cover the <code>Realm</code> authentication behavior shortly.</p>
-<h3><a href="#authenticator" name="authenticator">Authenticator</a></h3>
-<p>As mentioned earlier, the Shiro <code>SecurityManager</code> implementations default to using a <a href="static/current/apidocs/org/apache/shiro/authc/pam/ModularRealmAuthenticator.html"><code>ModularRealmAuthenticator</code></a> instance. The <code>ModularRealmAuthenticator</code> equally supports applications with single Realm as well as those with multiple realms.</p>
-<p>In a single-realm application, the <code>ModularRealmAuthenticator</code> will invoke the single <code>Realm</code> directly. If two or more Realms are configured, it will use an <code>AuthenticationStrategy</code> instance to coordinate how the attempt occurs. We&rsquo;ll cover AuthenticationStrategies below.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Authentication-AuthenticationSequence">Authentication Sequence</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Until now, we&#8217;ve only looked at how to authenticate a <code>Subject</code> from within application code.
+Now we&#8217;ll cover what happens inside Shiro when an authentication attempt occurs.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ve taken our previous architecture diagram from the <a href="/architecture.html">Architecture</a> chapter, and left only the components relevant to authentication highlighted.
+Each number represents a step during an authentication attempt:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/images/ShiroAuthenticationSequence.png" alt="authentication flow diagram">
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Step 1</strong>: Application code invokes the <code>Subject.login</code> method, passing in the constructed <code>AuthenticationToken</code> instance representing the end-user&#8217;s principals and credentials.</p>
+</div>
+<div class="paragraph">
+<p><strong>Step 2</strong>: The <code>Subject</code> instance, typically a <a href="/static/current/apidocs/org/apache/shiro/subject/support/DelegatingSubject.html"><code>DelegatingSubject</code></a> (or a subclass) delegates to the application&#8217;s <code>SecurityManager</code> by calling <code>securityManager.login(token)</code>, where the actual authentication work begins.</p>
+</div>
+<div class="paragraph">
+<p><strong>Step 3</strong>: The <code>SecurityManager</code>, being a basic 'umbrella' component, receives the token and simply delegates to its internal <a href="/static/current/apidocs/org/apache/shiro/authc/Authenticator.html"><code>Authenticator</code></a> instance by calling <code><a href="/static/current/apidocs/org/apache/shiro/authc/Authenticator.html#authenticate(org.apache.shiro.authc.AuthenticationToken)">authenticator.authenticate(token)</a></code>.
+This is almost always a <a href="/static/current/apidocs/org/apache/shiro/authc/pam/ModularRealmAuthenticator.html"><code>ModularRealmAuthenticator</code></a> instance, which supports coordinating one or more <code>Realm</code> instances during authentication.
+The <code>ModularRealmAuthenticator</code> essentially provides a <a href="https://en.wikipedia.org/wiki/Pluggable_Authentication_Modules">PAM</a>-style paradigm for Apache Shiro (where each <code>Realm</code>
+is a 'module' in PAM terminology).</p>
+</div>
+<div class="paragraph">
+<p><strong>Step 4</strong>: If more than one <code>Realm</code> is configured for the application, the <code>ModularRealmAuthenticator</code> instance will initiate a multi-<code>Realm</code> authentication attempt utilizing its configured <a href="/static/current/apidocs/org/apache/shiro/authc/pam/AuthenticationStrategy.html"><code>AuthenticationStrategy</code></a>.
+Before, during and after the <code>Realms</code> are invoked for authentication, the <code>AuthenticationStrategy</code> will be called to allow it to react to each Realm&#8217;s results.
+We will cover <code>AuthenticationStrategies</code> soon.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">Single-Realm Application</div>
+<p>If only a single Realm is configured, it is called directly - there is no need for an <code>AuthenticationStrategy</code> in a single-Realm application.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Step 5</strong>: Each configured <code>Realm</code> is consulted to see if it <code><a href="/static/current/apidocs/org/apache/shiro/realm/Realm.html#supports(org.apache.shiro.authc.AuthenticationToken)">supports</a></code> the submitted <code>AuthenticationToken</code>.
+If so, the supporting Realm&#8217;s <code><a href="/static/current/apidocs/org/apache/shiro/realm/Realm.html#getAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken)">getAuthenticationInfo</a></code> method will be invoked with the submitted <code>token</code>.
+The <code>getAuthenticationInfo</code> method effectively represents a single authentication attempt for that particular <code>Realm</code>.
+We will cover the <code>Realm</code> authentication behavior shortly.</p>
+</div>
+<div class="sect2">
+<h3 id="Authentication-AuthenticationSequence-Authenticator">Authenticator</h3>
+<div class="paragraph">
+<p>As mentioned earlier, the Shiro <code>SecurityManager</code> implementations default to using a <a href="/static/current/apidocs/org/apache/shiro/authc/pam/ModularRealmAuthenticator.html"><code>ModularRealmAuthenticator</code></a> instance.
+The <code>ModularRealmAuthenticator</code> equally supports applications with single Realm as well as those with multiple realms.</p>
+</div>
+<div class="paragraph">
+<p>In a single-realm application, the <code>ModularRealmAuthenticator</code> will invoke the single <code>Realm</code> directly.
+If two or more Realms are configured, it will use an <code>AuthenticationStrategy</code> instance to coordinate how the attempt occurs.
+We&#8217;ll cover AuthenticationStrategies below.</p>
+</div>
+<div class="paragraph">
 <p>If you wish to configure the <code>SecurityManager</code> with a custom <code>Authenticator</code> implementation, you can do so in <code>shiro.ini</code> for example:</p>
-<pre><code class="ini">[main]
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
 ...
 authenticator = com.foo.bar.CustomAuthenticator
 
-securityManager.authenticator = $authenticator
-</code></pre>
-<p>Although in practice, the <code>ModularRealmAuthenticator</code> is probably suitable for most needs.</p>
-<a name="Authentication-%7B%7BAuthenticationStrategy%7D%7D"></a>
-<h3><a href="#authenticationstrategy" name="authenticationstrategy">AuthenticationStrategy</a></h3>
-<p>When two or more realms are configured for an application, the <code>ModularRealmAuthenticator</code> relies on an internal <a href="static/current/apidocs/org/apache/shiro/authc/pam/AuthenticationStrategy.html"><code>AuthenticationStrategy</code></a> component to determine the conditions for which an authentication attempt succeeds or fails.</p>
-<p>For example, if only one Realm authenticates an <code>AuthenticationToken</code> successfully, but all others fail, is the authentication attempt considered successful? Or must all Realms authenticate successfully for the overall attempt to be considered successful? Or, if a Realm authenticates successfully, is it necessary to consult other Realms further? An <code>AuthenticationStrategy</code> makes the appropriate decision based on an application&rsquo;s needs.</p>
-<p>An AuthenticationStrategy is a stateless component that is consulted 4 times during an authentication attempt (any necessary state required for these 4 interactions will be given as method arguments):</p>
-<ol>
-  <li>before any of the Realms are invoked</li>
-  <li>immediately before an individual Realm&rsquo;s <code>getAuthenticationInfo</code> method is called</li>
-  <li>immediately after an individual Realm&rsquo;s <code>getAuthenticationInfo</code> method is called</li>
-  <li>after all of the Realms have been invoked</li>
-</ol>
-<p>Also an <code>AuthenticationStrategy</code> is responsible for aggregating the results from each successful Realm and &lsquo;bundling&rsquo; them into a single <a href="static/current/apidocs/org/apache/shiro/authc/AuthenticationInfo.html"><code>AuthenticationInfo</code></a> representation. This final aggregate <code>AuthenticationInfo</code> instance is what is returned by the <code>Authenticator</code> instance and is what Shiro uses to represent the <code>Subject</code>&rsquo;s final identity (aka Principals).</p>
-<div class="alert alert-info">
-    <span class="glyphicon glyphicon-info-sign"></span> <strong>Subject Identity 'View'</strong>
-    <hr class="message-inner-separator">
-    <p>If you use more than one Realm in your application to acquire account data from multiple data sources, the <code>AuthenticationStrategy</code> is ultimately responsible for the final 'merged' view of the Subject's identity that is seen by the application.</p>
+securityManager.authenticator = $authenticator</code></pre>
 </div>
-<p>Shiro has 3 concrete <code>AuthenticationStrategy</code> implementations:</p>
+</div>
+<div class="paragraph">
+<p>Although in practice, the <code>ModularRealmAuthenticator</code> is probably suitable for most needs.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Authentication-AuthenticationSequence-AuthenticationStrategy">AuthenticationStrategy</h3>
+<div class="paragraph">
+<p>When two or more realms are configured for an application, the <code>ModularRealmAuthenticator</code> relies on an internal <a href="/static/current/apidocs/org/apache/shiro/authc/pam/AuthenticationStrategy.html"><code>AuthenticationStrategy</code></a> component to determine the conditions for which an authentication attempt succeeds or fails.</p>
+</div>
+<div class="paragraph">
+<p>For example, if only one Realm authenticates an <code>AuthenticationToken</code> successfully, but all others fail, is the authentication attempt considered successful?
+Or must all Realms authenticate successfully for the overall attempt to be considered successful?
+Or, if a Realm authenticates successfully, is it necessary to consult other Realms further?
+An <code>AuthenticationStrategy</code> makes the appropriate decision based on an application&#8217;s needs.</p>
+</div>
+<div class="paragraph">
+<p>An AuthenticationStrategy is a stateless component that is consulted 4 times during an authentication attempt (any necessary state required for these 4 interactions will be given as method arguments):</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>before any of the Realms are invoked</p>
+</li>
+<li>
+<p>immediately before an individual Realm&#8217;s <code>getAuthenticationInfo</code> method is called</p>
+</li>
+<li>
+<p>immediately after an individual Realm&#8217;s <code>getAuthenticationInfo</code> method is called</p>
+</li>
+<li>
+<p>after all of the Realms have been invoked</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Also an <code>AuthenticationStrategy</code> is responsible for aggregating the results from each successful Realm and 'bundling' them into a single <a href="/static/current/apidocs/org/apache/shiro/authc/AuthenticationInfo.html"><code>AuthenticationInfo</code></a> representation.
+This final aggregate <code>AuthenticationInfo</code> instance is what is returned by the <code>Authenticator</code> instance and is what Shiro uses to represent the `Subject&#8217;s final identity (aka Principals).</p>
+</div>
+<div class="admonitionblock note">
 <table>
-  <thead>
-    <tr>
-      <th><code>AuthenticationStrategy</code> class </th>
-      <th>Description </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><a href="static/current/apidocs/org/apache/shiro/authc/pam/AtLeastOneSuccessfulStrategy.html"><code>AtLeastOneSuccessfulStrategy</code></a> </td>
-      <td>If one (or more) Realms authenticate successfully, the overall attempt is considered successful. If none authenticate succesfully, the attempt fails. </td>
-    </tr>
-    <tr>
-      <td><a href="static/current/apidocs/org/apache/shiro/authc/pam/FirstSuccessfulStrategy.html"><code>FirstSuccessfulStrategy</code></a> </td>
-      <td>Only the information returned from the first successfully authenticated Realm will be used. All further Realms will be ignored. If none authenticate successfully, the attempt fails. </td>
-    </tr>
-    <tr>
-      <td><a href="static/current/apidocs/org/apache/shiro/authc/pam/AllSuccessfulStrategy.html"><code>AllSuccessfulStrategy</code></a> </td>
-      <td>All configured Realms must authenticate successfully for the overall attempt to be considered successful. If any one does not authenticate successfully, the attempt fails. </td>
-    </tr>
-  </tbody>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">Subject Identity 'View'</div>
+<p>If you use more than one Realm in your application to acquire account data from multiple data sources, the <code>AuthenticationStrategy</code> is ultimately responsible for the final 'merged' view of the Subject&#8217;s identity that is seen by the application.</p>
+</div>
+</td>
+</tr>
 </table>
-<p>The <code>ModularRealmAuthenticator</code> defaults to the <strong><code>AtLeastOneSuccessfulStrategy</code></strong> implementation, as this is the most commonly desired strategy. However, you could configure a different strategy if you wanted:</p>
-<pre><code class="ini">[main]
+</div>
+<div class="paragraph">
+<p>Shiro has 3 concrete <code>AuthenticationStrategy</code> implementations:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>AuthenticationStrategy</code> class</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="/static/current/apidocs/org/apache/shiro/authc/pam/AtLeastOneSuccessfulStrategy.html"><code>AtLeastOneSuccessfulStrategy</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If one (or more) Realms authenticate successfully, the overall attempt is considered successful.
+If none authenticate succesfully, the attempt fails.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="/static/current/apidocs/org/apache/shiro/authc/pam/FirstSuccessfulStrategy.html"><code>FirstSuccessfulStrategy</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Only the information returned from the first successfully authenticated Realm will be used.
+All further Realms will be ignored.
+If none authenticate successfully, the attempt fails.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="/static/current/apidocs/org/apache/shiro/authc/pam/AllSuccessfulStrategy.html"><code>AllSuccessfulStrategy</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All configured Realms must authenticate successfully for the overall attempt to be considered successful.
+If any one does not authenticate successfully, the attempt fails.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>ModularRealmAuthenticator</code> defaults to the <strong><code>AtLeastOneSuccessfulStrategy</code></strong> implementation, as this is the most commonly desired strategy.
+However, you could configure a different strategy if you wanted:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
 ...
 authcStrategy = org.apache.shiro.authc.pam.FirstSuccessfulStrategy
 
 securityManager.authenticator.authenticationStrategy = $authcStrategy
 
-...
-</code></pre>
-<div class="alert alert-success">
-    <span class="glyphicon glyphicon-ok"></span> <strong>Custom AuthenticationStrategy</strong>
-    <hr class="message-inner-separator">
-    <p>If you wanted to create your own <code>AuthenticationStrategy</code> implementation yourself, you could use the <a class="external-link" href="static/current/apidocs/org/apache/shiro/authc/pam/AbstractAuthenticationStrategy.html"><code>org.apache.shiro.authc.pam.AbstractAuthenticationStrategy</code></a> as a starting point.  The <code>AbstractAuthenticationStrategy</code> class automatically implements the 'bundling'/aggregation behavior of merging the results from each Realm into a single <code>AuthenticationInfo</code> instance.</p>
+...</code></pre>
 </div>
-<a name="Authentication-RealmAuthenticationOrder"></a>
-<h3><a href="#realm-authentication-order" name="realm-authentication-order">Realm Authentication Order</a></h3>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">Custom AuthenticationStrategy</div>
+<p>If you wanted to create your own <code>AuthenticationStrategy</code> implementation yourself, you could use the <code><a href="/static/current/apidocs/org/apache/shiro/authc/pam/AbstractAuthenticationStrategy.html">org.apache.shiro.authc.pam.AbstractAuthenticationStrategy</a></code> as a starting point.
+The <code>AbstractAuthenticationStrategy</code> class automatically implements the ''bundling''/aggregation behavior of merging the results from each Realm into a single <code>AuthenticationInfo</code> instance.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Authentication-AuthenticationSequence-RealmAuthenticationOrder">Realm Authentication Order</h3>
+<div class="paragraph">
 <p>It is very important to point out that the <code>ModularRealmAuthenticator</code> will interact with Realm instances in <em>iteration</em> order.</p>
-<p>The <code>ModularRealmAuthenticator</code> has access to the <code>Realm</code> instances configured on the <code>SecurityManager</code>. When performing an authentication attempt, it will iterate over that collection, and for each <code>Realm</code> that supports the submitted <code>AuthenticationToken</code>, invoke the Realm&rsquo;s <code>getAuthenticationInfo</code> method.</p>
-<a name="Authentication-ImplicitOrdering"></a>
-<h4><a href="#implicit-ordering" name="implicit-ordering">Implicit Ordering</a></h4>
-<p>When using Shiro&rsquo;s INI configuration format, you should configure Realms <em>in the order you want them to process an <code>AuthenticationToken</code></em>. For example, in <code>shiro.ini</code>, Realms will be consulted in the order in which they are defined in the INI file. That is, for the following <code>shiro.ini</code> example:</p>
-<pre><code class="ini">blahRealm = com.company.blah.Realm
+</div>
+<div class="paragraph">
+<p>The <code>ModularRealmAuthenticator</code> has access to the <code>Realm</code> instances configured on the <code>SecurityManager</code>.
+When performing an authentication attempt, it will iterate over that collection, and for each <code>Realm</code> that supports the submitted <code>AuthenticationToken</code>, invoke the Realm&#8217;s <code>getAuthenticationInfo</code> method.</p>
+</div>
+<div class="sect3">
+<h4 id="Authentication-AuthenticationSequence-AuthenticationStrategy-ImplicitOrdering">Implicit Ordering</h4>
+<div class="paragraph">
+<p>When using Shiro&#8217;s INI configuration format, you should configure Realms <em>in the order you want them to process an <code>AuthenticationToken`</em>. For example, in `shiro.ini</code>, Realms will be consulted in the order in which they are defined in the INI file.
+That is, for the following <code>shiro.ini</code> example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">blahRealm = com.company.blah.Realm
 ...
 fooRealm = com.company.foo.Realm
 ...
-barRealm = com.company.another.Realm
-</code></pre>
+barRealm = com.company.another.Realm</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>The <code>SecurityManager</code> will be configured with those three realms, and during an authentication attempt, <code>blahRealm</code>, <code>fooRealm</code>, and <code>barRealm</code> will be invoked <em>in that order</em>.</p>
+</div>
+<div class="paragraph">
 <p>This has basically the same effect as if the following line were defined:</p>
-<pre><code class="java">securityManager.realms = $blahRealm, $fooRealm, $barRealm
-</code></pre>
-<p>Using this approach, you don&rsquo;t need to set the <code>securityManager&#39;s</code> <code>realms</code> property - every realm defined will automatically be added to the <code>realms</code> property.</p>
-<a name="Authentication-ExplicitOrdering"></a>
-<h4><a href="#explicit-ordering" name="explicit-ordering">Explicit Ordering</a></h4>
-<p>If you want to explicitly define the order in which the realms will be interacted with, regardless of how they are defined, you can set the securityManager&rsquo;s <code>realms</code> property as an explicit collection property. For example, if using the definition above, but you wanted the <code>blahRealm</code> to be consulted last instead of first:</p>
-<pre><code class="ini">blahRealm = com.company.blah.Realm
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">securityManager.realms = $blahRealm, $fooRealm, $barRealm</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Using this approach, you don&#8217;t need to set the <code>securityManager&#39;s</code> <code>realms</code> property - every realm defined will automatically be added to the <code>realms</code> property.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Authentication-AuthenticationSequence-AuthenticationStrategy-ExplicitOrdering">Explicit Ordering</h4>
+<div class="paragraph">
+<p>If you want to explicitly define the order in which the realms will be interacted with, regardless of how they are defined, you can set the securityManager&#8217;s <code>realms</code> property as an explicit collection property.
+For example, if using the definition above, but you wanted the <code>blahRealm</code> to be consulted last instead of first:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">blahRealm = com.company.blah.Realm
 ...
 fooRealm = com.company.foo.Realm
 ...
 barRealm = com.company.another.Realm
 
 securityManager.realms = $fooRealm, $barRealm, $blahRealm
-...
-</code></pre>
-<div class="alert alert-warning">
-    <span class="glyphicon glyphicon-warning-sign"></span> <strong>Explicit Realm Inclusion</strong>
-    <hr class="message-inner-separator">
-    <p>When you explicitly configure the <code>securityManager.realms</code> property, <em>only</em> the referenced realms will be configured on the <code>SecurityManager</code>.  This means you could define 5 realms in INI, but only actually use 3 if 3 are referenced for the <code>realms</code> property.  This is different than implicit realm ordering where all available realms will be used.</p>
+...</code></pre>
 </div>
-<a name="Authentication-RealmAuthentication"></a>
-<h2><a href="#realm-authentication" name="realm-authentication">Realm Authentication</a></h2>
-<p>This chapter covers Shiro&rsquo;s main workflow explaining how an authentication attempt occurs. The internal workflow of what happens in a single realm as it is consulted during authentication (i.e. &lsquo;Step 5&rsquo; above) is covered in the <a href="realm.html" title="Realm">Realm</a> chapter&rsquo;s <a href="realm.html#Realm-authentication">Realm Authentication</a> section.</p>
-<h2><a name="Lendahandwithdocumentation"></a>Lend a hand with documentation </h2>
-<p>While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time.  If you'd like to help the Shiro project, please consider correcting, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro. </p>
-<p>The easiest way to contribute your documentation is to submit a pull-request by clicking on the <code>Edit</code> link below, or send it to the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.</p>
-<input type="hidden" id="ghEditPage" value="authentication.md.vtl"></input>
-    
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">Explicit Realm Inclusion</div>
+<p>When you explicitly configure the <code>securityManager.realms</code> property, <strong>only</strong> the referenced realms will be configured on the <code>SecurityManager</code>.
+This means you could define 5 realms in INI, but only actually use 3 if 3 are referenced for the <code>realms</code> property.
+This is different than implicit realm ordering where all available realms will be used.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Authentication-RealmAuthentication">Realm Authentication</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter covers Shiro&#8217;s main workflow explaining how an authentication attempt occurs.
+The internal workflow of what happens in a single realm as it is consulted during authentication (i.e. 'Step 5' above) is covered in the <a href="/realm.html">Realm</a>
+chapter&#8217;s <a href="/realm.html#Realm-RealmAuthentication">Realm Authentication</a> section.</p>
+</div>
+</div>
+</div>
+	<hr />
+
+</div> 
 
     <div class="footer-padding"></div>
-    <footer class="custom-footer">
 
-        <div class="col-md-5">
-            <div class="copyright-footer">
-            <a href="http://www.apache.org/foundation/contributing.html">Donate to the ASF</a> |
-            <a href="http://www.apache.org/licenses/LICENSE-2.0.html">License</a>
-            <p>Copyright &copy; 2008-2021 The Apache Software Foundation</p>
-                </div>
+    <div class="container-fluid pt-2 border-top" id="custom-footer">
+      <footer class="row justify-content-between align-items-center">
+        <div class=" col-md-5">
+          <div class="copyright-footer justify-content-start">
+            <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
+            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+          </div>
         </div>
 
-        <div class="social col-md-2">
-            <a class="btn btn-social-icon btn-sm btn-twitter" target="_blank" href="https://twitter.com/ApacheShiro"><span class="fa fa-twitter"></span></a>
-            <a class="btn btn-social-icon btn-sm btn-facebook" target="_blank" href="https://www.facebook.com/ApacheShiro"><span class="fa fa-facebook"></span></a>
-            <a class="btn btn-social-icon btn-sm btn-linkedin" target="_blank" href="https://www.linkedin.com/groups/4382576"><span class="fa fa-linkedin"></span></a>
+        <div class="d-flex justify-content-center col-md-1">
+          <a class="btn btn-social"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
         </div>
 
-
-        <div class="col-md-2"></div>
-        <div class="col-md-2 editThisPage">
-            <div class="footer-shield"></div>
+        <div class="d-flex justify-content-end col-md-4" id="editThisPage">
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/authentication.adoc"/>
         </div>
 
-    </footer> <!--END FOOTER-->
+        <div class="d-flex col-md-2 justify-content-end" style="position: relative">
+          <div class="footer-shield"></div>
+        </div>
+      </footer>
+    </div>
 
-</body>
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="highlight.js-11.2.0/highlight.min.js"></script>
+    <script src="js/shiro.js"></script>
+
+    <script>
+        docReady(
+          addPageEditLink()
+      );
+    </script>
+    <script>hljs.highlightAll();</script>
+
+    </body>
 </html>

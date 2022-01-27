@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
@@ -14,305 +15,466 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Integrations | Apache Shiro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="description" content="Apache Shiro is a powerful and easy-to-use Java security framework that performs authentication, authorization, cryptography, and session management.">
+    <meta name="keywords" content='documentation,overview,features'>
+    <meta name="generator" content="JBake">
     <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
     <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
     <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
-    <meta name="y_key" content="e47896cd6bae4920">
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 
-    <title>
-                                    Apache Shiro Integrations | Apache Shiro
-                </title>
+    <meta property="og:title" content="Integrations | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2022-01-27"/>
+    <meta property="article:tag" content='documentation'/>
+    <meta property="article:tag" content='overview'/>
+    <meta property="article:tag" content='features'/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content='https://shiro.apache.org/integration.html'/>
+    <meta property="og:image" content='images/shiro-featured-image.png'/>
+    <meta property="og:image:width" content='1200'/>
+    <meta property="og:image:height" content='628'/>
+    <meta property="og:site_name" content="Apache Shiro"/>
 
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/asciidoctor.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="highlight.js-11.2.0/styles/default.min.css" rel="stylesheet">
+    <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
 
-    <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-
-    <!-- site styles and  -->
-    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
-    <script type="text/javascript" src="./assets/js/shiro-site.js"></script>
-
-    <!-- github ribbon -->
-    <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.css" />
-    <!--[if lt IE 9]>
-      <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.ie.css" />
-    <![endif]-->
-
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-
-    <!-- bootstrap -->
-    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap-theme.min.css">
-    <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
-
-    <link rel="stylesheet" href="./assets/css/bootstrap-social.css">
-
-    <!-- Google Analytics -->
-    <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-XXXXX-Y', 'auto');
-    ga('send', 'pageview');
-    </script>
-    <!-- End Google Analytics -->
-
-
-
-    <!-- syntax highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css" integrity="sha256-Zd1icfZ72UBmsId/mUcagrmN7IN5Qkrvh75ICHIQVTk=" crossorigin="anonymous" />
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js" integrity="sha256-s63qpgPYoQk+wv3U6WZqioVJrwFNBTgD4dkeegLuwvo=" crossorigin="anonymous"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
-
-    <script type="text/javascript">
-
-        $( document ).ready(function() {
-            addPageEditLink();
-        });
-    </script>
-</head>
-
-<body>
-
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="favicon.ico">
+  </head>
+  <body>
     <div id="top-bar"></div>
-
-    <div class="container" style="max-width: 1200px;">
-
     <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
 
+    <div id="wrap">
 
-
-    <div class="masthead">
+      <div class="masthead">
         <p class="lead">
-            <a href="./index.html">
-                <img src="./assets/images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;">
-            </a>
-            <span class="tagline">Simple. Java. Security.</span>
-            <a class="pull-right" href="https://www.apache.org/events/current-event.html">
-                <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png"/>
-            </a>
+          <a href="index.html"><img src="images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <span class="tagline">Simple. Java. Security.</span>
+          <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
+          </a>
         </p>
+      </div>
+
+	<!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="get-started.html">Get Started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="documentation.html">Docs</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-webapps" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Web Apps
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
+                <li><a class="dropdown-item" href="web.html">General</a></li>
+                <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="web-features.html">Features</a></li>
+              </ul>
+            </li>
+
+            <li><a class="nav-link" href="features.html">Features</a></li>
+
+            <!-- integrations -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-integrations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Integrations
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
+                <li><a class="dropdown-item" href="spring-boot.html">Spring</a></li>
+                <li><a class="dropdown-item" href="guice.html">Guice</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="integration.html">Third-Party Integrations</a></li>
+              </ul>
+            </li>
+
+            <!-- Community -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-community" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Community
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
+                <li><a class="dropdown-item" href="forums.html">Community Forums</a></li>
+                <li><a class="dropdown-item" href="mailing-lists.html">Mailing Lists</a></li>
+                <li><a class="dropdown-item" href="articles.html">Articles</a></li>
+                <li><a class="dropdown-item" href="news.html">News</a></li>
+                <li><a class="dropdown-item" href="events.html">Events</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="community.html">More</a></li>
+              </ul>
+            </li>
+
+            <!-- About -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-about" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                About
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
+                <li><a class="dropdown-item" href="about.html">About</a></li>
+                <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="d-flex justify-content-end navbar-nav mb-2 mb-lg-0">
+            <!-- The ASF -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-asf" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apache Software Foundation
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
+                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+	<div class="page-header">
+		<h1>Integrations</h1>
+	</div>
+
+
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#officially_supported_integrations">Officially Supported Integrations</a></li>
+<li><a href="#open_source_community_integrations">Open Source Community Integrations</a></li>
+<li><a href="#ports">Ports</a></li>
+<li><a href="#got_an_integration">Got An Integration?</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Shiro has been downloaded over one million times and is in production at thousands of companies. One reason: it integrates well with other technologies and frameworks.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="officially_supported_integrations">Officially Supported Integrations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>These integrations are supported by the Apache Shiro Development team.
+Want to help make them great?
+<a href="/how-to-contribute.html">Contribute</a> back to the project!</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><a href="/spring.html">Spring Application Framework</a></strong></p>
+<div class="paragraph">
+<p>Integrate Shiro into standalone or web-based Spring applications.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="/guice.html">Guice Dependency Injection Framework</a></strong></p>
+<div class="paragraph">
+<p>For Guice-based applications using standard Guice conventions and mechanisms.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="/cas.html">CAS SSO server</a></strong></p>
+<div class="paragraph">
+<p>Protect your WebApp with a Jasig CAS SSO server.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="open_source_community_integrations">Open Source Community Integrations</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong><a href="https://stormpath.com/blog/user-management-java-web-apps-stormpath-and-apache-shiro">Stormpath User Management</a></strong></p>
+<div class="paragraph">
+<p>from <a href="https://stormpath.com/">Stormpath</a>.</p>
+</div>
+<div class="paragraph">
+<p>Pairing Apache Shiro with Stormpath gives you a full application security and user management system, with little to no coding.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="https://grails.org/plugins/shiro">Grails</a></strong></p>
+<div class="paragraph">
+<p>from <a href="https://grails.org/">Pivotal</a> and <a href="https://twitter.com/@pledbrook">@pledbrook</a>.</p>
+</div>
+<div class="paragraph">
+<p>Very up-to-date Grails/Shiro Integration, including Grails 2.0 and Shiro 1.2. Adds easy authentication and access control to Grails applications.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="http://isis.apache.org">Apache Isis</a></strong></p>
+<div class="paragraph">
+<p>from <a href="http://apache.org/">Apache</a>.</p>
+</div>
+<div class="paragraph">
+<p>Apache Isis is a full-stack framework for rapidly developing domain driven apps and RESTful APIs in Java.
+<a href="http://isis.apache.org/documentation.html#security">It uses Apache Shiro</a> for authentication and authorization.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="http://geode.apache.org/">Apache Geode</a></strong></p>
+<div class="paragraph">
+<p>from <a href="http://apache.org/">Apache</a>.</p>
+</div>
+<div class="paragraph">
+<p>Using Apache Shiro to secure Geode endpoints like JMX operations, rest services, web monitoring application, CLI tool, and client server communications.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="https://github.com/FeedTheCoffers/shiro-oauth">Oauth</a></strong></p>
+<div class="paragraph">
+<p>from <a href="https://twitter.com/@JimmiDyson">@JimmiDyson</a></p>
+</div>
+<div class="paragraph">
+<p>Source code for an OAuth module for Apache Shiro based on Scribe</p>
+</div>
+</li>
+<li>
+<p><strong><a href="https://github.com/cilogi/gaeshiro">Google App Engine</a></strong></p>
+<div class="paragraph">
+<p>from <a href="https://twitter.com/@cilogi">@cilogi</a>.</p>
+</div>
+<div class="paragraph">
+<p>Demo of one way to integrate Shiro with App Engine and Google Guice, plus front-end user registration and password management.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="https://github.com/wsargent/play-shiro">Play!</a></strong></p>
+<div class="paragraph">
+<p>from <a href="https://twitter.com/@will_sargent">@will_sargent</a>.</p>
+</div>
+<div class="paragraph">
+<p>A very simple integration between Apache Shiro and Play 2.0.
+If you want to play with Play, this project could use an update handling statelessness since the Shiro 1.2 release.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="https://github.com/55minutes/fiftyfive-wicket">55Wicket</a></strong></p>
+<div class="paragraph">
+<p>from <a href="http://55minutes.com">55 Minutes</a></p>
+</div>
+<div class="paragraph">
+<p>A nifty set of tools and libraries for enhancing productivity with the Apache Wicket Java web framework, including Shiro Integration.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="https://github.com/timperrett/lift-shiro">Lift</a></strong></p>
+<div class="paragraph">
+<p>from <a href="https://twitter.com/@timperrett">@timperrett</a>.</p>
+</div>
+<div class="paragraph">
+<p>Integration between Shiro and the Lift Web framework.
+Uses Lift’s sitemap Locs instead of Shiro’s built in web.xml resource filters to control access to URLs.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="https://github.com/alexxiyang/shiro-redis">Redis Cache Manager</a></strong></p>
+<div class="paragraph">
+<p>from <a href="https://github.com/alexxiyang">@alexxiyang</a>.</p>
+</div>
+<div class="paragraph">
+<p>A <a href="http://redis.io/">Redis</a> Cache Manager implementation.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="https://github.com/mythfish/shiro-memcached">Memcached Cache Manager</a></strong></p>
+<div class="paragraph">
+<p>from <a href="https://github.com/mythfish">@mythfish</a></p>
+</div>
+<div class="paragraph">
+<p>A <a href="https://memcached.org/">Memcached</a> Cache Manager implementation.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="https://github.com/silb/shiro-jersey">JAX-RS</a></strong></p>
+<div class="paragraph">
+<p>from <a href="https://github.com/silb">@silb</a>.</p>
+</div>
+<div class="paragraph">
+<p>Apache Shiro support for the Jersey JAX-RS implementation.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="https://github.com/silb/dropwizard-shiro">Dropwizard</a></strong></p>
+<div class="paragraph">
+<p>from <a href="https://github.com/silb">@silb</a>.</p>
+</div>
+<div class="paragraph">
+<p>A bundle for securing <a href="http://www.dropwizard.io/">Dropwizard</a> with Apache Shiro.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="https://github.com/theborakompanioni/thymeleaf-extras-shiro">Thymeleaf</a></strong></p>
+<div class="paragraph">
+<p>from <a href="https://github.com/theborakompanioni">@theborakompanioni</a>.</p>
+</div>
+<div class="paragraph">
+<p>A <a href="http://www.thymeleaf.org/">Thymeleaf</a> dialect for <a href="https://shiro.apache.org">Apache Shiro</a> <a href="https://shiro.apache.org/tags">tags</a>.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="https://github.com/davidsowerby/krail">Krail</a></strong></p>
+<div class="paragraph">
+<p>from <a href="https://github.com/davidsowerby">@davidsowerby</a>.</p>
+</div>
+<div class="paragraph">
+<p>Krail provides a framework for rapid Java web development by combining Vaadin, Guice, Apache Shiro, Apache Commons Configuration and others.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="https://github.com/ocpsoft/rewrite/tree/main/security-integration-shiro">Rewrite Servlet</a></strong></p>
+<div class="paragraph">
+<p>from <a href="http://www.ocpsoft.org/rewrite/">ocpsoft</a>.</p>
+</div>
+<div class="paragraph">
+<p>A highly configurable URL-rewriting tool for Java EE 6+ and Servlet 2.5+ applications</p>
+</div>
+</li>
+<li>
+<p><strong><a href="http://freedomotic-developer-manual.readthedocs.io/en/latest/plugins/security.html">Freedomotic</a></strong></p>
+<div class="paragraph">
+<p>from <a href="http://www.freedomotic.com">freedomotic</a>.</p>
+</div>
+<div class="paragraph">
+<p>An open source, flexible, secure Internet of Things (IoT) development framework in Java, useful to build and manage modern smart spaces.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="https://github.com/flowlogix/flowlogix">FlowLogix Jakarta EE Library</a></strong></p>
+<div class="paragraph">
+<p>from <a href="https://twitter.com/lprimak">Lenny Primak</a>.</p>
+</div>
+<div class="paragraph">
+<p>Integrates Jakarta EE / Java EE applications with Shiro Security, specifically makes Shiro Annotations work with Java EE.</p>
+</div>
+</li>
+<li>
+<p><strong><a href="https://github.com/bootique/bootique-shiro">Bootique Shiro</a></strong></p>
+<div class="paragraph">
+<p>from <a href="https://github.com/bootique/bootique">Bootique</a>.</p>
+</div>
+<div class="paragraph">
+<p>Bootique is a minimally opinionated platform for modern runnable Java apps.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ports">Ports</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong><a href="https://github.com/stormpath/Turnstile">Turnstile</a></strong> - Swift</p>
+</li>
+<li>
+<p><strong><a href="https://github.com/YosaiProject/yosai">Yosai</a></strong> - Python</p>
+</li>
+<li>
+<p><strong><a href="https://github.com/gnavarro77/angular-shiro">Angular</a></strong> - Angular</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="got_an_integration">Got An Integration?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Have an integration you want listed?
+Send us a pull request of <a href="https://github.com/apache/shiro-site/blob/main/integration.md">this page</a>, and participate in Shiro development!</p>
+</div>
+<div class="paragraph">
+<p><a href="how-to-contribute.html">Learn more about contributing to Apache Shiro</a>.</p>
+</div>
+</div>
+</div>
+	<hr />
+
+</div> 
+
+    <div class="footer-padding"></div>
+
+    <div class="container-fluid pt-2 border-top" id="custom-footer">
+      <footer class="row justify-content-between align-items-center">
+        <div class=" col-md-5">
+          <div class="copyright-footer justify-content-start">
+            <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
+            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center col-md-1">
+          <a class="btn btn-social"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
+        </div>
+
+        <div class="d-flex justify-content-end col-md-4" id="editThisPage">
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/integration.adoc"/>
+        </div>
+
+        <div class="d-flex col-md-2 justify-content-end" style="position: relative">
+          <div class="footer-shield"></div>
+        </div>
+      </footer>
     </div>
 
 
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="highlight.js-11.2.0/highlight.min.js"></script>
+    <script src="js/shiro.js"></script>
 
-    <nav class="navbar navbar-default" role="navigation">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
+    <script>
+        docReady(
+          addPageEditLink()
+      );
+    </script>
+    <script>hljs.highlightAll();</script>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li><a href="./get-started.html">Get Started</a></li>
-                <li><a href="./documentation.html">Docs</a></li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Web Apps <b class="caret"></b>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="./web.html">General</a></li>
-                        <li class="divider"></li>
-                        <li><a href="./web-features.html">Features</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Integrations <b class="caret"></b>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="./spring-boot.html">Spring</a></li>
-                        <li><a href="./guice.html">Guice</a></li>
-                        <li class="divider"></li>
-                        <li><a href="./integration.html">Third-Party Integrations</a></li>
-                    </ul>
-                </li>
-
-                <li><a href="./features.html">Features</a></li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Community <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="./forums.html">Community Forums</a></li>
-                        <li><a href="./mailing-lists.html">Mailing Lists</a></li>
-                        <li><a href="./articles.html">Articles</a></li>
-                        <li><a href="./news.html">News</a></li>
-                        <li><a href="./events.html">Events</a></li>
-                        <li class="divider"></li>
-                        <li><a href="./community.html">More</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        About <b class="caret"></b>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="./about.html">About</a></li>
-                        <li><a href="./security-reports.html">Vulnerability Reports</a></li>
-                    </ul>
-                </li>
-
-            </ul>
-
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="http://www.apache.org/" class="dropdown-toggle" data-toggle="dropdown">
-                        Apache Software Foundation <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="http://www.apache.org/">Apache Homepage</a></li>
-                        <li><a href="http://www.apache.org/licenses/">License</a></li>
-                        <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
-                        <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
-                        <li><a href="http://www.apache.org/security/">Security</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
-    </nav>
-
-
-            <h1><a href="#apache-shiro-integrations" name="apache-shiro-integrations">Apache Shiro Integrations</a></h1>
-<p>Shiro has been downloaded over one million times and is in production at thousands of companies. One reason: it integrates well with other technologies and frameworks. </p>
-<h2><a href="#officially-supported-integrations" name="officially-supported-integrations">Officially Supported Integrations</a></h2>
-<p>These integrations are supported by the Apache Shiro Development team. Want to help make them great? <a href="how-to-contribute.html">Contribute</a> back to the project!</p>
-<ul>
-  <li>
-  <p><strong><a href="spring.html">Spring Application Framework</a></strong> Integrate Shiro into standalone or web-based Spring applications.</p></li>
-  <li>
-  <p><strong><a href="guice.html">Guice Dependency Injection Framework</a></strong> For Guice-based applications using standard Guice conventions and mechanisms.</p></li>
-  <li>
-  <p><strong><a href="cas.html">CAS SSO server</a></strong> Protect your WebApp with a Jasig CAS SSO server. </p></li>
-</ul>
-<h2><a href="#open-source-community-integrations" name="open-source-community-integrations">Open Source Community Integrations</a></h2>
-<ul>
-  <li>
-  <p><strong><a href="https://stormpath.com/blog/user-management-java-web-apps-stormpath-and-apache-shiro">Stormpath User Management</a></strong> from <a href="https://stormpath.com/">Stormpath</a><br/>Pairing Apache Shiro with Stormpath gives you a full application security and user management system, with little to no coding.</p></li>
-  <li>
-  <p><strong><a href="https://grails.org/plugins/shiro">Grails</a></strong> from <a href="https://grails.org/">Pivotal</a> and <a href="https://twitter.com/@pledbrook">@pledbrook</a><br/>Very up-to-date Grails/Shiro Integration, including Grails 2.0 and Shiro 1.2. Adds easy authentication and access control to Grails applications. </p></li>
-  <li>
-  <p><strong><a href="http://isis.apache.org">Apache Isis</a></strong> from <a href="http://apache.org/">Apache</a><br/>Apache Isis is a full-stack framework for rapidly developing domain driven apps and RESTful APIs in Java. <a href="http://isis.apache.org/documentation.html#security">It uses Apache Shiro</a> 1.2.x for authentication and authorization.</p></li>
-  <li>
-  <p><strong><a href="http://geode.apache.org/">Apache Geode</a></strong> from <a href="http://apache.org/">Apache</a><br/>Using Apache Shiro to secure Geode endpoints like JMX operations, rest services, web monitoring application, CLI tool, and client server communications.</p></li>
-  <li>
-  <p><strong><a href="https://github.com/FeedTheCoffers/shiro-oauth">Oauth</a></strong> from <a href="https://twitter.com/@JimmiDyson">@JimmiDyson</a><br/>Source code for an OAuth module for Apache Shiro based on Scribe</p></li>
-  <li>
-  <p><strong><a href="https://github.com/cilogi/gaeshiro">Google App Engine</a></strong> from <a href="https://twitter.com/@cilogi">@cilogi</a><br/>Demo of one way to integrate Shiro with App Engine and Google Guice, plus front-end user registration and password management.</p></li>
-  <li>
-  <p><strong><a href="https://github.com/wsargent/play-shiro">Play!</a></strong> from <a href="https://twitter.com/@will_sargent">@will_sargent</a><br/>A very simple integration between Apache Shiro and Play 2.0. If you want to play with Play, this project could use an update handling statelessness since the Shiro 1.2 release. </p></li>
-  <li>
-  <p><strong><a href="https://github.com/55minutes/fiftyfive-wicket">55Wicket</a></strong> from <a href="http://55minutes.com">55 Minutes</a><br/>A nifty set of tools and libraries for enhancing productivity with the Apache Wicket Java web framework, including Shiro Integration.</p></li>
-  <li>
-  <p><strong><a href="https://github.com/timperrett/lift-shiro">Lift</a></strong> from <a href="https://twitter.com/@timperrett">@timperrett</a><br/>Integration between Shiro and the Lift Web framework. Uses Lift’s sitemap Locs instead of Shiro’s built in web.xml resource filters to control access to URLs. </p></li>
-  <li>
-  <p><strong><a href="https://github.com/alexxiyang/shiro-redis">Redis Cache Manager</a></strong> from <a href="https://github.com/alexxiyang">@alexxiyang</a><br/>A <a href="http://redis.io/">Redis</a> Cache Manager implementation.</p></li>
-  <li>
-  <p><strong><a href="https://github.com/mythfish/shiro-memcached">Memcached Cache Manager</a></strong> from <a href="https://github.com/mythfish">@mythfish</a><br/>A <a href="https://memcached.org/">Memcached</a> Cache Manager implementation.</p></li>
-  <li>
-  <p><strong><a href="https://github.com/silb/shiro-jersey">JAX-RS</a></strong> from <a href="https://github.com/silb">@silb</a><br/>Apache Shiro support for the Jersey JAX-RS implementation.</p></li>
-  <li>
-  <p><strong><a href="https://github.com/silb/dropwizard-shiro">Dropwizard</a></strong> from <a href="https://github.com/silb">@silb</a><br/>A bundle for securing <a href="http://www.dropwizard.io/">Dropwizard</a> with Apache Shiro.</p></li>
-  <li>
-  <p><strong><a href="https://github.com/theborakompanioni/thymeleaf-extras-shiro">Thymeleaf</a></strong> from <a href="https://github.com/theborakompanioni">@theborakompanioni</a><br/>A <a href="http://www.thymeleaf.org/">Thymeleaf</a> dialect for <a href="https://shiro.apache.org">Apache Shiro</a> <a href="https://shiro.apache.org/tags">tags</a>.</p></li>
-  <li>
-  <p><strong><a href="https://github.com/davidsowerby/krail">Krail</a></strong> from <a href="https://github.com/davidsowerby">@davidsowerby</a><br/>Krail provides a framework for rapid Java web development by combining Vaadin, Guice, Apache Shiro, Apache Commons Configuration and others.</p></li>
-  <li>
-  <p><strong><a href="https://github.com/ocpsoft/rewrite/tree/main/security-integration-shiro">Rewrite Servlet</a></strong> from <a href="http://www.ocpsoft.org/rewrite/">ocpsoft</a><br/>A highly configurable URL-rewriting tool for Java EE 6+ and Servlet 2.5+ applications</p></li>
-  <li>
-  <p><strong><a href="http://freedomotic-developer-manual.readthedocs.io/en/latest/plugins/security.html">Freedomotic</a></strong> from <a href="http://www.freedomotic.com">freedomotic</a><br/>An open source, flexible, secure Internet of Things (IoT) development framework in Java, useful to build and manage modern smart spaces.</p></li>
-  <li>
-  <p><strong><a href="https://github.com/flowlogix/flowlogix">FlowLogix Jakarta EE Library</a></strong> from <a href="https://twitter.com/lprimak">Lenny Primak</a><br/>Integrates Jakarta EE / Java EE applications with Shiro Security, specifically makes Shiro Annotations work with Java EE.</p></li>
-  <li>
-  <p><strong><a href="https://github.com/bootique/bootique-shiro">Bootique Shiro</a></strong> from <a href="https://github.com/bootique/bootique">Bootique</a><br/>Bootique is a minimally opinionated platform for modern runnable Java apps.</p></li>
-</ul>
-<h2><a href="#ports" name="ports">Ports</a></h2>
-<ul>
-  <li>
-  <p><strong><a href="https://github.com/stormpath/Turnstile">Turnstile</a></strong> - Swift</p></li>
-  <li>
-  <p><strong><a href="https://github.com/YosaiProject/yosai">Yosai</a></strong> - Python</p></li>
-  <li>
-  <p><strong><a href="https://github.com/gnavarro77/angular-shiro">Angular</a></strong> - Angular</p></li>
-</ul>
-<h2><a href="#got-an-integration-" name="got-an-integration-">Got An Integration?</a></h2>
-<p>Have an integration you want listed? Send us a pull request of <a href="https://github.com/apache/shiro-site/blob/main/integration.md">this page</a>, and participate in Shiro development! <a href="how-to-contribute.html">Learn more about contributing to Apache Shiro</a>.<br/><input type="hidden" id="ghEditPage" value="integration.md"></input></p>
-    
-</div>
-
-    <div class="footer-padding"></div>
-    <footer class="custom-footer">
-
-        <div class="col-md-5">
-            <div class="copyright-footer">
-            <a href="http://www.apache.org/foundation/contributing.html">Donate to the ASF</a> |
-            <a href="http://www.apache.org/licenses/LICENSE-2.0.html">License</a>
-            <p>Copyright &copy; 2008-2021 The Apache Software Foundation</p>
-                </div>
-        </div>
-
-        <div class="social col-md-2">
-            <a class="btn btn-social-icon btn-sm btn-twitter" target="_blank" href="https://twitter.com/ApacheShiro"><span class="fa fa-twitter"></span></a>
-            <a class="btn btn-social-icon btn-sm btn-facebook" target="_blank" href="https://www.facebook.com/ApacheShiro"><span class="fa fa-facebook"></span></a>
-            <a class="btn btn-social-icon btn-sm btn-linkedin" target="_blank" href="https://www.linkedin.com/groups/4382576"><span class="fa fa-linkedin"></span></a>
-        </div>
-
-
-        <div class="col-md-2"></div>
-        <div class="col-md-2 editThisPage">
-            <div class="footer-shield"></div>
-        </div>
-
-    </footer> <!--END FOOTER-->
-
-</body>
+    </body>
 </html>

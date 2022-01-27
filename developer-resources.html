@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
@@ -14,274 +15,279 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Apache Shiro Developer Resources | Apache Shiro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="description" content="Apache Shiro is a powerful and easy-to-use Java security framework that performs authentication, authorization, cryptography, and session management.">
+    <meta name="keywords" content='development,git,clone,main,master,trunk,mavne'>
+    <meta name="generator" content="JBake">
     <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
     <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
     <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
-    <meta name="y_key" content="e47896cd6bae4920">
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 
-    <title>
-                    Apache Shiro | Simple. Java. Security.
-        </title>
+    <meta property="og:title" content="Apache Shiro Developer Resources | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2022-01-27"/>
+    <meta property="article:tag" content='development'/>
+    <meta property="article:tag" content='git'/>
+    <meta property="article:tag" content='clone'/>
+    <meta property="article:tag" content='main'/>
+    <meta property="article:tag" content='master'/>
+    <meta property="article:tag" content='trunk'/>
+    <meta property="article:tag" content='mavne'/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content='https://shiro.apache.org/developer-resources.html'/>
+    <meta property="og:image" content='images/shiro-featured-image.png'/>
+    <meta property="og:image:width" content='1200'/>
+    <meta property="og:image:height" content='628'/>
+    <meta property="og:site_name" content="Apache Shiro"/>
 
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/asciidoctor.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="highlight.js-11.2.0/styles/default.min.css" rel="stylesheet">
+    <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
 
-    <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-
-    <!-- site styles and  -->
-    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
-    <script type="text/javascript" src="./assets/js/shiro-site.js"></script>
-
-    <!-- github ribbon -->
-    <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.css" />
-    <!--[if lt IE 9]>
-      <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.ie.css" />
-    <![endif]-->
-
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-
-    <!-- bootstrap -->
-    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap-theme.min.css">
-    <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
-
-    <link rel="stylesheet" href="./assets/css/bootstrap-social.css">
-
-    <!-- Google Analytics -->
-    <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-XXXXX-Y', 'auto');
-    ga('send', 'pageview');
-    </script>
-    <!-- End Google Analytics -->
-
-
-
-    <!-- syntax highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css" integrity="sha256-Zd1icfZ72UBmsId/mUcagrmN7IN5Qkrvh75ICHIQVTk=" crossorigin="anonymous" />
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js" integrity="sha256-s63qpgPYoQk+wv3U6WZqioVJrwFNBTgD4dkeegLuwvo=" crossorigin="anonymous"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
-
-    <script type="text/javascript">
-
-        $( document ).ready(function() {
-            addPageEditLink();
-        });
-    </script>
-</head>
-
-<body>
-
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="favicon.ico">
+  </head>
+  <body>
     <div id="top-bar"></div>
-
-    <div class="container" style="max-width: 1200px;">
-
     <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
 
+    <div id="wrap">
 
-
-    <div class="masthead">
+      <div class="masthead">
         <p class="lead">
-            <a href="./index.html">
-                <img src="./assets/images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;">
-            </a>
-            <span class="tagline">Simple. Java. Security.</span>
-            <a class="pull-right" href="https://www.apache.org/events/current-event.html">
-                <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png"/>
-            </a>
+          <a href="index.html"><img src="images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <span class="tagline">Simple. Java. Security.</span>
+          <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
+          </a>
         </p>
+      </div>
+
+	<!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="get-started.html">Get Started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="documentation.html">Docs</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-webapps" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Web Apps
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
+                <li><a class="dropdown-item" href="web.html">General</a></li>
+                <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="web-features.html">Features</a></li>
+              </ul>
+            </li>
+
+            <li><a class="nav-link" href="features.html">Features</a></li>
+
+            <!-- integrations -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-integrations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Integrations
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
+                <li><a class="dropdown-item" href="spring-boot.html">Spring</a></li>
+                <li><a class="dropdown-item" href="guice.html">Guice</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="integration.html">Third-Party Integrations</a></li>
+              </ul>
+            </li>
+
+            <!-- Community -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-community" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Community
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
+                <li><a class="dropdown-item" href="forums.html">Community Forums</a></li>
+                <li><a class="dropdown-item" href="mailing-lists.html">Mailing Lists</a></li>
+                <li><a class="dropdown-item" href="articles.html">Articles</a></li>
+                <li><a class="dropdown-item" href="news.html">News</a></li>
+                <li><a class="dropdown-item" href="events.html">Events</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="community.html">More</a></li>
+              </ul>
+            </li>
+
+            <!-- About -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-about" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                About
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
+                <li><a class="dropdown-item" href="about.html">About</a></li>
+                <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="d-flex justify-content-end navbar-nav mb-2 mb-lg-0">
+            <!-- The ASF -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-asf" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apache Software Foundation
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
+                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+	<div class="page-header">
+		<h1>Apache Shiro Developer Resources</h1>
+	</div>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This page is dedicated for reference information used by the Apache Shiro development team when performing tasks as a committer or contributor.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="DeveloperResources-WritingDocumentation">Writing Documentation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>All non-JavaDoc documentation is managed in our <a href="https://github.com/apache/shiro-site">apache/shiro-site</a> repo.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="DeveloperResources-SourceCodeRepository">Source Code Repository</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We use a Git repository located at git://git.apache.org/shiro.git.
+You can also browse the mirrored repository on GitHub, located at <a href="https://github.com/apache/shiro-site" class="bare">https://github.com/apache/shiro-site</a>.</p>
+</div>
+<div class="paragraph">
+<p>Active development is done in the <code>main</code> branch, and maintenance typically on the <code>1.N.x</code> branch (where <code>N</code> is the current feature release and <code>x</code> is static).</p>
+</div>
+<div class="sect2">
+<h3 id="DeveloperResources-BuildingfromGit">Building from Git</h3>
+<div class="paragraph">
+<p>For Shiro cutting-edge development, you can clone the code from Git and build it using <a href="http://maven.apache.org">Maven</a> 3.6+:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Check out the code:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone https://github.com/apache/shiro.git</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Build the project using <a href="http://maven.apache.org">Maven</a> 3.6+:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd shiro
+mvn verify</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="title">Cutting-edge development</div>
+<div class="paragraph">
+<p>When building from <code>main</code> or any branches, use the generated artifacts at your own risk!
+Current and previous stable releases will always be available via the <a href="/download.html">Download</a> page.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+	<hr />
+
+</div> 
+
+    <div class="footer-padding"></div>
+
+    <div class="container-fluid pt-2 border-top" id="custom-footer">
+      <footer class="row justify-content-between align-items-center">
+        <div class=" col-md-5">
+          <div class="copyright-footer justify-content-start">
+            <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
+            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center col-md-1">
+          <a class="btn btn-social"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
+        </div>
+
+        <div class="d-flex justify-content-end col-md-4" id="editThisPage">
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/developer-resources.adoc"/>
+        </div>
+
+        <div class="d-flex col-md-2 justify-content-end" style="position: relative">
+          <div class="footer-shield"></div>
+        </div>
+      </footer>
     </div>
 
 
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="highlight.js-11.2.0/highlight.min.js"></script>
+    <script src="js/shiro.js"></script>
 
-    <nav class="navbar navbar-default" role="navigation">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
+    <script>
+        docReady(
+          addPageEditLink()
+      );
+    </script>
+    <script>hljs.highlightAll();</script>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li><a href="./get-started.html">Get Started</a></li>
-                <li><a href="./documentation.html">Docs</a></li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Web Apps <b class="caret"></b>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="./web.html">General</a></li>
-                        <li class="divider"></li>
-                        <li><a href="./web-features.html">Features</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Integrations <b class="caret"></b>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="./spring-boot.html">Spring</a></li>
-                        <li><a href="./guice.html">Guice</a></li>
-                        <li class="divider"></li>
-                        <li><a href="./integration.html">Third-Party Integrations</a></li>
-                    </ul>
-                </li>
-
-                <li><a href="./features.html">Features</a></li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Community <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="./forums.html">Community Forums</a></li>
-                        <li><a href="./mailing-lists.html">Mailing Lists</a></li>
-                        <li><a href="./articles.html">Articles</a></li>
-                        <li><a href="./news.html">News</a></li>
-                        <li><a href="./events.html">Events</a></li>
-                        <li class="divider"></li>
-                        <li><a href="./community.html">More</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        About <b class="caret"></b>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="./about.html">About</a></li>
-                        <li><a href="./security-reports.html">Vulnerability Reports</a></li>
-                    </ul>
-                </li>
-
-            </ul>
-
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="http://www.apache.org/" class="dropdown-toggle" data-toggle="dropdown">
-                        Apache Software Foundation <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="http://www.apache.org/">Apache Homepage</a></li>
-                        <li><a href="http://www.apache.org/licenses/">License</a></li>
-                        <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
-                        <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
-                        <li><a href="http://www.apache.org/security/">Security</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
-    </nav>
-
-
-            <a name="DeveloperResources-ApacheShiroDeveloperResources"></a>
-<h1><a href="#apache-shiro-developer-resources" name="apache-shiro-developer-resources">Apache Shiro Developer Resources</a></h1>
-<p>This page and its children are dedicated for reference information used by the Apache Shiro development team when performing tasks as a committer or contributor</p>
-<a name="DeveloperResources-WritingDocumentation"></a>
-<h2><a href="#writing-documentation" name="writing-documentation">Writing Documentation</a></h2>
-<p>All non-JavaDoc documentation is managed in our <a href="https://github.com/apache/shiro-site">apache/shiro-site</a> repo.</p>
-<a name="DeveloperResources-SourceCodeRepository"></a>
-<h2><a href="#source-code-repository" name="source-code-repository">Source Code Repository</a></h2>
-<p>We use a Git repository located at <a href="git://git.apache.org/shiro.git">git://git.apache.org/shiro.git</a>.</p>
-<p>Active development is done in the <code>main</code> branch, and maintenance typically on the <code>1.2.x</code> branch.</p>
-<a name="DeveloperResources-BuildingfromGit"></a>
-<h3><a href="#building-from-git" name="building-from-git">Building from Git</a></h3>
-<p>For Shiro cutting-edge development, you can clone the code from Git and build it using <a href="http://maven.apache.org">Maven</a> 2.2+:</p>
-<ol>
-  <li>
-    <p>Check out the code:</p>
-    <pre><code class="bash">git clone https://github.com/apache/shiro.git
-</code></pre>
-  </li>
-  <li>
-    <p>Build the project using <a href="http://maven.apache.org">Maven</a> 3.x+:</p>
-    <pre><code class="bash">cd shiro
-mvn install
-</code></pre>
-    <p>The resulting artifacts will be in your local M2 Repo under the org.apache.shiro group.</p>
-  </li>
-</ol>
-<div class="alert alert-danger">
-    <span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Cutting-edge development</strong>
-    <hr class="message-inner-separator">
-    <p>When building from `main` or any branches, use the generated artifacts at your own risk!  Current and previous stable releases will always be available via the <a href="download.html" title="Download">Download</a> page.</p>
-</div>
-<input type="hidden" id="ghEditPage" value="developer-resources.md.vtl"></input>
-    
-</div>
-
-    <div class="footer-padding"></div>
-    <footer class="custom-footer">
-
-        <div class="col-md-5">
-            <div class="copyright-footer">
-            <a href="http://www.apache.org/foundation/contributing.html">Donate to the ASF</a> |
-            <a href="http://www.apache.org/licenses/LICENSE-2.0.html">License</a>
-            <p>Copyright &copy; 2008-2021 The Apache Software Foundation</p>
-                </div>
-        </div>
-
-        <div class="social col-md-2">
-            <a class="btn btn-social-icon btn-sm btn-twitter" target="_blank" href="https://twitter.com/ApacheShiro"><span class="fa fa-twitter"></span></a>
-            <a class="btn btn-social-icon btn-sm btn-facebook" target="_blank" href="https://www.facebook.com/ApacheShiro"><span class="fa fa-facebook"></span></a>
-            <a class="btn btn-social-icon btn-sm btn-linkedin" target="_blank" href="https://www.linkedin.com/groups/4382576"><span class="fa fa-linkedin"></span></a>
-        </div>
-
-
-        <div class="col-md-2"></div>
-        <div class="col-md-2 editThisPage">
-            <div class="footer-shield"></div>
-        </div>
-
-    </footer> <!--END FOOTER-->
-
-</body>
+    </body>
 </html>

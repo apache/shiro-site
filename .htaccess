@@ -1,4 +1,4 @@
-RedirectMatch ^/favicon.ico /assets/images/favicon.ico
+RedirectMatch ^/favicon.ico /images/favicon.ico
 RedirectMatch ^/shiro-all(.*) /static/current/shiro-all/$1
 RedirectMatch ^/shiro-core(.*) /static/current/shiro-core/$1
 
@@ -13,3 +13,43 @@ RedirectMatch ^/shiro-web(.*) /static/current/shiro-web/$1
 RedirectMatch ^/spring.html /spring-framework.html
 RedirectMatch ^/features-overview.html /features.html
 RedirectMatch ^/contribute.html /how-to-contribute.html
+
+# redirect blog posts
+# old:   2013/05/30/apache-shiro-122-released.html
+# new:   blog/2013/05/30/apache-shiro-122-released.html
+RedirectMatch ^/2013/05/30/apache-shiro-122-released.html /blog/2013/05/30/apache-shiro-122-released.html
+RedirectMatch ^/2012/07/29/apache-shiro-121-released.html /blog/2012/07/29/apache-shiro-121-released.html
+RedirectMatch ^/2012/03/13/whats-new-in-apache-shiro-12.html /blog/2012/03/13/whats-new-in-apache-shiro-12.html
+RedirectMatch ^/2012/01/24/apache-shiro-120-released.html /blog/2012/01/24/apache-shiro-120-released.html
+RedirectMatch ^/2011/06/30/apache-shiro-login-demo.html /blog/2011/06/30/apache-shiro-login-demo.html
+RedirectMatch ^/2011/05/24/the-new-rbac-resource-based-access-control.html /blog/2011/05/24/the-new-rbac-resource-based-access-control.html
+RedirectMatch ^/2011/03/14/infoq-article-on-apache-shiro.html /blog/2011/03/14/infoq-article-on-apache-shiro.html
+RedirectMatch ^/2011/02/28/java-authorization-guide-with-apache-shiro-posted.html /blog/2011/02/28/java-authorization-guide-with-apache-shiro-posted.html
+RedirectMatch ^/2011/02/10/apache-shiro-integration-for-grails-113-released.html /blog/2011/02/10/apache-shiro-integration-for-grails-113-released.html
+RedirectMatch ^/2011/01/13/apache-shiro-support-for-mule.html /blog/2011/01/13/apache-shiro-support-for-mule.html
+RedirectMatch ^/2011/01/06/apache-shiro-video-and-slide-from-sf-jug-presentation.html /blog/2011/01/06/apache-shiro-video-and-slide-from-sf-jug-presentation.html
+RedirectMatch ^/2010/11/03/apache-shiro-110-released.html /blog/2010/11/03/apache-shiro-110-released.html
+RedirectMatch ^/2010/09/24/apache-shiro-becomes-an-apache-top-level-project.html /blog/2010/09/24/apache-shiro-becomes-an-apache-top-level-project.html
+RedirectMatch ^/2010/09/20/san-francisco-jug-presentation.html /blog/2010/09/20/san-francisco-jug-presentation.html
+RedirectMatch ^/2010/09/14/ibm-developerworks-introduction-to-apache-shiro.html /blog/2010/09/14/ibm-developerworks-introduction-to-apache-shiro.html
+RedirectMatch ^/2010/06/01/sdforum-java-sig-apache-shiro-presentation.html /blog/2010/06/01/sdforum-java-sig-apache-shiro-presentation.html
+
+# redirect old file names
+RedirectMatch ^/assets/images/articles/(.*) /files/articles/$1
+
+# the tools-jar got renamed to shiro-tools.
+# this means, tools/apidocs and tools/shiro-tool-hasher/apidocs need to
+# be adjusted to shiro-tools/apidocs.
+#
+# redirect static/1.8.0/tools/apidocs/org/apache/shiro/tools/hasher/Hasher.html
+#    to    static/1.8.0/shiro-tools/apidocs/org/apache/shiro/tools/hasher/Hasher.html
+# ... but leave the package name alone.
+RedirectMatch /static/(.*)/tools/apidocs/(.*) /static/$1/shiro-tools/$2
+
+# those do not exist anymore.
+RedirectMatch /static/1.1.0(.*) /static/current$1
+RedirectMatch /static/1.0.0-incubating(.*) /static/current$1
+
+# latest
+RedirectMatch /static/current(.*) /static/1.8.0$1
+RedirectMatch /static/latest(.*) /static/1.8.0$1

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
@@ -14,273 +15,304 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Securing Web Applications with Apache Shiro | Apache Shiro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="description" content="Apache Shiro is a powerful and easy-to-use Java security framework that performs authentication, authorization, cryptography, and session management.">
+    <meta name="keywords" content='documentation,manual'>
+    <meta name="generator" content="JBake">
     <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
     <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
     <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
-    <meta name="y_key" content="e47896cd6bae4920">
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 
-    <title>
-                                    Securing Web Applications with Apache Shiro | Apache Shiro
-                </title>
+    <meta property="og:title" content="Securing Web Applications with Apache Shiro | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2022-01-27"/>
+    <meta property="article:tag" content='documentation'/>
+    <meta property="article:tag" content='manual'/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content='https://shiro.apache.org/webapp-tutorial.html'/>
+    <meta property="og:image" content='images/shiro-featured-image.png'/>
+    <meta property="og:image:width" content='1200'/>
+    <meta property="og:image:height" content='628'/>
+    <meta property="og:site_name" content="Apache Shiro"/>
 
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/asciidoctor.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="highlight.js-11.2.0/styles/default.min.css" rel="stylesheet">
+    <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
 
-    <link rel="icon" type="image/vnd.microsoft.icon" href="./assets/images/favicon.ico">
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-
-    <!-- site styles and  -->
-    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
-    <script type="text/javascript" src="./assets/js/shiro-site.js"></script>
-
-    <!-- github ribbon -->
-    <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.css" />
-    <!--[if lt IE 9]>
-      <link rel="stylesheet" href="./assets/css/gh-pages/gh-fork-ribbon.ie.css" />
-    <![endif]-->
-
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-
-    <!-- bootstrap -->
-    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap-theme.min.css">
-    <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
-
-    <link rel="stylesheet" href="./assets/css/bootstrap-social.css">
-
-    <!-- Google Analytics -->
-    <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-XXXXX-Y', 'auto');
-    ga('send', 'pageview');
-    </script>
-    <!-- End Google Analytics -->
-
-
-
-    <!-- syntax highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css" integrity="sha256-Zd1icfZ72UBmsId/mUcagrmN7IN5Qkrvh75ICHIQVTk=" crossorigin="anonymous" />
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js" integrity="sha256-s63qpgPYoQk+wv3U6WZqioVJrwFNBTgD4dkeegLuwvo=" crossorigin="anonymous"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
-
-    <script type="text/javascript">
-
-        $( document ).ready(function() {
-            addPageEditLink();
-        });
-    </script>
-</head>
-
-<body>
-
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="favicon.ico">
+  </head>
+  <body>
     <div id="top-bar"></div>
-
-    <div class="container" style="max-width: 1200px;">
-
     <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
 
+    <div id="wrap">
 
-
-    <div class="masthead">
+      <div class="masthead">
         <p class="lead">
-            <a href="./index.html">
-                <img src="./assets/images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;">
-            </a>
-            <span class="tagline">Simple. Java. Security.</span>
-            <a class="pull-right" href="https://www.apache.org/events/current-event.html">
-                <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png"/>
-            </a>
+          <a href="index.html"><img src="images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <span class="tagline">Simple. Java. Security.</span>
+          <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
+          </a>
         </p>
-    </div>
+      </div>
 
+	<!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="get-started.html">Get Started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="documentation.html">Docs</a>
+            </li>
 
-    <nav class="navbar navbar-default" role="navigation">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-webapps" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Web Apps
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
+                <li><a class="dropdown-item" href="web.html">General</a></li>
+                <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="web-features.html">Features</a></li>
+              </ul>
+            </li>
+
+            <li><a class="nav-link" href="features.html">Features</a></li>
+
+            <!-- integrations -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-integrations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Integrations
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
+                <li><a class="dropdown-item" href="spring-boot.html">Spring</a></li>
+                <li><a class="dropdown-item" href="guice.html">Guice</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="integration.html">Third-Party Integrations</a></li>
+              </ul>
+            </li>
+
+            <!-- Community -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-community" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Community
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
+                <li><a class="dropdown-item" href="forums.html">Community Forums</a></li>
+                <li><a class="dropdown-item" href="mailing-lists.html">Mailing Lists</a></li>
+                <li><a class="dropdown-item" href="articles.html">Articles</a></li>
+                <li><a class="dropdown-item" href="news.html">News</a></li>
+                <li><a class="dropdown-item" href="events.html">Events</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="community.html">More</a></li>
+              </ul>
+            </li>
+
+            <!-- About -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-about" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                About
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
+                <li><a class="dropdown-item" href="about.html">About</a></li>
+                <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="d-flex justify-content-end navbar-nav mb-2 mb-lg-0">
+            <!-- The ASF -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-asf" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apache Software Foundation
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
+                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+              </ul>
+            </li>
+          </ul>
         </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li><a href="./get-started.html">Get Started</a></li>
-                <li><a href="./documentation.html">Docs</a></li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Web Apps <b class="caret"></b>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="./web.html">General</a></li>
-                        <li class="divider"></li>
-                        <li><a href="./web-features.html">Features</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Integrations <b class="caret"></b>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="./spring-boot.html">Spring</a></li>
-                        <li><a href="./guice.html">Guice</a></li>
-                        <li class="divider"></li>
-                        <li><a href="./integration.html">Third-Party Integrations</a></li>
-                    </ul>
-                </li>
-
-                <li><a href="./features.html">Features</a></li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Community <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="./forums.html">Community Forums</a></li>
-                        <li><a href="./mailing-lists.html">Mailing Lists</a></li>
-                        <li><a href="./articles.html">Articles</a></li>
-                        <li><a href="./news.html">News</a></li>
-                        <li><a href="./events.html">Events</a></li>
-                        <li class="divider"></li>
-                        <li><a href="./community.html">More</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        About <b class="caret"></b>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="./about.html">About</a></li>
-                        <li><a href="./security-reports.html">Vulnerability Reports</a></li>
-                    </ul>
-                </li>
-
-            </ul>
-
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="http://www.apache.org/" class="dropdown-toggle" data-toggle="dropdown">
-                        Apache Software Foundation <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="http://www.apache.org/">Apache Homepage</a></li>
-                        <li><a href="http://www.apache.org/licenses/">License</a></li>
-                        <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
-                        <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
-                        <li><a href="http://www.apache.org/security/">Security</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
+      </div>
     </nav>
 
+	<div class="page-header">
+		<h1>Securing Web Applications with Apache Shiro</h1>
+	</div>
 
-            <div class="alert alert-warning">
-    <span class="glyphicon glyphicon-warning-sign"></span> <strong>NOTE: This Page is Out of Date</strong>
-    <hr class="message-inner-separator">
-    <p>See the full list of official Apache Shiro sample apps on <a href="https://github.com/apache/shiro/tree/main/samples">Github</a>.
-Help the project out by updating this page via a <a href="https://github.com/apache/shiro-site/edit/main/webapp-tutorial.md.vtl">Pull Request</a.></p>
-</div>
-<!-- TODO: Stormpath has been shutdown, this tutorial needs to be updated to use a different Realm, possibly a JDBC Realm backed by an in memory DB. -->
-<h1><a href="#securing-web-applications-with-apache-shiro" name="securing-web-applications-with-apache-shiro">Securing Web Applications with Apache Shiro</a></h1>
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
 <p>This document is an introductory step-by-step tutorial to securing a web application with Apache Shiro. It assumes an introductory knowledge of Shiro, and assumes familiarity with at least the following two introductory documents:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><a href="https://www.infoq.com/articles/apache-shiro">Application Security with Apache Shiro</a></li>
-  <li><a href="http://shiro.apache.org/10-minute-tutorial.html">Apache Shiro 10 Minute Tutorial</a></li>
+<li>
+<p><a href="https://www.infoq.com/articles/apache-shiro">Application Security with Apache Shiro</a></p>
+</li>
+<li>
+<p><a href="https://shiro.apache.org/10-minute-tutorial.html">Apache Shiro 10 Minute Tutorial</a></p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
 <p>This step-by-step tutorial should take ~ 45 minutes to 1 hour to complete. When you are finished, you will have a very good idea of how Shiro works in a web application.</p>
-<h3><a href="#table-of-contents" name="table-of-contents">Table of Contents</a></h3>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="table_of_contents">Table of Contents</h2>
+<div class="sectionbody">
+<div class="ulist">
 <ul>
-  <li><a href="#overview">Overview</a></li>
-  <li><a href="#project-setup">Project Setup</a></li>
-  <li><a href="#step1">Step 1: Enable Shiro</a></li>
-  <li><a href="#step2">Step 2: Connect to a User Store</a></li>
-  <li><a href="#step3">Step 3: Enable Login and Logout</a></li>
-  <li><a href="#step4">Step 4: User-Specific UI Changes</a></li>
-  <li><a href="#step5">Step 5: Allow Access to Only Authenticated Users</a></li>
-  <li><a href="#step6">Step 6: Role-based Access Control</a></li>
-  <li><a href="#step7">Step 7: Permission-based Access Control</a></li>
+<li>
+<p><a href="#overview">Overview</a></p>
+</li>
+<li>
+<p><a href="#project-setup">Project Setup</a></p>
+</li>
+<li>
+<p><a href="#step1">Step 1: Enable Shiro</a></p>
+</li>
+<li>
+<p><a href="#step2">Step 2: Connect to a User Store</a></p>
+</li>
+<li>
+<p><a href="#step3">Step 3: Enable Login and Logout</a></p>
+</li>
+<li>
+<p><a href="#step4">Step 4: User-Specific UI Changes</a></p>
+</li>
+<li>
+<p><a href="#step5">Step 5: Allow Access to Only Authenticated Users</a></p>
+</li>
+<li>
+<p><a href="#step6">Step 6: Role-based Access Control</a></p>
+</li>
+<li>
+<p><a href="#step7">Step 7: Permission-based Access Control</a></p>
+</li>
 </ul>
-<a id="overview"></a>
-<h2><a href="#overview" name="overview">Overview</a></h2>
-<p>While Apache Shiro&rsquo;s core design goals allow it to be used to secure <em>any</em> JVM-based application, such as command line applications, server daemons, web apps, etc, this guide will focus on the most common use case: securing a web application running in a <a href="https://en.wikipedia.org/wiki/Java_servlet">Servlet</a> container, such as Tomcat or Jetty.</p>
-<h3><a href="#prerequisites" name="prerequisites">Prerequisites</a></h3>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="overview"><a id="overview"></a> Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>While Apache Shiro&#8217;s core design goals allow it to be used to secure <em>any</em> JVM-based application, such as command line applications, server daemons, web apps, etc, this guide will focus on the most common use case: securing a web application running in a <a href="https://en.wikipedia.org/wiki/Java_servlet">Servlet</a> container, such as Tomcat or Jetty.</p>
+</div>
+<div class="sect2">
+<h3 id="prerequisites">Prerequisites</h3>
+<div class="paragraph">
 <p>The following tools are expected to be installed on your local development machine in order to follow along with this tutorial.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>Git (tested w/ 1.7)</li>
-  <li>Java SDK 7</li>
-  <li>Maven 3</li>
-  <li>Your favorite IDE, like IntelliJ IDEA or Eclipse, or even a simple text editor to view files and make changes.</li>
+<li>
+<p>Git (tested w/ 1.7)</p>
+</li>
+<li>
+<p>Java SDK 7</p>
+</li>
+<li>
+<p>Maven 3</p>
+</li>
+<li>
+<p>Your favorite IDE, like IntelliJ IDEA or Eclipse, or even a simple text editor to view files and make changes.</p>
+</li>
 </ul>
-<h3><a href="#tutorial-format" name="tutorial-format">Tutorial Format</a></h3>
+</div>
+</div>
+<div class="sect2">
+<h3 id="tutorial_format">Tutorial Format</h3>
+<div class="paragraph">
 <p>This is a step-by-step tutorial. The tutorial, and all of its steps, exist as a Git repository. When you clone the git repository, the <code>main</code> branch is your starting point. Each step in the tutorial is a separate branch. You can follow along simply by checking out the git branch that reflects the tutorial step you are reviewing.</p>
-<h3><a href="#the-application" name="the-application">The Application</a></h3>
+</div>
+</div>
+<div class="sect2">
+<h3 id="the_application">The Application</h3>
+<div class="paragraph">
 <p>The web application we will build is a super webapp that can be used as a starting point for your own application. It will demonstrate user login, logout, user-specific welcome messages, access control to certain parts of the web application, and integration with a pluggable security data store.</p>
+</div>
+<div class="paragraph">
 <p>We will start by setting up the project, including the build tool and declaring dependencies, as well as configuring the servlet <code>web.xml</code> file to launch the web application and the Shiro environment.</p>
+</div>
+<div class="paragraph">
 <p>Once we complete setup, we will then layer in individual pieces of functionality, including integration with a security data store, then enabling user login, logout, and access control.</p>
-<a id="project-setup"></a>
-<h2><a href="#project-setup" name="project-setup">Project Setup</a></h2>
-<p>Instead of having to manually set up a directory structure and initial set of basic files, we&rsquo;ve done this for you in a git repository.</p>
-<h3>1. Fork the tutorial project</h3>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="project_setup"><a id="project-setup"></a> Project Setup</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Instead of having to manually set up a directory structure and initial set of basic files, we&#8217;ve done this for you in a git repository.</p>
+</div>
+<div class="sect2">
+<h3 id="1_fork_the_tutorial_project">1. Fork the tutorial project</h3>
+<div class="paragraph">
 <p>On GitHub, visit the <a href="https://github.com/lhazlewood/apache-shiro-tutorial-webapp">tutorial project</a> and click the <code>Fork</code> button on the upper right.</p>
-<h3>2. Clone your tutorial repository</h3>
+</div>
+</div>
+<div class="sect2">
+<h3 id="2_clone_your_tutorial_repository">2. Clone your tutorial repository</h3>
+<div class="paragraph">
 <p>Now that you have forked the repository to your own GitHub account, clone it on your local machine:</p>
-<pre><code class="bash">$ git clone git@github.com:$YOUR_GITHUB_USERNAME/apache-shiro-tutorial-webapp.git    
-</code></pre>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ git clone git@github.com:$YOUR_GITHUB_USERNAME/apache-shiro-tutorial-webapp.git</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>(where <code>$YOUR_GITHUB_USERNAME</code> is your own GitHub username of course)</p>
+</div>
+<div class="paragraph">
 <p>You can now <code>cd</code> into the cloned directory and see the project structure:</p>
-<pre><code class="bash">$ cd apache-shiro-tutorial-webapp
-</code></pre>
-<h3>3. Review project structure</h3>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ cd apache-shiro-tutorial-webapp</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="3_review_project_structure">3. Review project structure</h3>
+<div class="paragraph">
 <p>After cloning the repo, your current <code>main</code> branch will have the following structure:</p>
-<pre><code class="nohighlight">    apache-shiro-tutorial-webapp/
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-nohighlight hljs" data-lang="nohighlight">    apache-shiro-tutorial-webapp/
       |-- src/
       |  |-- main/
       |    |-- resources/
@@ -295,61 +327,142 @@ Help the project out by updating this page via a <a href="https://github.com/apa
       |-- .travis.yml
       |-- LICENSE
       |-- README.md
-      |-- pom.xml
-</code></pre>
+      |-- pom.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Here is what each means:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>pom.xml</code>: the Maven project/build file. It has Jetty configured so you can test your web app right away by running <code>mvn jetty:run</code>.</li>
-  <li><code>README.md</code>: a simple project readme file</li>
-  <li><code>LICENSE</code>: the project&rsquo;s Apache 2.0 license</li>
-  <li><code>.travis.yml</code>: A <a href="https://travis-ci.org/">Travis CI</a> config file in case you want to run continuous integration on your project to ensure it always builds.</li>
-  <li><code>.gitignore</code>: A git ignore file, containing suffixes and directories that shouldn&rsquo;t be checked in to version control.</li>
-  <li><code>src/main/resources/logback.xml</code>: A simple <a href="http://logback.qos.ch/">Logback</a> config file. For this tutorial, we&rsquo;ve chosen <a href="http://www.slf4j.org">SLF4J</a> as our logging API and Logback as the logging implementation. This could have easily been Log4J or JUL.</li>
-  <li><code>src/main/webapp/WEB-INF/web.xml</code>: Our initial <code>web.xml</code> file that we&rsquo;ll configure soon to enable Shiro.</li>
-  <li><code>src/main/webapp/include.jsp</code>: A page that contains common imports and declarations, included in other JSP pages. This allows us to manage imports and declarations in one place.</li>
-  <li><code>src/main/webapp/home.jsp</code>: our webapp&rsquo;s simple default home page. Includes <code>include.jsp</code> (as will others, as we will soon see).</li>
-  <li><code>src/main/webapp/index.jsp</code>: the default site index page - this merely forwards the request on to our <code>home.jsp</code> homepage.</li>
+<li>
+<p><code>pom.xml</code>: the Maven project/build file. It has Jetty configured so you can test your web app right away by running <code>mvn jetty:run</code>.</p>
+</li>
+<li>
+<p><code>README.md</code>: a simple project readme file</p>
+</li>
+<li>
+<p><code>LICENSE</code>: the project&#8217;s Apache 2.0 license</p>
+</li>
+<li>
+<p><code>.travis.yml</code>: A <a href="https://travis-ci.org/">Travis CI</a> config file in case you want to run continuous integration on your project to ensure it always builds.</p>
+</li>
+<li>
+<p><code>.gitignore</code>: A git ignore file, containing suffixes and directories that shouldn&#8217;t be checked in to version control.</p>
+</li>
+<li>
+<p><code>src/main/resources/logback.xml</code>: A simple <a href="http://logback.qos.ch/">Logback</a> config file. For this tutorial, we&#8217;ve chosen <a href="http://www.slf4j.org">SLF4J</a> as our logging API and Logback as the logging implementation. This could have easily been Log4J or JUL.</p>
+</li>
+<li>
+<p><code>src/main/webapp/WEB-INF/web.xml</code>: Our initial <code>web.xml</code> file that we&#8217;ll configure soon to enable Shiro.</p>
+</li>
+<li>
+<p><code>src/main/webapp/include.jsp</code>: A page that contains common imports and declarations, included in other JSP pages. This allows us to manage imports and declarations in one place.</p>
+</li>
+<li>
+<p><code>src/main/webapp/home.jsp</code>: our webapp&#8217;s simple default home page. Includes <code>include.jsp</code> (as will others, as we will soon see).</p>
+</li>
+<li>
+<p><code>src/main/webapp/index.jsp</code>: the default site index page - this merely forwards the request on to our <code>home.jsp</code> homepage.</p>
+</li>
 </ul>
-<h3>4. Run the webapp</h3>
-<p>Now that you&rsquo;ve cloned the project, you can run the web application by executing the following on the command line:</p>
-<pre><code class="bash">$ mvn jetty:run
-</code></pre>
-<p>Next, open your web browser to <a href="http://localhost:8080">localhost:8080</a>, and you&rsquo;ll see the home page with a <strong>Hello, World!</strong> greeting. </p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="4_run_the_webapp">4. Run the webapp</h3>
+<div class="paragraph">
+<p>Now that you&#8217;ve cloned the project, you can run the web application by executing the following on the command line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ mvn jetty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, open your web browser to <a href="http://localhost:8080">localhost:8080</a>, and you&#8217;ll see the home page with a <strong>Hello, World!</strong> greeting.</p>
+</div>
+<div class="paragraph">
 <p>Hit <code>ctl-C</code> to shut down the web app.</p>
-<a id="step1"></a>
-<h2>Step 1: Enable Shiro</h2>
-<p>Our initial repository <code>main</code> branch is just a simple generic web application that could be used as a template for any application. Let&rsquo;s add the bare minimum to enable Shiro in the web app next.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="step_1_enable_shiro"><a id="step1"></a> Step 1: Enable Shiro</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Our initial repository <code>main</code> branch is just a simple generic web application that could be used as a template for any application. Let&#8217;s add the bare minimum to enable Shiro in the web app next.</p>
+</div>
+<div class="paragraph">
 <p>Perform the following git checkout command to load the <code>step1</code> branch:</p>
-<pre><code class="bash">$ git checkout step1
-</code></pre>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ git checkout step1</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Checking out this branch, you will find two changes:</p>
-<ol>
-  <li>A new <code>src/main/webapp/WEB-INF/shiro.ini</code> file was added, and</li>
-  <li><code>src/main/webapp/WEB-INF/web.xml</code> was modified.</li>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>A new <code>src/main/webapp/WEB-INF/shiro.ini</code> file was added, and</p>
+</li>
+<li>
+<p><code>src/main/webapp/WEB-INF/web.xml</code> was modified.</p>
+</li>
 </ol>
-<h3>1a: Add a <code>shiro.ini</code> file</h3>
+</div>
+<div class="sect2">
+<h3 id="1a_add_a_shiro_ini_file">1a: Add a <code>shiro.ini</code> file</h3>
+<div class="paragraph">
 <p>Shiro can be configured in many different ways in a web application, depending on the web and/or MVC framework you use. For example, you can configure Shiro via Spring, Guice, Tapestry, and many many more.</p>
-<p>To keep things simple for now, we&rsquo;ll start a Shiro environment by using Shiro&rsquo;s default (and very simple) <a href="http://shiro.apache.org/configuration.html">INI-based configuration</a>.</p>
-<p>If you checked out the <code>step1</code> branch, you&rsquo;ll see the contents of this new <code>src/main/webapp/WEB-INF/shiro.ini</code> file (header comments removed for brevity):</p>
-<pre><code class="ini">[main]
+</div>
+<div class="paragraph">
+<p>To keep things simple for now, we&#8217;ll start a Shiro environment by using Shiro&#8217;s default (and very simple) <a href="http://shiro.apache.org/configuration.html">INI-based configuration</a>.</p>
+</div>
+<div class="paragraph">
+<p>If you checked out the <code>step1</code> branch, you&#8217;ll see the contents of this new <code>src/main/webapp/WEB-INF/shiro.ini</code> file (header comments removed for brevity):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
 
-# Let&#39;s use some in-memory caching to reduce the number of runtime lookups against a remote user store.
+# Let's use some in-memory caching to reduce the number of runtime lookups against a remote user store.
 # A real application might want to use a more robust caching solution (e.g. ehcache or a
 # distributed cache).  When using such caches, be aware of your cache TTL settings: too high
-# a TTL and the cache won&#39;t reflect any potential changes in Stormpath fast enough.  Too low
+# a TTL and the cache won't reflect any potential changes in Stormpath fast enough.  Too low
 # and the cache could evict too often, reducing performance.
 cacheManager = org.apache.shiro.cache.MemoryConstrainedCacheManager
-securityManager.cacheManager = $cacheManager
-</code></pre>
+securityManager.cacheManager = $cacheManager</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>This .ini contains simply a <code>[main]</code> section with some minimal configuration:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>It defines a new <code>cacheManager</code> instance. Caching is an important part of Shiro&rsquo;s architecture - it reduces constant round-trip communications to various data stores. This example uses a <code>MemoryConstrainedCacheManager</code> which is only really good for single JVM applications. If your application is deployed across multiple hosts (e.g. a clustered webserver farm), you will want to use a clustered CacheManager implementation instead.</li>
-  <li>It configures the new <code>cacheManager</code> instance on the Shiro <code>securityManager</code>. A Shiro <a href="http://shiro.apache.org/architecture.html"><code>SecurityManager</code></a> instance always exists, so it did not need to be defined explicitly.</li>
+<li>
+<p>It defines a new <code>cacheManager</code> instance. Caching is an important part of Shiro&#8217;s architecture - it reduces constant round-trip communications to various data stores. This example uses a <code>MemoryConstrainedCacheManager</code> which is only really good for single JVM applications. If your application is deployed across multiple hosts (e.g. a clustered webserver farm), you will want to use a clustered CacheManager implementation instead.</p>
+</li>
+<li>
+<p>It configures the new <code>cacheManager</code> instance on the Shiro <code>securityManager</code>. A Shiro <a href="http://shiro.apache.org/architecture.html"><code>SecurityManager</code></a> instance always exists, so it did not need to be defined explicitly.</p>
+</li>
 </ul>
-<h3>1b: Enable Shiro in <code>web.xml</code></h3>
+</div>
+</div>
+<div class="sect2">
+<h3 id="1b_enable_shiro_in_web_xml">1b: Enable Shiro in <code>web.xml</code></h3>
+<div class="paragraph">
 <p>While we have a <code>shiro.ini</code> configuration, we need to actually <em>load</em> it and start a new Shiro environment and make that environment available to the web application.</p>
+</div>
+<div class="paragraph">
 <p>We do all of this by adding a few things to the existing <code>src/main/webapp/WEB-INF/web.xml</code> file:</p>
-<pre><code class="xml">&lt;listener&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;listener&gt;
     &lt;listener-class&gt;org.apache.shiro.web.env.EnvironmentLoaderListener&lt;/listener-class&gt;
 &lt;/listener&gt;
 
@@ -365,494 +478,1073 @@ securityManager.cacheManager = $cacheManager
     &lt;dispatcher&gt;FORWARD&lt;/dispatcher&gt;
     &lt;dispatcher&gt;INCLUDE&lt;/dispatcher&gt;
     &lt;dispatcher&gt;ERROR&lt;/dispatcher&gt;
-&lt;/filter-mapping&gt;
-</code></pre>
+&lt;/filter-mapping&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>
-  <p>The <code>&lt;listener&gt;</code> declaration defines a <a href="http://docs.oracle.com/javaee/6/api/javax/servlet/ServletContextListener.html"><code>ServletContextListener</code></a> that starts up the Shiro environment (including the Shiro <code>SecurityManager</code>) upon web application startup. By default, this listener automatically knows to look for our <code>WEB-INF/shiro.ini</code> file for Shiro configuration.</p></li>
-  <li>
-  <p>The <code>&lt;filter&gt;</code> declaration defines the main <code>ShiroFilter</code>. This filter is expected to filter <em>all</em> requests into the web application so Shiro can peform necessary identity and access control operations before allowing a request to reach the application.</p></li>
-  <li>
-  <p>The <code>&lt;filter-mapping&gt;</code> declaration ensures that <em>all</em> request types are filed by the <code>ShiroFilter</code>. Often <code>filter-mapping</code> declarations don&rsquo;t specify <code>&lt;dispatcher&gt;</code> elements, but Shiro needs them all defined so it can filter all of the different request types that might execute for a web app.</p></li>
+<li>
+<p>The <code>&lt;listener&gt;</code> declaration defines a <a href="http://docs.oracle.com/javaee/6/api/javax/servlet/ServletContextListener.html"><code>ServletContextListener</code></a> that starts up the Shiro environment (including the Shiro <code>SecurityManager</code>) upon web application startup. By default, this listener automatically knows to look for our <code>WEB-INF/shiro.ini</code> file for Shiro configuration.</p>
+</li>
+<li>
+<p>The <code>&lt;filter&gt;</code> declaration defines the main <code>ShiroFilter</code>. This filter is expected to filter <em>all</em> requests into the web application so Shiro can peform necessary identity and access control operations before allowing a request to reach the application.</p>
+</li>
+<li>
+<p>The <code>&lt;filter-mapping&gt;</code> declaration ensures that <em>all</em> request types are filed by the <code>ShiroFilter</code>. Often <code>filter-mapping</code> declarations don&#8217;t specify <code>&lt;dispatcher&gt;</code> elements, but Shiro needs them all defined so it can filter all of the different request types that might execute for a web app.</p>
+</li>
 </ul>
-<h3>1c: Run the webapp</h3>
+</div>
+</div>
+<div class="sect2">
+<h3 id="1c_run_the_webapp">1c: Run the webapp</h3>
+<div class="paragraph">
 <p>After checking out the <code>step1</code> branch, go ahead and run the web app:</p>
-<pre><code class="bash">$ mvn jetty:run
-</code></pre>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ mvn jetty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>This time, you will see log output similar to the following, indicating that Shiro is indeed running in your webapp:</p>
-<pre><code class="nohighlight">16:04:19.807 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Starting Shiro environment initialization.
-16:04:19.904 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Shiro environment initialized in 95 ms.
-</code></pre>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-nohighlight hljs" data-lang="nohighlight">16:04:19.807 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Starting Shiro environment initialization.
+16:04:19.904 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Shiro environment initialized in 95 ms.</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Hit <code>ctl-C</code> to shut down the web app.</p>
-<a id="step2"></a>
-<h2>Step 2: Connect to a User Store</h2>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="step_2_connect_to_a_user_store"><a id="step2"></a> Step 2: Connect to a User Store</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Perform the following git checkout command to load the <code>step2</code> branch:</p>
-<pre><code class="bash">$ git checkout step2
-</code></pre>
-<p>Now we have Shiro integrated and running within a webapp. But we haven&rsquo;t actually told Shiro to do anything yet!</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ git checkout step2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we have Shiro integrated and running within a webapp. But we haven&#8217;t actually told Shiro to do anything yet!</p>
+</div>
+<div class="paragraph">
 <p>Before we can login, or logout, or perform role-based or permission-based access control, or anything else security related, we need users!</p>
+</div>
+<div class="paragraph">
 <p>We will need to configure Shiro to access a <em>User Store</em> of some type, so it can look up users to perform login attempts, or check roles for security decisions, etc. There are many types of user stores that any application might need to access: maybe you store users in a MySQL database, maybe in MongoDB, maybe your company stores user accounts in LDAP or Active Directory, maybe you store them in a simple file, or some other proprietary data store.</p>
-<p>Shiro does this via what it calls a <a href="http://shiro.apache.org/architecture.html"><code>Realm</code></a>. From Shiro&rsquo;s documentation: </p>
+</div>
+<div class="paragraph">
+<p>Shiro does this via what it calls a <a href="http://shiro.apache.org/architecture.html"><code>Realm</code></a>. From Shiro&#8217;s documentation:</p>
+</div>
+<div class="quoteblock">
 <blockquote>
-  <p>Realms act as the ‘bridge’ or ‘connector’ between Shiro and your application’s security data. When it comes time to actually interact with security-related data like user accounts to perform authentication (login) and authorization (access control), Shiro looks up many of these things from one or more Realms configured for an application. </p>
-  <p>In this sense a Realm is essentially a security-specific <a href="https://en.wikipedia.org/wiki/Data_access_object">DAO</a>: it encapsulates connection details for data sources and makes the associated data available to Shiro as needed. When configuring Shiro, you must specify at least one Realm to use for authentication and/or authorization. The SecurityManager may be configured with multiple Realms, but at least one is required. </p>
-  <p>Shiro provides out-of-the-box Realms to connect to a number of security data sources (aka directories) such as LDAP, relational databases (JDBC), text configuration sources like INI and properties files, and more. You can plug-in your own Realm implementations to represent custom data sources if the default Realms do not meet your needs. </p>
+<div class="paragraph">
+<p>Realms act as the ‘bridge’ or ‘connector’ between Shiro and your application’s security data. When it comes time to actually interact with security-related data like user accounts to perform authentication (login) and authorization (access control), Shiro looks up many of these things from one or more Realms configured for an application.</p>
+</div>
+<div class="paragraph">
+<p>In this sense a Realm is essentially a security-specific <a href="https://en.wikipedia.org/wiki/Data_access_object">DAO</a>: it encapsulates connection details for data sources and makes the associated data available to Shiro as needed. When configuring Shiro, you must specify at least one Realm to use for authentication and/or authorization. The SecurityManager may be configured with multiple Realms, but at least one is required.</p>
+</div>
+<div class="paragraph">
+<p>Shiro provides out-of-the-box Realms to connect to a number of security data sources (aka directories) such as LDAP, relational databases (JDBC), text configuration sources like INI and properties files, and more. You can plug-in your own Realm implementations to represent custom data sources if the default Realms do not meet your needs.</p>
+</div>
 </blockquote>
+</div>
+<div class="paragraph">
 <p>So, we need to configure a Realm so we can access users.</p>
-<h3>2a: Set up Stormpath</h3>
-<p>In the spirit of keeping this tutorial as simple as possible, without introducing complexity or scope that distracts us from the purpose of learning Shiro, we&rsquo;ll use one of the simplest realms we can: a Stormpath realm.</p>
-<p><a href="https://stormpath.com/">Stormpath</a> is a cloud hosted user management service, totally free for development purposes. This means that after enabling Stormpath, you&rsquo;ll have the following ready to go:</p>
+</div>
+<div class="sect2">
+<h3 id="2a_set_up_stormpath">2a: Set up Stormpath</h3>
+<div class="paragraph">
+<p>In the spirit of keeping this tutorial as simple as possible, without introducing complexity or scope that distracts us from the purpose of learning Shiro, we&#8217;ll use one of the simplest realms we can: a Stormpath realm.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://stormpath.com/">Stormpath</a> is a cloud hosted user management service, totally free for development purposes. This means that after enabling Stormpath, you&#8217;ll have the following ready to go:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>A user interface for managing Applications, Directories, Accounts and Groups. Shiro does not provide this at all, so this will be convenient and save time while you go through this tutorial.</li>
-  <li>A secure storage mechanism for user passwords. Your application never needs to worry about password security, password comparisons or storing passwords. While Shiro can do these things, you would have to configure them and be aware of cryptographic concepts. Stormpath automates password security so you (and Shiro) don&rsquo;t need to worry about it or be on the hook for &lsquo;getting it right&rsquo;.</li>
-  <li>Security workflows like account email verification and password reset via email. Shiro has no support for this, as it is often application specific.</li>
-  <li>Hosted/managed &lsquo;always on&rsquo; infrastructure - you don&rsquo;t have to set anything up or maintain anything.</li>
+<li>
+<p>A user interface for managing Applications, Directories, Accounts and Groups. Shiro does not provide this at all, so this will be convenient and save time while you go through this tutorial.</p>
+</li>
+<li>
+<p>A secure storage mechanism for user passwords. Your application never needs to worry about password security, password comparisons or storing passwords. While Shiro can do these things, you would have to configure them and be aware of cryptographic concepts. Stormpath automates password security so you (and Shiro) don&#8217;t need to worry about it or be on the hook for 'getting it right'.</p>
+</li>
+<li>
+<p>Security workflows like account email verification and password reset via email. Shiro has no support for this, as it is often application specific.</p>
+</li>
+<li>
+<p>Hosted/managed 'always on' infrastructure - you don&#8217;t have to set anything up or maintain anything.</p>
+</li>
 </ul>
-<p>For the purposes of this tutorial, Stormpath is much simpler than setting up a separate RDBMS server and worrying about SQL or password encryption issues. So we&rsquo;ll use that for now.</p>
-<p>Of course, Stormpath is only one of many back-end data stores that Shiro can communicate with. We&rsquo;ll cover more complicated data stores and application-specific configuration of them later.</p>
-<h4><a href="#sign-up-for-stormpath" name="sign-up-for-stormpath">Sign up for Stormpath</a></h4>
-<ol>
-  <li>Fill out and submit the <a href="https://api.stormpath.com/register">Stormpath registration form</a>. This will send a confirmation email.</li>
-  <li>Click the link in the confirmation email.</li>
+</div>
+<div class="paragraph">
+<p>For the purposes of this tutorial, Stormpath is much simpler than setting up a separate RDBMS server and worrying about SQL or password encryption issues. So we&#8217;ll use that for now.</p>
+</div>
+<div class="paragraph">
+<p>Of course, Stormpath is only one of many back-end data stores that Shiro can communicate with. We&#8217;ll cover more complicated data stores and application-specific configuration of them later.</p>
+</div>
+<div class="sect3">
+<h4 id="sign_up_for_stormpath">Sign up for Stormpath</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Fill out and submit the <a href="https://api.stormpath.com/register">Stormpath registration form</a>. This will send a confirmation email.</p>
+</li>
+<li>
+<p>Click the link in the confirmation email.</p>
+</li>
 </ol>
-<h4><a href="#get-a-stormpath-api-key" name="get-a-stormpath-api-key">Get a Stormpath API Key</a></h4>
+</div>
+</div>
+<div class="sect3">
+<h4 id="get_a_stormpath_api_key">Get a Stormpath API Key</h4>
+<div class="paragraph">
 <p>A Stormpath API Key is required for the Stormpath Realm to communicate with Stormpath. To get a Stormpath API Key:</p>
-<ol>
-  <li>
-  <p>Log in to the <a href="https://api.stormpath.com/">Stormpath Admin Console</a> using the email address and password you used to register with Stormpath.</p></li>
-  <li>
-  <p>On the middle-right the resulting page, visit <strong>API Keys: Manage API Keys</strong> in the <strong>DEVELOPER TOOLS</strong> section of the page.</p></li>
-  <li>
-    <p>On the Account Details page, in the <strong>Security Credentials</strong> section, click <strong>Create API Key</strong> under <strong>Api Keys</strong>.</p>
-    <p>This will generate your API Key and download it to your computer as an <code>apiKey.properties</code> file. If you open the file in a text editor, you will see something similar to the following:</p>
-    <pre><code class="ini">apiKey.id = 144JVZINOF5EBNCMG9EXAMPLE
-apiKey.secret = lWxOiKqKPNwJmSldbiSkEbkNjgh2uRSNAb+AEXAMPLE
-</code></pre>
-  </li>
-  <li>
-    <p>Save this file in a secure location, such as your home directory in a hidden <code>.stormpath</code> directory. For example:</p>
-    <pre><code class="bash">$HOME/.stormpath/apiKey.properties
-</code></pre>
-  </li>
-  <li>
-    <p>Also change the file permissions to ensure only you can read this file. For example, on *nix operating systems:</p>
-    <pre><code class="bash">$ chmod go-rwx $HOME/.stormpath/apiKey.properties
-$ chmod u-w $HOME/.stormpath/apiKey.properties
-</code></pre>
-  </li>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log in to the <a href="https://api.stormpath.com/">Stormpath Admin Console</a> using the email address and password you used to register with Stormpath.</p>
+</li>
+<li>
+<p>On the middle-right the resulting page, visit <strong>API Keys: Manage API Keys</strong> in the <strong>DEVELOPER TOOLS</strong> section of the page.</p>
+</li>
+<li>
+<p>On the Account Details page, in the <strong>Security Credentials</strong> section, click <strong>Create API Key</strong> under <strong>Api Keys</strong>.</p>
+</li>
 </ol>
+</div>
+<div class="paragraph">
+<p>This will generate your API Key and download it to your computer as an <code>apiKey.properties</code> file. If you open the file in a text editor, you will see something similar to the following:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Save this file in a secure location, such as your home directory in a hidden <code>.stormpath</code> directory. For example:</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$HOME/.stormpath/apiKey.properties</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Also change the file permissions to ensure only you can read this file. For example, on *nix operating systems:</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ chmod go-rwx $HOME/.stormpath/apiKey.properties
+$ chmod u-w $HOME/.stormpath/apiKey.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>On Windows, you can <a href="https://msdn.microsoft.com/en-us/library/bb727008.aspx">set file permissions similarly</a>.</p>
-<h4><a href="#retrieve-the-default-stormpath-application" name="retrieve-the-default-stormpath-application">Retrieve the default Stormpath Application</a></h4>
-<p>When you signed up for Stormpath, an empty application was automatically created for you. It&rsquo;s called: <code>My Application</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="retrieve_the_default_stormpath_application">Retrieve the default Stormpath Application</h4>
+<div class="paragraph">
+<p>When you signed up for Stormpath, an empty application was automatically created for you. It&#8217;s called: <code>My Application</code>.</p>
+</div>
+<div class="paragraph">
 <p>We have to register our web application with Stormpath to allow the app to use Stormpath for user management and authentication. In order to register our web application with the <code>My Application</code> Stormpath application, we need to know some information. Fortunately, we can retrieve this information using the Stormpath API.</p>
-<p>First, we need the location of your tenant from Stormpath. Here&rsquo;s how you get that:</p>
-<pre><code class="bash">curl -i --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
-&#39;https://api.stormpath.com/v1/tenants/current&#39;
-</code></pre>
+</div>
+<div class="paragraph">
+<p>First, we need the location of your tenant from Stormpath. Here&#8217;s how you get that:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -i --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
+'https://api.stormpath.com/v1/tenants/current'</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>where:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>$YOUR_API_KEY_ID is the apiKey.id value in apiKey.properties and</li>
-  <li>$YOUR_API_KEY_SECRET is the apiKey.secret value in apiKey.properties</li>
+<li>
+<p>$YOUR_API_KEY_ID is the apiKey.id value in apiKey.properties and</p>
+</li>
+<li>
+<p>$YOUR_API_KEY_SECRET is the apiKey.secret value in apiKey.properties</p>
+</li>
 </ul>
-<p>You&rsquo;ll get a response like this:</p>
-<pre><code class="nohighlight">HTTP/1.1 302 Found
+</div>
+<div class="paragraph">
+<p>You&#8217;ll get a response like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-nohighlight hljs" data-lang="nohighlight">HTTP/1.1 302 Found
 Date: Fri, 28 Aug 2015 18:34:51 GMT
 Location: https://api.stormpath.com/v1/tenants/sOmELoNgRaNDoMIdHeRe
 Server: Apache
 Set-Cookie: rememberMe=deleteMe; Path=/; Max-Age=0; Expires=Thu, 27-Aug-2015 18:34:52 GMT
 Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 Content-Length: 0
-Connection: keep-alive
-</code></pre>
+Connection: keep-alive</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Notice the <code>Location</code> header. This is the location of your Stormpath tenant. Now, we can retrieve the location of the <code>My Application</code> Stormpath application, again using the API:</p>
-<pre><code class="bash">curl -u $API_KEY_ID:$API_KEY_SECRET \
-     -H &quot;Accept: application/json&quot; \
-     &#39;$TENANT_HREF/applications?name=My%20Application&#39;
-</code></pre>
-<p>where: </p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -u $API_KEY_ID:$API_KEY_SECRET \
+     -H "Accept: application/json" \
+     '$TENANT_HREF/applications?name=My%20Application'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>$YOUR_API_KEY_ID is the apiKey.id value in apiKey.properties and</li>
-  <li>$YOUR_API_KEY_SECRET is the apiKey.secret value in apiKey.properties</li>
-  <li>$TENANT_HREF is the value of the <code>Location</code> header from the previous step</li>
+<li>
+<p>$YOUR_API_KEY_ID is the apiKey.id value in apiKey.properties and</p>
+</li>
+<li>
+<p>$YOUR_API_KEY_SECRET is the apiKey.secret value in apiKey.properties</p>
+</li>
+<li>
+<p>$TENANT_HREF is the value of the <code>Location</code> header from the previous step</p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
 <p>The response from this has a lot of information in it. Here’s an example excerpt from the response:</p>
-<pre><code class="json">{
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
     ...
-    &quot;href&quot;: &quot;https://api.stormpath.com/v1/applications/aLoNGrAnDoMAppIdHeRe&quot;,
-    &quot;name&quot;: &quot;My Application&quot;,
-    &quot;description&quot;: &quot;This application was automatically created for you in Stormpath for use with our Quickstart guides(https://docs.stormpath.com). It does apply to your subscription&#39;s number of reserved applications and can be renamed or reused for your own purposes.&quot;,
-    &quot;status&quot;: &quot;ENABLED&quot;,
-    &quot;tenant&quot;: {
-        &quot;href&quot;: &quot;https://api.stormpath.com/v1/tenants/sOmELoNgRaNDoMIdHeRe&quot;
+    "href": "https://api.stormpath.com/v1/applications/aLoNGrAnDoMAppIdHeRe",
+    "name": "My Application",
+    "description": "This application was automatically created for you in Stormpath for use with our Quickstart guides(https://docs.stormpath.com). It does apply to your subscription's number of reserved applications and can be renamed or reused for your own purposes.",
+    "status": "ENABLED",
+    "tenant": {
+        "href": "https://api.stormpath.com/v1/tenants/sOmELoNgRaNDoMIdHeRe"
     },
     ...
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Make note of your top-level <code>href</code> from above - we will use this href in the <code>shiro.ini</code> configuration next.</p>
-<h4><a href="#create-an-application-test-user-account" name="create-an-application-test-user-account">Create an application test user account</a></h4>
-<p>Now that we have an application, we&rsquo;ll want to create a sample/test user for that application:</p>
-<pre><code class="bash">curl --request POST --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
-    -H &quot;Accept: application/json&quot; \
-    -H &quot;Content-Type: application/json&quot; \
-    -d &#39;{
-           &quot;givenName&quot;: &quot;Jean-Luc&quot;,
-           &quot;surname&quot;: &quot;Picard&quot;,
-           &quot;username&quot;: &quot;jlpicard&quot;,
-           &quot;email&quot;: &quot;capt@enterprise.com&quot;,
-           &quot;password&quot;:&quot;Changeme1&quot;
-        }&#39; \
- &quot;$YOUR_APPLICATION_HREF/accounts&quot;
-</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="create_an_application_test_user_account">Create an application test user account</h4>
+<div class="paragraph">
+<p>Now that we have an application, we&#8217;ll want to create a sample/test user for that application:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl --request POST --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
+    -H "Accept: application/json" \
+    -H "Content-Type: application/json" \
+    -d '{
+           "givenName": "Jean-Luc",
+           "surname": "Picard",
+           "username": "jlpicard",
+           "email": "capt@enterprise.com",
+           "password":"Changeme1"
+        }' \
+ "$YOUR_APPLICATION_HREF/accounts"</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>where:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>$YOUR_API_KEY_ID is the apiKey.id value in apiKey.properties and</li>
-  <li>$YOUR_API_KEY_SECRET is the apiKey.secret value in apiKey.properties</li>
-  <li>$YOUR_APPLICATION_HREF is the application <code>href</code> you made note of above</li>
+<li>
+<p>$YOUR_API_KEY_ID is the apiKey.id value in apiKey.properties and</p>
+</li>
+<li>
+<p>$YOUR_API_KEY_SECRET is the apiKey.secret value in apiKey.properties</p>
+</li>
+<li>
+<p>$YOUR_APPLICATION_HREF is the application <code>href</code> you made note of above</p>
+</li>
 </ul>
-<p>Again, don&rsquo;t forget to change <code>$YOUR_APPLICATION_ID</code> in the URL above to match your application’s ID!</p>
-<h3>2b: Configure the Realm in <code>shiro.ini</code></h3>
-<p>Once you choose at least one user store to connect to for Shiro&rsquo;s needs, we&rsquo;ll need to configure a <code>Realm</code> that represents that data store and then tell the Shiro <code>SecurityManager</code> about it.</p>
-<p>If you&rsquo;ve checked out the <code>step2</code> branch, you&rsquo;ll notice the <code>src/main/webapp/WEB-INF/shiro.ini</code> file&rsquo;s <code>[main]</code> section now has the following additions:</p>
-<pre style="white-space: pre;"><code class="ini">
-# Configure a Realm to connect to a user datastore.  In this simple tutorial, we'll just point to Stormpath since it
-# takes 5 minutes to set up:
-stormpathClient = com.stormpath.shiro.client.ClientFactory
-stormpathClient.cacheManager = $cacheManager
-
-# (Optional) If you put your apiKey.properties in the non-default location, you set the location here
-#stormpathClient.apiKeyFileLocation = $HOME/.stormpath/apiKey.properties
-
-stormpathRealm = com.stormpath.shiro.realm.ApplicationRealm
-stormpathRealm.client = $stormpathClient
-
-# Find this URL in your Stormpath console for an application you create:
-# Applications -> (choose application name) --> Details --> REST URL
-# (Optional) If you only have one Application
-#stormpathRealm.applicationRestUrl = https://api.stormpath.com/v1/applications/$STORMPATH_APPLICATION_ID
-
-stormpathRealm.groupRoleResolver.modeNames = name
-securityManager.realm = $stormpathRealm
-</code></pre>
-<p>Note the optional lines: </p>
+</div>
+<div class="paragraph">
+<p>Again, don&#8217;t forget to change <code>$YOUR_APPLICATION_ID</code> in the URL above to match your application’s ID!</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="2b_configure_the_realm_in_shiro_ini">2b: Configure the Realm in <code>shiro.ini</code></h3>
+<div class="paragraph">
+<p>Once you choose at least one user store to connect to for Shiro&#8217;s needs, we&#8217;ll need to configure a <code>Realm</code> that represents that data store and then tell the Shiro <code>SecurityManager</code> about it.</p>
+</div>
+<div class="paragraph">
+<p>If you&#8217;ve checked out the <code>step2</code> branch, you&#8217;ll notice the <code>src/main/webapp/WEB-INF/shiro.ini</code> file&#8217;s <code>[main]</code> section now has the following additions:</p>
+</div>
+<div class="paragraph">
+<p>Note the optional lines:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>If you have been using Stormpath for a while and you have more then one Stormpath application, the <code>stormpathRealm.applicationRestUrl</code> property must be set.</li>
+<li>
+<p>If you have been using Stormpath for a while and you have more then one Stormpath application, the <code>stormpathRealm.applicationRestUrl</code> property must be set.</p>
+</li>
 </ul>
-<h3>2d: Run the webapp</h3>
+</div>
+</div>
+<div class="sect2">
+<h3 id="2d_run_the_webapp">2d: Run the webapp</h3>
+<div class="paragraph">
 <p>After making the changes as specified in Step 2b and 2c, go ahead and run the web app:</p>
-<pre><code class="bash">$ mvn jetty:run
-</code></pre>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ mvn jetty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>This time, you will see log output similar to the following, indicating that Shiro and the new Realm are configured properly in your webapp:</p>
-<pre><code class="nohighlight">16:08:25.466 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Starting Shiro environment initialization.
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-nohighlight hljs" data-lang="nohighlight">16:08:25.466 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Starting Shiro environment initialization.
 16:08:26.201 [main] INFO  o.a.s.c.IniSecurityManagerFactory - Realms have been explicitly set on the SecurityManager instance - auto-setting of realms will not occur.
-16:08:26.201 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Shiro environment initialized in 731 ms.
-</code></pre>
+16:08:26.201 [main] INFO  o.a.shiro.web.env.EnvironmentLoader - Shiro environment initialized in 731 ms.</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Hit <code>ctl-C</code> to shut down the web app.</p>
-<a id="step3"></a>
-<h2>Step 3: Enable Login and Logout</h2>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="step_3_enable_login_and_logout"><a id="step3"></a> Step 3: Enable Login and Logout</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Now we have users, and we can add, remove and disable them easily in a UI. Now we can start enabling features like login/logout and access control in our application.</p>
+</div>
+<div class="paragraph">
 <p>Perform the following git checkout command to load the <code>step3</code> branch:</p>
-<pre><code class="bash">$ git checkout step3
-</code></pre>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ git checkout step3</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>This checkout will load the following 2 additions:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>A new <code>src/main/webapp/login.jsp</code> file has been added with a simple login form. We&rsquo;ll use that to login.</li>
-  <li>The <code>shiro.ini</code> file has been updated to support web (URL)-specific capabilities.</li>
+<li>
+<p>A new <code>src/main/webapp/login.jsp</code> file has been added with a simple login form. We&#8217;ll use that to login.</p>
+</li>
+<li>
+<p>The <code>shiro.ini</code> file has been updated to support web (URL)-specific capabilities.</p>
+</li>
 </ul>
-<h3>Step 3a: Enable Shiro form login and logout support</h3>
-<p>The <code>step3</code> branch&rsquo;s <code>src/main/webapp/WEB-INF/shiro.ini</code> file contains the following 2 additions:</p>
-<pre><code class="ini">[main]
+</div>
+<div class="sect2">
+<h3 id="step_3a_enable_shiro_form_login_and_logout_support">Step 3a: Enable Shiro form login and logout support</h3>
+<div class="paragraph">
+<p>The <code>step3</code> branch&#8217;s <code>src/main/webapp/WEB-INF/shiro.ini</code> file contains the following 2 additions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
 
 shiro.loginUrl = /login.jsp
 
-# Stuff we&#39;ve configured here previously is omitted for brevity
+# Stuff we've configured here previously is omitted for brevity
 
 [urls]
 /login.jsp = authc
-/logout = logout
-</code></pre>
-<h4><code>shiro.*</code> lines</h4>
+/logout = logout</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="shiro_lines"><code>shiro.*</code> lines</h4>
+<div class="paragraph">
 <p>At the top of the <code>[main]</code> section, there is a new line:</p>
-<pre><code class="ini">shiro.loginUrl = /login.jsp
-</code></pre>
-<p>This is a special configuration directive that tells Shiro &ldquo;For any of Shiro&rsquo;s <a href="http://shiro.apache.org/web.html#Web-DefaultFilters">default filters</a> that have a <code>loginUrl</code> property, I want that property value to be set to <code>/login.jsp</code>.&rdquo;</p>
-<p>This allows Shiro&rsquo;s default <code>authc</code> filter (by default, a <a href="http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html"><code>FormAuthenticationFilter</code></a>) to know about the login page. This is necessary for the <code>FormAuthenticationFilter</code> to work correctly.</p>
-<h4>The <code>[urls]</code> section</h4>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">shiro.loginUrl = /login.jsp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is a special configuration directive that tells Shiro "For any of Shiro&#8217;s <a href="http://shiro.apache.org/web.html#Web-DefaultFilters">default filters</a> that have a <code>loginUrl</code> property, I want that property value to be set to <code>/login.jsp</code>."</p>
+</div>
+<div class="paragraph">
+<p>This allows Shiro&#8217;s default <code>authc</code> filter (by default, a <a href="http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html"><code>FormAuthenticationFilter</code></a>) to know about the login page. This is necessary for the <code>FormAuthenticationFilter</code> to work correctly.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="the_urls_section">The <code>[urls]</code> section</h4>
+<div class="paragraph">
 <p>The <code>[urls]</code> section is a new <a href="http://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D">web-specific INI section</a>.</p>
-<p>This section allows you to use a very succinct name/value pair syntax to tell shiro how to filter request for any given URL path. All paths in <code>[urls]</code> are relative to the web application&rsquo;s [<code>HttpServletRequest.getContextPath()</code>](<a href="http://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#getContextPath()">http://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#getContextPath()</a>) value.</p>
-<p>These name/value pairs offer an extremely powerful way to filter requests, allowing for all sorts of security rules. A deeper coverage of urls and filter chains is outside the scope of this document, but please do <a href="http://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D">read more about it</a> if you&rsquo;re interested.</p>
-<p>For now, we&rsquo;ll cover the two lines that were added:</p>
-<pre><code class="ini">/login.jsp = authc
-/logout = logout
-</code></pre>
+</div>
+<div class="paragraph">
+<p>This section allows you to use a very succinct name/value pair syntax to tell shiro how to filter request for any given URL path. All paths in <code>[urls]</code> are relative to the web application&#8217;s [<code>HttpServletRequest.getContextPath()</code>](<a href="http://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#getContextPath()" class="bare">http://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#getContextPath()</a>) value.</p>
+</div>
+<div class="paragraph">
+<p>These name/value pairs offer an extremely powerful way to filter requests, allowing for all sorts of security rules. A deeper coverage of urls and filter chains is outside the scope of this document, but please do <a href="http://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D">read more about it</a> if you&#8217;re interested.</p>
+</div>
+<div class="paragraph">
+<p>For now, we&#8217;ll cover the two lines that were added:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">/login.jsp = authc
+/logout = logout</code></pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>The first line indicates &ldquo;Whenever Shiro sees a request to the <code>/login.jsp</code> url, enable the Shiro <code>authc</code> filter during the request&rdquo;.</li>
-  <li>The second line means &ldquo;whenever Shiro sees a request to the <code>/logout</code> url, enable the Shiro <code>logout</code> filter during the request.&rdquo;</li>
+<li>
+<p>The first line indicates "Whenever Shiro sees a request to the <code>/login.jsp</code> url, enable the Shiro <code>authc</code> filter during the request".</p>
+</li>
+<li>
+<p>The second line means "whenever Shiro sees a request to the <code>/logout</code> url, enable the Shiro <code>logout</code> filter during the request."</p>
+</li>
 </ul>
-<p>Both of these filters are a little special: they don&rsquo;t actually require anything to be &lsquo;behind&rsquo; them. Instead of filtering, they will actually just process the request entirely. This means there isn&rsquo;t anything for you to do for requests to these URLs - no controllers to write! Shiro will handle the requests as necessary.</p>
-<h3>Step 3b: Add a login page</h3>
+</div>
+<div class="paragraph">
+<p>Both of these filters are a little special: they don&#8217;t actually require anything to be 'behind' them. Instead of filtering, they will actually just process the request entirely. This means there isn&#8217;t anything for you to do for requests to these URLs - no controllers to write! Shiro will handle the requests as necessary.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step_3b_add_a_login_page">Step 3b: Add a login page</h3>
+<div class="paragraph">
 <p>Since Step 3a enabled login and logout support, now we need to ensure there is actually a <code>/login.jsp</code> page to display a login form.</p>
+</div>
+<div class="paragraph">
 <p>The <code>step3</code> branch contains a new <code>src/main/webapp/login.jsp</code> page. This is a simple enough bootstrap-themed HTML login page, but there are four important things in it:</p>
-<ol>
-  <li>The form&rsquo;s <code>action</code> value is the empty string. When a form does not have an action value, the browser will submit the form request to the same URL. This is fine, as we will tell Shiro what that URL is shortly so Shiro can automatically process any login submissions. The <code>/login.jsp = authc</code> line in <code>shiro.ini</code> is what tells the <code>authc</code> filter to process the submission.</li>
-  <li>There is a <code>username</code> form field. The Shiro <code>authc</code> filter will automatically look for a <code>username</code> request parameter during login submission and use that as the value during login (many Realms allow this to be an email or a username).</li>
-  <li>There is a <code>password</code> form field. The Shiro <code>authc</code> filter will automatically look for a <code>password</code> request parameter during login submission.</li>
-  <li>There is a <code>rememberMe</code> checkbox whose &lsquo;checked&rsquo; state can be a &lsquo;truthy&rsquo; value (<code>true</code>, <code>t</code>, <code>1</code>, <code>enabled</code>, <code>y</code>, <code>yes</code>, or <code>on</code>).</li>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The form&#8217;s <code>action</code> value is the empty string. When a form does not have an action value, the browser will submit the form request to the same URL. This is fine, as we will tell Shiro what that URL is shortly so Shiro can automatically process any login submissions. The <code>/login.jsp = authc</code> line in <code>shiro.ini</code> is what tells the <code>authc</code> filter to process the submission.</p>
+</li>
+<li>
+<p>There is a <code>username</code> form field. The Shiro <code>authc</code> filter will automatically look for a <code>username</code> request parameter during login submission and use that as the value during login (many Realms allow this to be an email or a username).</p>
+</li>
+<li>
+<p>There is a <code>password</code> form field. The Shiro <code>authc</code> filter will automatically look for a <code>password</code> request parameter during login submission.</p>
+</li>
+<li>
+<p>There is a <code>rememberMe</code> checkbox whose 'checked' state can be a 'truthy' value (<code>true</code>, <code>t</code>, <code>1</code>, <code>enabled</code>, <code>y</code>, <code>yes</code>, or <code>on</code>).</p>
+</li>
 </ol>
+</div>
+<div class="paragraph">
 <p>Our login.jsp form just uses the default <code>username</code>, <code>password</code>, and <code>rememberMe</code> form field names. These names are configurable if you wish to change them - see the <a href="http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html"><code>FormAuthenticationFilter</code> JavaDoc</a> for information.</p>
-<h3>Step 3c: Run the webapp</h3>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step_3c_run_the_webapp">Step 3c: Run the webapp</h3>
+<div class="paragraph">
 <p>After making the changes as specified in Step 2b and 2c, go ahead and run the web app:</p>
-<pre><code class="bash">$ mvn jetty:run
-</code></pre>
-<h3>Step 3d: Try to Login</h3>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ mvn jetty:run</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step_3d_try_to_login">Step 3d: Try to Login</h3>
+<div class="paragraph">
 <p>With your web browser, navigate to <a href="http://localhost:8080/login.jsp">localhost:8080/login.jsp</a> and you will see our new shiny login form.</p>
-<p>Enter in a username and password of the account you created at the end of Step 2, and hit &lsquo;Login&rsquo;. If the login is successful, you will be directed to the home page! If the login fails, you will be shown the login page again.</p>
-<p>Tip: If you want a successful login to redirect the user to a different page other than the home page (context path <code>/</code>), you can set the <code>authc.successUrl = /whatever</code> in the INI&rsquo;s <code>[main]</code> section.</p>
+</div>
+<div class="paragraph">
+<p>Enter in a username and password of the account you created at the end of Step 2, and hit 'Login'. If the login is successful, you will be directed to the home page! If the login fails, you will be shown the login page again.</p>
+</div>
+<div class="paragraph">
+<p>Tip: If you want a successful login to redirect the user to a different page other than the home page (context path <code>/</code>), you can set the <code>authc.successUrl = /whatever</code> in the INI&#8217;s <code>[main]</code> section.</p>
+</div>
+<div class="paragraph">
 <p>Hit <code>ctl-C</code> to shut down the web app.</p>
-<a id="step4"></a>
-<h2>Step 4: User-specific UI changes</h2>
-<p>It&rsquo;s usually a requirement to change a web user interface based on who the user is. We can do that easily because Shiro supports a JSP tag library to do things based on the currently logged-in Subject (user).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="step_4_user_specific_ui_changes"><a id="step4"></a> Step 4: User-specific UI changes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It&#8217;s usually a requirement to change a web user interface based on who the user is. We can do that easily because Shiro supports a JSP tag library to do things based on the currently logged-in Subject (user).</p>
+</div>
+<div class="paragraph">
 <p>Perform the following git checkout command to load the <code>step4</code> branch:</p>
-<pre><code class="bash">$ git checkout step4
-</code></pre>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ git checkout step4</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>This step makes some additions to our <code>home.jsp</code> page:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>When the current user viewing the page is not logged in, they will see a &lsquo;Welcome Guest&rsquo; message and see the link to the login page.</li>
-  <li>When the current user viewing the page <em>is</em> logged in, they will see their own name, &lsquo;Welcome <em>username</em>&rsquo; and a link to log out.</li>
+<li>
+<p>When the current user viewing the page is not logged in, they will see a 'Welcome Guest' message and see the link to the login page.</p>
+</li>
+<li>
+<p>When the current user viewing the page <em>is</em> logged in, they will see their own name, 'Welcome <em>username</em>' and a link to log out.</p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
 <p>This type of UI customization is very common for a navigation bar, with user controls on the upper right of the screen.</p>
-<h3>Step 4a: Add the Shiro Tag Library Declaration</h3>
+</div>
+<div class="sect2">
+<h3 id="step_4a_add_the_shiro_tag_library_declaration">Step 4a: Add the Shiro Tag Library Declaration</h3>
+<div class="paragraph">
 <p>The <code>home.jsp</code> file was modified to include two lines at the top:</p>
-<pre><code class="html">&lt;%@ taglib prefix=&quot;shiro&quot; uri=&quot;http://shiro.apache.org/tags&quot; %&gt;
-&lt;%@ taglib prefix=&quot;c&quot; uri=&quot;http://java.sun.com/jsp/jstl/core&quot; %&gt;
-</code></pre>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %&gt;
+&lt;%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>These two JSP page directives allow the Core (<code>c:</code>) and Shiro (<code>shiro:</code>) taglibraries in the page.</p>
-<h3>Step 4b: Add Shiro Guest and User tags</h3>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step_4b_add_shiro_guest_and_user_tags">Step 4b: Add Shiro Guest and User tags</h3>
+<div class="paragraph">
 <p>The <code>home.jsp</code> file was further modified in the page body (right after the <code>&lt;h1&gt;</code> welcome message) to include <em>both</em> the <code>&lt;shiro:guest&gt;</code> and <code>&lt;shiro:user&gt;</code> tags:</p>
-<pre><code class="html">&lt;p&gt;Hi &lt;shiro:guest&gt;Guest&lt;/shiro:guest&gt;&lt;shiro:user&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;p&gt;Hi &lt;shiro:guest&gt;Guest&lt;/shiro:guest&gt;&lt;shiro:user&gt;
 &lt;%
     //This should never be done in a normal page and should exist in a proper MVC controller of some sort, but for this
-    //tutorial, we&#39;ll just pull out Stormpath Account data from Shiro&#39;s PrincipalCollection to reference in the
+    //tutorial, we'll just pull out Stormpath Account data from Shiro's PrincipalCollection to reference in the
     //&lt;c:out/&gt; tag next:
 
-    request.setAttribute(&quot;account&quot;, org.apache.shiro.SecurityUtils.getSubject().getPrincipals().oneByType(java.util.Map.class));
+    request.setAttribute("account", org.apache.shiro.SecurityUtils.getSubject().getPrincipals().oneByType(java.util.Map.class));
 
 %&gt;
-&lt;c:out value=&quot;${account.givenName}&quot;/&gt;&lt;/shiro:user&gt;!
-    ( &lt;shiro:user&gt;&lt;a href=&quot;&lt;c:url value=&quot;/logout&quot;/&gt;&quot;&gt;Log out&lt;/a&gt;&lt;/shiro:user&gt;
-    &lt;shiro:guest&gt;&lt;a href=&quot;&lt;c:url value=&quot;/login.jsp&quot;/&gt;&quot;&gt;Log in&lt;/a&gt;&lt;/shiro:guest&gt; )
-&lt;/p&gt;
-</code></pre>
-<p>It&rsquo;s a little hard to read given the formatting, but two tags are used here:</p>
+&lt;c:out value="${account.givenName}"/&gt;&lt;/shiro:user&gt;!
+    ( &lt;shiro:user&gt;&lt;a href="&lt;c:url value="/logout"/&gt;"&gt;Log out&lt;/a&gt;&lt;/shiro:user&gt;
+    &lt;shiro:guest&gt;&lt;a href="&lt;c:url value="/login.jsp"/&gt;"&gt;Log in&lt;/a&gt;&lt;/shiro:guest&gt; )
+&lt;/p&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It&#8217;s a little hard to read given the formatting, but two tags are used here:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>&lt;shiro:guest&gt;</code>: This tag will only display its internal contents if the current Shiro <code>Subject</code> is an application &lsquo;guest&rsquo;. Shiro defines a <code>guest</code> as any <code>Subject</code> that has not logged in to the application, or is not remembered from a previous login (using Shiro&rsquo;s &lsquo;remember me&rsquo; functionality).</li>
-  <li><code>&lt;shiro:user&gt;</code>: This tag will only display its internal contents if the current Shiro <code>Subject</code> is an application &lsquo;user&rsquo;. Shiro defines a <code>user</code> as any <code>Subject</code> that is <em>currently</em> logged in to (authenticated with) the application or one that is remembered from a previous login (using Shiro&rsquo;s &lsquo;remember me&rsquo; functionality).</li>
+<li>
+<p><code>&lt;shiro:guest&gt;</code>: This tag will only display its internal contents if the current Shiro <code>Subject</code> is an application 'guest'. Shiro defines a <code>guest</code> as any <code>Subject</code> that has not logged in to the application, or is not remembered from a previous login (using Shiro&#8217;s 'remember me' functionality).</p>
+</li>
+<li>
+<p><code>&lt;shiro:user&gt;</code>: This tag will only display its internal contents if the current Shiro <code>Subject</code> is an application 'user'. Shiro defines a <code>user</code> as any <code>Subject</code> that is <em>currently</em> logged in to (authenticated with) the application or one that is remembered from a previous login (using Shiro&#8217;s 'remember me' functionality).</p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
 <p>The above code snippet will render the following if the Subject is a guest:</p>
-<pre><code class="html">Hi Guest! (Log in)
-</code></pre>
-<p>where &lsquo;Log in&rsquo; is a hyperlink to <code>/login.jsp</code></p>
-<p>It will render the following if the Subject is a &lsquo;user&rsquo;:</p>
-<pre><code class="html">Hi jsmith! (Log out)
-</code></pre>
-<p>Assuming &lsquo;jsmith&rsquo; is the username of the account logged in. &lsquo;Log out&rsquo; is a hyperlink to the &lsquo;/logout&rsquo; url handled by the Shiro <code>logout</code> filter.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">Hi Guest! (Log in)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where 'Log in' is a hyperlink to <code>/login.jsp</code></p>
+</div>
+<div class="paragraph">
+<p>It will render the following if the Subject is a 'user':</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">Hi jsmith! (Log out)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Assuming 'jsmith' is the username of the account logged in. 'Log out' is a hyperlink to the '/logout' url handled by the Shiro <code>logout</code> filter.</p>
+</div>
+<div class="paragraph">
 <p>As you can see, you can turn off or on entire page sections, features and UI components. In addition to <code>&lt;shiro:guest&gt;</code> and <code>&lt;shiro:user&gt;</code>, Shiro supports <a href="http://shiro.apache.org/web.html#Web-taglibrary">many other useful JSP tags</a> that you can use to customize the UI based on various things known about the current <code>Subject</code>.</p>
-<h3>Step 4c: Run the webapp</h3>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step_4c_run_the_webapp">Step 4c: Run the webapp</h3>
+<div class="paragraph">
 <p>After checking out the <code>step4</code> branch, go ahead and run the web app:</p>
-<pre><code class="bash">$ mvn jetty:run
-</code></pre>
-<p>Try visiting <a href="http://localhost:8080">localhost:8080</a> as a guest, and then login. After successful login, you will see the page content change to reflect that you&rsquo;re now a known user!</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ mvn jetty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Try visiting <a href="http://localhost:8080">localhost:8080</a> as a guest, and then login. After successful login, you will see the page content change to reflect that you&#8217;re now a known user!</p>
+</div>
+<div class="paragraph">
 <p>Hit <code>ctl-C</code> to shut down the web app.</p>
-<a id="step5"></a>
-<h2>Step 5: Allow Access to Only Authenticated Users</h2>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="step_5_allow_access_to_only_authenticated_users"><a id="step5"></a> Step 5: Allow Access to Only Authenticated Users</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>While you can change page content based on Subject state, often times you will want to restrict entire sections of your webapp based on if someone has <strong>proven</strong> their identity (authenticated) during their current interaction with the web application.</p>
+</div>
+<div class="paragraph">
 <p>This is especially important if a user-only section of a webapp shows sensitive information, like billing details or the ability to control other users.</p>
+</div>
+<div class="paragraph">
 <p>Perform the following git checkout command to load the <code>step5</code> branch:</p>
-<pre><code class="bash">$ git checkout step5
-</code></pre>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ git checkout step5</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Step 5 introduces the following 3 changes:</p>
-<ol>
-  <li>We added a new section (url path) of the webapp that we want to restrict to only authenticated users.</li>
-  <li>We changed <code>shiro.ini</code> to tell Shiro to only allow authenticated users to that part of the web app.</li>
-  <li>We modified the home page to change its output based on if the current <code>Subject</code> is authenticated or not.</li>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>We added a new section (url path) of the webapp that we want to restrict to only authenticated users.</p>
+</li>
+<li>
+<p>We changed <code>shiro.ini</code> to tell Shiro to only allow authenticated users to that part of the web app.</p>
+</li>
+<li>
+<p>We modified the home page to change its output based on if the current <code>Subject</code> is authenticated or not.</p>
+</li>
 </ol>
-<h3>Step 5a: Add a new restricted section</h3>
-<p>A new <code>src/main/webapp/account</code> directory was added. This directory (and all paths below it) simulates a &lsquo;private&rsquo; or &lsquo;authenticated only&rsquo; section of a website that you might want to restrict to only logged in users. The <code>src/main/webapp/account/index.jsp</code> file is just a placeholder for a simulated &lsquo;home account&rsquo; page.</p>
-<h3>Step 5b: Configure <code>shiro.ini</code></h3>
+</div>
+<div class="sect2">
+<h3 id="step_5a_add_a_new_restricted_section">Step 5a: Add a new restricted section</h3>
+<div class="paragraph">
+<p>A new <code>src/main/webapp/account</code> directory was added. This directory (and all paths below it) simulates a 'private' or 'authenticated only' section of a website that you might want to restrict to only logged in users. The <code>src/main/webapp/account/index.jsp</code> file is just a placeholder for a simulated 'home account' page.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step_5b_configure_shiro_ini">Step 5b: Configure <code>shiro.ini</code></h3>
+<div class="paragraph">
 <p><code>shiro.ini</code> was modified by adding the following line at the end of the <code>[urls]</code> section:</p>
-<pre><code class="ini">/account/** = authc
-</code></pre>
-<p>This <a href="http://shiro.apache.org/web.html#Web-FilterChainDefinitions">Shiro filter chain definition</a> means &ldquo;Any requests to <code>/account</code> (or any of its sub-paths) must be authenticated&rdquo;.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">/account/** = authc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This <a href="http://shiro.apache.org/web.html#Web-FilterChainDefinitions">Shiro filter chain definition</a> means "Any requests to <code>/account</code> (or any of its sub-paths) must be authenticated".</p>
+</div>
+<div class="paragraph">
 <p>But what happens if someone tries to access that path or any of its children paths?</p>
+</div>
+<div class="paragraph">
 <p>Do you remember in Step 3 when we added the following line to the <code>[main]</code> section:</p>
-<pre><code class="ini">shiro.loginUrl = /login.jsp
-</code></pre>
-<p>This line automatically configured the <code>authc</code> filter with our webapp&rsquo;s login URL.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">shiro.loginUrl = /login.jsp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This line automatically configured the <code>authc</code> filter with our webapp&#8217;s login URL.</p>
+</div>
+<div class="paragraph">
 <p>Based on this line of config, the <code>authc</code> filter is now smart enough to know that if the current Subject is not authenticated when accessing <code>/account</code>, it will automatically redirect the <code>Subject</code> to the <code>/login.jsp</code> page. After successful login, it will then automatically redirect the user back to the page they were trying to access (<code>/account</code>). Convenient!</p>
-<h3>Step 5c: Update our home page</h3>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step_5c_update_our_home_page">Step 5c: Update our home page</h3>
+<div class="paragraph">
 <p>The final change for Step 5 is to update the <code>/home.jsp</code> page to let the user know they can access the new part of the web site.</p>
+</div>
+<div class="paragraph">
 <p>These lines were added below the welcome message:</p>
-<pre><code class="html">&lt;shiro:authenticated&gt;&lt;p&gt;Visit your &lt;a href=&quot;&lt;c:url value=&quot;/account&quot;/&gt;&quot;&gt;account page&lt;/a&gt;.&lt;/p&gt;&lt;/shiro:authenticated&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;shiro:authenticated&gt;&lt;p&gt;Visit your &lt;a href="&lt;c:url value="/account"/&gt;"&gt;account page&lt;/a&gt;.&lt;/p&gt;&lt;/shiro:authenticated&gt;
 &lt;shiro:notAuthenticated&gt;
-  &lt;p&gt;If you want to access the authenticated-only &lt;a href=&quot;&lt;c:url value=&quot;/account&quot;/&gt;&quot;&gt;account page&lt;/a&gt;, you will need to log-in first.&lt;/p&gt;
-&lt;/shiro:notAuthenticated&gt;
-</code></pre>
+  &lt;p&gt;If you want to access the authenticated-only &lt;a href="&lt;c:url value="/account"/&gt;"&gt;account page&lt;/a&gt;, you will need to log-in first.&lt;/p&gt;
+&lt;/shiro:notAuthenticated&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>The <code>&lt;shiro:authenticated&gt;</code> tag will only display the contents if the current Subject has already logged in (authenticated) during their current session. This is how the <code>Subject</code> knows they can go visit a new part of the website.</p>
+</div>
+<div class="paragraph">
 <p>The <code>&lt;shiro:notAuthenticated&gt;</code> tag will only display the contents if the current Subject is not yet authenticated during their current session.</p>
-<p>But did you notice that the <code>notAuthenticated</code> content still has a URL to the <code>/account</code> section? That&rsquo;s ok - our <code>authc</code> filter will handle the login-and-then-redirect flow as described above.</p>
+</div>
+<div class="paragraph">
+<p>But did you notice that the <code>notAuthenticated</code> content still has a URL to the <code>/account</code> section? That&#8217;s ok - our <code>authc</code> filter will handle the login-and-then-redirect flow as described above.</p>
+</div>
+<div class="paragraph">
 <p>Fire up the webapp with the new changes and try it out!</p>
-<h3>Step 5d: Run the webapp</h3>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step_5d_run_the_webapp">Step 5d: Run the webapp</h3>
+<div class="paragraph">
 <p>After checking out the <code>step5</code> branch, go ahead and run the web app:</p>
-<pre><code class="bash">$ mvn jetty:run
-</code></pre>
-<p>Try visiting <a href="http://localhost:8080">localhost:8080</a>. Once there, click the new <code>/account</code> link and watch it redirect you to force you to log in. Once logged in, return to the home page and see the content change again now that you&rsquo;re authenticated. You can visit the account page and the home page as often as you want, until you log out. Nice!</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ mvn jetty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Try visiting <a href="http://localhost:8080">localhost:8080</a>. Once there, click the new <code>/account</code> link and watch it redirect you to force you to log in. Once logged in, return to the home page and see the content change again now that you&#8217;re authenticated. You can visit the account page and the home page as often as you want, until you log out. Nice!</p>
+</div>
+<div class="paragraph">
 <p>Hit <code>ctl-C</code> to shut down the web app.</p>
-<a id="step6"></a>
-<h2>Step 6: Role-Based Access Control</h2>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="step_6_role_based_access_control"><a id="step6"></a> Step 6: Role-Based Access Control</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>In addition to controlling access based on authentication, it is often a requirement to restrict access to certain parts of the application based on what role(s) are assigned to the current <code>Subject</code>.</p>
+</div>
+<div class="paragraph">
 <p>Perform the following git checkout command to load the <code>step6</code> branch:</p>
-<pre><code class="bash">$ git checkout step6
-</code></pre>
-<h3>Step 6a: Add Roles</h3>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ git checkout step6</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step_6a_add_roles">Step 6a: Add Roles</h3>
+<div class="paragraph">
 <p>In order to perform Role-Based Access Control, we need Roles to exist.</p>
+</div>
+<div class="paragraph">
 <p>The fastest way to do that in this tutorial is to populate some Groups within Stormpath (in Stormpath, a Stormpath Group can serve the same purpose of a Role).</p>
+</div>
+<div class="paragraph">
 <p>To do this, log in to the UI and navigate as follows:</p>
+</div>
+<div class="paragraph">
 <p><strong>Directories &gt; My Application Directory &gt; Groups</strong></p>
+</div>
+<div class="paragraph">
 <p>Add the following three groups:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>Captains</li>
-  <li>Officers</li>
-  <li>Enlisted</li>
+<li>
+<p>Captains</p>
+</li>
+<li>
+<p>Officers</p>
+</li>
+<li>
+<p>Enlisted</p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
 <p>(to keep with our Star-Trek account theme :) )</p>
-<p>Once you&rsquo;ve created the groups, add the <code>Jean-Luc Picard</code> account to the <code>Captains</code> and <code>Officers</code> groups. You might want to create some ad-hoc accounts and add them to whatever groups you like. Make sure some of the accounts don&rsquo;t overlap groups so you can see changes based on separate Groups assigned to user accounts.</p>
-<h3>Step 6b: Role Based Access Control (RBAC) Tags</h3>
-<p>We update the <code>/home.jsp</code> page to let the user know what roles they have and which ones they don&rsquo;t. These messages are added in a new <code>&lt;h2&gt;Roles&lt;/h2&gt;</code> section of the home page:</p>
-<pre><code class="html">&lt;h2&gt;Roles&lt;/h2&gt;
+</div>
+<div class="paragraph">
+<p>Once you&#8217;ve created the groups, add the <code>Jean-Luc Picard</code> account to the <code>Captains</code> and <code>Officers</code> groups. You might want to create some ad-hoc accounts and add them to whatever groups you like. Make sure some of the accounts don&#8217;t overlap groups so you can see changes based on separate Groups assigned to user accounts.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step_6b_role_based_access_control_rbac_tags">Step 6b: Role Based Access Control (RBAC) Tags</h3>
+<div class="paragraph">
+<p>We update the <code>/home.jsp</code> page to let the user know what roles they have and which ones they don&#8217;t. These messages are added in a new <code>&lt;h2&gt;Roles&lt;/h2&gt;</code> section of the home page:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;h2&gt;Roles&lt;/h2&gt;
 
-&lt;p&gt;Here are the roles you have and don&#39;t have. Log out and log back in under different user
+&lt;p&gt;Here are the roles you have and don't have. Log out and log back in under different user
     accounts to see different roles.&lt;/p&gt;
-    
+
 &lt;h3&gt;Roles you have:&lt;/h3&gt;
 
 &lt;p&gt;
-    &lt;shiro:hasRole name=&quot;Captains&quot;&gt;Captains&lt;br/&gt;&lt;/shiro:hasRole&gt;
-    &lt;shiro:hasRole name=&quot;Officers&quot;&gt;Bad Guys&lt;br/&gt;&lt;/shiro:hasRole&gt;
-    &lt;shiro:hasRole name=&quot;Enlisted&quot;&gt;Enlisted&lt;br/&gt;&lt;/shiro:hasRole&gt;
+    &lt;shiro:hasRole name="Captains"&gt;Captains&lt;br/&gt;&lt;/shiro:hasRole&gt;
+    &lt;shiro:hasRole name="Officers"&gt;Bad Guys&lt;br/&gt;&lt;/shiro:hasRole&gt;
+    &lt;shiro:hasRole name="Enlisted"&gt;Enlisted&lt;br/&gt;&lt;/shiro:hasRole&gt;
 &lt;/p&gt;
 
-&lt;h3&gt;Roles you DON&#39;T have:&lt;/h3&gt;
+&lt;h3&gt;Roles you DON'T have:&lt;/h3&gt;
 
 &lt;p&gt;
-    &lt;shiro:lacksRole name=&quot;Captains&quot;&gt;Captains&lt;br/&gt;&lt;/shiro:lacksRole&gt;
-    &lt;shiro:lacksRole name=&quot;Officers&quot;&gt;Officers&lt;br/&gt;&lt;/shiro:lacksRole&gt;
-    &lt;shiro:lacksRole name=&quot;Enlisted&quot;&gt;Enlisted&lt;br/&gt;&lt;/shiro:lacksRole&gt;
-&lt;/p&gt;
-</code></pre>
+    &lt;shiro:lacksRole name="Captains"&gt;Captains&lt;br/&gt;&lt;/shiro:lacksRole&gt;
+    &lt;shiro:lacksRole name="Officers"&gt;Officers&lt;br/&gt;&lt;/shiro:lacksRole&gt;
+    &lt;shiro:lacksRole name="Enlisted"&gt;Enlisted&lt;br/&gt;&lt;/shiro:lacksRole&gt;
+&lt;/p&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>The <code>&lt;shiro:hasRole&gt;</code> tag will only display the contents if the current Subject has been assigned the specified role.</p>
+</div>
+<div class="paragraph">
 <p>The <code>&lt;shiro:lacksRole&gt;</code> tag will only display the contents if the current Subject <strong>has not</strong> been assigned the specified role.</p>
-<h3>Step 6c: RBAC filter chains</h3>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step_6c_rbac_filter_chains">Step 6c: RBAC filter chains</h3>
+<div class="paragraph">
 <p>An exercise left to the reader (not a defined step) is to create a new section of the website and restrict URL access to that section of the website based on what role is assigned to the current user.</p>
+</div>
+<div class="paragraph">
 <p>Hint: Create a <a href="http://shiro.apache.org/web.html#Web-FilterChainDefinitions">filter chain definition</a> for that new part of the webapp using the <a href="http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authz/RolesAuthorizationFilter.html"><code>roles</code> filter</a></p>
-<h3>Step 6d: Run the webapp</h3>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step_6d_run_the_webapp">Step 6d: Run the webapp</h3>
+<div class="paragraph">
 <p>After checking out the <code>step6</code> branch, go ahead and run the web app:</p>
-<pre><code class="bash">$ mvn jetty:run
-</code></pre>
-<p>Try visiting <a href="http://localhost:8080">localhost:8080</a> and log in with different user accounts that are assigned different roles and watch the home page&rsquo;s <strong>Roles</strong> section content change!</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ mvn jetty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Try visiting <a href="http://localhost:8080">localhost:8080</a> and log in with different user accounts that are assigned different roles and watch the home page&#8217;s <strong>Roles</strong> section content change!</p>
+</div>
+<div class="paragraph">
 <p>Hit <code>ctl-C</code> to shut down the web app.</p>
-<a id="step7"></a>
-<h2>Step 7: Permission-Based Access Control</h2>
-<p>Role-based access control is good for many use cases, but it suffers from one major problem: you can&rsquo;t add or delete roles at runtime. Role checks are hard-coded with role names, so if you changed the role names or role configuration, or add or remove roles, you have to go back and change your code!</p>
-<p>Because of this, Shiro has a powerful marquis feature: built-in support for <em>permissions</em>. In Shiro, a permission is a raw statement of functionality, for example &lsquo;open a door&rsquo; &lsquo;create a blog entry&rsquo;, &lsquo;delete the <code>jsmith</code> user&rsquo;, etc. Permissions reflect your application&rsquo;s raw functionality, so you only need to change permission checks when you change your application&rsquo;s functionlity - not if you want to change your role or user model.</p>
-<p>To demonstrate this, we will create some permissions and assign them to a user, and then customize our web UI based on a user&rsquo;s authorization (permissions).</p>
-<h3>Step 7a: Add Permissions</h3>
-<p>Shiro <code>Realm</code>s are read-only components: every data store models roles, groups, permissions, accounts, and their relationships differently, so Shiro doesn&rsquo;t have a &lsquo;write&rsquo; API to modify these resources. To modify the underlying the model objects, you just modify them directly via whatever API you desire. Your Shiro Realm then knows how to read this information and represent it in a format Shiro understands.</p>
-<p>As such, since we&rsquo;re using Stormpath in this sample app, we&rsquo;ll assign permissions to an account and group in a Stormpath API-specific way.</p>
-<p>Let&rsquo;s execute a cURL request to add some permissions to our previously created Jean-Luc Picard account. Using that account&rsquo;s <code>href</code> URL, we&rsquo;ll post some <code>apacheShiroPermissions</code> to the account via <a href="https://docs.stormpath.com/rest/product-guide/latest/reference.html#custom-data">custom data</a>:</p>
-<pre><code class="bash">curl -X POST --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
-    -H &quot;Accept: application/json&quot; \
-    -H &quot;Content-Type: application/json&quot; \
-    -d &#39;{
-            &quot;apacheShiroPermissions&quot;: [
-                &quot;ship:NCC-1701-D:command&quot;,
-                &quot;user:jlpicard:edit&quot;
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="step_7_permission_based_access_control"><a id="step7"></a> Step 7: Permission-Based Access Control</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Role-based access control is good for many use cases, but it suffers from one major problem: you can&#8217;t add or delete roles at runtime. Role checks are hard-coded with role names, so if you changed the role names or role configuration, or add or remove roles, you have to go back and change your code!</p>
+</div>
+<div class="paragraph">
+<p>Because of this, Shiro has a powerful marquis feature: built-in support for <em>permissions</em>. In Shiro, a permission is a raw statement of functionality, for example 'open a door' 'create a blog entry', 'delete the <code>jsmith</code> user', etc. Permissions reflect your application&#8217;s raw functionality, so you only need to change permission checks when you change your application&#8217;s functionlity - not if you want to change your role or user model.</p>
+</div>
+<div class="paragraph">
+<p>To demonstrate this, we will create some permissions and assign them to a user, and then customize our web UI based on a user&#8217;s authorization (permissions).</p>
+</div>
+<div class="sect2">
+<h3 id="step_7a_add_permissions">Step 7a: Add Permissions</h3>
+<div class="paragraph">
+<p>Shiro `Realm`s are read-only components: every data store models roles, groups, permissions, accounts, and their relationships differently, so Shiro doesn&#8217;t have a 'write' API to modify these resources. To modify the underlying the model objects, you just modify them directly via whatever API you desire. Your Shiro Realm then knows how to read this information and represent it in a format Shiro understands.</p>
+</div>
+<div class="paragraph">
+<p>As such, since we&#8217;re using Stormpath in this sample app, we&#8217;ll assign permissions to an account and group in a Stormpath API-specific way.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s execute a cURL request to add some permissions to our previously created Jean-Luc Picard account. Using that account&#8217;s <code>href</code> URL, we&#8217;ll post some <code>apacheShiroPermissions</code> to the account via <a href="https://docs.stormpath.com/rest/product-guide/latest/reference.html#custom-data">custom data</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST --user $YOUR_API_KEY_ID:$YOUR_API_KEY_SECRET \
+    -H "Accept: application/json" \
+    -H "Content-Type: application/json" \
+    -d '{
+            "apacheShiroPermissions": [
+                "ship:NCC-1701-D:command",
+                "user:jlpicard:edit"
             ]
-        }&#39; \
-&quot;https://api.stormpath.com/v1/accounts/$JLPICARD_ACCOUNT_ID/customData&quot;
-</code></pre>
+        }' \
+"https://api.stormpath.com/v1/accounts/$JLPICARD_ACCOUNT_ID/customData"</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>where <code>$JLPICARD_ACCOUNT_ID</code> matches the uid of the Jean-Luc Picard you created at the beginning of this tutorial.</p>
+</div>
+<div class="paragraph">
 <p>This adds two permissions directly to the Stormpath Account:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>ship:NCC-1701-D:command</code></li>
-  <li><code>user:jlpicard:edit</code></li>
+<li>
+<p><code>ship:NCC-1701-D:command</code></p>
+</li>
+<li>
+<p><code>user:jlpicard:edit</code></p>
+</li>
 </ul>
-<p>These use Shiro&rsquo;s <a href="http://shiro.apache.org/permissions.html">WildcardPermission</a> syntax. </p>
-<p>The first basically means <em>the ability to &lsquo;command&rsquo; the &lsquo;ship&rsquo; with identifier &lsquo;NCC-1701-D&rsquo;</em>. This is an example of an <em>instance-level</em> permission: controlling access to a specific <em>instance</em> <code>NCC-1701-D</code> of a resource <code>ship</code>. The second is also an instance-level permission that states <em>the ability to <code>edit</code> the <code>user</code> with identifier <code>jlpicard</code></em>.</p>
+</div>
+<div class="paragraph">
+<p>These use Shiro&#8217;s <a href="http://shiro.apache.org/permissions.html">WildcardPermission</a> syntax.</p>
+</div>
+<div class="paragraph">
+<p>The first basically means <em>the ability to 'command' the 'ship' with identifier 'NCC-1701-D'</em>. This is an example of an <em>instance-level</em> permission: controlling access to a specific <em>instance</em> <code>NCC-1701-D</code> of a resource <code>ship</code>. The second is also an instance-level permission that states <em>the ability to <code>edit</code> the <code>user</code> with identifier `jlpicard`</em>.</p>
+</div>
+<div class="paragraph">
 <p>How permissions are stored in Stormpath, as well as how to customize storage and access options in Stormpath is out of scope for this document, but this is explained in the <a href="https://github.com/stormpath/stormpath-shiro/wiki#permissions">Shiro Stormpath plugin documentation</a>.</p>
-<h3>Step 7b: Permission Tags</h3>
-<p>Just as we have JSP tags for role checks, parallel tags exist for permission checks as well. We update the <code>/home.jsp</code> page to let the user know if they&rsquo;re allowed to do something or not based on the permissions that are assigned to them. These messages are added in a new <code>&lt;h2&gt;Permissions&lt;/h2&gt;</code> section of the home page:</p>
-<pre><code class="html">&lt;h2&gt;Permissions&lt;/h2&gt;
+</div>
+</div>
+<div class="sect2">
+<h3 id="step_7b_permission_tags">Step 7b: Permission Tags</h3>
+<div class="paragraph">
+<p>Just as we have JSP tags for role checks, parallel tags exist for permission checks as well. We update the <code>/home.jsp</code> page to let the user know if they&#8217;re allowed to do something or not based on the permissions that are assigned to them. These messages are added in a new <code>&lt;h2&gt;Permissions&lt;/h2&gt;</code> section of the home page:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;h2&gt;Permissions&lt;/h2&gt;
 
 &lt;ul&gt;
-    &lt;li&gt;You may &lt;shiro:lacksPermission name=&quot;ship:NCC-1701-D:command&quot;&gt;&lt;b&gt;NOT&lt;/b&gt; &lt;/shiro:lacksPermission&gt; command the &lt;code&gt;NCC-1701-D&lt;/code&gt; Starship!&lt;/li&gt;
-    &lt;li&gt;You may &lt;shiro:lacksPermission name=&quot;user:${account.username}:edit&quot;&gt;&lt;b&gt;NOT&lt;/b&gt; &lt;/shiro:lacksPermission&gt; edit the ${account.username} user!&lt;/li&gt;
-&lt;/ul&gt;
-</code></pre>
-<p>When you visit the home page the first time, before you log in, you will see the following output:</p>
-<pre><code class="html">You may NOT command the NCC-1701-D Starship!
-You may NOT edit the user!
-</code></pre>
-<p>But after you log in with your Jean-Luc Picard account, you will see this instead:</p>
-<pre><code class="html">You may command the NCC-1701-D Starship!
-You may edit the user!
-</code></pre>
-<p>You can see that Shiro resolved that the authenticated user had permissions, and the output was rendered in an appropriate way.</p>
-<p>You can also use the <code>&lt;shiro:hasPermission&gt;</code> tag for affirmative permission checks.</p>
-<p>Finally, we&rsquo;ll call to attention an extremely powerful feature with permission checks. Did you see how the second permission check used a <em>runtime</em> generated permission value?</p>
-<pre><code class="html">&lt;shiro:lacksPermission name=&quot;user:${account.username}:edit&quot;&gt; ...
-</code></pre>
-<p>The <code>${account.username}</code> value is interpreted at runtime and forms the final <code>user:aUsername:edit</code> value, and then the final String value is used for the permission check.</p>
-<p>This is <em>extremely</em> powerful: you can perform permission checks based on who the current user is and <em>what is currently being interacted with</em>. These runtime-based instance-level permission checks are a foundational technique for developing highly customizable and secure applications.</p>
-<h3>Step 7c: Run the webapp</h3>
-<p>After checking out the <code>step7</code> branch, go ahead and run the web app:</p>
-<pre><code class="bash">$ mvn jetty:run
-</code></pre>
-<p>Try visiting <a href="http://localhost:8080">localhost:8080</a> and log in and out of the UI with your Jean-Luc Picard account (and other accounts), and see the page output change based on what permissions are assigned (or not)!</p>
-<p>Hit <code>ctl-C</code> to shut down the web app.</p>
-<h2><a href="#summary" name="summary">Summary</a></h2>
-<p>We hope you have found this introductory tutorial for Shiro-enabled webapps useful. In coming editions of this tutorial, we will cover:</p>
-<ul>
-  <li>Plugging in different user data stores, like an RDBMS or NoSQL data store.</li>
-</ul>
-<h3><a href="#fixes-and-pull-requests" name="fixes-and-pull-requests">Fixes and Pull Requests</a></h3>
-<p>Please send any fixes for errata as a <a href="https://help.github.com/articles/creating-a-pull-request/">GitHub Pull Request</a> to the <code>https://github.com/lhazlewood/apache-shiro-tutorial-webapp</code> repository. We appreciate it!!!</p>
-<input type="hidden" id="ghEditPage" value="webapp-tutorial.md"></input>
-    
+    &lt;li&gt;You may &lt;shiro:lacksPermission name="ship:NCC-1701-D:command"&gt;&lt;b&gt;NOT&lt;/b&gt; &lt;/shiro:lacksPermission&gt; command the &lt;code&gt;NCC-1701-D&lt;/code&gt; Starship!&lt;/li&gt;
+    &lt;li&gt;You may &lt;shiro:lacksPermission name="user:${account.username}:edit"&gt;&lt;b&gt;NOT&lt;/b&gt; &lt;/shiro:lacksPermission&gt; edit the ${account.username} user!&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>When you visit the home page the first time, before you log in, you will see the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">You may NOT command the NCC-1701-D Starship!
+You may NOT edit the user!</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But after you log in with your Jean-Luc Picard account, you will see this instead:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">You may command the NCC-1701-D Starship!
+You may edit the user!</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can see that Shiro resolved that the authenticated user had permissions, and the output was rendered in an appropriate way.</p>
+</div>
+<div class="paragraph">
+<p>You can also use the <code>&lt;shiro:hasPermission&gt;</code> tag for affirmative permission checks.</p>
+</div>
+<div class="paragraph">
+<p>Finally, we&#8217;ll call to attention an extremely powerful feature with permission checks. Did you see how the second permission check used a <em>runtime</em> generated permission value?</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;shiro:lacksPermission name="user:${account.username}:edit"&gt; ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>${account.username}</code> value is interpreted at runtime and forms the final <code>user:aUsername:edit</code> value, and then the final String value is used for the permission check.</p>
+</div>
+<div class="paragraph">
+<p>This is <em>extremely</em> powerful: you can perform permission checks based on who the current user is and <em>what is currently being interacted with</em>. These runtime-based instance-level permission checks are a foundational technique for developing highly customizable and secure applications.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step_7c_run_the_webapp">Step 7c: Run the webapp</h3>
+<div class="paragraph">
+<p>After checking out the <code>step7</code> branch, go ahead and run the web app:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ mvn jetty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Try visiting <a href="http://localhost:8080">localhost:8080</a> and log in and out of the UI with your Jean-Luc Picard account (and other accounts), and see the page output change based on what permissions are assigned (or not)!</p>
+</div>
+<div class="paragraph">
+<p>Hit <code>ctl-C</code> to shut down the web app.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="summary">Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We hope you have found this introductory tutorial for Shiro-enabled webapps useful. In coming editions of this tutorial, we will cover:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Plugging in different user data stores, like an RDBMS or NoSQL data store.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="fixes_and_pull_requests">Fixes and Pull Requests</h3>
+<div class="paragraph">
+<p>Please send any fixes for errata as a <a href="https://help.github.com/articles/creating-a-pull-request/">GitHub Pull Request</a> to the <code><a href="https://github.com/lhazlewood/apache-shiro-tutorial-webapp" class="bare">https://github.com/lhazlewood/apache-shiro-tutorial-webapp</a></code> repository. We appreciate it!!!</p>
+</div>
+</div>
+</div>
+</div>
+	<hr />
+
+</div> 
 
     <div class="footer-padding"></div>
-    <footer class="custom-footer">
 
-        <div class="col-md-5">
-            <div class="copyright-footer">
-            <a href="http://www.apache.org/foundation/contributing.html">Donate to the ASF</a> |
-            <a href="http://www.apache.org/licenses/LICENSE-2.0.html">License</a>
-            <p>Copyright &copy; 2008-2021 The Apache Software Foundation</p>
-                </div>
+    <div class="container-fluid pt-2 border-top" id="custom-footer">
+      <footer class="row justify-content-between align-items-center">
+        <div class=" col-md-5">
+          <div class="copyright-footer justify-content-start">
+            <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
+            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+          </div>
         </div>
 
-        <div class="social col-md-2">
-            <a class="btn btn-social-icon btn-sm btn-twitter" target="_blank" href="https://twitter.com/ApacheShiro"><span class="fa fa-twitter"></span></a>
-            <a class="btn btn-social-icon btn-sm btn-facebook" target="_blank" href="https://www.facebook.com/ApacheShiro"><span class="fa fa-facebook"></span></a>
-            <a class="btn btn-social-icon btn-sm btn-linkedin" target="_blank" href="https://www.linkedin.com/groups/4382576"><span class="fa fa-linkedin"></span></a>
+        <div class="d-flex justify-content-center col-md-1">
+          <a class="btn btn-social"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
         </div>
 
-
-        <div class="col-md-2"></div>
-        <div class="col-md-2 editThisPage">
-            <div class="footer-shield"></div>
+        <div class="d-flex justify-content-end col-md-4" id="editThisPage">
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/webapp-tutorial.adoc"/>
         </div>
 
-    </footer> <!--END FOOTER-->
+        <div class="d-flex col-md-2 justify-content-end" style="position: relative">
+          <div class="footer-shield"></div>
+        </div>
+      </footer>
+    </div>
 
-</body>
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="highlight.js-11.2.0/highlight.min.js"></script>
+    <script src="js/shiro.js"></script>
+
+    <script>
+        docReady(
+          addPageEditLink()
+      );
+    </script>
+    <script>hljs.highlightAll();</script>
+
+    </body>
 </html>
