@@ -31,7 +31,12 @@ mvn clean generate-resources
 
 # These next commands will publish changes to live ASF web servers.
 # Be confident the changes are what you want:
+rsync -avP target/website/. ../shiro-site-publish
 cd ../shiro-site-publish
+# Please check that you did not modify any of the following files:
+# .asf.yaml
+# .htaccess
+# robots.txt
 git add .
 git commit -am "my change description"
 git push origin asf-site
