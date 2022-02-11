@@ -33,7 +33,7 @@
 
 	<p>
 		<em>Published ${theauthor}on the
-			<time datetime="${content.date?date?string.iso}">${content.date?string("dd")}${ordsuf} of ${content.date?string("MMMM, yyyy")}</time>
+			<time datetime="${content.date?datetime?string.iso_s_u}">${content.date?string("dd")}${ordsuf} of ${content.date?string("MMMM, yyyy")}</time>
 		</em>
 	</p>
 
