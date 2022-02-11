@@ -33,7 +33,7 @@
     <title>${post.title}</title>
     <link href="${config.site_host}/${post.uri}"/>
     <id>${config.site_host}/${post.uri}</id>
-    <updated>${post.date?date?string.iso_s_nz}</updated>
+    <updated>${post.date?datetime?string.iso_s_u}</updated>
     <#if (post.description??)>
     <summary>${post.description}</summary>
     </#if>
