@@ -16,6 +16,8 @@
   <tr>
     <#if (artifact.c)??>
         <#assign classifier="-"+artifact.c>
+    <#else>
+        <#assign classifier="">
     </#if>
     <#assign group=artifact.g?replace('.', '/') >
 
