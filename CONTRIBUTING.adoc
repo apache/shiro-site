@@ -33,9 +33,9 @@ Git will automatically convert line endings for you.
 * Change `latestRelease: "..."` to the new version.
 * Update the `versionInfo` object accordingly. +
 You can just add a new release, there is no need to remove old releases.
-* Update the `oldReleases`/`releases` variable like so:
+* Update the `oldReleases`/`releases` variable:
 ** If the new `latestRelease` is a new minor release (e.g. `1.n.0`, where `n` is the new minor release version), prepend the old version to the `oldReleases` array. +
-Also add it to the 'releases' object at the end of the file as `1nx`.
+Also, add it to the 'releases' object at the end of the file as `1nx`.
 ** If the new `latestRelease` is a bugfix release (e.g. `1.n.x`), update the version number of the `releases` object at the end of the file. +
 _Rationale:_ Every minor release should only be represented with the latest bugfix release.
 
