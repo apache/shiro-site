@@ -10,11 +10,14 @@
 
 <p><@content.body?interpret /></p>
 
-<#-- if not releases are given using :jbake-release:, assume oldReleases. -->
+<#-- if a release is given, assume it is the current release (download.html). -->
 <#if ((content.releases).versions)??>
-    <#assign displayReleases=((content.releases).versions)![] />
+  <#assign displayReleases=((content.releases).versions)![] />
+  <#assign downloadUrl="https://www.apache.org/dyn/closer.lua/shiro/" />
 <#else>
-    <#assign displayReleases=versions.oldReleases />
+  <#-- if not releases are given using :jbake-release:, assume oldReleases (release-archive.html). -->
+  <#assign displayReleases=versions.oldReleases />
+  <#assign downloadUrl="https://archive.apache.org/dist/shiro/" />
 </#if>
 
 <p>
@@ -42,12 +45,12 @@
 
   <p>The source bundle requires JDK 1.8 and Maven 3.0.3+ to build:
 
-  <code><a class="external-link" href="https://www.apache.org/dyn/closer.lua/shiro/${release.version}/shiro-root-${release.version}-source-release.zip">shiro-root-${release.version}-source-release.zip</a></code>
+  <code><a class="external-link" href="${downloadUrl}${release.version}/shiro-root-${release.version}-source-release.zip">shiro-root-${release.version}-source-release.zip</a></code>
     (<a class="external-link"
-        href="https://www.apache.org/dist/shiro/${release.version}/shiro-root-${release.version}-source-release.zip.asc">pgp</a>, <a
+        href="${downloadUrl}${release.version}/shiro-root-${release.version}-source-release.zip.asc">pgp</a>, <a
             class="external-link"
-            href="https://www.apache.org/dist/shiro/${release.version}/shiro-root-${release.version}-source-release.zip.sha512">sha512</a>)
-  </p>
+            href="${downloadUrl}${release.version}/shiro-root-${release.version}-source-release.zip.sha512">sha512</a>)
+  </code>
 
   <p>Associated documentation can be found <a href="documentation.html" title="Documentation">here</a></p>
 
