@@ -30,9 +30,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - run: sed -i.bak 's/site.host=.*/site.host=https:\/\/shiro-jbake.staged.apache.org\//g' jbake.properties && rm jbake.properties.bak
-        shell: bash
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-java@v2
         with:

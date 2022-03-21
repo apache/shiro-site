@@ -15,15 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 
-name: Mandatory files
-
-# checks for mandatory files which are used elsewhere, e.g. in Javadocs, the site, etc.
+name: Stage main branch
 
 on:
   workflow_dispatch: {}
-  push: {}
-  pull_request:
-    branches: [ main, jbake ]
 
 
 jobs:
@@ -31,12 +26,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: 'Checkout main'
+        uses: actions/checkout@v2
         with:
+          ref: 'main'
+          path: 'src'
           persist-credentials: false
 
-      - run: file assets/images/apache-shiro-logo.png
+      - run: cd src && sed -i.bak 's/site.host=.*/site.host=https:\/\/shiro.staged.apache.org\//g' jbake.properties && rm jbake.properties.bak
         shell: bash
 
-      - run: file assets/images/asf_logo.png
+      - run: cd src && mv src/site/asssets/robots.staging.txt src/site/asssets/robots.txt
         shell: bash
+
+      - uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - run: cd src && mvn generate-resources --show-version --errors --batch-mode --no-transfer-progress
+
+      - name: 'Checkout target'
+        uses: actions/checkout@v2
+        with:
+          repository: 'apache/shiro-site'
+          ref: 'asf-staging'
+          path: 'site-staging'
+
+      - name: 'Copy to staging'
+        run: rsync -avP src/target/website/. ../site-staging && git commit -a -m "staging $(date -Is)" && git push
+        shell: bash
+
