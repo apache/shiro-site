@@ -34,9 +34,11 @@ jobs:
           path: 'src'
           persist-credentials: false
 
-      - run: |
-          sed -i.bak 's/site.host=.*/site.host=https:\/\/shiro.staged.apache.org\//g' jbake.properties && rm jbake.properties.bak
-          mv src/site/assets/robots.staging.txt src/site/assets/robots.txt
+      - run: sed -i.bak 's/site.host=.*/site.host=https:\/\/shiro.staged.apache.org\//g' jbake.properties && rm jbake.properties.bak
+        shell: bash
+        working-directory: ./src
+
+      - run: mv src/site/assets/robots.staging.txt src/site/assets/robots.txt
         shell: bash
         working-directory: ./src
 
