@@ -33,18 +33,21 @@ jobs:
           path: 'src'
           persist-credentials: false
 
-      - run: cd src && sed -i.bak 's/site.host=.*/site.host=https:\/\/shiro.staged.apache.org\//g' jbake.properties && rm jbake.properties.bak
+      - run: sed -i.bak 's/site.host=.*/site.host=https:\/\/shiro.staged.apache.org\//g' jbake.properties && rm jbake.properties.bak
         shell: bash
+        working-directory: ./src
 
-      - run: cd src && mv src/site/asssets/robots.staging.txt src/site/asssets/robots.txt
+      - run: mv src/site/asssets/robots.staging.txt src/site/asssets/robots.txt
         shell: bash
+        working-directory: ./src
 
       - uses: actions/setup-java@v2
         with:
           java-version: '11'
           distribution: 'temurin'
 
-      - run: cd src && mvn generate-resources --show-version --errors --batch-mode --no-transfer-progress
+      - run: mvn generate-resources --show-version --errors --batch-mode --no-transfer-progress
+        working-directory: ./src
 
       - name: 'Checkout target'
         uses: actions/checkout@v2
