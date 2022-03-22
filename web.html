@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-  2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Apache Shiro Web Support | Apache Shiro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content='documentation,web'>
+    <meta name="generator" content="JBake">
+    <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
+    <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
+    <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
+
+    <meta property="og:title" content="Apache Shiro Web Support | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2022-03-22T22:45:11Z"/>
+    <meta property="article:tag" content='documentation'/>
+    <meta property="article:tag" content='web'/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content='https://shiro.staged.apache.org//web.html'/>
+    <meta property="og:image" content='images/shiro-featured-image.png'/>
+    <meta property="og:image:width" content='1200'/>
+    <meta property="og:image:height" content='628'/>
+    <meta property="og:site_name" content="Apache Shiro"/>
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/asciidoctor.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="highlight.js-11.2.0/styles/default.min.css" rel="stylesheet">
+    <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Matomo -->
+    <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['disableCookies']);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u="//matomo.privacy.apache.org/";
+            _paq.push(['setTrackerUrl', u+'matomo.php']);
+            _paq.push(['setSiteId', '2']);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+  </head>
+  <body>
+    <div id="top-bar"></div>
+    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
+
+    <div id="wrap">
+
+      <div class="masthead">
+        <p class="lead">
+          <a href="index.html"><img src="images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <span class="tagline">Simple. Java. Security.</span>
+          <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
+          </a>
+        </p>
+      </div>
+
+	<!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="get-started.html">Get Started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="documentation.html">Docs</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-webapps" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Web Apps
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
+                <li><a class="dropdown-item" href="web.html">General</a></li>
+                <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="web-features.html">Features</a></li>
+              </ul>
+            </li>
+
+            <li><a class="nav-link" href="features.html">Features</a></li>
+
+            <!-- integrations -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-integrations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Integrations
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
+                <li><a class="dropdown-item" href="spring-boot.html">Spring</a></li>
+                <li><a class="dropdown-item" href="guice.html">Guice</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="integration.html">Third-Party Integrations</a></li>
+              </ul>
+            </li>
+
+            <!-- Community -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-community" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Community
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
+                <li><a class="dropdown-item" href="forums.html">Community Forums</a></li>
+                <li><a class="dropdown-item" href="mailing-lists.html">Mailing Lists</a></li>
+                <li><a class="dropdown-item" href="articles.html">Articles</a></li>
+                <li><a class="dropdown-item" href="news.html">News</a></li>
+                <li><a class="dropdown-item" href="events.html">Events</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="community.html">More</a></li>
+              </ul>
+            </li>
+
+            <!-- About -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-about" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                About
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
+                <li><a class="dropdown-item" href="about.html">About</a></li>
+                <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="d-flex justify-content-end navbar-nav mb-2 mb-lg-0">
+            <!-- The ASF -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-asf" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apache Software Foundation
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
+                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+	<div class="page-header">
+		<h1>Apache Shiro Web Support</h1>
+	</div>
+
+
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#configuration">Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#web_xml"><code>web.xml</code></a>
+<ul class="sectlevel3">
+<li><a href="#shiro_1_2_and_later">Shiro 1.2 and later</a>
+<ul class="sectlevel4">
+<li><a href="#custom_webenvironment_class">Custom <code>WebEnvironment</code> Class</a></li>
+<li><a href="#custom_configuration_locations">Custom Configuration Locations</a></li>
+</ul>
+</li>
+<li><a href="#shiro_1_1_and_earlier">Shiro 1.1 and earlier</a>
+<ul class="sectlevel4">
+<li><a href="#custom_path">Custom Path</a></li>
+<li><a href="#inline_config">Inline Config</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#web_ini">Web INI configuration</a>
+<ul class="sectlevel3">
+<li><a href="#urls"><code>[urls]</code></a>
+<ul class="sectlevel4">
+<li><a href="#url_path_expressions">URL Path Expressions</a></li>
+<li><a href="#filter_chain_definitions">Filter Chain Definitions</a></li>
+<li><a href="#available_filters">Available Filters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#default_filters">Default Filters</a></li>
+<li><a href="#enabling_and_disabling_filters">Enabling and Disabling Filters</a>
+<ul class="sectlevel2">
+<li><a href="#general_enablingdisabling">General Enabling/Disabling</a></li>
+<li><a href="#request_specific_enablingdisabling">Request-specific Enabling/Disabling</a></li>
+<li><a href="#path_specific_enablingdisabling">Path-specific Enabling/Disabling</a></li>
+<li><a href="#global_filters">Global Filters</a></li>
+<li><a href="#http_strict_transport_security_hsts">HTTP Strict Transport Security (HSTS)</a></li>
+</ul>
+</li>
+<li><a href="#session_management">Session Management</a>
+<ul class="sectlevel2">
+<li><a href="#servlet_container_sessions">Servlet Container Sessions</a>
+<ul class="sectlevel3">
+<li><a href="#servlet_container_session_timeout">Servlet Container Session Timeout</a></li>
+</ul>
+</li>
+<li><a href="#native_sessions">Native Sessions</a>
+<ul class="sectlevel3">
+<li><a href="#defaultwebsessionmanager"><code>DefaultWebSessionManager</code></a>
+<ul class="sectlevel4">
+<li><a href="#native_session_timeout">Native Session Timeout</a></li>
+<li><a href="#session_cookie">Session Cookie</a>
+<ul class="sectlevel5">
+<li><a href="#session_cookie_configuration">Session Cookie Configuration</a></li>
+<li><a href="#disabling_the_session_cookie">Disabling the Session Cookie</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#remember_me_services">Remember Me Services</a>
+<ul class="sectlevel2">
+<li><a href="#programmatic_support">Programmatic Support</a></li>
+<li><a href="#form_based_login">Form-based Login</a></li>
+<li><a href="#cookie_configuration">Cookie configuration</a></li>
+<li><a href="#custom_remembermemanager">Custom <code>RememberMeManager</code></a></li>
+</ul>
+</li>
+<li><a href="#tag_library">JSP / GSP Tag Library</a>
+<ul class="sectlevel2">
+<li><a href="#tag_library_configuration">Tag Library Configuration</a></li>
+<li><a href="#web_guesttag">The <code>guest</code> tag</a></li>
+<li><a href="#web_usertag">The <code>user</code> tag</a></li>
+<li><a href="#web_authenticatedtag">The <code>authenticated</code> tag</a></li>
+<li><a href="#web_notauthenticatedtag">The <code>notAuthenticated</code> tag</a></li>
+<li><a href="#the_principal_tag">The <code>principal</code> tag</a>
+<ul class="sectlevel3">
+<li><a href="#typed_principal">Typed principal</a></li>
+<li><a href="#principal_property">Principal property</a></li>
+</ul>
+</li>
+<li><a href="#web_hasroletag">The <code>hasRole</code> tag</a></li>
+<li><a href="#web_lacksroletag">The <code>lacksRole</code> tag</a></li>
+<li><a href="#the_hasanyrole_tag">The <code>hasAnyRole</code> tag</a></li>
+<li><a href="#web_haspermissiontag">The <code>hasPermission</code> tag</a></li>
+<li><a href="#web_lackspermissiontag">The <code>lacksPermission</code> tag</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="configuration">Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The simplest way to integrate Shiro into any web application is to configure a Servlet ContextListener and Filter in web.xml that understands how to read Shiro&#8217;s INI configuration. The bulk of the INI config format itself is defined in the Configuration pages&#8217;s <a href="/configuration.html#Configuration-INIConfiguration-Sections">INI Sections</a> section, but we&#8217;ll cover some additional web-specific sections here.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. Using Spring?</div>
+<div class="content">
+<div class="paragraph">
+<p>Spring Framework users will not perform this setup. If you use Spring, you will want to read about <a href="/spring-boot.html#web_applications">Spring-specific web configuration</a> instead.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="web_xml"><code>web.xml</code></h3>
+<div class="sect3">
+<h4 id="shiro_1_2_and_later">Shiro 1.2 and later</h4>
+<div class="paragraph">
+<p>In Shiro 1.2 and later, standard web applications initialize Shiro by adding the following XML chunks to <code>web.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;listener&gt;
+    &lt;listener-class&gt;org.apache.shiro.web.env.EnvironmentLoaderListener&lt;/listener-class&gt;
+&lt;/listener&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;filter&gt;
+    &lt;filter-name&gt;ShiroFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.apache.shiro.web.servlet.ShiroFilter&lt;/filter-class&gt;
+&lt;/filter&gt;
+
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;ShiroFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;
+    &lt;dispatcher&gt;FORWARD&lt;/dispatcher&gt;
+    &lt;dispatcher&gt;INCLUDE&lt;/dispatcher&gt;
+    &lt;dispatcher&gt;ERROR&lt;/dispatcher&gt;
+    &lt;dispatcher&gt;ASYNC&lt;/dispatcher&gt;
+&lt;/filter-mapping&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This assumes a Shiro INI <a href="configuration.html">Configuration</a> file is located at either of the following two locations, using whichever is found first:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>/WEB-INF/shiro.ini</code></p>
+</li>
+<li>
+<p><code>shiro.ini</code> file at the root of the classpath.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Here is what the above config does:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>EnvironmentLoaderListener</code> initializes a Shiro <code>WebEnvironment</code> instance (which contains everything Shiro needs to operate, including the <code>SecurityManager</code>) and makes it accessible in the <code>ServletContext</code>. If you need to obtain this <code>WebEnvironment</code> instance at any time, you can call <code>WebUtils.getRequiredWebEnvironment(servletContext)</code>.</p>
+</li>
+<li>
+<p>The <code>ShiroFilter</code> will use this <code>WebEnvironment</code> to perform all necessary security operations for any filtered request.</p>
+</li>
+<li>
+<p>Finally, the <code>filter-mapping</code> definition ensures that all requests are filtered by the <code>ShiroFilter</code>, recommended for most web applications to ensure that any request can be secured.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">ShiroFilter filter-mapping</div>
+<div class="paragraph">
+<p>It is usually desirable to define the <code>ShiroFilter filter-mapping</code> before any other <code>filter-mapping</code> declarations to ensure that Shiro can function in those filters as well.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. ShiroFilter default encoding</div>
+<div class="content">
+<div class="paragraph">
+<p>The shiro filter is a standard servlet filter, with a default encoding of ISO-8859-1 according to the <a href="https://javaee.github.io/servlet-spec/downloads/servlet-4.0/servlet-4_0_FINAL.pdf">servlet specification</a>. However, the client can choose to send authentication data with a different encoding using the <code>charset</code> attribute of the <code>Content-Type</code> header.</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="custom_webenvironment_class">Custom <code>WebEnvironment</code> Class</h5>
+<div class="paragraph">
+<p>By default the <code>EnvironmentLoaderListener</code> will create an <code>IniWebEnvironment</code> instance, which assumes Shiro&#8217;s INI-based <a href="configuration.html">Configuration</a>. If you like, you may specify a custom <code>WebEnvironment</code> instance instead by specifying a <code>ServletContext</code> <code>context-param</code> in <code>web.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;context-param&gt;
+    &lt;param-name&gt;shiroEnvironmentClass&lt;/param-name&gt;
+    &lt;param-value&gt;com.foo.bar.shiro.MyWebEnvironment&lt;/param-value&gt;
+&lt;/context-param&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This allows you to customize how a configuration format is parsed and represented as a <code>WebEnvironment</code> instance. You could subclass the existing <code>IniWebEnvironment</code> for custom behavior, or support different configuration formats entirely. For example, if someone wanted to configure Shiro in XML instead of INI, they could create an XML-based implementation, e.g. <code>com.foo.bar.shiro.XmlWebEnvironment</code>.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="custom_configuration_locations">Custom Configuration Locations</h5>
+<div class="paragraph">
+<p>The <code>IniWebEnvironment</code> class expects to read and load INI configuration files. By default, this class will automatically look in the following two locations for the Shiro <code>.ini</code> configuration (in order):</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>/WEB-INF/shiro.ini</code></p>
+</li>
+<li>
+<p><code>classpath:shiro.ini</code></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>It will use whichever is found first.</p>
+</div>
+<div class="paragraph">
+<p>However, if you wish to place your config in another location, you may specify that location with another <code>context-param</code> in <code>web.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;context-param&gt;
+    &lt;param-name&gt;shiroConfigLocations&lt;/param-name&gt;
+    &lt;param-value&gt;YOUR_RESOURCE_LOCATION_HERE&lt;/param-value&gt;
+&lt;/context-param&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, the <code>param-value</code> is expected to be resolvable by the rules defined by <a href="https://docs.oracle.com/javaee/6/api/javax/servlet/ServletContext.html#getResource(java.lang.String)"><code>ServletContext.getResource</code></a> method.
+For example, <code>/WEB-INF/some/path/shiro.ini</code></p>
+</div>
+<div class="paragraph">
+<p>But you may also specify specific file-system, classpath or URL locations by using an appropriate resource prefix supported by Shiro&#8217;s <a href="static/current/apidocs/org/apache/shiro/io/ResourceUtils.html">ResourceUtils class</a>, for example:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>file:/home/foobar/myapp/shiro.ini</code></p>
+</li>
+<li>
+<p><code>classpath:com/foo/bar/shiro.ini</code></p>
+</li>
+<li>
+<p><code>url:http://confighost.mycompany.com/myapp/shiro.ini</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="shiro_1_1_and_earlier">Shiro 1.1 and earlier</h4>
+<div class="paragraph">
+<p>The simplest way to enable Shiro in a 1.1 or earlier web application is to define the IniShiroFilter and specify a <code>filter-mapping</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;filter&gt;
+    &lt;filter-name&gt;ShiroFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.apache.shiro.web.servlet.IniShiroFilter&lt;/filter-class&gt;
+&lt;/filter&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;!-- Make sure any request you want accessible to Shiro is filtered. /* catches all --&gt;
+&lt;!-- requests.  Usually this filter mapping is defined first (before all others) to --&gt;
+&lt;!-- ensure that Shiro works in subsequent filters in the filter chain:             --&gt;
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;ShiroFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;
+    &lt;dispatcher&gt;FORWARD&lt;/dispatcher&gt;
+    &lt;dispatcher&gt;INCLUDE&lt;/dispatcher&gt;
+    &lt;dispatcher&gt;ERROR&lt;/dispatcher&gt;
+&lt;/filter-mapping&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This definition expects your INI configuration to be in a shiro.ini file at the root of the classpath (e.g. <code>classpath:shiro.ini</code>).</p>
+</div>
+<div class="sect4">
+<h5 id="custom_path">Custom Path</h5>
+<div class="paragraph">
+<p>If you do not want to place your INI config in <code>/WEB-INF/shiro.ini</code> or <code>classpath:shiro.ini</code>, you may specify a custom resource location as necessary. Add a <code>configPath init-param</code> and specify a resource location:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;filter&gt;
+    &lt;filter-name&gt;ShiroFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.apache.shiro.web.servlet.IniShiroFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;configPath&lt;/param-name&gt;
+        &lt;param-value&gt;/WEB-INF/anotherFile.ini&lt;/param-value&gt;
+    &lt;/init-param&gt;
+&lt;/filter&gt;
+
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Unqualified (schemeless or 'non-prefixed') <code>configPath</code> values are assumed to be <code>ServletContext</code> resource paths, resolvable via the rules defined by the
+<a href="https://docs.oracle.com/javaee/6/api/javax/servlet/ServletContext.html#getResource(java.lang.String)"><code>ServletContext.getResource</code></a> method.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">ServletContext resource paths - Shiro 1.2+</div>
+<div class="paragraph">
+<p>ServletContext resource paths are available in Shiro 1.2 and later. In 1.1 and earlier, all <code>configPath</code> definitions must specify a <code>classpath:</code>, <code>file:</code> or <code>url:</code> prefix.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You may also specify other non-<code>ServletContext</code> resource locations by using <code>classpath:</code>, <code>url:</code>, or <code>file:</code> prefixes indicating classpath, url, or filesystem locations respectively. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">...
+&lt;init-param&gt;
+    &lt;param-name&gt;configPath&lt;/param-name&gt;
+    &lt;param-value&gt;url:http://configHost/myApp/shiro.ini&lt;/param-value&gt;
+&lt;/init-param&gt;
+...</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="inline_config">Inline Config</h5>
+<div class="paragraph">
+<p>Finally, it is also possible to embed your INI configuration inline in web.xml without using an INI file at all. You do this by using the <code>config init-param</code> instead of <code>configPath</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;filter&gt;
+    &lt;filter-name&gt;ShiroFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.apache.shiro.web.servlet.IniShiroFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;&lt;param-name&gt;config&lt;/param-name&gt;&lt;param-value&gt;
+
+    # INI Config Here
+
+    &lt;/param-value&gt;&lt;/init-param&gt;
+&lt;/filter&gt;
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Inline config is often fine for small or simple applications, but it is usually more convenient to externalize it in a dedicated shiro.ini file for the following reasons:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>You might edit security configuration a lot and don&#8217;t want to add revision control 'noise' to the web.xml file</p>
+</li>
+<li>
+<p>You might want to separate security config from the rest of web.xml config</p>
+</li>
+<li>
+<p>Your security configuration might become large and you want to keep web.xml lean and easier to read</p>
+</li>
+<li>
+<p>You have a complex build system where the same shiro config might need to be referenced in multiple places</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>It is up to you - use what makes sense for your project.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="web_ini">Web INI configuration</h3>
+<div class="paragraph">
+<p>In addition to the standard <code>[main]</code>, <code>[users]</code> and <code>[roles]</code> sections already described in the main <a href="configuration.html">Configuration</a> chapter, you can additionally specify a web-specific <code>[urls]</code> section in your <code>shiro.ini</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini"># [main], [users] and [roles] above here
+...
+[urls]
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>[urls]</code> section allows you to do something that doesn&#8217;t exist in any web framework that we&#8217;ve seen yet: the ability to define ad-hoc filter chains for any matching URL path in your application!</p>
+</div>
+<div class="paragraph">
+<p>This is <em>far</em> more flexible, powerful and concise than how you define filter chains normally in <code>web.xml</code>: even if you never used any other feature that Shiro provided and used only this, it alone would make it worth using.</p>
+</div>
+<div class="sect3">
+<h4 id="urls"><code>[urls]</code></h4>
+<div class="paragraph">
+<p>The format of each line in the <code>urls</code> section is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">_URL_Ant_Path_Expression_ = _Path_Specific_Filter_Chain_</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">...
+[urls]
+
+/index.html = anon
+/user/create = anon
+/user/** = authc
+/admin/** = authc, roles[administrator]
+/rest/** = authc, rest
+/remoting/rpc/** = authc, perms["remote:invoke"]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next we&#8217;ll cover exactly what these lines mean.</p>
+</div>
+<div class="sect4">
+<h5 id="url_path_expressions">URL Path Expressions</h5>
+<div class="paragraph">
+<p>The token on the left of the equals sign (=) is an <a href="http://ant.apache.org">Ant</a>-style path expression relative to your web application&#8217;s context root.</p>
+</div>
+<div class="paragraph">
+<p>For example, let&#8217;s say you had the following <code>[urls]</code> line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">/account/** = ssl, authc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This line states that "Any request to my application&#8217;s path of <code>/account</code> or any of it&#8217;s sub paths (<code>/account/foo</code>, <code>/account/bar/baz</code>, etc) will trigger the 'ssl, authc' filter chain". We&#8217;ll cover filter chains below.</p>
+</div>
+<div class="paragraph">
+<p>Note that all path expressions are relative to your application&#8217;s context root. This means that if you deploy your application one day to, say, <code>www.somehost.com/myapp</code> and then later deploy it to <code>www.anotherhost.com</code> (no 'myapp' sub-path), the pattern matching will still work.
+All paths are relative to the <a href="https://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#getContextPath()"><code>HttpServletRequest.getContextPath()</code></a> value.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="title">Order Matters!</div>
+<div class="paragraph">
+<p>URL path expressions are evaluated against an incoming request in the order they are defined and the <em>FIRST MATCH WINS</em>.
+For example, let&#8217;s asume that there are the following chain definitions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">/account/** = ssl, authc
+/account/signup = anon</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Always remember to define your filter chains based on a <em>FIRST MATCH WINS</em> policy!</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="filter_chain_definitions">Filter Chain Definitions</h5>
+<div class="paragraph">
+<p>The token on the right of the equals sign (=) is comma-delimited list of filters to execute for a request matching that path. It must match the following format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">filter1[optional_config1], filter2[optional_config2], ..., filterN[optional_configN]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>filterN</em> is the name of a filter bean defined in the <code>[main]</code> section and</p>
+</li>
+<li>
+<p><code>[optional_configN]</code> is an optional bracketed string that has meaning for that particular filter for <em>that particular path</em> (per-filter, <em>path-specific</em> configuration!). If the filter does not need specific config for that URL path, you may discard the brackets so <code>filterN[]</code> just becomes <code>filterN</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>And because filter tokens define chains (aka a List), remember that order matters! Define your comma-delimited list in the order that you want the request to flow through the chain.</p>
+</div>
+<div class="paragraph">
+<p>Finally, each filter is free to handle the response however it wants if its necessary conditions are not met (e.g. perform a redirect, respond with an HTTP error code, direct rendering, etc). Otherwise it is expected to allow the request to continue through the chain on to the final destination view.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Tip</div>
+<div class="paragraph">
+<p>Being able to react to path specific configuration, i.e. the <code>[optional_configN]</code> part of a filter token, is a unique feature available to Shiro filters.</p>
+</div>
+<div class="paragraph">
+<p>If you want to create your own <code>javax.servlet.Filter</code> implementation that can also do this, make sure your filter subclasses <a href="static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html">org.apache.shiro.web.filter.PathMatchingFilter</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="available_filters">Available Filters</h5>
+<div class="paragraph">
+<p>The 'pool' of filters available for use in filter chain definitions are defined in the <code>[main]</code> section.
+The name assigned to them in the main section is the name to use in the filter chain definitions. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+myFilter = com.company.web.some.FilterImplementation
+myFilter.property1 = value1
+...
+
+[urls]
+...
+/some/path/** = myFilter</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="default_filters">Default Filters</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When running a web-app, Shiro will create some useful default <code>Filter</code> instances and make them available in the <code>[main]</code> section automatically. You can configure them in <code>main</code> as you would any other bean and reference them in your chain definitions. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+# Notice how we didn't define the class for the FormAuthenticationFilter ('authc') - it is instantiated and available already:
+authc.loginUrl = /login.jsp
+...
+
+[urls]
+...
+# make sure the end-user is authenticated.  If not, redirect to the 'authc.loginUrl' above,
+# and after successful authentication, redirect them back to the original account page they
+# were trying to view:
+/account/** = authc
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The default Filter instances available automatically are defined by the <a href="static/current/apidocs/org/apache/shiro/web/filter/mgt/DefaultFilter.html">DefaultFilter enum</a> and the enum&#8217;s <code>name</code> field is the name available for configuration. They are:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Filter Name</th>
+<th class="tableblock halign-left valign-top">Class</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">anon</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authc/AnonymousFilter.html">org.apache.shiro.web.filter.authc.AnonymousFilter</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">authc</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html">org.apache.shiro.web.filter.authc.FormAuthenticationFilter</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">authcBasic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authc/BasicHttpAuthenticationFilter.html">org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">authcBearer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authc/BearerHttpAuthenticationFilter.html">org.apache.shiro.web.filter.authc.BearerHttpAuthenticationFilter</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">invalidRequest</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/InvalidRequestFilter.html">org.apache.shiro.web.filter.InvalidRequestFilter</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">logout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authc/LogoutFilter.html">org.apache.shiro.web.filter.authc.LogoutFilter</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">noSessionCreation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/session/NoSessionCreationFilter.html">org.apache.shiro.web.filter.session.NoSessionCreationFilter</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">perms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authz/PermissionsAuthorizationFilter.html">org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authz/PortFilter.html">org.apache.shiro.web.filter.authz.PortFilter</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rest</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authz/HttpMethodPermissionFilter.html">org.apache.shiro.web.filter.authz.HttpMethodPermissionFilter</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">roles</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authz/RolesAuthorizationFilter.html">org.apache.shiro.web.filter.authz.RolesAuthorizationFilter</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ssl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authz/SslFilter.html">org.apache.shiro.web.filter.authz.SslFilter</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authc/UserFilter.html">org.apache.shiro.web.filter.authc.UserFilter</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="enabling_and_disabling_filters">Enabling and Disabling Filters</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As is the case with any filter chain definition mechanism (<code>web.xml</code>, Shiro&#8217;s INI, etc), you enable a filter just by including it in the filter chain definition, and you disable it by removing it from the chain definition.</p>
+</div>
+<div class="paragraph">
+<p>But a new feature added in Shiro 1.2 is the ability to enable or disable filters without removing them from the filter chain. If enabled (the default setting), then a request will be filtered as expected. If disabled, then the filter will allow the request to pass through immediately to the next element in the <code>FilterChain</code>. You can trigger a filter&#8217;s enabled state generally based on a configuration property, or you can even trigger it on a <em>per request</em> basis.</p>
+</div>
+<div class="paragraph">
+<p>This is a powerful concept because it is often more convenient to enable or disable a filter based on certain requirements than to change the static filter chain definition, which would be permanent and inflexible.</p>
+</div>
+<div class="paragraph">
+<p>Shiro accomplishes this via its <a href="static/current/apidocs/org/apache/shiro/web/servlet/OncePerRequestFilter.html">OncePerRequestFilter</a> abstract parent class. All of Shiro&#8217;s out-of-the-box Filter implementations subclass this one and therefore are able to be enabled or disabled without removing them from the filter chain. You can subclass this class for your own filter implementations if you need this functionality as well*.</p>
+</div>
+<div class="paragraph">
+<p>*https://issues.apache.org/jira/browse/SHIRO-224[SHIRO-224] will hopefully enable this feature for any filter, not just those subclassing <code>OncePerRequestFilter</code>. If this is important to you, please vote for the issue.</p>
+</div>
+<div class="sect2">
+<h3 id="general_enablingdisabling">General Enabling/Disabling</h3>
+<div class="paragraph">
+<p>The <a href="static/current/apidocs/org/apache/shiro/web/servlet/OncePerRequestFilter.html">OncePerRequestFilter</a> (and all of its subclasses) supports enabling/disabling across all requests as well as on a per-request basis.</p>
+</div>
+<div class="paragraph">
+<p>General enabling or disabling of a filter for all requests is done by setting its <code>enabled</code> property to true or false. The default setting is <code>true</code> since most filters inherently need to execute if they are configured in a chain.</p>
+</div>
+<div class="paragraph">
+<p>For example, in shiro.ini:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+# configure Shiro's default 'ssl' filter to be disabled while testing:
+ssl.enabled = false
+
+[urls]
+...
+/some/path = ssl, authc
+/another/path = ssl, roles[admin]
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This example shows that potentially many URL paths can all require that a request must be secured by an SSL connection. Setting up SSL while in development can be frustrating and time consuming. While in development, you can disable the ssl filter. When deploying to production, you can enable it with one configuration property - something that is much easier than manually changing all of the URL paths or maintaining two Shiro configurations.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="request_specific_enablingdisabling">Request-specific Enabling/Disabling</h3>
+<div class="paragraph">
+<p><code>OncePerRequestFilter</code> actually determines if the filter is enabled or disabled based on its <code>isEnabled(request, response)</code> method.</p>
+</div>
+<div class="paragraph">
+<p>This method defaults to returning the value of the <code>enabled</code> property, which is used for generally enabling/disabling all requests as mentioned above. If you wanted to enable or disable a filter based on <em>request specific</em> criteria, you can override the <code>OncePerRequestFilter</code> <code>isEnabled(request,response)</code> method to perform more specific checks.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="path_specific_enablingdisabling">Path-specific Enabling/Disabling</h3>
+<div class="paragraph">
+<p>Shiro&#8217;s <a href="static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html">PathMatchingFilter</a> (a subclass of <code>OncePerRequestFilter</code> has the ability to react to configuration based on a <em>specific path</em> being filtered. This means you can enable or disable a filter based on the path and the path-specific configuration in addition to the incoming request and response.</p>
+</div>
+<div class="paragraph">
+<p>If you need to be able to react to the matching path and the path-specific configuration to determine if a filter is enabled or disabled, instead of overriding <code>OncePerRequestFilter</code> <code>isEnabled(request,response)</code> method, you would override the <code>PathMatchingFilter</code> <code>isEnabled(request,response,path,pathConfig)</code> method instead.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="global_filters">Global Filters</h3>
+<div class="paragraph">
+<p>Starting with Shiro 1.6 the ability to define global filters has been added. Adding "global filters" will add additional filters to ALL routes, this includes previously configured filter chains as well as unconfigured paths.</p>
+</div>
+<div class="paragraph">
+<p>By default, the global filters contains the <code>invalidRequest</code> filter. This filter blocks known malicious attacks, see below for configuration details.</p>
+</div>
+<div class="paragraph">
+<p>Global filters can be customized or disabled, for example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+# disable Global Filters
+filterChainResolver.globalFilters = null</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Define the list of global filters:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+filterChainResolver.globalFilters = invalidRequest, port</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>invalidRequest</code> filter blocks requests with non-ascii characters, semicolons, and backslashes, each of these can be disabled independently to allow for backward compatibility.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+invalidRequest.blockBackslash = true
+invalidRequest.blockSemicolon = true
+invalidRequest.blockNonAscii = true
+...</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you currently allowing URL rewriting to allow for a &lt;code&gt;jsessionid&lt;/code&gt; in the URL, you must set <code>blockSemicolon</code> to <code>false</code>.</p>
+</div>
+<div class="paragraph">
+<p>URL rewriting for <code>jsessionid</code> is defined in section "7.1.3" of the Java Servlet Specification, but it is generally NOT recommended.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="http_strict_transport_security_hsts">HTTP Strict Transport Security (HSTS)</h3>
+<div class="paragraph">
+<p>The <a href="static/current/apidocs/org/apache/shiro/web/filter/authz/SslFilter.html">SslFilter</a> (and all of its subclasses) supports enabling/disabling HTTP Strict Transport Security (HSTS).</p>
+</div>
+<div class="paragraph">
+<p>For example, in shiro.ini:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+# configure Shiro's default 'ssl' filter to enabled HSTS:
+ssl.enabled = true
+ssl.hsts.enabled = true
+ssl.hsts.includeSubDomains = true
+
+[urls]
+...
+/some/path = ssl, authc
+/another/path = ssl, roles[admin]
+...</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="session_management">Session Management</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="servlet_container_sessions">Servlet Container Sessions</h3>
+<div class="paragraph">
+<p>In web environments, Shiro&#8217;s default session manager <a href="static/current/apidocs/org/apache/shiro/session/mgt/SessionManager.html"><code>SessionManager</code></a> implementation is the <a href="static/current/apidocs/org/apache/shiro/web/session/mgt/ServletContainerSessionManager.html"><code>ServletContainerSessionManager</code></a>.
+This very simple implementation delegates all session management duties (including session clustering if the servlet container supports it) to the runtime Servlet container.
+It is essentially a bridge for Shiro&#8217;s session API to the servlet container and does little else.</p>
+</div>
+<div class="paragraph">
+<p>A benefit of using this default is that apps that work with existing servlet container session configuration (timeout, any container-specific clustering mechanisms, etc) will work as expected.</p>
+</div>
+<div class="paragraph">
+<p>A downside of this default is that you are tied to the servlet container&#8217;s specific session behavior. For example, if you wanted to cluster sessions, but you used Jetty for testing and Tomcat in production, your container-specific configuration (or code) would not be portable.</p>
+</div>
+<div class="sect3">
+<h4 id="servlet_container_session_timeout">Servlet Container Session Timeout</h4>
+<div class="paragraph">
+<p>If using the default servlet container support, you configure session timeout as expected in your web application&#8217;s <code>web.xml</code> file. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;session-config&gt;
+  &lt;!-- web.xml expects the session timeout in minutes: --&gt;
+  &lt;session-timeout&gt;30&lt;/session-timeout&gt;
+&lt;/session-config&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="native_sessions">Native Sessions</h3>
+<div class="paragraph">
+<p>If you want your session configuration settings and clustering to be portable across servlet containers (e.g. Jetty in testing, but Tomcat or JBoss in production), or you want to control specific session/clustering features, you can enable Shiro&#8217;s native session management.</p>
+</div>
+<div class="paragraph">
+<p>The word 'Native' here means that Shiro&#8217;s own enterprise session management implementation will be used to support all <code>Subject</code> and <code>HttpServletRequest</code> sessions and bypass the servlet container completely. But rest assured - Shiro implements the relevant parts of the Servlet specification directly so any existing web/http related code works as expected and never needs to 'know' that Shiro is transparently managing sessions.</p>
+</div>
+<div class="sect3">
+<h4 id="defaultwebsessionmanager"><code>DefaultWebSessionManager</code></h4>
+<div class="paragraph">
+<p>To enable native session management for your web application, you will need to configure a native web-capable session manager to override the default servlet container-based one. You can do that by configuring an instance of <a href="static/current/apidocs/org/apache/shiro/web/session/mgt/DefaultWebSessionManager.html"><code>DefaultWebSessionManager</code></a> on Shiro&#8217;s <code>SecurityManager</code>. For example, in <code>shiro.ini</code>:</p>
+</div>
+<div class="paragraph">
+<p><strong>shiro.ini native web session management</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+sessionManager = org.apache.shiro.web.session.mgt.DefaultWebSessionManager
+# configure properties (like session timeout) here if desired
+
+# Use the configured native session manager:
+securityManager.sessionManager = $sessionManager</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once declared, you can configure the <code>DefaultWebSessionManager</code> instance with native session options like session timeout and clustering configuration as described in the <a href="session-management.html">Session Management</a> section.</p>
+</div>
+<div class="sect4">
+<h5 id="native_session_timeout">Native Session Timeout</h5>
+<div class="paragraph">
+<p>After configuring the <code>DefaultWebSessionManager</code> instance, session timeout is configured as described in <a href="/session-management.html#SessionManagement-SessionManager-SessionTimeout">Session Management: Session Timeout</a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="session_cookie">Session Cookie</h5>
+<div class="paragraph">
+<p>The <code>DefaultWebSessionManager</code> supports two web-specific configuration properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>sessionIdCookieEnabled</code> (a boolean)</p>
+</li>
+<li>
+<p><code>sessionIdCookie</code>, a <a href="static/current/apidocs/org/apache/shiro/web/servlet/Cookie.html">Cookie</a> instance.</p>
+</li>
+</ul>
+</div>
+<div class="exampleblock">
+<div class="title">Example 3. Cookie as a template</div>
+<div class="content">
+<div class="paragraph">
+<p>The <code>sessionIdCookie</code> property is essentially a template - you configure the <code>Cookie</code> instance properties, and this template will be used to set the actual HTTP <code>Cookie</code> header at runtime with an appropriate session ID value.</p>
+</div>
+</div>
+</div>
+<div class="sect5">
+<h6 id="session_cookie_configuration">Session Cookie Configuration</h6>
+<div class="paragraph">
+<p>The DefaultWebSessionManager&#8217;s <code>sessionIdCookie</code> default instance is a <a href="static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html"><code>SimpleCookie</code></a>. This simple implementation allows JavaBeans-style property configuration for all of the relevant properties you would want to configure on an http Cookie.</p>
+</div>
+<div class="paragraph">
+<p>For example, you could set the Cookie domain:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+securityManager.sessionManager.sessionIdCookie.domain = foo.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See the <a href="static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html">SimpleCookie JavaDoc</a> for additional properties.</p>
+</div>
+<div class="paragraph">
+<p>The cookie&#8217;s default name is <code>JSESSIONID</code> in accordance with the servlet specification. Additionally, Shiro&#8217;s cookie supports the <a href="https://en.wikipedia.org/wiki/HTTP_cookie#HttpOnly_cookie"><code>HttpOnly</code></a> and <a href="https://en.wikipedia.org/wiki/HTTP_cookie#Same-site_cookie"><code>SameSite</code></a> flags. The <code>sessionIdCookie</code> sets <code>HttpOnly</code> to <code>true</code> and <code>SameSite</code> to <code>LAX</code> by default for extra security.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Shiro&#8217;s <code>Cookie</code> concept supports the <code>HttpOnly</code> flag even in Servlet 2.4 and 2.5 environments (whereas the Servlet API only supports it natively in 2.6 or later).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="disabling_the_session_cookie">Disabling the Session Cookie</h6>
+<div class="paragraph">
+<p>If you do not want session cookies to be used, you can disable their use by configuring the <code>sessionIdCookieEnabled</code> property to false. For example:</p>
+</div>
+<div class="paragraph">
+<p><strong>Disabling native session cookies</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+securityManager.sessionManager.sessionIdCookieEnabled = false</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="remember_me_services">Remember Me Services</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Shiro will perform 'rememberMe' services if the <code>AuthenticationToken</code> implements the <a href="static/current/apidocs/org/apache/shiro/authc/RememberMeAuthenticationToken.html"><code>org.apache.shiro.authc.RememberMeAuthenticationToken</code></a> interface. This interface specifies a method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">boolean isRememberMe();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If this method returns <code>true</code>, Shiro will remember the end-user&#8217;s identity across sessions.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">UsernamePasswordToken and RememberMe</div>
+<div class="paragraph">
+<p>The frequently-used <code>UsernamePasswordToken</code> already implements the <code>RememberMeAuthenticationToken</code> interface and supports rememberMe logins.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="programmatic_support">Programmatic Support</h3>
+<div class="paragraph">
+<p>To use rememberMe programmatically, you can set the value to <code>true</code> on a class that supports this configuration. For example, using the standard <code>UsernamePasswordToken</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+
+token.setRememberMe(true);
+
+SecurityUtils.getSubject().login(token);
+...</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="form_based_login">Form-based Login</h3>
+<div class="paragraph">
+<p>For web applications, the <code>authc</code> filter is by default a <a href="static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html"><code>FormAuthenticationFilter</code></a>. This supports reading the 'rememberMe' boolean as a form/request parameter. By default, it expects the request param to be named <code>rememberMe</code>. Here is an example shiro.ini config supporting this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+authc.loginUrl = /login.jsp
+
+[urls]
+
+# your login form page here:
+login.jsp = authc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And in your web form, have a checkbox named 'rememberMe':</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;form ...&gt;
+
+   Username: &lt;input type="text" name="username"/&gt; &lt;br/&gt;
+   Password: &lt;input type="password" name="password"/&gt;
+    ...
+   &lt;input type="checkbox" name="rememberMe" value="true"/&gt;Remember Me?
+   ...
+&lt;/form&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, the <code>FormAuthenticationFilter</code> will look for request parameters named <code>username</code>, <code>password</code> and <code>rememberMe</code>. If these are different than the form field names that you use in your form, you&#8217;ll want to configure the names on the <code>FormAuthenticationFilter</code>. For example, in <code>shiro.ini</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+authc.loginUrl = /whatever.jsp
+authc.usernameParam = somethingOtherThanUsername
+authc.passwordParam = somethingOtherThanPassword
+authc.rememberMeParam = somethingOtherThanRememberMe
+...</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cookie_configuration">Cookie configuration</h3>
+<div class="paragraph">
+<p>You can configure how the <code>rememberMe</code> cookie functions by setting the default {{RememberMeManager}}s various cookie properties. For example, in shiro.ini:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+
+securityManager.rememberMeManager.cookie.name = foo
+securityManager.rememberMeManager.cookie.maxAge = blah
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See the <a href="static/current/apidocs/org/apache/shiro/web/mgt/CookieRememberMeManager.html"><code>CookieRememberMeManager</code></a> and the supporting <a href="static/current/apidocs/src-html/org/apache/shiro/web/servlet/SimpleCookie.html"><code>SimpleCookie</code></a> JavaDoc for configuration properties.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="custom_remembermemanager">Custom <code>RememberMeManager</code></h3>
+<div class="paragraph">
+<p>It should be noted that if the default cookie-based <code>RememberMeManager</code> implementation does not meet your needs, you can plug in any you like in to the <code>securityManager</code> like you would configure any other object reference:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+rememberMeManager = com.my.impl.RememberMeManager
+securityManager.rememberMeManager = $rememberMeManager</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tag_library">JSP / GSP Tag Library</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apache Shiro provides a <code>Subject</code>-aware JSP/GSP tag library that allows you to control your JSP, JSTL or GSP page output based on the current Subject&#8217;s state. This is quite useful for personalizing views based on the identity and authorization state of the current user viewing the web page.</p>
+</div>
+<div class="sect2">
+<h3 id="tag_library_configuration">Tag Library Configuration</h3>
+<div class="paragraph">
+<p>The Tag Library Descriptor (TLD) file is bundled in <code>shiro-web.jar</code> in the <code>META-INF/shiro.tld</code> file. To use any of the tags, add the following line to the top of your JSP page (or wherever you define page directives):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ve used the <code>shiro</code> prefix to indicate the shiro tag library namespace, but you can assign whatever name you like.</p>
+</div>
+<div class="paragraph">
+<p>Now we&#8217;ll cover each tag and show how it might be used to render a page.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="web_guesttag">The <code>guest</code> tag</h3>
+<div class="paragraph">
+<p>The <code>guest</code> tag will display its wrapped content only if the current <code>Subject</code> is considered a 'guest'. A guest is any <code>Subject</code> that does not have an identity. That is, we don&#8217;t know who the user is because they have not logged in and they are not remembered (from Remember Me services) from a previous site visit.</p>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;shiro:guest&gt;
+    Hi there!  Please &lt;a href="login.jsp"&gt;Login&lt;/a&gt; or &lt;a href="signup.jsp"&gt;Signup&lt;/a&gt; today!
+&lt;/shiro:guest&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>guest</code> tag is the logical opposite of the <a href="#web_usertag"><code>user</code></a> tag.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="web_usertag">The <code>user</code> tag</h3>
+<div class="paragraph">
+<p>The <code>user</code> tag will display its wrapped content only if the current <code>Subject</code> is considered a 'user'. A 'user' in this context is defined as a <code>Subject</code> with a known identity, either from a successful authentication or from 'RememberMe' services. Note that this tag is semantically different from the <a href="#web_authenticatedtag">authenticated</a> tag, which is more restrictive than this tag.</p>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;shiro:user&gt;
+    Welcome back John!  Not John? Click &lt;a href="login.jsp"&gt;here&lt;a&gt; to login.
+&lt;/shiro:user&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>user</code> tag is the logical opposite of the <a href="#web_guesttag"><code>guest</code></a> tag.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="web_authenticatedtag">The <code>authenticated</code> tag</h3>
+<div class="paragraph">
+<p>Displays body content only if the current user has successfully authenticated <em>during their current session</em>. It is more restrictive than the 'user' tag. It is logically opposite to the 'notAuthenticated' tag.</p>
+</div>
+<div class="paragraph">
+<p>The <code>authenticated</code> tag will display its wrapped content only if the current <code>Subject</code> has successfully authenticated <em>during their current session</em>. It is a more restrictive tag than the <a href="#web_usertag">user</a>, which is used to guarantee identity in sensitive workflows.</p>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;shiro:authenticated&gt;
+    &lt;a href="updateAccount.jsp"&gt;Update your contact information&lt;/a&gt;.
+&lt;/shiro:authenticated&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>authenticated</code> tag is the logical opposite of the <a href="#web_notauthenticatedtag"><code>notAuthenticated</code></a> tag.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="web_notauthenticatedtag">The <code>notAuthenticated</code> tag</h3>
+<div class="paragraph">
+<p>The <code>notAuthenticated</code> tag will display its wrapped content if the current <code>Subject</code> has <strong>NOT</strong> yet successfully authenticated during the current session.</p>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;shiro:notAuthenticated&gt;
+    Please &lt;a href="login.jsp"&gt;login&lt;/a&gt; in order to update your credit card information.
+&lt;/shiro:notAuthenticated&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>notAuthenticated</code> tag is the logical opposite of the <a href="#web_authenticatedtag"><code>authenticated</code></a> tag.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="the_principal_tag">The <code>principal</code> tag</h3>
+<div class="paragraph">
+<p>The <code>principal</code> tag will output the Subject&#8217;s <a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#">[#</a>]#getPrincipal--[<code>principal</code>] (identifying attribute) or a property of that principal.</p>
+</div>
+<div class="paragraph">
+<p>Without any tag attributes, the tag will render the <code>toString()</code> value of the principal. For example (assuming the principal is a String username):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">Hello, &lt;shiro:principal/&gt;, how are you today?</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is (mostly) equivalent to the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-jsp hljs" data-lang="jsp">Hello, &lt;%= SecurityUtils.getSubject().getPrincipal().toString() %&gt;, how are you today?</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="typed_principal">Typed principal</h4>
+<div class="paragraph">
+<p>The <code>principal</code> tag assumes by default that the principal to print is the <code>subject.getPrincipal()</code> value. But if you wanted to print a value that is <em>not</em> the primary principal, but another in the Subject&#8217;s {<a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#">[#</a>]#getPrincipals--[principal collection], you can acquire that principal by type and print that value instead.</p>
+</div>
+<div class="paragraph">
+<p>For example, printing the Subject&#8217;s user ID (and not the username), assuming the ID was in the principal collection:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">User ID: &lt;principal type="java.lang.Integer"/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is (mostly) equivalent to the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-jsp hljs" data-lang="jsp">User ID: &lt;%= SecurityUtils.getSubject().getPrincipals().oneByType(Integer.class).toString() %&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="principal_property">Principal property</h4>
+<div class="paragraph">
+<p>But what if the principal (either the default primary principal or 'typed' principal above) is a complex object and not a simple string, and you wanted to reference a property on that principal? You can use the <code>property</code> attribute to indicate the name of the property to read (must be accessible via a JavaBeans-compatible getter method). For example (assuming the primary principal is a User object):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">Hello, &lt;shiro:principal property="firstName"/&gt;, how are you today?</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is (mostly) equivalent to the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-jsp hljs" data-lang="jsp">Hello, &lt;%= SecurityUtils.getSubject().getPrincipal().getFirstName().toString() %&gt;, how are you today?</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or, combined with the type attribute:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">Hello, &lt;shiro:principal type="com.foo.User" property="firstName"/&gt;, how are you today?</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>this is largely equivalent to the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-jsp hljs" data-lang="jsp">Hello, &lt;%= SecurityUtils.getSubject().getPrincipals().oneByType(com.foo.User.class).getFirstName().toString() %&gt;, how are you today?</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="web_hasroletag">The <code>hasRole</code> tag</h3>
+<div class="paragraph">
+<p>The <code>hasRole</code> tag will display its wrapped content only if the current <code>Subject</code> is assigned the specified role.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;shiro:hasRole name="administrator"&gt;
+    &lt;a href="admin.jsp"&gt;Administer the system&lt;/a&gt;
+&lt;/shiro:hasRole&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>hasRole</code> tag is the logical opposite of the <a href="#web_lacksroletag">lacksRole</a> tag.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="web_lacksroletag">The <code>lacksRole</code> tag</h3>
+<div class="paragraph">
+<p>The <code>lacksRole</code> tag will display its wrapped content only if the current <code>Subject</code> <strong>is NOT</strong> assigned the specified role.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;shiro:lacksRole name="administrator"&gt;
+    Sorry, you are not allowed to administer the system.
+&lt;/shiro:lacksRole&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>lacksRole</code> tag is the logical opposite of the <a href="#web_hasroletag">hasRole</a> tag.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="the_hasanyrole_tag">The <code>hasAnyRole</code> tag</h3>
+<div class="paragraph">
+<p>The <code>hasAnyRole</code> tag will display its wrapped content if the current <code>Subject</code> is assigned <em>any</em> of the specified roles from a comma-delimited list of role names.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;shiro:hasAnyRoles name="developer, project manager, administrator"&gt;
+    You are either a developer, project manager, or administrator.
+&lt;/shiro:hasAnyRoles&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>hasAnyRole</code> tag does not currently have a logically opposite tag.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="web_haspermissiontag">The <code>hasPermission</code> tag</h3>
+<div class="paragraph">
+<p>The <code>hasPermission</code> tag will display its wrapped content only if the current <code>Subject</code> 'has' (implies) the specified permission. That is, the user has the specified ability.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;shiro:hasPermission name="user:create"&gt;
+    &lt;a href="createUser.jsp"&gt;Create a new User&lt;/a&gt;
+&lt;/shiro:hasPermission&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>hasPermission</code> tag is the logical opposite of the <a href="#web_lackspermissiontag">lacksPermission</a> tag.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="web_lackspermissiontag">The <code>lacksPermission</code> tag</h3>
+<div class="paragraph">
+<p>The <code>lacksPermission</code> tag will display its wrapped content only if the current <code>Subject</code> <strong>DOES NOT</strong> have (imply) the specified permission. That is, the user <strong>DOES NOT</strong> have the specified ability.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;shiro:lacksPermission name="user:delete"&gt;
+    Sorry, you are not allowed to delete user accounts.
+&lt;/shiro:lacksPermission&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>lacksPermission</code> tag is the logical opposite of the <a href="#web_haspermissiontag">hasPermission</a> tag.</p>
+</div>
+<h2 id="Lendahandwithdocumentation">Lend a hand with documentation</h2>
+
+<p>While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time.  If you'd like to help the Shiro project, please consider correcting, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro. </p>
+
+<p>The easiest way to contribute your documentation is to submit a pull-request by clicking on the <code>Edit</code> link below, or send it to the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.</p>
+</div>
+</div>
+</div>
+	<hr />
+
+</div> 
+
+    <div class="footer-padding"></div>
+
+    <div class="container-fluid pt-2 border-top" id="custom-footer">
+      <footer class="row justify-content-between align-items-center">
+        <div class=" col-md-5">
+          <div class="copyright-footer justify-content-start">
+            <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
+            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center col-md-1">
+          <a class="btn btn-social"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
+        </div>
+
+        <div class="d-flex justify-content-end col-md-4" id="editThisPage">
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/web.adoc"/>
+        </div>
+
+        <div class="d-flex col-md-2 justify-content-end" style="position: relative">
+          <div class="footer-shield"></div>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="highlight.js-11.2.0/highlight.min.js"></script>
+    <script src="js/shiro.js"></script>
+
+    <script>
+        docReady(
+          addPageEditLink()
+      );
+    </script>
+    <script>hljs.highlightAll();</script>
+
+    </body>
+</html>

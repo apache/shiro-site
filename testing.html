@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-  2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Testing with Apache Shiro | Apache Shiro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content='documentation,testing'>
+    <meta name="generator" content="JBake">
+    <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
+    <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
+    <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
+
+    <meta property="og:title" content="Testing with Apache Shiro | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2022-03-22T22:45:11Z"/>
+    <meta property="article:tag" content='documentation'/>
+    <meta property="article:tag" content='testing'/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content='https://shiro.staged.apache.org//testing.html'/>
+    <meta property="og:image" content='images/shiro-featured-image.png'/>
+    <meta property="og:image:width" content='1200'/>
+    <meta property="og:image:height" content='628'/>
+    <meta property="og:site_name" content="Apache Shiro"/>
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/asciidoctor.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="highlight.js-11.2.0/styles/default.min.css" rel="stylesheet">
+    <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Matomo -->
+    <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['disableCookies']);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u="//matomo.privacy.apache.org/";
+            _paq.push(['setTrackerUrl', u+'matomo.php']);
+            _paq.push(['setSiteId', '2']);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+  </head>
+  <body>
+    <div id="top-bar"></div>
+    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
+
+    <div id="wrap">
+
+      <div class="masthead">
+        <p class="lead">
+          <a href="index.html"><img src="images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <span class="tagline">Simple. Java. Security.</span>
+          <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
+          </a>
+        </p>
+      </div>
+
+	<!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="get-started.html">Get Started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="documentation.html">Docs</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-webapps" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Web Apps
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
+                <li><a class="dropdown-item" href="web.html">General</a></li>
+                <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="web-features.html">Features</a></li>
+              </ul>
+            </li>
+
+            <li><a class="nav-link" href="features.html">Features</a></li>
+
+            <!-- integrations -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-integrations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Integrations
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
+                <li><a class="dropdown-item" href="spring-boot.html">Spring</a></li>
+                <li><a class="dropdown-item" href="guice.html">Guice</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="integration.html">Third-Party Integrations</a></li>
+              </ul>
+            </li>
+
+            <!-- Community -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-community" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Community
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
+                <li><a class="dropdown-item" href="forums.html">Community Forums</a></li>
+                <li><a class="dropdown-item" href="mailing-lists.html">Mailing Lists</a></li>
+                <li><a class="dropdown-item" href="articles.html">Articles</a></li>
+                <li><a class="dropdown-item" href="news.html">News</a></li>
+                <li><a class="dropdown-item" href="events.html">Events</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="community.html">More</a></li>
+              </ul>
+            </li>
+
+            <!-- About -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-about" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                About
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
+                <li><a class="dropdown-item" href="about.html">About</a></li>
+                <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="d-flex justify-content-end navbar-nav mb-2 mb-lg-0">
+            <!-- The ASF -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-asf" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apache Software Foundation
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
+                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+	<div class="page-header">
+		<h1>Testing with Apache Shiro</h1>
+	</div>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This part of the documentation explains how to enable Shiro in unit tests.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Testing-Whattoknowfortests">What to know for tests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As we&#8217;ve already covered in the <a href="/subject.html">Subject reference</a>, we know that a Subject is security-specific view of the 'currently executing' user, and that Subject instances are always bound to a thread to ensure we know <em>who</em> is executing logic at any time during the thread&#8217;s execution.</p>
+</div>
+<div class="paragraph">
+<p>This means three basic things must always occur in order to support being able to access the currently executing Subject:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>A <code>Subject</code> instance must be created</p>
+</li>
+<li>
+<p>The <code>Subject</code> instance must be <em>bound</em> to the currently executing thread.</p>
+</li>
+<li>
+<p>After the thread is finished executing (or if the thread&#8217;s execution results in a <code>Throwable</code>), the <code>Subject</code> must be <em>unbound</em> to ensure that the thread remains 'clean' in any thread-pooled environment.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Shiro has architectural components that perform this bind/unbind logic automatically for a running application. For example, in a web application, the root Shiro Filter performs this logic when <a href="http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/servlet/AbstractShiroFilter.html#doFilterInternal-javax.servlet.ServletRequest-javax.servlet.ServletResponse-javax.servlet.FilterChain-">filtering a request</a>. But as test environments and frameworks differ, we need to perform this bind/unbind logic ourselves for our chosen test framework.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Testing-TestSetup">Test Setup</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>So we know after creating a <code>Subject</code> instance, it must be <em>bound</em> to thread. After the thread (or in this case, a test) is finished executing, we must <em>unbind</em> the Subject to keep the thread 'clean'.</p>
+</div>
+<div class="paragraph">
+<p>Luckily enough, modern test frameworks like JUnit and TestNG natively support this notion of 'setup' and 'teardown' already. We can leverage this support to simulate what Shiro would do in a 'complete' application. We&#8217;ve created a base abstract class that you can use in your own testing below - feel free to copy and/or modify as you see fit. It can be used in both unit testing and integration testing (we&#8217;re using JUnit in this example, but TestNG works just as well):</p>
+</div>
+<div class="sect2">
+<h3 id="abstractshirotest">AbstractShiroTest</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.UnavailableSecurityManagerException;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.subject.support.SubjectThreadState;
+import org.apache.shiro.util.LifecycleUtils;
+import org.apache.shiro.util.ThreadState;
+import org.junit.AfterClass;
+
+/**
+ * Abstract test case enabling Shiro in test environments.
+ */
+public abstract class AbstractShiroTest {
+
+    private static ThreadState subjectThreadState;
+
+    public AbstractShiroTest() {
+    }
+
+    /**
+     * Allows subclasses to set the currently executing {@link Subject} instance.
+     *
+     * @param subject the Subject instance
+     */
+    protected void setSubject(Subject subject) {
+        clearSubject();
+        subjectThreadState = createThreadState(subject);
+        subjectThreadState.bind();
+    }
+
+    protected Subject getSubject() {
+        return SecurityUtils.getSubject();
+    }
+
+    protected ThreadState createThreadState(Subject subject) {
+        return new SubjectThreadState(subject);
+    }
+
+    /**
+     * Clears Shiro's thread state, ensuring the thread remains clean for future test execution.
+     */
+    protected void clearSubject() {
+        doClearSubject();
+    }
+
+    private static void doClearSubject() {
+        if (subjectThreadState != null) {
+            subjectThreadState.clear();
+            subjectThreadState = null;
+        }
+    }
+
+    protected static void setSecurityManager(SecurityManager securityManager) {
+        SecurityUtils.setSecurityManager(securityManager);
+    }
+
+    protected static SecurityManager getSecurityManager() {
+        return SecurityUtils.getSecurityManager();
+    }
+
+    @AfterClass
+    public static void tearDownShiro() {
+        doClearSubject();
+        try {
+            SecurityManager securityManager = getSecurityManager();
+            LifecycleUtils.destroy(securityManager);
+        } catch (UnavailableSecurityManagerException e) {
+            //we don't care about this when cleaning up the test environment
+            //(for example, maybe the subclass is a unit test and it didn't
+            // need a SecurityManager instance because it was using only
+            // mock Subject instances)
+        }
+        setSecurityManager(null);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">Testing &amp; Frameworks</div>
+<div class="paragraph">
+<p>The code in the <code>AbstractShiroTest</code> class uses Shiro''s <code>ThreadState</code> concept and a static SecurityManager.
+These techniques are useful in tests and in framework code, but rarely ever used in application code.</p>
+</div>
+<div class="paragraph">
+<p>Most end-users working with Shiro who need to ensure thread-state consistency will almost always use Shiro''s automatic management mechanisms, namely the <code>Subject.associateWith</code> and the <code>Subject.execute</code> methods.
+These methods are covered in the reference on <a href="/subject.html#Subject-ThreadAssociation">Subject thread association</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>&lt;p&gt;&lt;/p&gt;')</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Testing-UnitTesting">Unit Testing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Unit testing is mostly about testing your code and only your code in a limited scope. When you take Shiro into account, what you really want to focus on is that your code works correctly with Shiro&#8217;s <em>API</em> - you don&#8217;t want to necessarily test that Shiro&#8217;s implementation is working correctly (that&#8217;s something that the Shiro development team must ensure in Shiro&#8217;s code base).</p>
+</div>
+<div class="paragraph">
+<p>Testing to see if Shiro&#8217;s implementations work in conjunction with your implementations is really integration testing (discussed below).</p>
+</div>
+<div class="sect2">
+<h3 id="Testing-ExampleShiroUnitTest">ExampleShiroUnitTest</h3>
+<div class="paragraph">
+<p>Because unit tests are better suited for testing your own logic (and not any implementations your logic might call), it is a great idea to <em>mock</em> any APIs that your logic depends on. This works very well with Shiro - you can mock the <code>Subject</code> interface and have it reflect whatever conditions you want your code under test to react to. We can leverage modern mock frameworks like <a href="http://easymock.org/">EasyMock</a> and <a href="http://site.mockito.org">Mockito</a> to do this for us.</p>
+</div>
+<div class="paragraph">
+<p>But as stated above, the key in Shiro tests is to remember that any Subject instance (mock or real) must be bound to the thread during test execution. So all we need to do is bind the mock Subject to ensure things work as expected.</p>
+</div>
+<div class="paragraph">
+<p>(this example uses EasyMock, but Mockito works equally as well):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.apache.shiro.subject.Subject;
+import org.junit.After;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+
+/**
+ * Simple example test class showing how one may perform unit tests for
+ * code that requires Shiro APIs.
+ */
+public class ExampleShiroUnitTest extends AbstractShiroTest {
+
+    @Test
+    public void testSimple() {
+
+        //1.  Create a mock authenticated Subject instance for the test to run:
+        Subject subjectUnderTest = createNiceMock(Subject.class);
+        expect(subjectUnderTest.isAuthenticated()).andReturn(true);
+
+        //2. Bind the subject to the current thread:
+        setSubject(subjectUnderTest);
+
+        //perform test logic here.  Any call to
+        //SecurityUtils.getSubject() directly (or nested in the
+        //call stack) will work properly.
+    }
+
+    @After
+    public void tearDownSubject() {
+        //3. Unbind the subject from the current thread:
+        clearSubject();
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see, we&#8217;re not setting up a Shiro <code>SecurityManager</code> instance or configuring a <code>Realm</code> or anything like that. We&#8217;re simply creating a mock <code>Subject</code> instance and binding it to the thread via the <code>setSubject</code> method call. This will ensure that any calls in our test code or in the code we&#8217;re testing to <code>SecurityUtils.getSubject()</code> will work correctly.</p>
+</div>
+<div class="paragraph">
+<p>Note that the <code>setSubject</code> method implementation will bind your mock Subject to the thread and it will remain there until you call <code>setSubject</code> with a different <code>Subject</code> instance or until you explicitly clear it from the thread via the <code>clearSubject()</code> call.</p>
+</div>
+<div class="paragraph">
+<p>How long you keep the subject bound to the thread (or swap it out for a new instance in a different test) is up to you and your testing requirements.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Testing-tearDownSubject">tearDownSubject()</h3>
+<div class="paragraph">
+<p>The <code>tearDownSubject()</code> method in the example uses a Junit 4 annotation to ensure that the Subject is cleared from the thread after every test method is executed, no matter what. This requires you to set up a new <code>Subject</code> instance and set it (via <code>setSubject</code>) for every test that executes.</p>
+</div>
+<div class="paragraph">
+<p>This is not strictly necessary however. For example, you could just bind a new Subject instance (via <code>setSujbect</code>) at the beginning of every test, say, in an <code>@Before</code>-annotated method. But if you&#8217;re going to do that, you might as well have the <code>@After tearDownSubject()</code> method to keep things symmetrical and 'clean'.</p>
+</div>
+<div class="paragraph">
+<p>You can mix and match this setup/teardown logic in each method manually or use the @Before and @After annotations as you see fit. The <code>AbstractShiroTest</code> super class will however unbind the Subject from the thread after all tests because of the <code>@AfterClass</code> annotation in its <code>tearDownShiro()</code> method.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Testing-IntegrationTesting">Integration Testing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now that we&#8217;ve covered unit test setup, let&#8217;s talk a bit about integration testing. Integration testing is testing implementations across API boundaries. For example, testing that implementation A works when calling implementation B and that implementation B does what it is supposed to.</p>
+</div>
+<div class="paragraph">
+<p>You can easily perform integration testing in Shiro as well. Shiro&#8217;s <code>SecurityManager</code> instance and things it wraps (like Realms and SessionManager, etc) are all very lightweight POJOs that use very little memory. This means you can create and tear down a <code>SecurityManager</code> instance for every test class you execute. When your integration tests run, they will be using 'real' <code>SecurityManager</code> and <code>Subject</code> instances like your application will be using at runtime.</p>
+</div>
+<div class="sect2">
+<h3 id="Testing-ExampleShiroIntegrationTest">ExampleShiroIntegrationTest</h3>
+<div class="paragraph">
+<p>The example code below looks almost identical to the Unit Test example above, but the 3 step process is slightly different:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>There is now a step '0', which sets up a 'real' SecurityManager instance.</p>
+</li>
+<li>
+<p>Step 1 now constructs a 'real' Subject instance with the <code>Subject.Builder</code> and binds it to the thread.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Thread binding and unbinding (steps 2 and 3) function the same as the Unit Test example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.Factory;
+import org.junit.After;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+public class ExampleShiroIntegrationTest extends AbstractShiroTest {
+
+    @BeforeClass
+    public static void beforeClass() {
+        //0.  Build and set the SecurityManager used to build Subject instances used in your tests
+        //    This typically only needs to be done once per class if your shiro.ini doesn't change,
+        //    otherwise, you'll need to do this logic in each test that is different
+        Factory&lt;SecurityManager&gt; factory = new IniSecurityManagerFactory("classpath:test.shiro.ini");
+        setSecurityManager(factory.getInstance());
+    }
+
+    @Test
+    public void testSimple() {
+        //1.  Build the Subject instance for the test to run:
+        Subject subjectUnderTest = new Subject.Builder(getSecurityManager()).buildSubject();
+
+        //2. Bind the subject to the current thread:
+        setSubject(subjectUnderTest);
+
+        //perform test logic here.  Any call to
+        //SecurityUtils.getSubject() directly (or nested in the
+        //call stack) will work properly.
+    }
+
+    @AfterClass
+    public void tearDownSubject() {
+        //3. Unbind the subject from the current thread:
+        clearSubject();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see, a concrete <code>SecurityManager</code> implementation is instantiated and made accessible for the remainder of the test via the <code>setSecurityManager</code> method. Test methods can then use this <code>SecurityManager</code> when using the <code>Subject.Builder</code> later via the <code>getSecurityManager()</code> method.</p>
+</div>
+<div class="paragraph">
+<p>Also note that the <code>SecurityManager</code> instance is set up once in a <code>@BeforeClass</code> setup method - a fairly common practice for most test classes. But if you wanted to, you could create a new <code>SecurityManager</code> instance and set it via <code>setSecurityManager</code> at any time from any test method - for example, you might reference two different .ini files to build a new <code>SecurityManager</code> depending on your test requirements.</p>
+</div>
+<div class="paragraph">
+<p>Finally, just as with the Unit Test example, the <code>AbstractShiroTest</code> super class will clean up all Shiro artifacts (any remaining <code>SecurityManager</code> and <code>Subject</code> instance) via its <code>@AfterClass tearDownShiro()</code> method to ensure the thread is 'clean' for the next test class to run.</p>
+</div>
+</div>
+</div>
+</div>
+	<hr />
+
+</div> 
+
+    <div class="footer-padding"></div>
+
+    <div class="container-fluid pt-2 border-top" id="custom-footer">
+      <footer class="row justify-content-between align-items-center">
+        <div class=" col-md-5">
+          <div class="copyright-footer justify-content-start">
+            <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
+            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center col-md-1">
+          <a class="btn btn-social"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
+        </div>
+
+        <div class="d-flex justify-content-end col-md-4" id="editThisPage">
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/testing.adoc"/>
+        </div>
+
+        <div class="d-flex col-md-2 justify-content-end" style="position: relative">
+          <div class="footer-shield"></div>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="highlight.js-11.2.0/highlight.min.js"></script>
+    <script src="js/shiro.js"></script>
+
+    <script>
+        docReady(
+          addPageEditLink()
+      );
+    </script>
+    <script>hljs.highlightAll();</script>
+
+    </body>
+</html>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>WebDelegatingSubject.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: All (aggregate jar)</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.subject.support</a> &gt; <span class="el_source">WebDelegatingSubject.java</span></div><h1>WebDelegatingSubject.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.subject.support;
+
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.SessionContext;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.support.DelegatingSubject;
+import org.apache.shiro.util.StringUtils;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionContext;
+import org.apache.shiro.web.session.mgt.WebSessionContext;
+import org.apache.shiro.web.subject.WebSubject;
+import org.apache.shiro.web.util.WebUtils;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
+/**
+ * Default {@link WebSubject WebSubject} implementation that additional ensures the ability to retain a
+ * servlet request/response pair to be used by internal shiro components as necessary during the request execution.
+ *
+ * @since 1.0
+ */
+public class WebDelegatingSubject extends DelegatingSubject implements WebSubject {
+
+    private static final long serialVersionUID = -1655724323350159250L;
+
+    private final ServletRequest servletRequest;
+    private final ServletResponse servletResponse;
+
+    public WebDelegatingSubject(PrincipalCollection principals, boolean authenticated,
+                                String host, Session session,
+                                ServletRequest request, ServletResponse response,
+                                SecurityManager securityManager) {
+<span class="nc" id="L52">        this(principals, authenticated, host, session, true, request, response, securityManager);</span>
+<span class="nc" id="L53">    }</span>
+
+    //since 1.2
+    public WebDelegatingSubject(PrincipalCollection principals, boolean authenticated,
+                                String host, Session session, boolean sessionEnabled,
+                                ServletRequest request, ServletResponse response,
+                                SecurityManager securityManager) {
+<span class="fc" id="L60">        super(principals, authenticated, host, session, sessionEnabled, securityManager);</span>
+<span class="fc" id="L61">        this.servletRequest = request;</span>
+<span class="fc" id="L62">        this.servletResponse = response;</span>
+<span class="fc" id="L63">    }</span>
+
+    public ServletRequest getServletRequest() {
+<span class="fc" id="L66">        return servletRequest;</span>
+    }
+
+    public ServletResponse getServletResponse() {
+<span class="fc" id="L70">        return servletResponse;</span>
+    }
+
+    /**
+     * Returns {@code true} if session creation is allowed  (as determined by the super class's
+     * {@link super#isSessionCreationEnabled()} value and no request-specific override has disabled sessions for this subject,
+     * {@code false} otherwise.
+     * &lt;p/&gt;
+     * This means session creation is disabled if the super {@link super#isSessionCreationEnabled()} property is {@code false}
+     * or if a request attribute is discovered that turns off sessions for the current request.
+     *
+     * @return {@code true} if session creation is allowed  (as determined by the super class's
+     *         {@link super#isSessionCreationEnabled()} value and no request-specific override has disabled sessions for this
+     *         subject, {@code false} otherwise.
+     * @since 1.2
+     */
+    @Override
+    protected boolean isSessionCreationEnabled() {
+<span class="fc" id="L88">        boolean enabled = super.isSessionCreationEnabled();</span>
+<span class="pc bpc" id="L89" title="2 of 4 branches missed.">        return enabled &amp;&amp; WebUtils._isSessionCreationEnabled(this);</span>
+    }
+
+    @Override
+    protected SessionContext createSessionContext() {
+<span class="fc" id="L94">        WebSessionContext wsc = new DefaultWebSessionContext();</span>
+<span class="fc" id="L95">        String host = getHost();</span>
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">        if (StringUtils.hasText(host)) {</span>
+<span class="nc" id="L97">            wsc.setHost(host);</span>
+        }
+<span class="fc" id="L99">        wsc.setServletRequest(this.servletRequest);</span>
+<span class="fc" id="L100">        wsc.setServletResponse(this.servletResponse);</span>
+<span class="fc" id="L101">        return wsc;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

@@ -1,0 +1,284 @@
+<!DOCTYPE HTML>
+<html lang="fr">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<main role="main">
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a id="line.1">/*</a>
+<span class="sourceLineNo">002</span><a id="line.2"> * Licensed to the Apache Software Foundation (ASF) under one</a>
+<span class="sourceLineNo">003</span><a id="line.3"> * or more contributor license agreements.  See the NOTICE file</a>
+<span class="sourceLineNo">004</span><a id="line.4"> * distributed with this work for additional information</a>
+<span class="sourceLineNo">005</span><a id="line.5"> * regarding copyright ownership.  The ASF licenses this file</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * to you under the Apache License, Version 2.0 (the</a>
+<span class="sourceLineNo">007</span><a id="line.7"> * "License"); you may not use this file except in compliance</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * with the License.  You may obtain a copy of the License at</a>
+<span class="sourceLineNo">009</span><a id="line.9"> *</a>
+<span class="sourceLineNo">010</span><a id="line.10"> *     http://www.apache.org/licenses/LICENSE-2.0</a>
+<span class="sourceLineNo">011</span><a id="line.11"> *</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * Unless required by applicable law or agreed to in writing,</a>
+<span class="sourceLineNo">013</span><a id="line.13"> * software distributed under the License is distributed on an</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</a>
+<span class="sourceLineNo">015</span><a id="line.15"> * KIND, either express or implied.  See the License for the</a>
+<span class="sourceLineNo">016</span><a id="line.16"> * specific language governing permissions and limitations</a>
+<span class="sourceLineNo">017</span><a id="line.17"> * under the License.</a>
+<span class="sourceLineNo">018</span><a id="line.18"> */</a>
+<span class="sourceLineNo">019</span><a id="line.19">package org.apache.shiro.session;</a>
+<span class="sourceLineNo">020</span><a id="line.20"></a>
+<span class="sourceLineNo">021</span><a id="line.21">import java.io.Serializable;</a>
+<span class="sourceLineNo">022</span><a id="line.22">import java.util.Collection;</a>
+<span class="sourceLineNo">023</span><a id="line.23">import java.util.Date;</a>
+<span class="sourceLineNo">024</span><a id="line.24"></a>
+<span class="sourceLineNo">025</span><a id="line.25">/**</a>
+<span class="sourceLineNo">026</span><a id="line.26"> * A {@code Session} is a stateful data context associated with a single Subject (user, daemon process,</a>
+<span class="sourceLineNo">027</span><a id="line.27"> * etc) who interacts with a software system over a period of time.</a>
+<span class="sourceLineNo">028</span><a id="line.28"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">029</span><a id="line.29"> * A {@code Session} is intended to be managed by the business tier and accessible via other</a>
+<span class="sourceLineNo">030</span><a id="line.30"> * tiers without being tied to any given client technology.  This is a &lt;em&gt;great&lt;/em&gt; benefit to Java</a>
+<span class="sourceLineNo">031</span><a id="line.31"> * systems, since until now, the only viable session mechanisms were the</a>
+<span class="sourceLineNo">032</span><a id="line.32"> * {@code javax.servlet.http.HttpSession} or Stateful Session EJB's, which many times</a>
+<span class="sourceLineNo">033</span><a id="line.33"> * unnecessarily coupled applications to web or ejb technologies.</a>
+<span class="sourceLineNo">034</span><a id="line.34"> *</a>
+<span class="sourceLineNo">035</span><a id="line.35"> * @since 0.1</a>
+<span class="sourceLineNo">036</span><a id="line.36"> */</a>
+<span class="sourceLineNo">037</span><a id="line.37">public interface Session {</a>
+<span class="sourceLineNo">038</span><a id="line.38"></a>
+<span class="sourceLineNo">039</span><a id="line.39">    /**</a>
+<span class="sourceLineNo">040</span><a id="line.40">     * Returns the unique identifier assigned by the system upon session creation.</a>
+<span class="sourceLineNo">041</span><a id="line.41">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">042</span><a id="line.42">     * All return values from this method are expected to have proper {@code toString()},</a>
+<span class="sourceLineNo">043</span><a id="line.43">     * {@code equals()}, and {@code hashCode()} implementations. Good candidates for such</a>
+<span class="sourceLineNo">044</span><a id="line.44">     * an identifier are {@link java.util.UUID UUID}s, {@link java.lang.Integer Integer}s, and</a>
+<span class="sourceLineNo">045</span><a id="line.45">     * {@link java.lang.String String}s.</a>
+<span class="sourceLineNo">046</span><a id="line.46">     *</a>
+<span class="sourceLineNo">047</span><a id="line.47">     * @return The unique identifier assigned to the session upon creation.</a>
+<span class="sourceLineNo">048</span><a id="line.48">     */</a>
+<span class="sourceLineNo">049</span><a id="line.49">    Serializable getId();</a>
+<span class="sourceLineNo">050</span><a id="line.50"></a>
+<span class="sourceLineNo">051</span><a id="line.51">    /**</a>
+<span class="sourceLineNo">052</span><a id="line.52">     * Returns the time the session was started; that is, the time the system created the instance.</a>
+<span class="sourceLineNo">053</span><a id="line.53">     *</a>
+<span class="sourceLineNo">054</span><a id="line.54">     * @return The time the system created the session.</a>
+<span class="sourceLineNo">055</span><a id="line.55">     */</a>
+<span class="sourceLineNo">056</span><a id="line.56">    Date getStartTimestamp();</a>
+<span class="sourceLineNo">057</span><a id="line.57"></a>
+<span class="sourceLineNo">058</span><a id="line.58">    /**</a>
+<span class="sourceLineNo">059</span><a id="line.59">     * Returns the last time the application received a request or method invocation from the user associated</a>
+<span class="sourceLineNo">060</span><a id="line.60">     * with this session.  Application calls to this method do not affect this access time.</a>
+<span class="sourceLineNo">061</span><a id="line.61">     *</a>
+<span class="sourceLineNo">062</span><a id="line.62">     * @return The time the user last interacted with the system.</a>
+<span class="sourceLineNo">063</span><a id="line.63">     * @see #touch()</a>
+<span class="sourceLineNo">064</span><a id="line.64">     */</a>
+<span class="sourceLineNo">065</span><a id="line.65">    Date getLastAccessTime();</a>
+<span class="sourceLineNo">066</span><a id="line.66"></a>
+<span class="sourceLineNo">067</span><a id="line.67">    /**</a>
+<span class="sourceLineNo">068</span><a id="line.68">     * Returns the time in milliseconds that the session session may remain idle before expiring.</a>
+<span class="sourceLineNo">069</span><a id="line.69">     * &lt;ul&gt;</a>
+<span class="sourceLineNo">070</span><a id="line.70">     * &lt;li&gt;A negative return value means the session will never expire.&lt;/li&gt;</a>
+<span class="sourceLineNo">071</span><a id="line.71">     * &lt;li&gt;A non-negative return value (0 or greater) means the session expiration will occur if idle for that</a>
+<span class="sourceLineNo">072</span><a id="line.72">     * length of time.&lt;/li&gt;</a>
+<span class="sourceLineNo">073</span><a id="line.73">     * &lt;/ul&gt;</a>
+<span class="sourceLineNo">074</span><a id="line.74">     * &lt;b&gt;*Note:&lt;/b&gt; if you are used to the {@code HttpSession}'s {@code getMaxInactiveInterval()} method, the scale on</a>
+<span class="sourceLineNo">075</span><a id="line.75">     * this method is different: Shiro Sessions use millisecond values for timeout whereas</a>
+<span class="sourceLineNo">076</span><a id="line.76">     * {@code HttpSession.getMaxInactiveInterval} uses seconds.  Always use millisecond values with Shiro sessions.</a>
+<span class="sourceLineNo">077</span><a id="line.77">     *</a>
+<span class="sourceLineNo">078</span><a id="line.78">     * @return the time in milliseconds the session may remain idle before expiring.</a>
+<span class="sourceLineNo">079</span><a id="line.79">     * @throws InvalidSessionException if the session has been stopped or expired prior to calling this method.</a>
+<span class="sourceLineNo">080</span><a id="line.80">     * @since 0.2</a>
+<span class="sourceLineNo">081</span><a id="line.81">     */</a>
+<span class="sourceLineNo">082</span><a id="line.82">    long getTimeout() throws InvalidSessionException;</a>
+<span class="sourceLineNo">083</span><a id="line.83"></a>
+<span class="sourceLineNo">084</span><a id="line.84">    /**</a>
+<span class="sourceLineNo">085</span><a id="line.85">     * Sets the time in milliseconds that the session may remain idle before expiring.</a>
+<span class="sourceLineNo">086</span><a id="line.86">     * &lt;ul&gt;</a>
+<span class="sourceLineNo">087</span><a id="line.87">     * &lt;li&gt;A negative value means the session will never expire.&lt;/li&gt;</a>
+<span class="sourceLineNo">088</span><a id="line.88">     * &lt;li&gt;A non-negative value (0 or greater) means the session expiration will occur if idle for that</a>
+<span class="sourceLineNo">089</span><a id="line.89">     * length of time.&lt;/li&gt;</a>
+<span class="sourceLineNo">090</span><a id="line.90">     * &lt;/ul&gt;</a>
+<span class="sourceLineNo">091</span><a id="line.91">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">092</span><a id="line.92">     * &lt;b&gt;*Note:&lt;/b&gt; if you are used to the {@code HttpSession}'s {@code getMaxInactiveInterval()} method, the scale on</a>
+<span class="sourceLineNo">093</span><a id="line.93">     * this method is different: Shiro Sessions use millisecond values for timeout whereas</a>
+<span class="sourceLineNo">094</span><a id="line.94">     * {@code HttpSession.getMaxInactiveInterval} uses seconds.  Always use millisecond values with Shiro sessions.</a>
+<span class="sourceLineNo">095</span><a id="line.95">     *</a>
+<span class="sourceLineNo">096</span><a id="line.96">     * @param maxIdleTimeInMillis the time in milliseconds that the session may remain idle before expiring.</a>
+<span class="sourceLineNo">097</span><a id="line.97">     * @throws InvalidSessionException if the session has been stopped or expired prior to calling this method.</a>
+<span class="sourceLineNo">098</span><a id="line.98">     * @since 0.2</a>
+<span class="sourceLineNo">099</span><a id="line.99">     */</a>
+<span class="sourceLineNo">100</span><a id="line.100">    void setTimeout(long maxIdleTimeInMillis) throws InvalidSessionException;</a>
+<span class="sourceLineNo">101</span><a id="line.101"></a>
+<span class="sourceLineNo">102</span><a id="line.102">    /**</a>
+<span class="sourceLineNo">103</span><a id="line.103">     * Returns the host name or IP string of the host that originated this session, or {@code null}</a>
+<span class="sourceLineNo">104</span><a id="line.104">     * if the host is unknown.</a>
+<span class="sourceLineNo">105</span><a id="line.105">     *</a>
+<span class="sourceLineNo">106</span><a id="line.106">     * @return the host name or IP string of the host that originated this session, or {@code null}</a>
+<span class="sourceLineNo">107</span><a id="line.107">     *         if the host address is unknown.</a>
+<span class="sourceLineNo">108</span><a id="line.108">     */</a>
+<span class="sourceLineNo">109</span><a id="line.109">    String getHost();</a>
+<span class="sourceLineNo">110</span><a id="line.110"></a>
+<span class="sourceLineNo">111</span><a id="line.111">    /**</a>
+<span class="sourceLineNo">112</span><a id="line.112">     * Explicitly updates the {@link #getLastAccessTime() lastAccessTime} of this session to the current time when</a>
+<span class="sourceLineNo">113</span><a id="line.113">     * this method is invoked.  This method can be used to ensure a session does not time out.</a>
+<span class="sourceLineNo">114</span><a id="line.114">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">115</span><a id="line.115">     * Most programmers won't use this method directly and will instead rely on the last access time to be updated</a>
+<span class="sourceLineNo">116</span><a id="line.116">     * automatically as a result of an incoming web request or remote procedure call/method invocation.</a>
+<span class="sourceLineNo">117</span><a id="line.117">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">118</span><a id="line.118">     * However, this method is particularly useful when supporting rich-client applications such as</a>
+<span class="sourceLineNo">119</span><a id="line.119">     * Java Web Start app, Java or Flash applets, etc.  Although rare, it is possible in a rich-client</a>
+<span class="sourceLineNo">120</span><a id="line.120">     * environment that a user continuously interacts with the client-side application without a</a>
+<span class="sourceLineNo">121</span><a id="line.121">     * server-side method call ever being invoked.  If this happens over a long enough period of</a>
+<span class="sourceLineNo">122</span><a id="line.122">     * time, the user's server-side session could time-out.  Again, such cases are rare since most</a>
+<span class="sourceLineNo">123</span><a id="line.123">     * rich-clients frequently require server-side method invocations.</a>
+<span class="sourceLineNo">124</span><a id="line.124">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">125</span><a id="line.125">     * In this example though, the user's session might still be considered valid because</a>
+<span class="sourceLineNo">126</span><a id="line.126">     * the user is actively &amp;quot;using&amp;quot; the application, just not communicating with the</a>
+<span class="sourceLineNo">127</span><a id="line.127">     * server. But because no server-side method calls are invoked, there is no way for the server</a>
+<span class="sourceLineNo">128</span><a id="line.128">     * to know if the user is sitting idle or not, so it must assume so to maintain session</a>
+<span class="sourceLineNo">129</span><a id="line.129">     * integrity.  This {@code touch()} method could be invoked by the rich-client application code during those</a>
+<span class="sourceLineNo">130</span><a id="line.130">     * times to ensure that the next time a server-side method is invoked, the invocation will not</a>
+<span class="sourceLineNo">131</span><a id="line.131">     * throw an {@link ExpiredSessionException ExpiredSessionException}.  In short terms, it could be used periodically</a>
+<span class="sourceLineNo">132</span><a id="line.132">     * to ensure a session does not time out.</a>
+<span class="sourceLineNo">133</span><a id="line.133">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">134</span><a id="line.134">     * How often this rich-client &amp;quot;maintenance&amp;quot; might occur is entirely dependent upon</a>
+<span class="sourceLineNo">135</span><a id="line.135">     * the application and would be based on variables such as session timeout configuration,</a>
+<span class="sourceLineNo">136</span><a id="line.136">     * usage characteristics of the client application, network utilization and application server</a>
+<span class="sourceLineNo">137</span><a id="line.137">     * performance.</a>
+<span class="sourceLineNo">138</span><a id="line.138">     *</a>
+<span class="sourceLineNo">139</span><a id="line.139">     * @throws InvalidSessionException if this session has stopped or expired prior to calling this method.</a>
+<span class="sourceLineNo">140</span><a id="line.140">     */</a>
+<span class="sourceLineNo">141</span><a id="line.141">    void touch() throws InvalidSessionException;</a>
+<span class="sourceLineNo">142</span><a id="line.142"></a>
+<span class="sourceLineNo">143</span><a id="line.143">    /**</a>
+<span class="sourceLineNo">144</span><a id="line.144">     * Explicitly stops (invalidates) this session and releases all associated resources.</a>
+<span class="sourceLineNo">145</span><a id="line.145">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">146</span><a id="line.146">     * If this session has already been authenticated (i.e. the {@code Subject} that</a>
+<span class="sourceLineNo">147</span><a id="line.147">     * owns this session has logged-in), calling this method explicitly might have undesired side effects:</a>
+<span class="sourceLineNo">148</span><a id="line.148">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">149</span><a id="line.149">     * It is common for a {@code Subject} implementation to retain authentication state in the</a>
+<span class="sourceLineNo">150</span><a id="line.150">     * {@code Session}.  If the session</a>
+<span class="sourceLineNo">151</span><a id="line.151">     * is explicitly stopped by application code by calling this method directly, it could clear out any</a>
+<span class="sourceLineNo">152</span><a id="line.152">     * authentication state that might exist, thereby effectively &amp;quot;unauthenticating&amp;quot; the {@code Subject}.</a>
+<span class="sourceLineNo">153</span><a id="line.153">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">154</span><a id="line.154">     * As such, you might consider {@link org.apache.shiro.subject.Subject#logout logging-out} the 'owning'</a>
+<span class="sourceLineNo">155</span><a id="line.155">     * {@code Subject} instead of manually calling this method, as a log out is expected to stop the</a>
+<span class="sourceLineNo">156</span><a id="line.156">     * corresponding session automatically, and also allows framework code to execute additional cleanup logic.</a>
+<span class="sourceLineNo">157</span><a id="line.157">     *</a>
+<span class="sourceLineNo">158</span><a id="line.158">     * @throws InvalidSessionException if this session has stopped or expired prior to calling this method.</a>
+<span class="sourceLineNo">159</span><a id="line.159">     */</a>
+<span class="sourceLineNo">160</span><a id="line.160">    void stop() throws InvalidSessionException;</a>
+<span class="sourceLineNo">161</span><a id="line.161"></a>
+<span class="sourceLineNo">162</span><a id="line.162">    /**</a>
+<span class="sourceLineNo">163</span><a id="line.163">     * Returns the keys of all the attributes stored under this session.  If there are no</a>
+<span class="sourceLineNo">164</span><a id="line.164">     * attributes, this returns an empty collection.</a>
+<span class="sourceLineNo">165</span><a id="line.165">     *</a>
+<span class="sourceLineNo">166</span><a id="line.166">     * @return the keys of all attributes stored under this session, or an empty collection if</a>
+<span class="sourceLineNo">167</span><a id="line.167">     *         there are no session attributes.</a>
+<span class="sourceLineNo">168</span><a id="line.168">     * @throws InvalidSessionException if this session has stopped or expired prior to calling this method.</a>
+<span class="sourceLineNo">169</span><a id="line.169">     * @since 0.2</a>
+<span class="sourceLineNo">170</span><a id="line.170">     */</a>
+<span class="sourceLineNo">171</span><a id="line.171">    Collection&lt;Object&gt; getAttributeKeys() throws InvalidSessionException;</a>
+<span class="sourceLineNo">172</span><a id="line.172"></a>
+<span class="sourceLineNo">173</span><a id="line.173">    /**</a>
+<span class="sourceLineNo">174</span><a id="line.174">     * Returns the object bound to this session identified by the specified key.  If there is no</a>
+<span class="sourceLineNo">175</span><a id="line.175">     * object bound under the key, {@code null} is returned.</a>
+<span class="sourceLineNo">176</span><a id="line.176">     *</a>
+<span class="sourceLineNo">177</span><a id="line.177">     * @param key the unique name of the object bound to this session</a>
+<span class="sourceLineNo">178</span><a id="line.178">     * @return the object bound under the specified {@code key} name or {@code null} if there is</a>
+<span class="sourceLineNo">179</span><a id="line.179">     *         no object bound under that name.</a>
+<span class="sourceLineNo">180</span><a id="line.180">     * @throws InvalidSessionException if this session has stopped or expired prior to calling</a>
+<span class="sourceLineNo">181</span><a id="line.181">     *                                 this method.</a>
+<span class="sourceLineNo">182</span><a id="line.182">     */</a>
+<span class="sourceLineNo">183</span><a id="line.183">    Object getAttribute(Object key) throws InvalidSessionException;</a>
+<span class="sourceLineNo">184</span><a id="line.184"></a>
+<span class="sourceLineNo">185</span><a id="line.185">    /**</a>
+<span class="sourceLineNo">186</span><a id="line.186">     * Binds the specified {@code value} to this session, uniquely identified by the specified</a>
+<span class="sourceLineNo">187</span><a id="line.187">     * {@code key} name.  If there is already an object bound under the {@code key} name, that</a>
+<span class="sourceLineNo">188</span><a id="line.188">     * existing object will be replaced by the new {@code value}.</a>
+<span class="sourceLineNo">189</span><a id="line.189">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">190</span><a id="line.190">     * If the {@code value} parameter is null, it has the same effect as if</a>
+<span class="sourceLineNo">191</span><a id="line.191">     * {@link #removeAttribute(Object) removeAttribute} was called.</a>
+<span class="sourceLineNo">192</span><a id="line.192">     *</a>
+<span class="sourceLineNo">193</span><a id="line.193">     * @param key   the name under which the {@code value} object will be bound in this session</a>
+<span class="sourceLineNo">194</span><a id="line.194">     * @param value the object to bind in this session.</a>
+<span class="sourceLineNo">195</span><a id="line.195">     * @throws InvalidSessionException if this session has stopped or expired prior to calling</a>
+<span class="sourceLineNo">196</span><a id="line.196">     *                                 this method.</a>
+<span class="sourceLineNo">197</span><a id="line.197">     */</a>
+<span class="sourceLineNo">198</span><a id="line.198">    void setAttribute(Object key, Object value) throws InvalidSessionException;</a>
+<span class="sourceLineNo">199</span><a id="line.199"></a>
+<span class="sourceLineNo">200</span><a id="line.200">    /**</a>
+<span class="sourceLineNo">201</span><a id="line.201">     * Removes (unbinds) the object bound to this session under the specified {@code key} name.</a>
+<span class="sourceLineNo">202</span><a id="line.202">     *</a>
+<span class="sourceLineNo">203</span><a id="line.203">     * @param key the name uniquely identifying the object to remove</a>
+<span class="sourceLineNo">204</span><a id="line.204">     * @return the object removed or {@code null} if there was no object bound under the name</a>
+<span class="sourceLineNo">205</span><a id="line.205">     *         {@code key}.</a>
+<span class="sourceLineNo">206</span><a id="line.206">     * @throws InvalidSessionException if this session has stopped or expired prior to calling</a>
+<span class="sourceLineNo">207</span><a id="line.207">     *                                 this method.</a>
+<span class="sourceLineNo">208</span><a id="line.208">     */</a>
+<span class="sourceLineNo">209</span><a id="line.209">    Object removeAttribute(Object key) throws InvalidSessionException;</a>
+<span class="sourceLineNo">210</span><a id="line.210">}</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</main>
+</body>
+</html>

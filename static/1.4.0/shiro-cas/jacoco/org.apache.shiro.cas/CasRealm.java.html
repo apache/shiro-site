@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CasRealm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Shiro :: Support :: CAS</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.cas</a> &gt; <span class="el_source">CasRealm.java</span></div><h1>CasRealm.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.cas;
+
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.util.CollectionUtils;
+import org.apache.shiro.util.StringUtils;
+import org.jasig.cas.client.authentication.AttributePrincipal;
+import org.jasig.cas.client.validation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * This realm implementation acts as a CAS client to a CAS server for authentication and basic authorization.
+ * &lt;p/&gt;
+ * This realm functions by inspecting a submitted {@link org.apache.shiro.cas.CasToken CasToken} (which essentially 
+ * wraps a CAS service ticket) and validates it against the CAS server using a configured CAS
+ * {@link org.jasig.cas.client.validation.TicketValidator TicketValidator}.
+ * &lt;p/&gt;
+ * The {@link #getValidationProtocol() validationProtocol} is {@code CAS} by default, which indicates that a
+ * a {@link org.jasig.cas.client.validation.Cas20ServiceTicketValidator Cas20ServiceTicketValidator}
+ * will be used for ticket validation.  You can alternatively set
+ * or {@link org.jasig.cas.client.validation.Saml11TicketValidator Saml11TicketValidator} of CAS client. It is based on
+ * {@link AuthorizingRealm AuthorizingRealm} for both authentication and authorization. User id and attributes are retrieved from the CAS
+ * service ticket validation response during authentication phase. Roles and permissions are computed during authorization phase (according
+ * to the attributes previously retrieved).
+ *
+ * @since 1.2
+ * @see &lt;a href=&quot;https://github.com/bujiio/buji-pac4j&quot;&gt;buji-pac4j&lt;/a&gt;
+ * @deprecated replaced with Shiro integration in &lt;a href=&quot;https://github.com/bujiio/buji-pac4j&quot;&gt;buji-pac4j&lt;/a&gt;.
+ */
+@Deprecated
+public class CasRealm extends AuthorizingRealm {
+
+    // default name of the CAS attribute for remember me authentication (CAS 3.4.10+)
+    public static final String DEFAULT_REMEMBER_ME_ATTRIBUTE_NAME = &quot;longTermAuthenticationRequestTokenUsed&quot;;
+    public static final String DEFAULT_VALIDATION_PROTOCOL = &quot;CAS&quot;;
+    
+<span class="fc" id="L67">    private static Logger log = LoggerFactory.getLogger(CasRealm.class);</span>
+    
+    // this is the url of the CAS server (example : http://host:port/cas)
+    private String casServerUrlPrefix;
+    
+    // this is the CAS service url of the application (example : http://host:port/mycontextpath/shiro-cas)
+    private String casService;
+    
+    /* CAS protocol to use for ticket validation : CAS (default) or SAML :
+       - CAS protocol can be used with CAS server version &lt; 3.1 : in this case, no user attributes can be retrieved from the CAS ticket validation response (except if there are some customizations on CAS server side)
+       - SAML protocol can be used with CAS server version &gt;= 3.1 : in this case, user attributes can be extracted from the CAS ticket validation response
+    */
+<span class="fc" id="L79">    private String validationProtocol = DEFAULT_VALIDATION_PROTOCOL;</span>
+    
+    // default name of the CAS attribute for remember me authentication (CAS 3.4.10+)
+<span class="fc" id="L82">    private String rememberMeAttributeName = DEFAULT_REMEMBER_ME_ATTRIBUTE_NAME;</span>
+    
+    // this class from the CAS client is used to validate a service ticket on CAS server
+    private TicketValidator ticketValidator;
+    
+    // default roles to applied to authenticated user
+    private String defaultRoles;
+    
+    // default permissions to applied to authenticated user
+    private String defaultPermissions;
+    
+    // names of attributes containing roles
+    private String roleAttributeNames;
+    
+    // names of attributes containing permissions
+    private String permissionAttributeNames;
+    
+<span class="fc" id="L99">    public CasRealm() {</span>
+<span class="fc" id="L100">        setAuthenticationTokenClass(CasToken.class);</span>
+<span class="fc" id="L101">    }</span>
+
+    @Override
+    protected void onInit() {
+<span class="nc" id="L105">        super.onInit();</span>
+<span class="nc" id="L106">        ensureTicketValidator();</span>
+<span class="nc" id="L107">    }</span>
+
+    protected TicketValidator ensureTicketValidator() {
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (this.ticketValidator == null) {</span>
+<span class="nc" id="L111">            this.ticketValidator = createTicketValidator();</span>
+        }
+<span class="fc" id="L113">        return this.ticketValidator;</span>
+    }
+    
+    protected TicketValidator createTicketValidator() {
+<span class="nc" id="L117">        String urlPrefix = getCasServerUrlPrefix();</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if (&quot;saml&quot;.equalsIgnoreCase(getValidationProtocol())) {</span>
+<span class="nc" id="L119">            return new Saml11TicketValidator(urlPrefix);</span>
+        }
+<span class="nc" id="L121">        return new Cas20ServiceTicketValidator(urlPrefix);</span>
+    }
+    
+    /**
+     * Authenticates a user and retrieves its information.
+     * 
+     * @param token the authentication token
+     * @throws AuthenticationException if there is an error during authentication.
+     */
+    @Override
+    @SuppressWarnings(&quot;unchecked&quot;)
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+<span class="fc" id="L133">        CasToken casToken = (CasToken) token;</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">        if (token == null) {</span>
+<span class="nc" id="L135">            return null;</span>
+        }
+        
+<span class="fc" id="L138">        String ticket = (String)casToken.getCredentials();</span>
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">        if (!StringUtils.hasText(ticket)) {</span>
+<span class="nc" id="L140">            return null;</span>
+        }
+        
+<span class="fc" id="L143">        TicketValidator ticketValidator = ensureTicketValidator();</span>
+
+        try {
+            // contact CAS server to validate service ticket
+<span class="fc" id="L147">            Assertion casAssertion = ticketValidator.validate(ticket, getCasService());</span>
+            // get principal, user id and attributes
+<span class="fc" id="L149">            AttributePrincipal casPrincipal = casAssertion.getPrincipal();</span>
+<span class="fc" id="L150">            String userId = casPrincipal.getName();</span>
+<span class="fc" id="L151">            log.debug(&quot;Validate ticket : {} in CAS server : {} to retrieve user : {}&quot;, new Object[]{</span>
+<span class="fc" id="L152">                    ticket, getCasServerUrlPrefix(), userId</span>
+            });
+
+<span class="fc" id="L155">            Map&lt;String, Object&gt; attributes = casPrincipal.getAttributes();</span>
+            // refresh authentication token (user id + remember me)
+<span class="fc" id="L157">            casToken.setUserId(userId);</span>
+<span class="fc" id="L158">            String rememberMeAttributeName = getRememberMeAttributeName();</span>
+<span class="fc" id="L159">            String rememberMeStringValue = (String)attributes.get(rememberMeAttributeName);</span>
+<span class="fc bfc" id="L160" title="All 4 branches covered.">            boolean isRemembered = rememberMeStringValue != null &amp;&amp; Boolean.parseBoolean(rememberMeStringValue);</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">            if (isRemembered) {</span>
+<span class="fc" id="L162">                casToken.setRememberMe(true);</span>
+            }
+            // create simple authentication info
+<span class="fc" id="L165">            List&lt;Object&gt; principals = CollectionUtils.asList(userId, attributes);</span>
+<span class="fc" id="L166">            PrincipalCollection principalCollection = new SimplePrincipalCollection(principals, getName());</span>
+<span class="fc" id="L167">            return new SimpleAuthenticationInfo(principalCollection, ticket);</span>
+<span class="nc" id="L168">        } catch (TicketValidationException e) { </span>
+<span class="nc" id="L169">            throw new CasAuthenticationException(&quot;Unable to validate ticket [&quot; + ticket + &quot;]&quot;, e);</span>
+        }
+    }
+    
+    /**
+     * Retrieves the AuthorizationInfo for the given principals (the CAS previously authenticated user : id + attributes).
+     * 
+     * @param principals the primary identifying principals of the AuthorizationInfo that should be retrieved.
+     * @return the AuthorizationInfo associated with this principals.
+     */
+    @Override
+    @SuppressWarnings(&quot;unchecked&quot;)
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+        // retrieve user information
+<span class="fc" id="L183">        SimplePrincipalCollection principalCollection = (SimplePrincipalCollection) principals;</span>
+<span class="fc" id="L184">        List&lt;Object&gt; listPrincipals = principalCollection.asList();</span>
+<span class="fc" id="L185">        Map&lt;String, String&gt; attributes = (Map&lt;String, String&gt;) listPrincipals.get(1);</span>
+        // create simple authorization info
+<span class="fc" id="L187">        SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();</span>
+        // add default roles
+<span class="fc" id="L189">        addRoles(simpleAuthorizationInfo, split(defaultRoles));</span>
+        // add default permissions
+<span class="fc" id="L191">        addPermissions(simpleAuthorizationInfo, split(defaultPermissions));</span>
+        // get roles from attributes
+<span class="fc" id="L193">        List&lt;String&gt; attributeNames = split(roleAttributeNames);</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">        for (String attributeName : attributeNames) {</span>
+<span class="fc" id="L195">            String value = attributes.get(attributeName);</span>
+<span class="fc" id="L196">            addRoles(simpleAuthorizationInfo, split(value));</span>
+<span class="fc" id="L197">        }</span>
+        // get permissions from attributes
+<span class="fc" id="L199">        attributeNames = split(permissionAttributeNames);</span>
+<span class="fc bfc" id="L200" title="All 2 branches covered.">        for (String attributeName : attributeNames) {</span>
+<span class="fc" id="L201">            String value = attributes.get(attributeName);</span>
+<span class="fc" id="L202">            addPermissions(simpleAuthorizationInfo, split(value));</span>
+<span class="fc" id="L203">        }</span>
+<span class="fc" id="L204">        return simpleAuthorizationInfo;</span>
+    }
+    
+    /**
+     * Split a string into a list of not empty and trimmed strings, delimiter is a comma.
+     * 
+     * @param s the input string
+     * @return the list of not empty and trimmed strings
+     */
+    private List&lt;String&gt; split(String s) {
+<span class="fc" id="L214">        List&lt;String&gt; list = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L215">        String[] elements = StringUtils.split(s, ',');</span>
+<span class="pc bpc" id="L216" title="1 of 4 branches missed.">        if (elements != null &amp;&amp; elements.length &gt; 0) {</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">            for (String element : elements) {</span>
+<span class="pc bpc" id="L218" title="1 of 2 branches missed.">                if (StringUtils.hasText(element)) {</span>
+<span class="fc" id="L219">                    list.add(element.trim());</span>
+                }
+            }
+        }
+<span class="fc" id="L223">        return list;</span>
+    }
+    
+    /**
+     * Add roles to the simple authorization info.
+     * 
+     * @param simpleAuthorizationInfo
+     * @param roles the list of roles to add
+     */
+    private void addRoles(SimpleAuthorizationInfo simpleAuthorizationInfo, List&lt;String&gt; roles) {
+<span class="fc bfc" id="L233" title="All 2 branches covered.">        for (String role : roles) {</span>
+<span class="fc" id="L234">            simpleAuthorizationInfo.addRole(role);</span>
+<span class="fc" id="L235">        }</span>
+<span class="fc" id="L236">    }</span>
+    
+    /**
+     * Add permissions to the simple authorization info.
+     * 
+     * @param simpleAuthorizationInfo
+     * @param permissions the list of permissions to add
+     */
+    private void addPermissions(SimpleAuthorizationInfo simpleAuthorizationInfo, List&lt;String&gt; permissions) {
+<span class="fc bfc" id="L245" title="All 2 branches covered.">        for (String permission : permissions) {</span>
+<span class="fc" id="L246">            simpleAuthorizationInfo.addStringPermission(permission);</span>
+<span class="fc" id="L247">        }</span>
+<span class="fc" id="L248">    }</span>
+
+    public String getCasServerUrlPrefix() {
+<span class="fc" id="L251">        return casServerUrlPrefix;</span>
+    }
+
+    public void setCasServerUrlPrefix(String casServerUrlPrefix) {
+<span class="nc" id="L255">        this.casServerUrlPrefix = casServerUrlPrefix;</span>
+<span class="nc" id="L256">    }</span>
+
+    public String getCasService() {
+<span class="fc" id="L259">        return casService;</span>
+    }
+
+    public void setCasService(String casService) {
+<span class="nc" id="L263">        this.casService = casService;</span>
+<span class="nc" id="L264">    }</span>
+
+    public String getValidationProtocol() {
+<span class="nc" id="L267">        return validationProtocol;</span>
+    }
+
+    public void setValidationProtocol(String validationProtocol) {
+<span class="nc" id="L271">        this.validationProtocol = validationProtocol;</span>
+<span class="nc" id="L272">    }</span>
+
+    public String getRememberMeAttributeName() {
+<span class="fc" id="L275">        return rememberMeAttributeName;</span>
+    }
+
+    public void setRememberMeAttributeName(String rememberMeAttributeName) {
+<span class="fc" id="L279">        this.rememberMeAttributeName = rememberMeAttributeName;</span>
+<span class="fc" id="L280">    }</span>
+
+    public String getDefaultRoles() {
+<span class="nc" id="L283">        return defaultRoles;</span>
+    }
+
+    public void setDefaultRoles(String defaultRoles) {
+<span class="fc" id="L287">        this.defaultRoles = defaultRoles;</span>
+<span class="fc" id="L288">    }</span>
+
+    public String getDefaultPermissions() {
+<span class="nc" id="L291">        return defaultPermissions;</span>
+    }
+
+    public void setDefaultPermissions(String defaultPermissions) {
+<span class="fc" id="L295">        this.defaultPermissions = defaultPermissions;</span>
+<span class="fc" id="L296">    }</span>
+
+    public String getRoleAttributeNames() {
+<span class="nc" id="L299">        return roleAttributeNames;</span>
+    }
+
+    public void setRoleAttributeNames(String roleAttributeNames) {
+<span class="fc" id="L303">        this.roleAttributeNames = roleAttributeNames;</span>
+<span class="fc" id="L304">    }</span>
+
+    public String getPermissionAttributeNames() {
+<span class="nc" id="L307">        return permissionAttributeNames;</span>
+    }
+
+    public void setPermissionAttributeNames(String permissionAttributeNames) {
+<span class="fc" id="L311">        this.permissionAttributeNames = permissionAttributeNames;</span>
+<span class="fc" id="L312">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

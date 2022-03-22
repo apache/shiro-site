@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>SubjectCallable.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-core</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.subject.support</a> &gt; <span class="el_source">SubjectCallable.java</span></div><h1>SubjectCallable.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.subject.support;
+
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadState;
+
+import java.util.concurrent.Callable;
+
+/**
+ * A {@code SubjectCallable} associates a {@link Subject Subject} with a target/delegate
+ * {@link Callable Callable} to ensure proper {@code Subject} thread-state management when the {@code Callable} executes.
+ * This ensures that any calls to {@code SecurityUtils.}{@link org.apache.shiro.SecurityUtils#getSubject() getSubject()}
+ * during the target {@code Callable}'s execution still work correctly even if the {@code Callable} executes on a
+ * different thread than the one that created it.  This allows {@code Subject} access during asynchronous operations.
+ * &lt;p/&gt;
+ * When instances of this class execute (typically via a {@link java.util.concurrent.ExecutorService ExecutorService}),
+ * the following occurs:
+ * &lt;ol&gt;
+ * &lt;li&gt;The specified Subject any of its associated thread state is first bound to the thread that executes the
+ * {@code Callable}.&lt;/li&gt;
+ * &lt;li&gt;The delegate/target {@code Callable} is {@link java.util.concurrent.Callable#call() executed}&lt;/li&gt;
+ * &lt;li&gt;The previous thread state that might have existed before the {@code Subject} was bound is fully restored&lt;/li&gt;
+ * &lt;/ol&gt;
+ * &lt;p/&gt;
+ * This behavior ensures that the thread that executes this {@code Callable}, which is often a different thread than
+ * the one that created the instance, retains a {@code Subject} to support {@code SecurityUtils.getSubject()}
+ * invocations. It also guarantees that the running thread remains 'clean' in any thread-pooled environments.
+ *
+ * &lt;h3&gt;Usage&lt;/h3&gt;
+ *
+ * This is typically considered a support class and is not often directly referenced.  Most people prefer to use
+ * the {@code Subject.}{@link Subject#associateWith(Callable) associateWith} method, which will automatically return
+ * an instance of this class.
+ * &lt;p/&gt;
+ * An even more convenient alternative is to use a
+ * {@link org.apache.shiro.concurrent.SubjectAwareExecutorService SubjectAwareExecutorService}, which
+ * transparently uses instances of this class.
+ *
+ * @see Subject#associateWith(Callable)
+ * @see org.apache.shiro.concurrent.SubjectAwareExecutorService SubjectAwareExecutorService
+ * @since 1.0
+ */
+public class SubjectCallable&lt;V&gt; implements Callable&lt;V&gt; {
+
+    protected final ThreadState threadState;
+    private final Callable&lt;V&gt; callable;
+
+    public SubjectCallable(Subject subject, Callable&lt;V&gt; delegate) {
+<span class="fc" id="L66">        this(new SubjectThreadState(subject), delegate);</span>
+<span class="fc" id="L67">    }</span>
+
+<span class="fc" id="L69">    protected SubjectCallable(ThreadState threadState, Callable&lt;V&gt; delegate) {</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        if (threadState == null) {</span>
+<span class="nc" id="L71">            throw new IllegalArgumentException(&quot;ThreadState argument cannot be null.&quot;);</span>
+        }
+<span class="fc" id="L73">        this.threadState = threadState;</span>
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (delegate == null) {</span>
+<span class="nc" id="L75">            throw new IllegalArgumentException(&quot;Callable delegate instance cannot be null.&quot;);</span>
+        }
+<span class="fc" id="L77">        this.callable = delegate;</span>
+<span class="fc" id="L78">    }</span>
+
+    public V call() throws Exception {
+        try {
+<span class="fc" id="L82">            threadState.bind();</span>
+<span class="fc" id="L83">            return doCall(this.callable);</span>
+        } finally {
+<span class="pc" id="L85">            threadState.restore();</span>
+        }
+    }
+
+    protected V doCall(Callable&lt;V&gt; target) throws Exception {
+<span class="fc" id="L90">        return target.call();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-  2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>10 Minute Tutorial on Apache Shiro | Apache Shiro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Try Apache Shiro for yourself in under 10 minutes.">
+    <meta property="og:description" content="Try Apache Shiro for yourself in under 10 minutes.">
+    <meta name="keywords" content='documentation,manual'>
+    <meta name="generator" content="JBake">
+    <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
+    <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
+    <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
+
+    <meta property="og:title" content="10 Minute Tutorial on Apache Shiro | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2016-10-23T00:00:00Z"/>
+    <meta property="article:tag" content='documentation'/>
+    <meta property="article:tag" content='manual'/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content='https://shiro.staged.apache.org//10-minute-tutorial.html'/>
+    <meta property="og:image" content='images/shiro-featured-image.png'/>
+    <meta property="og:image:width" content='1200'/>
+    <meta property="og:image:height" content='628'/>
+    <meta property="og:site_name" content="Apache Shiro"/>
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/asciidoctor.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="highlight.js-11.2.0/styles/default.min.css" rel="stylesheet">
+    <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Matomo -->
+    <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['disableCookies']);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u="//matomo.privacy.apache.org/";
+            _paq.push(['setTrackerUrl', u+'matomo.php']);
+            _paq.push(['setSiteId', '2']);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+  </head>
+  <body>
+    <div id="top-bar"></div>
+    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
+
+    <div id="wrap">
+
+      <div class="masthead">
+        <p class="lead">
+          <a href="index.html"><img src="images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <span class="tagline">Simple. Java. Security.</span>
+          <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
+          </a>
+        </p>
+      </div>
+
+	<!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="get-started.html">Get Started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="documentation.html">Docs</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-webapps" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Web Apps
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
+                <li><a class="dropdown-item" href="web.html">General</a></li>
+                <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="web-features.html">Features</a></li>
+              </ul>
+            </li>
+
+            <li><a class="nav-link" href="features.html">Features</a></li>
+
+            <!-- integrations -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-integrations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Integrations
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
+                <li><a class="dropdown-item" href="spring-boot.html">Spring</a></li>
+                <li><a class="dropdown-item" href="guice.html">Guice</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="integration.html">Third-Party Integrations</a></li>
+              </ul>
+            </li>
+
+            <!-- Community -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-community" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Community
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
+                <li><a class="dropdown-item" href="forums.html">Community Forums</a></li>
+                <li><a class="dropdown-item" href="mailing-lists.html">Mailing Lists</a></li>
+                <li><a class="dropdown-item" href="articles.html">Articles</a></li>
+                <li><a class="dropdown-item" href="news.html">News</a></li>
+                <li><a class="dropdown-item" href="events.html">Events</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="community.html">More</a></li>
+              </ul>
+            </li>
+
+            <!-- About -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-about" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                About
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
+                <li><a class="dropdown-item" href="about.html">About</a></li>
+                <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="d-flex justify-content-end navbar-nav mb-2 mb-lg-0">
+            <!-- The ASF -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-asf" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apache Software Foundation
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
+                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+	<div class="page-header">
+		<h1>10 Minute Tutorial on Apache Shiro</h1>
+	</div>
+
+
+<div class="sect1">
+<h2 id="introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Welcome to Apache Shiro&#8217;s 10 Minute Tutorial!</p>
+</div>
+<div class="paragraph">
+<p>By going through this quick and simple tutorial you should fully understand how a developer uses Shiro in their application.
+And you should be able to do it in under 10 minutes.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="overview">Overview</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="what_is_apache_shiro">What is Apache Shiro?</h3>
+<div class="paragraph">
+<p>Apache Shiro is a powerful and easy to use Java security framework that offers developers an intuitive yet comprehensive solution to authentication, authorization, cryptography, and session management.</p>
+</div>
+<div class="paragraph">
+<p>In practical terms, it achieves to manage all facets of your application&#8217;s security, while keeping out of the way as much as possible.
+It is built on sound interface-driven design and OO principles, enabling custom behavior wherever you can imagine it.
+But with sensible defaults for everything, it is as "hands off" as application security can be.
+At least that&#8217;s what we strive for.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="what_can_apache_shiro_do">What can Apache Shiro do?</h3>
+<div class="paragraph">
+<p>A lot 😉.
+But we don&#8217;t want to bloat the QuickStart.
+Please check out our <a href="features.html">Features</a> page if you&#8217;d like to see what it can do for you.
+Also, if you&#8217;re curious on how we got started and why we exist, please see the <a href="/what-is-shiro.html">Shiro History and Mission</a> page.</p>
+</div>
+<div class="paragraph">
+<p>Ok.
+Now let&#8217;s actually do something!</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Shiro can be run in any environment, from the simplest command line application to the biggest enterprise web and clustered applications, but we''ll use the simplest possible example in a simple <code>main</code> method for this QuickStart so you can get a feel for the API.')</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="download">Download</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure you have JDK 1.8+ and Maven 3.0.3+ installed.</p>
+</li>
+<li>
+<p>Download the lastest "Source Code Distribution" from the <a href="download.html">Download</a> page.
+In this example, we&#8217;re using the 1.8.0 release distribution.</p>
+</li>
+<li>
+<p>Unzip the source package:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ unzip shiro-root-1.8.0-source-release.zip</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Enter the quickstart directory:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ cd shiro-root-1.8.0/samples/quickstart</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the QuickStart:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ mvn compile exec:java</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This target will just print out some log messages to let you know what is going on and then exit.
+While reading this quickstart, feel free to look at the code found under <code>samples/quickstart/src/main/java/Quickstart.java</code>.
+Change that file and run the above <code>mvn compile exec:java</code> command as often as you like.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="quickstart_java">Quickstart.java</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>Quickstart.java</code> file referenced above contains all the code that will get you familiar with the API.
+Now lets break it down in chunks here so you can easily understand what is going on.</p>
+</div>
+<div class="paragraph">
+<p>In almost all environments, you can obtain the currently executing user via the following call:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Subject currentUser = SecurityUtils.getSubject();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Using <a href="static/current/apidocs/org/apache/shiro/SecurityUtils.html"><code>SecurityUtils</code></a>.<a href="static/current/apidocs/org/apache/shiro/SecurityUtils.html#getSubject()"><code>getSubject()</code></a>, we can obtain the currently executing <a href="static/current/apidocs/org/apache/shiro/subject/Subject.html"><code>Subject</code></a>.
+A <em>Subject</em> is just a security-specific "view" of an application User.
+We actually wanted to call it 'User' since that "just makes sense", but we decided against it: too many applications have existing APIs that already have their own User classes/frameworks, and we didn&#8217;t want to conflict with those.
+Also, in the security world, the term <code>Subject</code> is actually the recognized nomenclature.
+Ok, moving on&#8230;&#8203;</p>
+</div>
+<div class="paragraph">
+<p>The <code>getSubject()</code> call in a standalone application might return a <code>Subject</code> based on user data in an application-specific location, and in a server environment (e.g. web app), it acquires the <code>Subject</code> based on user data associated with current thread or incoming request.</p>
+</div>
+<div class="paragraph">
+<p>Now that you have a <code>Subject</code>, what can you do with it?</p>
+</div>
+<div class="paragraph">
+<p>If you want to make things available to the user during their current session with the application, you can get their session:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Session session = currentUser.getSession();
+session.setAttribute( "someKey", "aValue" );</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>Session</code> is a Shiro-specific instance that provides most of what you&#8217;re used to with regular HttpSessions but with some extra goodies and one <strong>big</strong> difference: it does not require an HTTP environment!</p>
+</div>
+<div class="paragraph">
+<p>If deploying inside a web application, by default the <code>Session</code> will be <code>HttpSession</code> based.But, in a non-web environment, like this simple Quickstart, Shiro will automatically use its Enterprise Session Management by default.
+This means you get to use the same API in your applications, in any tier, regardless of deployment environment.
+This opens a whole new world of applications since any application requiring sessions does not need to be forced to use the <code>HttpSession</code> or EJB Stateful Session Beans.And, any client technology can now share session data.</p>
+</div>
+<div class="paragraph">
+<p>So now you can acquire a <code>Subject</code> and their <code>Session</code>.What about the <em>really</em> useful stuff like checking if they are allowed to do things, like checking against roles and permissions?</p>
+</div>
+<div class="paragraph">
+<p>Well, we can only do those checks for a known user.Our <code>Subject</code> instance above represents the current user, but <em>who</em> is the current user?
+Well, they&#8217;re anonymous - that is, until they log in at least once.So, let&#8217;s do that:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">if ( !currentUser.isAuthenticated() ) {
+    //collect user principals and credentials in a gui specific manner
+    //such as username/password html form, X509 certificate, OpenID, etc.
+    //We'll use the username/password example here since it is the most common.
+    //(do you know what movie this is from? ;)
+    UsernamePasswordToken token = new UsernamePasswordToken("lonestarr", "vespa");
+    //this is all you have to do to support 'remember me' (no config - built in!):
+    token.setRememberMe(true);
+    currentUser.login(token);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That&#8217;s it!It couldn&#8217;t be easier.</p>
+</div>
+<div class="paragraph">
+<p>But what if their login attempt fails?You can catch all sorts of specific exceptions that tell you exactly what happened and allows you to handle and react accordingly:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">try {
+    currentUser.login( token );
+    //if no exception, that's it, we're done!
+} catch ( UnknownAccountException uae ) {
+    //username wasn't in the system, show them an error message?
+} catch ( IncorrectCredentialsException ice ) {
+    //password didn't match, try again?
+} catch ( LockedAccountException lae ) {
+    //account for that username is locked - can't login.  Show them a message?
+}
+    ... more types exceptions to check if you want ...
+} catch ( AuthenticationException ae ) {
+    //unexpected condition - error?
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are many different types of exceptions you can check, or throw your own for custom conditions Shiro might not account for.See the <a href="static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html">AuthenticationException JavaDoc</a> for more.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Handy Hint</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Security best practice is to give generic login failure messages to users because you do not want to aid an attacker trying to break into your system.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Ok, so by now, we have a logged in user.
+What else can we do?</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s say who they are:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">//print their identifying principal (in this case, a username):
+log.info( "User [" + currentUser.getPrincipal() + "] logged in successfully." );</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can also test to see if they have specific role or not:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">if ( currentUser.hasRole( "schwartz" ) ) {
+    log.info("May the Schwartz be with you!" );
+} else {
+    log.info( "Hello, mere mortal." );
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can also see if they have a permission to act on a certain type of entity:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">if ( currentUser.isPermitted( "lightsaber:wield" ) ) {
+    log.info("You may use a lightsaber ring.  Use it wisely.");
+} else {
+    log.info("Sorry, lightsaber rings are for schwartz masters only.");
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Also, we can perform an extremely powerful <em>instance-level</em> permission check - the ability to see if the user has the ability to access a specific instance of a type:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">if ( currentUser.isPermitted( "winnebago:drive:eagle5" ) ) {
+    log.info("You are permitted to 'drive' the 'winnebago' with license plate (id) 'eagle5'.  " +
+                "Here are the keys - have fun!");
+} else {
+    log.info("Sorry, you aren't allowed to drive the 'eagle5' winnebago!");
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Piece of cake, right?</p>
+</div>
+<div class="paragraph">
+<p>Finally, when the user is done using the application, they can log out:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">currentUser.logout(); //removes all identifying information and invalidates their session too.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Well, that&#8217;s the core to using Apache Shiro at the application-developer level.
+And although there is some pretty sophisticated stuff going on under the hood to make this work so elegantly, that&#8217;s really all there is to it.</p>
+</div>
+<div class="paragraph">
+<p>But you might ask yourself, "But who is responsible for getting the user data during a login (usernames and passwords, role and permissions, etc), and who actually performs those security checks during runtime?" Well, you do, by implementing what Shiro calls a [Realm](realm.html "Realm") and plugging that <code>Realm</code> into Shiro&#8217;s configuration.</p>
+</div>
+<div class="paragraph">
+<p>However, how you configure a [Realm](realm.html "Realm") is largely dependent upon your runtime environment.
+For example, if you run a standalone application, or if you have a web based application, or a Spring or JEE container-based application, or combination thereof.
+That type of configuration is outside the scope of this QuickStart, since its aim is to get you comfortable with the API and Shiro&#8217;s concepts.</p>
+</div>
+<div class="paragraph">
+<p>When you&#8217;re ready to jump in with a little more detail, you&#8217;ll definitely want to read the <a href="/java-authentication-guide.html" title="Java Authentication Guide">Authentication Guide</a> and <a href="java-authorization-guide.html" title="Java Authorization Guide">Authorization Guide</a>.
+Then can move onto other <a href="/documentation.html" title="Documentation">Documentation</a>, in particularly the <a href="/reference.html">Reference Manual</a>, to answer any other questions.
+You&#8217;ll also probably want to join the user <a href="mailing-lists.html" title="Mailing Lists">mailing list</a> - you&#8217;ll find that we have a great community with people willing to help whenever possible.</p>
+</div>
+<div class="paragraph">
+<p>Thanks for following along. We hope you enjoy using Apache Shiro!</p>
+</div>
+</div>
+</div>
+	<hr />
+
+</div> 
+
+    <div class="footer-padding"></div>
+
+    <div class="container-fluid pt-2 border-top" id="custom-footer">
+      <footer class="row justify-content-between align-items-center">
+        <div class=" col-md-5">
+          <div class="copyright-footer justify-content-start">
+            <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
+            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center col-md-1">
+          <a class="btn btn-social"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
+        </div>
+
+        <div class="d-flex justify-content-end col-md-4" id="editThisPage">
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/10-minute-tutorial.adoc"/>
+        </div>
+
+        <div class="d-flex col-md-2 justify-content-end" style="position: relative">
+          <div class="footer-shield"></div>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="highlight.js-11.2.0/highlight.min.js"></script>
+    <script src="js/shiro.js"></script>
+
+    <script>
+        docReady(
+          addPageEditLink()
+      );
+    </script>
+    <script>hljs.highlightAll();</script>
+
+    </body>
+</html>

@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-  2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Understanding Subjects in Apache Shiro | Apache Shiro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content='documentation,manual,subject'>
+    <meta name="generator" content="JBake">
+    <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
+    <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
+    <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
+
+    <meta property="og:title" content="Understanding Subjects in Apache Shiro | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2022-03-22T22:45:11Z"/>
+    <meta property="article:tag" content='documentation'/>
+    <meta property="article:tag" content='manual'/>
+    <meta property="article:tag" content='subject'/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content='https://shiro.staged.apache.org//subject.html'/>
+    <meta property="og:image" content='images/shiro-featured-image.png'/>
+    <meta property="og:image:width" content='1200'/>
+    <meta property="og:image:height" content='628'/>
+    <meta property="og:site_name" content="Apache Shiro"/>
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/asciidoctor.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="highlight.js-11.2.0/styles/default.min.css" rel="stylesheet">
+    <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Matomo -->
+    <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['disableCookies']);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u="//matomo.privacy.apache.org/";
+            _paq.push(['setTrackerUrl', u+'matomo.php']);
+            _paq.push(['setSiteId', '2']);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+  </head>
+  <body>
+    <div id="top-bar"></div>
+    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
+
+    <div id="wrap">
+
+      <div class="masthead">
+        <p class="lead">
+          <a href="index.html"><img src="images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <span class="tagline">Simple. Java. Security.</span>
+          <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
+          </a>
+        </p>
+      </div>
+
+	<!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="get-started.html">Get Started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="documentation.html">Docs</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-webapps" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Web Apps
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
+                <li><a class="dropdown-item" href="web.html">General</a></li>
+                <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="web-features.html">Features</a></li>
+              </ul>
+            </li>
+
+            <li><a class="nav-link" href="features.html">Features</a></li>
+
+            <!-- integrations -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-integrations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Integrations
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
+                <li><a class="dropdown-item" href="spring-boot.html">Spring</a></li>
+                <li><a class="dropdown-item" href="guice.html">Guice</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="integration.html">Third-Party Integrations</a></li>
+              </ul>
+            </li>
+
+            <!-- Community -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-community" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Community
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
+                <li><a class="dropdown-item" href="forums.html">Community Forums</a></li>
+                <li><a class="dropdown-item" href="mailing-lists.html">Mailing Lists</a></li>
+                <li><a class="dropdown-item" href="articles.html">Articles</a></li>
+                <li><a class="dropdown-item" href="news.html">News</a></li>
+                <li><a class="dropdown-item" href="events.html">Events</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="community.html">More</a></li>
+              </ul>
+            </li>
+
+            <!-- About -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-about" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                About
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
+                <li><a class="dropdown-item" href="about.html">About</a></li>
+                <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="d-flex justify-content-end navbar-nav mb-2 mb-lg-0">
+            <!-- The ASF -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-asf" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apache Software Foundation
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
+                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+	<div class="page-header">
+		<h1>Understanding Subjects in Apache Shiro</h1>
+	</div>
+
+
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#the_currently_executing_subject">The Currently Executing Subject</a></li>
+<li><a href="#Subject-CustomSubjectInstances">Custom Subject Instances</a>
+<ul class="sectlevel2">
+<li><a href="#Subject-Subject">Subject.Builder</a></li>
+<li><a href="#Subject-ThreadAssociation">Thread Association</a>
+<ul class="sectlevel3">
+<li><a href="#Subject-AutomaticAssociation">Automatic Association</a></li>
+<li><a href="#Subject-ManualAssociation">Manual Association</a></li>
+<li><a href="#a_different_thread">A Different Thread</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Without question, the most important concept in Apache Shiro is the <code>Subject</code>. 'Subject' is just a security term that means a security-specific 'view' of an application user. A Shiro <code>Subject</code> instance represents both security state and operations for a <em>single</em> application user.</p>
+</div>
+<div class="paragraph">
+<p>These operations include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>authentication (login)</p>
+</li>
+<li>
+<p>authorization (access control)</p>
+</li>
+<li>
+<p>session access</p>
+</li>
+<li>
+<p>logout</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>We originally wanted to call it 'User' since that "just makes sense", but we decided against it: too many applications have existing APIs that already have their own User classes/frameworks, and we didn&#8217;t want to conflict with those.
+Also, in the security world, the term 'Subject' is actually the recognized nomenclature.</p>
+</div>
+<div class="paragraph">
+<p>Shiro&#8217;s API encourages a <code>Subject</code>-centric programming paradigm for applications. When coding application logic, most application developers want to know who the <em>currently executing</em> user is.
+While the application can usually look up any user via their own mechanisms (UserService, etc), when it comes to security, the most important question is <strong>"Who is the <em>current</em> user?"</strong></p>
+</div>
+<div class="paragraph">
+<p>While any Subject can be acquired by using the <code>SecurityManager</code>, application code based on only the current user/<code>Subject</code> is much more natural and intuitive.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="the_currently_executing_subject">The Currently Executing Subject</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In almost all environments, you can obtain the currently executing <code>Subject</code> by using <code>org.apache.shiro.SecurityUtils</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Subject currentUser = SecurityUtils.getSubject();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>getSubject()</code> call in a standalone application might return a <code>Subject</code> based on user data in an application-specific location, and in a server environment (e.g. web app), it acquires the Subject based on user data associated with current thread or incoming request.</p>
+</div>
+<div class="paragraph">
+<p>After you acquire the current <code>Subject</code>, what can you do with it?</p>
+</div>
+<div class="paragraph">
+<p>If you want to make things available to the user during their current session with the application, you can get their session:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Session session = currentUser.getSession();
+session.setAttribute( "someKey", "aValue" );</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>Session</code> is a Shiro-specific instance that provides most of what you&#8217;re used to with regular HttpSessions but with some extra goodies and one <strong>big</strong> difference: it does not require an HTTP environment!</p>
+</div>
+<div class="paragraph">
+<p>If deploying inside a web application, by default the <code>Session</code> will be <code>HttpSession</code> based.
+But, in a non-web environment, like this simple Quickstart, Shiro will automatically use its Enterprise Session Management by default. This means you get to use the same API in your applications, in any tier, regardless of deployment environment.
+This opens a whole new world of applications since any application requiring sessions does not need to be forced to use the <code>HttpSession</code> or EJB Stateful Session Beans.
+And, any client technology can now share session data.</p>
+</div>
+<div class="paragraph">
+<p>So now you can acquire a <code>Subject</code> and their <code>Session</code>. What about the <em>really</em> useful stuff like checking if they are allowed to do things, like checking against roles and permissions?</p>
+</div>
+<div class="paragraph">
+<p>Well, we can only do those checks for a known user.
+Our <code>Subject</code> instance above represents the current user, but <em>who</em> is actually the current user?
+Well, they&#8217;re anonymous - that is, until they log in at least once.
+So, let&#8217;s do that:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">if ( !currentUser.isAuthenticated() ) {
+    //collect user principals and credentials in a gui specific manner
+    //such as username/password html form, X509 certificate, OpenID, etc.
+    //We'll use the username/password example here since it is the most common.
+    //(do you know what movie this is from? ;)
+    UsernamePasswordToken token = new UsernamePasswordToken("lonestarr", "vespa");
+    //this is all you have to do to support 'remember me' (no config - built in!):
+    token.setRememberMe(true);
+    currentUser.login(token);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That&#8217;s it!
+It couldn&#8217;t be easier.</p>
+</div>
+<div class="paragraph">
+<p>But what if their login attempt fails?
+You can catch all sorts of specific exceptions that tell you exactly what happened:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">try {
+    currentUser.login( token );
+    //if no exception, that's it, we're done!
+} catch ( UnknownAccountException uae ) {
+    //username wasn't in the system, show them an error message?
+} catch ( IncorrectCredentialsException ice ) {
+    //password didn't match, try again?
+} catch ( LockedAccountException lae ) {
+    //account for that username is locked - can't login.  Show them a message?
+}
+    ... more types exceptions to check if you want ...
+} catch ( AuthenticationException ae ) {
+    //unexpected condition - error?
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You, as the application/GUI developer can choose to show the end-user messages based on exceptions or not (for example, <code>&quot;There is no account in the system with that username.&quot;</code>).
+There are many different types of exceptions you can check, or throw your own for custom conditions Shiro might not account for.
+See the <a href="/static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html">AuthenticationException JavaDoc</a> for more.</p>
+</div>
+<div class="paragraph">
+<p>Ok, so by now, we have a logged in user.
+What else can we do?</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s say who they are:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">//print their identifying principal (in this case, a username):
+log.info( "User [" + currentUser.getPrincipal() + "] logged in successfully." );</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can also test to see if they have specific role or not:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">if ( currentUser.hasRole( "schwartz" ) ) {
+    log.info("May the Schwartz be with you!" );
+} else {
+    log.info( "Hello, mere mortal." );
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can also see if they have a <a href="/permissions.html">permission</a> to act on a certain type of entity:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">if ( currentUser.isPermitted( "lightsaber:wield" ) ) {
+    log.info("You may use a lightsaber ring.  Use it wisely.");
+} else {
+    log.info("Sorry, lightsaber rings are for schwartz masters only.");
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Also, we can perform an extremely powerful <em>instance-level</em> <a href="permissions.html">permission</a> check - the ability to see if the user has the ability to access a specific instance of a type:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">if ( currentUser.isPermitted( "winnebago:drive:eagle5" ) ) {
+    log.info("You are permitted to 'drive' the 'winnebago' with license plate (id) 'eagle5'.  " +
+                "Here are the keys - have fun!");
+} else {
+    log.info("Sorry, you aren't allowed to drive the 'eagle5' winnebago!");
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Piece of cake, right?</p>
+</div>
+<div class="paragraph">
+<p>Finally, when the user is done using the application, they can log out:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">currentUser.logout(); //removes all identifying information and invalidates their session too.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This simple API constitutes 90% of what Shiro end-users will ever have to deal with when using Shiro.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Subject-CustomSubjectInstances">Custom Subject Instances</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A new feature added in Shiro 1.0 is the ability to construct custom/ad-hoc subject instances for use in special situations.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">Special Use Only!</div>
+<div class="paragraph">
+<p>You should almost always acquire the currently executing Subject by calling <code>SecurityUtils.getSubject();</code> Creating custom <code>Subject</code> instances should only be done in special cases.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Some 'special cases' when this can be useful:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>System startup/bootstrap - when there are no users interacting with the system, but code should execute as a 'system' or daemon user.
+It is desirable to create Subject instances representing a particular user so bootstrap code executes as that user (e.g. as the <code>admin</code> user).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This practice is encouraged because it ensures that utility/system code executes in the same way as a normal user, ensuring code is consistent.
+This makes code easier to maintain since you don&#8217;t have to worry about custom code blocks just for system/daemon scenarios.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Integration <a href="/testing.html">Testing</a> - you might want to create <code>Subject</code> instances as necessary to be used in integration tests. See the <a href="/testing.html">testing documentation</a> for more.</p>
+</li>
+<li>
+<p>Daemon/background process work - when a daemon or background process executes, it might need to execute as a particular user.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you already have access to a 'Subject' instance and want it to be available to other threads, you should use the 'Subject.associateWith'* methods instead of creating a new Subject instance.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Ok, so assuming you still need to create custom subject instances, let&#8217;s see how to do it:</p>
+</div>
+<div class="sect2 Builder">
+<h3 id="Subject-Subject">Subject.Builder</h3>
+<div class="paragraph">
+<p>The <code>Subject.Builder</code> class is provided to build <code>Subject</code> instances easily without needing to know construction details.</p>
+</div>
+<div class="paragraph">
+<p>The simplest usage of the Builder is to construct an anonymous, session-less <code>Subject</code> instance:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Subject subject = new Subject.Builder().buildSubject()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The default, no-arg <code>Subject.Builder()</code> constructor shown above will use the application&#8217;s currently accessible <code>SecurityManager</code> via the <code>SecurityUtils.getSecurityManager()</code> method. You may also specify the <code>SecurityManager</code> instance to be used by the additional constructor if desired:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">SecurityManager securityManager = //acquired from somewhere
+Subject subject = new Subject.Builder(securityManager).buildSubject();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All other <code>Subject.Builder</code> methods may be called before the <code>buildSubject()</code> method to provide context on how to construct the <code>Subject</code> instance.
+For example, if you have a session ID and want to acquire the <code>Subject</code> that 'owns' that session (assuming the session exists and is not expired):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Serializable sessionId = //acquired from somewhere
+Subject subject = new Subject.Builder().sessionId(sessionId).buildSubject();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Similarly, if you want to create a <code>Subject</code> instance that reflects a certain identity:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Object userIdentity = //a long ID or String username, or whatever the "myRealm" requires
+String realmName = "myRealm";
+PrincipalCollection principals = new SimplePrincipalCollection(userIdentity, realmName);
+Subject subject = new Subject.Builder().principals(principals).buildSubject();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can then use the built <code>Subject</code> instance and make calls on it as expected. But <strong>note</strong>:</p>
+</div>
+<div class="paragraph">
+<p>The built <code>Subject</code> instance is <strong>not</strong> automatically bound to the application (thread) for further use.
+If you want it to be available to any code that calls <code>SecurityUtils.getSubject()</code>, you must ensure a Thread is associated with the constructed <code>Subject</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Subject-ThreadAssociation">Thread Association</h3>
+<div class="paragraph">
+<p>As stated above, just building a <code>Subject</code> instance does not associate it with a thread - a usual requirement if any calls to <code>SecurityUtils.getSubject()</code> during thread execution are to work properly. There are three ways of ensuring a thread is associated with a <code>Subject</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Automatic Association</strong> - A <code>Callable</code> or <code>Runnable</code> executed via the <code>Subject.execute</code>* methods will automatically bind and unbind the Subject to the thread before and after <code>Callable</code>/<code>Runnable</code> execution.</p>
+</li>
+<li>
+<p><strong>Manual Association</strong> - You manually bind and unbind the <code>Subject</code> instance to the currently executing thread. This is usually useful for framework developers.</p>
+</li>
+<li>
+<p><strong>Different Thread</strong> - A <code>Callable</code> or <code>Runnable</code> is associated with a <code>Subject</code> by calling the <code>Subject.associateWith</code>* methods and then the returned <code>Callable</code>/<code>Runnable</code> is executed by another thread. This is the preferred approach if you need to execute work on another thread as the <code>Subject</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The important thing to know about thread association is that 2 things must always occur:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The Subject is <em>bound</em> to the thread so it is available at all points of the thread&#8217;s execution. Shiro does this via its <code>ThreadState</code> mechanism which is an abstraction on top of a <code>ThreadLocal</code>.</p>
+</li>
+<li>
+<p>The Subject is <em>unbound</em> at some point later, even if the thread execution results in an error. This ensures the thread remains clean and clear of any previous <code>Subject</code> state in a pooled/reusable thread environment.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>These principles are guaranteed to occur in the 3 mechanisms listed above. Their usage is elaborated next.</p>
+</div>
+<div class="sect3">
+<h4 id="Subject-AutomaticAssociation">Automatic Association</h4>
+<div class="paragraph">
+<p>If you only need a <code>Subject</code> to be temporarily associated with the current thread, and you want the thread binding and cleanup to occur automatically, a <code>Subject&#8217;s direct execution of a `Callable</code> or <code>Runnable</code> is the way to go. After the <code>Subject.execute</code> call returns, the current thread is guaranteed to be in the same state as it was before the execution. This mechanism is the most widely used of the three.</p>
+</div>
+<div class="paragraph">
+<p>For example, let&#8217;s say that you had some logic to perform when the system starts up. You want to execute a chunk of code as a particular user, but once the logic is finished, you want to ensure the thread/environment goes back to normal automatically. You would do that by calling the <code>Subject.execute</code>* methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Subject subject = //build or acquire subject
+subject.execute( new Runnable() {
+    public void run() {
+        //subject is 'bound' to the current thread now
+        //any SecurityUtils.getSubject() calls in any
+        //code called from here will work
+    }
+});
+//At this point, the Subject is no longer associated
+//with the current thread and everything is as it was before</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Of course <code>Callable</code> instances are supported as well so you can have return values and catch exceptions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Subject subject = //build or acquire subject
+MyResult result = subject.execute( new Callable&lt;MyResult&gt;() {
+    public MyResult call() throws Exception {
+        //subject is 'bound' to the current thread now
+        //any SecurityUtils.getSubject() calls in any
+        //code called from here will work
+        ...
+        //finish logic as this Subject
+        ...
+        return myResult;
+    }
+});
+//At this point, the Subject is no longer associated
+//with the current thread and everything is as it was before</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This approach is also useful in framework development. For example, Shiro&#8217;s support for secure Spring remoting ensures the remote invocation is executed as a particular subject:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Subject.Builder builder = new Subject.Builder();
+//populate the builder's attributes based on the incoming RemoteInvocation ...
+Subject subject = builder.buildSubject();
+
+return subject.execute(new Callable() {
+    public Object call() throws Exception {
+        return invoke(invocation, targetObject);
+    }
+});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Subject-ManualAssociation">Manual Association</h4>
+<div class="paragraph">
+<p>While the <code>Subject.execute</code>* methods automatically clean up the thread state after they return, there might be some scenarios where you want to manage the <code>ThreadState</code> yourself. This is almost always done in framework-level development when integrating w/ Shiro and is rarely used even in bootstrap/daemon scenarios (where the <code>Subject.execute(callable)</code> example above is more frequent).</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">Guarantee Cleanup</div>
+<div class="paragraph">
+<p>The most important thing about this mechanism is that you must <em>always</em> guarantee the current thread is cleaned up after logic is executed to ensure there is no thread state corruption in a reusable or pooled thread environment.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Guaranteeing cleanup is best done in a <code>try/finally</code> block:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Subject subject = new Subject.Builder()...
+ThreadState threadState = new SubjectThreadState(subject);
+threadState.bind();
+try {
+    //execute work as the built Subject
+} finally {
+    //ensure any state is cleaned so the thread won't be
+    //corrupt in a reusable or pooled thread environment
+    threadState.clear();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Interestingly enough, this is exactly what the <code>Subject.execute</code>* methods do - they just perform this logic automatically before and after <code>Callable</code> or <code>Runnable</code> execution. It is also nearly identical logic performed by Shiro&#8217;s <code>ShiroFilter</code> for web applications (<code>ShiroFilter</code> uses web-specific <code>ThreadState</code> implementations outside the scope of this section).</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="title">Web Use</div>
+<div class="paragraph">
+<p>Don''t use the above 'ThreadState' code example in a thread that is processing a web request. Web-specific ThreadState implementations are used during web requests instead. Instead, ensure the 'ShiroFilter' intercepts web requests to ensure Subject building/binding/cleanup is done properly.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="a_different_thread">A Different Thread</h4>
+<div class="paragraph">
+<p>If you have a <code>Callable</code> or <code>Runnable</code> instance that should execute as a <code>Subject</code> and you will execute the <code>Callable</code> or <code>Runnable</code> yourself (or hand it off to a thread pool or <code>Executor</code> or <code>ExecutorService</code> for example), you should use the <code>Subject.associateWith</code>* methods. These methods ensure that the Subject is retained and accessible on the thread that eventually executes.</p>
+</div>
+<div class="paragraph">
+<p>Callable example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Subject subject = new Subject.Builder()...
+Callable work = //build/acquire a Callable instance.
+//associate the work with the built subject so SecurityUtils.getSubject() calls works properly:
+work = subject.associateWith(work);
+ExecutorService executor = java.util.concurrent.Executors.newCachedThreadPool();
+//execute the work on a different thread as the built Subject:
+executor.execute(work);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Runnable example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Subject subject = new Subject.Builder()...
+Runnable work = //build/acquire a Runnable instance.
+//associate the work with the built subject so SecurityUtils.getSubject() calls works properly:
+work = subject.associateWith(work);
+ExecutorService executor = java.util.concurrent.Executors.newCachedThreadPool();
+//execute the work on a different thread as the built Subject:
+executor.execute(work);</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Automatic Cleanup</div>
+<div class="paragraph">
+<p>The 'associateWith'* methods perform necessary thread cleanup automatically to ensure threads remain clean in a pooled environment.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+	<hr />
+
+</div> 
+
+    <div class="footer-padding"></div>
+
+    <div class="container-fluid pt-2 border-top" id="custom-footer">
+      <footer class="row justify-content-between align-items-center">
+        <div class=" col-md-5">
+          <div class="copyright-footer justify-content-start">
+            <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
+            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center col-md-1">
+          <a class="btn btn-social"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
+        </div>
+
+        <div class="d-flex justify-content-end col-md-4" id="editThisPage">
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/subject.adoc"/>
+        </div>
+
+        <div class="d-flex col-md-2 justify-content-end" style="position: relative">
+          <div class="footer-shield"></div>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="highlight.js-11.2.0/highlight.min.js"></script>
+    <script src="js/shiro.js"></script>
+
+    <script>
+        docReady(
+          addPageEditLink()
+      );
+    </script>
+    <script>hljs.highlightAll();</script>
+
+    </body>
+</html>

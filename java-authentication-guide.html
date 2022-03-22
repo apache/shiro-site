@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-  2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Java Authentication Guide with Apache Shiro | Apache Shiro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content='documentation,authentication'>
+    <meta name="generator" content="JBake">
+    <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
+    <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
+    <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
+
+    <meta property="og:title" content="Java Authentication Guide with Apache Shiro | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2022-03-22T22:45:11Z"/>
+    <meta property="article:tag" content='documentation'/>
+    <meta property="article:tag" content='authentication'/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content='https://shiro.staged.apache.org//java-authentication-guide.html'/>
+    <meta property="og:image" content='images/shiro-featured-image.png'/>
+    <meta property="og:image:width" content='1200'/>
+    <meta property="og:image:height" content='628'/>
+    <meta property="og:site_name" content="Apache Shiro"/>
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/asciidoctor.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="highlight.js-11.2.0/styles/default.min.css" rel="stylesheet">
+    <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Matomo -->
+    <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['disableCookies']);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u="//matomo.privacy.apache.org/";
+            _paq.push(['setTrackerUrl', u+'matomo.php']);
+            _paq.push(['setSiteId', '2']);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+  </head>
+  <body>
+    <div id="top-bar"></div>
+    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
+
+    <div id="wrap">
+
+      <div class="masthead">
+        <p class="lead">
+          <a href="index.html"><img src="images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <span class="tagline">Simple. Java. Security.</span>
+          <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
+          </a>
+        </p>
+      </div>
+
+	<!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="get-started.html">Get Started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="documentation.html">Docs</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-webapps" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Web Apps
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
+                <li><a class="dropdown-item" href="web.html">General</a></li>
+                <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="web-features.html">Features</a></li>
+              </ul>
+            </li>
+
+            <li><a class="nav-link" href="features.html">Features</a></li>
+
+            <!-- integrations -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-integrations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Integrations
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
+                <li><a class="dropdown-item" href="spring-boot.html">Spring</a></li>
+                <li><a class="dropdown-item" href="guice.html">Guice</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="integration.html">Third-Party Integrations</a></li>
+              </ul>
+            </li>
+
+            <!-- Community -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-community" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Community
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
+                <li><a class="dropdown-item" href="forums.html">Community Forums</a></li>
+                <li><a class="dropdown-item" href="mailing-lists.html">Mailing Lists</a></li>
+                <li><a class="dropdown-item" href="articles.html">Articles</a></li>
+                <li><a class="dropdown-item" href="news.html">News</a></li>
+                <li><a class="dropdown-item" href="events.html">Events</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="community.html">More</a></li>
+              </ul>
+            </li>
+
+            <!-- About -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-about" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                About
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
+                <li><a class="dropdown-item" href="about.html">About</a></li>
+                <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="d-flex justify-content-end navbar-nav mb-2 mb-lg-0">
+            <!-- The ASF -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-asf" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apache Software Foundation
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
+                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+	<div class="page-header">
+		<h1>Java Authentication Guide with Apache Shiro</h1>
+	</div>
+
+
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#JavaAuthenticationGuide-Terminologyyoullneed">Terminology you&#8217;ll need</a></li>
+<li><a href="#JavaAuthenticationGuide-HowtoAuthenticateinJavawithShiro">How to Authenticate in Java with Shiro</a>
+<ul class="sectlevel2">
+<li><a href="#JavaAuthenticationGuide-Step1Collectthesubjectsprincipalsandcredentials">Step 1 - Collect the subject&#8217;s principals and credentials</a></li>
+<li><a href="#JavaAuthenticationGuide-Step2Submittheprincipalsandcredentialstoanauthenticationsystem">Step 2 - Submit the principals and credentials to an authentication system.</a></li>
+<li><a href="#JavaAuthenticationGuide-Step3Allowaccessretryauthenticationorblockaccess">Step 3 - Allow access, retry authentication, or block access</a></li>
+</ul>
+</li>
+<li><a href="#JavaAuthenticationGuide-RememberMeSupport">"Remember Me" Support</a>
+<ul class="sectlevel2">
+<li><a href="#JavaAuthenticationGuide-RememberedvsAuthenticated">Remembered vs Authenticated</a></li>
+</ul>
+</li>
+<li><a href="#logging_out">Logging Out</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Authentication is the process of identity verification– you are trying to prove a user is who they say they are.
+To do so, a user needs to provide some sort of proof of identity that your system understands and trust.</p>
+</div>
+<div class="paragraph">
+<p>The goal of this guide is to walk you through how Authentication in Java is performed in Shiro.
+If you haven&#8217;t already please take moment and go through Shiro&#8217;s <a href="/10-minute-tutorial.html">10 Minute Tutorial</a> so that you get a basic understanding of how to work with Shiro.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="JavaAuthenticationGuide-Terminologyyoullneed">Terminology you&#8217;ll need</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Subject</dt>
+<dd>
+<p>Security specific user 'view' of an application user. It can be a human being, a third-party process, a server connecting to your application, or even a cron job. Basically, it is anything or anyone communicating with your application.</p>
+</dd>
+<dt class="hdlist1">Principals</dt>
+<dd>
+<p>A subjects identifying attributes. First name, last name, social security number, username</p>
+</dd>
+<dt class="hdlist1">Credentials</dt>
+<dd>
+<p>secret data that are used to verify identities. Passwords, Biometric data, x509 certificates,</p>
+</dd>
+<dt class="hdlist1">Realms</dt>
+<dd>
+<p>Security specific DAO, data access object, software component that talks to a backend data source. If you have usernames and password in LDAP, then you would have an LDAP Realm that would communicate with LDAP. The idea is that you would use a realm per back-end data source and Shiro would know how to coordinate with these realms together to do what you have to do.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="JavaAuthenticationGuide-HowtoAuthenticateinJavawithShiro">How to Authenticate in Java with Shiro</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In Shiro&#8217;s framework, and most every other framework for that matter, the Java authentication process can be broken up into three distinct steps.</p>
+</div>
+<div id="JavaAuthenticationGuide-Steps" class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Collect the subject&#8217;s principals and credentials</p>
+</li>
+<li>
+<p>Submit the principals and credentials to an authentication system.</p>
+</li>
+<li>
+<p>Allow access, retry authentication, or block access</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Here is some code on how you do this in Shiro Specifically.</p>
+</div>
+<div class="sect2">
+<h3 id="JavaAuthenticationGuide-Step1Collectthesubjectsprincipalsandcredentials">Step 1 - Collect the subject&#8217;s principals and credentials</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">//Example using most common scenario:
+//String username and password.  Acquire in
+//system-specific manner (HTTP request, GUI, etc)
+UsernamePasswordToken token = new UsernamePasswordToken( username, password );
+
+//”Remember Me” built-in, just do this:
+token.setRememberMe(true);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this particular case, we’re using a class called <a href="/static/current/apidocs/org/apache/shiro/authc/UsernamePasswordToken.html">UsernamePasswordToken</a>.
+It is the most common authentication token used in the framework.</p>
+</div>
+<div class="paragraph">
+<p>We use this token to bundle the username and password we acquired in someway in our Java application.
+Maybe they were submitted via a user web form, an HTTP header, or a command line.
+In Shiro, it does not matter how you acquire them – it is protocol agnostic.</p>
+</div>
+<div class="paragraph">
+<p>In this example, we have decided that we want the application to remember users when they return.
+So once the token is created, we use Shiro&#8217;s built-in "Remember-me" feature by setting it to true on the token.
+This is done using the token&#8217;s <a href="/static/current/apidocs/org/apache/shiro/authc/UsernamePasswordToken.html#setRememberMe(boolean)"><code>setRememberMe()</code></a> method</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="JavaAuthenticationGuide-Step2Submittheprincipalsandcredentialstoanauthenticationsystem">Step 2 - Submit the principals and credentials to an authentication system.</h3>
+<div class="paragraph">
+<p>So we’ve collected the information in a token and set it to remember returning users. The next step is in the Authentication process is to submit the token to an authentication system.
+Your authentication system is represented in Shiro by security-specific DAOs, that are referred to as <a href="/static/current/apidocs/">Realms</a>.
+For more information on realms please check out the <a href="/realm.html">Shiro Realm Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>In Shiro we try to make this part as quick and easy as humanly possible. We have it down to one line of Java code!</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">//With most of Shiro, you'll always want to make sure you're working with the currently
+//executing user, referred to as the subject
+Subject currentUser = SecurityUtils.getSubject();
+
+//Authenticate the subject by passing
+//the user name and password token
+//into the login method
+currentUser.login(token);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>First, we need to acquire the currently executing user, referred to as the subject. A subject is just a security specific view of the user—-it can be a human, a process, cron job, doesn&#8217;t matter. In Shiro, there is always a subject instance available to the currently executing thread. The concept of a subject is core to Shiro and most of the framework is centered around working with subjects. In this example, we will name this instance of subject currentUser.</p>
+</div>
+<div class="paragraph">
+<p>To acquire the subject, we use the <a href="/static/current/apidocs/org/apache/shiro/SecurityUtils.html">SecurityUtils</a> class which is also a core part of Shiro&#8217;s API.
+It will acquire the currently executing user via the <a href="/static/current/apidocs/org/apache/shiro/SecurityUtils.html#getSubject()"><code>getsubject()</code></a> method call.
+And we get back a subject instance that is representing who the current user is who is interacting with the system.
+At this point in the example, the subject currentUser is anonymous.
+There is no identity associated with them.</p>
+</div>
+<div class="paragraph">
+<p>Now with the user representation in hand, we authenticate them by just calling the <a href="/static/current/apidocs/org/apache/shiro/subject/Subject.html#login(org.apache.shiro.authc.AuthenticationToken)"><code>login()</code></a>) method and submit the token we just constructed a second ago.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="JavaAuthenticationGuide-Step3Allowaccessretryauthenticationorblockaccess">Step 3 - Allow access, retry authentication, or block access</h3>
+<div class="paragraph">
+<p>Again really, really easy, single method call.
+If the <code>login()</code> method call is successful, then the user is logged in and associated with a user account or identity.
+From here, the user can go about using your application and retain their identity through their session or longer since we have set the "Remember Me" in our example.</p>
+</div>
+<div class="paragraph">
+<p>But what happens if something fails in the authentication attempt?
+What if they give you the wrong password or they accessed the system too many times, maybe their account is locked?
+In this case, Shiro will throw an exception.
+This is where Shiro&#8217;s rich exception hierarchy comes into play.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">try {
+    currentUser.login(token);
+} catch  ( UnknownAccountException uae ) { ...
+} catch  ( IncorrectCredentialsException ice ) { ...
+} catch  ( LockedAccountException lae ) { ...
+} catch  ( ExcessiveAttemptsException eae ) { ...
+} ...  your own ...
+} catch ( AuthenticationException ae ) {
+    //unexpected error?
+}
+//No problems, show authenticated view…</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can take that method call and wrap it in a try/catch block and you can catch all sort of exceptions if you want to handle them and react accordingly. In addition to a rich set of exceptions that Shiro offers, you can create your own if you need custom functionality. For more information, follow this link documentation on <a href="/static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html">AuthenticationException</a>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Security Tip</div>
+<div class="paragraph">
+<p>Security best practice is to give generic login failure messages to users because you do not want to aid an attacker trying to break into your system.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="JavaAuthenticationGuide-RememberMeSupport">"Remember Me" Support</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As shown in the example above, Shiro supports the notion of "remember me" in addition to the normal login process.</p>
+</div>
+<div class="paragraph">
+<p>In Shiro, the Subject object supports two methods : <a href="/static/current/apidocs/org/apache/shiro/subject/Subject.html#isRemembered()"><code>isRemembered()</code></a> and <a href="/static/current/apidocs/org/apache/shiro/subject/Subject.html#isAuthenticated()"><code>isAuthenticated()</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>A "remembered" subject has an identity (it is not anonymous) and their identifying attributes,referred to as principals, are remembered from a successful authentication during a previous session.</p>
+</div>
+<div class="paragraph">
+<p>An authenticated subject has proved their identity <em>during their current session</em>.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If a subject is remembered, it DOES NOT mean they are authenticated.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="JavaAuthenticationGuide-RememberedvsAuthenticated">Remembered vs Authenticated</h3>
+<div class="paragraph">
+<p>In shiro it is very important to note that a remembered subject is not an authenticated subject.
+A check against <code>isAuthenticated()</code> is a much more strict check because authentication is the process of proving you are who you say you are.
+When a user is only remembered, the remembered identity gives the system an idea who that user probably is, but in reality, has no way of absolutely guaranteeing if the remembered Subject represents the user currently using the application.
+Once the subject is authenticated, they are no longer considered only remembered because their identity would have been verified during the current session.</p>
+</div>
+<div class="paragraph">
+<p>So although many parts of the application can still perform user-specific logic based on the remembered principals, such as customized views, it should never perform highly-sensitive operations until the user has legitimately verified their identity by executing a successful authentication attempt.</p>
+</div>
+<div class="paragraph">
+<p>For example, a check to see if a subject can access financial information should almost always depend on <code>isAuthenticated()</code>, not <code>isRemembered()</code>, to guarantee a verified identity.</p>
+</div>
+<div class="paragraph">
+<p>Here is a scenario to help illustrate why the distinction between isAuthenticated and isRemembered is important.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s say you&#8217;re using Amazon.com.
+You log in and you add some books to your shopping cart.
+A day goes by.
+Of course your user session has expired and you&#8217;ve been logged out.
+But Amazon "remembers" you, greets you by name, and is still giving you personalized book recommendations. To Amazon, <code>isRemembered()</code> would return <code>TRUE</code>.
+What happens if you try to use one of the credit cards on file or change your account information?
+While Amazon "remembers" you, <code>isRemembered() = TRUE</code>, it is not certain that you are in fact you, <code>isAuthenticated()=FALSE</code>.
+So before you can perform a sensitive action Amazon needs to verify your identity by forcing an authentication process which it does through a login screen.
+After the login, your identity has been verified and <code>isAuthenticated()=TRUE</code>.</p>
+</div>
+<div class="paragraph">
+<p>This scenario happens very often over the web so the functionality is built into Shiro helping you easily make the distinction yourself.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="logging_out">Logging Out</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Finally, when the user is done using the application, they can log out. And in Shiro, we make logging out quick and easy with a single method call.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">currentUser.logout(); //removes all identifying information and invalidates their session too.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When you log out in Shiro it will close out the user session and removes any associated identity from the subject instance. If you&#8217;re using RememberMe in a web environment, then <code>.logout()</code> will, by default, also delete the RememberMe cookie from the browser.</p>
+</div>
+</div>
+</div>
+	<hr />
+
+</div> 
+
+    <div class="footer-padding"></div>
+
+    <div class="container-fluid pt-2 border-top" id="custom-footer">
+      <footer class="row justify-content-between align-items-center">
+        <div class=" col-md-5">
+          <div class="copyright-footer justify-content-start">
+            <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
+            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center col-md-1">
+          <a class="btn btn-social"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
+        </div>
+
+        <div class="d-flex justify-content-end col-md-4" id="editThisPage">
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/java-authentication-guide.adoc"/>
+        </div>
+
+        <div class="d-flex col-md-2 justify-content-end" style="position: relative">
+          <div class="footer-shield"></div>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="highlight.js-11.2.0/highlight.min.js"></script>
+    <script src="js/shiro.js"></script>
+
+    <script>
+        docReady(
+          addPageEditLink()
+      );
+    </script>
+    <script>hljs.highlightAll();</script>
+
+    </body>
+</html>

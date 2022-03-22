@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-  2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Integrating Apache Shiro into Guice based Application | Apache Shiro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content='documentation,integration,guice'>
+    <meta name="generator" content="JBake">
+    <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
+    <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
+    <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
+
+    <meta property="og:title" content="Integrating Apache Shiro into Guice based Application | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2022-03-22T22:45:11Z"/>
+    <meta property="article:tag" content='documentation'/>
+    <meta property="article:tag" content='integration'/>
+    <meta property="article:tag" content='guice'/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content='https://shiro.staged.apache.org//guice.html'/>
+    <meta property="og:image" content='images/shiro-featured-image.png'/>
+    <meta property="og:image:width" content='1200'/>
+    <meta property="og:image:height" content='628'/>
+    <meta property="og:site_name" content="Apache Shiro"/>
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/asciidoctor.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="highlight.js-11.2.0/styles/default.min.css" rel="stylesheet">
+    <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Matomo -->
+    <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['disableCookies']);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u="//matomo.privacy.apache.org/";
+            _paq.push(['setTrackerUrl', u+'matomo.php']);
+            _paq.push(['setSiteId', '2']);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+  </head>
+  <body>
+    <div id="top-bar"></div>
+    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
+
+    <div id="wrap">
+
+      <div class="masthead">
+        <p class="lead">
+          <a href="index.html"><img src="images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <span class="tagline">Simple. Java. Security.</span>
+          <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
+          </a>
+        </p>
+      </div>
+
+	<!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="get-started.html">Get Started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="documentation.html">Docs</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-webapps" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Web Apps
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
+                <li><a class="dropdown-item" href="web.html">General</a></li>
+                <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="web-features.html">Features</a></li>
+              </ul>
+            </li>
+
+            <li><a class="nav-link" href="features.html">Features</a></li>
+
+            <!-- integrations -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-integrations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Integrations
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
+                <li><a class="dropdown-item" href="spring-boot.html">Spring</a></li>
+                <li><a class="dropdown-item" href="guice.html">Guice</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="integration.html">Third-Party Integrations</a></li>
+              </ul>
+            </li>
+
+            <!-- Community -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-community" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Community
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
+                <li><a class="dropdown-item" href="forums.html">Community Forums</a></li>
+                <li><a class="dropdown-item" href="mailing-lists.html">Mailing Lists</a></li>
+                <li><a class="dropdown-item" href="articles.html">Articles</a></li>
+                <li><a class="dropdown-item" href="news.html">News</a></li>
+                <li><a class="dropdown-item" href="events.html">Events</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="community.html">More</a></li>
+              </ul>
+            </li>
+
+            <!-- About -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-about" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                About
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
+                <li><a class="dropdown-item" href="about.html">About</a></li>
+                <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="d-flex justify-content-end navbar-nav mb-2 mb-lg-0">
+            <!-- The ASF -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-asf" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apache Software Foundation
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
+                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+	<div class="page-header">
+		<h1>Integrating Apache Shiro into Guice based Application</h1>
+	</div>
+
+
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#overview">Overview</a></li>
+<li><a href="#getting_started">Getting Started</a></li>
+<li><a href="#aop">AOP</a></li>
+<li><a href="#web">Web</a></li>
+<li><a href="#properties">Properties</a></li>
+<li><a href="#injection_of_shiro_objects">Injection of Shiro Objects</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Shiro <a href="https://github.com/google/guice">Guice</a> integration was added in Shiro 1.2. This page covers the ways to integrate Shiro into Guice-based applications using standard Guice conventions and mechanisms. Prior to reading this integration document, you should be a least somewhat familiar with Guice.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="overview">Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>shiro-guice provides three Guice modules that can be included in your application.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ShiroModule</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Provides basic integration for setting up the <code>SecurityManager</code>, any <code>Realms</code>, and any other Shiro configuration.</p>
+</li>
+<li>
+<p>This module is used by extending it and adding your own custom configuration.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>ShiroWebModule</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Extension of <code>ShiroModule</code> that sets up the web environment and also allows for filter chain configuration. This uses the <a href="https://github.com/google/guice/wiki/ServletModule">Guice Servlet Module</a> to configure the filters, and so requires that to be setup.</p>
+</li>
+<li>
+<p>Like the <code>ShiroModule</code>, this module is used by extending it and adding your own custom configuration.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>ShiroAopModule</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Uses <a href="https://github.com/google/guice/wiki/AOP">Guice AOP</a> to implement the Shiro AOP annotations. This module is primarily concerned with adapting Shiro <code>AnnotationMethodInterceptors</code> to the Guice method interceptor model.</p>
+</li>
+<li>
+<p>This module is typically used by simply installing it. However, if you have your own <code>AnnotationMethodInterceptors</code> written for Shiro, they can be easily incorporated by extending it.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="getting_started">Getting Started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First, include the shiro-guice dependency in your project:</p>
+</div>
+<ul class="nav nav-tabs" id="dependency-cli-tab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link active"
+      id="maven-cli-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#maven-cli"
+      type="button"
+      role="tab"
+      aria-controls="maven-cli"
+      aria-selected="true"
+      >Maven</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link"
+      id="gradle-cli-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#gradle-cli"
+      type="button"
+      role="tab"
+      aria-controls="gradle-cli"
+      aria-selected="false"
+      >Gradle</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link"
+      id="sbt-cli-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#sbt-cli"
+      type="button"
+      role="tab"
+      aria-controls="sbt-cli"
+      aria-selected="false"
+    >SBT</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link"
+      id="ivy-cli-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#ivy-cli"
+      type="button"
+      role="tab"
+      aria-controls="ivy-cli"
+      aria-selected="false"
+      >Ivy</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link"
+      id="leiningen-cli-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#leiningen-cli"
+      type="button"
+      role="tab"
+      aria-controls="leiningen-cli"
+      aria-selected="false"
+    >Leiningen</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link"
+      id="buildr-cli-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#buildr-cli"
+      type="button"
+      role="tab"
+      aria-controls="buildr-cli"
+      aria-selected="false"
+    >Buildr</button>
+  </li>
+</ul>
+
+<div class="tab-content" id="dependency-cli-tab-content">
+  <div
+    class="tab-pane fade show active"
+    id="maven-cli"
+    role="tabpanel"
+    aria-labelledby="maven-cli-tab"
+    >
+    <pre><code class='xml language-xml'>&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+  &lt;artifactId&gt;shiro-guice&lt;/artifactId&gt;
+  &lt;version&gt;1.8.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+  </div>
+  <div
+    class="tab-pane fade"
+    id="gradle-cli"
+    role="tabpanel"
+    aria-labelledby="gradle-cli-tab"
+    >
+    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-guice:1.8.0'
+</code></pre>
+  </div>
+  <div
+    class="tab-pane fade"
+    id="sbt-cli"
+    role="tabpanel"
+    aria-labelledby="sbt-cli-tab"
+  >
+    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-guice" % "1.8.0"
+</code></pre>
+  </div>
+  <div
+    class="tab-pane fade"
+    id="ivy-cli"
+    role="tabpanel"
+    aria-labelledby="ivy-cli-tab"
+    >
+    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-guice" rev="1.8.0"/&gt;
+</code></pre>
+  </div>
+  <div
+    class="tab-pane fade"
+    id="leiningen-cli"
+    role="tabpanel"
+    aria-labelledby="leiningen-cli-tab"
+    >
+    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-guice "1.8.0"]
+</code></pre>
+  </div>
+  <div
+    class="tab-pane fade"
+    id="buildr-cli"
+    role="tabpanel"
+    aria-labelledby="buildr-cli-tab"
+  >
+    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-guice:jar:1.8.0'
+</code></pre>
+  </div>
+</div>
+<div class="paragraph">
+<p>The most simple configuration is to extend <code>ShiroModule</code> to install your own <code>Realm</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class MyShiroModule extends ShiroModule {
+    protected void configureShiro() {
+        try {
+            bindRealm().toConstructor(IniRealm.class.getConstructor(Ini.class));
+        } catch (NoSuchMethodException e) {
+            addError(e);
+        }
+    }
+
+    @Provides
+    Ini loadShiroIni() {
+        return Ini.fromResourcePath("classpath:shiro.ini");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this case, user and role configuration would go in the <code>shiro.ini</code> file.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="title">shiro.ini usage in Guice</div>
+<div class="paragraph">
+<p>It is important to note that, in this above configuration, only the <code>users</code> and <code>roles</code> sections from the ini file are used.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Then, the module is used to create a Guice injector, and the injector is used to obtain a <code>SecurityManager</code>. The following example serves the same purpose as the first three lines in the <a href="/10-minute-tutorial.html#quickstart_java">Quickstart</a> example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Injector injector = Guice.createInjector(new MyShiroModule());
+SecurityManager securityManager = injector.getInstance(SecurityManager.class);
+SecurityUtils.setSecurityManager(securityManager);</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="aop">AOP</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Shiro includes several annotations and method interceptors useful for performing authorization via AOP. It also provides a simple API for writing Shiro-specific method interceptors. shiro-guice supports this with the <code>ShiroAopModule</code>.</p>
+</div>
+<div class="paragraph">
+<p>To use it, simply instantiate and install the module alongside your application module and your <code>ShiroModule</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Injector injector = Guice.createInjector(new MyShiroModule(), new ShiroAopModule(), new MyApplicationModule());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you have written custom interceptors that conform to Shiro&#8217;s api, you may find it useful to extend the <code>ShiroAopModule</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class MyShiroAopModule extends ShiroAopModule {
+    protected void configureInterceptors(AnnotationResolver resolver)
+    {
+        bindShiroInterceptor(new MyCustomAnnotationMethodInterceptor(resolver));
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="web">Web</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>shiro-guice&#8217;s web integration is designed to integrate Shiro and its filter paradigm with Guice&#8217;s servlet module. If you are using Shiro in a web environment, and using Guice&#8217;s servlet module, then you should extend ShiroWebModule rather than ShiroModule. Your web.xml should be setup exactly as Guice&#8217;s servlet module recommends.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class MyShiroWebModule extends ShiroWebModule {
+    MyShiroWebModule(ServletContext sc) {
+        super(sc);
+    }
+
+    protected void configureShiroWeb() {
+        try {
+            bindRealm().toConstructor(IniRealm.class.getConstructor(Ini.class));
+        } catch (NoSuchMethodException e) {
+            addError(e);
+        }
+
+        addFilterChain("/public/**", ANON);
+        addFilterChain("/stuff/allowed/**", AUTHC_BASIC, config(PERMS, "yes"));
+        addFilterChain("/stuff/forbidden/**", AUTHC_BASIC, config(PERMS, "no"));
+        addFilterChain("/**", AUTHC_BASIC);
+    }
+
+    @Provides
+    Ini loadShiroIni() {
+        return Ini.fromResourcePath("classpath:shiro.ini");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the previous code, we have bound an <code>IniRealm</code> and setup four filter chains. These chains would be equivalent to the following ini configuration.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[urls]
+/public/** = anon
+/stuff/allowed/** = authcBasic, perms["yes"]
+/stuff/forbidden/** = authcBasic, perms["no"]
+/** = authcBasic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In shiro-guice, the filter names are Guice keys. All of the default Shiro filters are available as constants, but you are not limited to those. In order to use a custom filter in a filter chain, you would do</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Key customFilter = Key.get(MyCustomFilter.class);
+
+addFilterChain("/custom/**", customFilter);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We still have to tell guice-servlets about our Shiro filter. Since the <code>ShiroWebModule</code> is private, and guice-servlets does not give us a way to expose a filter mapping, we have to bind it manually.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ShiroWebModule.guiceFilterModule()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or, from within an application module,</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ShiroWebModule.bindGuiceFilter(binder())</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="properties">Properties</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A number of Shiro classes expose configuration parameters via setter methods. shiro-guice will inject these if it finds a binding for <code>@Named(&quot;shiro.{propName}&quot;)</code>. For instance, to set the session timeout, you could do the following.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">bindConstant().annotatedWith(Names.named("shiro.globalSessionTimeout")).to(30000L);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If this paradigm doesn&#8217;t work for you, you may also consider using a provider to instantiate the object and invoking the setters directly.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="injection_of_shiro_objects">Injection of Shiro Objects</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>shiro-guice uses a Guice <code>TypeListener</code> to perform injection on native Shiro classes (any class in a subdirectory of <code>org.apache.shiro</code> but not <code>org.apache.shiro.guice</code>). However, Guice only considers explicitly bound types as candidates for <code>TypeListeners</code>, so if you have a Shiro object that you want injected, you have to declare it explicitly. For instance, to set the <code>CredentialsMatcher</code> for a realm, we would need to add the following bindings:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">bind(CredentialsMatcher.class).to(HashedCredentialsMatcher.class);
+bind(HashedCredentialsMatcher.class);
+bindConstant().annotatedWith(Names.named("shiro.hashAlgorithmName")).to(Md5Hash.ALGORITHM_NAME);</code></pre>
+</div>
+</div>
+<h2 id="Lendahandwithdocumentation">Lend a hand with documentation</h2>
+
+<p>While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time.  If you'd like to help the Shiro project, please consider correcting, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro. </p>
+
+<p>The easiest way to contribute your documentation is to submit a pull-request by clicking on the <code>Edit</code> link below, or send it to the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.</p>
+</div>
+</div>
+	<hr />
+
+</div> 
+
+    <div class="footer-padding"></div>
+
+    <div class="container-fluid pt-2 border-top" id="custom-footer">
+      <footer class="row justify-content-between align-items-center">
+        <div class=" col-md-5">
+          <div class="copyright-footer justify-content-start">
+            <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
+            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center col-md-1">
+          <a class="btn btn-social"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
+        </div>
+
+        <div class="d-flex justify-content-end col-md-4" id="editThisPage">
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/guice.adoc"/>
+        </div>
+
+        <div class="d-flex col-md-2 justify-content-end" style="position: relative">
+          <div class="footer-shield"></div>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="highlight.js-11.2.0/highlight.min.js"></script>
+    <script src="js/shiro.js"></script>
+
+    <script>
+        docReady(
+          addPageEditLink()
+      );
+    </script>
+    <script>hljs.highlightAll();</script>
+
+    </body>
+</html>

@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-  2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Session Management | Apache Shiro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content='documentation'>
+    <meta name="generator" content="JBake">
+    <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
+    <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
+    <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
+
+    <meta property="og:title" content="Session Management | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2022-03-22T22:45:11Z"/>
+    <meta property="article:tag" content='documentation'/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content='https://shiro.staged.apache.org//session-management.html'/>
+    <meta property="og:image" content='images/shiro-featured-image.png'/>
+    <meta property="og:image:width" content='1200'/>
+    <meta property="og:image:height" content='628'/>
+    <meta property="og:site_name" content="Apache Shiro"/>
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/asciidoctor.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="highlight.js-11.2.0/styles/default.min.css" rel="stylesheet">
+    <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Matomo -->
+    <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['disableCookies']);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u="//matomo.privacy.apache.org/";
+            _paq.push(['setTrackerUrl', u+'matomo.php']);
+            _paq.push(['setSiteId', '2']);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+  </head>
+  <body>
+    <div id="top-bar"></div>
+    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
+
+    <div id="wrap">
+
+      <div class="masthead">
+        <p class="lead">
+          <a href="index.html"><img src="images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <span class="tagline">Simple. Java. Security.</span>
+          <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
+          </a>
+        </p>
+      </div>
+
+	<!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="get-started.html">Get Started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="documentation.html">Docs</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-webapps" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Web Apps
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
+                <li><a class="dropdown-item" href="web.html">General</a></li>
+                <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="web-features.html">Features</a></li>
+              </ul>
+            </li>
+
+            <li><a class="nav-link" href="features.html">Features</a></li>
+
+            <!-- integrations -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-integrations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Integrations
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
+                <li><a class="dropdown-item" href="spring-boot.html">Spring</a></li>
+                <li><a class="dropdown-item" href="guice.html">Guice</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="integration.html">Third-Party Integrations</a></li>
+              </ul>
+            </li>
+
+            <!-- Community -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-community" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Community
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
+                <li><a class="dropdown-item" href="forums.html">Community Forums</a></li>
+                <li><a class="dropdown-item" href="mailing-lists.html">Mailing Lists</a></li>
+                <li><a class="dropdown-item" href="articles.html">Articles</a></li>
+                <li><a class="dropdown-item" href="news.html">News</a></li>
+                <li><a class="dropdown-item" href="events.html">Events</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="community.html">More</a></li>
+              </ul>
+            </li>
+
+            <!-- About -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-about" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                About
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
+                <li><a class="dropdown-item" href="about.html">About</a></li>
+                <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="d-flex justify-content-end navbar-nav mb-2 mb-lg-0">
+            <!-- The ASF -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-asf" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apache Software Foundation
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
+                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+	<div class="page-header">
+		<h1>Session Management</h1>
+	</div>
+
+
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#SessionManagement-UsingSessions">Using Sessions</a></li>
+<li><a href="#SessionManagement-SessionManager">The SessionManager</a>
+<ul class="sectlevel2">
+<li><a href="#SessionManagement-SessionManager-SessionTimeout">Session Timeout</a></li>
+<li><a href="#SessionManagement-SessionManager-Listeners">Session Listeners</a></li>
+<li><a href="#SessionManagement-SessionManager-Storage">Session Storage</a></li>
+<li><a href="#SessionManagement-SessionManager-SessionValidationScheduling">Session Validation &amp; Scheduling</a></li>
+</ul>
+</li>
+<li><a href="#SessionManagement-SessionClustering">Session Clustering</a>
+<ul class="sectlevel2">
+<li><a href="#SessionManagement-SessionClustering-EnterpriseCacheSessionDAO"><code>EnterpriseCacheSessionDAO</code></a></li>
+<li><a href="#SessionManagement-SessionClustering-EhcacheTerracotta">Ehcache + Terracotta</a></li>
+<li><a href="#SessionManagement-SessionClustering-Zookeeper">Zookeeper</a></li>
+</ul>
+</li>
+<li><a href="#SessionManagement-SessionsSubjectState">Sessions and Subject State</a>
+<ul class="sectlevel2">
+<li><a href="#SessionManagement-SessionsSubjectState-StatefulApplications">Stateful Applications (Sessions allowed)</a></li>
+<li><a href="#SessionManagement-SessionsSubjectState-StatelessApplications">Stateless Applications (Sessionless)</a></li>
+<li><a href="#SessionManagement-SessionsSubjectState-HybridApproach">A Hybrid Approach</a></li>
+<li><a href="#SessionManagement-SessionsSubjectState-WebApplications">Web Applications</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apache Shiro offers something unique in the world of security frameworks: a complete enterprise-grade Session solution for any application, from the simplest command-line and smart phone applications to the largest clustered enterprise web applications.</p>
+</div>
+<div class="paragraph">
+<p>This has large implications for many applications - until Shiro, if you required session support, you were required to deploy your application in a web container or use EJB Stateful Session Beans. Shiro&#8217;s Session support is much simpler to use and manage than either of these two mechanisms, and it is available in any application, regardless of container.</p>
+</div>
+<div class="paragraph">
+<p>And even if you deploy your application in a Servlet or EJB container, there are still compelling reasons to use Shiro&#8217;s Session support instead of the container&#8217;s. Here is a list of the most desirable features provided by Shiro&#8217;s session support:</p>
+</div>
+<div class="paragraph">
+<p><strong>Features</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>POJO/J2SE based (IoC friendly)</strong> - Everything in Shiro (including all aspects of Sessions and Session Management) is interface-based and implemented with POJOs. This allows you to easily configure all session components with any JavaBeans-compatible configuration format, like JSON, YAML, Spring XML or similar mechanisms. You can also easily extend Shiro&#8217;s components or write your own as necessary to fully customize session management functionality.</p>
+</li>
+<li>
+<p><strong>Easy Custom Session Storage</strong> - Because Shiro&#8217;s Session objects are POJO-based, session data can be easily stored in any number of data sources. This allows you to customize exactly where your application&#8217;s session data resides - for example, the file system, in memory, in a networked distributed cache, a relational database, or proprietary data store.</p>
+</li>
+<li>
+<p><strong>Container-Independent Clustering!</strong> - Shiro&#8217;s sessions can be easily clustered using any of the readily-available networked caching products, like Ehcache + Terracotta, Coherence, GigaSpaces, et. al. This means you can configure session clustering for Shiro once and only once, and no matter what container you deploy to, your sessions will be clustered the same way. No need for container-specific configuration!</p>
+</li>
+<li>
+<p><strong>Heterogeneous Client Access</strong> - Unlike EJB or Web sessions, Shiro sessions can be 'shared' across various client technologies. For example, a desktop application could 'see' and 'share' the same physical session used by the same user in a web application. We are unaware of any framework other than Shiro that can support this.</p>
+</li>
+<li>
+<p><strong>Event Listeners</strong> - Event listeners allow you to listen to lifecycle events during a session&#8217;s lifetime. You can listen for these events and react to them for custom application behavior - for example, updating a user record when their session expires.</p>
+</li>
+<li>
+<p><strong>Host Address Retention</strong> – Shiro Sessions retain the IP address or host name of the host from where the session was initiated. This allows you to determine where the user is located and react accordingly (often useful in intranet environments where IP association is deterministic).</p>
+</li>
+<li>
+<p><strong>Inactivity/Expiration Support</strong> – Sessions expire due to inactivity as expected, but they can be prolonged via a <code>touch()</code> method to keep them 'alive' if desired. This is useful in Rich Internet Application (RIA) environments where the user might be using a desktop application, but may not be regularly communicating with the server, but the server session should not expire.</p>
+</li>
+<li>
+<p><strong>Transparent Web Use</strong> - Shiro&#8217;s web support fully implements and supports the Servlet 2.5 specification for Sessions (<code>HttpSession</code> interface and all of it&#8217;s associated APIs). This means you can use Shiro sessions in existing web applications and you don&#8217;t need to change any of your existing web code.</p>
+</li>
+<li>
+<p><strong>Can be used for SSO</strong> - Because Shiro session&#8217;s are POJO based, they are easily stored in any data source, and they can be 'shared' across applications if needed. We call this 'poor man&#8217;s SSO', and it can be used to provide a simple sign-on experience since the shared session can retain authentication state.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="SessionManagement-UsingSessions">Using Sessions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Like almost everything else in Shiro, you acquire a <code>Session</code> by interacting with the currently executing <code>Subject</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Subject currentUser = SecurityUtils.getSubject();
+
+Session session = currentUser.getSession();
+session.setAttribute( "someKey", someValue);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>currentUser.getSession()</code> method is a shortcut for calling <code>currentUser.getSession(true)</code>.</p>
+</div>
+<div class="paragraph">
+<p>For those familiar with <code>HttpServletRequest</code> API, the <code>Subject.getSession(boolean create)</code> method functions the same way as the <code>HttpServletRequest.getSession(boolean create)</code> method:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If the <code>Subject</code> already has a <code>Session</code>, the boolean argument is ignored and the <code>Session</code> is returned immediately</p>
+</li>
+<li>
+<p>If the <code>Subject</code> does not yet have a <code>Session</code> and the <code>create</code> boolean argument is <code>true</code>, a new session will be created and returned.</p>
+</li>
+<li>
+<p>If the <code>Subject</code> does not yet have a <code>Session</code> and the <code>create</code> boolean argument is <code>false</code>, a new session will not be created and <code>null</code> is returned.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">Any Application</div>
+<p><strong>getSession</strong> calls work in any application, even non-web applications.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>subject.getSession(false)</code> can be used to good effect when developing framework code to ensure a Session isn&#8217;t created unnecessarily.</p>
+</div>
+<div class="paragraph">
+<p>Once you acquire a Subject&#8217;s <code>Session</code> you can do many things with it, like set or retrieve attributes, set its timeout, and more. See the <a href="static/current/apidocs/org/apache/shiro/session/Session.html">Session JavaDoc</a> to see what is possible with an individual session.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="SessionManagement-SessionManager">The SessionManager</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The SessionManager, as its name might imply, manages Sessions for <em>all</em> subjects in an application - creation, deletion, inactivity and validation, etc. Like other core architectural components in Shiro, the <code>SessionManager</code> is a top-level component maintained by the <code>SecurityManager</code>.</p>
+</div>
+<div class="paragraph">
+<p>The default <code>SecurityManager</code> implementation defaults to using a <a href="static/current/apidocs/org/apache/shiro/mgt/DefaultSecurityManager.html"><code>DefaultSessionManager</code></a> out of the box. The <code>DefaultSessionManager</code> implementation provides all of the enterprise-grade session management features needed for an application, like Session validation, orphan cleanup, etc. This can be used in any application.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">Web Applications</div>
+<p>Web applications use different <strong>SessionManager</strong> implementations. Please see the <a href="web.html">Web</a> documentation for web-specific Session Management information.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Like all other components managed by the <code>SecurityManager</code>, the <code>SessionManager</code> can be acquired or set via JavaBeans-style getter/setter methods on all of Shiro&#8217;s default <code>SecurityManager</code> implementations (<code>getSessionManager()</code>/<code>setSessionManager()</code>). Or for example, if using <code>shiro.ini</code> <a href="configuration.html">Configuration</a>:</p>
+</div>
+<div class="paragraph">
+<p><strong>Configuring a new SessionManager in shiro.ini</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+sessionManager = com.foo.my.SessionManagerImplementation
+securityManager.sessionManager = $sessionManager</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But creating a <code>SessionManager</code> from scratch is a complicated task and not something that most people will want to do themselves. Shiro&#8217;s out-of-the-box <code>SessionManager</code> implementations are highly customizable and configurable and will suit most needs. Most of the rest of this documentation assumes that you will be using Shiro&#8217;s default <code>SessionManager</code> implementations when covering configuration options, but note that you can essentially create or plug-in nearly anything you wish.</p>
+</div>
+<div class="sect2">
+<h3 id="SessionManagement-SessionManager-SessionTimeout">Session Timeout</h3>
+<div class="paragraph">
+<p>By default, Shiro&#8217;s <code>SessionManager</code> implementations default to a 30 minute session timeout. That is, if any <code>Session</code> created remains idle (unused, where its <a href="static/current/apidocs/org/apache/shiro/session/Session.html#getLastAccessTime()"><code>lastAccessedTime</code></a> isn&#8217;t updated) for 30 minutes or more, the <code>Session</code> is considered expired and will not be allowed to be used anymore.</p>
+</div>
+<div class="paragraph">
+<p>You can set the default <code>SessionManager</code> implementation&#8217;s <code>globalSessionTimeout</code> property to define the default timeout value for all sessions. For example, if you wanted the timeout to be an hour instead of 30 minutes:</p>
+</div>
+<div class="paragraph">
+<p><strong>Setting the Default Session Timeout in shiro.ini</strong></p>
+</div>
+<div class="paragraph">
+<p>=</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+# 3,600,000 milliseconds = 1 hour
+securityManager.sessionManager.globalSessionTimeout = 3600000</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="SessionManagement-SessionManager-SessionTimeout-PerSession">Per-Session Timeout</h4>
+<div class="paragraph">
+<p>The above <code>globalSessionTimeout</code> value is the default for all newly created <code>Sessions</code>. You can control session timeout on a per-Session basis by setting the individual Session&#8217;s <a href="static/current/apidocs/org/apache/shiro/session/Session.html#setTimeout(long)"><code>timeout</code></a> value. Like the above <code>globalSessionTimeout</code>, the value is time in <strong>milliseconds</strong> (not seconds).</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="SessionManagement-SessionManager-Listeners">Session Listeners</h3>
+<div class="paragraph">
+<p>Shiro supports the notion of a <code>SessionListener</code> to allow you to react to important session events as they occur. You can implement the <a href="static/current/apidocs/org/apache/shiro/session/SessionListener.html"><code>SessionListener</code></a> interface (or extend the convenience <a href="static/current/apidocs/org/apache/shiro/session/SessionListenerAdapter.html"><code>SessionListenerAdapter</code></a>) and react to session operations accordingly.</p>
+</div>
+<div class="paragraph">
+<p>As the default <code>SessionManager</code> <code>sessionListeners</code> property is a collection, you can configure the <code>SessionManager</code> with one or more of your listener implementations like any other collection in <code>shiro.ini</code>:</p>
+</div>
+<div class="paragraph">
+<p><strong>SessionListener Configuration in shiro.ini</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+aSessionListener = com.foo.my.SessionListener
+anotherSessionListener = com.foo.my.OtherSessionListener
+
+securityManager.sessionManager.sessionListeners = $aSessionListener, $anotherSessionListener, etc.</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">All Session Events</div>
+<p><strong>SessionListeners</strong> are notified when an event occurs for <strong>any</strong> session - not just for a particular session.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="SessionManagement-SessionManager-Storage">Session Storage</h3>
+<div class="paragraph">
+<p>Whenever a session is created or updated, its data needs to persisted to a storage location so it is accessible by the application at a later time. Similarly, when a session is invalid and longer being used, it needs to be deleted from storage so the session data store space is not exhausted. The <code>SessionManager</code> implementations delegate these Create/Read/Update/Delete (CRUD) operations to an internal component, the <a href="static/current/apidocs/org/apache/shiro/session/mgt/eis/SessionDAO.html"><code>SessionDAO</code></a>, which reflects the <a href="https://en.wikipedia.org/wiki/Data_access_object">Data Access Object (DAO)</a> design pattern.</p>
+</div>
+<div class="paragraph">
+<p>The power of the SessionDAO is that you can implement this interface to communicate with <em>any</em> data store you wish. This means your session data can reside in memory, on the file system, in a relational database or NoSQL data store, or any other location you need. You have control over persistence behavior.</p>
+</div>
+<div class="paragraph">
+<p>You can configure any <code>SessionDAO</code> implementation as a property on the default <code>SessionManager</code> instance. For example, in shiro.ini:</p>
+</div>
+<div class="paragraph">
+<p><strong>Configuring a SessionDAO in shiro.ini</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+sessionDAO = com.foo.my.SessionDAO
+securityManager.sessionManager.sessionDAO = $sessionDAO</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, as you might expect, Shiro already has some good <code>SessionDAO</code> implementations that you can use out of the box or subclass for your own needs.
+&lt;a name="SessionManagement-websessionmanagersessiondao"&gt;&lt;/a&gt;</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">Web Applications</div>
+<p>The above <strong>securityManager.sessionManager.sessionDAO = $sessionDAO</strong> assignment only works when using a Shiro native session manager. Web applications by default do not use a native session manager and instead retain the Servlet Container 's default session manager which does not support a SessionDAO. If you would like to enable a SessionDAO in a web-based application for custom session storage or session clustering, you will have to first configure a native web session manager. For example:</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">[main]
+...
+sessionManager = org.apache.shiro.web.session.mgt.DefaultWebSessionManager
+securityManager.sessionManager = $sessionManager
+
+# Configure a SessionDAO and then set it:
+securityManager.sessionManager.sessionDAO = $sessionDAO</code></pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<div class="title">Configure a SessionDAO</div>
+<p>Shiro 's default configuration native SessionManagers use <strong>in-memory-only</strong> Session storage. This is unsuitable for most production applications. Most production applications will want to either configure the provided EHCache support (see below) or provide their own <strong>SessionDAO</strong> implementation.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that web applications use a servlet-container-based SessionManager by default and do not have this issue. This is only an issue when using a Shiro native SessionManager.')</p>
+</div>
+<div class="sect3">
+<h4 id="SessionManagement-SessionManager-Storage-EHCacheSessionDAO">EHCache SessionDAO</h4>
+<div class="paragraph">
+<p>EHCache is not enabled by default, but if you do not plan on implementing your own <code>SessionDAO</code>, it is <strong>highly</strong> recommended that you enable the EHCache support for Shiro&#8217;s SessionManagement. The EHCache SessionDAO will store sessions in memory and support overflow to disk if memory becomes constrained. This is highly desirable for production applications to ensure that you don&#8217;t randomly 'lose' sessions at runtime.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">Use EHCache as your default</div>
+<p>If you 're not writing a custom <strong>SessionDAO</strong>, definitely enable EHCache in your Shiro configuration. EHCache can also be beneficial beyond Sessions, caching authentication and authorization data as well. See the <a href="caching.html">Caching</a> documentation for more information.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">Container-Independent Session Clustering</div>
+<p>EHCache is also a nice choice if you quickly need container-independent session clustering. You can transparently plug in <a href="http://www.terracotta.org/">TerraCotta</a> behind EHCache and have a container-independent clustered session cache. No more worrying about Tomcat, JBoss, Jetty, WebSphere or WebLogic specific session clustering ever again!</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Enabling EHCache for sessions is very easy. First, ensure that you have the <code>shiro-ehcache-&lt;version&gt;.jar</code> file in your classpath (see the <a href="download.html">Download</a> page or use Maven or Ant+Ivy).</p>
+</div>
+<div class="paragraph">
+<p>Once in the classpath, this first <code>shiro.ini</code> example shows you how to use EHCache for all of Shiro&#8217;s caching needs (not just Session support):</p>
+</div>
+<div class="paragraph">
+<p><strong>Configuring EHCache for all of Shiro&#8217;s caching needs in shiro.ini</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+
+sessionDAO = org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO
+securityManager.sessionManager.sessionDAO = $sessionDAO
+
+cacheManager = org.apache.shiro.cache.ehcache.EhCacheManager
+securityManager.cacheManager = $cacheManager</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The final line, <code>securityManager.cacheManager = $cacheManager</code>, configures a <code>CacheManager</code> for all of Shiro&#8217;s needs. This <code>CacheManager</code> instance will propagate down to the <code>SessionDAO</code> automatically (by nature of <code>EnterpriseCacheSessionDAO</code> implementing the <a href="static/current/apidocs/org/apache/shiro/cache/CacheManagerAware.html"><code>CacheManagerAware</code></a> interface).</p>
+</div>
+<div class="paragraph">
+<p>Then, when the <code>SessionManager</code> asks the <code>EnterpriseCacheSessionDAO</code> to persist a <code>Session</code>, it will use an EHCache-backed <a href="static/current/apidocs/org/apache/shiro/cache/Cache.html"><code>Cache</code></a> implementation to store the Session data.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">Web Applications</div>
+<p>Don 't forget that assigning a <strong>SessionDAO</strong> is a feature when using Shiro native SessionManager implementations. Web applications by default use a Servlet container-based SessionManager which does not support a <strong>SessionDAO</strong>. Configure a native web SessionManager as <a href="#SessionManagement-SessionManager-Storage-EHCacheSessionDAO">explained above</a> if you want to use Ehcache-based session storage in a web application.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect4">
+<h5 id="SessionManagement-SessionManager-Storage-EHCacheSessionDAO-CacheConfiguration">EHCache Session Cache Configuration</h5>
+<div class="paragraph">
+<p>By default, the <code>EhCacheManager</code> uses a Shiro-specific <a href="https://github.com/apache/shiro/blob/main/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml"><code>ehcache.xml</code></a> file that sets up the Session cache region and the necessary settings to ensure Sessions are stored and retrieved properly.</p>
+</div>
+<div class="paragraph">
+<p>However, if you wish to change the cache settings, or configure your own <code>ehcache.xml</code> or EHCache <code>net.sf.ehcache.CacheManager</code> instance, you will need to configure the cache region to ensure that Sessions are handled correctly.</p>
+</div>
+<div class="paragraph">
+<p>If you look at the default <a href="https://github.com/apache/shiro/blob/main/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml"><code>ehcache.xml</code></a> file, you will see the following <code>shiro-activeSessionCache</code> cache configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;cache name="shiro-activeSessionCache"
+       maxElementsInMemory="10000"
+       overflowToDisk="true"
+       eternal="true"
+       timeToLiveSeconds="0"
+       timeToIdleSeconds="0"
+       diskPersistent="true"
+       diskExpiryThreadIntervalSeconds="600"/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you wish to use your own <code>ehcache.xml</code> file, ensure that you have defined a similar cache entry for Shiro&#8217;s needs. Most likely you might change the <code>maxElementsInMemory</code> attribute value to meet your needs. However, it is very important that at least the following two attributes exist (and are not changed) in your own configuration:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>overflowToDisk=&quot;true&quot;</code> - this ensures that if you run out of process memory, sessions won&#8217;t be lost and can serialized to disk</p>
+</li>
+<li>
+<p><code>eternal=&quot;true&quot;</code> - ensures that cache entries (Session instances) are never expired or expunged automatically by the cache. This is necessary because Shiro does its own validation based on a scheduled process (see "Session Validation &amp; Scheduling" below). If we turned this off, the cache would likely evict Sessions without Shiro knowing about it, which could cause problems.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="SessionManagement-SessionManager-Storage-EHCacheSessionDAO-CacheName">EHCache Session Cache Name</h5>
+<div class="paragraph">
+<p>By default, the <code>EnterpriseCacheSessionDAO</code> asks the <code>CacheManager</code> for a <code>Cache</code> named &#8220;shiro-activeSessionCache&#8221;. This cache name/region is expected to be configured in <code>ehcache.xml</code>, as mentioned above.</p>
+</div>
+<div class="paragraph">
+<p>If you want to use a different name instead of this default, you can configure that name on the <code>EnterpriseCacheSessionDAO</code>, for example:</p>
+</div>
+<div class="paragraph">
+<p><strong>Configuring the cache name for Shiro&#8217;s active session cache in shiro.ini</strong>&lt;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+sessionDAO = org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO
+sessionDAO.activeSessionsCacheName = myname
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Just ensure that a corresponding entry in <code>ehcache.xml</code> matches that name and you&#8217;ve configured <code>overflowToDisk=&quot;true&quot;</code> and <code>eternal=&quot;true&quot;</code> as mentioned above.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="SessionManagement-SessionManager-Storage-CustomSessionIDs">Custom Session IDs</h4>
+<div class="paragraph">
+<p>Shiro&#8217;s <code>SessionDAO</code> implementations use an internal <a href="static/current/apidocs/org/apache/shiro/session/mgt/eis/SessionIdGenerator.html"><code>SessionIdGenerator</code></a> component to generate a new Session ID every time a new session is created. The ID is generated, assigned to the newly created <code>Session</code> instance, and then the <code>Session</code> is saved via the <code>SessionDAO</code>.</p>
+</div>
+<div class="paragraph">
+<p>The default <code>SessionIdGenerator</code> is a <a href="static/current/apidocs/org/apache/shiro/session/mgt/eis/JavaUuidSessionIdGenerator.html"><code>JavaUuidSessionIdGenerator</code></a>, which generates <code>String</code> IDs based on Java <a href="http://download.oracle.com/javase/6/docs/api/java/util/UUID.html"><code>UUIDs</code></a>. This implementation is suitable for all production environments.</p>
+</div>
+<div class="paragraph">
+<p>If this does not meet your needs, you can implement the <code>SessionIdGenerator</code> interface and configure the implementation on Shiro&#8217;s <code>SessionDAO</code> instance. For example, in <code>shiro.ini</code>:</p>
+</div>
+<div class="paragraph">
+<p><strong>Configuring a SessionIdGenerator in shiro.ini</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+sessionIdGenerator = com.my.session.SessionIdGenerator
+securityManager.sessionManager.sessionDAO.sessionIdGenerator = $sessionIdGenerator</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="SessionManagement-SessionManager-SessionValidationScheduling">Session Validation &amp; Scheduling</h3>
+<div class="paragraph">
+<p>Sessions must be validated so any invalid (expired or stopped) sessions can be deleted from the session data store. This ensures that the data store does not fill up over time with sessions that will never be used again.</p>
+</div>
+<div class="paragraph">
+<p>For performance reasons, <code>Sessions</code> are only validated to see if they have been stopped or expired at the time they are accessed (i.e. <code>subject.getSession()</code>). This means that without additional regular periodic validation, <code>Session</code> orphans would begin to fill up the session data store.</p>
+</div>
+<div class="paragraph">
+<p>A common example illustrating orphans is the web browser scenario: Let&#8217;s say a user logs in to a web application and a session is created to retain data (authentication state, shopping cart, etc). If the user does not log out and closes their browser without the application knowing about it, their session is essentially just 'lying around' (orphaned) in the session data store. The <code>SessionManager</code> has no way of detecting that the user was no longer using their browser, and the session is never accessed again (it is orphaned).</p>
+</div>
+<div class="paragraph">
+<p>Session orphans, if they are not regularly purged, will fill up the session data store (which would be bad). So, to prevent orphans from piling up, the <code>SessionManager</code> implementations support the notion of a <a href="static/current/apidocs/org/apache/shiro/session/mgt/SessionValidationScheduler.html"><code>SessionValidationScheduler</code></a>. A <code>SessionValidationScheduler</code> is responsible for validating sessions at a periodic rate to ensure they are cleaned up as necessary.</p>
+</div>
+<div class="sect3">
+<h4 id="SessionManagement-SessionManager-SessionValidationScheduling-DefaultSessionValidationScheduler">Default SessionValidationScheduler</h4>
+<div class="paragraph">
+<p>The default <code>SessionValidationScheduler</code> usable in all environments is the <a href="static/current/apidocs/org/apache/shiro/session/mgt/ExecutorServiceSessionValidationScheduler.html"><code>ExecutorServiceSessionValidationScheduler</code></a> which uses a JDK <a href="http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/ScheduledExecutorService.html"><code>ScheduledExecutorService</code></a> to control how often the validation should occur.</p>
+</div>
+<div class="paragraph">
+<p>By default, this implementation will perform validation once per hour. You can change the rate at which validation occurs by specifying a <strong>new</strong> instance of <code>ExecutorServiceSessionValidationScheduler</code> and specifying a different interval (in milliseconds):</p>
+</div>
+<div class="paragraph">
+<p><strong>ExecutorServiceSessionValidationScheduler interval in shiro.ini</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+sessionValidationScheduler = org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler
+# Default is 3,600,000 millis = 1 hour:
+sessionValidationScheduler.interval = 3600000
+
+securityManager.sessionManager.sessionValidationScheduler = $sessionValidationScheduler</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="SessionManagement-SessionManager-SessionValidationScheduling-CustomSessionValidationScheduler">Custom SessionValidationScheduler</h4>
+<div class="paragraph">
+<p>If you wish to provide a custom <code>SessionValidationScheduler</code> implementation, you can specify it as a property of the default <code>SessionManager</code> instance. For example, in <code>shiro.ini</code>:</p>
+</div>
+<div class="paragraph">
+<p><strong>Configuring a custom SessionValidationScheduler in shiro.ini</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+sessionValidationScheduler = com.foo.my.SessionValidationScheduler
+securityManager.sessionManager.sessionValidationScheduler = $sessionValidationScheduler</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="SessionManagement-SessionManager-SessionValidationScheduling-DisablingSessionValidation">Disabling Session Validation</h4>
+<div class="paragraph">
+<p>In some cases, you might wish to disable session validation entirely because you have set up a process outside of Shiro&#8217;s control to perform the validation for you. For example, maybe you are using an enterprise Cache and rely on the cache&#8217;s Time To Live setting to automatically expunge old sessions. Or maybe you&#8217;ve set up a cron job to auto-purge a custom data store. In these cases you can turn off session validation scheduling:</p>
+</div>
+<div class="paragraph">
+<p><strong>Disabling Session Validation Scheduling in shiro.ini</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+securityManager.sessionManager.sessionValidationSchedulerEnabled = false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Sessions will still be validated when they are retrieved from the session data store, but this will disable Shiro&#8217;s periodic validation.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<div class="title">Enable Session Validation somewhere</div>
+<p>If you turn off Shiro''s session validation scheduler, you <strong>MUST</strong> perform periodic session validation via some other mechanism (cron job, etc&#8230;&#8203;). This is the only way to guarantee Session orphans do not fill up the data store.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="SessionManagement-SessionManager-SessionValidationScheduling-InvalidSessionDeletion">Invalid Session Deletion</h4>
+<div class="paragraph">
+<p>As we&#8217;ve stated above, the purpose of periodic session validation is mainly to delete any invalid (expired or stopped) sessions to ensure they do not fill up the session data store.</p>
+</div>
+<div class="paragraph">
+<p>By default, whenever Shiro detects an invalid session, it attempts to delete it from the underlying session data store via the <code>SessionDAO.delete(session)</code> method. This is good practice for most applications to ensure the session data storage space is not exhausted.</p>
+</div>
+<div class="paragraph">
+<p>However, some applications may not wish for Shiro to automatically delete sessions. For example, if an application has provided a <code>SessionDAO</code> that backs a queryable data store, perhaps the application team wishes old or invalid sessions to be available for a certain period of time. This would allow the team to run queries against the data store to see, for example, how many sessions a user has created over the last week, or the average duration of a user&#8217;s sessions, or similar reporting-type queries.</p>
+</div>
+<div class="paragraph">
+<p>In these scenarios, you can turn off invalid session deletion entirely. For example, in <code>shiro.ini</code>:</p>
+</div>
+<div class="paragraph">
+<p><strong>Disabling Invalid Session Deletion in shiro.ini</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+securityManager.sessionManager.deleteInvalidSessions = false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But be careful! If you turn this off, you are responsible for ensuring that your session data store doesn&#8217;t exhaust its space. You must delete invalid sessions from you data store yourself!</p>
+</div>
+<div class="paragraph">
+<p>Note also that even if you prevent Shiro from deleting invalid sessions, you still should enable session validation somehow - either via Shiro&#8217;s existing validation mechanisms or via a custom mechanism you provide yourself (see the above "Disabling Session Validation" section above for more). The validation mechanism will update your session records to reflect the invalid state (e.g. when it was invalidated, when it was last accessed, etc), even if you will delete them manually yourself at some other time.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<div class="title">Warning</div>
+<p>If you configure Shiro so it does not delete invalid sessions, you are responsible for ensuring that your session data store doesn 't exhaust its space. You must delete invalid sessions from you data store yourself!
+Also note that disabling session deletion is <strong>not</strong> the same as disabling session validation scheduling. You should almost always use a session validation scheduling mechanism - either one supported by Shiro directly or your own.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="SessionManagement-SessionClustering">Session Clustering</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>One of the very exciting things about Apache Shiro&#8217;s session capabilities is that you can cluster Subject sessions natively and never need to worry again about how to cluster sessions based on your container environment. That is, if you use Shiro&#8217;s native sessions and configure a session cluster, you can, say, deploy to Jetty or Tomcat in development, JBoss or Geronimo in production, or any other environment - all the while never worrying about container/environment-specific clustering setup or configuration. Configure session clustering once in Shiro and it works no matter your deployment environment.</p>
+</div>
+<div class="paragraph">
+<p>So how does it work?</p>
+</div>
+<div class="paragraph">
+<p>Because of Shiro&#8217;s POJO-based N-tiered architecture, enabling Session clustering is as simple as enabling a clustering mechanism at the Session persistence level. That is, if you configure a cluster-capable <a href="#SessionManagement-SessionManager-Storage"><code>SessionDAO</code></a>, the DAO can interact with a clustering mechanism and Shiro&#8217;s <code>SessionManager</code> never needs to know about clustering concerns.</p>
+</div>
+<div class="paragraph">
+<p><strong>Distributed Caches</strong></p>
+</div>
+<div class="paragraph">
+<p>Distributed Caches such as <a href="http://www.ehcache.org/documentation/2.7/configuration/distributed-cache-configuration.html">Ehcache+TerraCotta</a>, <a href="http://www.gigaspaces.com/">GigaSpaces</a> <a href="http://www.oracle.com/technetwork/middleware/coherence/overview/index.html">Oracle Coherence</a>, and <a href="http://memcached.org/">Memcached</a> (and many others) already solve the distributed-data-at-the-persistence-level problem. Therefore enabling Session clustering in Shiro is as simple as configuring Shiro to use a distributed cache.</p>
+</div>
+<div class="paragraph">
+<p>This gives you the flexibility of choosing the exact clustering mechanism that is suitable for <em>your</em> environment.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">Cache Memory</div>
+<p>Note that when enabling a distributed/enterprise cache to be your session clustering data store, one of the following two cases must be true:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The distributed cache has enough cluster-wide memory to retain <em>all</em> active/current sessions</p>
+</li>
+<li>
+<p>If the distributed cache does not have enough cluster-wide memory to retain all active sessions, it must support disk overflow so sessions are not lost.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Failure for the cache to support either of the two cases will result in sessions being randomly lost, which would likely be frustrating to end-users.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="SessionManagement-SessionClustering-EnterpriseCacheSessionDAO"><code>EnterpriseCacheSessionDAO</code></h3>
+<div class="paragraph">
+<p>As you might expect, Shiro already provides a <code>SessionDAO</code> implementation that will persist data to an enterprise/distributed Cache. The <a href="static/current/apidocs/org/apache/shiro/session/mgt/eis/EnterpriseCacheSessionDAO.html">EnterpriseCacheSessionDAO</a> expects a Shiro <code>Cache</code> or <code>CacheManager</code> to be configured on it so it can leverage the caching mechanism.</p>
+</div>
+<div class="paragraph">
+<p>For example, in <code>shiro.ini</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">#This implementation would use your preferred distributed caching product's APIs:
+activeSessionsCache = my.org.apache.shiro.cache.CacheImplementation
+
+sessionDAO = org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO
+sessionDAO.activeSessionsCache = $activeSessionsCache
+
+securityManager.sessionManager.sessionDAO = $sessionDAO</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Although you could inject a <code>Cache</code> instance directly to the <code>SessionDAO</code> as shown above, it is usually far more common to configure a general <code>CacheManager</code> to use for all of Shiro&#8217;s caching needs (sessions as well as authentication and authorization data). In this case, instead of configuring a <code>Cache</code> instance directly, you would tell the <code>EnterpriseCacheSessionDAO</code> the name of the cache in the <code>CacheManager</code> that should be used for storing active sessions.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini"># This implementation would use your caching product's APIs:
+cacheManager = my.org.apache.shiro.cache.CacheManagerImplementation
+
+# Now configure the EnterpriseCacheSessionDAO and tell it what
+# cache in the CacheManager should be used to store active sessions:
+sessionDAO = org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO
+# This is the default value.  Change it if your CacheManager configured a different name:
+sessionDAO.activeSessionsCacheName = shiro-activeSessionsCache
+# Now have the native SessionManager use that DAO:
+securityManager.sessionManager.sessionDAO = $sessionDAO
+
+# Configure the above CacheManager on Shiro's SecurityManager
+# to use it for all of Shiro's caching needs:
+securityManager.cacheManager = $cacheManager</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But there&#8217;s something a bit strange about the above configuration. Did you notice it?</p>
+</div>
+<div class="paragraph">
+<p>The interesting thing about this config is that nowhere in the config did we actually tell the <code>sessionDAO</code> instance to use a <code>Cache</code> or <code>CacheManager</code>! So how does the <code>sessionDAO</code> use the distributed cache?</p>
+</div>
+<div class="paragraph">
+<p>When Shiro initializes the <code>SecurityManager</code>, it will check to see if the <code>SessionDAO</code> implements the <a href="static/current/apidocs/org/apache/shiro/cache/CacheManagerAware.html"><code>CacheManagerAware</code></a> interface. If it does, it will automatically be supplied with any available globally configured <code>CacheManager</code>.</p>
+</div>
+<div class="paragraph">
+<p>So when Shiro evaluates the <code>securityManager.cacheManager = $cacheManager</code> line, it will discover that the <code>EnterpriseCacheSessionDAO</code> implements the <code>CacheManagerAware</code> interface and call the <code>setCacheManager</code> method with your configured <code>CacheManager</code> as the method argument.</p>
+</div>
+<div class="paragraph">
+<p>Then at runtime, when the <code>EnterpriseCacheSessionDAO</code> needs the <code>activeSessionsCache</code> it will ask the <code>CacheManager</code> instance to return it it, using the <code>activeSessionsCacheName</code> as the lookup key to get a <code>Cache</code> instance. That <code>Cache</code> instance (backed by your distributed/enterprise caching product&#8217;s API) will be used to store and retrieve sessions for all of the <code>SessionDAO</code> CRUD operations.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="SessionManagement-SessionClustering-EhcacheTerracotta">Ehcache + Terracotta</h3>
+<div class="paragraph">
+<p>One such distributed caching solution that people have had success with while using Shiro is the Ehcache + Terracotta pairing. See the Ehcache-hosted <a href="http://www.ehcache.org/documentation/get-started/about-distributed-cache">Distributed Caching With Terracotta</a> documentation for full details of how to enable distributed caching with Ehcache.</p>
+</div>
+<div class="paragraph">
+<p>Once you&#8217;ve got Terracotta clustering working with Ehcache, the Shiro-specific parts are very simple. Read and follow the <a href="#SessionManagement-SessionManager-Storage-EHCacheSessionDAO">Ehcache SessionDAO</a> documentation, but we&#8217;ll need to make a few changes</p>
+</div>
+<div class="paragraph">
+<p>The Ehcache Session Cache Configuration <a href="#SessionManagement-SessionManager-Storage-EHCacheSessionDAO-CacheConfiguration">referenced previously</a> will not work - a Terracotta-specific configuration is needed. Here is an example configuration that has been tested to work correctly. Save its contents in a file and save it in an <code>ehcache.xml</code> file:</p>
+</div>
+<div class="paragraph">
+<p><strong>TerraCotta Session Clustering</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;ehcache&gt;
+    &lt;terracottaConfig url="localhost:9510"/&gt;
+    &lt;diskStore path="java.io.tmpdir/shiro-ehcache"/&gt;
+    &lt;defaultCache
+            maxElementsInMemory="10000"
+            eternal="false"
+            timeToIdleSeconds="120"
+            timeToLiveSeconds="120"
+            overflowToDisk="false"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"&gt;
+        &lt;terracotta/&gt;
+    &lt;/defaultCache&gt;
+    &lt;cache name="shiro-activeSessionCache"
+           maxElementsInMemory="10000"
+           eternal="true"
+           timeToLiveSeconds="0"
+           timeToIdleSeconds="0"
+           diskPersistent="false"
+           overflowToDisk="false"
+           diskExpiryThreadIntervalSeconds="600"&gt;
+        &lt;terracotta/&gt;
+    &lt;/cache&gt;
+    &lt;!-- Add more cache entries as desired, for example,
+         Realm authc/authz caching: --&gt;
+&lt;/ehcache&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Of course you will want to change your <code>&lt;terracottaConfig url=&quot;localhost:9510&quot;/&gt;</code> entry to reference the appropriate host/port of your Terracotta server array. Also notice that, unlike the <a href="#SessionManagement-SessionManager-Storage-EHCacheSessionDAO-CacheConfiguration">previous</a> configuration, the <code>ehcache-activeSessionCache</code> element <strong><em>DOES NOT</em></strong> set <code>diskPersistent</code> or <code>overflowToDisk</code> attributes to <code>true</code>. They should both be <code>false</code> as true values are not supported in clustered configuration.</p>
+</div>
+<div class="paragraph">
+<p>After you&#8217;ve saved this <code>ehcache.xml</code> file, we&#8217;ll need to reference it in Shiro&#8217;s configuration. Assuming you&#8217;ve made the terracotta-specific <code>ehcache.xml</code> file accessible at the root of the classpath, here is the final Shiro configuration that enables Terracotta+Ehcache clustering for all of Shiro&#8217;s needs (including Sessions):</p>
+</div>
+<div class="paragraph">
+<p><strong>shiro.ini for Session Clustering with Ehcache and Terracotta</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">sessionDAO = org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO
+# This name matches a cache name in ehcache.xml:
+sessionDAO.activeSessionsCacheName = shiro-activeSessionsCache
+securityManager.sessionManager.sessionDAO = $sessionDAO
+
+# Configure The EhCacheManager:
+cacheManager = org.apache.shiro.cache.ehcache.EhCacheManager
+cacheManager.cacheManagerConfigFile = classpath:ehcache.xml
+
+# Configure the above CacheManager on Shiro's SecurityManager
+# to use it for all of Shiro's caching needs:
+securityManager.cacheManager = $cacheManager</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And remember, <strong>ORDER MATTERS</strong>. By configuring the <code>cacheManager</code> on the <code>securityManager</code> last, we ensure that the CacheManager can be propagated to all previously-configured <code>CacheManagerAware</code> components (such as the <code>EnterpriseCachingSessionDAO</code>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="SessionManagement-SessionClustering-Zookeeper">Zookeeper</h3>
+<div class="paragraph">
+<p>Users have reported using <a href="http://zookeeper.apache.org/">Apache Zookeeper</a> for managing/coordinating distributed sessions as well. If you have any documentation/comments about how this would work, please post them to the Shiro <a href="mailing-lists.html">Mailing Lists</a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="SessionManagement-SessionsSubjectState">Sessions and Subject State</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="SessionManagement-SessionsSubjectState-StatefulApplications">Stateful Applications (Sessions allowed)</h3>
+<div class="paragraph">
+<p>By default, Shiro&#8217;s SecurityManager implementations will use a Subject&#8217;s Session as a strategy to store the Subject&#8217;s identity (<code>PrincipalCollection</code>) and authentication state (<code>subject.isAuthenticated()</code>) for continued reference. This typically occurs after a Subject logs-in or when a Subject&#8217;s identity is discovered via RememberMe services.</p>
+</div>
+<div class="paragraph">
+<p>There are a few benefits to this default approach:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Any applications that service requests, invocations or messages can associate the session ID with the request/invocation/message payload and that is all that is necessary for Shiro to associate a user with the inbound request. For example, if using the <code>Subject.Builder</code>, this is all that is needed to acquire the associated Subject:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Serializable sessionId = //get from the inbound request or remote method invocation payload Subject requestSubject = new Subject.Builder().sessionId(sessionId).buildSubject();</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Any 'RememberMe' identity found on an initial request can be persisted to the session upon first access. This ensures that the Subject&#8217;s remembered identity can be saved across requests without needing to deserialize and decrypt it on <em>every</em> request. For example, in a web application, there is no need to read an encrypted RememberMe cookie on every request if the identity is already known in the session. This can be a good performance enhancement.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="SessionManagement-SessionsSubjectState-StatelessApplications">Stateless Applications (Sessionless)</h3>
+<div class="paragraph">
+<p>While the above default strategy is fine (and often desirable) for most applications, this would not be desirable in applications that try to be stateless whenever possible. Many stateless architectures mandate that no persistent state can exist between requests, in which case Sessions would not be allowed (a Session by its very nature represents durable state).</p>
+</div>
+<div class="paragraph">
+<p>But this requirement comes at a convenience cost - Subject state cannot be retained across requests. This means that applications with this requirement must ensure Subject state can be represented in some other way for <em>every</em> request.</p>
+</div>
+<div class="paragraph">
+<p>This is almost always achieved by authenticating every request/invocation/message handled by the application. For example, most stateless web applications typically support this by enforcing HTTP Basic authentication, allowing the browser to authenticate every request on behalf of an end user. Remoting or Messaging frameworks must ensure that Subject principals and credentials are attached to every Invocation or Message payload, typically performed by framework code.</p>
+</div>
+<div class="sect3">
+<h4 id="SessionManagement-SessionsSubjectState-StatelessApplications-DisablingSubjectStateSessionStorage">Disabling Subject State Session Storage</h4>
+<div class="paragraph">
+<p>Beginning in Shiro 1.2 and later, applications that wish to disable Shiro&#8217;s internal implementation strategy of persisting Subject state to sessions may disable this entirely across <em>all</em> Subjects by doing the following:</p>
+</div>
+<div class="paragraph">
+<p>In <code>shiro.ini</code>, configure the following property on the <code>securityManager</code>:</p>
+</div>
+<div class="paragraph">
+<p><strong>shiro.ini</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+securityManager.subjectDAO.sessionStorageEvaluator.sessionStorageEnabled = false
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will prevent Shiro from using a Subject&#8217;s session to store that Subject&#8217;s state across requests/invocations/messages <em>for all Subjects</em>. Just be sure that you authenticate on every request so Shiro will know who the Subject is for any given request/invocation/message.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">Shiro 's Needs vs. Your Needs</div>
+<p>This will disable Shiro''s own implementations from using Sessions as a storage strategy. It <strong>DOES NOT</strong> disable Sessions entirely. A session will still be created if any of your own code explicitly calls <strong>subject.getSession()</strong> or <strong>subject.getSession(true)</strong>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="SessionManagement-SessionsSubjectState-HybridApproach">A Hybrid Approach</h3>
+<div class="paragraph">
+<p>The above <code>shiro.ini</code> configuration line (<code>securityManager.subjectDAO.sessionStorageEvaluator.sessionStorageEnabled = false</code>) will disable Shiro from using the Session as an implementation strategy for <em>all</em> Subjects.</p>
+</div>
+<div class="paragraph">
+<p>But what if you wanted a hybrid approach? What if some Subjects should have sessions and others should not? This hybrid approach can be beneficial for many applications. For example:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Maybe human Subjects (e.g. web browser users) should be able to use Sessions for the benefits provided above.</p>
+</li>
+<li>
+<p>Maybe non-human Subjects (e.g. API clients or 3rd-party applications) should <em>not</em> create sessions since their interaction with the software may be intermittent and/or erratic.</p>
+</li>
+<li>
+<p>Maybe all Subjects of a certain type or those accessing the system from a certain location should have state persisted in sessions, but all others should not.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you need this hybrid approach, you can implement a <code>SessionStorageEvaluator</code>.</p>
+</div>
+<div class="sect3">
+<h4 id="SessionManagement-SessionsSubjectState-HybridApproach-SessionStorageEvaluator">SessionStorageEvaluator</h4>
+<div class="paragraph">
+<p>In cases where you want to control exactly which Subjects may have their state persisted in their Session or not, you can implement the <code>org.apache.shiro.mgt.SessionStorageEvaluator</code> interface and tell Shiro exactly which Subjects should support session storage.</p>
+</div>
+<div class="paragraph">
+<p>This interface has a single method:</p>
+</div>
+<div class="paragraph">
+<p><strong>SessionStorageEvaluator</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public interface SessionStorageEvaluator {
+
+    public boolean isSessionStorageEnabled(Subject subject);
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a more detailed API explanation, please see the <a href="static/current/apidocs/org/apache/shiro/mgt/SessionStorageEvaluator.html">SessionStorageEvaluator JavaDoc</a>.</p>
+</div>
+<div class="paragraph">
+<p>You can implement this interface and inspect the Subject for any information that you might need to make this decision.</p>
+</div>
+<div class="sect4">
+<h5 id="SessionManagement-SessionsSubjectState-HybridApproach-SessionStorageEvaluator-SubjectInspection">Subject Inspection</h5>
+<div class="paragraph">
+<p>When implementing the <code>isSessionStorageEnabled(subject)</code> interface method, you can always look at the <code>Subject</code> and get access to whatever you need to make your decision. Of course all of the expected Subject methods are available to use (<code>getPrincipals()</code>, etc), but environment-specific <code>Subject</code> instances are valuable as well.</p>
+</div>
+<div class="paragraph">
+<p>For example, in web applications, if that decision must be made based on data in the current <code>ServletRequest</code>, you can get the request or the response because the runtime <code>Subject</code> instance is actually a <a href="static/current/apidocs/org/apache/shiro/web/subject/WebSubject.html"><code>WebSubject</code></a> instance:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">...
+    public boolean isSessionStorageEnabled(Subject subject) {
+        boolean enabled = false;
+        if (WebUtils.isWeb(Subject)) {
+            HttpServletRequest request = WebUtils.getHttpRequest(subject);
+            //set 'enabled' based on the current request.
+        } else {
+            //not a web request - maybe a RMI or daemon invocation?
+            //set 'enabled' another way...
+        }
+
+        return enabled;
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>N.B.</strong> Framework developers should keep this type of access in mind and ensure that any request/invocation/message context objects are available via environment-specific <code>Subject</code> implementations. Contact the Shiro user mailing list if you&#8217;d like some help setting this up for your framework/environment.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="SessionManagement-SessionsSubjectState-HybridApproach-Configuration">Configuration</h4>
+<div class="paragraph">
+<p>After you&#8217;ve implemented the <code>SessionStorageEvaluator</code> interface, you can configure it in <code>shiro.ini</code>:</p>
+</div>
+<div class="paragraph">
+<p><strong>shiro.ini SessionStorageEvaluator configuration</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+sessionStorageEvaluator = com.mycompany.shiro.subject.mgt.MySessionStorageEvaluator
+securityManager.subjectDAO.sessionStorageEvaluator = $sessionStorageEvaluator
+
+...</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="SessionManagement-SessionsSubjectState-WebApplications">Web Applications</h3>
+<div class="paragraph">
+<p>Often web applications wish to simply enable or disable session creation on a per request basis, regardless of which Subject is executing a request. This is often used to good effect in supporting REST and Messaging/RMI architectures. For example, perhaps normal end-users (humans using a browser) are allowed to create and use sessions, but remote API clients use REST or SOAP and shouldn&#8217;t have sessions at all (because they authenticate on every request, as is common in REST/SOAP architectures).</p>
+</div>
+<div class="paragraph">
+<p>To support this hybrid/per-request capability, a <code>noSessionCreation</code> filter has been added to Shiro&#8217;s 'pool' of default filters enabled for web applications. This filter will prevent new sessions from being created during a request to guarantee a stateless experience. In <code>shiro.ini</code> <code>[urls]</code> section, you typically define this filter in front of all others to ensure a session will never be used.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="paragraph">
+<p><strong>shiro.ini - Disable Session Creation per request</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[urls]
+...
+/rest/** = noSessionCreation, authcBasic, ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This filter allows session usage for any <em>existing</em> session, but will not allow new sessions to be created during the filtered request. That is, any of the four following method calls on a request or subject <em>that do not already have an existing session</em> will automatically trigger a <code>DisabledSessionException</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>httpServletRequest.getSession()</code></p>
+</li>
+<li>
+<p><code>httpServletRequest.getSession(true)</code></p>
+</li>
+<li>
+<p><code>subject.getSession()</code></p>
+</li>
+<li>
+<p><code>subject.getSession(true)</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If a <code>Subject</code> already has a session prior to visiting the noSessionCreation-protected-URL, the above 4 calls will still work as expected.</p>
+</div>
+<div class="paragraph">
+<p>Finally, the following calls will always be allowed in all cases:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>httpServletRequest.getSession(false)</code></p>
+</li>
+<li>
+<p><code>subject.getSession(false)</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+	<hr />
+
+</div> 
+
+    <div class="footer-padding"></div>
+
+    <div class="container-fluid pt-2 border-top" id="custom-footer">
+      <footer class="row justify-content-between align-items-center">
+        <div class=" col-md-5">
+          <div class="copyright-footer justify-content-start">
+            <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
+            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center col-md-1">
+          <a class="btn btn-social"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
+        </div>
+
+        <div class="d-flex justify-content-end col-md-4" id="editThisPage">
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/session-management.adoc"/>
+        </div>
+
+        <div class="d-flex col-md-2 justify-content-end" style="position: relative">
+          <div class="footer-shield"></div>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="highlight.js-11.2.0/highlight.min.js"></script>
+    <script src="js/shiro.js"></script>
+
+    <script>
+        docReady(
+          addPageEditLink()
+      );
+    </script>
+    <script>hljs.highlightAll();</script>
+
+    </body>
+</html>

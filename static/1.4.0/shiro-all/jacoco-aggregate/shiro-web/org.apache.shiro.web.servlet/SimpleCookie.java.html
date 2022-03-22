@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>SimpleCookie.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: All (aggregate jar)</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.servlet</a> &gt; <span class="el_source">SimpleCookie.java</span></div><h1>SimpleCookie.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.servlet;
+
+import org.apache.shiro.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
+/**
+ * Default {@link Cookie Cookie} implementation.  'HttpOnly' is supported out of the box, even on
+ * Servlet {@code 2.4} and {@code 2.5} container implementations, using raw header writing logic and not
+ * {@link javax.servlet.http.Cookie javax.servlet.http.Cookie} objects (which only has 'HttpOnly' support in Servlet
+ * {@code 2.6} specifications and above).
+ *
+ * @since 1.0
+ */
+public class SimpleCookie implements Cookie {
+
+    /**
+     * {@code -1}, indicating the cookie should expire when the browser closes.
+     */
+    public static final int DEFAULT_MAX_AGE = -1;
+
+    /**
+     * {@code -1} indicating that no version property should be set on the cookie.
+     */
+    public static final int DEFAULT_VERSION = -1;
+
+    //These constants are protected on purpose so that the test case can use them
+    protected static final String NAME_VALUE_DELIMITER = &quot;=&quot;;
+    protected static final String ATTRIBUTE_DELIMITER = &quot;; &quot;;
+    protected static final long DAY_MILLIS = 86400000; //1 day = 86,400,000 milliseconds
+    protected static final String GMT_TIME_ZONE_ID = &quot;GMT&quot;;
+    protected static final String COOKIE_DATE_FORMAT_STRING = &quot;EEE, dd-MMM-yyyy HH:mm:ss z&quot;;
+
+    protected static final String COOKIE_HEADER_NAME = &quot;Set-Cookie&quot;;
+    protected static final String PATH_ATTRIBUTE_NAME = &quot;Path&quot;;
+    protected static final String EXPIRES_ATTRIBUTE_NAME = &quot;Expires&quot;;
+    protected static final String MAXAGE_ATTRIBUTE_NAME = &quot;Max-Age&quot;;
+    protected static final String DOMAIN_ATTRIBUTE_NAME = &quot;Domain&quot;;
+    protected static final String VERSION_ATTRIBUTE_NAME = &quot;Version&quot;;
+    protected static final String COMMENT_ATTRIBUTE_NAME = &quot;Comment&quot;;
+    protected static final String SECURE_ATTRIBUTE_NAME = &quot;Secure&quot;;
+    protected static final String HTTP_ONLY_ATTRIBUTE_NAME = &quot;HttpOnly&quot;;
+
+<span class="fc" id="L71">    private static final transient Logger log = LoggerFactory.getLogger(SimpleCookie.class);</span>
+
+    private String name;
+    private String value;
+    private String comment;
+    private String domain;
+    private String path;
+    private int maxAge;
+    private int version;
+    private boolean secure;
+    private boolean httpOnly;
+
+<span class="fc" id="L83">    public SimpleCookie() {</span>
+<span class="fc" id="L84">        this.maxAge = DEFAULT_MAX_AGE;</span>
+<span class="fc" id="L85">        this.version = DEFAULT_VERSION;</span>
+<span class="fc" id="L86">        this.httpOnly = true; //most of the cookies ever used by Shiro should be as secure as possible.</span>
+<span class="fc" id="L87">    }</span>
+
+    public SimpleCookie(String name) {
+<span class="fc" id="L90">        this();</span>
+<span class="fc" id="L91">        this.name = name;</span>
+<span class="fc" id="L92">    }</span>
+
+<span class="fc" id="L94">    public SimpleCookie(Cookie cookie) {</span>
+<span class="fc" id="L95">        this.name = cookie.getName();</span>
+<span class="fc" id="L96">        this.value = cookie.getValue();</span>
+<span class="fc" id="L97">        this.comment = cookie.getComment();</span>
+<span class="fc" id="L98">        this.domain = cookie.getDomain();</span>
+<span class="fc" id="L99">        this.path = cookie.getPath();</span>
+<span class="fc" id="L100">        this.maxAge = Math.max(DEFAULT_MAX_AGE, cookie.getMaxAge());</span>
+<span class="fc" id="L101">        this.version = Math.max(DEFAULT_VERSION, cookie.getVersion());</span>
+<span class="fc" id="L102">        this.secure = cookie.isSecure();</span>
+<span class="fc" id="L103">        this.httpOnly = cookie.isHttpOnly();</span>
+<span class="fc" id="L104">    }</span>
+
+    public String getName() {
+<span class="fc" id="L107">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        if (!StringUtils.hasText(name)) {</span>
+<span class="nc" id="L112">            throw new IllegalArgumentException(&quot;Name cannot be null/empty.&quot;);</span>
+        }
+<span class="nc" id="L114">        this.name = name;</span>
+<span class="nc" id="L115">    }</span>
+
+    public String getValue() {
+<span class="fc" id="L118">        return value;</span>
+    }
+
+    public void setValue(String value) {
+<span class="fc" id="L122">        this.value = value;</span>
+<span class="fc" id="L123">    }</span>
+
+    public String getComment() {
+<span class="fc" id="L126">        return comment;</span>
+    }
+
+    public void setComment(String comment) {
+<span class="nc" id="L130">        this.comment = comment;</span>
+<span class="nc" id="L131">    }</span>
+
+    public String getDomain() {
+<span class="fc" id="L134">        return domain;</span>
+    }
+
+    public void setDomain(String domain) {
+<span class="fc" id="L138">        this.domain = domain;</span>
+<span class="fc" id="L139">    }</span>
+
+    public String getPath() {
+<span class="fc" id="L142">        return path;</span>
+    }
+
+    public void setPath(String path) {
+<span class="fc" id="L146">        this.path = path;</span>
+<span class="fc" id="L147">    }</span>
+
+    public int getMaxAge() {
+<span class="fc" id="L150">        return maxAge;</span>
+    }
+
+    public void setMaxAge(int maxAge) {
+<span class="fc" id="L154">        this.maxAge = Math.max(DEFAULT_MAX_AGE, maxAge);</span>
+<span class="fc" id="L155">    }</span>
+
+    public int getVersion() {
+<span class="fc" id="L158">        return version;</span>
+    }
+
+    public void setVersion(int version) {
+<span class="nc" id="L162">        this.version = Math.max(DEFAULT_VERSION, version);</span>
+<span class="nc" id="L163">    }</span>
+
+    public boolean isSecure() {
+<span class="fc" id="L166">        return secure;</span>
+    }
+
+    public void setSecure(boolean secure) {
+<span class="fc" id="L170">        this.secure = secure;</span>
+<span class="fc" id="L171">    }</span>
+
+    public boolean isHttpOnly() {
+<span class="fc" id="L174">        return httpOnly;</span>
+    }
+
+    public void setHttpOnly(boolean httpOnly) {
+<span class="fc" id="L178">        this.httpOnly = httpOnly;</span>
+<span class="fc" id="L179">    }</span>
+
+    /**
+     * Returns the Cookie's calculated path setting.  If the {@link javax.servlet.http.Cookie#getPath() path} is {@code null}, then the
+     * {@code request}'s {@link javax.servlet.http.HttpServletRequest#getContextPath() context path}
+     * will be returned. If getContextPath() is the empty string or null then the ROOT_PATH constant is returned.
+     *
+     * @param request the incoming HttpServletRequest
+     * @return the path to be used as the path when the cookie is created or removed
+     */
+    private String calculatePath(HttpServletRequest request) {
+<span class="fc" id="L190">        String path = StringUtils.clean(getPath());</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">        if (!StringUtils.hasText(path)) {</span>
+<span class="fc" id="L192">            path = StringUtils.clean(request.getContextPath());</span>
+        }
+
+        //fix for http://issues.apache.org/jira/browse/SHIRO-9:
+<span class="fc bfc" id="L196" title="All 2 branches covered.">        if (path == null) {</span>
+<span class="fc" id="L197">            path = ROOT_PATH;</span>
+        }
+<span class="fc" id="L199">        log.trace(&quot;calculated path: {}&quot;, path);</span>
+<span class="fc" id="L200">        return path;</span>
+    }
+
+    public void saveTo(HttpServletRequest request, HttpServletResponse response) {
+
+<span class="fc" id="L205">        String name = getName();</span>
+<span class="fc" id="L206">        String value = getValue();</span>
+<span class="fc" id="L207">        String comment = getComment();</span>
+<span class="fc" id="L208">        String domain = getDomain();</span>
+<span class="fc" id="L209">        String path = calculatePath(request);</span>
+<span class="fc" id="L210">        int maxAge = getMaxAge();</span>
+<span class="fc" id="L211">        int version = getVersion();</span>
+<span class="fc" id="L212">        boolean secure = isSecure();</span>
+<span class="fc" id="L213">        boolean httpOnly = isHttpOnly();</span>
+
+<span class="fc" id="L215">        addCookieHeader(response, name, value, comment, domain, path, maxAge, version, secure, httpOnly);</span>
+<span class="fc" id="L216">    }</span>
+
+    private void addCookieHeader(HttpServletResponse response, String name, String value, String comment,
+                                 String domain, String path, int maxAge, int version,
+                                 boolean secure, boolean httpOnly) {
+
+<span class="fc" id="L222">        String headerValue = buildHeaderValue(name, value, comment, domain, path, maxAge, version, secure, httpOnly);</span>
+<span class="fc" id="L223">        response.addHeader(COOKIE_HEADER_NAME, headerValue);</span>
+
+<span class="fc bfc" id="L225" title="All 2 branches covered.">        if (log.isDebugEnabled()) {</span>
+<span class="fc" id="L226">            log.debug(&quot;Added HttpServletResponse Cookie [{}]&quot;, headerValue);</span>
+        }
+<span class="fc" id="L228">    }</span>
+
+    /*
+     * This implementation followed the grammar defined here for convenience:
+     * &lt;a href=&quot;http://github.com/abarth/http-state/blob/master/notes/2009-11-07-Yui-Naruse.txt&quot;&gt;Cookie grammar&lt;/a&gt;.
+     *
+     * @return the 'Set-Cookie' header value for this cookie instance.
+     */
+
+    protected String buildHeaderValue(String name, String value, String comment,
+                                      String domain, String path, int maxAge, int version,
+                                      boolean secure, boolean httpOnly) {
+
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">        if (!StringUtils.hasText(name)) {</span>
+<span class="nc" id="L242">            throw new IllegalStateException(&quot;Cookie name cannot be null/empty.&quot;);</span>
+        }
+
+<span class="fc" id="L245">        StringBuilder sb = new StringBuilder(name).append(NAME_VALUE_DELIMITER);</span>
+
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">        if (StringUtils.hasText(value)) {</span>
+<span class="fc" id="L248">            sb.append(value);</span>
+        }
+
+<span class="fc" id="L251">        appendComment(sb, comment);</span>
+<span class="fc" id="L252">        appendDomain(sb, domain);</span>
+<span class="fc" id="L253">        appendPath(sb, path);</span>
+<span class="fc" id="L254">        appendExpires(sb, maxAge);</span>
+<span class="fc" id="L255">        appendVersion(sb, version);</span>
+<span class="fc" id="L256">        appendSecure(sb, secure);</span>
+<span class="fc" id="L257">        appendHttpOnly(sb, httpOnly);</span>
+
+<span class="fc" id="L259">        return sb.toString();</span>
+
+    }
+
+    private void appendComment(StringBuilder sb, String comment) {
+<span class="fc bfc" id="L264" title="All 2 branches covered.">        if (StringUtils.hasText(comment)) {</span>
+<span class="fc" id="L265">            sb.append(ATTRIBUTE_DELIMITER);</span>
+<span class="fc" id="L266">            sb.append(COMMENT_ATTRIBUTE_NAME).append(NAME_VALUE_DELIMITER).append(comment);</span>
+        }
+<span class="fc" id="L268">    }</span>
+
+    private void appendDomain(StringBuilder sb, String domain) {
+<span class="fc bfc" id="L271" title="All 2 branches covered.">        if (StringUtils.hasText(domain)) {</span>
+<span class="fc" id="L272">            sb.append(ATTRIBUTE_DELIMITER);</span>
+<span class="fc" id="L273">            sb.append(DOMAIN_ATTRIBUTE_NAME).append(NAME_VALUE_DELIMITER).append(domain);</span>
+        }
+<span class="fc" id="L275">    }</span>
+
+    private void appendPath(StringBuilder sb, String path) {
+<span class="pc bpc" id="L278" title="1 of 2 branches missed.">        if (StringUtils.hasText(path)) {</span>
+<span class="fc" id="L279">            sb.append(ATTRIBUTE_DELIMITER);</span>
+<span class="fc" id="L280">            sb.append(PATH_ATTRIBUTE_NAME).append(NAME_VALUE_DELIMITER).append(path);</span>
+        }
+<span class="fc" id="L282">    }</span>
+
+    private void appendExpires(StringBuilder sb, int maxAge) {
+        // if maxAge is negative, cookie should should expire when browser closes
+	// Don't write the maxAge cookie value if it's negative - at least on Firefox it'll cause the 
+	// cookie to be deleted immediately
+        // Write the expires header used by older browsers, but may be unnecessary
+        // and it is not by the spec, see http://www.faqs.org/rfcs/rfc2965.html
+        // TODO consider completely removing the following 
+<span class="fc bfc" id="L291" title="All 2 branches covered.">        if (maxAge &gt;= 0) {</span>
+<span class="fc" id="L292">            sb.append(ATTRIBUTE_DELIMITER);</span>
+<span class="fc" id="L293">            sb.append(MAXAGE_ATTRIBUTE_NAME).append(NAME_VALUE_DELIMITER).append(maxAge);</span>
+<span class="fc" id="L294">            sb.append(ATTRIBUTE_DELIMITER);</span>
+            Date expires;
+<span class="pc bpc" id="L296" title="1 of 2 branches missed.">            if (maxAge == 0) {</span>
+                //delete the cookie by specifying a time in the past (1 day ago):
+<span class="fc" id="L298">                expires = new Date(System.currentTimeMillis() - DAY_MILLIS);</span>
+            } else {
+                //Value is in seconds.  So take 'now' and add that many seconds, and that's our expiration date:
+<span class="nc" id="L301">                Calendar cal = Calendar.getInstance();</span>
+<span class="nc" id="L302">                cal.add(Calendar.SECOND, maxAge);</span>
+<span class="nc" id="L303">                expires = cal.getTime();</span>
+            }
+<span class="fc" id="L305">            String formatted = toCookieDate(expires);</span>
+<span class="fc" id="L306">            sb.append(EXPIRES_ATTRIBUTE_NAME).append(NAME_VALUE_DELIMITER).append(formatted);</span>
+        }
+<span class="fc" id="L308">    }</span>
+
+    private void appendVersion(StringBuilder sb, int version) {
+<span class="pc bpc" id="L311" title="1 of 2 branches missed.">        if (version &gt; DEFAULT_VERSION) {</span>
+<span class="nc" id="L312">            sb.append(ATTRIBUTE_DELIMITER);</span>
+<span class="nc" id="L313">            sb.append(VERSION_ATTRIBUTE_NAME).append(NAME_VALUE_DELIMITER).append(version);</span>
+        }
+<span class="fc" id="L315">    }</span>
+
+    private void appendSecure(StringBuilder sb, boolean secure) {
+<span class="fc bfc" id="L318" title="All 2 branches covered.">        if (secure) {</span>
+<span class="fc" id="L319">            sb.append(ATTRIBUTE_DELIMITER);</span>
+<span class="fc" id="L320">            sb.append(SECURE_ATTRIBUTE_NAME); //No value for this attribute</span>
+        }
+<span class="fc" id="L322">    }</span>
+
+    private void appendHttpOnly(StringBuilder sb, boolean httpOnly) {
+<span class="fc bfc" id="L325" title="All 2 branches covered.">        if (httpOnly) {</span>
+<span class="fc" id="L326">            sb.append(ATTRIBUTE_DELIMITER);</span>
+<span class="fc" id="L327">            sb.append(HTTP_ONLY_ATTRIBUTE_NAME); //No value for this attribute</span>
+        }
+<span class="fc" id="L329">    }</span>
+
+    /**
+     * Check whether the given {@code cookiePath} matches the {@code requestPath}
+     *
+     * @param cookiePath
+     * @param requestPath
+     * @return
+     * @see &lt;a href=&quot;https://tools.ietf.org/html/rfc6265#section-5.1.4&quot;&gt;RFC 6265, Section 5.1.4 &quot;Paths and Path-Match&quot;&lt;/a&gt;
+     */
+    private boolean pathMatches(String cookiePath, String requestPath) {
+<span class="fc bfc" id="L340" title="All 2 branches covered.">        if (!requestPath.startsWith(cookiePath)) {</span>
+<span class="fc" id="L341">            return false;</span>
+        }
+
+<span class="pc bpc" id="L344" title="1 of 2 branches missed.">        return requestPath.length() == cookiePath.length()</span>
+<span class="pc bpc" id="L345" title="1 of 2 branches missed.">            || cookiePath.charAt(cookiePath.length() - 1) == '/'</span>
+<span class="fc bfc" id="L346" title="All 2 branches covered.">            || requestPath.charAt(cookiePath.length()) == '/';</span>
+    }
+
+    /**
+     * Formats a date into a cookie date compatible string (Netscape's specification).
+     *
+     * @param date the date to format
+     * @return an HTTP 1.0/1.1 Cookie compatible date string (GMT-based).
+     */
+    private static String toCookieDate(Date date) {
+<span class="fc" id="L356">        TimeZone tz = TimeZone.getTimeZone(GMT_TIME_ZONE_ID);</span>
+<span class="fc" id="L357">        DateFormat fmt = new SimpleDateFormat(COOKIE_DATE_FORMAT_STRING, Locale.US);</span>
+<span class="fc" id="L358">        fmt.setTimeZone(tz);</span>
+<span class="fc" id="L359">        return fmt.format(date);</span>
+    }
+
+    public void removeFrom(HttpServletRequest request, HttpServletResponse response) {
+<span class="fc" id="L363">        String name = getName();</span>
+<span class="fc" id="L364">        String value = DELETED_COOKIE_VALUE;</span>
+<span class="fc" id="L365">        String comment = null; //don't need to add extra size to the response - comments are irrelevant for deletions</span>
+<span class="fc" id="L366">        String domain = getDomain();</span>
+<span class="fc" id="L367">        String path = calculatePath(request);</span>
+<span class="fc" id="L368">        int maxAge = 0; //always zero for deletion</span>
+<span class="fc" id="L369">        int version = getVersion();</span>
+<span class="fc" id="L370">        boolean secure = isSecure();</span>
+<span class="fc" id="L371">        boolean httpOnly = false; //no need to add the extra text, plus the value 'deleteMe' is not sensitive at all</span>
+
+<span class="fc" id="L373">        addCookieHeader(response, name, value, comment, domain, path, maxAge, version, secure, httpOnly);</span>
+
+<span class="fc" id="L375">        log.trace(&quot;Removed '{}' cookie by setting maxAge=0&quot;, name);</span>
+<span class="fc" id="L376">    }</span>
+
+    public String readValue(HttpServletRequest request, HttpServletResponse ignored) {
+<span class="fc" id="L379">        String name = getName();</span>
+<span class="fc" id="L380">        String value = null;</span>
+<span class="fc" id="L381">        javax.servlet.http.Cookie cookie = getCookie(request, name);</span>
+<span class="fc bfc" id="L382" title="All 2 branches covered.">        if (cookie != null) {</span>
+            // Validate that the cookie is used at the correct place.
+<span class="fc" id="L384">            String path = StringUtils.clean(getPath());</span>
+<span class="fc bfc" id="L385" title="All 4 branches covered.">            if (path != null &amp;&amp; !pathMatches(path, request.getRequestURI())) {</span>
+<span class="fc" id="L386">                log.warn(&quot;Found '{}' cookie at path '{}', but should be only used for '{}'&quot;, new Object[] { name, request.getRequestURI(), path});</span>
+            } else {
+<span class="fc" id="L388">                value = cookie.getValue();</span>
+<span class="fc" id="L389">                log.debug(&quot;Found '{}' cookie value [{}]&quot;, name, value);</span>
+            }
+<span class="fc" id="L391">        } else {</span>
+<span class="fc" id="L392">            log.trace(&quot;No '{}' cookie value&quot;, name);</span>
+        }
+
+<span class="fc" id="L395">        return value;</span>
+    }
+
+    /**
+     * Returns the cookie with the given name from the request or {@code null} if no cookie
+     * with that name could be found.
+     *
+     * @param request    the current executing http request.
+     * @param cookieName the name of the cookie to find and return.
+     * @return the cookie with the given name from the request or {@code null} if no cookie
+     *         with that name could be found.
+     */
+    private static javax.servlet.http.Cookie getCookie(HttpServletRequest request, String cookieName) {
+<span class="fc" id="L408">        javax.servlet.http.Cookie cookies[] = request.getCookies();</span>
+<span class="fc bfc" id="L409" title="All 2 branches covered.">        if (cookies != null) {</span>
+<span class="fc bfc" id="L410" title="All 2 branches covered.">            for (javax.servlet.http.Cookie cookie : cookies) {</span>
+<span class="fc bfc" id="L411" title="All 2 branches covered.">                if (cookie.getName().equals(cookieName)) {</span>
+<span class="fc" id="L412">                    return cookie;</span>
+                }
+            }
+        }
+<span class="fc" id="L416">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

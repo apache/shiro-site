@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<main role="main">
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a id="line.1">/*</a>
+<span class="sourceLineNo">002</span><a id="line.2"> * Licensed to the Apache Software Foundation (ASF) under one</a>
+<span class="sourceLineNo">003</span><a id="line.3"> * or more contributor license agreements.  See the NOTICE file</a>
+<span class="sourceLineNo">004</span><a id="line.4"> * distributed with this work for additional information</a>
+<span class="sourceLineNo">005</span><a id="line.5"> * regarding copyright ownership.  The ASF licenses this file</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * to you under the Apache License, Version 2.0 (the</a>
+<span class="sourceLineNo">007</span><a id="line.7"> * "License"); you may not use this file except in compliance</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * with the License.  You may obtain a copy of the License at</a>
+<span class="sourceLineNo">009</span><a id="line.9"> *</a>
+<span class="sourceLineNo">010</span><a id="line.10"> *     http://www.apache.org/licenses/LICENSE-2.0</a>
+<span class="sourceLineNo">011</span><a id="line.11"> *</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * Unless required by applicable law or agreed to in writing,</a>
+<span class="sourceLineNo">013</span><a id="line.13"> * software distributed under the License is distributed on an</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</a>
+<span class="sourceLineNo">015</span><a id="line.15"> * KIND, either express or implied.  See the License for the</a>
+<span class="sourceLineNo">016</span><a id="line.16"> * specific language governing permissions and limitations</a>
+<span class="sourceLineNo">017</span><a id="line.17"> * under the License.</a>
+<span class="sourceLineNo">018</span><a id="line.18"> */</a>
+<span class="sourceLineNo">019</span><a id="line.19"></a>
+<span class="sourceLineNo">020</span><a id="line.20">package org.apache.shiro.authc;</a>
+<span class="sourceLineNo">021</span><a id="line.21"></a>
+<span class="sourceLineNo">022</span><a id="line.22">import org.apache.shiro.subject.PrincipalCollection;</a>
+<span class="sourceLineNo">023</span><a id="line.23"></a>
+<span class="sourceLineNo">024</span><a id="line.24">import java.io.Serializable;</a>
+<span class="sourceLineNo">025</span><a id="line.25"></a>
+<span class="sourceLineNo">026</span><a id="line.26">/**</a>
+<span class="sourceLineNo">027</span><a id="line.27"> * &lt;code&gt;AuthenticationInfo&lt;/code&gt; represents a Subject's (aka user's) stored account information relevant to the</a>
+<span class="sourceLineNo">028</span><a id="line.28"> * authentication/log-in process only.</a>
+<span class="sourceLineNo">029</span><a id="line.29"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">030</span><a id="line.30"> * It is important to understand the difference between this interface and the</a>
+<span class="sourceLineNo">031</span><a id="line.31"> * {@link AuthenticationToken AuthenticationToken} interface.  &lt;code&gt;AuthenticationInfo&lt;/code&gt; implementations</a>
+<span class="sourceLineNo">032</span><a id="line.32"> * represent already-verified and stored account data, whereas an &lt;code&gt;AuthenticationToken&lt;/code&gt; represents data</a>
+<span class="sourceLineNo">033</span><a id="line.33"> * submitted for any given login attempt (which may or may not successfully match the verified and stored account</a>
+<span class="sourceLineNo">034</span><a id="line.34"> * &lt;code&gt;AuthenticationInfo&lt;/code&gt;).</a>
+<span class="sourceLineNo">035</span><a id="line.35"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">036</span><a id="line.36"> * Because the act of authentication (log-in) is orthogonal to authorization (access control), this interface is</a>
+<span class="sourceLineNo">037</span><a id="line.37"> * intended to represent only the account data needed by Shiro during an authentication attempt.  Shiro also</a>
+<span class="sourceLineNo">038</span><a id="line.38"> * has a parallel {@link org.apache.shiro.authz.AuthorizationInfo AuthorizationInfo} interface for use during the</a>
+<span class="sourceLineNo">039</span><a id="line.39"> * authorization process that references access control data such as roles and permissions.</a>
+<span class="sourceLineNo">040</span><a id="line.40"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">041</span><a id="line.41"> * But because many if not most {@link org.apache.shiro.realm.Realm Realm}s store both sets of data for a Subject, it might be</a>
+<span class="sourceLineNo">042</span><a id="line.42"> * convenient for a &lt;code&gt;Realm&lt;/code&gt; implementation to utilize an implementation of the {@link Account Account}</a>
+<span class="sourceLineNo">043</span><a id="line.43"> * interface instead, which is a convenience interface that combines both &lt;code&gt;AuthenticationInfo&lt;/code&gt; and</a>
+<span class="sourceLineNo">044</span><a id="line.44"> * &lt;code&gt;AuthorizationInfo&lt;/code&gt;.  Whether you choose to implement these two interfaces separately or implement the one</a>
+<span class="sourceLineNo">045</span><a id="line.45"> * &lt;code&gt;Account&lt;/code&gt; interface for a given &lt;code&gt;Realm&lt;/code&gt; is entirely based on your application's needs or your</a>
+<span class="sourceLineNo">046</span><a id="line.46"> * preferences.</a>
+<span class="sourceLineNo">047</span><a id="line.47"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">048</span><a id="line.48"> * &lt;p&gt;&lt;b&gt;Please note:&lt;/b&gt;  Since Shiro sometimes logs authentication operations, please ensure your AuthenticationInfo's</a>
+<span class="sourceLineNo">049</span><a id="line.49"> * &lt;code&gt;toString()&lt;/code&gt; implementation does &lt;em&gt;not&lt;/em&gt; print out account credentials (password, etc), as these might be viewable to</a>
+<span class="sourceLineNo">050</span><a id="line.50"> * someone reading your logs.  This is good practice anyway, and account credentials should rarely (if ever) be printed</a>
+<span class="sourceLineNo">051</span><a id="line.51"> * out for any reason.  If you're using Shiro's default implementations of this interface, they only ever print the</a>
+<span class="sourceLineNo">052</span><a id="line.52"> * account {@link #getPrincipals() principals}, so you do not need to do anything additional.&lt;/p&gt;</a>
+<span class="sourceLineNo">053</span><a id="line.53"> *</a>
+<span class="sourceLineNo">054</span><a id="line.54"> * @see org.apache.shiro.authz.AuthorizationInfo AuthorizationInfo</a>
+<span class="sourceLineNo">055</span><a id="line.55"> * @see Account</a>
+<span class="sourceLineNo">056</span><a id="line.56"> * @since 0.9</a>
+<span class="sourceLineNo">057</span><a id="line.57"> */</a>
+<span class="sourceLineNo">058</span><a id="line.58">public interface AuthenticationInfo extends Serializable {</a>
+<span class="sourceLineNo">059</span><a id="line.59"></a>
+<span class="sourceLineNo">060</span><a id="line.60">    /**</a>
+<span class="sourceLineNo">061</span><a id="line.61">     * Returns all principals associated with the corresponding Subject.  Each principal is an identifying piece of</a>
+<span class="sourceLineNo">062</span><a id="line.62">     * information useful to the application such as a username, or user id, a given name, etc - anything useful</a>
+<span class="sourceLineNo">063</span><a id="line.63">     * to the application to identify the current &lt;code&gt;Subject&lt;/code&gt;.</a>
+<span class="sourceLineNo">064</span><a id="line.64">     * &lt;p/&gt;</a>
+<span class="sourceLineNo">065</span><a id="line.65">     * The returned PrincipalCollection should &lt;em&gt;not&lt;/em&gt; contain any credentials used to verify principals, such</a>
+<span class="sourceLineNo">066</span><a id="line.66">     * as passwords, private keys, etc.  Those should be instead returned by {@link #getCredentials() getCredentials()}.</a>
+<span class="sourceLineNo">067</span><a id="line.67">     *</a>
+<span class="sourceLineNo">068</span><a id="line.68">     * @return all principals associated with the corresponding Subject.</a>
+<span class="sourceLineNo">069</span><a id="line.69">     */</a>
+<span class="sourceLineNo">070</span><a id="line.70">    PrincipalCollection getPrincipals();</a>
+<span class="sourceLineNo">071</span><a id="line.71"></a>
+<span class="sourceLineNo">072</span><a id="line.72">    /**</a>
+<span class="sourceLineNo">073</span><a id="line.73">     * Returns the credentials associated with the corresponding Subject.  A credential verifies one or more of the</a>
+<span class="sourceLineNo">074</span><a id="line.74">     * {@link #getPrincipals() principals} associated with the Subject, such as a password or private key.  Credentials</a>
+<span class="sourceLineNo">075</span><a id="line.75">     * are used by Shiro particularly during the authentication process to ensure that submitted credentials</a>
+<span class="sourceLineNo">076</span><a id="line.76">     * during a login attempt match exactly the credentials here in the &lt;code&gt;AuthenticationInfo&lt;/code&gt; instance.</a>
+<span class="sourceLineNo">077</span><a id="line.77">     *</a>
+<span class="sourceLineNo">078</span><a id="line.78">     * @return the credentials associated with the corresponding Subject.</a>
+<span class="sourceLineNo">079</span><a id="line.79">     */</a>
+<span class="sourceLineNo">080</span><a id="line.80">    Object getCredentials();</a>
+<span class="sourceLineNo">081</span><a id="line.81"></a>
+<span class="sourceLineNo">082</span><a id="line.82">}</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</main>
+</body>
+</html>

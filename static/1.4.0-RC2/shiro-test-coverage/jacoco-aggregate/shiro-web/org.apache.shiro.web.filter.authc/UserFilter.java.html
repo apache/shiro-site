@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>UserFilter.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-web</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.web.filter.authc</a> &gt; <span class="el_source">UserFilter.java</span></div><h1>UserFilter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.web.filter.authc;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.filter.AccessControlFilter;
+
+/**
+ * Filter that allows access to resources if the accessor is a known user, which is defined as
+ * having a known principal.  This means that any user who is authenticated or remembered via a
+ * 'remember me' feature will be allowed access from this filter.
+ * &lt;p/&gt;
+ * If the accessor is not a known user, then they will be redirected to the {@link #setLoginUrl(String) loginUrl}&lt;/p&gt;
+ *
+ * @since 0.9
+ */
+<span class="fc" id="L36">public class UserFilter extends AccessControlFilter {</span>
+
+    /**
+     * Returns &lt;code&gt;true&lt;/code&gt; if the request is a
+     * {@link #isLoginRequest(javax.servlet.ServletRequest, javax.servlet.ServletResponse) loginRequest} or
+     * if the current {@link #getSubject(javax.servlet.ServletRequest, javax.servlet.ServletResponse) subject}
+     * is not &lt;code&gt;null&lt;/code&gt;, &lt;code&gt;false&lt;/code&gt; otherwise.
+     *
+     * @return &lt;code&gt;true&lt;/code&gt; if the request is a
+     * {@link #isLoginRequest(javax.servlet.ServletRequest, javax.servlet.ServletResponse) loginRequest} or
+     * if the current {@link #getSubject(javax.servlet.ServletRequest, javax.servlet.ServletResponse) subject}
+     * is not &lt;code&gt;null&lt;/code&gt;, &lt;code&gt;false&lt;/code&gt; otherwise.
+     */
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (isLoginRequest(request, response)) {</span>
+<span class="nc" id="L51">            return true;</span>
+        } else {
+<span class="nc" id="L53">            Subject subject = getSubject(request, response);</span>
+            // If principal is not null, then the user is known and should be allowed access.
+<span class="nc bnc" id="L55" title="All 2 branches missed.">            return subject.getPrincipal() != null;</span>
+        }
+    }
+
+    /**
+     * This default implementation simply calls
+     * {@link #saveRequestAndRedirectToLogin(javax.servlet.ServletRequest, javax.servlet.ServletResponse) saveRequestAndRedirectToLogin}
+     * and then immediately returns &lt;code&gt;false&lt;/code&gt;, thereby preventing the chain from continuing so the redirect may
+     * execute.
+     */
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+<span class="nc" id="L66">        saveRequestAndRedirectToLogin(request, response);</span>
+<span class="nc" id="L67">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

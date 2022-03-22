@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>CasFilter.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Apache Shiro :: Test Coverage</a> &gt; <a href="../index.html" class="el_bundle">shiro-cas</a> &gt; <a href="index.source.html" class="el_package">org.apache.shiro.cas</a> &gt; <span class="el_source">CasFilter.java</span></div><h1>CasFilter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.shiro.cas;
+
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
+import org.apache.shiro.web.util.WebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+
+/**
+ * This filter validates the CAS service ticket to authenticate the user.  It must be configured on the URL recognized
+ * by the CAS server.  For example, in {@code shiro.ini}:
+ * &lt;pre&gt;
+ * [main]
+ * casFilter = org.apache.shiro.cas.CasFilter
+ * ...
+ *
+ * [urls]
+ * /shiro-cas = casFilter
+ * ...
+ * &lt;/pre&gt;
+ * (example : http://host:port/mycontextpath/shiro-cas)
+ *
+ * @since 1.2
+ * @see &lt;a href=&quot;https://github.com/bujiio/buji-pac4j&quot;&gt;buji-pac4j&lt;/a&gt;
+ * @deprecated replaced with Shiro integration in &lt;a href=&quot;https://github.com/bujiio/buji-pac4j&quot;&gt;buji-pac4j&lt;/a&gt;.
+ */
+@Deprecated
+<span class="nc" id="L53">public class CasFilter extends AuthenticatingFilter {</span>
+    
+<span class="nc" id="L55">    private static Logger logger = LoggerFactory.getLogger(CasFilter.class);</span>
+    
+    // the name of the parameter service ticket in url
+    private static final String TICKET_PARAMETER = &quot;ticket&quot;;
+    
+    // the url where the application is redirected if the CAS service ticket validation failed (example : /mycontextpatch/cas_error.jsp)
+    private String failureUrl;
+    
+    /**
+     * The token created for this authentication is a CasToken containing the CAS service ticket received on the CAS service url (on which
+     * the filter must be configured).
+     * 
+     * @param request the incoming request
+     * @param response the outgoing response
+     * @throws Exception if there is an error processing the request.
+     */
+    @Override
+    protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) throws Exception {
+<span class="nc" id="L73">        HttpServletRequest httpRequest = (HttpServletRequest) request;</span>
+<span class="nc" id="L74">        String ticket = httpRequest.getParameter(TICKET_PARAMETER);</span>
+<span class="nc" id="L75">        return new CasToken(ticket);</span>
+    }
+    
+    /**
+     * Execute login by creating {@link #createToken(javax.servlet.ServletRequest, javax.servlet.ServletResponse) token} and logging subject
+     * with this token.
+     * 
+     * @param request the incoming request
+     * @param response the outgoing response
+     * @throws Exception if there is an error processing the request.
+     */
+    @Override
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+<span class="nc" id="L88">        return executeLogin(request, response);</span>
+    }
+    
+    /**
+     * Returns &lt;code&gt;false&lt;/code&gt; to always force authentication (user is never considered authenticated by this filter).
+     * 
+     * @param request the incoming request
+     * @param response the outgoing response
+     * @param mappedValue the filter-specific config value mapped to this filter in the URL rules mappings.
+     * @return &lt;code&gt;false&lt;/code&gt;
+     */
+    @Override
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+<span class="nc" id="L101">        return false;</span>
+    }
+    
+    /**
+     * If login has been successful, redirect user to the original protected url.
+     * 
+     * @param token the token representing the current authentication
+     * @param subject the current authenticated subjet
+     * @param request the incoming request
+     * @param response the outgoing response
+     * @throws Exception if there is an error processing the request.
+     */
+    @Override
+    protected boolean onLoginSuccess(AuthenticationToken token, Subject subject, ServletRequest request,
+                                     ServletResponse response) throws Exception {
+<span class="nc" id="L116">        issueSuccessRedirect(request, response);</span>
+<span class="nc" id="L117">        return false;</span>
+    }
+    
+    /**
+     * If login has failed, redirect user to the CAS error page (no ticket or ticket validation failed) except if the user is already
+     * authenticated, in which case redirect to the default success url.
+     * 
+     * @param token the token representing the current authentication
+     * @param ae the current authentication exception
+     * @param request the incoming request
+     * @param response the outgoing response
+     */
+    @Override
+    protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException ae, ServletRequest request,
+                                     ServletResponse response) {
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L133">            logger.debug( &quot;Authentication exception&quot;, ae );</span>
+        }
+        // is user authenticated or in remember me mode ?
+<span class="nc" id="L136">        Subject subject = getSubject(request, response);</span>
+<span class="nc bnc" id="L137" title="All 4 branches missed.">        if (subject.isAuthenticated() || subject.isRemembered()) {</span>
+            try {
+<span class="nc" id="L139">                issueSuccessRedirect(request, response);</span>
+<span class="nc" id="L140">            } catch (Exception e) {</span>
+<span class="nc" id="L141">                logger.error(&quot;Cannot redirect to the default success url&quot;, e);</span>
+<span class="nc" id="L142">            }</span>
+        } else {
+            try {
+<span class="nc" id="L145">                WebUtils.issueRedirect(request, response, failureUrl);</span>
+<span class="nc" id="L146">            } catch (IOException e) {</span>
+<span class="nc" id="L147">                logger.error(&quot;Cannot redirect to failure url : {}&quot;, failureUrl, e);</span>
+<span class="nc" id="L148">            }</span>
+        }
+<span class="nc" id="L150">        return false;</span>
+    }
+    
+    public void setFailureUrl(String failureUrl) {
+<span class="nc" id="L154">        this.failureUrl = failureUrl;</span>
+<span class="nc" id="L155">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
