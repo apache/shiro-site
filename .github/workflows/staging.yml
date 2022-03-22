@@ -15,7 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
-name: Stage main branch
+# This action will make the current branch available
+# under https://shiro.staged.apache.org/
+name: Stage current branch
 
 on:
   workflow_dispatch: {}
@@ -29,15 +31,12 @@ jobs:
       - name: 'Checkout main'
         uses: actions/checkout@v2
         with:
-          ref: 'main'
           path: 'src'
           persist-credentials: false
 
-      - run: sed -i.bak 's/site.host=.*/site.host=https:\/\/shiro.staged.apache.org\//g' jbake.properties && rm jbake.properties.bak
-        shell: bash
-        working-directory: ./src
-
-      - run: mv src/site/asssets/robots.staging.txt src/site/asssets/robots.txt
+      - run: |
+          sed -i.bak 's/site.host=.*/site.host=https:\/\/shiro.staged.apache.org\//g' jbake.properties && rm jbake.properties.bak
+          mv src/site/assets/robots.staging.txt src/site/assets/robots.txt
         shell: bash
         working-directory: ./src
 
@@ -57,6 +56,17 @@ jobs:
           path: 'site-staging'
 
       - name: 'Copy to staging'
-        run: rsync -avP src/target/website/. ../site-staging && git commit -a -m "staging $(date -Is)" && git push
+        run: |
+          rsync -a src/target/website/. ./site-staging 
+        shell: bash
+
+      - name: 'commit staging'
+        working-directory: ./site-staging
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+          git add .
+          git commit -m "staging $(date -Is)" 
+          git push
         shell: bash
 
