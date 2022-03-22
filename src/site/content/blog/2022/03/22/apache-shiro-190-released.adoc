@@ -1,0 +1,127 @@
+////
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+////
+
+= Apache Shiro 1.9.0 Released
+Benjamin Marwell
+:jbake-date: 2022-03-22 21:39:37
+:jbake-type: post
+:jbake-status: published
+:jbake-tags: blog, release
+:idprefix:
+:icons: font
+
+The Shiro team is pleased to announce the release of Apache Shiro version 1.9.0.
+This is a feature release for 1.x.
+
+This release solves 20 issues since the 1.8.0 release and is available for download now.
+
+== Breaking changes
+
+* We fixed [https://issues.apache.org/jira/browse/SHIRO-829[SHIRO-829]] by changing the class signature of the class `ShiroFilterFactoryBean`:
++
+[source,diff]
+----
+-public class ShiroFilterFactoryBean implements FactoryBean, BeanPostProcessor {
++public class ShiroFilterFactoryBean implements FactoryBean<AbstractShiroFilter>, BeanPostProcessor {
+----
++
+and the method signature of `public Class<?> getObjectType`:
++
+[source,diff]
+----
+-    public Class getObjectType() {
+-        return SpringShiroFilter.class;
++    public Class<?> getObjectType() {
++        return AbstractShiroFilter.class;
+----
+
+While we do not expect to break any builds or runtimes, these changes are (strictly speaking) breaking changes as they introduce Generics to this class.
+
+
+== All changes
+
+You can learn more on link:https://issues.apache.org/jira/projects/SHIRO/versions/12350639[Jira, Release 1.9.0].
+
+=== Bug
+
+* [https://issues.apache.org/jira/browse/SHIRO-829[SHIRO-829]] -
+beanPostProcessor and FactoryBean cause aop to fail in the same
+Configuration
+* [https://issues.apache.org/jira/browse/SHIRO-845[SHIRO-845]] -
+Dependencies for test-jars missing
+
+=== Improvement
+
+* [https://issues.apache.org/jira/browse/SHIRO-804[SHIRO-804]] - Avoid
+conflicts with spring boot aop
+* [https://issues.apache.org/jira/browse/SHIRO-836[SHIRO-836]] - Delete
+jsecurty-sample.jks
+* [https://issues.apache.org/jira/browse/SHIRO-838[SHIRO-838]] - Create
+SHA512-Hashes
+* [https://issues.apache.org/jira/browse/SHIRO-846[SHIRO-846]] -
+Creation of site takes very long time
+* [https://issues.apache.org/jira/browse/SHIRO-848[SHIRO-848]] -
+Relative Path in pom.xml is not needed
+* [https://issues.apache.org/jira/browse/SHIRO-850[SHIRO-850]] - The
+profile name jdk19-plus is misleading
+* [https://issues.apache.org/jira/browse/SHIRO-851[SHIRO-851]] -
+Handling properties for compile/enconding vs. default configurations of
+plugins
+* [https://issues.apache.org/jira/browse/SHIRO-852[SHIRO-852]] -
+Configuration for maven-release-plugin prepationGoal should be changed
+* [https://issues.apache.org/jira/browse/SHIRO-853[SHIRO-853]] -
+Versions of maven-surefire/failsafe/report plugin are not in sync
+* [https://issues.apache.org/jira/browse/SHIRO-854[SHIRO-854]] -
+Konfiguration includes/excludes maven-failsafe-plugin can be reduced to
+default
+* [https://issues.apache.org/jira/browse/SHIRO-860[SHIRO-860]] - update
+logback to 1.2.10
+* [https://issues.apache.org/jira/browse/SHIRO-862[SHIRO-862]] - Replace
+Google Analytics with Matomo for new Javadocs
+
+=== Task
+
+* [https://issues.apache.org/jira/browse/SHIRO-841[SHIRO-841]] -
+NullPointerException from SessionsSecurityManager.start()
+* [https://issues.apache.org/jira/browse/SHIRO-867[SHIRO-867]] - Skip Deployment of integration-test and samples artifacts
+
+
+=== Dependency upgrade
+
+* [https://issues.apache.org/jira/browse/SHIRO-828[SHIRO-828]] -
+aspectj-maven-plugin 1.14.0
+* [https://issues.apache.org/jira/browse/SHIRO-842[SHIRO-842]] -
+shiro-web depends on older log4j
+* [https://issues.apache.org/jira/browse/SHIRO-843[SHIRO-843]] - Update
+maven-project-info-reports
+* [https://issues.apache.org/jira/browse/SHIRO-844[SHIRO-844]] - Update
+maven-javadoc-plugin to 3.3.1
+
+
+== Download
+
+Download and verification instructions are available link:/download.html[on our download page].
+
+== Documentation
+
+For more information on link:/documentation.html[Shiro, please read the documentation.]
+
+Enjoy!
+
+The Apache Shiro Team

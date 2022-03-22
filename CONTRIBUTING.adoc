@@ -1,3 +1,22 @@
+////
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+////
+
 = Apache Shiro Site: Contributing
 
 == General guidelines
@@ -9,15 +28,21 @@ Git will automatically convert line endings for you.
 
 == Changes for a new Apache Shiro Release
 
+=== Changes to link:src/site/content/download.adoc[]
+
+* Update the header attribute `:jbake-releases: {"versions":["shiro19x"]}`.
+* Keep the `x` at the end, as we only promote the latest bugfix release for a given minor version.
+
 === Changes to link:data/releases.yaml[]
 
-* If the new `latestRelease` is a new minor release (e.g. `1.x.0`), prepend the old version to the `oldReleases` array. +
-Please skip this step for minor releases.
-* If the new `latestRelease` is a minor release, update the version number of the `releases` object at the end of the file. +
-_Rationale:_ Every minor release should only be represented with the latest bugfix release.
 * Change `latestRelease: "..."` to the new version.
 * Update the `versionInfo` object accordingly. +
 You can just add a new release, there is no need to remove old releases.
+* Update the `oldReleases`/`releases` variable:
+** If the new `latestRelease` is a new minor release (e.g. `1.n.0`, where `n` is the new minor release version), prepend the old version to the `oldReleases` array. +
+Also, add it to the 'releases' object at the end of the file as `1nx`.
+** If the new `latestRelease` is a bugfix release (e.g. `1.n.x`), update the version number of the `releases` object at the end of the file. +
+_Rationale:_ Every minor release should only be represented with the latest bugfix release.
 
 === Changes to link:data/artifacts.yaml[]
 
@@ -25,6 +50,13 @@ In the unlikely event that new artifacts were generated, please modify link:data
 Do not delete artifacts, as they may be in use for old versions.
 
 After modifying the artifacts file, update the `releases` object in link:data/releases.yaml[] to include the new artifact's name.
+
+=== Changes to link:src/site/assets/.htaccess[]
+
+Look for hard coded versions and replace them.
+
+Unfortunately, JBake does not allow custom types.
+For this reason, templating is not availble for `.htaccess` files.
 
 == Development server
 
