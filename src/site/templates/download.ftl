@@ -20,6 +20,8 @@
   <#assign downloadUrl="https://archive.apache.org/dist/shiro/" />
 </#if>
 
+<#assign downloadHashUrl="https://downloads.apache.org/shiro/" />
+
 <p>
   <ul>
   <#list displayReleases as version>
@@ -47,9 +49,9 @@
 
   <code><a class="external-link" href="${downloadUrl}${release.version}/shiro-root-${release.version}-source-release.zip">shiro-root-${release.version}-source-release.zip</a></code>
     (<a class="external-link"
-        href="${downloadUrl}${release.version}/shiro-root-${release.version}-source-release.zip.asc">pgp</a>, <a
+        href="${downloadHashUrl}${release.version}/shiro-root-${release.version}-source-release.zip.asc">pgp</a>, <a
             class="external-link"
-            href="${downloadUrl}${release.version}/shiro-root-${release.version}-source-release.zip.sha512">sha512</a>)
+            href="${downloadHashUrl}${release.version}/shiro-root-${release.version}-source-release.zip.sha512">sha512</a>)
   </code>
 
   <p>Associated documentation can be found <a href="documentation.html" title="Documentation">here</a></p>
