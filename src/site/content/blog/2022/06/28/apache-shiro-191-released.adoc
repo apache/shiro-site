@@ -17,7 +17,7 @@
 # under the License.
 ////
 
-= Apache Shiro 1.9.1 Released
+= 1.9.1 available with fix CVE-2022-32532
 Brian Demers
 :jbake-date: 2022-06-28
 :jbake-type: post
@@ -34,6 +34,12 @@ This release solves 6 issues since the 1.9.1 release and is available for downlo
 == All changes
 
 You can learn more on link:https://issues.apache.org/jira/projects/SHIRO/versions/12351487[Jira, Release 1.9.1].
+
+=== CVE-2022-32532
+Apache Shiro before 1.9.1, A RegexRequestMatcher can be misconfigured to be bypassed on some servlet containers. Applications using RegExPatternMatcher with `.` in the regular expression are possibly vulnerable to an authorization bypass.
+
+Credit:
+Apache Shiro would like the thank 4ra1n for reporting this issue.
 
 === Bug
 
