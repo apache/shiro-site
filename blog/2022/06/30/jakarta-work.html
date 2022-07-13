@@ -18,43 +18,49 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Cache Manager | Apache Shiro</title>
+    <title>Ongoing work on the Jakarta namespace transition | Apache Shiro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content='documentation,cache'>
+    <meta name="author" content="Richard Zowalla">
+    <meta name="keywords" content='blog,release'>
     <meta name="generator" content="JBake">
     <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
     <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
     <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
     <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
 
-    <meta property="og:title" content="Cache Manager | Apache Shiro"/>
+    <meta property="og:title" content="Ongoing work on the Jakarta namespace transition | Apache Shiro"/>
+    <meta property="article:published_time" content="2022-06-30T00:00:00Z"/>
+    <meta name="publish_date" property="og:publish_date" content="2022-06-30T00:00:00Z"/>
+    <meta name="twitter:creator" content="@zowalla" />
+    <meta property="profile:first_name" content="Richard" />
+    <meta property="profile:last_name" content="Zowalla" />
     <meta property="og:type" content="article"/>
       <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@ApacheShiro" />
-    <meta property="article:modification_time" content="2010-03-18T00:00:00Z"/>
-    <meta property="article:tag" content='documentation'/>
-    <meta property="article:tag" content='cache'/>
+    <meta property="article:modification_time" content="2022-06-30T00:00:00Z"/>
+    <meta property="article:tag" content='blog'/>
+    <meta property="article:tag" content='release'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.apache.org/cachemanager.html'/>
-    <meta property="og:image" content='images/shiro-featured-image.png'/>
+    <meta property="og:url" content='https://shiro.apache.org/blog/2022/06/30/jakarta-work.html'/>
+    <meta property="og:image" content='../../../../images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
     <meta property="og:site_name" content="Apache Shiro"/>
 
     <!-- Le styles -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
-    <link href="css/asciidoctor.css" rel="stylesheet">
-    <link href="css/base.css" rel="stylesheet">
-    <link href="highlight.js-11.2.0/styles/default.min.css" rel="stylesheet">
-    <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
+    <link href="../../../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../../bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
+    <link href="../../../../css/asciidoctor.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link href="../../../../highlight.js-11.2.0/styles/default.min.css" rel="stylesheet">
+    <link href="../../../../css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
 
     <!-- Fav and touch icons -->
     <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
-    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
 
     <!-- Matomo -->
     <script>
@@ -81,7 +87,7 @@
 
       <div class="masthead">
         <p class="lead">
-          <a href="index.html"><img src="images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <a href="../../../../index.html"><img src="../../../../images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
           <span class="tagline">Simple. Java. Security.</span>
           <a class="pull-right" href="https://www.apache.org/events/current-event.html">
             <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
@@ -99,10 +105,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link" href="get-started.html">Get Started</a>
+              <a class="nav-link" href="../../../../get-started.html">Get Started</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="documentation.html">Docs</a>
+              <a class="nav-link" href="../../../../documentation.html">Docs</a>
             </li>
 
             <li class="nav-item dropdown">
@@ -110,14 +116,14 @@
                 Web Apps
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
-                <li><a class="dropdown-item" href="web.html">General</a></li>
-                <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><a class="dropdown-item" href="../../../../web.html">General</a></li>
+                <li><a class="dropdown-item" href="../../../../jaxrs.html">JAX-RS</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="web-features.html">Features</a></li>
+                <li><a class="dropdown-item" href="../../../../web-features.html">Features</a></li>
               </ul>
             </li>
 
-            <li><a class="nav-link" href="features.html">Features</a></li>
+            <li><a class="nav-link" href="../../../../features.html">Features</a></li>
 
             <!-- integrations -->
             <li class="nav-item dropdown">
@@ -125,10 +131,10 @@
                 Integrations
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
-                <li><a class="dropdown-item" href="spring-boot.html">Spring</a></li>
-                <li><a class="dropdown-item" href="guice.html">Guice</a></li>
+                <li><a class="dropdown-item" href="../../../../spring-boot.html">Spring</a></li>
+                <li><a class="dropdown-item" href="../../../../guice.html">Guice</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="integration.html">Third-Party Integrations</a></li>
+                <li><a class="dropdown-item" href="../../../../integration.html">Third-Party Integrations</a></li>
               </ul>
             </li>
 
@@ -138,13 +144,13 @@
                 Community
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
-                <li><a class="dropdown-item" href="forums.html">Community Forums</a></li>
-                <li><a class="dropdown-item" href="mailing-lists.html">Mailing Lists</a></li>
-                <li><a class="dropdown-item" href="articles.html">Articles</a></li>
-                <li><a class="dropdown-item" href="news.html">News</a></li>
-                <li><a class="dropdown-item" href="events.html">Events</a></li>
+                <li><a class="dropdown-item" href="../../../../forums.html">Community Forums</a></li>
+                <li><a class="dropdown-item" href="../../../../mailing-lists.html">Mailing Lists</a></li>
+                <li><a class="dropdown-item" href="../../../../articles.html">Articles</a></li>
+                <li><a class="dropdown-item" href="../../../../news.html">News</a></li>
+                <li><a class="dropdown-item" href="../../../../events.html">Events</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="community.html">More</a></li>
+                <li><a class="dropdown-item" href="../../../../community.html">More</a></li>
               </ul>
             </li>
 
@@ -154,9 +160,9 @@
                 About
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
-                <li><a class="dropdown-item" href="about.html">About</a></li>
-                <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
-                <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
+                <li><a class="dropdown-item" href="../../../../about.html">About</a></li>
+                <li><a class="dropdown-item" href="../../../../privacy-policy.html">Privacy Policy</a></li>
+                <li><a class="dropdown-item" href="../../../../security-reports.html">Vulnerability Reports</a></li>
               </ul>
             </li>
           </ul>
@@ -181,68 +187,37 @@
     </nav>
 
 	<div class="page-header">
-		<h1>Cache Manager</h1>
+		<h1>Ongoing work on the Jakarta namespace transition</h1>
 	</div>
 
 
-<div class="sect1">
-<h2 id="apache_shiro_cache_manager_overview">Apache Shiro Cache Manager Overview</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Shiro has three important cache interfaces:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="static/current/apidocs/org/apache/shiro/cache/CacheManager.html"><code>CacheManager</code></a></p>
-</li>
-<li>
-<p><a href="static/current/apidocs/org/apache/shiro/cache/Cache.html"><code>Cache</code></a></p>
-</li>
-<li>
-<p><a href="static/current/apidocs/org/apache/shiro/cache/CacheManagerAware.html"><code>CacheManagerAware</code></a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>A <code>CacheManager</code> returns <code>Cache</code> instances and various Shiro components use those <code>Cache&lt;</code> instances to cache data as necessary.
-Any Shiro component that implements <code>CacheManager</code> will automatically receive a configured <code>CacheManager</code>, where it can be used to acquire <code>Cache</code> instances.</p>
-</div>
-<div class="paragraph">
-<p>The Shiro <a href="securitymanager.html"><code>SecurityManager</code></a> implementations and all
-<a href="static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html"><code>AuthorizingRealm</code></a> implementations implement CacheManagerAware.
-If you set the <code>CacheManager</code> on the <code>SecurityManager</code>, it will in turn set it on the various Realms that implement CacheManagerAware as well (OO delegation).
-For example, in shiro.ini:</p>
-</div>
-<div class="listingblock">
-<div class="title">example shiro.ini CacheManager configuration</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">securityManager.realms = $myRealm1, $myRealm2, ..., $myRealmN
-...
-cacheManager = my.implementation.of.CacheManager
-...
-securityManager.cacheManager = $cacheManager
-# at this point, the securityManager and all CacheManagerAware
-# realms have been set with the cacheManager instance</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>We have an out-of-the-box <a href="static/current/apidocs/org/apache/shiro/cache/ehcache/EhCacheManager.html"><code>EhCacheManager</code></a> implementation, so you can use that today if you wanted.
-Otherwise, you can implement your own <code>CacheManager</code> (e.g. with Coherence, etc) and configure it as above, and you’ll be good to go.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="CacheManager-AuthorizationCacheInvalidation">Authorization Cache Invalidation</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Finally note that <a href="static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html"><code>AuthorizingRealm</code></a> has a <a href="static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html#clearCachedAuthorizationInfo%28org.apache.shiro.subject.PrincipalCollection%29"><code>clearCachedAuthorizationInfo</code></a> method that can be called by subclasses to evict the cached authzInfo for a particular account.
-It is usually called by custom logic if the corresponding account’s authz data has changed (to ensure the next authz check will pick up the new data).</p>
-</div>
-</div>
-</div>
-	<hr />
+	<p>
+		<em>Published by <a rel="author" href="https://twitter.com/@zowalla">Richard Zowalla</a>&nbsp;on the
+			<time datetime="2022-06-30T00:00:00Z">30th of June, 2022</time>
+		</em>
+	</p>
 
+	<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Apache Shiro team is pleased to announce the ongoing work on the javax &#8594; jakarta namespace transition!</p>
+</div>
+<div class="paragraph">
+<p>We aim to provide first jakarta artifacts of Shiro with the release of <strong>1.10.0</strong> going the same route as other Apache projects by using relocations. The resulting jakarta artifacts are later distributed via Maven classifiers.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="feedback_appreciated">Feedback appreciated!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We need <strong>your</strong> help in testing our relocated artifacts. Feel free to try <a href="https://repository.apache.org/content/groups/snapshots/org/apache/shiro/">our nightly snapshots</a>, to <a href="/issues.html">open an issue</a>, or to write us a message to the <a href="/mailing-lists.html">developer&#8217;s mailing list</a>!</p>
+</div>
+</div>
+</div>
+
+	<hr />
+	
 </div> 
 
     <div class="footer-padding"></div>
@@ -264,7 +239,7 @@ It is usually called by custom logic if the corresponding account’s authz data
         </div>
 
         <div class="d-flex justify-content-end col-md-4" id="editThisPage">
-          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/cachemanager.adoc"/>
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/blog/2022/06/30/jakarta-work.adoc"/>
         </div>
 
         <div class="d-flex col-md-2 justify-content-end" style="position: relative">
@@ -277,9 +252,9 @@ It is usually called by custom logic if the corresponding account’s authz data
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/bootstrap.min.js"></script>
-    <script src="highlight.js-11.2.0/highlight.min.js"></script>
-    <script src="js/shiro.js"></script>
+    <script src="../../../../js/bootstrap.min.js"></script>
+    <script src="../../../../highlight.js-11.2.0/highlight.min.js"></script>
+    <script src="../../../../js/shiro.js"></script>
 
     <script>
         docReady(
