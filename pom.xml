@@ -11,7 +11,6 @@
 
   <groupId>org.apache.shirp</groupId>
   <artifactId>shiro-website</artifactId>
-  <packaging>pom</packaging>
   <version>999-SNAPSHOT</version>
 
   <name>Apache Shiro website</name>
@@ -35,12 +34,42 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.10.1</version>
+        <configuration>
+          <source>11</source>
+          <target>11</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>validate</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <configuration>
+              <includeProjectDependencies>true</includeProjectDependencies>
+              <mainClass>org.apache.shiro.site.Validator</mainClass>
+              <arguments>
+                <argument>${project.basedir}/src/site/content</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.jbake</groupId>
         <artifactId>jbake-maven-plugin</artifactId>
         <version>0.3.6-rc.2</version>
         <executions>
           <execution>
-            <phase>generate-resources</phase>
+            <phase>process-classes</phase>
             <goals>
               <goal>generate</goal>
             </goals>
