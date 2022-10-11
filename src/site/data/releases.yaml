@@ -1,17 +1,21 @@
 ---
 # for each release, update this variable with the latest version.
-latestRelease: "1.9.1"
+latestRelease: "1.10.0"
 
 # also add or replace the latest version here.
 versionInfo:
+  '1.10.0':
+    releaseDate: 2022-10-10
   '1.9.1':
     releaseDate: 2022-06-28
   '1.9.0':
     releaseDate: 2022-03-22
 
+
 # oldReleases contain a list of all releases but the most recent one.
 # this is used for release-archive.adoc.
 oldReleases:
+  - shiro19x
   - shiro18x
   - shiro17x
   - shiro16x
@@ -176,6 +180,31 @@ releases:
 
   shiro19x:
     version: 1.9.1
+    artifacts:
+      - shiroAll
+      - shiroCore
+      - shiroWeb
+      - shiroServletPlugin
+      - shiroJaxrs
+      - shiroAspectJ
+      - shiroCas
+      - shiroEhCache
+      - shiroHazelcast
+      - shiroFeatures
+      - shiroGuice
+      - shiroQuartz
+      - shiroSpring
+      - shiroSpringBoot
+      - shiroSpringBootWeb
+      - shiroHasher
+    hashes:
+      - md5
+      - sha1
+      - sha512
+      - sha3512
+
+  shiro110x:
+    version: 1.10.0
     artifacts:
       - shiroAll
       - shiroCore
