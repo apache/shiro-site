@@ -4,7 +4,7 @@
   <subtitle>Simple. Java. Security.</subtitle>
   <link href="https://shiro.apache.org/"/>
   <link rel="self" href="https://shiro.apache.org/feed.xml" />
-  <updated>2022-10-11T03:11:39Z</updated>
+  <updated>2022-10-12T02:45:47Z</updated>
 
   <author>
     <name>Les Hazlewood</name>
@@ -30,6 +30,123 @@
   <generator uri="https://jbake.org/">JBake.org</generator>
   <icon>/images/favicon128.png</icon>
   <logo>/images/apache-shiro-logo.png</logo>
+
+  <entry>
+    <title>1.10.0 available with fix CVE-2022-40664</title>
+    <link href="https://shiro.apache.org/blog/2022/10/10/2022/apache-shiro-1101-released.html"/>
+    <id>https://shiro.apache.org/blog/2022/10/10/2022/apache-shiro-1101-released.html</id>
+    <updated>2022-10-10T00:00:00Z</updated>
+    <author>
+      <name>Brian Demers</name>
+    </author>
+    <content type="html">
+      &lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Shiro team is pleased to announce the release of Apache Shiro version 1.10.0.
+This is a feature release for 1.x.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This release solves 7 issues since the 1.9.1 release and is available for download now.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;all_changes&quot;&gt;All changes&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You can learn more on &lt;a href=&quot;https://issues.apache.org/jira/projects/SHIRO/versions/12351946&quot;&gt;Jira, Release 1.10.0&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;cve_2022_40664&quot;&gt;CVE-2022-40664&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Apache Shiro before 1.10.0, Authentication Bypass Vulnerability in Shiro when forwarding or including via RequestDispatcher.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Credit:
+Apache Shiro would like to thank Y4tacker for reporting this issue.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;bug&quot;&gt;Bug&lt;/h3&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-512&quot;&gt;SHIRO-512&lt;/a&gt;] - Race condition in Shiro&amp;#8217;s web container session timeout handling&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-887&quot;&gt;SHIRO-887&lt;/a&gt;] - FormAuthenticationFilter trims passwords which start and/or end with one or more space character(s)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;improvement&quot;&gt;Improvement&lt;/h3&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-891&quot;&gt;SHIRO-891&lt;/a&gt;] - fix source jar Reproducible Builds issue&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-884&quot;&gt;SHIRO-884&lt;/a&gt;] - fix source jar Reproducible Builds issue&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-885&quot;&gt;SHIRO-885&lt;/a&gt;] - Use OWASP Java Encoder with OSGi manifest&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-890&quot;&gt;SHIRO-890&lt;/a&gt;] - Avoid another proxy creator when @EnableAspectJAutoProxy enabled&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-891&quot;&gt;SHIRO-891&lt;/a&gt;] - Allow for direct configuration of ShiroFilter through WebEnvironment&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;dependency_upgrade&quot;&gt;Dependency upgrade&lt;/h3&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Many dependency updates&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;behavior_changes&quot;&gt;Behavior Changes&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As of 1.10.0, Shiro may filter a request multiple times, e.g. when including or forwarding requests.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This behavior can be reverted by setting the following property: &lt;code&gt;shiro.filterOncePerRequest=true&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;download&quot;&gt;Download&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Download and verification instructions are available &lt;a href=&quot;/download.html&quot;&gt;on our download page&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;documentation&quot;&gt;Documentation&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For more information on &lt;a href=&quot;/documentation.html&quot;&gt;Shiro, please read the documentation.&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Enjoy!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Apache Shiro Team&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+    </content>
+  </entry>
 
   <entry>
     <title>Ongoing work on the Jakarta namespace transition</title>
@@ -752,53 +869,6 @@ This is a feature release for 1.x.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;FirstSuccessfulStrategy will short circuit correctly now.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;You can learn more on &lt;a href=&quot;https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12310950&amp;amp;version=12346483&quot;&gt;Jira&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Release binaries (.jars) are also available through Maven Central and source bundles through Apache distribution mirrors.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;For more information on &lt;a href=&quot;/documentation.html&quot;&gt;Shiro, please read the documentation.&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Enjoy!&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The Apache Shiro Team&lt;/p&gt;
-&lt;/div&gt;
-    </content>
-  </entry>
-
-  <entry>
-    <title>Apache Shiro 1.5.1 Released</title>
-    <link href="https://shiro.apache.org/blog/2020/02/23/apache-shiro-151-released.html"/>
-    <id>https://shiro.apache.org/blog/2020/02/23/apache-shiro-151-released.html</id>
-    <updated>2020-02-23T00:00:00Z</updated>
-    <content type="html">
-      &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The Shiro team is pleased to announce the release of Apache Shiro version 1.5.1.
-This is a feature release for 1.x.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This release includes 5 issues resolved since the 1.5.0 release and is available for Download now.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Of Note:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;ulist&quot;&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;DefaultCipherInstance is an alias which is not available in every JVM or JCA Provider.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Bean reflection property failed with Enum values.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Matching of / (root) is broken.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
