@@ -1,0 +1,70 @@
+////
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+////
+
+= Apache Shiro 1.10.1 available
+:jbake-author: Benjamin Marwell
+:jbake-date: 2022-11-19 00:00:00
+:jbake-type: post
+:jbake-status: published
+:jbake-tags: blog, release
+:idprefix:
+:icons: font
+
+The Apache Shiro team is pleased to announce the release of Apache Shiro version 1.10.1.
+This is a feature release for 1.x.
+
+This release solves 5 issues since the 1.9.1 release and is available for download now.
+
+== All changes
+
+You can learn more on https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12310950&version=12352460[Jira, Release 1.10.1].
+
+This release does not include classifiers for the Jakarta namespace, yet.
+
+=== Bug
+
+[SHIRO-892] - No Guice binding for newly introduced ShiroFilterConfiguration
+[SHIRO-893] - NPE caused by lack of default ShiroFilterConfiguration
+
+=== Test
+
+[SHIRO-895] - Work around Guice 4's Java 17 compatibliity for Java 17-based tests
+
+=== Dependency upgrade
+
+[SHIRO-894] - EasyMock 5.0.1 for Java 17 compatibility
+[SHIRO-896] - HSQLDB 2.7.1
+
+
+=== Behavior Changes
+
+As of 1.10.1, the Guice injection will be fixed as we introduced a regression with 1.10.0 when using Guice with `binder().requireExplicitBindings();`.
+
+
+== Download
+
+Download and verification instructions are available link:/download.html[on our download page].
+
+== Documentation
+
+For more information on link:/documentation.html[Shiro, please read the documentation.]
+
+Enjoy!
+
+The Apache Shiro Team
