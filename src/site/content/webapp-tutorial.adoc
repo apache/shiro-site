@@ -109,7 +109,7 @@ Here is what each means:
 * `LICENSE`: the project's Apache 2.0 license
 * `.travis.yml`: A https://travis-ci.org/[Travis CI] config file in case you want to run continuous integration on your project to ensure it always builds.
 * `.gitignore`: A git ignore file, containing suffixes and directories that shouldn't be checked in to version control.
-* `src/main/resources/logback.xml`: A simple http://logback.qos.ch/[Logback] config file. For this tutorial, we've chosen http://www.slf4j.org[SLF4J] as our logging API and Logback as the logging implementation. This could have easily been Log4J or JUL.
+* `src/main/resources/logback.xml`: A simple https://logback.qos.ch/[Logback] config file. For this tutorial, we've chosen https://www.slf4j.org[SLF4J] as our logging API and Logback as the logging implementation. This could have easily been Log4J or JUL.
 * `src/main/webapp/WEB-INF/web.xml`: Our initial `web.xml` file that we'll configure soon to enable Shiro.
 * `src/main/webapp/include.jsp`: A page that contains common imports and declarations, included in other JSP pages. This allows us to manage imports and declarations in one place.
 * `src/main/webapp/home.jsp`: our webapp's simple default home page. Includes `include.jsp` (as will others, as we will soon see).
@@ -148,7 +148,7 @@ Checking out this branch, you will find two changes:
 
 Shiro can be configured in many different ways in a web application, depending on the web and/or MVC framework you use. For example, you can configure Shiro via Spring, Guice, Tapestry, and many many more.
 
-To keep things simple for now, we'll start a Shiro environment by using Shiro's default (and very simple) http://shiro.apache.org/configuration.html[INI-based configuration].
+To keep things simple for now, we'll start a Shiro environment by using Shiro's default (and very simple) https://shiro.apache.org/configuration.html[INI-based configuration].
 
 If you checked out the `step1` branch, you'll see the contents of this new `src/main/webapp/WEB-INF/shiro.ini` file (header comments removed for brevity):
 
@@ -168,7 +168,7 @@ securityManager.cacheManager = $cacheManager
 This .ini contains simply a `[main]` section with some minimal configuration:
 
 * It defines a new `cacheManager` instance. Caching is an important part of Shiro's architecture - it reduces constant round-trip communications to various data stores. This example uses a `MemoryConstrainedCacheManager` which is only really good for single JVM applications. If your application is deployed across multiple hosts (e.g. a clustered webserver farm), you will want to use a clustered CacheManager implementation instead.
-* It configures the new `cacheManager` instance on the Shiro `securityManager`. A Shiro http://shiro.apache.org/architecture.html[`SecurityManager`] instance always exists, so it did not need to be defined explicitly.
+* It configures the new `cacheManager` instance on the Shiro `securityManager`. A Shiro https://shiro.apache.org/architecture.html[`SecurityManager`] instance always exists, so it did not need to be defined explicitly.
 
 === 1b: Enable Shiro in `web.xml`
 
@@ -197,7 +197,7 @@ We do all of this by adding a few things to the existing `src/main/webapp/WEB-IN
 </filter-mapping>
 ----
 
-* The `&lt;listener&gt;` declaration defines a http://docs.oracle.com/javaee/6/api/javax/servlet/ServletContextListener.html[`ServletContextListener`] that starts up the Shiro environment (including the Shiro `SecurityManager`) upon web application startup. By default, this listener automatically knows to look for our `WEB-INF/shiro.ini` file for Shiro configuration.
+* The `&lt;listener&gt;` declaration defines a https://docs.oracle.com/javaee/6/api/javax/servlet/ServletContextListener.html[`ServletContextListener`] that starts up the Shiro environment (including the Shiro `SecurityManager`) upon web application startup. By default, this listener automatically knows to look for our `WEB-INF/shiro.ini` file for Shiro configuration.
 
 * The `&lt;filter&gt;` declaration defines the main `ShiroFilter`. This filter is expected to filter _all_ requests into the web application so Shiro can peform necessary identity and access control operations before allowing a request to reach the application.
 
@@ -237,7 +237,7 @@ Before we can login, or logout, or perform role-based or permission-based access
 
 We will need to configure Shiro to access a _User Store_ of some type, so it can look up users to perform login attempts, or check roles for security decisions, etc. There are many types of user stores that any application might need to access: maybe you store users in a MySQL database, maybe in MongoDB, maybe your company stores user accounts in LDAP or Active Directory, maybe you store them in a simple file, or some other proprietary data store.
 
-Shiro does this via what it calls a http://shiro.apache.org/architecture.html[`Realm`]. From Shiro's documentation: 
+Shiro does this via what it calls a https://shiro.apache.org/architecture.html[`Realm`]. From Shiro's documentation: 
 
 ____
 
@@ -466,17 +466,17 @@ At the top of the `[main]` section, there is a new line:
 shiro.loginUrl = /login.jsp
 ----
 
-This is a special configuration directive that tells Shiro "For any of Shiro's http://shiro.apache.org/web.html#Web-DefaultFilters[default filters] that have a `loginUrl` property, I want that property value to be set to `/login.jsp`."
+This is a special configuration directive that tells Shiro "For any of Shiro's https://shiro.apache.org/web.html#Web-DefaultFilters[default filters] that have a `loginUrl` property, I want that property value to be set to `/login.jsp`."
 
-This allows Shiro's default `authc` filter (by default, a http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html[`FormAuthenticationFilter`]) to know about the login page. This is necessary for the `FormAuthenticationFilter` to work correctly.
+This allows Shiro's default `authc` filter (by default, a https://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html[`FormAuthenticationFilter`]) to know about the login page. This is necessary for the `FormAuthenticationFilter` to work correctly.
 
 ==== The `[urls]` section
 
-The `[urls]` section is a new http://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D[web-specific INI section].
+The `[urls]` section is a new https://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D[web-specific INI section].
 
-This section allows you to use a very succinct name/value pair syntax to tell shiro how to filter request for any given URL path. All paths in `[urls]` are relative to the web application's [`HttpServletRequest.getContextPath()`](http://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#getContextPath()) value.
+This section allows you to use a very succinct name/value pair syntax to tell shiro how to filter request for any given URL path. All paths in `[urls]` are relative to the web application's [`HttpServletRequest.getContextPath()`](https://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#getContextPath()) value.
 
-These name/value pairs offer an extremely powerful way to filter requests, allowing for all sorts of security rules. A deeper coverage of urls and filter chains is outside the scope of this document, but please do http://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D[read more about it] if you're interested.
+These name/value pairs offer an extremely powerful way to filter requests, allowing for all sorts of security rules. A deeper coverage of urls and filter chains is outside the scope of this document, but please do https://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D[read more about it] if you're interested.
 
 For now, we'll cover the two lines that were added:
 
@@ -502,7 +502,7 @@ The `step3` branch contains a new `src/main/webapp/login.jsp` page. This is a si
 . There is a `password` form field. The Shiro `authc` filter will automatically look for a `password` request parameter during login submission.
 . There is a `rememberMe` checkbox whose 'checked' state can be a 'truthy' value (`true`, `t`, `1`, `enabled`, `y`, `yes`, or `on`).
 
-Our login.jsp form just uses the default `username`, `password`, and `rememberMe` form field names. These names are configurable if you wish to change them - see the http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html[`FormAuthenticationFilter` JavaDoc] for information.
+Our login.jsp form just uses the default `username`, `password`, and `rememberMe` form field names. These names are configurable if you wish to change them - see the https://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html[`FormAuthenticationFilter` JavaDoc] for information.
 
 === Step 3c: Run the webapp
 
@@ -597,7 +597,7 @@ Hi jsmith! (Log out)
 
 Assuming 'jsmith' is the username of the account logged in. 'Log out' is a hyperlink to the '/logout' url handled by the Shiro `logout` filter.
 
-As you can see, you can turn off or on entire page sections, features and UI components. In addition to `&lt;shiro:guest&gt;` and `&lt;shiro:user&gt;`, Shiro supports http://shiro.apache.org/web.html#Web-taglibrary[many other useful JSP tags] that you can use to customize the UI based on various things known about the current `Subject`.
+As you can see, you can turn off or on entire page sections, features and UI components. In addition to `&lt;shiro:guest&gt;` and `&lt;shiro:user&gt;`, Shiro supports https://shiro.apache.org/web.html#Web-taglibrary[many other useful JSP tags] that you can use to customize the UI based on various things known about the current `Subject`.
 
 === Step 4c: Run the webapp
 
@@ -644,7 +644,7 @@ A new `src/main/webapp/account` directory was added. This directory (and all pat
 /account/** = authc
 ----
 
-This http://shiro.apache.org/web.html#Web-FilterChainDefinitions[Shiro filter chain definition] means "Any requests to `/account` (or any of its sub-paths) must be authenticated".
+This https://shiro.apache.org/web.html#Web-FilterChainDefinitions[Shiro filter chain definition] means "Any requests to `/account` (or any of its sub-paths) must be authenticated".
 
 But what happens if someone tries to access that path or any of its children paths?
 
@@ -761,7 +761,7 @@ The `&lt;shiro:lacksRole&gt;` tag will only display the contents if the current 
 
 An exercise left to the reader (not a defined step) is to create a new section of the website and restrict URL access to that section of the website based on what role is assigned to the current user.
 
-Hint: Create a http://shiro.apache.org/web.html#Web-FilterChainDefinitions[filter chain definition] for that new part of the webapp using the http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authz/RolesAuthorizationFilter.html[`roles` filter]
+Hint: Create a https://shiro.apache.org/web.html#Web-FilterChainDefinitions[filter chain definition] for that new part of the webapp using the https://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authz/RolesAuthorizationFilter.html[`roles` filter]
 
 === Step 6d: Run the webapp
 
@@ -813,7 +813,7 @@ This adds two permissions directly to the Stormpath Account:
 * `ship:NCC-1701-D:command`
 * `user:jlpicard:edit`
 
-These use Shiro's http://shiro.apache.org/permissions.html[WildcardPermission] syntax. 
+These use Shiro's https://shiro.apache.org/permissions.html[WildcardPermission] syntax. 
 
 The first basically means _the ability to 'command' the 'ship' with identifier 'NCC-1701-D'_. This is an example of an _instance-level_ permission: controlling access to a specific _instance_ `NCC-1701-D` of a resource `ship`. The second is also an instance-level permission that states _the ability to `edit` the `user` with identifier `jlpicard`_.
 
