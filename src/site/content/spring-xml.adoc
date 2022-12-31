@@ -5,7 +5,7 @@
 :jbake-tags: documentation, manual
 :idprefix:
 
-This page covers the ways to integrate Shiro into http://spring.io[Spring]-based applications.
+This page covers the ways to integrate Shiro into https://spring.io[Spring]-based applications.
 
 Shiro's JavaBeans compatibility makes it perfectly suited to be configured via Spring XML or other Spring-based configuration mechanisms. Shiro applications need an application singleton `SecurityManager` instance. Note that this does not have to be a _static_ singleton, but there should only be a single instance used by the application, whether its a static singleton or not.
 
@@ -171,7 +171,7 @@ When a remote method invocation comes in to a Shiro-enabled server, the link:sub
 </bean>
 ----
 
-Once you have defined this bean, you must plug it in to whatever remoting `Exporter` you are using to export/expose your services. `Exporter` implementations are defined according to the remoting mechanism/protocol in use. See Spring's http://docs.spring.io/spring/docs/2.5.x/reference/remoting.html[Remoting chapter] on defining `Exporter` beans.
+Once you have defined this bean, you must plug it in to whatever remoting `Exporter` you are using to export/expose your services. `Exporter` implementations are defined according to the remoting mechanism/protocol in use. See Spring's https://docs.spring.io/spring/docs/2.5.x/reference/remoting.html[Remoting chapter] on defining `Exporter` beans.
 
 For example, if using HTTP-based remoting (notice the property reference to the `secureRemoteInvocationExecutor` bean):
 

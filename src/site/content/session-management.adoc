@@ -201,7 +201,7 @@ If you 're not writing a custom *SessionDAO*, definitely enable EHCache in your 
 [NOTE]
 ====
 .Container-Independent Session Clustering
-EHCache is also a nice choice if you quickly need container-independent session clustering. You can transparently plug in link:http://www.terracotta.org/[TerraCotta] behind EHCache and have a container-independent clustered session cache. No more worrying about Tomcat, JBoss, Jetty, WebSphere or WebLogic specific session clustering ever again!
+EHCache is also a nice choice if you quickly need container-independent session clustering. You can transparently plug in link:https://www.terracotta.org/[TerraCotta] behind EHCache and have a container-independent clustered session cache. No more worrying about Tomcat, JBoss, Jetty, WebSphere or WebLogic specific session clustering ever again!
 ====
 
 Enabling EHCache for sessions is very easy. First, ensure that you have the `shiro-ehcache-&lt;version&gt;.jar` file in your classpath (see the link:download.html[Download] page or use Maven or Ant+Ivy).
@@ -282,7 +282,7 @@ Just ensure that a corresponding entry in `ehcache.xml` matches that name and yo
 
 Shiro's `SessionDAO` implementations use an internal link:static/current/apidocs/org/apache/shiro/session/mgt/eis/SessionIdGenerator.html[`SessionIdGenerator`] component to generate a new Session ID every time a new session is created. The ID is generated, assigned to the newly created `Session` instance, and then the `Session` is saved via the `SessionDAO`.
 
-The default `SessionIdGenerator` is a link:static/current/apidocs/org/apache/shiro/session/mgt/eis/JavaUuidSessionIdGenerator.html[`JavaUuidSessionIdGenerator`], which generates `String` IDs based on Java http://download.oracle.com/javase/6/docs/api/java/util/UUID.html[`UUIDs`]. This implementation is suitable for all production environments.
+The default `SessionIdGenerator` is a link:static/current/apidocs/org/apache/shiro/session/mgt/eis/JavaUuidSessionIdGenerator.html[`JavaUuidSessionIdGenerator`], which generates `String` IDs based on Java https://download.oracle.com/javase/6/docs/api/java/util/UUID.html[`UUIDs`]. This implementation is suitable for all production environments.
 
 If this does not meet your needs, you can implement the `SessionIdGenerator` interface and configure the implementation on Shiro's `SessionDAO` instance. For example, in `shiro.ini`:
 
@@ -310,7 +310,7 @@ Session orphans, if they are not regularly purged, will fill up the session data
 [#SessionManagement-SessionManager-SessionValidationScheduling-DefaultSessionValidationScheduler]
 ==== Default SessionValidationScheduler
 
-The default `SessionValidationScheduler` usable in all environments is the link:static/current/apidocs/org/apache/shiro/session/mgt/ExecutorServiceSessionValidationScheduler.html[`ExecutorServiceSessionValidationScheduler`] which uses a JDK http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/ScheduledExecutorService.html[`ScheduledExecutorService`] to control how often the validation should occur.
+The default `SessionValidationScheduler` usable in all environments is the link:static/current/apidocs/org/apache/shiro/session/mgt/ExecutorServiceSessionValidationScheduler.html[`ExecutorServiceSessionValidationScheduler`] which uses a JDK https://docs.oracle.com/javase/6/docs/api/java/util/concurrent/ScheduledExecutorService.html[`ScheduledExecutorService`] to control how often the validation should occur.
 
 By default, this implementation will perform validation once per hour. You can change the rate at which validation occurs by specifying a *new* instance of `ExecutorServiceSessionValidationScheduler` and specifying a different interval (in milliseconds):
 
@@ -406,7 +406,7 @@ Because of Shiro's POJO-based N-tiered architecture, enabling Session clustering
 
 *Distributed Caches*
 
-Distributed Caches such as http://www.ehcache.org/documentation/2.7/configuration/distributed-cache-configuration.html[Ehcache+TerraCotta], http://www.gigaspaces.com/[GigaSpaces] http://www.oracle.com/technetwork/middleware/coherence/overview/index.html[Oracle Coherence], and http://memcached.org/[Memcached] (and many others) already solve the distributed-data-at-the-persistence-level problem. Therefore enabling Session clustering in Shiro is as simple as configuring Shiro to use a distributed cache.
+Distributed Caches such as https://www.ehcache.org/documentation/2.7/configuration/distributed-cache-configuration.html[Ehcache+TerraCotta], https://www.gigaspaces.com/[GigaSpaces] https://www.oracle.com/technetwork/middleware/coherence/overview/index.html[Oracle Coherence], and https://memcached.org/[Memcached] (and many others) already solve the distributed-data-at-the-persistence-level problem. Therefore enabling Session clustering in Shiro is as simple as configuring Shiro to use a distributed cache.
 
 This gives you the flexibility of choosing the exact clustering mechanism that is suitable for _your_ environment.
 
@@ -474,7 +474,7 @@ Then at runtime, when the `EnterpriseCacheSessionDAO` needs the `activeSessionsC
 [#SessionManagement-SessionClustering-EhcacheTerracotta]
 === Ehcache + Terracotta
 
-One such distributed caching solution that people have had success with while using Shiro is the Ehcache + Terracotta pairing. See the Ehcache-hosted http://www.ehcache.org/documentation/get-started/about-distributed-cache[Distributed Caching With Terracotta] documentation for full details of how to enable distributed caching with Ehcache.
+One such distributed caching solution that people have had success with while using Shiro is the Ehcache + Terracotta pairing. See the Ehcache-hosted https://www.ehcache.org/documentation/get-started/about-distributed-cache[Distributed Caching With Terracotta] documentation for full details of how to enable distributed caching with Ehcache.
 
 Once you've got Terracotta clustering working with Ehcache, the Shiro-specific parts are very simple. Read and follow the <<SessionManagement-SessionManager-Storage-EHCacheSessionDAO,Ehcache SessionDAO>> documentation, but we'll need to make a few changes
 
@@ -539,7 +539,7 @@ And remember, *ORDER MATTERS*. By configuring the `cacheManager` on the `securit
 [#SessionManagement-SessionClustering-Zookeeper]
 === Zookeeper
 
-Users have reported using http://zookeeper.apache.org/[Apache Zookeeper] for managing/coordinating distributed sessions as well. If you have any documentation/comments about how this would work, please post them to the Shiro link:mailing-lists.html[Mailing Lists]
+Users have reported using https://zookeeper.apache.org/[Apache Zookeeper] for managing/coordinating distributed sessions as well. If you have any documentation/comments about how this would work, please post them to the Shiro link:mailing-lists.html[Mailing Lists]
 
 [#SessionManagement-SessionsSubjectState]
 == Sessions and Subject State

@@ -21,7 +21,7 @@ This means three basic things must always occur in order to support being able t
 . The `Subject` instance must be _bound_ to the currently executing thread.
 . After the thread is finished executing (or if the thread's execution results in a `Throwable`), the `Subject` must be _unbound_ to ensure that the thread remains 'clean' in any thread-pooled environment.
 
-Shiro has architectural components that perform this bind/unbind logic automatically for a running application. For example, in a web application, the root Shiro Filter performs this logic when link:++http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/servlet/AbstractShiroFilter.html#doFilterInternal(javax.servlet.ServletRequest,javax.servlet.ServletResponse,javax.servlet.FilterChain)++[filtering a request]. But as test environments and frameworks differ, we need to perform this bind/unbind logic ourselves for our chosen test framework.
+Shiro has architectural components that perform this bind/unbind logic automatically for a running application. For example, in a web application, the root Shiro Filter performs this logic when link:++https://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/servlet/AbstractShiroFilter.html#doFilterInternal(javax.servlet.ServletRequest,javax.servlet.ServletResponse,javax.servlet.FilterChain)++[filtering a request]. But as test environments and frameworks differ, we need to perform this bind/unbind logic ourselves for our chosen test framework.
 
 [#Testing-TestSetup]
 == Test Setup
@@ -134,7 +134,7 @@ Testing to see if Shiro's implementations work in conjunction with your implemen
 [#Testing-ExampleShiroUnitTest]
 === ExampleShiroUnitTest
 
-Because unit tests are better suited for testing your own logic (and not any implementations your logic might call), it is a great idea to _mock_ any APIs that your logic depends on. This works very well with Shiro - you can mock the `Subject` interface and have it reflect whatever conditions you want your code under test to react to. We can leverage modern mock frameworks like http://easymock.org/[EasyMock] and http://site.mockito.org[Mockito] to do this for us.
+Because unit tests are better suited for testing your own logic (and not any implementations your logic might call), it is a great idea to _mock_ any APIs that your logic depends on. This works very well with Shiro - you can mock the `Subject` interface and have it reflect whatever conditions you want your code under test to react to. We can leverage modern mock frameworks like https://easymock.org/[EasyMock] and https://site.mockito.org[Mockito] to do this for us.
 
 But as stated above, the key in Shiro tests is to remember that any Subject instance (mock or real) must be bound to the thread during test execution. So all we need to do is bind the mock Subject to ensure things work as expected.
 

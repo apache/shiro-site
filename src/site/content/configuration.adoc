@@ -14,7 +14,7 @@ Shiro is designed to work in any environment, from simple command-line applicati
 [NOTE]
 ====
 .Many Configuration Options
-Shiro's `SecurityManager` implementations and all supporting components are all JavaBeans compatible. This allows Shiro to be configured with practically any configuration format such as regular Java, XML (Spring, JBoss, Guice, etc), link:http://www.yaml.org[YAML], JSON, Groovy Builder markup, and more.
+Shiro's `SecurityManager` implementations and all supporting components are all JavaBeans compatible. This allows Shiro to be configured with practically any configuration format such as regular Java, XML (Spring, JBoss, Guice, etc), link:https://yaml.org[YAML], JSON, Groovy Builder markup, and more.
 ====
 
 [#Configuration-ProgrammaticConfiguration]
@@ -101,7 +101,7 @@ SecurityUtils.setSecurityManager(securityManager);
 [#Configuration-INIConfiguration-CreatingSecurityManagerFromINI-Instance]
 ==== SecurityManager from an INI instance
 
-The INI configuration can be constructed programmatically as well if desired via the link:static/current/apidocs/org/apache/shiro/config/Ini.html[`org.apache.shiro.config.Ini`] class. The Ini class functions similarly to the JDK http://download.oracle.com/javase/6/docs/api/java/util/Properties.html[`java.util.Properties`] class, but additionally supports segmentation by section name.
+The INI configuration can be constructed programmatically as well if desired via the link:static/current/apidocs/org/apache/shiro/config/Ini.html[`org.apache.shiro.config.Ini`] class. The Ini class functions similarly to the JDK https://download.oracle.com/javase/6/docs/api/java/util/Properties.html[`java.util.Properties`] class, but additionally supports segmentation by section name.
 
 For example:
 
@@ -128,7 +128,7 @@ Now that we know how to construct a `SecurityManager` from INI configuration, le
 [#Configuration-INIConfiguration-Sections]
 === INI Sections
 
-INI is basically a text configuration consisting of key/value pairs organized by uniquely-named sections. Keys are unique per section only, not over the entire configuration (unlike the JDK http://java.sun.com/javase/6/docs/api/java/util/Properties.html[Properties]). Each section may be viewed like a single `Properties` definition however.
+INI is basically a text configuration consisting of key/value pairs organized by uniquely-named sections. Keys are unique per section only, not over the entire configuration (unlike the JDK https://java.sun.com/javase/6/docs/api/java/util/Properties.html[Properties]). Each section may be viewed like a single `Properties` definition however.
 
 Commented lines can start with either with an Octothorpe (# - aka the 'hash', 'pound' or 'number' sign) or a Semi-colon (';')
 
@@ -230,7 +230,7 @@ myRealm.setUsername("jsmith");
 
 How is this possible? It assumes that all objects are https://en.wikipedia.org/wiki/JavaBean[Java Beans]-compatible https://en.wikipedia.org/wiki/Plain_Old_Java_Object[POJO]s.
 
-Under the covers, Shiro by default uses Apache Commons http://commons.apache.org/proper/commons-beanutils/[BeanUtils] to do all the heavy lifting when setting these properties. So although INI values are text, BeanUtils knows how to convert the string values to the proper primitive types and then invoke the corresponding JavaBeans setter method.
+Under the covers, Shiro by default uses Apache Commons https://commons.apache.org/proper/commons-beanutils/[BeanUtils] to do all the heavy lifting when setting these properties. So although INI values are text, BeanUtils knows how to convert the string values to the proper primitive types and then invoke the corresponding JavaBeans setter method.
 
 [#Configuration-INIConfiguration-Sections-Main-DefiningObject-SettingProperties-ReferenceValues]
 ======= Reference Values
@@ -272,7 +272,7 @@ The graph traversal can be as deep as necessary: `object.property1.property2....
 [NOTE]
 ====
 .BeanUtils Property Support
-Any property assignment operation supported by the BeanUtils. link:https://commons.apache.org/proper/commons-beanutils/apidocs/org/apache/commons/beanutils/BeanUtils.html#setProperty-java.lang.Object-java.lang.String-java.lang.Object-[setProperty] method will work in Shiro's [main] section, including set/list/map element assignments. See the link:http://commons.apache.org/proper/commons-beanutils[Apache Commons BeanUtils Website] and documentation for more information.
+Any property assignment operation supported by the BeanUtils. link:https://commons.apache.org/proper/commons-beanutils/apidocs/org/apache/commons/beanutils/BeanUtils.html#setProperty-java.lang.Object-java.lang.String-java.lang.Object-[setProperty] method will work in Shiro's [main] section, including set/list/map element assignments. See the link:https://commons.apache.org/proper/commons-beanutils[Apache Commons BeanUtils Website] and documentation for more information.
 ====
 
 [#Configuration-INIConfiguration-Sections-Main-DefiningObject-SettingProperties-ByteArrayValues]
