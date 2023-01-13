@@ -4,7 +4,7 @@
   <subtitle>Simple. Java. Security.</subtitle>
   <link href="https://shiro.apache.org/"/>
   <link rel="self" href="https://shiro.apache.org/feed.xml" />
-  <updated>2022-11-19T09:38:48Z</updated>
+  <updated>2023-01-13T17:17:42Z</updated>
 
   <author>
     <name>Les Hazlewood</name>
@@ -30,6 +30,104 @@
   <generator uri="https://jbake.org/">JBake.org</generator>
   <icon>/images/favicon128.png</icon>
   <logo>/images/apache-shiro-logo.png</logo>
+
+  <entry>
+    <title>1.11.0 available with fix CVE-2023-22602</title>
+    <link href="https://shiro.apache.org/blog/2023/01/13/apache-shiro-1110-released.html"/>
+    <id>https://shiro.apache.org/blog/2023/01/13/apache-shiro-1110-released.html</id>
+    <updated>2023-01-13T00:00:00Z</updated>
+    <author>
+      <name>Brian Demers</name>
+    </author>
+    <content type="html">
+      &lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Apache Shiro team is pleased to announce the release of Apache Shiro version 1.11.0.
+This is a feature release for 1.x.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This release solves 3 issues since the 1.11.0 release and is available for download now.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;all_changes&quot;&gt;All changes&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You can learn more on &lt;a href=&quot;https://issues.apache.org/jira/projects/SHIRO/versions/12352377&quot;&gt;Jira, Release 1.11.0&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This release includes classifiers for the Jakarta namespace.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;cve_2023_22602&quot;&gt;&lt;a href=&quot;https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-22602&quot;&gt;CVE-2023-22602&lt;/a&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;When using Apache Shiro before 1.11.0 together with Spring Boot 2.6+, a specially crafted HTTP request may cause an authentication bypass.
+The authentication bypass occurs when Shiro and Spring Boot are using different pattern-matching techniques. Both Shiro and Spring Boot &amp;lt; 2.6 default to Ant style pattern matching.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Mitigation:&lt;/strong&gt; Update to Apache Shiro 1.11.0, or set the following Spring Boot configuration value:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlightjs highlight&quot;&gt;&lt;code class=&quot;language-properties hljs&quot; data-lang=&quot;properties&quot;&gt;spring.mvc.pathmatch.matching-strategy = ant_path_matcher&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Credit:&lt;/strong&gt;
+Apache Shiro would like to thank v3ged0ge and Adamytd for reporting this issue.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;bug&quot;&gt;Bug&lt;/h3&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-903&quot;&gt;SHIRO-903&lt;/a&gt;] - Shiro must use ant pattern matching with Spring&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-892&quot;&gt;SHIRO-899&lt;/a&gt;] - Jakarta 9+ fails with Shiro native sessions&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;improvement&quot;&gt;Improvement&lt;/h3&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-889&quot;&gt;SHIRO-889&lt;/a&gt;] - Provide Jakarta jar modules&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;download&quot;&gt;Download&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Download and verification instructions are available &lt;a href=&quot;/download.html&quot;&gt;on our download page&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;documentation&quot;&gt;Documentation&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For more information on &lt;a href=&quot;/documentation.html&quot;&gt;Shiro, please read the documentation.&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Enjoy!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Apache Shiro Team&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+    </content>
+  </entry>
 
   <entry>
     <title>Apache Shiro 1.10.1 available</title>
@@ -891,56 +989,6 @@ configured chain under the name/key&quot;&lt;/p&gt;
 Check out the interview with Brian about the current state of the Apache Shiro project!&lt;/p&gt;
 &lt;/div&gt;
 &lt;iframe width=&quot;768&quot; height=&quot;432&quot; src=&quot;https://www.youtube-nocookie.com/embed/PHJqbNbHVxY&quot; title=&quot;YouTube video player&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture&quot; allowfullscreen&gt;&lt;/iframe&gt;
-    </content>
-  </entry>
-
-  <entry>
-    <title>Apache Shiro 1.5.3 Released</title>
-    <link href="https://shiro.apache.org/blog/2020/05/03/apache-shiro-1.5.3-released.html"/>
-    <id>https://shiro.apache.org/blog/2020/05/03/apache-shiro-1.5.3-released.html</id>
-    <updated>2020-05-03T00:00:00Z</updated>
-    <content type="html">
-      &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The Shiro team is pleased to announce the release of Apache Shiro version 1.5.3.
-This is a feature release for 1.x.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This release includes 3 issues resolved since the 1.5.2 release and is available for Download now.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Of Note:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;ulist&quot;&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;INI parser does not properly handled backslashes at end of values.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Regression in URI parsing in Shiro 1.5.2.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;SimplePrincipalMap and SimplePrincipalCollection throw different exceptions for the same problem.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Dependency upgrade.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;You can learn more on &lt;a href=&quot;https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12310950&amp;amp;version=12346916&quot;&gt;Jira&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Release binaries (.jars) are also available through Maven Central and source bundles through Apache distribution mirrors.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;For more information on &lt;a href=&quot;/documentation.html&quot;&gt;Shiro, please read the documentation.&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Enjoy!&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The Apache Shiro Team&lt;/p&gt;
-&lt;/div&gt;
     </content>
   </entry>
 

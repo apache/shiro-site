@@ -167,11 +167,11 @@
                 Apache Software Foundation
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
-                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/security/">Security</a></li>
               </ul>
             </li>
           </ul>
@@ -214,7 +214,7 @@
 <td class="content">
 <div class="paragraph">
 <div class="title">Many Configuration Options</div>
-<p>Shiro&#8217;s <code>SecurityManager</code> implementations and all supporting components are all JavaBeans compatible. This allows Shiro to be configured with practically any configuration format such as regular Java, XML (Spring, JBoss, Guice, etc), <a href="http://www.yaml.org">YAML</a>, JSON, Groovy Builder markup, and more.</p>
+<p>Shiro&#8217;s <code>SecurityManager</code> implementations and all supporting components are all JavaBeans compatible. This allows Shiro to be configured with practically any configuration format such as regular Java, XML (Spring, JBoss, Guice, etc), <a href="https://yaml.org">YAML</a>, JSON, Groovy Builder markup, and more.</p>
 </div>
 </td>
 </tr>
@@ -325,7 +325,7 @@ SecurityUtils.setSecurityManager(securityManager);</code></pre>
 <div class="sect3">
 <h4 id="Configuration-INIConfiguration-CreatingSecurityManagerFromINI-Instance">SecurityManager from an INI instance</h4>
 <div class="paragraph">
-<p>The INI configuration can be constructed programmatically as well if desired via the <a href="static/current/apidocs/org/apache/shiro/config/Ini.html"><code>org.apache.shiro.config.Ini</code></a> class. The Ini class functions similarly to the JDK <a href="http://download.oracle.com/javase/6/docs/api/java/util/Properties.html"><code>java.util.Properties</code></a> class, but additionally supports segmentation by section name.</p>
+<p>The INI configuration can be constructed programmatically as well if desired via the <a href="static/current/apidocs/org/apache/shiro/config/Ini.html"><code>org.apache.shiro.config.Ini</code></a> class. The Ini class functions similarly to the JDK <a href="https://download.oracle.com/javase/6/docs/api/java/util/Properties.html"><code>java.util.Properties</code></a> class, but additionally supports segmentation by section name.</p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -356,7 +356,7 @@ SecurityUtils.setSecurityManager(securityManager);</code></pre>
 <div class="sect2">
 <h3 id="Configuration-INIConfiguration-Sections">INI Sections</h3>
 <div class="paragraph">
-<p>INI is basically a text configuration consisting of key/value pairs organized by uniquely-named sections. Keys are unique per section only, not over the entire configuration (unlike the JDK <a href="http://java.sun.com/javase/6/docs/api/java/util/Properties.html">Properties</a>). Each section may be viewed like a single <code>Properties</code> definition however.</p>
+<p>INI is basically a text configuration consisting of key/value pairs organized by uniquely-named sections. Keys are unique per section only, not over the entire configuration (unlike the JDK <a href="https://java.sun.com/javase/6/docs/api/java/util/Properties.html">Properties</a>). Each section may be viewed like a single <code>Properties</code> definition however.</p>
 </div>
 <div class="paragraph">
 <p>Commented lines can start with either with an Octothorpe (# - aka the 'hash', 'pound' or 'number' sign) or a Semi-colon (';')</p>
@@ -468,7 +468,7 @@ myRealm.setUsername("jsmith");
 <p>How is this possible? It assumes that all objects are <a href="https://en.wikipedia.org/wiki/JavaBean">Java Beans</a>-compatible <a href="https://en.wikipedia.org/wiki/Plain_Old_Java_Object">POJO</a>s.</p>
 </div>
 <div class="paragraph">
-<p>Under the covers, Shiro by default uses Apache Commons <a href="http://commons.apache.org/proper/commons-beanutils/">BeanUtils</a> to do all the heavy lifting when setting these properties. So although INI values are text, BeanUtils knows how to convert the string values to the proper primitive types and then invoke the corresponding JavaBeans setter method.</p>
+<p>Under the covers, Shiro by default uses Apache Commons <a href="https://commons.apache.org/proper/commons-beanutils/">BeanUtils</a> to do all the heavy lifting when setting these properties. So although INI values are text, BeanUtils knows how to convert the string values to the proper primitive types and then invoke the corresponding JavaBeans setter method.</p>
 </div>
 <div id="Configuration-INIConfiguration-Sections-Main-DefiningObject-SettingProperties-ReferenceValues" class="paragraph">
 <p>======= Reference Values</p>
@@ -521,7 +521,7 @@ securityManager.sessionManager.globalSessionTimeout = 1800000
 <td class="content">
 <div class="paragraph">
 <div class="title">BeanUtils Property Support</div>
-<p>Any property assignment operation supported by the BeanUtils. <a href="https://commons.apache.org/proper/commons-beanutils/apidocs/org/apache/commons/beanutils/BeanUtils.html#setProperty-java.lang.Object-java.lang.String-java.lang.Object-">setProperty</a> method will work in Shiro&#8217;s [main] section, including set/list/map element assignments. See the <a href="http://commons.apache.org/proper/commons-beanutils">Apache Commons BeanUtils Website</a> and documentation for more information.</p>
+<p>Any property assignment operation supported by the BeanUtils. <a href="https://commons.apache.org/proper/commons-beanutils/apidocs/org/apache/commons/beanutils/BeanUtils.html#setProperty-java.lang.Object-java.lang.String-java.lang.Object-">setProperty</a> method will work in Shiro&#8217;s [main] section, including set/list/map element assignments. See the <a href="https://commons.apache.org/proper/commons-beanutils">Apache Commons BeanUtils Website</a> and documentation for more information.</p>
 </div>
 </td>
 </tr>
@@ -874,7 +874,7 @@ to the <a href="static/current/apidocs/org/apache/shiro/authz/permission/Wildcar
           <div class="copyright-footer justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
             <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
-            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+            <p class="text-muted">Copyright &copy; 2008-2023 The Apache Software Foundation</p>
           </div>
         </div>
 
