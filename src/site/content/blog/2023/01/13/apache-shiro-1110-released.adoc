@@ -1,0 +1,74 @@
+////
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+////
+
+= 1.11.0 available with fix CVE-2023-22602
+:jbake-author: Brian Demers
+:jbake-date: 2023-01-13 00:00:00
+:jbake-type: post
+:jbake-status: published
+:jbake-tags: blog, release
+:idprefix:
+:icons: font
+
+The Apache Shiro team is pleased to announce the release of Apache Shiro version 1.11.0.
+This is a feature release for 1.x.
+
+This release solves 3 issues since the 1.11.0 release and is available for download now.
+
+== All changes
+
+You can learn more on https://issues.apache.org/jira/projects/SHIRO/versions/12352377[Jira, Release 1.11.0].
+
+This release includes classifiers for the Jakarta namespace.
+
+=== link:https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-22602[CVE-2023-22602]
+
+When using Apache Shiro before 1.11.0 together with Spring Boot 2.6+, a specially crafted HTTP request may cause an authentication bypass.
+The authentication bypass occurs when Shiro and Spring Boot are using different pattern-matching techniques. Both Shiro and Spring Boot < 2.6 default to Ant style pattern matching.
+
+**Mitigation:** Update to Apache Shiro 1.11.0, or set the following Spring Boot configuration value:
+
+```properties
+spring.mvc.pathmatch.matching-strategy = ant_path_matcher
+```
+
+**Credit:**
+Apache Shiro would like to thank v3ged0ge and Adamytd for reporting this issue.
+
+=== Bug
+
+* [https://issues.apache.org/jira/browse/SHIRO-903[SHIRO-903]] - Shiro must use ant pattern matching with Spring
+* [https://issues.apache.org/jira/browse/SHIRO-892[SHIRO-899]] - Jakarta 9+ fails with Shiro native sessions
+
+=== Improvement
+
+* [https://issues.apache.org/jira/browse/SHIRO-889[SHIRO-889]] - Provide Jakarta jar modules
+
+
+== Download
+
+Download and verification instructions are available link:/download.html[on our download page].
+
+== Documentation
+
+For more information on link:/documentation.html[Shiro, please read the documentation.]
+
+Enjoy!
+
+The Apache Shiro Team

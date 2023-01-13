@@ -1,0 +1,205 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<main role="main">
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a id="line.1">/*</a>
+<span class="sourceLineNo">002</span><a id="line.2"> * Licensed to the Apache Software Foundation (ASF) under one</a>
+<span class="sourceLineNo">003</span><a id="line.3"> * or more contributor license agreements.  See the NOTICE file</a>
+<span class="sourceLineNo">004</span><a id="line.4"> * distributed with this work for additional information</a>
+<span class="sourceLineNo">005</span><a id="line.5"> * regarding copyright ownership.  The ASF licenses this file</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * to you under the Apache License, Version 2.0 (the</a>
+<span class="sourceLineNo">007</span><a id="line.7"> * "License"); you may not use this file except in compliance</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * with the License.  You may obtain a copy of the License at</a>
+<span class="sourceLineNo">009</span><a id="line.9"> *</a>
+<span class="sourceLineNo">010</span><a id="line.10"> *     http://www.apache.org/licenses/LICENSE-2.0</a>
+<span class="sourceLineNo">011</span><a id="line.11"> *</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * Unless required by applicable law or agreed to in writing,</a>
+<span class="sourceLineNo">013</span><a id="line.13"> * software distributed under the License is distributed on an</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</a>
+<span class="sourceLineNo">015</span><a id="line.15"> * KIND, either express or implied.  See the License for the</a>
+<span class="sourceLineNo">016</span><a id="line.16"> * specific language governing permissions and limitations</a>
+<span class="sourceLineNo">017</span><a id="line.17"> * under the License.</a>
+<span class="sourceLineNo">018</span><a id="line.18"> */</a>
+<span class="sourceLineNo">019</span><a id="line.19">package org.apache.shiro.concurrent;</a>
+<span class="sourceLineNo">020</span><a id="line.20"></a>
+<span class="sourceLineNo">021</span><a id="line.21">import org.apache.shiro.SecurityUtils;</a>
+<span class="sourceLineNo">022</span><a id="line.22">import org.apache.shiro.subject.Subject;</a>
+<span class="sourceLineNo">023</span><a id="line.23"></a>
+<span class="sourceLineNo">024</span><a id="line.24">import java.util.concurrent.Executor;</a>
+<span class="sourceLineNo">025</span><a id="line.25"></a>
+<span class="sourceLineNo">026</span><a id="line.26">/**</a>
+<span class="sourceLineNo">027</span><a id="line.27"> * {@code Executor} implementation that will automatically first associate any argument</a>
+<span class="sourceLineNo">028</span><a id="line.28"> * {@link Runnable} instances with the currently available {@link Subject} and then</a>
+<span class="sourceLineNo">029</span><a id="line.29"> * dispatch the Subject-enabled runnable to an underlying delegate {@link Executor}</a>
+<span class="sourceLineNo">030</span><a id="line.30"> * instance.</a>
+<span class="sourceLineNo">031</span><a id="line.31"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">032</span><a id="line.32"> * This is a simplification for applications that want to execute code as the currently</a>
+<span class="sourceLineNo">033</span><a id="line.33"> * executing {@code Subject} on another thread, but don't want or need to call the</a>
+<span class="sourceLineNo">034</span><a id="line.34"> * {@link Subject#associateWith(Runnable)} method and dispatch to a Thread manually.  This</a>
+<span class="sourceLineNo">035</span><a id="line.35"> * simplifies code and reduces Shiro dependencies across application source code.</a>
+<span class="sourceLineNo">036</span><a id="line.36"> * &lt;p/&gt;</a>
+<span class="sourceLineNo">037</span><a id="line.37"> * Consider this code that could be repeated in many places across an application:</a>
+<span class="sourceLineNo">038</span><a id="line.38"> * &lt;pre&gt;</a>
+<span class="sourceLineNo">039</span><a id="line.39"> * {@link Runnable Runnable} applicationWork = //instantiate or acquire Runnable from somewhere</a>
+<span class="sourceLineNo">040</span><a id="line.40"> * {@link Subject Subject} subject = {@link SecurityUtils SecurityUtils}.{@link SecurityUtils#getSubject() getSubject()};</a>
+<span class="sourceLineNo">041</span><a id="line.41"> * {@link Runnable Runnable} work = subject.{@link Subject#associateWith(Runnable) associateWith(applicationWork)};</a>
+<span class="sourceLineNo">042</span><a id="line.42"> * {@link Executor anExecutor}.{@link Executor#execute(Runnable) execute(work)};</a>
+<span class="sourceLineNo">043</span><a id="line.43"> * &lt;/pre&gt;</a>
+<span class="sourceLineNo">044</span><a id="line.44"> * Instead, if the {@code Executor} instance used in application code is an instance of this class (which delegates</a>
+<span class="sourceLineNo">045</span><a id="line.45"> * to the target Executor that you want), all places in code like the above reduce to this:</a>
+<span class="sourceLineNo">046</span><a id="line.46"> * &lt;pre&gt;</a>
+<span class="sourceLineNo">047</span><a id="line.47"> * {@link Runnable Runnable} applicationWork = //instantiate or acquire Runnable from somewhere</a>
+<span class="sourceLineNo">048</span><a id="line.48"> * {@link Executor anExecutor}.{@link Executor#execute(Runnable) execute(work)};</a>
+<span class="sourceLineNo">049</span><a id="line.49"> * &lt;/pre&gt;</a>
+<span class="sourceLineNo">050</span><a id="line.50"> * Notice there is no use of the Shiro API in the 2nd code block, encouraging the principle of loose coupling across</a>
+<span class="sourceLineNo">051</span><a id="line.51"> * your codebase.</a>
+<span class="sourceLineNo">052</span><a id="line.52"> *</a>
+<span class="sourceLineNo">053</span><a id="line.53"> * @see SubjectAwareExecutorService</a>
+<span class="sourceLineNo">054</span><a id="line.54"> * @since 1.0</a>
+<span class="sourceLineNo">055</span><a id="line.55"> */</a>
+<span class="sourceLineNo">056</span><a id="line.56">public class SubjectAwareExecutor implements Executor {</a>
+<span class="sourceLineNo">057</span><a id="line.57"></a>
+<span class="sourceLineNo">058</span><a id="line.58">    /**</a>
+<span class="sourceLineNo">059</span><a id="line.59">     * The target Executor instance that will actually execute the subject-associated Runnable instances.</a>
+<span class="sourceLineNo">060</span><a id="line.60">     */</a>
+<span class="sourceLineNo">061</span><a id="line.61">    private Executor targetExecutor;</a>
+<span class="sourceLineNo">062</span><a id="line.62"></a>
+<span class="sourceLineNo">063</span><a id="line.63">    public SubjectAwareExecutor() {</a>
+<span class="sourceLineNo">064</span><a id="line.64">    }</a>
+<span class="sourceLineNo">065</span><a id="line.65"></a>
+<span class="sourceLineNo">066</span><a id="line.66">    public SubjectAwareExecutor(Executor targetExecutor) {</a>
+<span class="sourceLineNo">067</span><a id="line.67">        if (targetExecutor == null) {</a>
+<span class="sourceLineNo">068</span><a id="line.68">            throw new NullPointerException("target Executor instance cannot be null.");</a>
+<span class="sourceLineNo">069</span><a id="line.69">        }</a>
+<span class="sourceLineNo">070</span><a id="line.70">        this.targetExecutor = targetExecutor;</a>
+<span class="sourceLineNo">071</span><a id="line.71">    }</a>
+<span class="sourceLineNo">072</span><a id="line.72"></a>
+<span class="sourceLineNo">073</span><a id="line.73">    /**</a>
+<span class="sourceLineNo">074</span><a id="line.74">     * Returns the target Executor instance that will actually execute the subject-associated Runnable instances.</a>
+<span class="sourceLineNo">075</span><a id="line.75">     *</a>
+<span class="sourceLineNo">076</span><a id="line.76">     * @return target Executor instance that will actually execute the subject-associated Runnable instances.</a>
+<span class="sourceLineNo">077</span><a id="line.77">     */</a>
+<span class="sourceLineNo">078</span><a id="line.78">    public Executor getTargetExecutor() {</a>
+<span class="sourceLineNo">079</span><a id="line.79">        return targetExecutor;</a>
+<span class="sourceLineNo">080</span><a id="line.80">    }</a>
+<span class="sourceLineNo">081</span><a id="line.81"></a>
+<span class="sourceLineNo">082</span><a id="line.82">    /**</a>
+<span class="sourceLineNo">083</span><a id="line.83">     * Sets target Executor instance that will actually execute the subject-associated Runnable instances.</a>
+<span class="sourceLineNo">084</span><a id="line.84">     *</a>
+<span class="sourceLineNo">085</span><a id="line.85">     * @param targetExecutor the target Executor instance that will actually execute the subject-associated Runnable</a>
+<span class="sourceLineNo">086</span><a id="line.86">     *                       instances.</a>
+<span class="sourceLineNo">087</span><a id="line.87">     */</a>
+<span class="sourceLineNo">088</span><a id="line.88">    public void setTargetExecutor(Executor targetExecutor) {</a>
+<span class="sourceLineNo">089</span><a id="line.89">        this.targetExecutor = targetExecutor;</a>
+<span class="sourceLineNo">090</span><a id="line.90">    }</a>
+<span class="sourceLineNo">091</span><a id="line.91"></a>
+<span class="sourceLineNo">092</span><a id="line.92">    /**</a>
+<span class="sourceLineNo">093</span><a id="line.93">     * Returns the currently Subject instance that should be associated with Runnable or Callable instances before</a>
+<span class="sourceLineNo">094</span><a id="line.94">     * being dispatched to the target {@code Executor} instance.  This implementation merely defaults to returning</a>
+<span class="sourceLineNo">095</span><a id="line.95">     * {@code SecurityUtils}.{@link SecurityUtils#getSubject() getSubject()}.</a>
+<span class="sourceLineNo">096</span><a id="line.96">     *</a>
+<span class="sourceLineNo">097</span><a id="line.97">     * @return the currently Subject instance that should be associated with Runnable or Callable instances before</a>
+<span class="sourceLineNo">098</span><a id="line.98">     *         being dispatched to the target {@code Executor} instance.</a>
+<span class="sourceLineNo">099</span><a id="line.99">     */</a>
+<span class="sourceLineNo">100</span><a id="line.100">    protected Subject getSubject() {</a>
+<span class="sourceLineNo">101</span><a id="line.101">        return SecurityUtils.getSubject();</a>
+<span class="sourceLineNo">102</span><a id="line.102">    }</a>
+<span class="sourceLineNo">103</span><a id="line.103"></a>
+<span class="sourceLineNo">104</span><a id="line.104">    /**</a>
+<span class="sourceLineNo">105</span><a id="line.105">     * Utility method for subclasses to associate the argument {@code Runnable} with the currently executing subject</a>
+<span class="sourceLineNo">106</span><a id="line.106">     * and then return the associated Runnable.  The default implementation merely defaults to</a>
+<span class="sourceLineNo">107</span><a id="line.107">     * &lt;pre&gt;</a>
+<span class="sourceLineNo">108</span><a id="line.108">     * Subject subject = {@link #getSubject() getSubject()};</a>
+<span class="sourceLineNo">109</span><a id="line.109">     * return subject.{@link Subject#associateWith(Runnable) associateWith(r)};</a>
+<span class="sourceLineNo">110</span><a id="line.110">     * &lt;/pre&gt;</a>
+<span class="sourceLineNo">111</span><a id="line.111">     *</a>
+<span class="sourceLineNo">112</span><a id="line.112">     * @param r the argument runnable to be associated with the current subject</a>
+<span class="sourceLineNo">113</span><a id="line.113">     * @return the associated runnable instance reflecting the current subject</a>
+<span class="sourceLineNo">114</span><a id="line.114">     */</a>
+<span class="sourceLineNo">115</span><a id="line.115">    protected Runnable associateWithSubject(Runnable r) {</a>
+<span class="sourceLineNo">116</span><a id="line.116">        Subject subject = getSubject();</a>
+<span class="sourceLineNo">117</span><a id="line.117">        return subject.associateWith(r);</a>
+<span class="sourceLineNo">118</span><a id="line.118">    }</a>
+<span class="sourceLineNo">119</span><a id="line.119"></a>
+<span class="sourceLineNo">120</span><a id="line.120">    /**</a>
+<span class="sourceLineNo">121</span><a id="line.121">     * Executes the specified runnable by first associating it with the currently executing {@code Subject} and then</a>
+<span class="sourceLineNo">122</span><a id="line.122">     * dispatches the associated Runnable to the underlying target {@link Executor} instance.</a>
+<span class="sourceLineNo">123</span><a id="line.123">     *</a>
+<span class="sourceLineNo">124</span><a id="line.124">     * @param command the runnable to associate with the currently executing subject and then to execute via the target</a>
+<span class="sourceLineNo">125</span><a id="line.125">     *                {@code Executor} instance.</a>
+<span class="sourceLineNo">126</span><a id="line.126">     */</a>
+<span class="sourceLineNo">127</span><a id="line.127">    public void execute(Runnable command) {</a>
+<span class="sourceLineNo">128</span><a id="line.128">        Runnable associated = associateWithSubject(command);</a>
+<span class="sourceLineNo">129</span><a id="line.129">        getTargetExecutor().execute(associated);</a>
+<span class="sourceLineNo">130</span><a id="line.130">    }</a>
+<span class="sourceLineNo">131</span><a id="line.131">}</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</main>
+</body>
+</html>
