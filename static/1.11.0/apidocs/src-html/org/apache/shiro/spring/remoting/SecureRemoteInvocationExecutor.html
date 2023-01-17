@@ -1,0 +1,198 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<main role="main">
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a id="line.1">/*</a>
+<span class="sourceLineNo">002</span><a id="line.2"> * Licensed to the Apache Software Foundation (ASF) under one</a>
+<span class="sourceLineNo">003</span><a id="line.3"> * or more contributor license agreements.  See the NOTICE file</a>
+<span class="sourceLineNo">004</span><a id="line.4"> * distributed with this work for additional information</a>
+<span class="sourceLineNo">005</span><a id="line.5"> * regarding copyright ownership.  The ASF licenses this file</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * to you under the Apache License, Version 2.0 (the</a>
+<span class="sourceLineNo">007</span><a id="line.7"> * "License"); you may not use this file except in compliance</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * with the License.  You may obtain a copy of the License at</a>
+<span class="sourceLineNo">009</span><a id="line.9"> *</a>
+<span class="sourceLineNo">010</span><a id="line.10"> *     http://www.apache.org/licenses/LICENSE-2.0</a>
+<span class="sourceLineNo">011</span><a id="line.11"> *</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * Unless required by applicable law or agreed to in writing,</a>
+<span class="sourceLineNo">013</span><a id="line.13"> * software distributed under the License is distributed on an</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</a>
+<span class="sourceLineNo">015</span><a id="line.15"> * KIND, either express or implied.  See the License for the</a>
+<span class="sourceLineNo">016</span><a id="line.16"> * specific language governing permissions and limitations</a>
+<span class="sourceLineNo">017</span><a id="line.17"> * under the License.</a>
+<span class="sourceLineNo">018</span><a id="line.18"> */</a>
+<span class="sourceLineNo">019</span><a id="line.19">package org.apache.shiro.spring.remoting;</a>
+<span class="sourceLineNo">020</span><a id="line.20"></a>
+<span class="sourceLineNo">021</span><a id="line.21">import org.apache.shiro.SecurityUtils;</a>
+<span class="sourceLineNo">022</span><a id="line.22">import org.apache.shiro.mgt.SecurityManager;</a>
+<span class="sourceLineNo">023</span><a id="line.23">import org.apache.shiro.subject.ExecutionException;</a>
+<span class="sourceLineNo">024</span><a id="line.24">import org.apache.shiro.subject.Subject;</a>
+<span class="sourceLineNo">025</span><a id="line.25">import org.slf4j.Logger;</a>
+<span class="sourceLineNo">026</span><a id="line.26">import org.slf4j.LoggerFactory;</a>
+<span class="sourceLineNo">027</span><a id="line.27">import org.springframework.remoting.support.DefaultRemoteInvocationExecutor;</a>
+<span class="sourceLineNo">028</span><a id="line.28">import org.springframework.remoting.support.RemoteInvocation;</a>
+<span class="sourceLineNo">029</span><a id="line.29"></a>
+<span class="sourceLineNo">030</span><a id="line.30">import java.io.Serializable;</a>
+<span class="sourceLineNo">031</span><a id="line.31">import java.lang.reflect.InvocationTargetException;</a>
+<span class="sourceLineNo">032</span><a id="line.32">import java.util.concurrent.Callable;</a>
+<span class="sourceLineNo">033</span><a id="line.33"></a>
+<span class="sourceLineNo">034</span><a id="line.34"></a>
+<span class="sourceLineNo">035</span><a id="line.35">/**</a>
+<span class="sourceLineNo">036</span><a id="line.36"> * An implementation of the Spring {@link org.springframework.remoting.support.RemoteInvocationExecutor}</a>
+<span class="sourceLineNo">037</span><a id="line.37"> * that binds a {@code sessionId} to the incoming thread to make it available to the {@code SecurityManager}</a>
+<span class="sourceLineNo">038</span><a id="line.38"> * implementation during the thread execution.  The {@code SecurityManager} implementation can use this sessionId</a>
+<span class="sourceLineNo">039</span><a id="line.39"> * to reconstitute the {@code Subject} instance based on persistent state in the corresponding {@code Session}.</a>
+<span class="sourceLineNo">040</span><a id="line.40"> *</a>
+<span class="sourceLineNo">041</span><a id="line.41"> * @since 0.1</a>
+<span class="sourceLineNo">042</span><a id="line.42"> */</a>
+<span class="sourceLineNo">043</span><a id="line.43">public class SecureRemoteInvocationExecutor extends DefaultRemoteInvocationExecutor {</a>
+<span class="sourceLineNo">044</span><a id="line.44"></a>
+<span class="sourceLineNo">045</span><a id="line.45">    //TODO - complete JavaDoc</a>
+<span class="sourceLineNo">046</span><a id="line.46"></a>
+<span class="sourceLineNo">047</span><a id="line.47">    /*--------------------------------------------</a>
+<span class="sourceLineNo">048</span><a id="line.48">    |             C O N S T A N T S             |</a>
+<span class="sourceLineNo">049</span><a id="line.49">    ============================================*/</a>
+<span class="sourceLineNo">050</span><a id="line.50"></a>
+<span class="sourceLineNo">051</span><a id="line.51">    /*--------------------------------------------</a>
+<span class="sourceLineNo">052</span><a id="line.52">    |    I N S T A N C E   V A R I A B L E S    |</a>
+<span class="sourceLineNo">053</span><a id="line.53">    ============================================*/</a>
+<span class="sourceLineNo">054</span><a id="line.54">    private static final Logger log = LoggerFactory.getLogger(SecureRemoteInvocationExecutor.class);</a>
+<span class="sourceLineNo">055</span><a id="line.55"></a>
+<span class="sourceLineNo">056</span><a id="line.56">    /**</a>
+<span class="sourceLineNo">057</span><a id="line.57">     * The SecurityManager used to retrieve realms that should be associated with the</a>
+<span class="sourceLineNo">058</span><a id="line.58">     * created &lt;tt&gt;Subject&lt;/tt&gt;s upon remote invocation.</a>
+<span class="sourceLineNo">059</span><a id="line.59">     */</a>
+<span class="sourceLineNo">060</span><a id="line.60">    private SecurityManager securityManager;</a>
+<span class="sourceLineNo">061</span><a id="line.61"></a>
+<span class="sourceLineNo">062</span><a id="line.62">    /*--------------------------------------------</a>
+<span class="sourceLineNo">063</span><a id="line.63">    |         C O N S T R U C T O R S           |</a>
+<span class="sourceLineNo">064</span><a id="line.64">    ============================================*/</a>
+<span class="sourceLineNo">065</span><a id="line.65"></a>
+<span class="sourceLineNo">066</span><a id="line.66">    /*--------------------------------------------</a>
+<span class="sourceLineNo">067</span><a id="line.67">    |  A C C E S S O R S / M O D I F I E R S    |</a>
+<span class="sourceLineNo">068</span><a id="line.68">    ============================================*/</a>
+<span class="sourceLineNo">069</span><a id="line.69"></a>
+<span class="sourceLineNo">070</span><a id="line.70">    public void setSecurityManager(org.apache.shiro.mgt.SecurityManager securityManager) {</a>
+<span class="sourceLineNo">071</span><a id="line.71">        this.securityManager = securityManager;</a>
+<span class="sourceLineNo">072</span><a id="line.72">    }</a>
+<span class="sourceLineNo">073</span><a id="line.73"></a>
+<span class="sourceLineNo">074</span><a id="line.74">    /*--------------------------------------------</a>
+<span class="sourceLineNo">075</span><a id="line.75">    |               M E T H O D S               |</a>
+<span class="sourceLineNo">076</span><a id="line.76">    ============================================*/</a>
+<span class="sourceLineNo">077</span><a id="line.77">    @SuppressWarnings({"unchecked"})</a>
+<span class="sourceLineNo">078</span><a id="line.78">    public Object invoke(final RemoteInvocation invocation, final Object targetObject)</a>
+<span class="sourceLineNo">079</span><a id="line.79">            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {</a>
+<span class="sourceLineNo">080</span><a id="line.80"></a>
+<span class="sourceLineNo">081</span><a id="line.81">        try {</a>
+<span class="sourceLineNo">082</span><a id="line.82">            SecurityManager securityManager =</a>
+<span class="sourceLineNo">083</span><a id="line.83">                    this.securityManager != null ? this.securityManager : SecurityUtils.getSecurityManager();</a>
+<span class="sourceLineNo">084</span><a id="line.84"></a>
+<span class="sourceLineNo">085</span><a id="line.85">            Subject.Builder builder = new Subject.Builder(securityManager);</a>
+<span class="sourceLineNo">086</span><a id="line.86"></a>
+<span class="sourceLineNo">087</span><a id="line.87">            String host = (String) invocation.getAttribute(SecureRemoteInvocationFactory.HOST_KEY);</a>
+<span class="sourceLineNo">088</span><a id="line.88">            if (host != null) {</a>
+<span class="sourceLineNo">089</span><a id="line.89">                builder.host(host);</a>
+<span class="sourceLineNo">090</span><a id="line.90">            }</a>
+<span class="sourceLineNo">091</span><a id="line.91"></a>
+<span class="sourceLineNo">092</span><a id="line.92">            Serializable sessionId = invocation.getAttribute(SecureRemoteInvocationFactory.SESSION_ID_KEY);</a>
+<span class="sourceLineNo">093</span><a id="line.93">            if (sessionId != null) {</a>
+<span class="sourceLineNo">094</span><a id="line.94">                builder.sessionId(sessionId);</a>
+<span class="sourceLineNo">095</span><a id="line.95">            } else {</a>
+<span class="sourceLineNo">096</span><a id="line.96">                if (log.isTraceEnabled()) {</a>
+<span class="sourceLineNo">097</span><a id="line.97">                    log.trace("RemoteInvocation did not contain a Shiro Session id attribute under " +</a>
+<span class="sourceLineNo">098</span><a id="line.98">                            "key [" + SecureRemoteInvocationFactory.SESSION_ID_KEY + "].  A Subject based " +</a>
+<span class="sourceLineNo">099</span><a id="line.99">                            "on an existing Session will not be available during the method invocation.");</a>
+<span class="sourceLineNo">100</span><a id="line.100">                }</a>
+<span class="sourceLineNo">101</span><a id="line.101">            }</a>
+<span class="sourceLineNo">102</span><a id="line.102"></a>
+<span class="sourceLineNo">103</span><a id="line.103">            Subject subject = builder.buildSubject();</a>
+<span class="sourceLineNo">104</span><a id="line.104">            return subject.execute(new Callable() {</a>
+<span class="sourceLineNo">105</span><a id="line.105">                public Object call() throws Exception {</a>
+<span class="sourceLineNo">106</span><a id="line.106">                    return SecureRemoteInvocationExecutor.super.invoke(invocation, targetObject);</a>
+<span class="sourceLineNo">107</span><a id="line.107">                }</a>
+<span class="sourceLineNo">108</span><a id="line.108">            });</a>
+<span class="sourceLineNo">109</span><a id="line.109">        } catch (ExecutionException e) {</a>
+<span class="sourceLineNo">110</span><a id="line.110">            Throwable cause = e.getCause();</a>
+<span class="sourceLineNo">111</span><a id="line.111">            if (cause instanceof NoSuchMethodException) {</a>
+<span class="sourceLineNo">112</span><a id="line.112">                throw (NoSuchMethodException) cause;</a>
+<span class="sourceLineNo">113</span><a id="line.113">            } else if (cause instanceof IllegalAccessException) {</a>
+<span class="sourceLineNo">114</span><a id="line.114">                throw (IllegalAccessException) cause;</a>
+<span class="sourceLineNo">115</span><a id="line.115">            } else if (cause instanceof InvocationTargetException) {</a>
+<span class="sourceLineNo">116</span><a id="line.116">                throw (InvocationTargetException) cause;</a>
+<span class="sourceLineNo">117</span><a id="line.117">            } else {</a>
+<span class="sourceLineNo">118</span><a id="line.118">                throw new InvocationTargetException(cause);</a>
+<span class="sourceLineNo">119</span><a id="line.119">            }</a>
+<span class="sourceLineNo">120</span><a id="line.120">        } catch (Throwable t) {</a>
+<span class="sourceLineNo">121</span><a id="line.121">            throw new InvocationTargetException(t);</a>
+<span class="sourceLineNo">122</span><a id="line.122">        }</a>
+<span class="sourceLineNo">123</span><a id="line.123">    }</a>
+<span class="sourceLineNo">124</span><a id="line.124">}</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</main>
+</body>
+</html>
