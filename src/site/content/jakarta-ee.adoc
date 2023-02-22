@@ -1,0 +1,419 @@
+= Apache Shiro Jakarta EE Integration
+:jbake-date: 2023-02-06 00:00:00
+:jbake-type: page
+:jbake-status: published
+:jbake-tags: documentation, jakarta-ee, integrations, web
+:idprefix:
+:icons: font
+
+Apache Shiro Jakarta EE module makes it transparent to use Shiro features in Jakarta EE applications
+with minimal configuration. It makes annotations such as `@RequiresRoles` available in Jakarta EE (CDI, EJB, etc.) code.
+
+NOTE: Jakarta EE integration is available in Shiro 2.0 or later. +
+The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may work with earlier versions of Jakarta EE but was not tested with those.
+
+== Dependencies
+
+Include the `shiro-jakarta-ee` dependency in you application classpath (we recommend using a tool such as Apache Maven or Gradle to manage this).
+
+++++
+<@dependencies.dependencies anchorId="cli" deps=[{'g':'org.apache.shiro', 'a':'shiro-jakarta-ee', "v":"${versions.latestRelease}"}] />
+++++
+
+== Relationships between Jakarta EE and CDI / Jax-RS modules
+Jakarta EE module depends on CDI and Jax-RS submodules to fully integrate with the complete Jakarta EE API (Web Profile). If that is not desired, CDI and Jax-RS submodules can be used separately.
+
+== Features
+Configure Shiro automatically with sensible defaults for Jakarta EE, with minimal, or no configuration aside from shiro.ini.
+
+Use shiro.ini as usual to protect web application and Jax-RS paths and endpoints.
+
+Forms are automatically saved if sessions expire and seamlessly submitted upon subsequent login.
+
+Use Shiro-secured application behind a load balancer or an SSL-terminating proxy (haproxy, nginx, etc.) easily.
+
+Use `@Named` CDI beans in shiro.ini.
+
+Inject Shiro Subject, Principal, Session and SecurityManager into CDI, EJB beans and Jax-RS endpoints.
+
+Use Shiro and Jakarta EE Security annotations (i.e. `@RequiresRole`) to protect:
+
+* CDI and EJB (local and remote) beans (part of CDI module)
+* Jax-RS endpoints (part of Jax-RS module)
+
+Use Jakarta Faces (JSF) tags.
+
+Make Shiro's login flows Jakarta Faces (JSF) Ajax-aware.
+
+=== Jakarta EE Security Annotations (JSR-250)
+In addition to all Shiro annotations, Jakarta EE module allows to specify Jakarta EE security annotations such as `@RolesAllowed`, `@DenyAll` and `@PermitAll` on your beans
+
+=== How to use Jakarta 9+ (jakarta.* namespace) - replace LATEST with the version number
+Use the Shiro artifacts with Jakarta classifiers:
+[source,xml]
+----
+<dependency>
+  <groupId>org.apache.shiro</groupId>
+  <artifactId>shiro-jakarta-ee</artifactId>
+  <classifier>jakarta</classifier>
+</dependency>
+
+<dependency>
+  <groupId>org.apache.shiro</groupId>
+  <artifactId>shiro-cdi</artifactId>
+  <classifier>jakarta</classifier>
+</dependency>
+
+<dependency>
+  <groupId>org.apache.shiro</groupId>
+  <artifactId>shiro-core</artifactId>
+  <classifier>jakarta</classifier>
+</dependency>
+
+<dependency>
+  <groupId>org.apache.shiro</groupId>
+  <artifactId>shiro-web</artifactId>
+  <classifier>jakarta</classifier>
+</dependency>
+
+<dependency>
+  <groupId>org.omnifaces</groupId>
+  <artifactId>omnifaces</artifactId>
+  <version>LATEST</version>
+</dependency>
+----
+
+Import the Shiro BOM as seen below (replace LATEST with the version number):
+[source,xml]
+----
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-bom</artifactId>
+            <version>LATEST</version>
+            <scope>import</scope>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+----
+
+== CDI Features
+Use Shiro and Jakarta Security annotations on any CDI bean, with no additional annotations required:
+[code,java]
+----
+@RequestScoped
+@RequiresUser
+public class MyBean { }
+
+@RequestScoped
+@RolesAllowed("role")
+public class MyRoleBean { }
+----
+=== Configuring CDI without Jakarta EE module or shiro.ini
+Below is an example of Shiro configuration in Java code with CDI only (no shiro.ini):
+[code,java]
+----
+@ApplicationScoped
+public class MyBean {
+    private DefaultSecurityManager securityManager;
+
+    void configureSecurityManager(@Observes @Initialized(ApplicationScoped.class) Object nothing) {
+        var realm = new SimpleAccountRealm();
+        securityManager = new DefaultSecurityManager(realm);
+        realm.addAccount("powerful", "awesome", "admin");
+        realm.addAccount("regular", "meh", "user");
+        SecurityUtils.setSecurityManager(securityManager);
+    }
+
+    void destroySecurityManager(@Observes @Destroyed(ApplicationScoped.class) Object nothing) {
+        securityManager.destroy();
+        SecurityUtils.setSecurityManager(null);
+    }
+}
+----
+
+=== Injecting Shiro components and APIs
+Shiro APIs can be `@Inject` into CDI and EJB beans:
+[code,java]
+----
+@ApplicationScoped
+public class MyBean {
+    @Inject
+    SecurityManager manager;
+
+    @Inject
+    Subject subject;
+
+    @Inject
+    @Principal
+    Optional<MyUserAccount> userAccount;
+
+    @Inject
+    Session session;
+
+    @Inject
+    @NoSessionCreation
+    Session optionalSession;
+}
+----
+`Subject`, `Session` and `@Principal` are always treated as Request-Scoped beans. +
+If `Session` is annotated with `@NoSessionCreation` and if there is no existing session, `InvalidSessionException` is thrown when accessing the Injected session.
+Any Shiro Principal can be injected if annotated by `@Principal`. It must be injected as a Java optional, and may not be
+present if Shiro cannot retrieve it.
+
+== Jakarta EE Integration Module
+Jakarta EE integration module was inspired by this link:https://balusc.omnifaces.org/2013/01/apache-shiro-is-it-ready-for-java-ee-6.html[OmniFaces article] and brings everything together to seamlessly create secure Jakarta EE applications easily and with minimal configuration. The module works "the Shiro way" and uses shiro.ini in a straight-forward and intuitive way.
+
+=== Configuration
+==== Enabling RememberMe functionality
+RememberMe functionality is disabled by default. You can enable it easily by adding the below to `shiro.ini`:
+[code,properties]
+----
+authc.useRemembered = true
+----
+
+==== Automatic delay when login failed
+When user fails to log in, Shiro will automatically delay the failure response for a number of seconds. This can be one of the strategies to prevent brute force attacks.
+
+NOTE: Be careful utilizing this technique, as it could be a vector for a denial-of-service attack. Servers with virtual thread support (Project Loom) will not be affected by the DDOS vector.
+
+Add the below to `shiro.ini`:
+[code,properties]
+----
+authc.loginFailedWaitTime = 5
+----
+
+==== `web.xml`
+No configuration is required. The module is bootstrapped automatically.
+To disable automatic bootstrapping, add the following to `web.xml`:
+[code,xml]
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.disabled</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+The module adds `ShiroFilter` to the Servlet configuration. For most cases, the filter ordering works correctly out of the box. However, some cases require to reorder filters. Filter ordering follows the order of `<filter-mapping>` elements in `web.xml`:
+[code,xml]
+----
+<!-- Enforce Filter Ordering (Optional) -->
+... other filters ...
+<filter-mapping>
+    <filter-name>ShiroFilter</filter-name>
+    <url-pattern/>
+</filter-mapping>
+... other filters ...
+----
+
+==== Shiro.ini file locations
+The module finds shiro.ini in the same manner as link:web.html#custom_configuration_locations[Web Configuration] (WEB-INF/shiro.ini by default). Additionally, configuration is enhanced to merge two separate configuration files:
+[code,xml]
+----
+<context-param>
+    <param-name>shiroConfigLocations</param-name>
+    <param-value>classpath:META-INF/shiro.ini, classpath:META-INF/shiro2.ini</param-value>
+</context-param>
+----
+Only two files are supported. More than two file will result in an error.
+
+==== Custom WebEnvironment class
+Custom class is supported, provided it's inherited from `org.apache.shiro.ee.listeners.IniEnvironment` or has the same functionality.
+
+==== Enhanced SSL filter
+By default, Shiro enforces a specific ssl port number where the requests go to. However, if the application is behind a load balancer or a proxy (such as haproxy or nginx), the ports may be different for different instances.
+In this case, port filter can be turned off to allow SSL traffic to go to any port.
+To disable port filter, put the following in your `shiro.ini`:
+[code,properties]
+----
+ssl.enablePortFilter = false
+----
+SSL filter is only enabled in Jakarta Faces production mode (default) and is disabled in Development mode. However, if SSL filter always needs to be enabled, put the following into your `shiro.ini`:
+[code,properties]
+----
+ssl.alwaysEnabled = true
+----
+==== Using Enhanced SSL filter with HAProxy or other load balancers
+When behind SSL-terminating proxy, Shiro may not be able to determine if SSL was used.
+`X-Forwarded-Proto` header can mitigate this. You can configure your proxy set this header to `https` to tell Shiro
+when SSL is used. Below is an haproxy configuration excerpt:
+[code]
+----
+....
+frontend tcp-in
+    http-request set-header X-Forwarded-Proto https if { ssl_fc }
+...
+----
+
+==== Using CDI Beans in shiro.ini
+Below is an example of using a CDI bean and assign it's property to a variable in shiro.ini
+[code,java]
+----
+@Named
+@ApplicationScoped
+public class MyBean {
+    public boolean getMyValue() {
+        return true;
+    }
+}
+----
+[code,properties]
+----
+myBeanInstance = myBean
+myVariable = $myBeanInstance.myValue
+----
+
+==== Using CDI for custom RememberMe cipher key generation
+Use CDI bean that implements `CipherKeySupplier` interface to create a custom logic for generating the cipher key.
+For convenience, String data type is used, If the String that's returned is null or blank (just spaces), the default cipher key generating mechanism is used.
+
+For example, you can use MicroProfile Config to get the cipher key:
+[code,java]
+----
+@ApplicationScoped
+public class CipherKeySource implements CipherKeySupplier {
+    @Inject
+    @ConfigProperty(name = "my.config.source.cipher-key")
+    String cipherKey;
+
+    @Override
+    public String get() {
+        return cipherKey;
+    }
+}
+----
+
+==== Enhanced login flow and smart fallback pages
+Shiro always tries to redirect back to a previous page when a login or logout flow was successful.
+However, in some cases this may not be desired, such as when the previous page was a login page itself.
+In such cases, a fallback page is provided in shiro.ini (usually index or root page), and it is used
+even if the previous page is available. Logic is provided by implementing the `FallbackPredicate` interface. +
+Here we use the path check. If previous page is part of the auth folder, fallback path (index / root) page will always be used:
+[code,java]
+----
+@Named
+@ApplicationScoped
+public class UseFallback implements FallbackPredicate {
+    @Override
+    public boolean useFallback(String path, HttpServletRequest request) {
+        return path.contains("shiro/auth/");
+    }
+}
+----
+[code,properties]
+----
+fallbackType = useFallback
+authc.loginFallbackType = $fallbackType
+authc.logoutFallbackType = $fallbackType
+----
+
+==== Automatic form submit upon subsequent login
+The module will automatically submit forms upon session expiration and subsequent re-login.
+To disable this behavior, add the following to `web.xml`:
+[source,xml]
+----
+<context-param>
+    <param-name>org.apache.shiro.form-resubmit.disabled</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+
+==== Configuring for Tomcat / Jetty (or without Jakarta Faces)
+If Jakarta Faces (JSF) is not available in your environment, you need to put the following into your `web.xml` to enable proper OmniFaces initialization:
+[source,xml]
+----
+<context-param>
+    <param-name>org.omnifaces.SKIP_DEPLOYMENT_EXCEPTION</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+
+[#principal_propagation]
+==== Principal Propagation (Jakarta EE)
+By default, Shiro will propagate the Subject to `java.security.Principal`, which may not always be desired. For example, if calling remote EJBs, the container security mechanism might interpret the principal and will error the remote EJB call as unauthenticated.
+To disable this behavior, you can put the following in your `web.xml`:
+[source,xml]
+----
+<context-param>
+    <param-name>org.apache.shiro.web.disable-principal</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+
+=== Security Annotations (Shiro and EE)
+The module works transparently to enable Shiro (`@RequiresRole`) and Jakarta Security (`@RolesAllowed`) annotations,
+without any additional annotations or configuration.
+
+=== Automatic form resubmit when logged out and subsequently logged in
+Users get frustrated when they lose data. For example, while filling out a complicated form,
+the user get side-tracked with another browser tab or window. Then lunch. After getting back to the form,
+they will fill out the rest of the form and submit it. However, since it took a long time, they are now thrown
+back to the login screen. Once they log in, all their data entry vanished! +
+There are few workarounds for his issue, like a periodic ping of the back-end or something similar, but that causes unnecessary load and memory pressure on the server. These methods are also very brittle. +
+Jakarta EE module will automatically save the form data into Shiro cache when a user is redirected to a login screen.
+The cache is encrypted. And when the user subsequently logs back in, the form is automatically submitted and
+the data entry is never lost. +
+Form resubmission works with JSP, Jakarta Faces partial page rendering (Ajax) and with PrimeFaces components.
+
+=== Using CDI `@SessionScoped` and `@ViewScoped` beans
+Both CDI and OmniFaces Session and ViewScoped beans work correctly and transparently with both web container and Shiro native sessions.
+
+=== Jakarta Faces (JSF) features
+When using Shiro with Jakarta Faces, login and logout flow works transparently and correctly without worrying about `ViewExpiredException`. This works for both Ajax and standard events. +
+Both server and client state saving methods are supported. +
+Shiro's `FormAuthenticationFilter` (`authc` by default) in shiro.ini works the same way in Faces
+as it does in JSP. +
+It takes named Faces components and uses them to authenticate.
+Below, elements named by `id` are automatically used to authenticate, and any command button without explicit action will trigger the login.
+[code,xml]
+----
+<h:form prependId="false" id="form">
+    Username: <h:inputText id="username" p:autofocus="true" title="Username: " required="true" />
+    Password: <h:inputText id="password" title="Password: " required="true"/>
+    Remember Me: <h:selectBooleanCheckbox id="rememberMe" title="Remember Me: "/>
+    <h:commandButton id="login" value="Login ..."/>
+</h:form>
+----
+Logout can be specified via shiro.ini, without having any additional pages or code:
+++++
+<#noparse>
+++++
+[code]
+----
+/shiro/auth/logout* = ssl, logout
+----
+[code,xml]
+----
+<h:outputLink value="#{request.contextPath}/shiro/auth/logout">Logout</h:outputLink>
+----
+
+==== Jakarta Faces variables and actions
+Below are actions and variables available within Facelets.
+All actions have zero-argument versions that execute sensible defaults.
+[code,xml]
+----
+<div jsf:rendered="#{authc.sessionExpired}">
+    Your Session Has Expired
+</div>
+<div jsf:rendered="#{authc.loginFailure}">
+    Login Failed
+</div>
+<h:commandButton value="Login ..." action="#{authc.login}"/>
+<h:commandButton value="Login ..." action="#{authc.login(bean.username, bean.password)}
+<h:commandButton value="Login ..." action="#{authc.login(bean.username, bean.password, bean.rememberMe)}
+<h:commandButton value="Login ..." action="#{authc.redirectIfLoggedIn('page')}"/>
+----
+++++
+</#noparse>
+++++
+
+==== Forms API
+`Forms` class has external-faces API that can be accessed directly from code. See javadoc for further info.
+
+== Jax-RS
+Jakarta EE module uses Jax-RS module to provide support for non-CDI and non-EJB beans. +
+See link:jaxrs.html[Jax-RS documentation] for more details.
+
+=== Principal Propagation (Jax-RS)
+Propagation is enabled or disabled for Jax-RS by the Jakarta EE module. See link:jaxrs.html#principal_propagation[Jax-RS Principal Propagation]

@@ -10,11 +10,13 @@ Apache Shiro's JAX-RS support is built on top of the more general link:web.html[
 
 == Dependencies
 
-Include the `shiro-servlet-plugin` and `shiro-jaxrs` dependencies in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).
+Include the `shiro-servlet-plugin` and `shiro-jaxrs` dependencies in you application classpath (we recommend using a tool such as Apache Maven or Gradle to manage this).
 
 ++++
 <@dependencies.dependencies anchorId="cli" deps=[{'g':'org.apache.shiro', 'a':'shiro-servlet-plugin', "v":"${versions.latestRelease}"},{"g":'org.apache.shiro', "a":'shiro-jaxrs', "v":'${versions.latestRelease}'}] />
 ++++
+
+NOTE: This is not required if using Jakarta EE module
 
 
 For information on other ways to set up the Apache Shiro Filter see the link:web.html[web documentation].
@@ -49,6 +51,24 @@ The below code block will allow for basic authentication but NOT require it (via
 
 /api/** = authcBasic[permissive]
 
+----
+
+=== Jakarta EE Security Annotations (JSR-250)
+In addition to all Shiro annotations, Jax-RS module allows to specify Jakarta EE security annotations such as `@RolesAllowed`, `@DenyAll` and `@PermitAll` on your Jax-RS Endpoints.
+
+[#principal_propagation]]
+=== Principal Propagation
+If calling remote EJBs, for example, the container security mechanism might interpret `java.security.Principal` and will error the remote EJB call as unauthenticated.
+If Jax-RS is used in conjunction with the link:jakarta-ee.html[Jakarta EE] module, the principal propagation is configured by Jakarta EE. However, if Jax-RS module is used standalone, principal propagation can be disabled by adding a configuration property to the map as illustrated below:
+[source,java]
+----
+@ApplicationPath("/api")
+public class JaxRsApplication extends Application {
+    @Override
+    public Map<String, Object> getProperties() {
+        return Map.of(SHIRO_WEB_JAXRS_DISABLE_PRINCIPAL_PARAM, Boolean.TRUE);
+    }
+}
 ----
 
 == Example
@@ -102,7 +122,7 @@ public class ExampleApp extends Application {
 The `ShiroFeature` does three things:
 
 * configures exception mapping from Shiro's `AuthorizationException` to HTTP status codes (401 and 403)
-* exposes Shiro's `Subject` as a `java.security.Principal`
+* exposes Shiro's `Subject` as a `java.security.Principal` (link:jakarta-ee.html#principal_propagation[Principal Propagation])
 * Configures processing of Shiro's annotations
 
 In the above example, requests to either `/api/shiro` or `/api/shiro/define` will return an HTTP status of `401` if a user is not currently logged in. A request to `/api/shiro/define` made by a user without the `hello:define` will return a `403`.

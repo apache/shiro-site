@@ -14,6 +14,10 @@
 The simplest way to integrate Shiro into any web application is to configure a Servlet ContextListener and Filter in web.xml that understands how to read Shiro's INI configuration. The bulk of the INI config format itself is defined in the Configuration pages's link:/configuration.html#Configuration-INIConfiguration-Sections[INI Sections] section, but we'll cover some additional web-specific sections here.
 
 [INFO]
+.Using Jakart EE?
+====
+The below configuration is not required if using link:jakarta-ee.html[Jakarta EE integration] or basic CDI integration module.
+====
 .Using Spring?
 ====
 Spring Framework users will not perform this setup. If you use Spring, you will want to read about link:/spring-boot.html#web_applications[Spring-specific web configuration] instead.
@@ -691,17 +695,27 @@ securityManager.rememberMeManager = $rememberMeManager
 ----
 
 [#tag_library]
-== JSP / GSP Tag Library
+== JSP / Jakarta Faces (JSF) / GSP Tag Library
 
-Apache Shiro provides a `Subject`-aware JSP/GSP tag library that allows you to control your JSP, JSTL or GSP page output based on the current Subject's state. This is quite useful for personalizing views based on the identity and authorization state of the current user viewing the web page.
+Apache Shiro provides a `Subject`-aware JSP/Jakarta Faces/GSP tag library that allows you to control your JSP, Faces/JSF, JSTL or GSP page output based on the current Subject's state. This is quite useful for personalizing views based on the identity and authorization state of the current user viewing the web page.
 
 === Tag Library Configuration
 
 The Tag Library Descriptor (TLD) file is bundled in `shiro-web.jar` in the `META-INF/shiro.tld` file. To use any of the tags, add the following line to the top of your JSP page (or wherever you define page directives):
 
+.JSP/GSP/GSTL:
 [source,html]
 ----
 <%@ taglib prefix="shiro" uri="https://shiro.apache.org/tags" %>
+----
+.Jakarta Faces (JSF):
+[source,html]
+----
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:shiro="http://shiro.apache.org/tags">
+      ...
+</html>
 ----
 
 We've used the `shiro` prefix to indicate the shiro tag library namespace, but you can assign whatever name you like.
