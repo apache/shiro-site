@@ -113,6 +113,7 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
                 <li><a class="dropdown-item" href="web.html">General</a></li>
                 <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><a class="dropdown-item" href="jakarta-ee.html">Jakarta EE</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="web-features.html">Features</a></li>
               </ul>
@@ -189,7 +190,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Although Apache Shiro is designed to be used to secure <em>any</em> JVM-based application, it is most commonly used to secure a web application. It greatly simplifies how you secure web applications base on simple URL pattern matching and filter chain definitions. In addition to Shiro&#8217;s API, Shiro&#8217;s web support includes a rich JSP tag library to control page output.</p>
+<p>Although Apache Shiro is designed to be used to secure <em>any</em> JVM-based application, it is most commonly used to secure a web application. It greatly simplifies how you secure web applications base on simple URL pattern matching and filter chain definitions. In addition to Shiro&#8217;s API, Shiro&#8217;s web support includes a rich JSP and Jakarta Faces tag library to control page output.</p>
 </div>
 </div>
 </div>
@@ -200,7 +201,7 @@
 <ul>
 <li>
 <p><strong>Simple ShiroFilter web.xml definition</strong>
-You can enable Shiro for a web application with one simple filter definition in web.xml.</p>
+You can enable Shiro for a web application with one simple filter definition in web.xml. (Optional with Jakarta EE module)</p>
 </li>
 <li>
 <p><strong>Protects all URLs</strong>
@@ -211,12 +212,12 @@ Shiro can protect any type of web request that comes into your system. For examp
 Defining URL specific filter chains is much easier and more intuitive than using web.xml because, in Shiro, you can explicitly specify which filters you want to execute for each path and in what order. And with Shiro you can have path-specific configuration for each filter in that chain.</p>
 </li>
 <li>
-<p><strong>JSP Tag support</strong>
-The JSP tags allow you to easily control page output based on the current user&#8217;s state and access rights.</p>
+<p><strong>JSP and Jakarta Faces Tag support</strong>
+The tags allow you to easily control page output based on the current user&#8217;s state and access rights.</p>
 </li>
 <li>
 <p><strong>Transparent HttpSession support</strong>
-If you are using Shiro&#8217;s native sessions, we have implemented HTTP Session API and the Servlet 2.5 API so you don&#8217;t have to change any of your existing web code to use Shiro.</p>
+If you are using Shiro&#8217;s native sessions, we have implemented HTTP Session API and the Servlet 2.5+ API so you don&#8217;t have to change any of your existing web code to use Shiro.</p>
 </li>
 </ul>
 </div>
