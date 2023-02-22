@@ -21,6 +21,7 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>web.html">General</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>jaxrs.html">JAX-RS</a></li>
+                <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>jakarta-ee.html">Jakarta EE</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>web-features.html">Features</a></li>
               </ul>
