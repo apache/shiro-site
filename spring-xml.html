@@ -35,7 +35,7 @@
     <meta property="article:tag" content='documentation'/>
     <meta property="article:tag" content='manual'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//spring-xml.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/spring-xml.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -112,6 +112,7 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
                 <li><a class="dropdown-item" href="web.html">General</a></li>
                 <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><a class="dropdown-item" href="jakarta-ee.html">Jakarta EE</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="web-features.html">Features</a></li>
               </ul>
@@ -168,11 +169,11 @@
                 Apache Software Foundation
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
-                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/security/">Security</a></li>
               </ul>
             </li>
           </ul>
@@ -188,7 +189,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This page covers the ways to integrate Shiro into <a href="http://spring.io">Spring</a>-based applications.</p>
+<p>This page covers the ways to integrate Shiro into <a href="https://spring.io">Spring</a>-based applications.</p>
 </div>
 <div class="paragraph">
 <p>Shiro&#8217;s JavaBeans compatibility makes it perfectly suited to be configured via Spring XML or other Spring-based configuration mechanisms. Shiro applications need an application singleton <code>SecurityManager</code> instance. Note that this does not have to be a <em>static</em> singleton, but there should only be a single instance used by the application, whether its a static singleton or not.</p>
@@ -389,7 +390,7 @@ all of its configuration properties in web.xml but define the <code>SecurityMana
 </div>
 </div>
 <div class="paragraph">
-<p>Once you have defined this bean, you must plug it in to whatever remoting <code>Exporter</code> you are using to export/expose your services. <code>Exporter</code> implementations are defined according to the remoting mechanism/protocol in use. See Spring&#8217;s <a href="http://docs.spring.io/spring/docs/2.5.x/reference/remoting.html">Remoting chapter</a> on defining <code>Exporter</code> beans.</p>
+<p>Once you have defined this bean, you must plug it in to whatever remoting <code>Exporter</code> you are using to export/expose your services. <code>Exporter</code> implementations are defined according to the remoting mechanism/protocol in use. See Spring&#8217;s <a href="https://docs.spring.io/spring/docs/2.5.x/reference/remoting.html">Remoting chapter</a> on defining <code>Exporter</code> beans.</p>
 </div>
 <div class="paragraph">
 <p>For example, if using HTTP-based remoting (notice the property reference to the <code>secureRemoteInvocationExecutor</code> bean):</p>
@@ -455,7 +456,7 @@ all of its configuration properties in web.xml but define the <code>SecurityMana
           <div class="copyright-footer justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
             <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
-            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+            <p class="text-muted">Copyright &copy; 2008-2023 The Apache Software Foundation</p>
           </div>
         </div>
 

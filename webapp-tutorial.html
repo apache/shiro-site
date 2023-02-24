@@ -35,7 +35,7 @@
     <meta property="article:tag" content='documentation'/>
     <meta property="article:tag" content='manual'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//webapp-tutorial.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/webapp-tutorial.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -112,6 +112,7 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
                 <li><a class="dropdown-item" href="web.html">General</a></li>
                 <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><a class="dropdown-item" href="jakarta-ee.html">Jakarta EE</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="web-features.html">Features</a></li>
               </ul>
@@ -168,11 +169,11 @@
                 Apache Software Foundation
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
-                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/security/">Security</a></li>
               </ul>
             </li>
           </ul>
@@ -369,7 +370,7 @@
 <p><code>.gitignore</code>: A git ignore file, containing suffixes and directories that shouldn&#8217;t be checked in to version control.</p>
 </li>
 <li>
-<p><code>src/main/resources/logback.xml</code>: A simple <a href="http://logback.qos.ch/">Logback</a> config file. For this tutorial, we&#8217;ve chosen <a href="http://www.slf4j.org">SLF4J</a> as our logging API and Logback as the logging implementation. This could have easily been Log4J or JUL.</p>
+<p><code>src/main/resources/logback.xml</code>: A simple <a href="https://logback.qos.ch/">Logback</a> config file. For this tutorial, we&#8217;ve chosen <a href="https://www.slf4j.org">SLF4J</a> as our logging API and Logback as the logging implementation. This could have easily been Log4J or JUL.</p>
 </li>
 <li>
 <p><code>src/main/webapp/WEB-INF/web.xml</code>: Our initial <code>web.xml</code> file that we&#8217;ll configure soon to enable Shiro.</p>
@@ -438,7 +439,7 @@
 <p>Shiro can be configured in many different ways in a web application, depending on the web and/or MVC framework you use. For example, you can configure Shiro via Spring, Guice, Tapestry, and many many more.</p>
 </div>
 <div class="paragraph">
-<p>To keep things simple for now, we&#8217;ll start a Shiro environment by using Shiro&#8217;s default (and very simple) <a href="http://shiro.apache.org/configuration.html">INI-based configuration</a>.</p>
+<p>To keep things simple for now, we&#8217;ll start a Shiro environment by using Shiro&#8217;s default (and very simple) <a href="https://shiro.apache.org/configuration.html">INI-based configuration</a>.</p>
 </div>
 <div class="paragraph">
 <p>If you checked out the <code>step1</code> branch, you&#8217;ll see the contents of this new <code>src/main/webapp/WEB-INF/shiro.ini</code> file (header comments removed for brevity):</p>
@@ -465,7 +466,7 @@ securityManager.cacheManager = $cacheManager</code></pre>
 <p>It defines a new <code>cacheManager</code> instance. Caching is an important part of Shiro&#8217;s architecture - it reduces constant round-trip communications to various data stores. This example uses a <code>MemoryConstrainedCacheManager</code> which is only really good for single JVM applications. If your application is deployed across multiple hosts (e.g. a clustered webserver farm), you will want to use a clustered CacheManager implementation instead.</p>
 </li>
 <li>
-<p>It configures the new <code>cacheManager</code> instance on the Shiro <code>securityManager</code>. A Shiro <a href="http://shiro.apache.org/architecture.html"><code>SecurityManager</code></a> instance always exists, so it did not need to be defined explicitly.</p>
+<p>It configures the new <code>cacheManager</code> instance on the Shiro <code>securityManager</code>. A Shiro <a href="https://shiro.apache.org/architecture.html"><code>SecurityManager</code></a> instance always exists, so it did not need to be defined explicitly.</p>
 </li>
 </ul>
 </div>
@@ -502,7 +503,7 @@ securityManager.cacheManager = $cacheManager</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p>The <code>&lt;listener&gt;</code> declaration defines a <a href="http://docs.oracle.com/javaee/6/api/javax/servlet/ServletContextListener.html"><code>ServletContextListener</code></a> that starts up the Shiro environment (including the Shiro <code>SecurityManager</code>) upon web application startup. By default, this listener automatically knows to look for our <code>WEB-INF/shiro.ini</code> file for Shiro configuration.</p>
+<p>The <code>&lt;listener&gt;</code> declaration defines a <a href="https://docs.oracle.com/javaee/6/api/javax/servlet/ServletContextListener.html"><code>ServletContextListener</code></a> that starts up the Shiro environment (including the Shiro <code>SecurityManager</code>) upon web application startup. By default, this listener automatically knows to look for our <code>WEB-INF/shiro.ini</code> file for Shiro configuration.</p>
 </li>
 <li>
 <p>The <code>&lt;filter&gt;</code> declaration defines the main <code>ShiroFilter</code>. This filter is expected to filter <em>all</em> requests into the web application so Shiro can peform necessary identity and access control operations before allowing a request to reach the application.</p>
@@ -559,7 +560,7 @@ securityManager.cacheManager = $cacheManager</code></pre>
 <p>We will need to configure Shiro to access a <em>User Store</em> of some type, so it can look up users to perform login attempts, or check roles for security decisions, etc. There are many types of user stores that any application might need to access: maybe you store users in a MySQL database, maybe in MongoDB, maybe your company stores user accounts in LDAP or Active Directory, maybe you store them in a simple file, or some other proprietary data store.</p>
 </div>
 <div class="paragraph">
-<p>Shiro does this via what it calls a <a href="http://shiro.apache.org/architecture.html"><code>Realm</code></a>. From Shiro&#8217;s documentation:</p>
+<p>Shiro does this via what it calls a <a href="https://shiro.apache.org/architecture.html"><code>Realm</code></a>. From Shiro&#8217;s documentation:</p>
 </div>
 <div class="quoteblock">
 <blockquote>
@@ -905,22 +906,22 @@ shiro.loginUrl = /login.jsp
 </div>
 </div>
 <div class="paragraph">
-<p>This is a special configuration directive that tells Shiro "For any of Shiro&#8217;s <a href="http://shiro.apache.org/web.html#Web-DefaultFilters">default filters</a> that have a <code>loginUrl</code> property, I want that property value to be set to <code>/login.jsp</code>."</p>
+<p>This is a special configuration directive that tells Shiro "For any of Shiro&#8217;s <a href="https://shiro.apache.org/web.html#Web-DefaultFilters">default filters</a> that have a <code>loginUrl</code> property, I want that property value to be set to <code>/login.jsp</code>."</p>
 </div>
 <div class="paragraph">
-<p>This allows Shiro&#8217;s default <code>authc</code> filter (by default, a <a href="http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html"><code>FormAuthenticationFilter</code></a>) to know about the login page. This is necessary for the <code>FormAuthenticationFilter</code> to work correctly.</p>
+<p>This allows Shiro&#8217;s default <code>authc</code> filter (by default, a <a href="https://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html"><code>FormAuthenticationFilter</code></a>) to know about the login page. This is necessary for the <code>FormAuthenticationFilter</code> to work correctly.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="the_urls_section">The <code>[urls]</code> section</h4>
 <div class="paragraph">
-<p>The <code>[urls]</code> section is a new <a href="http://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D">web-specific INI section</a>.</p>
+<p>The <code>[urls]</code> section is a new <a href="https://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D">web-specific INI section</a>.</p>
 </div>
 <div class="paragraph">
-<p>This section allows you to use a very succinct name/value pair syntax to tell shiro how to filter request for any given URL path. All paths in <code>[urls]</code> are relative to the web application&#8217;s [<code>HttpServletRequest.getContextPath()</code>](<a href="http://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#getContextPath()" class="bare">http://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#getContextPath()</a>) value.</p>
+<p>This section allows you to use a very succinct name/value pair syntax to tell shiro how to filter request for any given URL path. All paths in <code>[urls]</code> are relative to the web application&#8217;s [<code>HttpServletRequest.getContextPath()</code>](<a href="https://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#getContextPath()" class="bare">https://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#getContextPath()</a>) value.</p>
 </div>
 <div class="paragraph">
-<p>These name/value pairs offer an extremely powerful way to filter requests, allowing for all sorts of security rules. A deeper coverage of urls and filter chains is outside the scope of this document, but please do <a href="http://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D">read more about it</a> if you&#8217;re interested.</p>
+<p>These name/value pairs offer an extremely powerful way to filter requests, allowing for all sorts of security rules. A deeper coverage of urls and filter chains is outside the scope of this document, but please do <a href="https://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D">read more about it</a> if you&#8217;re interested.</p>
 </div>
 <div class="paragraph">
 <p>For now, we&#8217;ll cover the two lines that were added:</p>
@@ -971,7 +972,7 @@ shiro.loginUrl = /login.jsp
 </ol>
 </div>
 <div class="paragraph">
-<p>Our login.jsp form just uses the default <code>username</code>, <code>password</code>, and <code>rememberMe</code> form field names. These names are configurable if you wish to change them - see the <a href="http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html"><code>FormAuthenticationFilter</code> JavaDoc</a> for information.</p>
+<p>Our login.jsp form just uses the default <code>username</code>, <code>password</code>, and <code>rememberMe</code> form field names. These names are configurable if you wish to change them - see the <a href="https://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html"><code>FormAuthenticationFilter</code> JavaDoc</a> for information.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1105,7 +1106,7 @@ shiro.loginUrl = /login.jsp
 <p>Assuming 'jsmith' is the username of the account logged in. 'Log out' is a hyperlink to the '/logout' url handled by the Shiro <code>logout</code> filter.</p>
 </div>
 <div class="paragraph">
-<p>As you can see, you can turn off or on entire page sections, features and UI components. In addition to <code>&lt;shiro:guest&gt;</code> and <code>&lt;shiro:user&gt;</code>, Shiro supports <a href="http://shiro.apache.org/web.html#Web-taglibrary">many other useful JSP tags</a> that you can use to customize the UI based on various things known about the current <code>Subject</code>.</p>
+<p>As you can see, you can turn off or on entire page sections, features and UI components. In addition to <code>&lt;shiro:guest&gt;</code> and <code>&lt;shiro:user&gt;</code>, Shiro supports <a href="https://shiro.apache.org/web.html#Web-taglibrary">many other useful JSP tags</a> that you can use to customize the UI based on various things known about the current <code>Subject</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1177,7 +1178,7 @@ shiro.loginUrl = /login.jsp
 </div>
 </div>
 <div class="paragraph">
-<p>This <a href="http://shiro.apache.org/web.html#Web-FilterChainDefinitions">Shiro filter chain definition</a> means "Any requests to <code>/account</code> (or any of its sub-paths) must be authenticated".</p>
+<p>This <a href="https://shiro.apache.org/web.html#Web-FilterChainDefinitions">Shiro filter chain definition</a> means "Any requests to <code>/account</code> (or any of its sub-paths) must be authenticated".</p>
 </div>
 <div class="paragraph">
 <p>But what happens if someone tries to access that path or any of its children paths?</p>
@@ -1338,7 +1339,7 @@ shiro.loginUrl = /login.jsp
 <p>An exercise left to the reader (not a defined step) is to create a new section of the website and restrict URL access to that section of the website based on what role is assigned to the current user.</p>
 </div>
 <div class="paragraph">
-<p>Hint: Create a <a href="http://shiro.apache.org/web.html#Web-FilterChainDefinitions">filter chain definition</a> for that new part of the webapp using the <a href="http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authz/RolesAuthorizationFilter.html"><code>roles</code> filter</a></p>
+<p>Hint: Create a <a href="https://shiro.apache.org/web.html#Web-FilterChainDefinitions">filter chain definition</a> for that new part of the webapp using the <a href="https://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authz/RolesAuthorizationFilter.html"><code>roles</code> filter</a></p>
 </div>
 </div>
 <div class="sect2">
@@ -1414,7 +1415,7 @@ shiro.loginUrl = /login.jsp
 </ul>
 </div>
 <div class="paragraph">
-<p>These use Shiro&#8217;s <a href="http://shiro.apache.org/permissions.html">WildcardPermission</a> syntax.</p>
+<p>These use Shiro&#8217;s <a href="https://shiro.apache.org/permissions.html">WildcardPermission</a> syntax.</p>
 </div>
 <div class="paragraph">
 <p>The first basically means <em>the ability to 'command' the 'ship' with identifier 'NCC-1701-D'</em>. This is an example of an <em>instance-level</em> permission: controlling access to a specific <em>instance</em> <code>NCC-1701-D</code> of a resource <code>ship</code>. The second is also an instance-level permission that states <em>the ability to <code>edit</code> the <code>user</code> with identifier `jlpicard`</em>.</p>
@@ -1529,7 +1530,7 @@ You may edit the user!</code></pre>
           <div class="copyright-footer justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
             <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
-            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+            <p class="text-muted">Copyright &copy; 2008-2023 The Apache Software Foundation</p>
           </div>
         </div>
 

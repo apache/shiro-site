@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"org.apache.shiro.spring.boot.autoconfigure"},{"l":"org.apache.shiro.spring.boot.autoconfigure.exception"},{"l":"org.apache.shiro.spring.config.web.autoconfigure"}]

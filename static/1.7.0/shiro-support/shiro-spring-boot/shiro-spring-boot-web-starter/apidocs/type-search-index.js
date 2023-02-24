@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"org.apache.shiro.spring.config.web.autoconfigure","l":"ShiroWebAutoConfiguration"},{"p":"org.apache.shiro.spring.config.web.autoconfigure","l":"ShiroWebFilterConfiguration"},{"p":"org.apache.shiro.spring.config.web.autoconfigure","l":"ShiroWebMvcAutoConfiguration"}]

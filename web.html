@@ -35,7 +35,7 @@
     <meta property="article:tag" content='documentation'/>
     <meta property="article:tag" content='web'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//web.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/web.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -112,6 +112,7 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
                 <li><a class="dropdown-item" href="web.html">General</a></li>
                 <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><a class="dropdown-item" href="jakarta-ee.html">Jakarta EE</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="web-features.html">Features</a></li>
               </ul>
@@ -168,11 +169,11 @@
                 Apache Software Foundation
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
-                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/security/">Security</a></li>
               </ul>
             </li>
           </ul>
@@ -261,7 +262,7 @@
 <li><a href="#custom_remembermemanager">Custom <code>RememberMeManager</code></a></li>
 </ul>
 </li>
-<li><a href="#tag_library">JSP / GSP Tag Library</a>
+<li><a href="#tag_library">JSP / Jakarta Faces (JSF) / GSP Tag Library</a>
 <ul class="sectlevel2">
 <li><a href="#tag_library_configuration">Tag Library Configuration</a></li>
 <li><a href="#web_guesttag">The <code>guest</code> tag</a></li>
@@ -276,7 +277,7 @@
 </li>
 <li><a href="#web_hasroletag">The <code>hasRole</code> tag</a></li>
 <li><a href="#web_lacksroletag">The <code>lacksRole</code> tag</a></li>
-<li><a href="#the_hasanyrole_tag">The <code>hasAnyRole</code> tag</a></li>
+<li><a href="#the_hasanyroles_tag">The <code>hasAnyRoles</code> tag</a></li>
 <li><a href="#web_haspermissiontag">The <code>hasPermission</code> tag</a></li>
 <li><a href="#web_lackspermissiontag">The <code>lacksPermission</code> tag</a></li>
 </ul>
@@ -290,7 +291,15 @@
 <p>The simplest way to integrate Shiro into any web application is to configure a Servlet ContextListener and Filter in web.xml that understands how to read Shiro&#8217;s INI configuration. The bulk of the INI config format itself is defined in the Configuration pages&#8217;s <a href="/configuration.html#Configuration-INIConfiguration-Sections">INI Sections</a> section, but we&#8217;ll cover some additional web-specific sections here.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 1. Using Spring?</div>
+<div class="title">Example 1. Using Jakart EE?</div>
+<div class="content">
+<div class="paragraph">
+<p>The below configuration is not required if using <a href="jakarta-ee.html">Jakarta EE integration</a> or basic CDI integration module.</p>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. Using Spring?</div>
 <div class="content">
 <div class="paragraph">
 <p>Spring Framework users will not perform this setup. If you use Spring, you will want to read about <a href="/spring-boot.html#web_applications">Spring-specific web configuration</a> instead.</p>
@@ -373,7 +382,7 @@
 </table>
 </div>
 <div class="exampleblock">
-<div class="title">Example 2. ShiroFilter default encoding</div>
+<div class="title">Example 3. ShiroFilter default encoding</div>
 <div class="content">
 <div class="paragraph">
 <p>The shiro filter is a standard servlet filter, with a default encoding of ISO-8859-1 according to the <a href="https://javaee.github.io/servlet-spec/downloads/servlet-4.0/servlet-4_0_FINAL.pdf">servlet specification</a>. However, the client can choose to send authentication data with a different encoding using the <code>charset</code> attribute of the <code>Content-Type</code> header.</p>
@@ -625,7 +634,7 @@ For example, <code>/WEB-INF/some/path/shiro.ini</code></p>
 <div class="sect4">
 <h5 id="url_path_expressions">URL Path Expressions</h5>
 <div class="paragraph">
-<p>The token on the left of the equals sign (=) is an <a href="http://ant.apache.org">Ant</a>-style path expression relative to your web application&#8217;s context root.</p>
+<p>The token on the left of the equals sign (=) is an <a href="https://ant.apache.org">Ant</a>-style path expression relative to your web application&#8217;s context root.</p>
 </div>
 <div class="paragraph">
 <p>For example, let&#8217;s say you had the following <code>[urls]</code> line:</p>
@@ -1069,7 +1078,7 @@ securityManager.sessionManager = $sessionManager</code></pre>
 </ul>
 </div>
 <div class="exampleblock">
-<div class="title">Example 3. Cookie as a template</div>
+<div class="title">Example 4. Cookie as a template</div>
 <div class="content">
 <div class="paragraph">
 <p>The <code>sessionIdCookie</code> property is essentially a template - you configure the <code>Cookie</code> instance properties, and this template will be used to set the actual HTTP <code>Cookie</code> header at runtime with an appropriate session ID value.</p>
@@ -1260,10 +1269,10 @@ securityManager.rememberMeManager = $rememberMeManager</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="tag_library">JSP / GSP Tag Library</h2>
+<h2 id="tag_library">JSP / Jakarta Faces (JSF) / GSP Tag Library</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Apache Shiro provides a <code>Subject</code>-aware JSP/GSP tag library that allows you to control your JSP, JSTL or GSP page output based on the current Subject&#8217;s state. This is quite useful for personalizing views based on the identity and authorization state of the current user viewing the web page.</p>
+<p>Apache Shiro provides a <code>Subject</code>-aware JSP/Jakarta Faces/GSP tag library that allows you to control your JSP, Faces/JSF, JSTL or GSP page output based on the current Subject&#8217;s state. This is quite useful for personalizing views based on the identity and authorization state of the current user viewing the web page.</p>
 </div>
 <div class="sect2">
 <h3 id="tag_library_configuration">Tag Library Configuration</h3>
@@ -1271,8 +1280,19 @@ securityManager.rememberMeManager = $rememberMeManager</code></pre>
 <p>The Tag Library Descriptor (TLD) file is bundled in <code>shiro-web.jar</code> in the <code>META-INF/shiro.tld</code> file. To use any of the tags, add the following line to the top of your JSP page (or wherever you define page directives):</p>
 </div>
 <div class="listingblock">
+<div class="title">JSP/GSP/GSTL:</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %&gt;</code></pre>
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;%@ taglib prefix="shiro" uri="https://shiro.apache.org/tags" %&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Jakarta Faces (JSF):</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:shiro="http://shiro.apache.org/tags"&gt;
+      ...
+&lt;/html&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1479,9 +1499,9 @@ securityManager.rememberMeManager = $rememberMeManager</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="the_hasanyrole_tag">The <code>hasAnyRole</code> tag</h3>
+<h3 id="the_hasanyroles_tag">The <code>hasAnyRoles</code> tag</h3>
 <div class="paragraph">
-<p>The <code>hasAnyRole</code> tag will display its wrapped content if the current <code>Subject</code> is assigned <em>any</em> of the specified roles from a comma-delimited list of role names.</p>
+<p>The <code>hasAnyRoles</code> tag will display its wrapped content if the current <code>Subject</code> is assigned <em>any</em> of the specified roles from a comma-delimited list of role names.</p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -1494,7 +1514,7 @@ securityManager.rememberMeManager = $rememberMeManager</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>hasAnyRole</code> tag does not currently have a logically opposite tag.</p>
+<p>The <code>hasAnyRoles</code> tag does not currently have a logically opposite tag.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1554,7 +1574,7 @@ securityManager.rememberMeManager = $rememberMeManager</code></pre>
           <div class="copyright-footer justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
             <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
-            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+            <p class="text-muted">Copyright &copy; 2008-2023 The Apache Software Foundation</p>
           </div>
         </div>
 

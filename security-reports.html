@@ -35,7 +35,7 @@
     <meta property="article:tag" content='events'/>
     <meta property="article:tag" content='meetings'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//security-reports.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/security-reports.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -112,6 +112,7 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
                 <li><a class="dropdown-item" href="web.html">General</a></li>
                 <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><a class="dropdown-item" href="jakarta-ee.html">Jakarta EE</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="web-features.html">Features</a></li>
               </ul>
@@ -168,11 +169,11 @@
                 Apache Software Foundation
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
-                <li><a class="dropdown-item" href="http://www.apache.org/">Apache Homepage</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/licenses/">License</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
-                <li><a class="dropdown-item" href="http://www.apache.org/security/">Security</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/security/">Security</a></li>
               </ul>
             </li>
           </ul>
@@ -192,6 +193,7 @@
 <li><a href="#vulnerability_handling_process">Vulnerability Handling Process</a></li>
 <li><a href="#apache_shiro_vulnerability_reports">Apache Shiro Vulnerability Reports</a>
 <ul class="sectlevel2">
+<li><a href="#cve_2023_22602">CVE-2023-22602</a></li>
 <li><a href="#cve_2022_40664">CVE-2022-40664</a></li>
 <li><a href="#cve_2022_32532">CVE-2022-32532</a></li>
 <li><a href="#cve_2021_41303">CVE-2021-41303</a></li>
@@ -247,13 +249,32 @@ We cannot accept regular bug reports or other queries at this address.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>A <a href="http://www.apache.org/security/committers.html">more detailed description of the process</a> has been written for committers. Reporters of security vulnerabilities may also find it useful.</p>
+<p>A <a href="https://www.apache.org/security/committers.html">more detailed description of the process</a> has been written for committers. Reporters of security vulnerabilities may also find it useful.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="apache_shiro_vulnerability_reports">Apache Shiro Vulnerability Reports</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="cve_2023_22602"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-22602">CVE-2023-22602</a></h3>
+<div class="paragraph">
+<p>When using Apache Shiro before 1.11.0 together with Spring Boot 2.6+, a specially crafted HTTP request may cause an authentication bypass.
+The authentication bypass occurs when Shiro and Spring Boot are using different pattern-matching techniques. Both Shiro and Spring Boot &lt; 2.6 default to Ant style pattern matching.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong> Update to Apache Shiro 1.11.0, or set the following Spring Boot configuration value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">spring.mvc.pathmatch.matching-strategy = ant_path_matcher</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Credit:</strong>
+Apache Shiro would like to thank v3ged0ge and Adamytd for reporting this issue.</p>
+</div>
+</div>
 <div class="sect2">
 <h3 id="cve_2022_40664"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-40664">CVE-2022-40664</a></h3>
 <div class="paragraph">
@@ -349,7 +370,7 @@ We cannot accept regular bug reports or other queries at this address.</p>
           <div class="copyright-footer justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
             <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
-            <p class="text-muted">Copyright &copy; 2008-2022 The Apache Software Foundation</p>
+            <p class="text-muted">Copyright &copy; 2008-2023 The Apache Software Foundation</p>
           </div>
         </div>
 
