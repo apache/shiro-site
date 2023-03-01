@@ -101,7 +101,7 @@ Import the Shiro BOM as seen below (replace LATEST with the version number):
 
 == CDI Features
 Use Shiro and Jakarta Security annotations on any CDI bean, with no additional annotations required:
-[code,java]
+[source,java]
 ----
 @RequestScoped
 @RequiresUser
@@ -113,7 +113,7 @@ public class MyRoleBean { }
 ----
 === Configuring CDI without Jakarta EE module or shiro.ini
 Below is an example of Shiro configuration in Java code with CDI only (no shiro.ini):
-[code,java]
+[source,java]
 ----
 @ApplicationScoped
 public class MyBean {
@@ -136,7 +136,7 @@ public class MyBean {
 
 === Injecting Shiro components and APIs
 Shiro APIs can be `@Inject` into CDI and EJB beans:
-[code,java]
+[source,java]
 ----
 @ApplicationScoped
 public class MyBean {
@@ -169,7 +169,7 @@ Jakarta EE integration module was inspired by this link:https://balusc.omnifaces
 === Configuration
 ==== Enabling RememberMe functionality
 RememberMe functionality is disabled by default. You can enable it easily by adding the below to `shiro.ini`:
-[code,properties]
+[source,properties]
 ----
 authc.useRemembered = true
 ----
@@ -180,7 +180,7 @@ When user fails to log in, Shiro will automatically delay the failure response f
 NOTE: Be careful utilizing this technique, as it could be a vector for a denial-of-service attack. Servers with virtual thread support (Project Loom) will not be affected by the DDOS vector.
 
 Add the below to `shiro.ini`:
-[code,properties]
+[source,properties]
 ----
 authc.loginFailedWaitTime = 5
 ----
@@ -188,7 +188,7 @@ authc.loginFailedWaitTime = 5
 ==== `web.xml`
 No configuration is required. The module is bootstrapped automatically.
 To disable automatic bootstrapping, add the following to `web.xml`:
-[code,xml]
+[source,xml]
 ----
 <context-param>
     <param-name>org.apache.shiro.ee.disabled</param-name>
@@ -196,7 +196,7 @@ To disable automatic bootstrapping, add the following to `web.xml`:
 </context-param>
 ----
 The module adds `ShiroFilter` to the Servlet configuration. For most cases, the filter ordering works correctly out of the box. However, some cases require to reorder filters. Filter ordering follows the order of `<filter-mapping>` elements in `web.xml`:
-[code,xml]
+[source,xml]
 ----
 <!-- Enforce Filter Ordering (Optional) -->
 ... other filters ...
@@ -209,7 +209,7 @@ The module adds `ShiroFilter` to the Servlet configuration. For most cases, the 
 
 ==== Shiro.ini file locations
 The module finds shiro.ini in the same manner as link:web.html#custom_configuration_locations[Web Configuration] (WEB-INF/shiro.ini by default). Additionally, configuration is enhanced to merge two separate configuration files:
-[code,xml]
+[source,xml]
 ----
 <context-param>
     <param-name>shiroConfigLocations</param-name>
@@ -225,12 +225,12 @@ Custom class is supported, provided it's inherited from `org.apache.shiro.ee.lis
 By default, Shiro enforces a specific ssl port number where the requests go to. However, if the application is behind a load balancer or a proxy (such as haproxy or nginx), the ports may be different for different instances.
 In this case, port filter can be turned off to allow SSL traffic to go to any port.
 To disable port filter, put the following in your `shiro.ini`:
-[code,properties]
+[source,properties]
 ----
 ssl.enablePortFilter = false
 ----
 SSL filter is only enabled in Jakarta Faces production mode (default) and is disabled in Development mode. However, if SSL filter always needs to be enabled, put the following into your `shiro.ini`:
-[code,properties]
+[source,properties]
 ----
 ssl.alwaysEnabled = true
 ----
@@ -238,7 +238,7 @@ ssl.alwaysEnabled = true
 When behind SSL-terminating proxy, Shiro may not be able to determine if SSL was used.
 `X-Forwarded-Proto` header can mitigate this. You can configure your proxy set this header to `https` to tell Shiro
 when SSL is used. Below is an haproxy configuration excerpt:
-[code]
+[source]
 ----
 ....
 frontend tcp-in
@@ -248,7 +248,7 @@ frontend tcp-in
 
 ==== Using CDI Beans in shiro.ini
 Below is an example of using a CDI bean and assign it's property to a variable in shiro.ini
-[code,java]
+[source,java]
 ----
 @Named
 @ApplicationScoped
@@ -258,7 +258,7 @@ public class MyBean {
     }
 }
 ----
-[code,properties]
+[source,properties]
 ----
 myBeanInstance = myBean
 myVariable = $myBeanInstance.myValue
@@ -269,7 +269,7 @@ Use CDI bean that implements `CipherKeySupplier` interface to create a custom lo
 For convenience, String data type is used, If the String that's returned is null or blank (just spaces), the default cipher key generating mechanism is used.
 
 For example, you can use MicroProfile Config to get the cipher key:
-[code,java]
+[source,java]
 ----
 @ApplicationScoped
 public class CipherKeySource implements CipherKeySupplier {
@@ -290,7 +290,7 @@ However, in some cases this may not be desired, such as when the previous page w
 In such cases, a fallback page is provided in shiro.ini (usually index or root page), and it is used
 even if the previous page is available. Logic is provided by implementing the `FallbackPredicate` interface. +
 Here we use the path check. If previous page is part of the auth folder, fallback path (index / root) page will always be used:
-[code,java]
+[source,java]
 ----
 @Named
 @ApplicationScoped
@@ -301,7 +301,7 @@ public class UseFallback implements FallbackPredicate {
     }
 }
 ----
-[code,properties]
+[source,properties]
 ----
 fallbackType = useFallback
 authc.loginFallbackType = $fallbackType
@@ -366,7 +366,7 @@ Shiro's `FormAuthenticationFilter` (`authc` by default) in shiro.ini works the s
 as it does in JSP. +
 It takes named Faces components and uses them to authenticate.
 Below, elements named by `id` are automatically used to authenticate, and any command button without explicit action will trigger the login.
-[code,xml]
+[source,xml]
 ----
 <h:form prependId="false" id="form">
     Username: <h:inputText id="username" p:autofocus="true" title="Username: " required="true" />
@@ -379,11 +379,11 @@ Logout can be specified via shiro.ini, without having any additional pages or co
 ++++
 <#noparse>
 ++++
-[code]
+[source]
 ----
 /shiro/auth/logout* = ssl, logout
 ----
-[code,xml]
+[source,xml]
 ----
 <h:outputLink value="#{request.contextPath}/shiro/auth/logout">Logout</h:outputLink>
 ----
@@ -391,7 +391,7 @@ Logout can be specified via shiro.ini, without having any additional pages or co
 ==== Jakarta Faces variables and actions
 Below are actions and variables available within Facelets.
 All actions have zero-argument versions that execute sensible defaults.
-[code,xml]
+[source,xml]
 ----
 <div jsf:rendered="#{authc.sessionExpired}">
     Your Session Has Expired
@@ -400,8 +400,8 @@ All actions have zero-argument versions that execute sensible defaults.
     Login Failed
 </div>
 <h:commandButton value="Login ..." action="#{authc.login}"/>
-<h:commandButton value="Login ..." action="#{authc.login(bean.username, bean.password)}
-<h:commandButton value="Login ..." action="#{authc.login(bean.username, bean.password, bean.rememberMe)}
+<h:commandButton value="Login ..." action="#{authc.login(bean.username, bean.password)}"/>
+<h:commandButton value="Login ..." action="#{authc.login(bean.username, bean.password, bean.rememberMe)}"/>
 <h:commandButton value="Login ..." action="#{authc.redirectIfLoggedIn('page')}"/>
 ----
 ++++
