@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"org.apache.shiro.hazelcast.cache","l":"HazelcastCacheManager"}]

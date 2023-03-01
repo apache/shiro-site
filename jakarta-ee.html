@@ -473,13 +473,13 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>@RequestScoped
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@RequestScoped
 @RequiresUser
 public class MyBean { }
 
 @RequestScoped
 @RolesAllowed("role")
-public class MyRoleBean { }</pre>
+public class MyRoleBean { }</code></pre>
 </div>
 </div>
 <div class="sect2">
@@ -489,7 +489,7 @@ public class MyRoleBean { }</pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>@ApplicationScoped
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ApplicationScoped
 public class MyBean {
     private DefaultSecurityManager securityManager;
 
@@ -505,7 +505,7 @@ public class MyBean {
         securityManager.destroy();
         SecurityUtils.setSecurityManager(null);
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -516,7 +516,7 @@ public class MyBean {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>@ApplicationScoped
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ApplicationScoped
 public class MyBean {
     @Inject
     SecurityManager manager;
@@ -534,7 +534,7 @@ public class MyBean {
     @Inject
     @NoSessionCreation
     Session optionalSession;
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -561,7 +561,7 @@ present if Shiro cannot retrieve it.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>authc.useRemembered = true</pre>
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">authc.useRemembered = true</code></pre>
 </div>
 </div>
 </div>
@@ -587,7 +587,7 @@ Be careful utilizing this technique, as it could be a vector for a denial-of-ser
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>authc.loginFailedWaitTime = 5</pre>
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">authc.loginFailedWaitTime = 5</code></pre>
 </div>
 </div>
 </div>
@@ -599,10 +599,10 @@ To disable automatic bootstrapping, add the following to <code>web.xml</code>:</
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>&lt;context-param&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;context-param&gt;
     &lt;param-name&gt;org.apache.shiro.ee.disabled&lt;/param-name&gt;
     &lt;param-value&gt;true&lt;/param-value&gt;
-&lt;/context-param&gt;</pre>
+&lt;/context-param&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -610,13 +610,13 @@ To disable automatic bootstrapping, add the following to <code>web.xml</code>:</
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>&lt;!-- Enforce Filter Ordering (Optional) --&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;!-- Enforce Filter Ordering (Optional) --&gt;
 ... other filters ...
 &lt;filter-mapping&gt;
     &lt;filter-name&gt;ShiroFilter&lt;/filter-name&gt;
     &lt;url-pattern/&gt;
 &lt;/filter-mapping&gt;
-... other filters ...</pre>
+... other filters ...</code></pre>
 </div>
 </div>
 </div>
@@ -627,10 +627,10 @@ To disable automatic bootstrapping, add the following to <code>web.xml</code>:</
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>&lt;context-param&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;context-param&gt;
     &lt;param-name&gt;shiroConfigLocations&lt;/param-name&gt;
     &lt;param-value&gt;classpath:META-INF/shiro.ini, classpath:META-INF/shiro2.ini&lt;/param-value&gt;
-&lt;/context-param&gt;</pre>
+&lt;/context-param&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -652,7 +652,7 @@ To disable port filter, put the following in your <code>shiro.ini</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>ssl.enablePortFilter = false</pre>
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">ssl.enablePortFilter = false</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -660,7 +660,7 @@ To disable port filter, put the following in your <code>shiro.ini</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>ssl.alwaysEnabled = true</pre>
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">ssl.alwaysEnabled = true</code></pre>
 </div>
 </div>
 </div>
@@ -673,10 +673,10 @@ when SSL is used. Below is an haproxy configuration excerpt:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>....
+<pre class="highlightjs highlight"><code class="language-none hljs">....
 frontend tcp-in
     http-request set-header X-Forwarded-Proto https if { ssl_fc }
-...</pre>
+...</code></pre>
 </div>
 </div>
 </div>
@@ -687,19 +687,19 @@ frontend tcp-in
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>@Named
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Named
 @ApplicationScoped
 public class MyBean {
     public boolean getMyValue() {
         return true;
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>myBeanInstance = myBean
-myVariable = $myBeanInstance.myValue</pre>
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">myBeanInstance = myBean
+myVariable = $myBeanInstance.myValue</code></pre>
 </div>
 </div>
 </div>
@@ -714,7 +714,7 @@ For convenience, String data type is used, If the String that&#8217;s returned i
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>@ApplicationScoped
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ApplicationScoped
 public class CipherKeySource implements CipherKeySupplier {
     @Inject
     @ConfigProperty(name = "my.config.source.cipher-key")
@@ -724,7 +724,7 @@ public class CipherKeySource implements CipherKeySupplier {
     public String get() {
         return cipherKey;
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -739,21 +739,21 @@ Here we use the path check. If previous page is part of the auth folder, fallbac
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>@Named
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Named
 @ApplicationScoped
 public class UseFallback implements FallbackPredicate {
     @Override
     public boolean useFallback(String path, HttpServletRequest request) {
         return path.contains("shiro/auth/");
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>fallbackType = useFallback
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">fallbackType = useFallback
 authc.loginFallbackType = $fallbackType
-authc.logoutFallbackType = $fallbackType</pre>
+authc.logoutFallbackType = $fallbackType</code></pre>
 </div>
 </div>
 </div>
@@ -841,12 +841,12 @@ Below, elements named by <code>id</code> are automatically used to authenticate,
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>&lt;h:form prependId="false" id="form"&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;h:form prependId="false" id="form"&gt;
     Username: &lt;h:inputText id="username" p:autofocus="true" title="Username: " required="true" /&gt;
     Password: &lt;h:inputText id="password" title="Password: " required="true"/&gt;
     Remember Me: &lt;h:selectBooleanCheckbox id="rememberMe" title="Remember Me: "/&gt;
     &lt;h:commandButton id="login" value="Login ..."/&gt;
-&lt;/h:form&gt;</pre>
+&lt;/h:form&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -854,12 +854,12 @@ Below, elements named by <code>id</code> are automatically used to authenticate,
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>/shiro/auth/logout* = ssl, logout</pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">/shiro/auth/logout* = ssl, logout</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>&lt;h:outputLink value="#{request.contextPath}/shiro/auth/logout"&gt;Logout&lt;/h:outputLink&gt;</pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;h:outputLink value="#{request.contextPath}/shiro/auth/logout"&gt;Logout&lt;/h:outputLink&gt;</code></pre>
 </div>
 </div>
 <div class="sect3">
@@ -870,16 +870,16 @@ All actions have zero-argument versions that execute sensible defaults.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>&lt;div jsf:rendered="#{authc.sessionExpired}"&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;div jsf:rendered="#{authc.sessionExpired}"&gt;
     Your Session Has Expired
 &lt;/div&gt;
 &lt;div jsf:rendered="#{authc.loginFailure}"&gt;
     Login Failed
 &lt;/div&gt;
 &lt;h:commandButton value="Login ..." action="#{authc.login}"/&gt;
-&lt;h:commandButton value="Login ..." action="#{authc.login(bean.username, bean.password)}
-&lt;h:commandButton value="Login ..." action="#{authc.login(bean.username, bean.password, bean.rememberMe)}
-&lt;h:commandButton value="Login ..." action="#{authc.redirectIfLoggedIn('page')}"/&gt;</pre>
+&lt;h:commandButton value="Login ..." action="#{authc.login(bean.username, bean.password)}"/&gt;
+&lt;h:commandButton value="Login ..." action="#{authc.login(bean.username, bean.password, bean.rememberMe)}"/&gt;
+&lt;h:commandButton value="Login ..." action="#{authc.redirectIfLoggedIn('page')}"/&gt;</code></pre>
 </div>
 </div>
 </div>
