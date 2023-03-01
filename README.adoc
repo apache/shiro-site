@@ -31,7 +31,7 @@ mvn clean process-classes
 
 # These next commands will publish changes to live ASF web servers.
 # Be confident the changes are what you want:
-rsync -avP target/website/. ../shiro-site-publish
+rsync -avP --delete --exclude .git target/website/. ../shiro-site-publish
 cd ../shiro-site-publish
 # Please check that you did not modify any of the following files:
 # .asf.yaml
