@@ -149,7 +149,7 @@ public class MyBean {
 
     @Inject
     @Principal
-    ShiroPrincipal<MyUserAccount> userAccount;
+    Supplier<MyUserAccount> userAccount;
 
     @Inject
     Session session;
@@ -159,9 +159,9 @@ public class MyBean {
     Session optionalSession;
 }
 ----
-`Subject`, `Session` and `ShiroPrincipal` are always treated as Request-Scoped beans. They are injectable into any Jakarta EE bean including Jax-RS, Servlet and other CDI beans. +
+`Subject`, `Session` and `@Principal` are always treated as Request-Scoped beans. They are injectable into any Jakarta EE bean including Jax-RS, Servlet and other CDI beans. +
 If `Session` is annotated with `@NoSessionCreation` and there is no existing session, `InvalidSessionException` is thrown when accessing the Injected session. +
-Any Shiro principal object can be injected if annotated by `@Principal`. It must be injected as `ShiroPrincipal`, and `ShiroPrincipal.get()` may return null if there are no principals available of the injected type.
+Any Shiro principal object can be injected if annotated by `@Principal`. It must be injected as `Supplier<MyPrincipalClass>`, and `Supplier.get()` may return null if there are no principals available of the injected type.
 
 == Jakarta EE Integration Module
 Jakarta EE integration module was inspired by this link:https://balusc.omnifaces.org/2013/01/apache-shiro-is-it-ready-for-java-ee-6.html[OmniFaces article] and brings everything together to seamlessly create secure Jakarta EE applications easily and with minimal configuration. The module works "the Shiro way" and uses shiro.ini in a straight-forward and intuitive way.
