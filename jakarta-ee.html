@@ -526,7 +526,7 @@ public class MyBean {
 
     @Inject
     @Principal
-    Optional&lt;MyUserAccount&gt; userAccount;
+    ShiroPrincipal&lt;MyUserAccount&gt; userAccount;
 
     @Inject
     Session session;
@@ -538,10 +538,9 @@ public class MyBean {
 </div>
 </div>
 <div class="paragraph">
-<p><code>Subject</code>, <code>Session</code> and <code>@Principal</code> are always treated as Request-Scoped beans.<br>
-If <code>Session</code> is annotated with <code>@NoSessionCreation</code> and if there is no existing session, <code>InvalidSessionException</code> is thrown when accessing the Injected session.
-Any Shiro Principal can be injected if annotated by <code>@Principal</code>. It must be injected as a Java optional, and may not be
-present if Shiro cannot retrieve it.</p>
+<p><code>Subject</code>, <code>Session</code> and <code>ShiroPrincipal</code> are always treated as Request-Scoped beans. They are injectable into any Jakarta EE bean including Jax-RS, Servlet and other CDI beans.<br>
+If <code>Session</code> is annotated with <code>@NoSessionCreation</code> and there is no existing session, <code>InvalidSessionException</code> is thrown when accessing the Injected session.<br>
+Any Shiro principal object can be injected if annotated by <code>@Principal</code>. It must be injected as <code>ShiroPrincipal</code>, and <code>ShiroPrincipal.get()</code> may return null if there are no principals available of the injected type.</p>
 </div>
 </div>
 </div>
