@@ -24,26 +24,16 @@ Include the `shiro-jakarta-ee` dependency in you application classpath (we recom
 Jakarta EE module depends on CDI and Jax-RS submodules to fully integrate with the complete Jakarta EE API (Web Profile). If that is not desired, CDI and Jax-RS submodules can be used separately.
 
 == Features
-Configure Shiro automatically with sensible defaults for Jakarta EE, with minimal, or no configuration aside from shiro.ini.
-
-Use shiro.ini as usual to protect web application and Jax-RS paths and endpoints.
-
-Forms are automatically saved if sessions expire and seamlessly submitted upon subsequent login.
-
-Use Shiro-secured application behind a load balancer or an SSL-terminating proxy (haproxy, nginx, etc.) easily.
-
-Use `@Named` CDI beans in shiro.ini.
-
-Inject Shiro Subject, Principal, Session and SecurityManager into CDI, EJB beans and Jax-RS endpoints.
-
-Use Shiro and Jakarta EE Security annotations (i.e. `@RequiresRole`) to protect:
-
-* CDI and EJB (local and remote) beans (part of CDI module)
-* Jax-RS endpoints (part of Jax-RS module)
-
-Use Jakarta Faces (JSF) tags.
-
-Make Shiro's login flows Jakarta Faces (JSF) Ajax-aware.
+* Configure Shiro automatically with sensible defaults for Jakarta EE, with minimal, or no configuration aside from shiro.ini.
+* Use shiro.ini as usual to secure web application, Jax-RS paths and endpoints.
+* Forms are automatically saved if sessions expire and seamlessly submitted upon subsequent login.
+* Use Shiro-secured application behind a load balancer or an SSL-terminating proxy (haproxy, nginx, etc.) easily.
+* Use `@Named` CDI beans in shiro.ini.
+* Inject Shiro Subject, Principal, Session and SecurityManager into CDI, EJB beans and Jax-RS endpoints.
+* Use Shiro and Jakarta EE Security annotations (i.e. `@RequiresRole`) to protect CDI, EJB (local and remote) beans (part of CDI module) and Jax-RS endpoints (part of Jax-RS module)
+* Use Jakarta Faces (JSF) tags.
+* Make Shiro's login flows Jakarta Faces (JSF) Ajax-aware.
+* Smart redirect flow based on custom code and fallback pages.
 
 === Jakarta EE Security Annotations (JSR-250)
 In addition to all Shiro annotations, Jakarta EE module allows to specify Jakarta EE security annotations such as `@RolesAllowed`, `@DenyAll` and `@PermitAll` on your beans
