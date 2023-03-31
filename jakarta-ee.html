@@ -363,42 +363,39 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
 <div class="sect1">
 <h2 id="features">Features</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Configure Shiro automatically with sensible defaults for Jakarta EE, with minimal, or no configuration aside from shiro.ini.</p>
-</div>
-<div class="paragraph">
-<p>Use shiro.ini as usual to protect web application and Jax-RS paths and endpoints.</p>
-</div>
-<div class="paragraph">
-<p>Forms are automatically saved if sessions expire and seamlessly submitted upon subsequent login.</p>
-</div>
-<div class="paragraph">
-<p>Use Shiro-secured application behind a load balancer or an SSL-terminating proxy (haproxy, nginx, etc.) easily.</p>
-</div>
-<div class="paragraph">
-<p>Use <code>@Named</code> CDI beans in shiro.ini.</p>
-</div>
-<div class="paragraph">
-<p>Inject Shiro Subject, Principal, Session and SecurityManager into CDI, EJB beans and Jax-RS endpoints.</p>
-</div>
-<div class="paragraph">
-<p>Use Shiro and Jakarta EE Security annotations (i.e. <code>@RequiresRole</code>) to protect:</p>
-</div>
 <div class="ulist">
 <ul>
 <li>
-<p>CDI and EJB (local and remote) beans (part of CDI module)</p>
+<p>Configure Shiro automatically with sensible defaults for Jakarta EE, with minimal, or no configuration aside from shiro.ini.</p>
 </li>
 <li>
-<p>Jax-RS endpoints (part of Jax-RS module)</p>
+<p>Use shiro.ini as usual to secure web application, Jax-RS paths and endpoints.</p>
+</li>
+<li>
+<p>Forms are automatically saved if sessions expire and seamlessly submitted upon subsequent login.</p>
+</li>
+<li>
+<p>Use Shiro-secured application behind a load balancer or an SSL-terminating proxy (haproxy, nginx, etc.) easily.</p>
+</li>
+<li>
+<p>Use <code>@Named</code> CDI beans in shiro.ini.</p>
+</li>
+<li>
+<p>Inject Shiro Subject, Principal, Session and SecurityManager into CDI, EJB beans and Jax-RS endpoints.</p>
+</li>
+<li>
+<p>Use Shiro and Jakarta EE Security annotations (i.e. <code>@RequiresRole</code>) to protect CDI, EJB (local and remote) beans (part of CDI module) and Jax-RS endpoints (part of Jax-RS module)</p>
+</li>
+<li>
+<p>Use Jakarta Faces (JSF) tags.</p>
+</li>
+<li>
+<p>Make Shiro&#8217;s login flows Jakarta Faces (JSF) Ajax-aware.</p>
+</li>
+<li>
+<p>Smart redirect flow based on custom code and fallback pages.</p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>Use Jakarta Faces (JSF) tags.</p>
-</div>
-<div class="paragraph">
-<p>Make Shiro&#8217;s login flows Jakarta Faces (JSF) Ajax-aware.</p>
 </div>
 <div class="sect2">
 <h3 id="jakarta_ee_security_annotations_jsr_250">Jakarta EE Security Annotations (JSR-250)</h3>
