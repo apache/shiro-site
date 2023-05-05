@@ -1,0 +1,273 @@
+////
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+////
+
+= 2.0.0-alpha available
+:jbake-author: Lenny Primak
+:jbake-date: 2023-05-04 00:00:00
+:jbake-type: post
+:jbake-status: published
+:jbake-tags: blog, release
+:idprefix:
+:icons: font
+
+The Apache Shiro team is pleased to announce the release of Apache Shiro version 2.0.0-alpha.
+
+== All changes
+
+You can learn more on https://issues.apache.org/jira/projects/SHIRO/versions/12315455[Jira, Release 2.0.0-alpha].
+
+Release Notes - Shiro - Version 2.0.0-alpha
+
+=== Sub-tasks
+
+* [https://issues.apache.org/jira/browse/SHIRO-772[SHIRO-772]] -
+PowerMock blocks JDK 11+ builds
+* [https://issues.apache.org/jira/browse/SHIRO-773[SHIRO-773]] -
+Outdated Groovy version does not work with JDK14
+* [https://issues.apache.org/jira/browse/SHIRO-775[SHIRO-775]] -
+Excessive logging in jetty ContainerITs
+
+=== Bugs
+
+* [https://issues.apache.org/jira/browse/SHIRO-349[SHIRO-349]] -
+Security: Byte arrays (and other memory) holding sensitive data (even
+temporarily) should be zerod-out
+* [https://issues.apache.org/jira/browse/SHIRO-512[SHIRO-512]] - Race
+condition in Shiro's web container session timeout handling
+* [https://issues.apache.org/jira/browse/SHIRO-537[SHIRO-537]] - Class
+load issue in OSGI in ClassUtils
+* [https://issues.apache.org/jira/browse/SHIRO-610[SHIRO-610]] -
+Incorrect filterchainResolver in 1.4.0-RC2
+* [https://issues.apache.org/jira/browse/SHIRO-632[SHIRO-632]] -
+org.apache.felix:maven-bundle-plugin causing duplicate class problems
+between core and lang
+* [https://issues.apache.org/jira/browse/SHIRO-646[SHIRO-646]] - Unable
+to login a DelegatingSubject on a DefaultWebSecurityManager
+* [https://issues.apache.org/jira/browse/SHIRO-654[SHIRO-654]] -
+Multiple shiro OSGi bundles export the same packages
+* [https://issues.apache.org/jira/browse/SHIRO-678[SHIRO-678]] - Strings
+garbled when POST without JSESSIONID cookie
+* [https://issues.apache.org/jira/browse/SHIRO-761[SHIRO-761]] - Bad
+OSGi import for javax.annotation in shiro-guice
+* [https://issues.apache.org/jira/browse/SHIRO-762[SHIRO-762]] -
+SecurityUtils.securityManager should be volatile
+* [https://issues.apache.org/jira/browse/SHIRO-766[SHIRO-766]] -
+ArrayIndexOutOfBoundsException in Base64#decode
+* [https://issues.apache.org/jira/browse/SHIRO-767[SHIRO-767]] -
+org.apache.shiro.util.ClassUtil cannot load the array of Primitive
+DataType when use undertown as web container
+* [https://issues.apache.org/jira/browse/SHIRO-774[SHIRO-774]] - Remove
+wrong usage of prerequisites in pom.xml
+* [https://issues.apache.org/jira/browse/SHIRO-778[SHIRO-778]] - onInit
+method on AuthenticatingRealm is called twice
+* [https://issues.apache.org/jira/browse/SHIRO-792[SHIRO-792]] -
+ShiroWebFilterConfiguration seems to conflict with other
+FilterRegistrationBean
+* [https://issues.apache.org/jira/browse/SHIRO-797[SHIRO-797]] - Shiro
+1.7.0 is lower than using springboot version 2.0.7 dependency error
+* [https://issues.apache.org/jira/browse/SHIRO-812[SHIRO-812]] - Key
+value separator in config is broken with escape char
+* [https://issues.apache.org/jira/browse/SHIRO-817[SHIRO-817]] -
+CommonsInterpolator does not follow javadoc
+* [https://issues.apache.org/jira/browse/SHIRO-818[SHIRO-818]] - JAX-RS
+ExceptionMapper returns wrong status code
+* [https://issues.apache.org/jira/browse/SHIRO-819[SHIRO-819]] - Hasher
+Utility not executable
+* [https://issues.apache.org/jira/browse/SHIRO-825[SHIRO-825]] -
+Trailing slash in URI results in "IllegalArgumentException: There is no
+configured chain under the name/key"
+* [https://issues.apache.org/jira/browse/SHIRO-845[SHIRO-845]] -
+Dependencies for test-jars missing
+* [https://issues.apache.org/jira/browse/SHIRO-899[SHIRO-899]] - Jakarta
+9+ fails with Shiro native sesions
+* [https://issues.apache.org/jira/browse/SHIRO-902[SHIRO-902]] -
+Separator conflict between PermissionUtils.resolveDelimitedPermissions()
+and WildcardPermission.SUBPART_DIVIDER_TOKEN
+
+=== Epic
+
+* [https://issues.apache.org/jira/browse/SHIRO-897[SHIRO-897]] - Group
+all Jakarta-EE related issues here
+
+=== New Features
+
+* [https://issues.apache.org/jira/browse/SHIRO-206[SHIRO-206]] - Support
+for JSF/Facelets
+* [https://issues.apache.org/jira/browse/SHIRO-290[SHIRO-290]] - Create
+a BCrypt Hash implementation
+* [https://issues.apache.org/jira/browse/SHIRO-337[SHIRO-337]] - adding
+support for CDI
+* [https://issues.apache.org/jira/browse/SHIRO-789[SHIRO-789]] - Also
+add cookie SameSite option to Spring
+* [https://issues.apache.org/jira/browse/SHIRO-898[SHIRO-898]] - Migrate
+Jakarta EE support from FlowLogix to Shiro
+
+=== Improvements
+
+* [https://issues.apache.org/jira/browse/SHIRO-216[SHIRO-216]] - Add
+@Documented to Shiro authorization annotations
+* [https://issues.apache.org/jira/browse/SHIRO-398[SHIRO-398]] -
+Inconsistent name for session validation interval property in different
+implementations
+* [https://issues.apache.org/jira/browse/SHIRO-478[SHIRO-478]] - Upgrade
+dependencies on trunk
+* [https://issues.apache.org/jira/browse/SHIRO-551[SHIRO-551]] -
+DelegatingSubject should implement toString()
+* [https://issues.apache.org/jira/browse/SHIRO-671[SHIRO-671]] - Add
+support for javax.annotation.security.RolesAllowed, PermitAll, and
+DenyAll
+* [https://issues.apache.org/jira/browse/SHIRO-679[SHIRO-679]] - Shiro
+modules have split packages
+* [https://issues.apache.org/jira/browse/SHIRO-708[SHIRO-708]] - Remove
+deprecated shiro-cas module
+* [https://issues.apache.org/jira/browse/SHIRO-740[SHIRO-740]] -
+SslFilter with HTTP Strict Transport Security (HSTS)
+* [https://issues.apache.org/jira/browse/SHIRO-750[SHIRO-750]] - Migrate
+to jakarta APIs
+* [https://issues.apache.org/jira/browse/SHIRO-764[SHIRO-764]] - Add
+IpFilter for restricting access IP ranges
+* [https://issues.apache.org/jira/browse/SHIRO-770[SHIRO-770]] - Remove
+Base64
+* [https://issues.apache.org/jira/browse/SHIRO-771[SHIRO-771]] - Add
+OpenJDK-OpenJ9 travis builds
+* [https://issues.apache.org/jira/browse/SHIRO-795[SHIRO-795]] - Disable
+session path rewriting by default
+* [https://issues.apache.org/jira/browse/SHIRO-804[SHIRO-804]] - Avoid
+conflicts with spring boot aop
+* [https://issues.apache.org/jira/browse/SHIRO-806[SHIRO-806]] - Remove
+deprecated DefaultLdapContextFactory
+* [https://issues.apache.org/jira/browse/SHIRO-807[SHIRO-807]] - Remove
+deprecated getLdapContext(String username, String password)
+* [https://issues.apache.org/jira/browse/SHIRO-811[SHIRO-811]] - Convert
+AuthorizationFilterTest to using Mockito
+* [https://issues.apache.org/jira/browse/SHIRO-836[SHIRO-836]] - Delete
+jsecurty-sample.jks
+* [https://issues.apache.org/jira/browse/SHIRO-838[SHIRO-838]] - Create
+SHA512-Hashes
+* [https://issues.apache.org/jira/browse/SHIRO-840[SHIRO-840]] - Java 17
+compatibility
+* [https://issues.apache.org/jira/browse/SHIRO-846[SHIRO-846]] -
+Creation of site takes very long time
+* [https://issues.apache.org/jira/browse/SHIRO-848[SHIRO-848]] -
+Relative Path in pom.xml is not needed
+* [https://issues.apache.org/jira/browse/SHIRO-850[SHIRO-850]] - The
+profile name jdk19-plus is misleading
+* [https://issues.apache.org/jira/browse/SHIRO-851[SHIRO-851]] -
+Handling properties for compile/enconding vs. default configurations of
+plugins
+* [https://issues.apache.org/jira/browse/SHIRO-852[SHIRO-852]] -
+Configuration for maven-release-plugin prepationGoal should be changed
+* [https://issues.apache.org/jira/browse/SHIRO-853[SHIRO-853]] -
+Versions of maven-surefire/failsafe/report plugin are not in sync
+* [https://issues.apache.org/jira/browse/SHIRO-854[SHIRO-854]] -
+Konfiguration includes/excludes maven-failsafe-plugin can be reduced to
+default
+* [https://issues.apache.org/jira/browse/SHIRO-860[SHIRO-860]] - update
+logback to 1.2.10
+* [https://issues.apache.org/jira/browse/SHIRO-862[SHIRO-862]] - Replace
+Google Analytics with Matomo for new Javadocs
+* [https://issues.apache.org/jira/browse/SHIRO-871[SHIRO-871]] -
+ActiveDirectoryRealm - append suffix only if missing from username
+* [https://issues.apache.org/jira/browse/SHIRO-872[SHIRO-872]] - fix
+Reproducible Builds issues
+* [https://issues.apache.org/jira/browse/SHIRO-884[SHIRO-884]] - fix
+source jar Reproducible Builds issue
+* [https://issues.apache.org/jira/browse/SHIRO-885[SHIRO-885]] - Use
+OWASP Java Encoder with OSGi manifest
+* [https://issues.apache.org/jira/browse/SHIRO-889[SHIRO-889]] - Provide
+Jakarta jar modules
+* [https://issues.apache.org/jira/browse/SHIRO-890[SHIRO-890]] - Avoid
+another proxy creator when @EnableAspectJAutoProxy enabled
+* [https://issues.apache.org/jira/browse/SHIRO-900[SHIRO-900]] -
+Refactor of root POM (and update groovy to apache)
+
+=== Tests
+
+* [https://issues.apache.org/jira/browse/SHIRO-776[SHIRO-776]] - JUnit
+update to version 5
+* [https://issues.apache.org/jira/browse/SHIRO-777[SHIRO-777]] - Remove
+PowerMock and update the enforcer exclusion list
+
+=== Wishe
+
+* [https://issues.apache.org/jira/browse/SHIRO-780[SHIRO-780]] - NOTICE
+files of shiro components don't match NOTICE in source code repository
+
+=== Tasks
+
+* [https://issues.apache.org/jira/browse/SHIRO-39[SHIRO-39]] - JEE
+integration
+* [https://issues.apache.org/jira/browse/SHIRO-573[SHIRO-573]] - Remove
+shiro-cas from master (2.0)
+* [https://issues.apache.org/jira/browse/SHIRO-768[SHIRO-768]] - Remove
+the shiro-all module
+* [https://issues.apache.org/jira/browse/SHIRO-793[SHIRO-793]] -
+deleteMe cookie should use the defined "sameSite"
+* [https://issues.apache.org/jira/browse/SHIRO-805[SHIRO-805]] -
+Spelling
+* [https://issues.apache.org/jira/browse/SHIRO-841[SHIRO-841]] -
+NullPointerException from SessionsSecurityManager.start()
+* [https://issues.apache.org/jira/browse/SHIRO-849[SHIRO-849]] - Add
+support for JCache
+* [https://issues.apache.org/jira/browse/SHIRO-904[SHIRO-904]] - Make
+JDK 11 base compatibility in Shiro 2.0
+
+=== Dependency upgrades
+
+* [https://issues.apache.org/jira/browse/SHIRO-765[SHIRO-765]] - Upgrade
+to Apache Pom Parent 23
+* [https://issues.apache.org/jira/browse/SHIRO-785[SHIRO-785]] - Upgrade
+to maven-bundle-plugin 5.1.1
+* [https://issues.apache.org/jira/browse/SHIRO-786[SHIRO-786]] - Upgrade
+to Spring 5.2.8.RELEASE and Spring boot 2.3.2.RELEASE
+* [https://issues.apache.org/jira/browse/SHIRO-828[SHIRO-828]] -
+aspectj-maven-plugin 1.14.0
+* [https://issues.apache.org/jira/browse/SHIRO-842[SHIRO-842]] -
+shiro-web depends on older log4j
+* [https://issues.apache.org/jira/browse/SHIRO-878[SHIRO-878]] - Update
+Spring Dependencies to 5.2.20
+* [https://issues.apache.org/jira/browse/SHIRO-882[SHIRO-882]] - Upgrade
+to apache pom parent 26
+* [https://issues.apache.org/jira/browse/SHIRO-886[SHIRO-886]] - Upgrade
+to commons configuration 2.8.0
+
+=== Question
+
+* [https://issues.apache.org/jira/browse/SHIRO-784[SHIRO-784]] - Error
+creating bean with name
+'org.apache.shiro.spring.web.config.ShiroWebFilterConfiguration':
+Unsatisfied dependency expressed through field 'filterMap';
+
+=== Dependency
+
+* [https://issues.apache.org/jira/browse/SHIRO-881[SHIRO-881]] - pom.xml
+in samples/web may lack dependency
+
+
+== Download
+
+Download and verification instructions are available link:/download.html[on our download page].
+
+== Documentation
+
+For more information on link:/documentation.html[Shiro, please read the documentation.]
+
+Enjoy!
+
+The Apache Shiro Team
