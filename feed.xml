@@ -3,8 +3,8 @@
   <title>Apache Shiro | The Apache Software Foundation</title>
   <subtitle>Simple. Java. Security.</subtitle>
   <link href="https://shiro.apache.org/"/>
-  <link rel="self" href="https://shiro.apache.org/feed.xml" />
-  <updated>2023-02-26T09:14:59Z</updated>
+  <link rel="self" href="https://shiro.staged.apache.org//feed.xml" />
+  <updated>2023-06-27T07:56:24Z</updated>
 
   <author>
     <name>Les Hazlewood</name>
@@ -36,9 +36,510 @@
   <logo>/images/apache-shiro-logo.png</logo>
 
   <entry>
+    <title>2.0.0-alpha available</title>
+    <link href="https://shiro.staged.apache.org//blog/2023/05/04/apache-shiro-200-alpha-1-released.html"/>
+    <id>https://shiro.staged.apache.org//blog/2023/05/04/apache-shiro-200-alpha-1-released.html</id>
+    <updated>2023-05-04T00:00:00Z</updated>
+    <author>
+      <name>Lenny Primak</name>
+    </author>
+    <content type="html">
+      &lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Apache Shiro team is pleased to announce the release of Apache Shiro version 2.0.0-alpha.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;all_changes&quot;&gt;All changes&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You can learn more on &lt;a href=&quot;https://issues.apache.org/jira/projects/SHIRO/versions/12315455&quot;&gt;Jira, Release 2.0.0-alpha&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Release Notes - Shiro - Version 2.0.0-alpha&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;sub_tasks&quot;&gt;Sub-tasks&lt;/h3&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-772&quot;&gt;SHIRO-772&lt;/a&gt;] -
+PowerMock blocks JDK 11+ builds&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-773&quot;&gt;SHIRO-773&lt;/a&gt;] -
+Outdated Groovy version does not work with JDK14&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-775&quot;&gt;SHIRO-775&lt;/a&gt;] -
+Excessive logging in jetty ContainerITs&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;bugs&quot;&gt;Bugs&lt;/h3&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-349&quot;&gt;SHIRO-349&lt;/a&gt;] -
+Security: Byte arrays (and other memory) holding sensitive data (even
+temporarily) should be zerod-out&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-512&quot;&gt;SHIRO-512&lt;/a&gt;] - Race
+condition in Shiro&amp;#8217;s web container session timeout handling&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-537&quot;&gt;SHIRO-537&lt;/a&gt;] - Class
+load issue in OSGI in ClassUtils&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-610&quot;&gt;SHIRO-610&lt;/a&gt;] -
+Incorrect filterchainResolver in 1.4.0-RC2&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-632&quot;&gt;SHIRO-632&lt;/a&gt;] -
+org.apache.felix:maven-bundle-plugin causing duplicate class problems
+between core and lang&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-646&quot;&gt;SHIRO-646&lt;/a&gt;] - Unable
+to login a DelegatingSubject on a DefaultWebSecurityManager&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-654&quot;&gt;SHIRO-654&lt;/a&gt;] -
+Multiple shiro OSGi bundles export the same packages&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-678&quot;&gt;SHIRO-678&lt;/a&gt;] - Strings
+garbled when POST without JSESSIONID cookie&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-761&quot;&gt;SHIRO-761&lt;/a&gt;] - Bad
+OSGi import for javax.annotation in shiro-guice&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-762&quot;&gt;SHIRO-762&lt;/a&gt;] -
+SecurityUtils.securityManager should be volatile&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-766&quot;&gt;SHIRO-766&lt;/a&gt;] -
+ArrayIndexOutOfBoundsException in Base64#decode&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-767&quot;&gt;SHIRO-767&lt;/a&gt;] -
+org.apache.shiro.util.ClassUtil cannot load the array of Primitive
+DataType when use undertown as web container&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-774&quot;&gt;SHIRO-774&lt;/a&gt;] - Remove
+wrong usage of prerequisites in pom.xml&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-778&quot;&gt;SHIRO-778&lt;/a&gt;] - onInit
+method on AuthenticatingRealm is called twice&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-792&quot;&gt;SHIRO-792&lt;/a&gt;] -
+ShiroWebFilterConfiguration seems to conflict with other
+FilterRegistrationBean&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-797&quot;&gt;SHIRO-797&lt;/a&gt;] - Shiro
+1.7.0 is lower than using springboot version 2.0.7 dependency error&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-812&quot;&gt;SHIRO-812&lt;/a&gt;] - Key
+value separator in config is broken with escape char&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-817&quot;&gt;SHIRO-817&lt;/a&gt;] -
+CommonsInterpolator does not follow javadoc&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-818&quot;&gt;SHIRO-818&lt;/a&gt;] - JAX-RS
+ExceptionMapper returns wrong status code&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-819&quot;&gt;SHIRO-819&lt;/a&gt;] - Hasher
+Utility not executable&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-825&quot;&gt;SHIRO-825&lt;/a&gt;] -
+Trailing slash in URI results in &quot;IllegalArgumentException: There is no
+configured chain under the name/key&quot;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-845&quot;&gt;SHIRO-845&lt;/a&gt;] -
+Dependencies for test-jars missing&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-899&quot;&gt;SHIRO-899&lt;/a&gt;] - Jakarta
+9+ fails with Shiro native sesions&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-902&quot;&gt;SHIRO-902&lt;/a&gt;] -
+Separator conflict between PermissionUtils.resolveDelimitedPermissions()
+and WildcardPermission.SUBPART_DIVIDER_TOKEN&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;epic&quot;&gt;Epic&lt;/h3&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-897&quot;&gt;SHIRO-897&lt;/a&gt;] - Group
+all Jakarta-EE related issues here&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;new_features&quot;&gt;New Features&lt;/h3&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-206&quot;&gt;SHIRO-206&lt;/a&gt;] - Support
+for JSF/Facelets&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-290&quot;&gt;SHIRO-290&lt;/a&gt;] - Create
+a BCrypt Hash implementation&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-337&quot;&gt;SHIRO-337&lt;/a&gt;] - adding
+support for CDI&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-789&quot;&gt;SHIRO-789&lt;/a&gt;] - Also
+add cookie SameSite option to Spring&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-898&quot;&gt;SHIRO-898&lt;/a&gt;] - Migrate
+Jakarta EE support from FlowLogix to Shiro&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;improvements&quot;&gt;Improvements&lt;/h3&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-216&quot;&gt;SHIRO-216&lt;/a&gt;] - Add
+@Documented to Shiro authorization annotations&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-398&quot;&gt;SHIRO-398&lt;/a&gt;] -
+Inconsistent name for session validation interval property in different
+implementations&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-478&quot;&gt;SHIRO-478&lt;/a&gt;] - Upgrade
+dependencies on trunk&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-551&quot;&gt;SHIRO-551&lt;/a&gt;] -
+DelegatingSubject should implement toString()&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-671&quot;&gt;SHIRO-671&lt;/a&gt;] - Add
+support for javax.annotation.security.RolesAllowed, PermitAll, and
+DenyAll&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-679&quot;&gt;SHIRO-679&lt;/a&gt;] - Shiro
+modules have split packages&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-708&quot;&gt;SHIRO-708&lt;/a&gt;] - Remove
+deprecated shiro-cas module&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-740&quot;&gt;SHIRO-740&lt;/a&gt;] -
+SslFilter with HTTP Strict Transport Security (HSTS)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-750&quot;&gt;SHIRO-750&lt;/a&gt;] - Migrate
+to jakarta APIs&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-764&quot;&gt;SHIRO-764&lt;/a&gt;] - Add
+IpFilter for restricting access IP ranges&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-770&quot;&gt;SHIRO-770&lt;/a&gt;] - Remove
+Base64&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-771&quot;&gt;SHIRO-771&lt;/a&gt;] - Add
+OpenJDK-OpenJ9 travis builds&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-795&quot;&gt;SHIRO-795&lt;/a&gt;] - Disable
+session path rewriting by default&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-804&quot;&gt;SHIRO-804&lt;/a&gt;] - Avoid
+conflicts with spring boot aop&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-806&quot;&gt;SHIRO-806&lt;/a&gt;] - Remove
+deprecated DefaultLdapContextFactory&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-807&quot;&gt;SHIRO-807&lt;/a&gt;] - Remove
+deprecated getLdapContext(String username, String password)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-811&quot;&gt;SHIRO-811&lt;/a&gt;] - Convert
+AuthorizationFilterTest to using Mockito&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-836&quot;&gt;SHIRO-836&lt;/a&gt;] - Delete
+jsecurty-sample.jks&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-838&quot;&gt;SHIRO-838&lt;/a&gt;] - Create
+SHA512-Hashes&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-840&quot;&gt;SHIRO-840&lt;/a&gt;] - Java 17
+compatibility&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-846&quot;&gt;SHIRO-846&lt;/a&gt;] -
+Creation of site takes very long time&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-848&quot;&gt;SHIRO-848&lt;/a&gt;] -
+Relative Path in pom.xml is not needed&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-850&quot;&gt;SHIRO-850&lt;/a&gt;] - The
+profile name jdk19-plus is misleading&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-851&quot;&gt;SHIRO-851&lt;/a&gt;] -
+Handling properties for compile/enconding vs. default configurations of
+plugins&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-852&quot;&gt;SHIRO-852&lt;/a&gt;] -
+Configuration for maven-release-plugin prepationGoal should be changed&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-853&quot;&gt;SHIRO-853&lt;/a&gt;] -
+Versions of maven-surefire/failsafe/report plugin are not in sync&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-854&quot;&gt;SHIRO-854&lt;/a&gt;] -
+Konfiguration includes/excludes maven-failsafe-plugin can be reduced to
+default&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-860&quot;&gt;SHIRO-860&lt;/a&gt;] - update
+logback to 1.2.10&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-862&quot;&gt;SHIRO-862&lt;/a&gt;] - Replace
+Google Analytics with Matomo for new Javadocs&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-871&quot;&gt;SHIRO-871&lt;/a&gt;] -
+ActiveDirectoryRealm - append suffix only if missing from username&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-872&quot;&gt;SHIRO-872&lt;/a&gt;] - fix
+Reproducible Builds issues&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-884&quot;&gt;SHIRO-884&lt;/a&gt;] - fix
+source jar Reproducible Builds issue&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-885&quot;&gt;SHIRO-885&lt;/a&gt;] - Use
+OWASP Java Encoder with OSGi manifest&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-889&quot;&gt;SHIRO-889&lt;/a&gt;] - Provide
+Jakarta jar modules&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-890&quot;&gt;SHIRO-890&lt;/a&gt;] - Avoid
+another proxy creator when @EnableAspectJAutoProxy enabled&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-900&quot;&gt;SHIRO-900&lt;/a&gt;] -
+Refactor of root POM (and update groovy to apache)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;tests&quot;&gt;Tests&lt;/h3&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-776&quot;&gt;SHIRO-776&lt;/a&gt;] - JUnit
+update to version 5&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-777&quot;&gt;SHIRO-777&lt;/a&gt;] - Remove
+PowerMock and update the enforcer exclusion list&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;wishe&quot;&gt;Wishe&lt;/h3&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-780&quot;&gt;SHIRO-780&lt;/a&gt;] - NOTICE
+files of shiro components don&amp;#8217;t match NOTICE in source code repository&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;tasks&quot;&gt;Tasks&lt;/h3&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-39&quot;&gt;SHIRO-39&lt;/a&gt;] - JEE
+integration&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-573&quot;&gt;SHIRO-573&lt;/a&gt;] - Remove
+shiro-cas from master (2.0)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-768&quot;&gt;SHIRO-768&lt;/a&gt;] - Remove
+the shiro-all module&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-793&quot;&gt;SHIRO-793&lt;/a&gt;] -
+deleteMe cookie should use the defined &quot;sameSite&quot;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-805&quot;&gt;SHIRO-805&lt;/a&gt;] -
+Spelling&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-841&quot;&gt;SHIRO-841&lt;/a&gt;] -
+NullPointerException from SessionsSecurityManager.start()&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-849&quot;&gt;SHIRO-849&lt;/a&gt;] - Add
+support for JCache&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-904&quot;&gt;SHIRO-904&lt;/a&gt;] - Make
+JDK 11 base compatibility in Shiro 2.0&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;dependency_upgrades&quot;&gt;Dependency upgrades&lt;/h3&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-765&quot;&gt;SHIRO-765&lt;/a&gt;] - Upgrade
+to Apache Pom Parent 23&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-785&quot;&gt;SHIRO-785&lt;/a&gt;] - Upgrade
+to maven-bundle-plugin 5.1.1&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-786&quot;&gt;SHIRO-786&lt;/a&gt;] - Upgrade
+to Spring 5.2.8.RELEASE and Spring boot 2.3.2.RELEASE&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-828&quot;&gt;SHIRO-828&lt;/a&gt;] -
+aspectj-maven-plugin 1.14.0&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-842&quot;&gt;SHIRO-842&lt;/a&gt;] -
+shiro-web depends on older log4j&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-878&quot;&gt;SHIRO-878&lt;/a&gt;] - Update
+Spring Dependencies to 5.2.20&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-882&quot;&gt;SHIRO-882&lt;/a&gt;] - Upgrade
+to apache pom parent 26&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-886&quot;&gt;SHIRO-886&lt;/a&gt;] - Upgrade
+to commons configuration 2.8.0&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;question&quot;&gt;Question&lt;/h3&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-784&quot;&gt;SHIRO-784&lt;/a&gt;] - Error
+creating bean with name
+&apos;org.apache.shiro.spring.web.config.ShiroWebFilterConfiguration&apos;:
+Unsatisfied dependency expressed through field &apos;filterMap&apos;;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;dependency&quot;&gt;Dependency&lt;/h3&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;[&lt;a href=&quot;https://issues.apache.org/jira/browse/SHIRO-881&quot;&gt;SHIRO-881&lt;/a&gt;] - pom.xml
+in samples/web may lack dependency&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;download&quot;&gt;Download&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Download and verification instructions are available &lt;a href=&quot;/download.html&quot;&gt;on our download page&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;documentation&quot;&gt;Documentation&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For more information on &lt;a href=&quot;/documentation.html&quot;&gt;Shiro, please read the documentation.&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Enjoy!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Apache Shiro Team&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+    </content>
+  </entry>
+
+  <entry>
     <title>1.11.0 available with fix CVE-2023-22602</title>
-    <link href="https://shiro.apache.org/blog/2023/01/13/apache-shiro-1110-released.html"/>
-    <id>https://shiro.apache.org/blog/2023/01/13/apache-shiro-1110-released.html</id>
+    <link href="https://shiro.staged.apache.org//blog/2023/01/13/apache-shiro-1110-released.html"/>
+    <id>https://shiro.staged.apache.org//blog/2023/01/13/apache-shiro-1110-released.html</id>
     <updated>2023-01-13T00:00:00Z</updated>
     <author>
       <name>Brian Demers</name>
@@ -135,8 +636,8 @@ Apache Shiro would like to thank v3ged0ge and Adamytd for reporting this issue.&
 
   <entry>
     <title>Apache Shiro 1.10.1 available</title>
-    <link href="https://shiro.apache.org/blog/2022/11/19/apache-shiro-1101-released.html"/>
-    <id>https://shiro.apache.org/blog/2022/11/19/apache-shiro-1101-released.html</id>
+    <link href="https://shiro.staged.apache.org//blog/2022/11/19/apache-shiro-1101-released.html"/>
+    <id>https://shiro.staged.apache.org//blog/2022/11/19/apache-shiro-1101-released.html</id>
     <updated>2022-11-19T00:00:00Z</updated>
     <author>
       <name>Benjamin Marwell</name>
@@ -233,8 +734,8 @@ This is a feature release for 1.x.&lt;/p&gt;
 
   <entry>
     <title>1.10.0 available with fix CVE-2022-40664</title>
-    <link href="https://shiro.apache.org/blog/2022/10/10/apache-shiro-1100-released.html"/>
-    <id>https://shiro.apache.org/blog/2022/10/10/apache-shiro-1100-released.html</id>
+    <link href="https://shiro.staged.apache.org//blog/2022/10/10/apache-shiro-1100-released.html"/>
+    <id>https://shiro.staged.apache.org//blog/2022/10/10/apache-shiro-1100-released.html</id>
     <updated>2022-10-10T00:00:00Z</updated>
     <author>
       <name>Brian Demers</name>
@@ -350,8 +851,8 @@ Apache Shiro would like to thank Y4tacker for reporting this issue.&lt;/p&gt;
 
   <entry>
     <title>Ongoing work on the Jakarta namespace transition</title>
-    <link href="https://shiro.apache.org/blog/2022/06/30/jakarta-work.html"/>
-    <id>https://shiro.apache.org/blog/2022/06/30/jakarta-work.html</id>
+    <link href="https://shiro.staged.apache.org//blog/2022/06/30/jakarta-work.html"/>
+    <id>https://shiro.staged.apache.org//blog/2022/06/30/jakarta-work.html</id>
     <updated>2022-06-30T00:00:00Z</updated>
     <author>
       <name>Richard Zowalla</name>
@@ -380,8 +881,8 @@ Apache Shiro would like to thank Y4tacker for reporting this issue.&lt;/p&gt;
 
   <entry>
     <title>1.9.1 available with fix CVE-2022-32532</title>
-    <link href="https://shiro.apache.org/blog/2022/06/28/apache-shiro-191-released.html"/>
-    <id>https://shiro.apache.org/blog/2022/06/28/apache-shiro-191-released.html</id>
+    <link href="https://shiro.staged.apache.org//blog/2022/06/28/apache-shiro-191-released.html"/>
+    <id>https://shiro.staged.apache.org//blog/2022/06/28/apache-shiro-191-released.html</id>
     <updated>2022-06-28T00:00:00Z</updated>
     <author>
       <name>Brian Demers</name>
@@ -491,8 +992,8 @@ Dependencies for test-jars missing&lt;/p&gt;
 
   <entry>
     <title>Apache Shiro 1.9.0 Released</title>
-    <link href="https://shiro.apache.org/blog/2022/03/22/apache-shiro-190-released.html"/>
-    <id>https://shiro.apache.org/blog/2022/03/22/apache-shiro-190-released.html</id>
+    <link href="https://shiro.staged.apache.org//blog/2022/03/22/apache-shiro-190-released.html"/>
+    <id>https://shiro.staged.apache.org//blog/2022/03/22/apache-shiro-190-released.html</id>
     <updated>2022-03-22T21:39:37Z</updated>
     <author>
       <name>Benjamin Marwell</name>
@@ -686,8 +1187,8 @@ maven-javadoc-plugin to 3.3.1&lt;/p&gt;
 
   <entry>
     <title>The new Apache Shiro website is live!</title>
-    <link href="https://shiro.apache.org/blog/2022/02/09/new-shiro-website.html"/>
-    <id>https://shiro.apache.org/blog/2022/02/09/new-shiro-website.html</id>
+    <link href="https://shiro.staged.apache.org//blog/2022/02/09/new-shiro-website.html"/>
+    <id>https://shiro.staged.apache.org//blog/2022/02/09/new-shiro-website.html</id>
     <updated>2022-02-09T15:43:22Z</updated>
     <author>
       <name>Benjamin Marwell</name>
@@ -758,8 +1259,8 @@ Of course the old URLs will be redirected.&lt;/p&gt;
 
   <entry>
     <title>Apache Shiro v1.8.0 released</title>
-    <link href="https://shiro.apache.org/blog/2021/v1.8.0.html"/>
-    <id>https://shiro.apache.org/blog/2021/v1.8.0.html</id>
+    <link href="https://shiro.staged.apache.org//blog/2021/v1.8.0.html"/>
+    <id>https://shiro.staged.apache.org//blog/2021/v1.8.0.html</id>
     <updated>2021-08-26T00:00:00Z</updated>
     <author>
       <name>Benjamin Marwell</name>
@@ -838,8 +1339,8 @@ configured chain under the name/key&quot;&lt;/p&gt;
 
   <entry>
     <title>1.7.1 available with fix CVE-2020-17523</title>
-    <link href="https://shiro.apache.org/blog/2021/v1.7.1.html"/>
-    <id>https://shiro.apache.org/blog/2021/v1.7.1.html</id>
+    <link href="https://shiro.staged.apache.org//blog/2021/v1.7.1.html"/>
+    <id>https://shiro.staged.apache.org//blog/2021/v1.7.1.html</id>
     <updated>2021-01-31T00:00:00Z</updated>
     <author>
       <name>Brian Demers</name>
@@ -871,8 +1372,8 @@ configured chain under the name/key&quot;&lt;/p&gt;
 
   <entry>
     <title>1.7.0 available with fix CVE-2020-17510</title>
-    <link href="https://shiro.apache.org/blog/2020/v1.7.0.html"/>
-    <id>https://shiro.apache.org/blog/2020/v1.7.0.html</id>
+    <link href="https://shiro.staged.apache.org//blog/2020/v1.7.0.html"/>
+    <id>https://shiro.staged.apache.org//blog/2020/v1.7.0.html</id>
     <updated>2020-10-29T00:00:00Z</updated>
     <author>
       <name>François Papon</name>
@@ -926,8 +1427,8 @@ configured chain under the name/key&quot;&lt;/p&gt;
 
   <entry>
     <title>Apache Shiro 1.6.0 available</title>
-    <link href="https://shiro.apache.org/blog/2020/v1.6.0.html"/>
-    <id>https://shiro.apache.org/blog/2020/v1.6.0.html</id>
+    <link href="https://shiro.staged.apache.org//blog/2020/v1.6.0.html"/>
+    <id>https://shiro.staged.apache.org//blog/2020/v1.6.0.html</id>
     <updated>2020-08-17T00:00:00Z</updated>
     <author>
       <name>François Papon</name>
@@ -976,23 +1477,6 @@ configured chain under the name/key&quot;&lt;/p&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;The Apache Shiro Team&lt;/p&gt;
 &lt;/div&gt;
-    </content>
-  </entry>
-
-  <entry>
-    <title>Feathercast with Brian Demers</title>
-    <link href="https://shiro.apache.org/blog/2020/05/25/feathercast-with-brian-demers.html"/>
-    <id>https://shiro.apache.org/blog/2020/05/25/feathercast-with-brian-demers.html</id>
-    <updated>2020-05-25T00:00:00Z</updated>
-    <author>
-      <name>Benjamin Marwell</name>
-    </author>
-    <content type="html">
-      &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Our PMC Chair Brian Demers was interviewed in the Feathercast, an Apache Podcast.
-Check out the interview with Brian about the current state of the Apache Shiro project!&lt;/p&gt;
-&lt;/div&gt;
-&lt;iframe width=&quot;768&quot; height=&quot;432&quot; src=&quot;https://www.youtube-nocookie.com/embed/PHJqbNbHVxY&quot; title=&quot;YouTube video player&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture&quot; allowfullscreen&gt;&lt;/iframe&gt;
     </content>
   </entry>
 

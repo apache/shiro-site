@@ -18,9 +18,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Apache Shiro 1.9.0 Released | Apache Shiro</title>
+    <title>2.0.0-alpha available | Apache Shiro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Benjamin Marwell">
+    <meta name="author" content="Lenny Primak">
     <meta name="keywords" content='blog,release'>
     <meta name="generator" content="JBake">
     <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
@@ -28,21 +28,21 @@
     <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
     <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
 
-    <meta property="og:title" content="Apache Shiro 1.9.0 Released | Apache Shiro"/>
-    <meta property="article:published_time" content="2022-03-22T21:39:37Z"/>
-    <meta name="publish_date" property="og:publish_date" content="2022-03-22T21:39:37Z"/>
-    <meta name="twitter:creator" content="@bmarwell" />
-    <meta property="article:author" content="https://www.facebook.com/bmarwell" />
-    <meta property="profile:first_name" content="Benjamin" />
-    <meta property="profile:last_name" content="Marwell" />
+    <meta property="og:title" content="2.0.0-alpha available | Apache Shiro"/>
+    <meta property="article:published_time" content="2023-05-04T00:00:00Z"/>
+    <meta name="publish_date" property="og:publish_date" content="2023-05-04T00:00:00Z"/>
+    <meta name="twitter:creator" content="@lprimak" />
+    <meta property="article:author" content="https://www.facebook.com/lprimak" />
+    <meta property="profile:first_name" content="Lenny" />
+    <meta property="profile:last_name" content="Primak" />
     <meta property="og:type" content="article"/>
       <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@ApacheShiro" />
-    <meta property="article:modification_time" content="2022-03-22T21:39:37Z"/>
+    <meta property="article:modification_time" content="2023-05-04T00:00:00Z"/>
     <meta property="article:tag" content='blog'/>
     <meta property="article:tag" content='release'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//blog/2022/03/22/apache-shiro-190-released.html'/>
+    <meta property="og:url" content='https://shiro.staged.apache.org//blog/2023/05/04/apache-shiro-200-alpha-1-released.html'/>
     <meta property="og:image" content='../../../../images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -189,56 +189,20 @@
     </nav>
 
 	<div class="page-header">
-		<h1>Apache Shiro 1.9.0 Released</h1>
+		<h1>2.0.0-alpha available</h1>
 	</div>
 
 
 	<p>
-		<em>Published by <a rel="author" href="https://twitter.com/@bmarwell">Benjamin Marwell</a>&nbsp;on the
-			<time datetime="2022-03-22T21:39:37Z">22th of March, 2022</time>
+		<em>Published by <a rel="author" href="https://twitter.com/@lprimak">Lenny Primak</a>&nbsp;on the
+			<time datetime="2023-05-04T00:00:00Z">04th of May, 2023</time>
 		</em>
 	</p>
 
 	<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Shiro team is pleased to announce the release of Apache Shiro version 1.9.0.
-This is a feature release for 1.x.</p>
-</div>
-<div class="paragraph">
-<p>This release solves 20 issues since the 1.8.0 release and is available for download now.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="breaking_changes">Breaking changes</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>We fixed [<a href="https://issues.apache.org/jira/browse/SHIRO-829">SHIRO-829</a>] by changing the class signature of the class <code>ShiroFilterFactoryBean</code>:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-diff hljs" data-lang="diff">-public class ShiroFilterFactoryBean implements FactoryBean, BeanPostProcessor {
-+public class ShiroFilterFactoryBean implements FactoryBean&lt;AbstractShiroFilter&gt;, BeanPostProcessor {</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>and the method signature of <code>public Class&lt;?&gt; getObjectType</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-diff hljs" data-lang="diff">-    public Class getObjectType() {
--        return SpringShiroFilter.class;
-+    public Class&lt;?&gt; getObjectType() {
-+        return AbstractShiroFilter.class;</code></pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>While we do not expect to break any builds or runtimes, these changes are (strictly speaking) breaking changes as they introduce Generics to this class.</p>
+<p>The Apache Shiro team is pleased to announce the release of Apache Shiro version 2.0.0-alpha.</p>
 </div>
 </div>
 </div>
@@ -246,31 +210,250 @@ This is a feature release for 1.x.</p>
 <h2 id="all_changes">All changes</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can learn more on <a href="https://issues.apache.org/jira/projects/SHIRO/versions/12350639">Jira, Release 1.9.0</a>.</p>
+<p>You can learn more on <a href="https://issues.apache.org/jira/projects/SHIRO/versions/12315455">Jira, Release 2.0.0-alpha</a>.</p>
+</div>
+<div class="paragraph">
+<p>Release Notes - Shiro - Version 2.0.0-alpha</p>
 </div>
 <div class="sect2">
-<h3 id="bug">Bug</h3>
+<h3 id="sub_tasks">Sub-tasks</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-829">SHIRO-829</a>] -
-beanPostProcessor and FactoryBean cause aop to fail in the same
-Configuration</p>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-772">SHIRO-772</a>] -
+PowerMock blocks JDK 11+ builds</p>
 </li>
 <li>
-<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-845">SHIRO-845</a>] -
-Dependencies for test-jars missing</p>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-773">SHIRO-773</a>] -
+Outdated Groovy version does not work with JDK14</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-775">SHIRO-775</a>] -
+Excessive logging in jetty ContainerITs</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="improvement">Improvement</h3>
+<h3 id="bugs">Bugs</h3>
 <div class="ulist">
 <ul>
 <li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-349">SHIRO-349</a>] -
+Security: Byte arrays (and other memory) holding sensitive data (even
+temporarily) should be zerod-out</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-512">SHIRO-512</a>] - Race
+condition in Shiro&#8217;s web container session timeout handling</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-537">SHIRO-537</a>] - Class
+load issue in OSGI in ClassUtils</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-610">SHIRO-610</a>] -
+Incorrect filterchainResolver in 1.4.0-RC2</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-632">SHIRO-632</a>] -
+org.apache.felix:maven-bundle-plugin causing duplicate class problems
+between core and lang</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-646">SHIRO-646</a>] - Unable
+to login a DelegatingSubject on a DefaultWebSecurityManager</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-654">SHIRO-654</a>] -
+Multiple shiro OSGi bundles export the same packages</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-678">SHIRO-678</a>] - Strings
+garbled when POST without JSESSIONID cookie</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-761">SHIRO-761</a>] - Bad
+OSGi import for javax.annotation in shiro-guice</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-762">SHIRO-762</a>] -
+SecurityUtils.securityManager should be volatile</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-766">SHIRO-766</a>] -
+ArrayIndexOutOfBoundsException in Base64#decode</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-767">SHIRO-767</a>] -
+org.apache.shiro.util.ClassUtil cannot load the array of Primitive
+DataType when use undertown as web container</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-774">SHIRO-774</a>] - Remove
+wrong usage of prerequisites in pom.xml</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-778">SHIRO-778</a>] - onInit
+method on AuthenticatingRealm is called twice</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-792">SHIRO-792</a>] -
+ShiroWebFilterConfiguration seems to conflict with other
+FilterRegistrationBean</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-797">SHIRO-797</a>] - Shiro
+1.7.0 is lower than using springboot version 2.0.7 dependency error</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-812">SHIRO-812</a>] - Key
+value separator in config is broken with escape char</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-817">SHIRO-817</a>] -
+CommonsInterpolator does not follow javadoc</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-818">SHIRO-818</a>] - JAX-RS
+ExceptionMapper returns wrong status code</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-819">SHIRO-819</a>] - Hasher
+Utility not executable</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-825">SHIRO-825</a>] -
+Trailing slash in URI results in "IllegalArgumentException: There is no
+configured chain under the name/key"</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-845">SHIRO-845</a>] -
+Dependencies for test-jars missing</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-899">SHIRO-899</a>] - Jakarta
+9+ fails with Shiro native sesions</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-902">SHIRO-902</a>] -
+Separator conflict between PermissionUtils.resolveDelimitedPermissions()
+and WildcardPermission.SUBPART_DIVIDER_TOKEN</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="epic">Epic</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-897">SHIRO-897</a>] - Group
+all Jakarta-EE related issues here</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="new_features">New Features</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-206">SHIRO-206</a>] - Support
+for JSF/Facelets</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-290">SHIRO-290</a>] - Create
+a BCrypt Hash implementation</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-337">SHIRO-337</a>] - adding
+support for CDI</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-789">SHIRO-789</a>] - Also
+add cookie SameSite option to Spring</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-898">SHIRO-898</a>] - Migrate
+Jakarta EE support from FlowLogix to Shiro</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="improvements">Improvements</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-216">SHIRO-216</a>] - Add
+@Documented to Shiro authorization annotations</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-398">SHIRO-398</a>] -
+Inconsistent name for session validation interval property in different
+implementations</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-478">SHIRO-478</a>] - Upgrade
+dependencies on trunk</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-551">SHIRO-551</a>] -
+DelegatingSubject should implement toString()</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-671">SHIRO-671</a>] - Add
+support for javax.annotation.security.RolesAllowed, PermitAll, and
+DenyAll</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-679">SHIRO-679</a>] - Shiro
+modules have split packages</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-708">SHIRO-708</a>] - Remove
+deprecated shiro-cas module</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-740">SHIRO-740</a>] -
+SslFilter with HTTP Strict Transport Security (HSTS)</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-750">SHIRO-750</a>] - Migrate
+to jakarta APIs</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-764">SHIRO-764</a>] - Add
+IpFilter for restricting access IP ranges</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-770">SHIRO-770</a>] - Remove
+Base64</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-771">SHIRO-771</a>] - Add
+OpenJDK-OpenJ9 travis builds</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-795">SHIRO-795</a>] - Disable
+session path rewriting by default</p>
+</li>
+<li>
 <p>[<a href="https://issues.apache.org/jira/browse/SHIRO-804">SHIRO-804</a>] - Avoid
 conflicts with spring boot aop</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-806">SHIRO-806</a>] - Remove
+deprecated DefaultLdapContextFactory</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-807">SHIRO-807</a>] - Remove
+deprecated getLdapContext(String username, String password)</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-811">SHIRO-811</a>] - Convert
+AuthorizationFilterTest to using Mockito</p>
 </li>
 <li>
 <p>[<a href="https://issues.apache.org/jira/browse/SHIRO-836">SHIRO-836</a>] - Delete
@@ -279,6 +462,10 @@ jsecurty-sample.jks</p>
 <li>
 <p>[<a href="https://issues.apache.org/jira/browse/SHIRO-838">SHIRO-838</a>] - Create
 SHA512-Hashes</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-840">SHIRO-840</a>] - Java 17
+compatibility</p>
 </li>
 <li>
 <p>[<a href="https://issues.apache.org/jira/browse/SHIRO-846">SHIRO-846</a>] -
@@ -318,27 +505,118 @@ logback to 1.2.10</p>
 <p>[<a href="https://issues.apache.org/jira/browse/SHIRO-862">SHIRO-862</a>] - Replace
 Google Analytics with Matomo for new Javadocs</p>
 </li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-871">SHIRO-871</a>] -
+ActiveDirectoryRealm - append suffix only if missing from username</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-872">SHIRO-872</a>] - fix
+Reproducible Builds issues</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-884">SHIRO-884</a>] - fix
+source jar Reproducible Builds issue</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-885">SHIRO-885</a>] - Use
+OWASP Java Encoder with OSGi manifest</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-889">SHIRO-889</a>] - Provide
+Jakarta jar modules</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-890">SHIRO-890</a>] - Avoid
+another proxy creator when @EnableAspectJAutoProxy enabled</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-900">SHIRO-900</a>] -
+Refactor of root POM (and update groovy to apache)</p>
+</li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="task">Task</h3>
+<h3 id="tests">Tests</h3>
 <div class="ulist">
 <ul>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-776">SHIRO-776</a>] - JUnit
+update to version 5</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-777">SHIRO-777</a>] - Remove
+PowerMock and update the enforcer exclusion list</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="wishe">Wishe</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-780">SHIRO-780</a>] - NOTICE
+files of shiro components don&#8217;t match NOTICE in source code repository</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="tasks">Tasks</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-39">SHIRO-39</a>] - JEE
+integration</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-573">SHIRO-573</a>] - Remove
+shiro-cas from master (2.0)</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-768">SHIRO-768</a>] - Remove
+the shiro-all module</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-793">SHIRO-793</a>] -
+deleteMe cookie should use the defined "sameSite"</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-805">SHIRO-805</a>] -
+Spelling</p>
+</li>
 <li>
 <p>[<a href="https://issues.apache.org/jira/browse/SHIRO-841">SHIRO-841</a>] -
 NullPointerException from SessionsSecurityManager.start()</p>
 </li>
 <li>
-<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-867">SHIRO-867</a>] - Skip Deployment of integration-test and samples artifacts</p>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-849">SHIRO-849</a>] - Add
+support for JCache</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-904">SHIRO-904</a>] - Make
+JDK 11 base compatibility in Shiro 2.0</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="dependency_upgrade">Dependency upgrade</h3>
+<h3 id="dependency_upgrades">Dependency upgrades</h3>
 <div class="ulist">
 <ul>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-765">SHIRO-765</a>] - Upgrade
+to Apache Pom Parent 23</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-785">SHIRO-785</a>] - Upgrade
+to maven-bundle-plugin 5.1.1</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-786">SHIRO-786</a>] - Upgrade
+to Spring 5.2.8.RELEASE and Spring boot 2.3.2.RELEASE</p>
+</li>
 <li>
 <p>[<a href="https://issues.apache.org/jira/browse/SHIRO-828">SHIRO-828</a>] -
 aspectj-maven-plugin 1.14.0</p>
@@ -348,12 +626,40 @@ aspectj-maven-plugin 1.14.0</p>
 shiro-web depends on older log4j</p>
 </li>
 <li>
-<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-843">SHIRO-843</a>] - Update
-maven-project-info-reports</p>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-878">SHIRO-878</a>] - Update
+Spring Dependencies to 5.2.20</p>
 </li>
 <li>
-<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-844">SHIRO-844</a>] - Update
-maven-javadoc-plugin to 3.3.1</p>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-882">SHIRO-882</a>] - Upgrade
+to apache pom parent 26</p>
+</li>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-886">SHIRO-886</a>] - Upgrade
+to commons configuration 2.8.0</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="question">Question</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-784">SHIRO-784</a>] - Error
+creating bean with name
+'org.apache.shiro.spring.web.config.ShiroWebFilterConfiguration':
+Unsatisfied dependency expressed through field 'filterMap';</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="dependency">Dependency</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>[<a href="https://issues.apache.org/jira/browse/SHIRO-881">SHIRO-881</a>] - pom.xml
+in samples/web may lack dependency</p>
 </li>
 </ul>
 </div>
@@ -406,7 +712,7 @@ maven-javadoc-plugin to 3.3.1</p>
         </div>
 
         <div class="d-flex justify-content-end col-md-4" id="editThisPage">
-          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/blog/2022/03/22/apache-shiro-190-released.adoc"/>
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/blog/2023/05/04/apache-shiro-200-alpha-1-released.adoc"/>
         </div>
 
         <div class="d-flex col-md-2 justify-content-end" style="position: relative">
