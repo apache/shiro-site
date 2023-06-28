@@ -13,7 +13,7 @@ Authentication is the process of identity verification– you are trying to prov
 To do so, a user needs to provide some sort of proof of identity that your system understands and trust.
 
 The goal of this guide is to walk you through how Authentication in Java is performed in Shiro.
-If you haven't already please take moment and go through Shiro's link:/10-minute-tutorial.html[10 Minute Tutorial] so that you get a basic understanding of how to work with Shiro.
+If you haven't already please take moment and go through Shiro's link:/10-minute-tutorial.html[10-Minute Tutorial] so that you get a basic understanding of how to work with Shiro.
 
 [#JavaAuthenticationGuide-Terminologyyoullneed]
 == Terminology you'll need
@@ -29,7 +29,7 @@ Realms:: Security specific DAO, data access object, software component that talk
 [#JavaAuthenticationGuide-HowtoAuthenticateinJavawithShiro]
 == How to Authenticate in Java with Shiro
 
-In Shiro's framework, and most every other framework for that matter, the Java authentication process can be broken up into three distinct steps.
+In Shiro's framework, and almost every other framework for that matter, the Java authentication process can be broken up into three distinct steps.
 
 [#JavaAuthenticationGuide-Steps]
 
@@ -72,7 +72,7 @@ So we’ve collected the information in a token and set it to remember returning
 Your authentication system is represented in Shiro by security-specific DAOs, that are referred to as link:/static/current/apidocs/[Realms].
 For more information on realms please check out the link:/realm.html[Shiro Realm Guide].
 
-In Shiro we try to make this part as quick and easy as humanly possible. We have it down to one line of Java code!
+In Shiro, we try to make this part as quick and easy as humanly possible. We have it down to one line of Java code!
 
 [source,java]
 ----
@@ -104,7 +104,7 @@ If the `login()` method call is successful, then the user is logged in and assoc
 From here, the user can go about using your application and retain their identity through their session or longer since we have set the "Remember Me" in our example.
 
 But what happens if something fails in the authentication attempt?
-What if they give you the wrong password or they accessed the system too many times, maybe their account is locked?
+What if they give you the wrong password, or they accessed the system too many times, maybe their account is locked?
 In this case, Shiro will throw an exception.
 This is where Shiro's rich exception hierarchy comes into play.
 
@@ -123,7 +123,7 @@ try {
 //No problems, show authenticated view…
 ----
 
-You can take that method call and wrap it in a try/catch block and you can catch all sort of exceptions if you want to handle them and react accordingly. In addition to a rich set of exceptions that Shiro offers, you can create your own if you need custom functionality. For more information, follow this link documentation on link:/static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html[AuthenticationException].
+You can take that method call and wrap it in a try/catch block, and you can catch all sort of exceptions if you want to handle them and react accordingly. In addition to a rich set of exceptions that Shiro offers, you can create your own if you need custom functionality. For more information, follow this link documentation on link:/static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html[AuthenticationException].
 
 [TIP]
 .Security Tip
@@ -162,9 +162,9 @@ For example, a check to see if a subject can access financial information should
 Here is a scenario to help illustrate why the distinction between isAuthenticated and isRemembered is important.
 
 Let's say you're using Amazon.com.
-You log in and you add some books to your shopping cart.
+You log in, and you add some books to your shopping cart.
 A day goes by.
-Of course your user session has expired and you've been logged out.
+Of course your user session has expired, and you've been logged out.
 But Amazon "remembers" you, greets you by name, and is still giving you personalized book recommendations. To Amazon, `isRemembered()` would return `TRUE`.
 What happens if you try to use one of the credit cards on file or change your account information?
 While Amazon "remembers" you, `isRemembered() = TRUE`, it is not certain that you are in fact you, `isAuthenticated()=FALSE`.

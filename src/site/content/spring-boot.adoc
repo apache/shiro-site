@@ -6,14 +6,14 @@
 :idprefix:
 :toc:
 
-Shiro's Spring-Boot integration is the easiest way to integrate Shiro into a Spring-base application, for more general Spring Framework integration, take a the link:spring-framework.html[annotation] or link:spring-xml.html[XML] guides.
+Shiro's Spring-Boot integration is the easiest way to integrate Shiro into a Spring-base application, for more general Spring Framework integration, take the link:spring-framework.html[annotation] or link:spring-xml.html[XML] guides.
 
 [#web_applications]
 == Web Applications
 
 Shiro has first-class support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a main Shiro Filter. This filter itself is extremely powerful, allowing for ad-hoc custom filter chains to be executed based on any URL path expression.
 
-First include the Shiro Spring web starter dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).
+First include the Shiro Spring web starter dependency in you application classpath (we recommend using a tool such as Apache Maven or Gradle to manage this).
 
 ++++
 <@dependencies.dependencies anchorId="web" deps=[{"g":"org.apache.shiro", "a":"shiro-spring-boot-web-starter", "v":"${versions.latestRelease}"}] />
@@ -50,7 +50,7 @@ public ShiroFilterChainDefinition shiroFilterChainDefinition() {
 
 If you are using Shiro's annotations see the link:#annotations_and_web_applications[annotation] section below.
 
-You can see a full example in our link:https://github.com/apache/shiro/tree/main/samples/spring-boot-web[samples on Github].
+You can see a full example in our link:https://github.com/apache/shiro/tree/main/samples/spring-boot-web[samples on GitHub].
 
 === Enabling Shiro Annotations
 
@@ -68,7 +68,7 @@ public void readDocument() {
 
 === Annotations and Web Applications
 
-Shiro annotations are fully supported for use in `@Controller` classes, for example:
+Shiro's annotations are fully supported for use in `@Controller` classes, for example:
 
 [source,java]
 ----
@@ -83,7 +83,7 @@ public class AccountInfoController {
 }
 ----
 
-A `ShiroFilterChainDefinition` bean with at least one definition is still required for this to work, either configure all paths to be accessable via the `anon` filter or a filter in 'permissive' mode, for example: `authcBasic[permissive]`.
+A `ShiroFilterChainDefinition` bean with at least one definition is still required for this to work, either configure all paths to be accessible via the `anon` filter or a filter in 'permissive' mode, for example: `authcBasic[permissive]`.
 
 [source,java]
 ----
@@ -163,7 +163,7 @@ protected CacheManager cacheManager() {
 
 == Standalone Applications
 
-Include the Shiro Spring starter dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).
+Include the Shiro Spring starter dependency in you application classpath (we recommend using a tool such as Apache Maven or Gradle to manage this).
 
 ++++
 <@dependencies.dependencies anchorId="cli" deps=[{"g":"org.apache.shiro", "a":"shiro-spring-boot-starter", "v":"${versions.latestRelease}"}] />
@@ -179,7 +179,7 @@ public Realm realm() {
 }
 ----
 
-The easiest way to setup Shiro, so that all SecurityUtils.* methods work in all cases, is to make the `SecurityManager` bean a static singleton.  DO NOT do this in web applications - see the link:#web_applications[Web Applications] section below instead.
+The easiest way to set up Shiro, so that all SecurityUtils.* methods work in all cases, is to make the `SecurityManager` bean a static singleton.  DO NOT do this in web applications - see the link:#web_applications[Web Applications] section below instead.
 
 [source,java]
 ----
@@ -199,4 +199,4 @@ That is it, now you can get the current `Subject` using:
 SecurityUtils.getSubject();
 ----
 
-You can see a full example in our link:https://github.com/apache/shiro/tree/main/samples/spring-boot[samples on Github].
+You can see a full example in our link:https://github.com/apache/shiro/tree/main/samples/spring-boot[samples on GitHub].

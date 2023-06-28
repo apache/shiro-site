@@ -72,7 +72,7 @@ However, even with these caveats, the direct programmatic manipulation approach 
 
 Most applications instead benefit from text-based configuration that could be modified independently of source code and even make things easier to understand for those not intimately familiar with Shiro's APIs.
 
-To ensure a common-denominator text-based configuration mechanism that can work in all environments with minimal 3rd party dependencies, Shiro supports the link:https://en.wikipedia.org/wiki/INI_file[INI format] to build the `SecurityManager` object graph and its supporting components. INI is easy to read, easy to configure, and is simple to set-up and suits most applications well.
+To ensure a common-denominator text-based configuration mechanism that can work in all environments with minimal 3rd party dependencies, Shiro supports the link:https://en.wikipedia.org/wiki/INI_file[INI format] to build the `SecurityManager` object graph and its supporting components. INI is easy to read, easy to configure, and is simple to set up and suits most applications well.
 
 [#Configuration-INIConfiguration-CreatingSecurityManagerFromINI]
 === Creating a SecurityManager from INI
@@ -128,7 +128,7 @@ Now that we know how to construct a `SecurityManager` from INI configuration, le
 [#Configuration-INIConfiguration-Sections]
 === INI Sections
 
-INI is basically a text configuration consisting of key/value pairs organized by uniquely-named sections. Keys are unique per section only, not over the entire configuration (unlike the JDK https://java.sun.com/javase/6/docs/api/java/util/Properties.html[Properties]). Each section may be viewed like a single `Properties` definition however.
+INI is basically a text configuration consisting of key/value pairs organized by uniquely-named sections. Keys are unique per section only, not over the entire configuration (unlike the JDK https://java.sun.com/javase/6/docs/api/java/util/Properties.html[Properties]). Each section may be viewed like a single `Properties` definition, however.
 
 Commented lines can start with either with an Octothorpe (# - aka the 'hash', 'pound' or 'number' sign) or a Semi-colon (';')
 
@@ -391,7 +391,7 @@ securityManager.sessionManager.globalSessionTimeout = 1800000
 ...
 ----
 
-This is because the `securityManager` instance is a special one - it is already instantiated for you and ready to go so you don't need to know the specific `SecurityManager` implementation class to instantiate.
+This is because the `securityManager` instance is a special one - it is already instantiated for you and ready to go, so you don't need to know the specific `SecurityManager` implementation class to instantiate.
 
 Of course, if you actually _want_ to specify your own implementation, you can, just define your implementation as specified in the "Overriding Instances" section above:
 
@@ -439,7 +439,7 @@ Each line in the [users] section must conform to the following format:
 [#Configuration-INIConfiguration-Sections-users-EncryptingPasswords]
 ===== Encrypting Passwords
 
-If you don't want the [users] section passwords to be in plain-text, you can encrypt them using your favorite hash algorithm (MD5, Sha1, Sha256, etc) however you like and use the resulting string as the password value. By default, the password string is expected to be Hex encoded, but can be configured to be Base64 encoded instead (see below).
+If you don't want the [users] section passwords to be in plain-text, you can encrypt them using your favorite hash algorithm (MD5, Sha1, Sha256, etc.) however you like and use the resulting string as the password value. By default, the password string is expected to be Hex encoded, but can be configured to be Base64 encoded instead (see below).
 
 [NOTE]
 ====
@@ -495,7 +495,7 @@ goodguy = winnebago:drive:eagle5
 [#Configuration-INIConfiguration-Sections-roles-LineFormat]
 ===== Line Format
 
-Each line in the [roles] section must must define a role-to-permission(s) key/value mapping with in the following format:
+Each line in the [roles] section must define a role-to-permission(s) key/value mapping with in the following format:
 
 `rolename` = _permissionDefinition1_, _permissionDefinition2_, …, _permissionDefinitionN_
 
@@ -517,4 +517,4 @@ If you have roles that don't require permission associations, you don't need to 
 [#Configuration-INIConfiguration-Sections-urls]
 ==== `[urls]`
 
-This section and its options is described in the link:web.html[Web] chapter.
+This section and its options are described in the link:web.html[Web] chapter.

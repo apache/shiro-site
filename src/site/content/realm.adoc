@@ -95,7 +95,7 @@ Once you understand Shiro's main link:/authentication.html#Authentication-sequen
 As mentioned in the link:/authentication.html#Authentication-AuthenticationSequence[authentication sequence], just before a `Realm` is consulted to perform an authentication attempt, its link:static/current/apidocs/org/apache/shiro/realm/Realm.html#supports(org.apache.shiro.authc.AuthenticationToken)[`supports`] method is called.
 If the return value is `true`, only then will its `getAuthenticationInfo(token)` method be invoked.
 
-Typically a realm will check the type (interface or class) of the submitted token to see if it can process it.
+Typically, a realm will check the type (interface or class) of the submitted token to see if it can process it.
 For example, a Realm that processes biometric data may not understand `UsernamePasswordTokens` at all, in which case it would return `false` from the `supports` method.
 
 [#Realm-Handling-supported-AuthenticationTokens]
@@ -121,7 +121,7 @@ The only thing required is that, if the credentials match for the given principa
 ====
 Implementing
 link:/static/current/apidocs/org/apache/shiro/realm/Realm.html[Realm]
-interface directly might be time consuming and error prone.
+interface directly might be time-consuming and error-prone.
 Most people choose to subclass the
 link:/static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html[AuthorizingRealm]
 abstract class instead of starting from scratch.
@@ -292,12 +292,12 @@ When one of the overloaded method `isPermitted()` or `checkPermission()` method 
 
 . `Subject` delegates the task to grant or deny Permission to SecurityManager
 . `SecurityManager` then delegates to Authorizer
-. Authorizer then referrers to all of the Authorizer Realms one by one until it Permission is granted If Permission is not granted by any of the Authorizing Realm, Subject is denied Permission
+. Authorizer then referrers to all the Authorizer Realms one by one until it Permission is granted If Permission is not granted by any of the Authorizing Realm, Subject is denied Permission
 . Authorizing Realm does the following in order to check if a Subject is permitted:
 
 a. First it gets identify all Permissions assigned to Subject directly by calling getObjectPermissions() and getStringPermissions methods on link:/static/current/apidocs/org/apache/shiro/authz/AuthorizationInfo.html[AuthorizationInfo] and aggregating the results.
 
-b. If a link:/static/current/apidocs/org/apache/shiro/authz/permission/RolePermissionResolver.html[RolePermissionResolver] is registered, it is used to retrieve Permissions based on all of the roles assigned to Subject by calling the `RolePermissionResolver.resolvePermissionsInRole()`
+b. If a link:/static/current/apidocs/org/apache/shiro/authz/permission/RolePermissionResolver.html[RolePermissionResolver] is registered, it is used to retrieve Permissions based on all the roles assigned to Subject by calling the `RolePermissionResolver.resolvePermissionsInRole()`
 
 c. For aggregated Permissions from a. and b. the implies() method is called to check if any of these permission are implied the checked permission.
 See link:/permissions.html#wildcard_permissions[WildcardPermission]

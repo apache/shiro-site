@@ -16,7 +16,7 @@ Everything in Shiro (including all aspects of Sessions and Session Management) i
 Because Shiro's Session objects are POJO-based, session data can be easily stored in any number of data sources. This allows you to customize exactly where your application's session data resides - for example, the file system, an enterprise cache, a relational database, or proprietary data store.
 
 * *Easy and Powerful Clustering* +
-Shiro's sessions can be easily clustered using any of the readily-available networked caching products, like Ehcache, Coherence, GigaSpaces, et. al.
+Shiro's sessions can be easily clustered using any of the readily-available networked caching products, like Ehcache, Coherence, GigaSpaces, et al.
 This means you can configure session clustering for Shiro once and only once, and no matter what web container you deploy to, your sessions will be clustered the same way. No need for container-specific configuration!
 
 * *Heterogeneous Client Access* +
@@ -32,7 +32,7 @@ Shiro Sessions retain the IP address of the host from where the session was init
 Sessions expire due to inactivity as expected, but they can be prolonged via a `touch()` method to keep them 'alive' if desired. This is useful in Rich Internet Application (RIA) environments where the user might be using a desktop application, but may not be regularly communicating with the server, but the server session should not expire.
 
 * *Transparent web use* +
-Shiro's web support implements the `HttpSession` interface and all of it's associated APIs. This means you can use Shiro sessions in existing web applications and you don't need to change any of your existing web code.
+Shiro's web support implements the `HttpSession` interface and all of it's associated APIs. This means you can use Shiro sessions in existing web applications, and you don't need to change any of your existing web code.
 
 * *Can be used for SSO* +
 Because Shiro’s sessions are POJO based, they are easily stored in any data source, and they can be 'shared' across applications if needed. This can be used to provide a simple sign-on experience since the shared session can retain authentication state.

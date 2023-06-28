@@ -10,7 +10,7 @@ This page covers the ways to integrate Shiro into link:https://spring.io[Spring]
 
 == Standalone Applications
 
-Include the Shiro Spring dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).
+Include the Shiro Spring dependency in you application classpath (we recommend using a tool such as Apache Maven or Gradle to manage this).
 
 ++++
 <@dependencies.dependencies anchorId="cli" deps=[{'g':'org.apache.shiro', 'a':'shiro-spring', "v":"${versions.latestRelease}"},{"g":'org.springframework', "a":'spring-context', "v":'${r"${spring.version}"}'}] />
@@ -55,7 +55,7 @@ public Realm realm() {
 }
 ----
 
-The easiest way to setup Shiro, so that all SecurityUtils.* methods work in all cases, is to make the `SecurityManager` bean a static singleton.
+The easiest way to set up Shiro, so that all SecurityUtils.* methods work in all cases, is to make the `SecurityManager` bean a static singleton.
 DO NOT do this in web applications - see the link:#web_applications[Web Applications] section below instead.
 
 [source,java]
@@ -75,14 +75,14 @@ That is it, now you can get the current `Subject` using:
 SecurityUtils.getSubject();
 ----
 
-You can see a full example in our link:https://github.com/apache/shiro/tree/main/samples/spring[samples on Github].
+You can see a full example in our link:https://github.com/apache/shiro/tree/main/samples/spring[samples on GitHub].
 
 [#web_applications]
 == Web Applications
 
 Shiro has first-class support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a main Shiro Filter. This filter itself is extremely powerful, allowing for ad-hoc custom filter chains to be executed based on any URL path expression.
 
-Include the Shiro Spring web dependencies in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).
+Include the Shiro Spring web dependencies in you application classpath (we recommend using a tool such as Apache Maven or Gradle to manage this).
 
 ++++
 <@dependencies.dependencies anchorId="web" deps=[{"g":'org.apache.shiro', "a":'shiro-spring', "v":"${versions.latestRelease}"}, {"g":'org.apache.shiro', "a":'shiro-web', "v":"${versions.latestRelease}"},{"g":'org.springframework', "a":'spring-webmvc', "v":'${r"${spring.version}"}'}] />
@@ -156,7 +156,7 @@ public ShiroFilterChainDefinition shiroFilterChainDefinition() {
 
 If you are using Shiro's annotations see the link:#annotations_and_web_applications[annotation] section below.
 
-You can see a full example in our link:https://github.com/apache/shiro/tree/main/samples/spring-mvc[samples on Github].
+You can see a full example in our link:https://github.com/apache/shiro/tree/main/samples/spring-mvc[samples on GitHub].
 
 == Enabling Shiro Annotations
 
@@ -189,7 +189,7 @@ public class AccountInfoController {
 }
 ----
 
-A `ShiroFilterChainDefinition` bean with at least one definition is still required for this to work, either configure all paths to be accessable via the `anon` filter or a filter in 'permissive' mode, for example: `authcBasic[permissive]`.
+A `ShiroFilterChainDefinition` bean with at least one definition is still required for this to work, either configure all paths to be accessible via the `anon` filter or a filter in 'permissive' mode, for example: `authcBasic[permissive]`.
 
 [source,java]
 ----
