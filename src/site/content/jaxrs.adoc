@@ -41,9 +41,9 @@ Just like any other web application, your resources paths can be defined in a `s
 
 See the link:web.html[web documentation] for more details.
 
-The other, probably more popular, option is to use Shiro's link:java-annotations-list.html[annotations] along side other JAX-RS annotations on your resources. However you *MUST* still define at least one path in your `shiro.ini` file.
+The other, probably more popular, option is to use Shiro's link:java-annotations-list.html[annotations] alongside other JAX-RS annotations on your resources. However, you *MUST* still define at least one path in your `shiro.ini` file.
 
-The below code block will allow for basic authentication but NOT require it (via the `permissive` flag). This way all of the resources under `/api` can optional require authentication and authorization based on annotations.
+The below code block will allow for basic authentication but NOT require it (via the `permissive` flag). This way all the resources under `/api` can optional require authentication and authorization based on annotations.
 
 [source,ini]
 ----
@@ -95,7 +95,7 @@ public class HelloShiro {
 }
 ----
 
-This resource has two end points, the first allows access by any logged in user, the second any user with the link:permissions.html[permission] `hello:define`.
+This resource has two end points, the first allows access by any logged-in user, the second any user with the link:permissions.html[permission] `hello:define`.
 
 The corresponding JAX-RS Application class:
 
@@ -129,4 +129,4 @@ In the above example, requests to either `/api/shiro` or `/api/shiro/define` wil
 
 == Want to see more?
 
-You can find portable JAX-RS application that runs with https://jersey.java.net/[Jersey], https://resteasy.dev/[RestEasy] or https://cxf.apache.org[Apache CXF] in the https://github.com/apache/shiro/tree/main/samples[samples] directory on Github.
+You can find portable JAX-RS application that runs with https://jersey.java.net/[Jersey], https://resteasy.dev/[RestEasy] or https://cxf.apache.org[Apache CXF] in the https://github.com/apache/shiro/tree/main/samples[samples] directory on GitHub.

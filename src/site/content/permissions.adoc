@@ -26,7 +26,7 @@ There are many variations for how permissions could be granted to users - the ap
 [#wildcard_permissions]
 == Wildcard Permissions
 
-The above examples of permissions, "Open a file", "View the 'user/list' web page", etc are all valid permission statements.However, it would be very difficult computationally to interpret those natural language strings and determine if a user is allowed to perform that behavior or not.
+The above examples of permissions, "Open a file", "View the 'user/list' web page", etc. are all valid permission statements.However, it would be very difficult computationally to interpret those natural language strings and determine if a user is allowed to perform that behavior or not.
 
 So to enable easy-to-process yet still readable permission statements, Shiro provides powerful and intuitive permission syntax we refer to as the WildcardPermission.
 
@@ -221,7 +221,7 @@ printer:*:lp7200
 
 While permission assignments use the wildcard construct quite a bit ("printer:print:*" = print to any printer) for convenience and scalability, permission *checks* at runtime should _always_ be based on the most specific permission string possible.
 
-For example, if the user had a UI and they wanted to print a document to the `lp7200` printer, you *should* check if the user is permitted to do so by executing this code:
+For example, if the user had a UI, and they wanted to print a document to the `lp7200` printer, you *should* check if the user is permitted to do so by executing this code:
 
 [source,java]
 ----
@@ -253,7 +253,7 @@ Why is it that runtime permission checks should be as specific as possible, but 
 
 That is, if a user is assigned the `user:*` permission, this _implies_ that the user can perform the `user:view` action. The string "user:*" is clearly not equal to "user:view", but the former implies the latter. "user:*" describes a superset of functionality of that defined by "user:view".
 
-To support implication rules, all permissions are translated in to object instances that implement the `org.apache.shiro.authz.Permission` interface. This is so that implication logic can be executed at runtime and that implication logic is often more complex than a simple string equality check. All of the wildcard behavior described in this document is actually made possible by the `org.apache.shiro.authz.permission.WildcardPermission` class implementation. Here are some more wildcard permission strings that show access by implication:
+To support implication rules, all permissions are translated in to object instances that implement the `org.apache.shiro.authz.Permission` interface. This is so that implication logic can be executed at runtime and that implication logic is often more complex than a simple string equality check. All the wildcard behavior described in this document is actually made possible by the `org.apache.shiro.authz.permission.WildcardPermission` class implementation. Here are some more wildcard permission strings that show access by implication:
 
 [source,ini]
 ----
@@ -303,4 +303,4 @@ Shiro's default behavior for Realm implementations is that, for every permission
 
 This is usually extremely fast when users, roles and permissions are cached in memory when using a proper link:cachemanager.html[CacheManager], which Shiro does support for Realm implementations. Just know that with this default behavior, as the number of permissions assigned to a user or their roles or groups increase, the time to perform the check will necessarily increase.
 
-If a Realm implementor has a more efficient way of checking permissions and performing this implication logic, especially if based on the applicaton's data model, they should implement that as part of their Realm isPermitted* method implementations. The default Realm/WildcardPermission support exists to cover 80-90% of most use cases, but it might not be the best solution for applications that have massive amounts of permissions to store and/or check at runtime.
+If a Realm implementor has a more efficient way of checking permissions and performing this implication logic, especially if based on the application's data model, they should implement that as part of their Realm isPermitted* method implementations. The default Realm/WildcardPermission support exists to cover 80-90% of most use cases, but it might not be the best solution for applications that have massive amounts of permissions to store and/or check at runtime.

@@ -23,7 +23,7 @@ We originally wanted to call it 'User' since that "just makes sense", but we dec
 Also, in the security world, the term 'Subject' is actually the recognized nomenclature.
 
 Shiro's API encourages a `Subject`-centric programming paradigm for applications. When coding application logic, most application developers want to know who the _currently executing_ user is.
-While the application can usually look up any user via their own mechanisms (UserService, etc), when it comes to security, the most important question is *"Who is the _current_ user?"*
+While the application can usually look up any user via their own mechanisms (UserService, etc.), when it comes to security, the most important question is *"Who is the _current_ user?"*
 
 While any Subject can be acquired by using the `SecurityManager`, application code based on only the current user/`Subject` is much more natural and intuitive.
 
@@ -104,7 +104,7 @@ You, as the application/GUI developer can choose to show the end-user messages b
 There are many different types of exceptions you can check, or throw your own for custom conditions Shiro might not account for.
 See the link:/static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html[AuthenticationException JavaDoc] for more.
 
-Ok, so by now, we have a logged in user.
+Ok, so by now, we have a logged-in user.
 What else can we do?
 
 Let's say who they are:
@@ -251,7 +251,7 @@ As stated above, just building a `Subject` instance does not associate it with a
 
 The important thing to know about thread association is that 2 things must always occur:
 
-. The Subject is _bound_ to the thread so it is available at all points of the thread's execution. Shiro does this via its `ThreadState` mechanism which is an abstraction on top of a `ThreadLocal`.
+. The Subject is _bound_ to the thread, so it is available at all points of the thread's execution. Shiro does this via its `ThreadState` mechanism which is an abstraction on top of a `ThreadLocal`.
 . The Subject is _unbound_ at some point later, even if the thread execution results in an error. This ensures the thread remains clean and clear of any previous `Subject` state in a pooled/reusable thread environment.
 
 These principles are guaranteed to occur in the 3 mechanisms listed above. Their usage is elaborated next.
@@ -277,7 +277,7 @@ subject.execute( new Runnable() {
 //with the current thread and everything is as it was before
 ----
 
-Of course `Callable` instances are supported as well so you can have return values and catch exceptions:
+Of course `Callable` instances are supported as well, so you can have return values and catch exceptions:
 
 [source,java]
 ----
@@ -344,7 +344,7 @@ Interestingly enough, this is exactly what the `Subject.execute`* methods do - t
 [CAUTION]
 .Web Use
 ====
-Don''t use the above 'ThreadState' code example in a thread that is processing a web request. Web-specific ThreadState implementations are used during web requests instead. Instead, ensure the 'ShiroFilter' intercepts web requests to ensure Subject building/binding/cleanup is done properly.
+Don't use the above 'ThreadState' code example in a thread that is processing a web request. Web-specific ThreadState implementations are used during web requests instead. Instead, ensure the 'ShiroFilter' intercepts web requests to ensure Subject building/binding/cleanup is done properly.
 ====
 
 ==== A Different Thread

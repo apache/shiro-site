@@ -16,7 +16,7 @@ We believe:
 * Authentication and Authorization functionality should be as pluggable and flexible as possible.
 * Authentication and Authorization are only half of a robust security framework. Enterprise Session Management and easy Cryptography services are the other half.
 * *Session Management should not be tied to web or EJB applications*. We believe Sessions are a business-tier concern that should be accessible in any client or server environment.
-* Heterogeneous client mediums (HTTP requests, Applets, Java Web Start, C# applications, etc) should be able to participate in the same Session, regardless of the client technology.
+* Heterogeneous client mediums (HTTP requests, Applets, Java Web Start, C# applications, etc.) should be able to participate in the same Session, regardless of the client technology.
 * Security code should be eliminated as much as possible in favor of a cleaner declarative security model utilizing JDK 1.5 Annotations or XML, whichever you prefer.
 * Last but definitely not least, a security framework should support a *dynamic*, *instance-level* security model out-of-the-box (i.e. changing user/group/role/permission assignments *during runtime*)
 
@@ -35,7 +35,7 @@ Standard JAAS and EJB security models couldn't cut it - they required static def
 
 Like most of the Java community, I looked into https://docs.oracle.com/javase/7/docs/technotes/guides/security/jaas/JAASRefGuide.html[JAAS] to see if it could do what I wanted. After all, it was really the only security technology out there widely accessible to Java developers at the time. I did a *lot* of research, looking for ways that I might be able to coerce JAAS into doing what I wanted. Sometimes it came close. JAAS Authentication could meet my needs with a decent amount of effort, but JAAS Authorization didn't even come close.
 
-JAAS is tied too heavily tied to virtual machine-level concerns. As an application architect, I usually didn't care one bit about whether or not a *Class* could execute inside the virtual machine. What I really wanted to control is whether or not the *current user* could execute a given method, often based on the method's arguments. So, I hobbled a bit, creating some functionality to piggy-back JAAS and custom-coded the rest. The result was only usable on a few applications and wasn't nearly as robust as I wanted.
+JAAS is tied too heavily tied to virtual machine-level concerns. As an application architect, I usually didn't care one bit about whether a *Class* could execute inside the virtual machine. What I really wanted to control is whether the *current user* could execute a given method, often based on the method's arguments. So, I hobbled a bit, creating some functionality to piggyback JAAS and custom-coded the rest. The result was only usable on a few applications and wasn't nearly as robust as I wanted.
 
 Then I came to work on a really great application that pushed the limits of application security. This application was written for government organizations and needed *extremely* powerful yet flexible security support. The client required the following:
 

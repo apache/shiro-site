@@ -52,7 +52,7 @@ We'll cover how Shiro determines if a `Subject` is permitted to do something or 
 [#Authentication-ElementsOfAuthorization-Permissions-PermissionGranularity]
 ==== Permission Granularity
 
-The permission examples above all specify actions (open, read, delete, etc) on a resource type (door, file, customer, etc). In some cases, they even specify very fine-grained _instance-level_ behavior - for example, 'delete' (action) the 'user' (resource type) with username 'jsmith' (instance identifier). In Shiro, you have the ability to define exactly how granular those statements can be.
+The permission examples above all specify actions (open, read, delete, etc.) on a resource type (door, file, customer, etc). In some cases, they even specify very fine-grained _instance-level_ behavior - for example, 'delete' (action) the 'user' (resource type) with username 'jsmith' (instance identifier). In Shiro, you have the ability to define exactly how granular those statements can be.
 
 We cover permission granularity and 'levels' of permission statements in much more detail in Shiro's link:permissions.html[Permissions Documentation].
 
@@ -91,7 +91,7 @@ A user essentially is the 'who' of an application. As we've covered previously h
 
 Users (Subjects) are allowed to perform certain actions in your application through their association with roles or direct permissions. Your application's data model defines exactly how a `Subject` is allowed to do something or not.
 
-For example, in your data model, perhaps you have an actual `User` class and you assign permissions directly to `User` instances. Or maybe you assign permissions only to `Roles` directly, and then assign Roles to `Users`, so by association, `Users` transitively 'have' the permissions assigned to their roles. Or you could represent these things with a 'Group' concept. It is up to you - use what makes sense for your application.
+For example, in your data model, perhaps you have an actual `User` class, and you assign permissions directly to `User` instances. Or maybe you assign permissions only to `Roles` directly, and then assign Roles to `Users`, so by association, `Users` transitively 'have' the permissions assigned to their roles. Or you could represent these things with a 'Group' concept. It is up to you - use what makes sense for your application.
 
 Your data model defines exactly how authorization will function. Shiro relies on a link:realm.html[Realm] implementation to translate your data model association details into a format Shiro understands. We'll cover how Realms do this a little later.
 
@@ -99,7 +99,7 @@ Your data model defines exactly how authorization will function. Shiro relies on
 ====
 .Note
 Ultimately, your link:realm.html[Realm] implementation is what communicates with your data source (RDBMS, LDAP, etc).
-So your realm is what will tell Shiro whether or not roles or permissions exist. You have full control over how your authorization model is structured and defined.
+So your realm is what will tell Shiro whether roles or permissions exist. You have full control over how your authorization model is structured and defined.
 ====
 
 [#Authentication-AuthorizingSubjects]
@@ -146,8 +146,8 @@ There are few role-oriented `Subject` methods you can call, depending on your ne
 |Subject Method |Description
 
 |link:static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRole(java.lang.String)[`hasRole(String roleName)`] |Returns `true` if the `Subject` is assigned the specified role, `false` otherwise.
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRoles(java.util.List)[`hasRoles(List&lt;String&gt; roleNames)`] |Returns a array of `hasRole` results corresponding to the indices in the method argument. Useful as a performance enhancement if many role checks need to be performed (e.g. when customizing a complex view)
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#hasAllRoles(java.util.Collection)[`hasAllRoles(Collection&lt;String&gt; roleNames)`] |Returns `true` if the `Subject` is assigned _all_ of the specified roles, `false` otherwise.
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRoles(java.util.List)[`hasRoles(List&lt;String&gt; roleNames)`] |Returns an array of `hasRole` results corresponding to the indices in the method argument. Useful as a performance enhancement if many role checks need to be performed (e.g. when customizing a complex view)
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#hasAllRoles(java.util.Collection)[`hasAllRoles(Collection&lt;String&gt; roleNames)`] |Returns `true` if the `Subject` is assigned _all_ the specified roles, `false` otherwise.
 |===
 
 [#Authentication-AuthorizingSubjects-ProgrammaticAuthorization-RoleBasedAuthorization-Assertions]
@@ -175,7 +175,7 @@ There are few role-oriented `Subject` assertion methods you can call, depending 
 |Subject Method |Description
 
 |link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRole(java.lang.String)[`checkRole(String roleName)`] |Returns quietly if the `Subject` is assigned the specified role or throws an `AuthorizationException` if not.
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRoles(java.util.Collection)[`checkRoles(Collection&lt;String&gt; roleNames)`] |Returns quietly if the `Subject` is assigned _all_ of the specified role or throws an `AuthorizationException` if not.
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRoles(java.util.Collection)[`checkRoles(Collection&lt;String&gt; roleNames)`] |Returns quietly if the `Subject` is assigned _all_ the specified role or throws an `AuthorizationException` if not.
 |link:++static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRoles(java.lang.String...)++[`checkRoles(String... roleIdentifiers)`] |Same effect as the `checkRoles` method above, but allows Java 5 var-args style arguments.
 |===
 
@@ -225,13 +225,13 @@ There are few Object permission-oriented `Subject` methods you can call, dependi
 
 |link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted(org.apache.shiro.authz.Permission)[`isPermitted(Permission p)`] |Returns `true` if the `Subject` is permitted to perform an action or access a resource summarized by the specified `Permission` instance, `false` otherwise.
 |link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted(java.util.List)[`isPermitted(List&lt;Permission&gt; perms)`] |Returns an array of `isPermitted` results corresponding to the indices in the method argument. Useful as a performance enhancement if many permission checks need to be performed (e.g. when customizing a complex view)
-|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermittedAll(java.util.Collection)[`isPermittedAll(Collection&lt;Permission&gt; perms)`] |Returns `true` if the `Subject` is permitted _all_ of the specified permissions, `false` otherwise.
+|link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermittedAll(java.util.Collection)[`isPermittedAll(Collection&lt;Permission&gt; perms)`] |Returns `true` if the `Subject` is permitted _all_ the specified permissions, `false` otherwise.
 |===
 
 [#Authentication-AuthorizingSubjects-ProgrammaticAuthorization-PermissionBasedAuthorization-StringBasedPermissionChecks]
 ===== String-based permission checks
 
-While Object-based permissions can be useful (compile-time type-safety, guaranteed behavior, customized implication logic, etc), they can sometimes feel a bit 'heavy handed' for many applications. An alternative is to use normal `Strings` to represent a permission instance.
+While Object-based permissions can be useful (compile-time type-safety, guaranteed behavior, customized implication logic, etc.), they can sometimes feel a bit 'heavy-handed' for many applications. An alternative is to use normal `Strings` to represent a permission instance.
 
 For example, based on the print permission example above, we can re-formulate that same check as a `String`-based permission check:
 
@@ -278,7 +278,7 @@ Like the Object-based permission check methods, there are String variants to sup
 
 |link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted(java.lang.String)[`isPermitted(String perm)`] |Returns `true` if the `Subject` is permitted to perform an action or access a resource summarized by the specified `String` permission, `false` otherwise.
 |link:static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted(java.util.List)[`isPermitted(List perms)`] |Returns an array of `isPermitted` results corresponding to the indices in the method argument. Useful as a performance enhancement if many `String` permission checks need to be performed (e.g. when customizing a complex view)
-|link:++static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermittedAll(java.lang.String...)++[`isPermittedAll(String... perms)`] |Returns `true` if the `Subject` is permitted _all_ of the specified `String` permissions, `false` otherwise.
+|link:++static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermittedAll(java.lang.String...)++[`isPermittedAll(String... perms)`] |Returns `true` if the `Subject` is permitted _all_ the specified `String` permissions, `false` otherwise.
 |===
 
 [#Authentication-AuthorizingSubjects-ProgrammaticAuthorization-PermissionBasedAuthorization-PermissionAssertions]
@@ -533,7 +533,7 @@ For any authorization operation, the `ModularRealmAuthorizer` will iterate over 
 
 .. If the Realm's method results in an exception, the exception is propagated as an link:static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html[`AuthorizationException`] to the `Subject` caller. This short-circuits the authorization process and any remaining Realms will not be consulted for that authorization operation.
 
-.. If the Realm's method is a `hasRole*` or `isPermitted*` variant that returns a boolean and that return value is `true`, the `true` value is returned immediately and any remaining Realms are short circuited. This behavior exists as a performance enhancement, as typically if permitted by one Realm, it is implied that the Subject is permitted. This favors security policies where everything is prohibited by default and things are explicitly allowed, the most secure type of security policy.
+.. If the Realm's method is a `hasRole*` or `isPermitted*` variant that returns a boolean and that return value is `true`, the `true` value is returned immediately and any remaining Realms are short-circuited. This behavior exists as a performance enhancement, as typically if permitted by one Realm, it is implied that the Subject is permitted. This favors security policies where everything is prohibited by default and things are explicitly allowed, the most secure type of security policy.
 
 . If the Realm does not implement the `Authorizer` interface, it is ignored.
 
@@ -572,7 +572,7 @@ securityManager.authorizer.permissionResolver = $globalPermissionResolver
 [WARNING]
 ====
 .PermissionResolverAware
-If you want to configure a global `PermissionResolver`, each `Realm` that is to receive the configured `PermissionResolver` *must* implement the link:static/current/apidocs/src-html/org/apache/shiro/authz/permission/PermissionResolverAware.html[`PermisionResolverAware`] interface.
+If you want to configure a global `PermissionResolver`, each `Realm` that is to receive the configured `PermissionResolver` *must* implement the link:static/current/apidocs/src-html/org/apache/shiro/authz/permission/PermissionResolverAware.html[`PermissionResolverAware`] interface.
 This guarantees that the configured instance can be relayed to each `Realm` that supports such configuration.
 If you don't want to use a global `PermissionResolver` or you don't want to be bothered with the `PermissionResolverAware` interface, you can always configure a realm with a `PermissionResolver` instance explicitly (assuming there is a JavaBeans-compatible setPermissionResolver method).
 ====
@@ -617,7 +617,7 @@ securityManager.authorizer.rolePermissionResolver = $globalRolePermissionResolve
 ====
 .RolePermissionResolverAware
 If you want to configure a global `RolePermissionResolver`, each `Realm` that is to receive the configured `RolePermissionResolver` *must* implement the
-link:static/current/apidocs/org/apache/shiro/authz/permission/RolePermissionResolverAware.html[`RolePermisionResolverAware`] interface.
+link:static/current/apidocs/org/apache/shiro/authz/permission/RolePermissionResolverAware.html[`RolePermissionResolverAware`] interface.
 This guarantees that the configured global `RolePermissionResolver` instance can be relayed to each `Realm` that supports such configuration.
 If you don't want to use a global `RolePermissionResolver` or you don't want to be bothered with the `RolePermissionResolverAware` interface, you can always configure
 a realm with a `RolePermissionResolver` instance explicitly (assuming there is a JavaBeans-compatible setRolePermissionResolver method).

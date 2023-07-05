@@ -138,7 +138,7 @@ Because unit tests are better suited for testing your own logic (and not any imp
 
 But as stated above, the key in Shiro tests is to remember that any Subject instance (mock or real) must be bound to the thread during test execution. So all we need to do is bind the mock Subject to ensure things work as expected.
 
-(this example uses EasyMock, but Mockito works equally as well):
+(this example uses EasyMock, but Mockito works equally well):
 
 [source,java]
 ----
@@ -180,7 +180,7 @@ public class ExampleShiroUnitTest extends AbstractShiroTest {
 
 As you can see, we're not setting up a Shiro `SecurityManager` instance or configuring a `Realm` or anything like that. We're simply creating a mock `Subject` instance and binding it to the thread via the `setSubject` method call. This will ensure that any calls in our test code or in the code we're testing to `SecurityUtils.getSubject()` will work correctly.
 
-Note that the `setSubject` method implementation will bind your mock Subject to the thread and it will remain there until you call `setSubject` with a different `Subject` instance or until you explicitly clear it from the thread via the `clearSubject()` call.
+Note that the `setSubject` method implementation will bind your mock Subject to the thread, and it will remain there until you call `setSubject` with a different `Subject` instance or until you explicitly clear it from the thread via the `clearSubject()` call.
 
 How long you keep the subject bound to the thread (or swap it out for a new instance in a different test) is up to you and your testing requirements.
 
@@ -189,7 +189,7 @@ How long you keep the subject bound to the thread (or swap it out for a new inst
 
 The `tearDownSubject()` method in the example uses a Junit 4 annotation to ensure that the Subject is cleared from the thread after every test method is executed, no matter what. This requires you to set up a new `Subject` instance and set it (via `setSubject`) for every test that executes.
 
-This is not strictly necessary however. For example, you could just bind a new Subject instance (via `setSujbect`) at the beginning of every test, say, in an `@Before`-annotated method. But if you're going to do that, you might as well have the `@After tearDownSubject()` method to keep things symmetrical and 'clean'.
+This is not strictly necessary, however. For example, you could just bind a new Subject instance (via `setSujbect`) at the beginning of every test, say, in an `@Before`-annotated method. But if you're going to do that, you might as well have the `@After tearDownSubject()` method to keep things symmetrical and 'clean'.
 
 You can mix and match this setup/teardown logic in each method manually or use the @Before and @After annotations as you see fit. The `AbstractShiroTest` super class will however unbind the Subject from the thread after all tests because of the `@AfterClass` annotation in its `tearDownShiro()` method.
 
@@ -198,12 +198,12 @@ You can mix and match this setup/teardown logic in each method manually or use t
 
 Now that we've covered unit test setup, let's talk a bit about integration testing. Integration testing is testing implementations across API boundaries. For example, testing that implementation A works when calling implementation B and that implementation B does what it is supposed to.
 
-You can easily perform integration testing in Shiro as well. Shiro's `SecurityManager` instance and things it wraps (like Realms and SessionManager, etc) are all very lightweight POJOs that use very little memory. This means you can create and tear down a `SecurityManager` instance for every test class you execute. When your integration tests run, they will be using 'real' `SecurityManager` and `Subject` instances like your application will be using at runtime.
+You can easily perform integration testing in Shiro as well. Shiro's `SecurityManager` instance and things it wraps (like Realms and SessionManager, etc.) are all very lightweight POJOs that use very little memory. This means you can create and tear down a `SecurityManager` instance for every test class you execute. When your integration tests run, they will be using 'real' `SecurityManager` and `Subject` instances like your application will be using at runtime.
 
 [#Testing-ExampleShiroIntegrationTest]
 === ExampleShiroIntegrationTest
 
-The example code below looks almost identical to the Unit Test example above, but the 3 step process is slightly different:
+The example code below looks almost identical to the Unit Test example above, but the 3-step process is slightly different:
 
 . There is now a step '0', which sets up a 'real' SecurityManager instance.
 . Step 1 now constructs a 'real' Subject instance with the `Subject.Builder` and binds it to the thread.

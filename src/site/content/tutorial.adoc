@@ -126,7 +126,7 @@ For now, create a new directory on your filesystem, for example, *`shiro-tutoria
 
 We'll be running a simple command-line application, so we'll need to create a Java class with a `public static void main(String[] args)` method.
 
-In the same directory containing your `pom.xml` file, create a *`src/main/java` sub directory. In `src/main/java` create a `Tutorial.java` file with the following contents:
+In the same directory containing your `pom.xml` file, create a *`src/main/java` subdirectory. In `src/main/java` create a `Tutorial.java` file with the following contents:
 
 
 [source,java]
@@ -157,7 +157,7 @@ Don't worry about the import statements for now - we'll get to them shortly. But
 
 == Test Run
 
-To try our Tutorial application, execute the following in a command prompt in your tutorial project's root dirctory (e.g. `shiro-tutorial`), and type the following:
+To try our Tutorial application, execute the following in a command prompt in your tutorial project's root directory (e.g. `shiro-tutorial`), and type the following:
 
 `mvn compile exec:java`
 
@@ -171,7 +171,7 @@ We've verified the application runs successfully - now let's enable Apache Shiro
 
 The first thing to understand in enabling Shiro in an application is that almost everything in Shiro is related to a central/core component called the `SecurityManager`. For those familiar with Java security, this is Shiro's notion of a SecurityManager - it is _NOT_ the same thing as the `java.lang.SecurityManager`.
 
-While we will cover Shiro's design in detail in the link:architecture.html[Architecture] chapter, it is good enough for now to know that the Shiro `SecurityManager` is the core of a Shiro environment for an application and one `SecurityManager` must exist per application. So, the first thing we must do in our Tutorial application is set-up the `SecurityManager` instance.
+While we will cover Shiro's design in detail in the link:architecture.html[Architecture] chapter, it is good enough for now to know that the Shiro `SecurityManager` is the core of a Shiro environment for an application and one `SecurityManager` must exist per application. So, the first thing we must do in our Tutorial application is set up the `SecurityManager` instance.
 
 == Configuration
 
@@ -250,15 +250,15 @@ Feel free to run `mvn compile exec:java` and see that everything still runs succ
 
 Here is what the above additions are doing:
 
-. We use Shiro's `IniSecurityManagerFactory` implementation to ingest our `shiro.ini` file which is located at the root of the classpath. This implementation reflects Shiro's support of the https://en.wikipedia.org/wiki/Factory_method_pattern[Factory Method Design Pattern]. The `classpath:` prefix is an resource indicator that tells shiro where to load the ini file from (other prefixes, like `url:` and `file:` are supported as well).
+. We use Shiro's `IniSecurityManagerFactory` implementation to ingest our `shiro.ini` file which is located at the root of the classpath. This implementation reflects Shiro's support of the https://en.wikipedia.org/wiki/Factory_method_pattern[Factory Method Design Pattern]. The `classpath:` prefix is a resource indicator that tells shiro where to load the ini file from (other prefixes, like `url:` and `file:` are supported as well).
 
 . The `factory.getInstance()` method is called, which parses the INI file and returns a `SecurityManager` instance reflecting the configuration.
 
-. In this simple example, we set the `SecurityManager` to be a _static_ (memory) singleton, accessible across the JVM. Note however that this is not desireable if you will ever have more than one Shiro-enabled application in a single JVM. For this simple example, it is ok, but more sophisticated application environments will usually place the `SecurityManager` in application-specific memory (such as in a web app's `ServletContext` or a Spring, Guice or JBoss DI container instance).
+. In this simple example, we set the `SecurityManager` to be a _static_ (memory) singleton, accessible across the JVM. Note however that this is not desirable if you will ever have more than one Shiro-enabled application in a single JVM. For this simple example, it is ok, but more sophisticated application environments will usually place the `SecurityManager` in application-specific memory (such as in a web app's `ServletContext` or a Spring, Guice or JBoss DI container instance).
 
 == Using Shiro
 
-Now that our SecurityManager is set-up and ready-to go, now we can start doing the things we really care about - performing security operations.
+Now that our SecurityManager is set up and ready-to go, now we can start doing the things we really care about - performing security operations.
 
 When securing our applications, probably the most relevant questions we ask ourselves are “Who is the current user?” or “Is the current user allowed to do X”? It is common to ask these questions as we're writing code or designing user interfaces: applications are usually built based on user stories, and you want functionality represented (and secured) based on a per-user basis. So, the most natural way for us to think about security in our application is based on the current user. Shiro’s API fundamentally represents the notion of 'the current user' with its `Subject` concept.
 
@@ -335,7 +335,7 @@ There are many different types of exceptions you can check, or throw your own fo
 Security best practice is to give generic login failure messages to users because you do not want to aid an attacker trying to break into your system.
 ====
 
-Ok, so by now, we have a logged in user.
+Ok, so by now, we have a logged-in user.
 What else can we do?
 
 Let's say who they are:
@@ -485,8 +485,8 @@ public class Tutorial {
 
 == Summary
 
-Hopefully this introduction tutorial helped you understand how to set-up Shiro in a basic application as well Shiro's primary design concepts, the `Subject` and `SecurityManager`.
+Hopefully this introduction tutorial helped you understand how to set up Shiro in a basic application as well Shiro's primary design concepts, the `Subject` and `SecurityManager`.
 
-But this was a fairly simple application. You might have asked yourself, "What if I don't want to use INI user accounts and instead want to connect to a more complex user data source?"
+But this was a fairly simple application. You might have asked yourself "What if I don't want to use INI user accounts and instead want to connect to a more complex user data source?"
 
 To answer that question requires a little deeper understanding of Shiro's architecture and supporting configuration mechanisms. We'll cover Shiro's link:architecture.html[Architecture] next.

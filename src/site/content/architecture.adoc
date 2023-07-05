@@ -19,7 +19,7 @@ At the highest conceptual level, Shiro's architecture has 3 primary concepts: th
 
 image::/images/ShiroBasicArchitecture.png[Shiro Basic Architecture Diagram, align="center"]
 
-* *Subject*: As we've mentioned in our link:tutorial.html[Tutorial], the `Subject` is essentially a security specific 'view' of the the currently executing user. Whereas the word 'User' often implies a human being, a `Subject` can be a person, but it could also represent a 3rd-party service, daemon account, cron job, or anything similar - basically anything that is currently interacting with the software.
+* *Subject*: As we've mentioned in our link:tutorial.html[Tutorial], the `Subject` is essentially a security specific 'view' of the currently executing user. Whereas the word 'User' often implies a human being, a `Subject` can be a person, but it could also represent a 3rd-party service, daemon account, cron job, or anything similar - basically anything that is currently interacting with the software.
 +
 `Subject` instances are all bound to (and require) a `SecurityManager`. When you interact with a `Subject`, those interactions translate to subject-specific interactions with the `SecurityManager`.
 
@@ -38,7 +38,7 @@ The following diagram shows Shiro's core architectural concepts followed by shor
 image::/images/ShiroArchitecture.png[Shiro Architecture Diagram, align="center"]
 
 * *Subject* (link:static/current/apidocs/org/apache/shiro/subject/Subject.html[`org.apache.shiro.subject.Subject`])
-A security-specific 'view' of the entity (user, 3rd-party service, cron job, etc) currently interacting with the software.
+A security-specific 'view' of the entity (user, 3rd-party service, cron job, etc.) currently interacting with the software.
 
 * *SecurityManager* (link:static/current/apidocs/org/apache/shiro/mgt/SecurityManager.html[org.apache.shiro.mgt.SecurityManager])
 As mentioned above, the `SecurityManager` is the heart of Shiro's architecture. It is mostly an 'umbrella' object that coordinates its managed components to ensure they work smoothly together. It also manages Shiro's view of every application user, so it knows how to perform security operations per user.
@@ -62,7 +62,7 @@ The `SessionDAO` performs `Session` persistence (CRUD) operations on behalf of t
 The `CacheManager` creates and manages `Cache` instance lifecycles used by other Shiro components. Because Shiro can access many back-end data sources for authentication, authorization and session management, caching has always been a first-class architectural feature in the framework to improve performance while using these data sources. Any of the modern open-source and/or enterprise caching products can be plugged in to Shiro to provide a fast and efficient user-experience.
 
 * *Cryptography* (link:static/current/apidocs/org/apache/shiro/crypto/package-summary.html[org.apache.shiro.crypto.*])
-Cryptography is a natural addition to an enterprise security framework. Shiro's `crypto` package contains easy-to-use and understand representations of crytographic Ciphers, Hashes (aka digests) and different codec implementations. All of the classes in this package are carefully designed to be very easy to use and easy to understand. Anyone who has used Java's native cryptography support knows it can be a challenging animal to tame. Shiro's crypto APIs simplify the complicated Java mechanisms and make cryptography easy to use for normal mortal human beings.
+Cryptography is a natural addition to an enterprise security framework. Shiro's `crypto` package contains easy-to-use and understand representations of crytographic Ciphers, Hashes (aka digests) and different codec implementations. All the classes in this package are carefully designed to be very easy to use and easy to understand. Anyone who has used Java's native cryptography support knows it can be a challenging animal to tame. Shiro's crypto APIs simplify the complicated Java mechanisms and make cryptography easy to use for normal mortal human beings.
 
 * *Realms* (link:static/current/apidocs/org/apache/shiro/realm/Realm.html[org.apache.shiro.realm.Realm])
 As mentioned above, Realms act as the &#8216;bridge&#8217; or &#8216;connector&#8217; between Shiro and your application&#8217;s security data. When it comes time to actually interact with security-related data like user accounts to perform authentication (login) and authorization (access control), Shiro looks up many of these things from one or more Realms configured for an application. You can configure as many `Realms` as you need (usually one per data source) and Shiro will coordinate with them as necessary for both authentication and authorization.

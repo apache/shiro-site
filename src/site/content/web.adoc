@@ -14,7 +14,7 @@
 The simplest way to integrate Shiro into any web application is to configure a Servlet ContextListener and Filter in web.xml that understands how to read Shiro's INI configuration. The bulk of the INI config format itself is defined in the Configuration pages's link:/configuration.html#Configuration-INIConfiguration-Sections[INI Sections] section, but we'll cover some additional web-specific sections here.
 
 [INFO]
-.Using Jakart EE?
+.Using Jakarta EE?
 ====
 The below configuration is not required if using link:jakarta-ee.html[Jakarta EE integration] or basic CDI integration module.
 ====
@@ -81,7 +81,7 @@ The shiro filter is a standard servlet filter, with a default encoding of ISO-88
 
 ===== Custom `WebEnvironment` Class
 
-By default the `EnvironmentLoaderListener` will create an `IniWebEnvironment` instance, which assumes Shiro's INI-based link:configuration.html[Configuration]. If you like, you may specify a custom `WebEnvironment` instance instead by specifying a `ServletContext` `context-param` in `web.xml`:
+By default, the `EnvironmentLoaderListener` will create an `IniWebEnvironment` instance, which assumes Shiro's INI-based link:configuration.html[Configuration]. If you like, you may specify a custom `WebEnvironment` instance instead by specifying a `ServletContext` `context-param` in `web.xml`:
 
 [source,xml]
 ----
@@ -210,7 +210,7 @@ Inline config is often fine for small or simple applications, but it is usually 
 
 * You might edit security configuration a lot and don't want to add revision control 'noise' to the web.xml file
 * You might want to separate security config from the rest of web.xml config
-* Your security configuration might become large and you want to keep web.xml lean and easier to read
+* Your security configuration might become large, and you want to keep web.xml lean and easier to read
 * You have a complex build system where the same shiro config might need to be referenced in multiple places
 
 It is up to you - use what makes sense for your project.
@@ -269,7 +269,7 @@ For example, let's say you had the following `[urls]` line:
 /account/** = ssl, authc
 ----
 
-This line states that "Any request to my application's path of `/account` or any of it's sub paths (`/account/foo`, `/account/bar/baz`, etc) will trigger the 'ssl, authc' filter chain". We'll cover filter chains below.
+This line states that "Any request to my application's path of `/account` or any of its sub paths (`/account/foo`, `/account/bar/baz`, etc.) will trigger the 'ssl, authc' filter chain". We'll cover filter chains below.
 
 Note that all path expressions are relative to your application's context root. This means that if you deploy your application one day to, say, `www.somehost.com/myapp` and then later deploy it to `www.anotherhost.com` (no 'myapp' sub-path), the pattern matching will still work.
 All paths are relative to the link:https://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#getContextPath()[`HttpServletRequest.getContextPath()`] value.
@@ -278,7 +278,7 @@ All paths are relative to the link:https://docs.oracle.com/javaee/1.3/api/javax/
 .Order Matters!
 ====
 URL path expressions are evaluated against an incoming request in the order they are defined and the _FIRST MATCH WINS_.
-For example, let's asume that there are the following chain definitions:
+For example, let's assume that there are the following chain definitions:
 
 [source,ini]
 ----
@@ -305,7 +305,7 @@ where:
 
 And because filter tokens define chains (aka a List), remember that order matters! Define your comma-delimited list in the order that you want the request to flow through the chain.
 
-Finally, each filter is free to handle the response however it wants if its necessary conditions are not met (e.g. perform a redirect, respond with an HTTP error code, direct rendering, etc). Otherwise it is expected to allow the request to continue through the chain on to the final destination view.
+Finally, each filter is free to handle the response however it wants if its necessary conditions are not met (e.g. perform a redirect, respond with an HTTP error code, direct rendering, etc). Otherwise, it is expected to allow the request to continue through the chain on to the final destination view.
 
 [TIP]
 .Tip
@@ -377,9 +377,9 @@ The default Filter instances available automatically are defined by the link:sta
 
 == Enabling and Disabling Filters
 
-As is the case with any filter chain definition mechanism (`web.xml`, Shiro's INI, etc), you enable a filter just by including it in the filter chain definition, and you disable it by removing it from the chain definition.
+As is the case with any filter chain definition mechanism (`web.xml`, Shiro's INI, etc.), you enable a filter just by including it in the filter chain definition, and you disable it by removing it from the chain definition.
 
-But a new feature added in Shiro 1.2 is the ability to enable or disable filters without removing them from the filter chain. If enabled (the default setting), then a request will be filtered as expected. If disabled, then the filter will allow the request to pass through immediately to the next element in the `FilterChain`. You can trigger a filter's enabled state generally based on a configuration property, or you can even trigger it on a _per request_ basis.
+But a new feature added in Shiro 1.2 is the ability to enable or disable filters without removing them from the filter chain. If enabled (the default setting), then a request will be filtered as expected. If disabled, then the filter will allow the request to pass through immediately to the next element in the `FilterChain`. You can trigger a filter's enabled state generally based on a configuration property, or you can even trigger it on a _per-request_ basis.
 
 This is a powerful concept because it is often more convenient to enable or disable a filter based on certain requirements than to change the static filter chain definition, which would be permanent and inflexible.
 
@@ -409,7 +409,7 @@ ssl.enabled = false
 ...
 ----
 
-This example shows that potentially many URL paths can all require that a request must be secured by an SSL connection. Setting up SSL while in development can be frustrating and time consuming. While in development, you can disable the ssl filter. When deploying to production, you can enable it with one configuration property - something that is much easier than manually changing all of the URL paths or maintaining two Shiro configurations.
+This example shows that potentially many URL paths can all require that a request must be secured by an SSL connection. Setting up SSL while in development can be frustrating and time-consuming. While in development, you can disable the ssl filter. When deploying to production, you can enable it with one configuration property - something that is much easier than manually changing all the URL paths or maintaining two Shiro configurations.
 
 === Request-specific Enabling/Disabling
 
@@ -462,7 +462,7 @@ invalidRequest.blockNonAscii = true
 
 [NOTE]
 ====
-If you currently allowing URL rewriting to allow for a <code>jsessionid</code> in the URL, you must set `blockSemicolon` to `false`.
+If you're currently allowing URL rewriting to allow for a <code>jsessionid</code> in the URL, you must set `blockSemicolon` to `false`.
 
 URL rewriting for `jsessionid` is defined in section "7.1.3" of the Java Servlet Specification, but it is generally NOT recommended.
 ====
@@ -499,7 +499,7 @@ In web environments, Shiro's default session manager link:static/current/apidocs
 This very simple implementation delegates all session management duties (including session clustering if the servlet container supports it) to the runtime Servlet container.
 It is essentially a bridge for Shiro's session API to the servlet container and does little else.
 
-A benefit of using this default is that apps that work with existing servlet container session configuration (timeout, any container-specific clustering mechanisms, etc) will work as expected.
+A benefit of using this default is that apps that work with existing servlet container session configuration (timeout, any container-specific clustering mechanisms, etc.) will work as expected.
 
 A downside of this default is that you are tied to the servlet container's specific session behavior. For example, if you wanted to cluster sessions, but you used Jetty for testing and Tomcat in production, your container-specific configuration (or code) would not be portable.
 
@@ -559,7 +559,7 @@ The `sessionIdCookie` property is essentially a template - you configure the `Co
 
 ====== Session Cookie Configuration
 
-The DefaultWebSessionManager's `sessionIdCookie` default instance is a link:static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html[`SimpleCookie`]. This simple implementation allows JavaBeans-style property configuration for all of the relevant properties you would want to configure on an http Cookie.
+The DefaultWebSessionManager's `sessionIdCookie` default instance is a link:static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html[`SimpleCookie`]. This simple implementation allows JavaBeans-style property configuration for all the relevant properties you would want to configure on an http Cookie.
 
 For example, you could set the Cookie domain:
 
@@ -653,7 +653,7 @@ And in your web form, have a checkbox named 'rememberMe':
 </form>
 ----
 
-By default, the `FormAuthenticationFilter` will look for request parameters named `username`, `password` and `rememberMe`. If these are different than the form field names that you use in your form, you'll want to configure the names on the `FormAuthenticationFilter`. For example, in `shiro.ini`:
+By default, the `FormAuthenticationFilter` will look for request parameters named `username`, `password` and `rememberMe`. If these are different from the form field names that you use in your form, you'll want to configure the names on the `FormAuthenticationFilter`. For example, in `shiro.ini`:
 
 [source,ini]
 ----
@@ -725,7 +725,7 @@ Now we'll cover each tag and show how it might be used to render a page.
 [#web_guesttag]
 ===  The `guest` tag
 
-The `guest` tag will display its wrapped content only if the current `Subject` is considered a 'guest'. A guest is any `Subject` that does not have an identity. That is, we don't know who the user is because they have not logged in and they are not remembered (from Remember Me services) from a previous site visit.
+The `guest` tag will display its wrapped content only if the current `Subject` is considered a 'guest'. A guest is any `Subject` that does not have an identity. That is, we don't know who the user is because they have not logged in, and they are not remembered (from Remember Me services) from a previous site visit.
 
 Example:
 

@@ -227,7 +227,7 @@ ssl.alwaysEnabled = true
 ==== Using Enhanced SSL filter with HAProxy or other load balancers
 When behind SSL-terminating proxy, Shiro may not be able to determine if SSL was used.
 `X-Forwarded-Proto` header can mitigate this. You can configure your proxy set this header to `https` to tell Shiro
-when SSL is used. Below is an haproxy configuration excerpt:
+when SSL is used. Below is a haproxy configuration excerpt:
 [source]
 ----
 ....
@@ -237,7 +237,7 @@ frontend tcp-in
 ----
 
 ==== Using CDI Beans in shiro.ini
-Below is an example of using a CDI bean and assign it's property to a variable in shiro.ini
+Below is an example of using a CDI bean and assign its property to a variable in shiro.ini
 [source,java]
 ----
 @Named

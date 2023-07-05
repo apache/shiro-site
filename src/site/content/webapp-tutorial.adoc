@@ -26,7 +26,7 @@ This step-by-step tutorial should take ~ 45 minutes to 1 hour to complete. When 
 
 == [[overview]] Overview
 
-While Apache Shiro's core design goals allow it to be used to secure _any_ JVM-based application, such as command line applications, server daemons, web apps, etc, this guide will focus on the most common use case: securing a web application running in a https://en.wikipedia.org/wiki/Java_servlet[Servlet] container, such as Tomcat or Jetty.
+While Apache Shiro's core design goals allow it to be used to secure _any_ JVM-based application, such as command line applications, server daemons, web apps, etc., this guide will focus on the most common use case: securing a web application running in a https://en.wikipedia.org/wiki/Java_servlet[Servlet] container, such as Tomcat or Jetty.
 
 === Prerequisites
 
@@ -39,7 +39,7 @@ The following tools are expected to be installed on your local development machi
 
 === Tutorial Format
 
-This is a step-by-step tutorial. The tutorial, and all of its steps, exist as a Git repository. When you clone the git repository, the `main` branch is your starting point. Each step in the tutorial is a separate branch. You can follow along simply by checking out the git branch that reflects the tutorial step you are reviewing.
+This is a step-by-step tutorial. The tutorial and all of its steps, exist as a Git repository. When you clone the git repository, the `main` branch is your starting point. Each step in the tutorial is a separate branch. You can follow along simply by checking out the git branch that reflects the tutorial step you are reviewing.
 
 === The Application
 
@@ -104,7 +104,7 @@ After cloning the repo, your current `main` branch will have the following struc
 
 Here is what each means:
 
-* `pom.xml`: the Maven project/build file. It has Jetty configured so you can test your web app right away by running `mvn jetty:run`.
+* `pom.xml`: the Maven project/build file. It has Jetty configured, so you can test your web app right away by running `mvn jetty:run`.
 * `README.md`: a simple project readme file
 * `LICENSE`: the project's Apache 2.0 license
 * `.travis.yml`: A https://travis-ci.org/[Travis CI] config file in case you want to run continuous integration on your project to ensure it always builds.
@@ -146,7 +146,7 @@ Checking out this branch, you will find two changes:
 
 === 1a: Add a `shiro.ini` file
 
-Shiro can be configured in many different ways in a web application, depending on the web and/or MVC framework you use. For example, you can configure Shiro via Spring, Guice, Tapestry, and many many more.
+Shiro can be configured in many different ways in a web application, depending on the web and/or MVC framework you use. For example, you can configure Shiro via Spring, Guice, Tapestry, and many more.
 
 To keep things simple for now, we'll start a Shiro environment by using Shiro's default (and very simple) https://shiro.apache.org/configuration.html[INI-based configuration].
 
@@ -199,9 +199,9 @@ We do all of this by adding a few things to the existing `src/main/webapp/WEB-IN
 
 * The `&lt;listener&gt;` declaration defines a https://docs.oracle.com/javaee/6/api/javax/servlet/ServletContextListener.html[`ServletContextListener`] that starts up the Shiro environment (including the Shiro `SecurityManager`) upon web application startup. By default, this listener automatically knows to look for our `WEB-INF/shiro.ini` file for Shiro configuration.
 
-* The `&lt;filter&gt;` declaration defines the main `ShiroFilter`. This filter is expected to filter _all_ requests into the web application so Shiro can peform necessary identity and access control operations before allowing a request to reach the application.
+* The `&lt;filter&gt;` declaration defines the main `ShiroFilter`. This filter is expected to filter _all_ requests into the web application so Shiro can perform necessary identity and access control operations before allowing a request to reach the application.
 
-* The `&lt;filter-mapping&gt;` declaration ensures that _all_ request types are filed by the `ShiroFilter`. Often `filter-mapping` declarations don't specify `&lt;dispatcher&gt;` elements, but Shiro needs them all defined so it can filter all of the different request types that might execute for a web app.
+* The `&lt;filter-mapping&gt;` declaration ensures that _all_ request types are filed by the `ShiroFilter`. Often `filter-mapping` declarations don't specify `&lt;dispatcher&gt;` elements, but Shiro needs them all defined so it can filter all the different request types that might execute for a web app.
 
 === 1c: Run the webapp
 
@@ -233,7 +233,7 @@ $ git checkout step2
 
 Now we have Shiro integrated and running within a webapp. But we haven't actually told Shiro to do anything yet!
 
-Before we can login, or logout, or perform role-based or permission-based access control, or anything else security related, we need users!
+Before we can log in, or logout, or perform role-based or permission-based access control, or anything else security related, we need users!
 
 We will need to configure Shiro to access a _User Store_ of some type, so it can look up users to perform login attempts, or check roles for security decisions, etc. There are many types of user stores that any application might need to access: maybe you store users in a MySQL database, maybe in MongoDB, maybe your company stores user accounts in LDAP or Active Directory, maybe you store them in a simple file, or some other proprietary data store.
 
@@ -245,11 +245,11 @@ Realms act as the ‘bridge’ or ‘connector’ between Shiro and your applica
 
 In this sense a Realm is essentially a security-specific https://en.wikipedia.org/wiki/Data_access_object[DAO]: it encapsulates connection details for data sources and makes the associated data available to Shiro as needed. When configuring Shiro, you must specify at least one Realm to use for authentication and/or authorization. The SecurityManager may be configured with multiple Realms, but at least one is required. 
 
-Shiro provides out-of-the-box Realms to connect to a number of security data sources (aka directories) such as LDAP, relational databases (JDBC), text configuration sources like INI and properties files, and more. You can plug-in your own Realm implementations to represent custom data sources if the default Realms do not meet your needs. 
+Shiro provides out-of-the-box Realms to connect to a number of security data sources (aka directories) such as LDAP, relational databases (JDBC), text configuration sources like INI and properties files, and more. You can plug in your own Realm implementations to represent custom data sources if the default Realms do not meet your needs.
 
 ____
 
-So, we need to configure a Realm so we can access users.
+So, we need to configure a Realm, so we can access users.
 
 === 2a: Set up Stormpath
 
@@ -402,7 +402,7 @@ If you've checked out the `step2` branch, you'll notice the `src/main/webapp/WEB
 
 Note the optional lines: 
 
-* If you have been using Stormpath for a while and you have more then one Stormpath application, the `stormpathRealm.applicationRestUrl` property must be set.
+* If you have been using Stormpath for a while, and you have more than one Stormpath application, the `stormpathRealm.applicationRestUrl` property must be set.
 
 === 2d: Run the webapp
 
@@ -513,11 +513,11 @@ After making the changes as specified in Step 2b and 2c, go ahead and run the we
 $ mvn jetty:run
 ----
 
-=== Step 3d: Try to Login
+=== Step 3d: Try to Log in
 
-With your web browser, navigate to http://localhost:8080/login.jsp[localhost:8080/login.jsp] and you will see our new shiny login form.
+With your web browser, navigate to http://localhost:8080/login.jsp[localhost:8080/login.jsp], and you will see our new shiny login form.
 
-Enter in a username and password of the account you created at the end of Step 2, and hit 'Login'. If the login is successful, you will be directed to the home page! If the login fails, you will be shown the login page again.
+Enter a username and password of the account you created at the end of Step 2, and hit 'Login'. If the login is successful, you will be directed to the home page! If the login fails, you will be shown the login page again.
 
 Tip: If you want a successful login to redirect the user to a different page other than the home page (context path `/`), you can set the `authc.successUrl = /whatever` in the INI's `[main]` section.
 
@@ -633,7 +633,7 @@ Step 5 introduces the following 3 changes:
 
 === Step 5a: Add a new restricted section
 
-A new `src/main/webapp/account` directory was added. This directory (and all paths below it) simulates a 'private' or 'authenticated only' section of a website that you might want to restrict to only logged in users. The `src/main/webapp/account/index.jsp` file is just a placeholder for a simulated 'home account' page.
+A new `src/main/webapp/account` directory was added. This directory (and all paths below it) simulates a 'private' or 'authenticated only' section of a website that you might want to restrict to only logged-in users. The `src/main/webapp/account/index.jsp` file is just a placeholder for a simulated 'home account' page.
 
 === Step 5b: Configure `shiro.ini`
 
@@ -661,7 +661,7 @@ Based on this line of config, the `authc` filter is now smart enough to know tha
 
 === Step 5c: Update our home page
 
-The final change for Step 5 is to update the `/home.jsp` page to let the user know they can access the new part of the web site.
+The final change for Step 5 is to update the `/home.jsp` page to let the user know they can access the new part of the website.
 
 These lines were added below the welcome message:
 
@@ -723,7 +723,7 @@ Add the following three groups:
 
 (to keep with our Star-Trek account theme :) )
 
-Once you've created the groups, add the `Jean-Luc Picard` account to the `Captains` and `Officers` groups. You might want to create some ad-hoc accounts and add them to whatever groups you like. Make sure some of the accounts don't overlap groups so you can see changes based on separate Groups assigned to user accounts.
+Once you've created the groups, add the `Jean-Luc Picard` account to the `Captains` and `Officers` groups. You might want to create some ad-hoc accounts and add them to whatever groups you like. Make sure some of the accounts don't overlap groups, so you can see changes based on separate Groups assigned to user accounts.
 
 === Step 6b: Role Based Access Control (RBAC) Tags
 
@@ -780,7 +780,7 @@ Hit `ctl-C` to shut down the web app.
 
 Role-based access control is good for many use cases, but it suffers from one major problem: you can't add or delete roles at runtime. Role checks are hard-coded with role names, so if you changed the role names or role configuration, or add or remove roles, you have to go back and change your code!
 
-Because of this, Shiro has a powerful marquis feature: built-in support for _permissions_. In Shiro, a permission is a raw statement of functionality, for example 'open a door' 'create a blog entry', 'delete the `jsmith` user', etc. Permissions reflect your application's raw functionality, so you only need to change permission checks when you change your application's functionlity - not if you want to change your role or user model.
+Because of this, Shiro has a powerful marquis feature: built-in support for _permissions_. In Shiro, a permission is a raw statement of functionality, for example 'open a door' 'create a blog entry', 'delete the `jsmith` user', etc. Permissions reflect your application's raw functionality, so you only need to change permission checks when you change your application's functionality - not if you want to change your role or user model.
 
 To demonstrate this, we will create some permissions and assign them to a user, and then customize our web UI based on a user's authorization (permissions).
 

@@ -47,10 +47,10 @@ There are also additional features to support and reinforce these concerns in di
 
 * Web Support: Shiro's web support APIs help easily secure web applications.
 * Caching: Caching is a first-tier citizen in Apache Shiro's API to ensure that security operations remain fast and efficient.
-* Concurrency: Apache Shiro supports multi-threaded applications with its concurrency features.
+* Concurrency: Apache Shiro supports multithreaded applications with its concurrency features.
 * Testing: Test support exists to help you write unit and integration tests and ensure your code will be secured as expected.
 * "Run As": A feature that allows users to assume the identity of another user (if they are allowed), sometimes useful in administrative scenarios.
-* "Remember Me": Remember users' identities across sessions so they only need to log in when mandatory.
+* "Remember Me": Remember users' identities across sessions, so they only need to log in when mandatory.
 
 == A First Look at Apache Shiro
 
@@ -62,7 +62,7 @@ This example statement indicates that applications are largely written to satisf
 
 Shiro largely reflects these concepts in its own design. By matching what is already intuitive for software developers, Apache Shiro remains intuitive and easy to use in practically any application.
 
-=== Bsic Design
+=== Basic Design
 
 Shiro's architecture has 3 primary concepts: the `Subject`, `SecurityManager` and `Realm` s. The following diagram is a high-level overview of how these concepts interact, and we'll cover each concept below:
 
@@ -70,7 +70,7 @@ image::images/ShiroArchitecture.png["Apache Shiro Architecture",align="center"]
 
 ==== Subject
 
-The `Subject` is essentially a security specific 'view' of the the currently executing user. Notice that it is not actually named _User_ however. The name _Subject_ was chosen for two reasons:
+The `Subject` is essentially a security specific 'view' of the currently executing user. Notice that it is not actually named _User_, however. The name _Subject_ was chosen for two reasons:
 
 . The word 'User' often implies a human being in many software systems. But sometimes the 'currently executing user' isn't a human being at all - maybe it is a 3rd-party process or remote server or daemon account. The word 'Subject' is more general and can mean 'the entity interacting with the software'.
 . The word 'Subject', because it is a general-purpose concept, is the actual term most often used in the security world. We retain that definition to be consistent.
@@ -103,6 +103,6 @@ The third and final core concept in Shiro is that of a Realm. A Realm acts as th
 
 In this sense a Realm is essentially a security-specific https://en.wikipedia.org/wiki/Data_access_object[DAO]: it encapsulates connection details for data sources and makes the associated data available to Shiro as needed. When configuring Shiro, you must specify at least one Realm to use for authentication and/or authorization. More than one Realm may be configured, but at least one is required.
 
-Shiro provides out-of-the-box Realms to connect to a number of security data sources (aka directories) such as LDAP, relational databases (JDBC), text configuration sources like INI and properties files, and more. You can plug-in your own Realm implementations to represent custom data sources if the default Realms do not meet your needs.
+Shiro provides out-of-the-box Realms to connect to a number of security data sources (aka directories) such as LDAP, relational databases (JDBC), text configuration sources like INI and properties files, and more. You can plug in your own Realm implementations to represent custom data sources if the default Realms do not meet your needs.
 
 Like other internal components, the Shiro `SecurityManager` manages how Realms are used to acquire security data and then represented as `Subject` instances.
