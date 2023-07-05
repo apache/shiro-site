@@ -388,10 +388,10 @@ This is not required if using Jakarta EE module
 <p>See the <a href="web.html">web documentation</a> for more details.</p>
 </div>
 <div class="paragraph">
-<p>The other, probably more popular, option is to use Shiro&#8217;s <a href="java-annotations-list.html">annotations</a> along side other JAX-RS annotations on your resources. However you <strong>MUST</strong> still define at least one path in your <code>shiro.ini</code> file.</p>
+<p>The other, probably more popular, option is to use Shiro&#8217;s <a href="java-annotations-list.html">annotations</a> alongside other JAX-RS annotations on your resources. However, you <strong>MUST</strong> still define at least one path in your <code>shiro.ini</code> file.</p>
 </div>
 <div class="paragraph">
-<p>The below code block will allow for basic authentication but NOT require it (via the <code>permissive</code> flag). This way all of the resources under <code>/api</code> can optional require authentication and authorization based on annotations.</p>
+<p>The below code block will allow for basic authentication but NOT require it (via the <code>permissive</code> flag). This way all the resources under <code>/api</code> can optional require authentication and authorization based on annotations.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -454,7 +454,7 @@ public class HelloShiro {
 </div>
 </div>
 <div class="paragraph">
-<p>This resource has two end points, the first allows access by any logged in user, the second any user with the <a href="permissions.html">permission</a> <code>hello:define</code>.</p>
+<p>This resource has two end points, the first allows access by any logged-in user, the second any user with the <a href="permissions.html">permission</a> <code>hello:define</code>.</p>
 </div>
 <div class="paragraph">
 <p>The corresponding JAX-RS Application class:</p>
@@ -504,7 +504,7 @@ public class ExampleApp extends Application {
 <h2 id="want_to_see_more">Want to see more?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can find portable JAX-RS application that runs with <a href="https://jersey.java.net/">Jersey</a>, <a href="https://resteasy.dev/">RestEasy</a> or <a href="https://cxf.apache.org">Apache CXF</a> in the <a href="https://github.com/apache/shiro/tree/main/samples">samples</a> directory on Github.</p>
+<p>You can find portable JAX-RS application that runs with <a href="https://jersey.java.net/">Jersey</a>, <a href="https://resteasy.dev/">RestEasy</a> or <a href="https://cxf.apache.org">Apache CXF</a> in the <a href="https://github.com/apache/shiro/tree/main/samples">samples</a> directory on GitHub.</p>
 </div>
 </div>
 </div>

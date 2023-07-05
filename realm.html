@@ -342,7 +342,7 @@ If you change their definition order, you will change how the main `Authenticato
 If the return value is <code>true</code>, only then will its <code>getAuthenticationInfo(token)</code> method be invoked.</p>
 </div>
 <div class="paragraph">
-<p>Typically a realm will check the type (interface or class) of the submitted token to see if it can process it.
+<p>Typically, a realm will check the type (interface or class) of the submitted token to see if it can process it.
 For example, a Realm that processes biometric data may not understand <code>UsernamePasswordTokens</code> at all, in which case it would return <code>false</code> from the <code>supports</code> method.</p>
 </div>
 </div>
@@ -390,7 +390,7 @@ Realms are free to do whatever they want during this method, such as record the 
 <div class="paragraph">
 <p>Implementing
 <a href="/static/current/apidocs/org/apache/shiro/realm/Realm.html">Realm</a>
-interface directly might be time consuming and error prone.
+interface directly might be time-consuming and error-prone.
 Most people choose to subclass the
 <a href="/static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html">AuthorizingRealm</a>
 abstract class instead of starting from scratch.
@@ -618,7 +618,7 @@ Deny access by returning false if no none of the Realm grants Subject given Role
 <p><code>SecurityManager</code> then delegates to Authorizer</p>
 </li>
 <li>
-<p>Authorizer then referrers to all of the Authorizer Realms one by one until it Permission is granted If Permission is not granted by any of the Authorizing Realm, Subject is denied Permission</p>
+<p>Authorizer then referrers to all the Authorizer Realms one by one until it Permission is granted If Permission is not granted by any of the Authorizing Realm, Subject is denied Permission</p>
 </li>
 <li>
 <p>Authorizing Realm does the following in order to check if a Subject is permitted:</p>
@@ -628,7 +628,7 @@ Deny access by returning false if no none of the Realm grants Subject given Role
 <p>First it gets identify all Permissions assigned to Subject directly by calling getObjectPermissions() and getStringPermissions methods on <a href="/static/current/apidocs/org/apache/shiro/authz/AuthorizationInfo.html">AuthorizationInfo</a> and aggregating the results.</p>
 </li>
 <li>
-<p>If a <a href="/static/current/apidocs/org/apache/shiro/authz/permission/RolePermissionResolver.html">RolePermissionResolver</a> is registered, it is used to retrieve Permissions based on all of the roles assigned to Subject by calling the <code>RolePermissionResolver.resolvePermissionsInRole()</code></p>
+<p>If a <a href="/static/current/apidocs/org/apache/shiro/authz/permission/RolePermissionResolver.html">RolePermissionResolver</a> is registered, it is used to retrieve Permissions based on all the roles assigned to Subject by calling the <code>RolePermissionResolver.resolvePermissionsInRole()</code></p>
 </li>
 <li>
 <p>For aggregated Permissions from a. and b. the implies() method is called to check if any of these permission are implied the checked permission.

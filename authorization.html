@@ -292,7 +292,7 @@
 <div class="sect3">
 <h4 id="Authentication-ElementsOfAuthorization-Permissions-PermissionGranularity">Permission Granularity</h4>
 <div class="paragraph">
-<p>The permission examples above all specify actions (open, read, delete, etc) on a resource type (door, file, customer, etc). In some cases, they even specify very fine-grained <em>instance-level</em> behavior - for example, 'delete' (action) the 'user' (resource type) with username 'jsmith' (instance identifier). In Shiro, you have the ability to define exactly how granular those statements can be.</p>
+<p>The permission examples above all specify actions (open, read, delete, etc.) on a resource type (door, file, customer, etc). In some cases, they even specify very fine-grained <em>instance-level</em> behavior - for example, 'delete' (action) the 'user' (resource type) with username 'jsmith' (instance identifier). In Shiro, you have the ability to define exactly how granular those statements can be.</p>
 </div>
 <div class="paragraph">
 <p>We cover permission granularity and 'levels' of permission statements in much more detail in Shiro&#8217;s <a href="permissions.html">Permissions Documentation</a>.</p>
@@ -367,7 +367,7 @@
 <p>Users (Subjects) are allowed to perform certain actions in your application through their association with roles or direct permissions. Your application&#8217;s data model defines exactly how a <code>Subject</code> is allowed to do something or not.</p>
 </div>
 <div class="paragraph">
-<p>For example, in your data model, perhaps you have an actual <code>User</code> class and you assign permissions directly to <code>User</code> instances. Or maybe you assign permissions only to <code>Roles</code> directly, and then assign Roles to <code>Users</code>, so by association, <code>Users</code> transitively 'have' the permissions assigned to their roles. Or you could represent these things with a 'Group' concept. It is up to you - use what makes sense for your application.</p>
+<p>For example, in your data model, perhaps you have an actual <code>User</code> class, and you assign permissions directly to <code>User</code> instances. Or maybe you assign permissions only to <code>Roles</code> directly, and then assign Roles to <code>Users</code>, so by association, <code>Users</code> transitively 'have' the permissions assigned to their roles. Or you could represent these things with a 'Group' concept. It is up to you - use what makes sense for your application.</p>
 </div>
 <div class="paragraph">
 <p>Your data model defines exactly how authorization will function. Shiro relies on a <a href="realm.html">Realm</a> implementation to translate your data model association details into a format Shiro understands. We&#8217;ll cover how Realms do this a little later.</p>
@@ -382,7 +382,7 @@
 <div class="paragraph">
 <div class="title">Note</div>
 <p>Ultimately, your <a href="realm.html">Realm</a> implementation is what communicates with your data source (RDBMS, LDAP, etc).
-So your realm is what will tell Shiro whether or not roles or permissions exist. You have full control over how your authorization model is structured and defined.</p>
+So your realm is what will tell Shiro whether roles or permissions exist. You have full control over how your authorization model is structured and defined.</p>
 </div>
 </td>
 </tr>
@@ -460,11 +460,11 @@ if (currentUser.hasRole("administrator")) {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRoles(java.util.List)"><code>hasRoles(List&lt;String&gt; roleNames)</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a array of <code>hasRole</code> results corresponding to the indices in the method argument. Useful as a performance enhancement if many role checks need to be performed (e.g. when customizing a complex view)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns an array of <code>hasRole</code> results corresponding to the indices in the method argument. Useful as a performance enhancement if many role checks need to be performed (e.g. when customizing a complex view)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#hasAllRoles(java.util.Collection)"><code>hasAllRoles(Collection&lt;String&gt; roleNames)</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Returns <code>true</code> if the <code>Subject</code> is assigned <em>all</em> of the specified roles, <code>false</code> otherwise.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns <code>true</code> if the <code>Subject</code> is assigned <em>all</em> the specified roles, <code>false</code> otherwise.</p></td>
 </tr>
 </tbody>
 </table>
@@ -511,7 +511,7 @@ openBankAccount();</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRoles(java.util.Collection)"><code>checkRoles(Collection&lt;String&gt; roleNames)</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Returns quietly if the <code>Subject</code> is assigned <em>all</em> of the specified role or throws an <code>AuthorizationException</code> if not.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns quietly if the <code>Subject</code> is assigned <em>all</em> the specified role or throws an <code>AuthorizationException</code> if not.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRoles(java.lang.String...)"><code>checkRoles(String&#8230;&#8203; roleIdentifiers)</code></a></p></td>
@@ -600,7 +600,7 @@ if (currentUser.isPermitted(printPermission)) {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermittedAll(java.util.Collection)"><code>isPermittedAll(Collection&lt;Permission&gt; perms)</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Returns <code>true</code> if the <code>Subject</code> is permitted <em>all</em> of the specified permissions, <code>false</code> otherwise.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns <code>true</code> if the <code>Subject</code> is permitted <em>all</em> the specified permissions, <code>false</code> otherwise.</p></td>
 </tr>
 </tbody>
 </table>
@@ -608,7 +608,7 @@ if (currentUser.isPermitted(printPermission)) {
 <div class="sect4">
 <h5 id="Authentication-AuthorizingSubjects-ProgrammaticAuthorization-PermissionBasedAuthorization-StringBasedPermissionChecks">String-based permission checks</h5>
 <div class="paragraph">
-<p>While Object-based permissions can be useful (compile-time type-safety, guaranteed behavior, customized implication logic, etc), they can sometimes feel a bit 'heavy handed' for many applications. An alternative is to use normal <code>Strings</code> to represent a permission instance.</p>
+<p>While Object-based permissions can be useful (compile-time type-safety, guaranteed behavior, customized implication logic, etc.), they can sometimes feel a bit 'heavy-handed' for many applications. An alternative is to use normal <code>Strings</code> to represent a permission instance.</p>
 </div>
 <div class="paragraph">
 <p>For example, based on the print permission example above, we can re-formulate that same check as a <code>String</code>-based permission check:</p>
@@ -680,7 +680,7 @@ if (currentUser.isPermitted(p) {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermittedAll(java.lang.String...)"><code>isPermittedAll(String&#8230;&#8203; perms)</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Returns <code>true</code> if the <code>Subject</code> is permitted <em>all</em> of the specified <code>String</code> permissions, <code>false</code> otherwise.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns <code>true</code> if the <code>Subject</code> is permitted <em>all</em> the specified <code>String</code> permissions, <code>false</code> otherwise.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1003,7 +1003,7 @@ public void updateAccount(Account account) {
 <p>If the Realm&#8217;s method results in an exception, the exception is propagated as an <a href="static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html"><code>AuthorizationException</code></a> to the <code>Subject</code> caller. This short-circuits the authorization process and any remaining Realms will not be consulted for that authorization operation.</p>
 </li>
 <li>
-<p>If the Realm&#8217;s method is a <code>hasRole*</code> or <code>isPermitted*</code> variant that returns a boolean and that return value is <code>true</code>, the <code>true</code> value is returned immediately and any remaining Realms are short circuited. This behavior exists as a performance enhancement, as typically if permitted by one Realm, it is implied that the Subject is permitted. This favors security policies where everything is prohibited by default and things are explicitly allowed, the most secure type of security policy.</p>
+<p>If the Realm&#8217;s method is a <code>hasRole*</code> or <code>isPermitted*</code> variant that returns a boolean and that return value is <code>true</code>, the <code>true</code> value is returned immediately and any remaining Realms are short-circuited. This behavior exists as a performance enhancement, as typically if permitted by one Realm, it is implied that the Subject is permitted. This favors security policies where everything is prohibited by default and things are explicitly allowed, the most secure type of security policy.</p>
 </li>
 </ol>
 </div>
@@ -1062,7 +1062,7 @@ securityManager.authorizer.permissionResolver = $globalPermissionResolver
 <td class="content">
 <div class="paragraph">
 <div class="title">PermissionResolverAware</div>
-<p>If you want to configure a global <code>PermissionResolver</code>, each <code>Realm</code> that is to receive the configured <code>PermissionResolver</code> <strong>must</strong> implement the <a href="static/current/apidocs/src-html/org/apache/shiro/authz/permission/PermissionResolverAware.html"><code>PermisionResolverAware</code></a> interface.
+<p>If you want to configure a global <code>PermissionResolver</code>, each <code>Realm</code> that is to receive the configured <code>PermissionResolver</code> <strong>must</strong> implement the <a href="static/current/apidocs/src-html/org/apache/shiro/authz/permission/PermissionResolverAware.html"><code>PermissionResolverAware</code></a> interface.
 This guarantees that the configured instance can be relayed to each <code>Realm</code> that supports such configuration.
 If you don&#8217;t want to use a global <code>PermissionResolver</code> or you don&#8217;t want to be bothered with the <code>PermissionResolverAware</code> interface, you can always configure a realm with a <code>PermissionResolver</code> instance explicitly (assuming there is a JavaBeans-compatible setPermissionResolver method).</p>
 </div>
@@ -1124,7 +1124,7 @@ securityManager.authorizer.rolePermissionResolver = $globalRolePermissionResolve
 <div class="paragraph">
 <div class="title">RolePermissionResolverAware</div>
 <p>If you want to configure a global <code>RolePermissionResolver</code>, each <code>Realm</code> that is to receive the configured <code>RolePermissionResolver</code> <strong>must</strong> implement the
-<a href="static/current/apidocs/org/apache/shiro/authz/permission/RolePermissionResolverAware.html"><code>RolePermisionResolverAware</code></a> interface.
+<a href="static/current/apidocs/org/apache/shiro/authz/permission/RolePermissionResolverAware.html"><code>RolePermissionResolverAware</code></a> interface.
 This guarantees that the configured global <code>RolePermissionResolver</code> instance can be relayed to each <code>Realm</code> that supports such configuration.
 If you don&#8217;t want to use a global <code>RolePermissionResolver</code> or you don&#8217;t want to be bothered with the <code>RolePermissionResolverAware</code> interface, you can always configure
 a realm with a <code>RolePermissionResolver</code> instance explicitly (assuming there is a JavaBeans-compatible setRolePermissionResolver method).</p>

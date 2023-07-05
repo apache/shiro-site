@@ -246,7 +246,7 @@
 <h2 id="overview"><a id="overview"></a> Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>While Apache Shiro&#8217;s core design goals allow it to be used to secure <em>any</em> JVM-based application, such as command line applications, server daemons, web apps, etc, this guide will focus on the most common use case: securing a web application running in a <a href="https://en.wikipedia.org/wiki/Java_servlet">Servlet</a> container, such as Tomcat or Jetty.</p>
+<p>While Apache Shiro&#8217;s core design goals allow it to be used to secure <em>any</em> JVM-based application, such as command line applications, server daemons, web apps, etc., this guide will focus on the most common use case: securing a web application running in a <a href="https://en.wikipedia.org/wiki/Java_servlet">Servlet</a> container, such as Tomcat or Jetty.</p>
 </div>
 <div class="sect2">
 <h3 id="prerequisites">Prerequisites</h3>
@@ -273,7 +273,7 @@
 <div class="sect2">
 <h3 id="tutorial_format">Tutorial Format</h3>
 <div class="paragraph">
-<p>This is a step-by-step tutorial. The tutorial, and all of its steps, exist as a Git repository. When you clone the git repository, the <code>main</code> branch is your starting point. Each step in the tutorial is a separate branch. You can follow along simply by checking out the git branch that reflects the tutorial step you are reviewing.</p>
+<p>This is a step-by-step tutorial. The tutorial and all of its steps, exist as a Git repository. When you clone the git repository, the <code>main</code> branch is your starting point. Each step in the tutorial is a separate branch. You can follow along simply by checking out the git branch that reflects the tutorial step you are reviewing.</p>
 </div>
 </div>
 <div class="sect2">
@@ -355,7 +355,7 @@
 <div class="ulist">
 <ul>
 <li>
-<p><code>pom.xml</code>: the Maven project/build file. It has Jetty configured so you can test your web app right away by running <code>mvn jetty:run</code>.</p>
+<p><code>pom.xml</code>: the Maven project/build file. It has Jetty configured, so you can test your web app right away by running <code>mvn jetty:run</code>.</p>
 </li>
 <li>
 <p><code>README.md</code>: a simple project readme file</p>
@@ -436,7 +436,7 @@
 <div class="sect2">
 <h3 id="1a_add_a_shiro_ini_file">1a: Add a <code>shiro.ini</code> file</h3>
 <div class="paragraph">
-<p>Shiro can be configured in many different ways in a web application, depending on the web and/or MVC framework you use. For example, you can configure Shiro via Spring, Guice, Tapestry, and many many more.</p>
+<p>Shiro can be configured in many different ways in a web application, depending on the web and/or MVC framework you use. For example, you can configure Shiro via Spring, Guice, Tapestry, and many more.</p>
 </div>
 <div class="paragraph">
 <p>To keep things simple for now, we&#8217;ll start a Shiro environment by using Shiro&#8217;s default (and very simple) <a href="https://shiro.apache.org/configuration.html">INI-based configuration</a>.</p>
@@ -506,10 +506,10 @@ securityManager.cacheManager = $cacheManager</code></pre>
 <p>The <code>&lt;listener&gt;</code> declaration defines a <a href="https://docs.oracle.com/javaee/6/api/javax/servlet/ServletContextListener.html"><code>ServletContextListener</code></a> that starts up the Shiro environment (including the Shiro <code>SecurityManager</code>) upon web application startup. By default, this listener automatically knows to look for our <code>WEB-INF/shiro.ini</code> file for Shiro configuration.</p>
 </li>
 <li>
-<p>The <code>&lt;filter&gt;</code> declaration defines the main <code>ShiroFilter</code>. This filter is expected to filter <em>all</em> requests into the web application so Shiro can peform necessary identity and access control operations before allowing a request to reach the application.</p>
+<p>The <code>&lt;filter&gt;</code> declaration defines the main <code>ShiroFilter</code>. This filter is expected to filter <em>all</em> requests into the web application so Shiro can perform necessary identity and access control operations before allowing a request to reach the application.</p>
 </li>
 <li>
-<p>The <code>&lt;filter-mapping&gt;</code> declaration ensures that <em>all</em> request types are filed by the <code>ShiroFilter</code>. Often <code>filter-mapping</code> declarations don&#8217;t specify <code>&lt;dispatcher&gt;</code> elements, but Shiro needs them all defined so it can filter all of the different request types that might execute for a web app.</p>
+<p>The <code>&lt;filter-mapping&gt;</code> declaration ensures that <em>all</em> request types are filed by the <code>ShiroFilter</code>. Often <code>filter-mapping</code> declarations don&#8217;t specify <code>&lt;dispatcher&gt;</code> elements, but Shiro needs them all defined so it can filter all the different request types that might execute for a web app.</p>
 </li>
 </ul>
 </div>
@@ -554,7 +554,7 @@ securityManager.cacheManager = $cacheManager</code></pre>
 <p>Now we have Shiro integrated and running within a webapp. But we haven&#8217;t actually told Shiro to do anything yet!</p>
 </div>
 <div class="paragraph">
-<p>Before we can login, or logout, or perform role-based or permission-based access control, or anything else security related, we need users!</p>
+<p>Before we can log in, or logout, or perform role-based or permission-based access control, or anything else security related, we need users!</p>
 </div>
 <div class="paragraph">
 <p>We will need to configure Shiro to access a <em>User Store</em> of some type, so it can look up users to perform login attempts, or check roles for security decisions, etc. There are many types of user stores that any application might need to access: maybe you store users in a MySQL database, maybe in MongoDB, maybe your company stores user accounts in LDAP or Active Directory, maybe you store them in a simple file, or some other proprietary data store.</p>
@@ -571,12 +571,12 @@ securityManager.cacheManager = $cacheManager</code></pre>
 <p>In this sense a Realm is essentially a security-specific <a href="https://en.wikipedia.org/wiki/Data_access_object">DAO</a>: it encapsulates connection details for data sources and makes the associated data available to Shiro as needed. When configuring Shiro, you must specify at least one Realm to use for authentication and/or authorization. The SecurityManager may be configured with multiple Realms, but at least one is required.</p>
 </div>
 <div class="paragraph">
-<p>Shiro provides out-of-the-box Realms to connect to a number of security data sources (aka directories) such as LDAP, relational databases (JDBC), text configuration sources like INI and properties files, and more. You can plug-in your own Realm implementations to represent custom data sources if the default Realms do not meet your needs.</p>
+<p>Shiro provides out-of-the-box Realms to connect to a number of security data sources (aka directories) such as LDAP, relational databases (JDBC), text configuration sources like INI and properties files, and more. You can plug in your own Realm implementations to represent custom data sources if the default Realms do not meet your needs.</p>
 </div>
 </blockquote>
 </div>
 <div class="paragraph">
-<p>So, we need to configure a Realm so we can access users.</p>
+<p>So, we need to configure a Realm, so we can access users.</p>
 </div>
 <div class="sect2">
 <h3 id="2a_set_up_stormpath">2a: Set up Stormpath</h3>
@@ -819,7 +819,7 @@ Connection: keep-alive</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p>If you have been using Stormpath for a while and you have more then one Stormpath application, the <code>stormpathRealm.applicationRestUrl</code> property must be set.</p>
+<p>If you have been using Stormpath for a while, and you have more than one Stormpath application, the <code>stormpathRealm.applicationRestUrl</code> property must be set.</p>
 </li>
 </ul>
 </div>
@@ -987,12 +987,12 @@ shiro.loginUrl = /login.jsp
 </div>
 </div>
 <div class="sect2">
-<h3 id="step_3d_try_to_login">Step 3d: Try to Login</h3>
+<h3 id="step_3d_try_to_log_in">Step 3d: Try to Log in</h3>
 <div class="paragraph">
-<p>With your web browser, navigate to <a href="http://localhost:8080/login.jsp">localhost:8080/login.jsp</a> and you will see our new shiny login form.</p>
+<p>With your web browser, navigate to <a href="http://localhost:8080/login.jsp">localhost:8080/login.jsp</a>, and you will see our new shiny login form.</p>
 </div>
 <div class="paragraph">
-<p>Enter in a username and password of the account you created at the end of Step 2, and hit 'Login'. If the login is successful, you will be directed to the home page! If the login fails, you will be shown the login page again.</p>
+<p>Enter a username and password of the account you created at the end of Step 2, and hit 'Login'. If the login is successful, you will be directed to the home page! If the login fails, you will be shown the login page again.</p>
 </div>
 <div class="paragraph">
 <p>Tip: If you want a successful login to redirect the user to a different page other than the home page (context path <code>/</code>), you can set the <code>authc.successUrl = /whatever</code> in the INI&#8217;s <code>[main]</code> section.</p>
@@ -1164,7 +1164,7 @@ shiro.loginUrl = /login.jsp
 <div class="sect2">
 <h3 id="step_5a_add_a_new_restricted_section">Step 5a: Add a new restricted section</h3>
 <div class="paragraph">
-<p>A new <code>src/main/webapp/account</code> directory was added. This directory (and all paths below it) simulates a 'private' or 'authenticated only' section of a website that you might want to restrict to only logged in users. The <code>src/main/webapp/account/index.jsp</code> file is just a placeholder for a simulated 'home account' page.</p>
+<p>A new <code>src/main/webapp/account</code> directory was added. This directory (and all paths below it) simulates a 'private' or 'authenticated only' section of a website that you might want to restrict to only logged-in users. The <code>src/main/webapp/account/index.jsp</code> file is just a placeholder for a simulated 'home account' page.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1201,7 +1201,7 @@ shiro.loginUrl = /login.jsp
 <div class="sect2">
 <h3 id="step_5c_update_our_home_page">Step 5c: Update our home page</h3>
 <div class="paragraph">
-<p>The final change for Step 5 is to update the <code>/home.jsp</code> page to let the user know they can access the new part of the web site.</p>
+<p>The final change for Step 5 is to update the <code>/home.jsp</code> page to let the user know they can access the new part of the website.</p>
 </div>
 <div class="paragraph">
 <p>These lines were added below the welcome message:</p>
@@ -1294,7 +1294,7 @@ shiro.loginUrl = /login.jsp
 <p>(to keep with our Star-Trek account theme :) )</p>
 </div>
 <div class="paragraph">
-<p>Once you&#8217;ve created the groups, add the <code>Jean-Luc Picard</code> account to the <code>Captains</code> and <code>Officers</code> groups. You might want to create some ad-hoc accounts and add them to whatever groups you like. Make sure some of the accounts don&#8217;t overlap groups so you can see changes based on separate Groups assigned to user accounts.</p>
+<p>Once you&#8217;ve created the groups, add the <code>Jean-Luc Picard</code> account to the <code>Captains</code> and <code>Officers</code> groups. You might want to create some ad-hoc accounts and add them to whatever groups you like. Make sure some of the accounts don&#8217;t overlap groups, so you can see changes based on separate Groups assigned to user accounts.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1368,7 +1368,7 @@ shiro.loginUrl = /login.jsp
 <p>Role-based access control is good for many use cases, but it suffers from one major problem: you can&#8217;t add or delete roles at runtime. Role checks are hard-coded with role names, so if you changed the role names or role configuration, or add or remove roles, you have to go back and change your code!</p>
 </div>
 <div class="paragraph">
-<p>Because of this, Shiro has a powerful marquis feature: built-in support for <em>permissions</em>. In Shiro, a permission is a raw statement of functionality, for example 'open a door' 'create a blog entry', 'delete the <code>jsmith</code> user', etc. Permissions reflect your application&#8217;s raw functionality, so you only need to change permission checks when you change your application&#8217;s functionlity - not if you want to change your role or user model.</p>
+<p>Because of this, Shiro has a powerful marquis feature: built-in support for <em>permissions</em>. In Shiro, a permission is a raw statement of functionality, for example 'open a door' 'create a blog entry', 'delete the <code>jsmith</code> user', etc. Permissions reflect your application&#8217;s raw functionality, so you only need to change permission checks when you change your application&#8217;s functionality - not if you want to change your role or user model.</p>
 </div>
 <div class="paragraph">
 <p>To demonstrate this, we will create some permissions and assign them to a user, and then customize our web UI based on a user&#8217;s authorization (permissions).</p>

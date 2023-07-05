@@ -229,7 +229,7 @@ securityManager.cacheManager = $cacheManager
 </div>
 <div class="paragraph">
 <p>We have an out-of-the-box <a href="static/current/apidocs/org/apache/shiro/cache/ehcache/EhCacheManager.html"><code>EhCacheManager</code></a> implementation, so you can use that today if you wanted.
-Otherwise, you can implement your own <code>CacheManager</code> (e.g. with Coherence, etc) and configure it as above, and you’ll be good to go.</p>
+Otherwise, you can implement your own <code>CacheManager</code> (e.g. with Coherence, etc.) and configure it as above, and you’ll be good to go.</p>
 </div>
 </div>
 </div>
@@ -237,7 +237,7 @@ Otherwise, you can implement your own <code>CacheManager</code> (e.g. with Coher
 <h2 id="CacheManager-AuthorizationCacheInvalidation">Authorization Cache Invalidation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Finally note that <a href="static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html"><code>AuthorizingRealm</code></a> has a <a href="static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html#clearCachedAuthorizationInfo%28org.apache.shiro.subject.PrincipalCollection%29"><code>clearCachedAuthorizationInfo</code></a> method that can be called by subclasses to evict the cached authzInfo for a particular account.
+<p>Finally, note that <a href="static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html"><code>AuthorizingRealm</code></a> has a <a href="static/current/apidocs/org/apache/shiro/realm/AuthorizingRealm.html#clearCachedAuthorizationInfo%28org.apache.shiro.subject.PrincipalCollection%29"><code>clearCachedAuthorizationInfo</code></a> method that can be called by subclasses to evict the cached authzInfo for a particular account.
 It is usually called by custom logic if the corresponding account’s authz data has changed (to ensure the next authz check will pick up the new data).</p>
 </div>
 </div>

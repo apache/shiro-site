@@ -282,7 +282,7 @@ and much more - all integrated into a cohesive easy-to-use API.</p>
 <p>Caching: Caching is a first-tier citizen in Apache Shiro&#8217;s API to ensure that security operations remain fast and efficient.</p>
 </li>
 <li>
-<p>Concurrency: Apache Shiro supports multi-threaded applications with its concurrency features.</p>
+<p>Concurrency: Apache Shiro supports multithreaded applications with its concurrency features.</p>
 </li>
 <li>
 <p>Testing: Test support exists to help you write unit and integration tests and ensure your code will be secured as expected.</p>
@@ -291,7 +291,7 @@ and much more - all integrated into a cohesive easy-to-use API.</p>
 <p>"Run As": A feature that allows users to assume the identity of another user (if they are allowed), sometimes useful in administrative scenarios.</p>
 </li>
 <li>
-<p>"Remember Me": Remember users' identities across sessions so they only need to log in when mandatory.</p>
+<p>"Remember Me": Remember users' identities across sessions, so they only need to log in when mandatory.</p>
 </li>
 </ul>
 </div>
@@ -313,7 +313,7 @@ and much more - all integrated into a cohesive easy-to-use API.</p>
 <p>Shiro largely reflects these concepts in its own design. By matching what is already intuitive for software developers, Apache Shiro remains intuitive and easy to use in practically any application.</p>
 </div>
 <div class="sect2">
-<h3 id="bsic_design">Bsic Design</h3>
+<h3 id="basic_design">Basic Design</h3>
 <div class="paragraph">
 <p>Shiro&#8217;s architecture has 3 primary concepts: the <code>Subject</code>, <code>SecurityManager</code> and <code>Realm</code> s. The following diagram is a high-level overview of how these concepts interact, and we&#8217;ll cover each concept below:</p>
 </div>
@@ -325,7 +325,7 @@ and much more - all integrated into a cohesive easy-to-use API.</p>
 <div class="sect3">
 <h4 id="subject">Subject</h4>
 <div class="paragraph">
-<p>The <code>Subject</code> is essentially a security specific 'view' of the the currently executing user. Notice that it is not actually named <em>User</em> however. The name <em>Subject</em> was chosen for two reasons:</p>
+<p>The <code>Subject</code> is essentially a security specific 'view' of the currently executing user. Notice that it is not actually named <em>User</em>, however. The name <em>Subject</em> was chosen for two reasons:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -376,7 +376,7 @@ Subject currentUser = SecurityUtils.getSubject();</code></pre>
 <p>In this sense a Realm is essentially a security-specific <a href="https://en.wikipedia.org/wiki/Data_access_object">DAO</a>: it encapsulates connection details for data sources and makes the associated data available to Shiro as needed. When configuring Shiro, you must specify at least one Realm to use for authentication and/or authorization. More than one Realm may be configured, but at least one is required.</p>
 </div>
 <div class="paragraph">
-<p>Shiro provides out-of-the-box Realms to connect to a number of security data sources (aka directories) such as LDAP, relational databases (JDBC), text configuration sources like INI and properties files, and more. You can plug-in your own Realm implementations to represent custom data sources if the default Realms do not meet your needs.</p>
+<p>Shiro provides out-of-the-box Realms to connect to a number of security data sources (aka directories) such as LDAP, relational databases (JDBC), text configuration sources like INI and properties files, and more. You can plug in your own Realm implementations to represent custom data sources if the default Realms do not meet your needs.</p>
 </div>
 <div class="paragraph">
 <p>Like other internal components, the Shiro <code>SecurityManager</code> manages how Realms are used to acquire security data and then represented as <code>Subject</code> instances.</p>

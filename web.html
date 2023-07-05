@@ -291,7 +291,7 @@
 <p>The simplest way to integrate Shiro into any web application is to configure a Servlet ContextListener and Filter in web.xml that understands how to read Shiro&#8217;s INI configuration. The bulk of the INI config format itself is defined in the Configuration pages&#8217;s <a href="/configuration.html#Configuration-INIConfiguration-Sections">INI Sections</a> section, but we&#8217;ll cover some additional web-specific sections here.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 1. Using Jakart EE?</div>
+<div class="title">Example 1. Using Jakarta EE?</div>
 <div class="content">
 <div class="paragraph">
 <p>The below configuration is not required if using <a href="jakarta-ee.html">Jakarta EE integration</a> or basic CDI integration module.</p>
@@ -392,7 +392,7 @@
 <div class="sect4">
 <h5 id="custom_webenvironment_class">Custom <code>WebEnvironment</code> Class</h5>
 <div class="paragraph">
-<p>By default the <code>EnvironmentLoaderListener</code> will create an <code>IniWebEnvironment</code> instance, which assumes Shiro&#8217;s INI-based <a href="configuration.html">Configuration</a>. If you like, you may specify a custom <code>WebEnvironment</code> instance instead by specifying a <code>ServletContext</code> <code>context-param</code> in <code>web.xml</code>:</p>
+<p>By default, the <code>EnvironmentLoaderListener</code> will create an <code>IniWebEnvironment</code> instance, which assumes Shiro&#8217;s INI-based <a href="configuration.html">Configuration</a>. If you like, you may specify a custom <code>WebEnvironment</code> instance instead by specifying a <code>ServletContext</code> <code>context-param</code> in <code>web.xml</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -570,7 +570,7 @@ For example, <code>/WEB-INF/some/path/shiro.ini</code></p>
 <p>You might want to separate security config from the rest of web.xml config</p>
 </li>
 <li>
-<p>Your security configuration might become large and you want to keep web.xml lean and easier to read</p>
+<p>Your security configuration might become large, and you want to keep web.xml lean and easier to read</p>
 </li>
 <li>
 <p>You have a complex build system where the same shiro config might need to be referenced in multiple places</p>
@@ -645,7 +645,7 @@ For example, <code>/WEB-INF/some/path/shiro.ini</code></p>
 </div>
 </div>
 <div class="paragraph">
-<p>This line states that "Any request to my application&#8217;s path of <code>/account</code> or any of it&#8217;s sub paths (<code>/account/foo</code>, <code>/account/bar/baz</code>, etc) will trigger the 'ssl, authc' filter chain". We&#8217;ll cover filter chains below.</p>
+<p>This line states that "Any request to my application&#8217;s path of <code>/account</code> or any of its sub paths (<code>/account/foo</code>, <code>/account/bar/baz</code>, etc.) will trigger the 'ssl, authc' filter chain". We&#8217;ll cover filter chains below.</p>
 </div>
 <div class="paragraph">
 <p>Note that all path expressions are relative to your application&#8217;s context root. This means that if you deploy your application one day to, say, <code>www.somehost.com/myapp</code> and then later deploy it to <code>www.anotherhost.com</code> (no 'myapp' sub-path), the pattern matching will still work.
@@ -661,7 +661,7 @@ All paths are relative to the <a href="https://docs.oracle.com/javaee/1.3/api/ja
 <div class="title">Order Matters!</div>
 <div class="paragraph">
 <p>URL path expressions are evaluated against an incoming request in the order they are defined and the <em>FIRST MATCH WINS</em>.
-For example, let&#8217;s asume that there are the following chain definitions:</p>
+For example, let&#8217;s assume that there are the following chain definitions:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -704,7 +704,7 @@ For example, let&#8217;s asume that there are the following chain definitions:</
 <p>And because filter tokens define chains (aka a List), remember that order matters! Define your comma-delimited list in the order that you want the request to flow through the chain.</p>
 </div>
 <div class="paragraph">
-<p>Finally, each filter is free to handle the response however it wants if its necessary conditions are not met (e.g. perform a redirect, respond with an HTTP error code, direct rendering, etc). Otherwise it is expected to allow the request to continue through the chain on to the final destination view.</p>
+<p>Finally, each filter is free to handle the response however it wants if its necessary conditions are not met (e.g. perform a redirect, respond with an HTTP error code, direct rendering, etc). Otherwise, it is expected to allow the request to continue through the chain on to the final destination view.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -847,10 +847,10 @@ authc.loginUrl = /login.jsp
 <h2 id="enabling_and_disabling_filters">Enabling and Disabling Filters</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>As is the case with any filter chain definition mechanism (<code>web.xml</code>, Shiro&#8217;s INI, etc), you enable a filter just by including it in the filter chain definition, and you disable it by removing it from the chain definition.</p>
+<p>As is the case with any filter chain definition mechanism (<code>web.xml</code>, Shiro&#8217;s INI, etc.), you enable a filter just by including it in the filter chain definition, and you disable it by removing it from the chain definition.</p>
 </div>
 <div class="paragraph">
-<p>But a new feature added in Shiro 1.2 is the ability to enable or disable filters without removing them from the filter chain. If enabled (the default setting), then a request will be filtered as expected. If disabled, then the filter will allow the request to pass through immediately to the next element in the <code>FilterChain</code>. You can trigger a filter&#8217;s enabled state generally based on a configuration property, or you can even trigger it on a <em>per request</em> basis.</p>
+<p>But a new feature added in Shiro 1.2 is the ability to enable or disable filters without removing them from the filter chain. If enabled (the default setting), then a request will be filtered as expected. If disabled, then the filter will allow the request to pass through immediately to the next element in the <code>FilterChain</code>. You can trigger a filter&#8217;s enabled state generally based on a configuration property, or you can even trigger it on a <em>per-request</em> basis.</p>
 </div>
 <div class="paragraph">
 <p>This is a powerful concept because it is often more convenient to enable or disable a filter based on certain requirements than to change the static filter chain definition, which would be permanent and inflexible.</p>
@@ -887,7 +887,7 @@ ssl.enabled = false
 </div>
 </div>
 <div class="paragraph">
-<p>This example shows that potentially many URL paths can all require that a request must be secured by an SSL connection. Setting up SSL while in development can be frustrating and time consuming. While in development, you can disable the ssl filter. When deploying to production, you can enable it with one configuration property - something that is much easier than manually changing all of the URL paths or maintaining two Shiro configurations.</p>
+<p>This example shows that potentially many URL paths can all require that a request must be secured by an SSL connection. Setting up SSL while in development can be frustrating and time-consuming. While in development, you can disable the ssl filter. When deploying to production, you can enable it with one configuration property - something that is much easier than manually changing all the URL paths or maintaining two Shiro configurations.</p>
 </div>
 </div>
 <div class="sect2">
@@ -958,7 +958,7 @@ invalidRequest.blockNonAscii = true
 </td>
 <td class="content">
 <div class="paragraph">
-<p>If you currently allowing URL rewriting to allow for a &lt;code&gt;jsessionid&lt;/code&gt; in the URL, you must set <code>blockSemicolon</code> to <code>false</code>.</p>
+<p>If you&#8217;re currently allowing URL rewriting to allow for a &lt;code&gt;jsessionid&lt;/code&gt; in the URL, you must set <code>blockSemicolon</code> to <code>false</code>.</p>
 </div>
 <div class="paragraph">
 <p>URL rewriting for <code>jsessionid</code> is defined in section "7.1.3" of the Java Servlet Specification, but it is generally NOT recommended.</p>
@@ -1006,7 +1006,7 @@ This very simple implementation delegates all session management duties (includi
 It is essentially a bridge for Shiro&#8217;s session API to the servlet container and does little else.</p>
 </div>
 <div class="paragraph">
-<p>A benefit of using this default is that apps that work with existing servlet container session configuration (timeout, any container-specific clustering mechanisms, etc) will work as expected.</p>
+<p>A benefit of using this default is that apps that work with existing servlet container session configuration (timeout, any container-specific clustering mechanisms, etc.) will work as expected.</p>
 </div>
 <div class="paragraph">
 <p>A downside of this default is that you are tied to the servlet container&#8217;s specific session behavior. For example, if you wanted to cluster sessions, but you used Jetty for testing and Tomcat in production, your container-specific configuration (or code) would not be portable.</p>
@@ -1088,7 +1088,7 @@ securityManager.sessionManager = $sessionManager</code></pre>
 <div class="sect5">
 <h6 id="session_cookie_configuration">Session Cookie Configuration</h6>
 <div class="paragraph">
-<p>The DefaultWebSessionManager&#8217;s <code>sessionIdCookie</code> default instance is a <a href="static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html"><code>SimpleCookie</code></a>. This simple implementation allows JavaBeans-style property configuration for all of the relevant properties you would want to configure on an http Cookie.</p>
+<p>The DefaultWebSessionManager&#8217;s <code>sessionIdCookie</code> default instance is a <a href="static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html"><code>SimpleCookie</code></a>. This simple implementation allows JavaBeans-style property configuration for all the relevant properties you would want to configure on an http Cookie.</p>
 </div>
 <div class="paragraph">
 <p>For example, you could set the Cookie domain:</p>
@@ -1219,7 +1219,7 @@ login.jsp = authc</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>By default, the <code>FormAuthenticationFilter</code> will look for request parameters named <code>username</code>, <code>password</code> and <code>rememberMe</code>. If these are different than the form field names that you use in your form, you&#8217;ll want to configure the names on the <code>FormAuthenticationFilter</code>. For example, in <code>shiro.ini</code>:</p>
+<p>By default, the <code>FormAuthenticationFilter</code> will look for request parameters named <code>username</code>, <code>password</code> and <code>rememberMe</code>. If these are different from the form field names that you use in your form, you&#8217;ll want to configure the names on the <code>FormAuthenticationFilter</code>. For example, in <code>shiro.ini</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1305,7 +1305,7 @@ securityManager.rememberMeManager = $rememberMeManager</code></pre>
 <div class="sect2">
 <h3 id="web_guesttag">The <code>guest</code> tag</h3>
 <div class="paragraph">
-<p>The <code>guest</code> tag will display its wrapped content only if the current <code>Subject</code> is considered a 'guest'. A guest is any <code>Subject</code> that does not have an identity. That is, we don&#8217;t know who the user is because they have not logged in and they are not remembered (from Remember Me services) from a previous site visit.</p>
+<p>The <code>guest</code> tag will display its wrapped content only if the current <code>Subject</code> is considered a 'guest'. A guest is any <code>Subject</code> that does not have an identity. That is, we don&#8217;t know who the user is because they have not logged in, and they are not remembered (from Remember Me services) from a previous site visit.</p>
 </div>
 <div class="paragraph">
 <p>Example:</p>

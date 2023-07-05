@@ -296,7 +296,7 @@ SessionDAO sessionDAO = new CustomSessionDAO();
 <p>Most applications instead benefit from text-based configuration that could be modified independently of source code and even make things easier to understand for those not intimately familiar with Shiro&#8217;s APIs.</p>
 </div>
 <div class="paragraph">
-<p>To ensure a common-denominator text-based configuration mechanism that can work in all environments with minimal 3rd party dependencies, Shiro supports the <a href="https://en.wikipedia.org/wiki/INI_file">INI format</a> to build the <code>SecurityManager</code> object graph and its supporting components. INI is easy to read, easy to configure, and is simple to set-up and suits most applications well.</p>
+<p>To ensure a common-denominator text-based configuration mechanism that can work in all environments with minimal 3rd party dependencies, Shiro supports the <a href="https://en.wikipedia.org/wiki/INI_file">INI format</a> to build the <code>SecurityManager</code> object graph and its supporting components. INI is easy to read, easy to configure, and is simple to set up and suits most applications well.</p>
 </div>
 <div class="sect2">
 <h3 id="Configuration-INIConfiguration-CreatingSecurityManagerFromINI">Creating a SecurityManager from INI</h3>
@@ -357,7 +357,7 @@ SecurityUtils.setSecurityManager(securityManager);</code></pre>
 <div class="sect2">
 <h3 id="Configuration-INIConfiguration-Sections">INI Sections</h3>
 <div class="paragraph">
-<p>INI is basically a text configuration consisting of key/value pairs organized by uniquely-named sections. Keys are unique per section only, not over the entire configuration (unlike the JDK <a href="https://java.sun.com/javase/6/docs/api/java/util/Properties.html">Properties</a>). Each section may be viewed like a single <code>Properties</code> definition however.</p>
+<p>INI is basically a text configuration consisting of key/value pairs organized by uniquely-named sections. Keys are unique per section only, not over the entire configuration (unlike the JDK <a href="https://java.sun.com/javase/6/docs/api/java/util/Properties.html">Properties</a>). Each section may be viewed like a single <code>Properties</code> definition, however.</p>
 </div>
 <div class="paragraph">
 <p>Commented lines can start with either with an Octothorpe (# - aka the 'hash', 'pound' or 'number' sign) or a Semi-colon (';')</p>
@@ -670,7 +670,7 @@ securityManager.sessionManager.globalSessionTimeout = 1800000
 </div>
 </div>
 <div class="paragraph">
-<p>This is because the <code>securityManager</code> instance is a special one - it is already instantiated for you and ready to go so you don&#8217;t need to know the specific <code>SecurityManager</code> implementation class to instantiate.</p>
+<p>This is because the <code>securityManager</code> instance is a special one - it is already instantiated for you and ready to go, so you don&#8217;t need to know the specific <code>SecurityManager</code> implementation class to instantiate.</p>
 </div>
 <div class="paragraph">
 <p>Of course, if you actually <em>want</em> to specify your own implementation, you can, just define your implementation as specified in the "Overriding Instances" section above:</p>
@@ -743,7 +743,7 @@ You can configure it like any other object as described above.</p>
 <div class="sect4">
 <h5 id="Configuration-INIConfiguration-Sections-users-EncryptingPasswords">Encrypting Passwords</h5>
 <div class="paragraph">
-<p>If you don&#8217;t want the [users] section passwords to be in plain-text, you can encrypt them using your favorite hash algorithm (MD5, Sha1, Sha256, etc) however you like and use the resulting string as the password value. By default, the password string is expected to be Hex encoded, but can be configured to be Base64 encoded instead (see below).</p>
+<p>If you don&#8217;t want the [users] section passwords to be in plain-text, you can encrypt them using your favorite hash algorithm (MD5, Sha1, Sha256, etc.) however you like and use the resulting string as the password value. By default, the password string is expected to be Hex encoded, but can be configured to be Base64 encoded instead (see below).</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -813,7 +813,7 @@ goodguy = winnebago:drive:eagle5</code></pre>
 <div class="sect4">
 <h5 id="Configuration-INIConfiguration-Sections-roles-LineFormat">Line Format</h5>
 <div class="paragraph">
-<p>Each line in the [roles] section must must define a role-to-permission(s) key/value mapping with in the following format:</p>
+<p>Each line in the [roles] section must define a role-to-permission(s) key/value mapping with in the following format:</p>
 </div>
 <div class="paragraph">
 <p><code>rolename</code> = <em>permissionDefinition1</em>, <em>permissionDefinition2</em>, …, <em>permissionDefinitionN</em></p>
@@ -857,7 +857,7 @@ to the <a href="static/current/apidocs/org/apache/shiro/authz/permission/Wildcar
 <div class="sect3">
 <h4 id="Configuration-INIConfiguration-Sections-urls"><code>[urls]</code></h4>
 <div class="paragraph">
-<p>This section and its options is described in the <a href="web.html">Web</a> chapter.</p>
+<p>This section and its options are described in the <a href="web.html">Web</a> chapter.</p>
 </div>
 </div>
 </div>

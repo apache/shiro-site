@@ -235,7 +235,7 @@ Also, in the security world, the term 'Subject' is actually the recognized nomen
 </div>
 <div class="paragraph">
 <p>Shiro&#8217;s API encourages a <code>Subject</code>-centric programming paradigm for applications. When coding application logic, most application developers want to know who the <em>currently executing</em> user is.
-While the application can usually look up any user via their own mechanisms (UserService, etc), when it comes to security, the most important question is <strong>"Who is the <em>current</em> user?"</strong></p>
+While the application can usually look up any user via their own mechanisms (UserService, etc.), when it comes to security, the most important question is <strong>"Who is the <em>current</em> user?"</strong></p>
 </div>
 <div class="paragraph">
 <p>While any Subject can be acquired by using the <code>SecurityManager</code>, application code based on only the current user/<code>Subject</code> is much more natural and intuitive.</p>
@@ -332,7 +332,7 @@ There are many different types of exceptions you can check, or throw your own fo
 See the <a href="/static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html">AuthenticationException JavaDoc</a> for more.</p>
 </div>
 <div class="paragraph">
-<p>Ok, so by now, we have a logged in user.
+<p>Ok, so by now, we have a logged-in user.
 What else can we do?</p>
 </div>
 <div class="paragraph">
@@ -535,7 +535,7 @@ If you want it to be available to any code that calls <code>SecurityUtils.getSub
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>The Subject is <em>bound</em> to the thread so it is available at all points of the thread&#8217;s execution. Shiro does this via its <code>ThreadState</code> mechanism which is an abstraction on top of a <code>ThreadLocal</code>.</p>
+<p>The Subject is <em>bound</em> to the thread, so it is available at all points of the thread&#8217;s execution. Shiro does this via its <code>ThreadState</code> mechanism which is an abstraction on top of a <code>ThreadLocal</code>.</p>
 </li>
 <li>
 <p>The Subject is <em>unbound</em> at some point later, even if the thread execution results in an error. This ensures the thread remains clean and clear of any previous <code>Subject</code> state in a pooled/reusable thread environment.</p>
@@ -568,7 +568,7 @@ subject.execute( new Runnable() {
 </div>
 </div>
 <div class="paragraph">
-<p>Of course <code>Callable</code> instances are supported as well so you can have return values and catch exceptions:</p>
+<p>Of course <code>Callable</code> instances are supported as well, so you can have return values and catch exceptions:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -654,7 +654,7 @@ try {
 <td class="content">
 <div class="title">Web Use</div>
 <div class="paragraph">
-<p>Don''t use the above 'ThreadState' code example in a thread that is processing a web request. Web-specific ThreadState implementations are used during web requests instead. Instead, ensure the 'ShiroFilter' intercepts web requests to ensure Subject building/binding/cleanup is done properly.</p>
+<p>Don&#8217;t use the above 'ThreadState' code example in a thread that is processing a web request. Web-specific ThreadState implementations are used during web requests instead. Instead, ensure the 'ShiroFilter' intercepts web requests to ensure Subject building/binding/cleanup is done properly.</p>
 </div>
 </td>
 </tr>

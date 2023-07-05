@@ -446,13 +446,13 @@ Once the subject is authenticated, they are no longer considered only remembered
 <div class="sect2">
 <h3 id="Authentication-RememberedVsAuthenticated-AnIllustratingExample">An illustrating example</h3>
 <div class="paragraph">
-<p>The following is a fairly common scenario that helps illustrate why the the distinction between remembered and authenticated is important.</p>
+<p>The following is a fairly common scenario that helps illustrate why the distinction between remembered and authenticated is important.</p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s say you&#8217;re using <a href="https://www.amazon.com">Amazon.com</a>.
 You&#8217;ve logged-in successfully and have added a few books to your shopping cart.
 But you have to run off to a meeting, but forget to log out.
-By the time the meeting is over, it&#8217;s time to go home and you leave the office.</p>
+By the time the meeting is over, it&#8217;s time to go home, and you leave the office.</p>
 </div>
 <div class="paragraph">
 <p>The next day when you come in to work, you realize you didn&#8217;t complete your purchase, so you go back to amazon.com.
@@ -464,11 +464,11 @@ To Amazon, <code>subject.isRemembered()</code> would return <code>true</code>.</
 While Amazon 'remembers' you (<code>isRemembered()</code> == <code>true</code>), it cannot guarantee that you are in fact you (for example, maybe a co-worker is using your computer).</p>
 </div>
 <div class="paragraph">
-<p>So before you can perform a sensitive action like updating credit card information, Amazon will force you to login so they can guarantee your identity.
-After you login, your identity has been verified and to Amazon, <code>isAuthenticated()</code> would now be <code>true</code>.</p>
+<p>So before you can perform a sensitive action like updating credit card information, Amazon will force you to login, so they can guarantee your identity.
+After you log in, your identity has been verified and to Amazon, <code>isAuthenticated()</code> would now be <code>true</code>.</p>
 </div>
 <div class="paragraph">
-<p>This scenario happens so frequently for many types of applications, so the functionality is built in to Shiro so you can leverage it for your own application.
+<p>This scenario happens so frequently for many types of applications, so the functionality is built in to Shiro, so you can leverage it for your own application.
 Now, whether you use <code>isRemembered()</code> or <code>isAuthenticated()</code> to customize your views and workflows is up to you, but Shiro will maintain this fundamental state in case you need it.</p>
 </div>
 </div>
@@ -618,12 +618,12 @@ An <code>AuthenticationStrategy</code> makes the appropriate decision based on a
 <p>immediately after an individual Realm&#8217;s <code>getAuthenticationInfo</code> method is called</p>
 </li>
 <li>
-<p>after all of the Realms have been invoked</p>
+<p>after all the Realms have been invoked</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>Also an <code>AuthenticationStrategy</code> is responsible for aggregating the results from each successful Realm and 'bundling' them into a single <a href="/static/current/apidocs/org/apache/shiro/authc/AuthenticationInfo.html"><code>AuthenticationInfo</code></a> representation.
+<p>Also, an <code>AuthenticationStrategy</code> is responsible for aggregating the results from each successful Realm and 'bundling' them into a single <a href="/static/current/apidocs/org/apache/shiro/authc/AuthenticationInfo.html"><code>AuthenticationInfo</code></a> representation.
 This final aggregate <code>AuthenticationInfo</code> instance is what is returned by the <code>Authenticator</code> instance and is what Shiro uses to represent the `Subject&#8217;s final identity (aka Principals).</p>
 </div>
 <div class="admonitionblock note">
@@ -659,7 +659,7 @@ This final aggregate <code>AuthenticationInfo</code> instance is what is returne
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="/static/current/apidocs/org/apache/shiro/authc/pam/AtLeastOneSuccessfulStrategy.html"><code>AtLeastOneSuccessfulStrategy</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If one (or more) Realms authenticate successfully, the overall attempt is considered successful.
-If none authenticate succesfully, the attempt fails.</p></td>
+If none authenticate successfully, the attempt fails.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="/static/current/apidocs/org/apache/shiro/authc/pam/FirstSuccessfulStrategy.html"><code>FirstSuccessfulStrategy</code></a></p></td>
@@ -774,7 +774,7 @@ securityManager.realms = $fooRealm, $barRealm, $blahRealm
 <div class="title">Explicit Realm Inclusion</div>
 <p>When you explicitly configure the <code>securityManager.realms</code> property, <strong>only</strong> the referenced realms will be configured on the <code>SecurityManager</code>.
 This means you could define 5 realms in INI, but only actually use 3 if 3 are referenced for the <code>realms</code> property.
-This is different than implicit realm ordering where all available realms will be used.</p>
+This is different from implicit realm ordering where all available realms will be used.</p>
 </div>
 </td>
 </tr>

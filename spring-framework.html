@@ -212,7 +212,7 @@
 <h2 id="standalone_applications">Standalone Applications</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Include the Shiro Spring dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).</p>
+<p>Include the Shiro Spring dependency in you application classpath (we recommend using a tool such as Apache Maven or Gradle to manage this).</p>
 </div>
 <ul class="nav nav-tabs" id="dependency-cli-tab" role="tablist">
   <li class="nav-item" role="presentation">
@@ -414,7 +414,7 @@ public Realm realm() {
 </div>
 </div>
 <div class="paragraph">
-<p>The easiest way to setup Shiro, so that all SecurityUtils.* methods work in all cases, is to make the <code>SecurityManager</code> bean a static singleton.
+<p>The easiest way to set up Shiro, so that all SecurityUtils.* methods work in all cases, is to make the <code>SecurityManager</code> bean a static singleton.
 DO NOT do this in web applications - see the <a href="#web_applications">Web Applications</a> section below instead.</p>
 </div>
 <div class="listingblock">
@@ -437,7 +437,7 @@ private SecurityManager securityManager;
 </div>
 </div>
 <div class="paragraph">
-<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/main/samples/spring">samples on Github</a>.</p>
+<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/main/samples/spring">samples on GitHub</a>.</p>
 </div>
 </div>
 </div>
@@ -448,7 +448,7 @@ private SecurityManager securityManager;
 <p>Shiro has first-class support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a main Shiro Filter. This filter itself is extremely powerful, allowing for ad-hoc custom filter chains to be executed based on any URL path expression.</p>
 </div>
 <div class="paragraph">
-<p>Include the Shiro Spring web dependencies in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).</p>
+<p>Include the Shiro Spring web dependencies in you application classpath (we recommend using a tool such as Apache Maven or Gradle to manage this).</p>
 </div>
 <ul class="nav nav-tabs" id="dependency-web-tab" role="tablist">
   <li class="nav-item" role="presentation">
@@ -694,7 +694,7 @@ public ShiroFilterChainDefinition shiroFilterChainDefinition() {
 <p>If you are using Shiro&#8217;s annotations see the <a href="#annotations_and_web_applications">annotation</a> section below.</p>
 </div>
 <div class="paragraph">
-<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/main/samples/spring-mvc">samples on Github</a>.</p>
+<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/main/samples/spring-mvc">samples on GitHub</a>.</p>
 </div>
 </div>
 </div>
@@ -734,7 +734,7 @@ public class AccountInfoController {
 </div>
 </div>
 <div class="paragraph">
-<p>A <code>ShiroFilterChainDefinition</code> bean with at least one definition is still required for this to work, either configure all paths to be accessable via the <code>anon</code> filter or a filter in 'permissive' mode, for example: <code>authcBasic[permissive]</code>.</p>
+<p>A <code>ShiroFilterChainDefinition</code> bean with at least one definition is still required for this to work, either configure all paths to be accessible via the <code>anon</code> filter or a filter in 'permissive' mode, for example: <code>authcBasic[permissive]</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">

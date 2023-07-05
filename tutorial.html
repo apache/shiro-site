@@ -353,7 +353,7 @@ OS name: "linux", version: "5.10.89-1-manjaro", arch: "amd64", family: "unix"</c
 <p>We&#8217;ll be running a simple command-line application, so we&#8217;ll need to create a Java class with a <code>public static void main(String[] args)</code> method.</p>
 </div>
 <div class="paragraph">
-<p>In the same directory containing your <code>pom.xml</code> file, create a *<code>src/main/java</code> sub directory. In <code>src/main/java</code> create a <code>Tutorial.java</code> file with the following contents:</p>
+<p>In the same directory containing your <code>pom.xml</code> file, create a *<code>src/main/java</code> subdirectory. In <code>src/main/java</code> create a <code>Tutorial.java</code> file with the following contents:</p>
 </div>
 <div class="listingblock">
 <div class="title">src/main/java/Tutorial.java</div>
@@ -388,7 +388,7 @@ public class Tutorial {
 <h2 id="test_run">Test Run</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To try our Tutorial application, execute the following in a command prompt in your tutorial project&#8217;s root dirctory (e.g. <code>shiro-tutorial</code>), and type the following:</p>
+<p>To try our Tutorial application, execute the following in a command prompt in your tutorial project&#8217;s root directory (e.g. <code>shiro-tutorial</code>), and type the following:</p>
 </div>
 <div class="paragraph">
 <p><code>mvn compile exec:java</code></p>
@@ -411,7 +411,7 @@ public class Tutorial {
 <p>The first thing to understand in enabling Shiro in an application is that almost everything in Shiro is related to a central/core component called the <code>SecurityManager</code>. For those familiar with Java security, this is Shiro&#8217;s notion of a SecurityManager - it is <em>NOT</em> the same thing as the <code>java.lang.SecurityManager</code>.</p>
 </div>
 <div class="paragraph">
-<p>While we will cover Shiro&#8217;s design in detail in the <a href="architecture.html">Architecture</a> chapter, it is good enough for now to know that the Shiro <code>SecurityManager</code> is the core of a Shiro environment for an application and one <code>SecurityManager</code> must exist per application. So, the first thing we must do in our Tutorial application is set-up the <code>SecurityManager</code> instance.</p>
+<p>While we will cover Shiro&#8217;s design in detail in the <a href="architecture.html">Architecture</a> chapter, it is good enough for now to know that the Shiro <code>SecurityManager</code> is the core of a Shiro environment for an application and one <code>SecurityManager</code> must exist per application. So, the first thing we must do in our Tutorial application is set up the <code>SecurityManager</code> instance.</p>
 </div>
 </div>
 </div>
@@ -514,13 +514,13 @@ goodguy = winnebago:drive:eagle5</code></pre>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>We use Shiro&#8217;s <code>IniSecurityManagerFactory</code> implementation to ingest our <code>shiro.ini</code> file which is located at the root of the classpath. This implementation reflects Shiro&#8217;s support of the <a href="https://en.wikipedia.org/wiki/Factory_method_pattern">Factory Method Design Pattern</a>. The <code>classpath:</code> prefix is an resource indicator that tells shiro where to load the ini file from (other prefixes, like <code>url:</code> and <code>file:</code> are supported as well).</p>
+<p>We use Shiro&#8217;s <code>IniSecurityManagerFactory</code> implementation to ingest our <code>shiro.ini</code> file which is located at the root of the classpath. This implementation reflects Shiro&#8217;s support of the <a href="https://en.wikipedia.org/wiki/Factory_method_pattern">Factory Method Design Pattern</a>. The <code>classpath:</code> prefix is a resource indicator that tells shiro where to load the ini file from (other prefixes, like <code>url:</code> and <code>file:</code> are supported as well).</p>
 </li>
 <li>
 <p>The <code>factory.getInstance()</code> method is called, which parses the INI file and returns a <code>SecurityManager</code> instance reflecting the configuration.</p>
 </li>
 <li>
-<p>In this simple example, we set the <code>SecurityManager</code> to be a <em>static</em> (memory) singleton, accessible across the JVM. Note however that this is not desireable if you will ever have more than one Shiro-enabled application in a single JVM. For this simple example, it is ok, but more sophisticated application environments will usually place the <code>SecurityManager</code> in application-specific memory (such as in a web app&#8217;s <code>ServletContext</code> or a Spring, Guice or JBoss DI container instance).</p>
+<p>In this simple example, we set the <code>SecurityManager</code> to be a <em>static</em> (memory) singleton, accessible across the JVM. Note however that this is not desirable if you will ever have more than one Shiro-enabled application in a single JVM. For this simple example, it is ok, but more sophisticated application environments will usually place the <code>SecurityManager</code> in application-specific memory (such as in a web app&#8217;s <code>ServletContext</code> or a Spring, Guice or JBoss DI container instance).</p>
 </li>
 </ol>
 </div>
@@ -531,7 +531,7 @@ goodguy = winnebago:drive:eagle5</code></pre>
 <h2 id="using_shiro">Using Shiro</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Now that our SecurityManager is set-up and ready-to go, now we can start doing the things we really care about - performing security operations.</p>
+<p>Now that our SecurityManager is set up and ready-to go, now we can start doing the things we really care about - performing security operations.</p>
 </div>
 <div class="paragraph">
 <p>When securing our applications, probably the most relevant questions we ask ourselves are “Who is the current user?” or “Is the current user allowed to do X”? It is common to ask these questions as we&#8217;re writing code or designing user interfaces: applications are usually built based on user stories, and you want functionality represented (and secured) based on a per-user basis. So, the most natural way for us to think about security in our application is based on the current user. Shiro’s API fundamentally represents the notion of 'the current user' with its <code>Subject</code> concept.</p>
@@ -631,7 +631,7 @@ session.setAttribute( "someKey", "aValue" );</code></pre>
 </table>
 </div>
 <div class="paragraph">
-<p>Ok, so by now, we have a logged in user.
+<p>Ok, so by now, we have a logged-in user.
 What else can we do?</p>
 </div>
 <div class="paragraph">
@@ -795,10 +795,10 @@ public class Tutorial {
 <h2 id="summary">Summary</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Hopefully this introduction tutorial helped you understand how to set-up Shiro in a basic application as well Shiro&#8217;s primary design concepts, the <code>Subject</code> and <code>SecurityManager</code>.</p>
+<p>Hopefully this introduction tutorial helped you understand how to set up Shiro in a basic application as well Shiro&#8217;s primary design concepts, the <code>Subject</code> and <code>SecurityManager</code>.</p>
 </div>
 <div class="paragraph">
-<p>But this was a fairly simple application. You might have asked yourself, "What if I don&#8217;t want to use INI user accounts and instead want to connect to a more complex user data source?"</p>
+<p>But this was a fairly simple application. You might have asked yourself "What if I don&#8217;t want to use INI user accounts and instead want to connect to a more complex user data source?"</p>
 </div>
 <div class="paragraph">
 <p>To answer that question requires a little deeper understanding of Shiro&#8217;s architecture and supporting configuration mechanisms. We&#8217;ll cover Shiro&#8217;s <a href="architecture.html">Architecture</a> next.</p>
