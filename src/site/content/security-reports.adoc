@@ -29,6 +29,15 @@ A https://www.apache.org/security/committers.html[more detailed description of t
 
 == Apache Shiro Vulnerability Reports
 
+=== link:https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-34478[CVE-2023-34478]
+
+Apache Shiro, before 1.12.0 or 2.0.0-alpha-3, may be susceptible to a path traversal attack that results in an authentication bypass when used together with APIs or other web frameworks that route requests based on non-normalized requests.
+
+**Mitigation:** Update to Apache Shiro 1.12.0+ or 2.0.0-alpha-3+.
+
+**Credit:**
+Apache Shiro would like to thank *swifty tk* for reporting this issue.
+
 === link:https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-22602[CVE-2023-22602]
 
 When using Apache Shiro before 1.11.0 together with Spring Boot 2.6+, a specially crafted HTTP request may cause an authentication bypass.
