@@ -36,7 +36,7 @@
     <meta property="article:tag" content='integration'/>
     <meta property="article:tag" content='guice'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//guice.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/guice.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -201,7 +201,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Shiro <a href="https://github.com/google/guice">Guice</a> integration was added in Shiro 1.2. This page covers the ways to integrate Shiro into Guice-based applications using standard Guice conventions and mechanisms. Prior to reading this integration document, you should be a least somewhat familiar with Guice.</p>
+<p>Shiro <a href="https://github.com/google/guice">Guice</a> integration was added in Shiro 1.2. This page covers the ways to integrate Shiro into Guice-based applications using standard Guice conventions and mechanisms. Prior to reading this integration document, you should be at least somewhat familiar with Guice.</p>
 </div>
 </div>
 </div>
@@ -347,7 +347,7 @@
     <pre><code class='xml language-xml'>&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-guice&lt;/artifactId&gt;
-  &lt;version&gt;1.11.0&lt;/version&gt;
+  &lt;version&gt;1.12.0&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
   </div>
@@ -357,7 +357,7 @@
     role="tabpanel"
     aria-labelledby="gradle-cli-tab"
     >
-    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-guice:1.11.0'
+    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-guice:1.12.0'
 </code></pre>
   </div>
   <div
@@ -366,7 +366,7 @@
     role="tabpanel"
     aria-labelledby="sbt-cli-tab"
   >
-    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-guice" % "1.11.0"
+    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-guice" % "1.12.0"
 </code></pre>
   </div>
   <div
@@ -375,7 +375,7 @@
     role="tabpanel"
     aria-labelledby="ivy-cli-tab"
     >
-    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-guice" rev="1.11.0"/&gt;
+    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-guice" rev="1.12.0"/&gt;
 </code></pre>
   </div>
   <div
@@ -384,7 +384,7 @@
     role="tabpanel"
     aria-labelledby="leiningen-cli-tab"
     >
-    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-guice "1.11.0"]
+    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-guice "1.12.0"]
 </code></pre>
   </div>
   <div
@@ -393,7 +393,7 @@
     role="tabpanel"
     aria-labelledby="buildr-cli-tab"
   >
-    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-guice:jar:1.11.0'
+    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-guice:jar:1.12.0'
 </code></pre>
   </div>
 </div>
@@ -523,7 +523,7 @@ SecurityUtils.setSecurityManager(securityManager);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In shiro-guice, the filter names are Guice keys. All of the default Shiro filters are available as constants, but you are not limited to those. In order to use a custom filter in a filter chain, you would do</p>
+<p>In shiro-guice, the filter names are Guice keys. All the default Shiro filters are available as constants, but you are not limited to those. In order to use a custom filter in a filter chain, you would do</p>
 </div>
 <div class="listingblock">
 <div class="content">

@@ -35,7 +35,7 @@
     <meta property="article:tag" content='documentation'/>
     <meta property="article:tag" content='authentication'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//java-authentication-guide.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/java-authentication-guide.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -213,7 +213,7 @@ To do so, a user needs to provide some sort of proof of identity that your syste
 </div>
 <div class="paragraph">
 <p>The goal of this guide is to walk you through how Authentication in Java is performed in Shiro.
-If you haven&#8217;t already please take moment and go through Shiro&#8217;s <a href="/10-minute-tutorial.html">10 Minute Tutorial</a> so that you get a basic understanding of how to work with Shiro.</p>
+If you haven&#8217;t already please take moment and go through Shiro&#8217;s <a href="/10-minute-tutorial.html">10-Minute Tutorial</a> so that you get a basic understanding of how to work with Shiro.</p>
 </div>
 </div>
 </div>
@@ -246,7 +246,7 @@ If you haven&#8217;t already please take moment and go through Shiro&#8217;s <a 
 <h2 id="JavaAuthenticationGuide-HowtoAuthenticateinJavawithShiro">How to Authenticate in Java with Shiro</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In Shiro&#8217;s framework, and most every other framework for that matter, the Java authentication process can be broken up into three distinct steps.</p>
+<p>In Shiro&#8217;s framework, and almost every other framework for that matter, the Java authentication process can be broken up into three distinct steps.</p>
 </div>
 <div id="JavaAuthenticationGuide-Steps" class="olist arabic">
 <ol class="arabic">
@@ -300,7 +300,7 @@ Your authentication system is represented in Shiro by security-specific DAOs, th
 For more information on realms please check out the <a href="/realm.html">Shiro Realm Guide</a>.</p>
 </div>
 <div class="paragraph">
-<p>In Shiro we try to make this part as quick and easy as humanly possible. We have it down to one line of Java code!</p>
+<p>In Shiro, we try to make this part as quick and easy as humanly possible. We have it down to one line of Java code!</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -337,7 +337,7 @@ From here, the user can go about using your application and retain their identit
 </div>
 <div class="paragraph">
 <p>But what happens if something fails in the authentication attempt?
-What if they give you the wrong password or they accessed the system too many times, maybe their account is locked?
+What if they give you the wrong password, or they accessed the system too many times, maybe their account is locked?
 In this case, Shiro will throw an exception.
 This is where Shiro&#8217;s rich exception hierarchy comes into play.</p>
 </div>
@@ -357,7 +357,7 @@ This is where Shiro&#8217;s rich exception hierarchy comes into play.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>You can take that method call and wrap it in a try/catch block and you can catch all sort of exceptions if you want to handle them and react accordingly. In addition to a rich set of exceptions that Shiro offers, you can create your own if you need custom functionality. For more information, follow this link documentation on <a href="/static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html">AuthenticationException</a>.</p>
+<p>You can take that method call and wrap it in a try/catch block, and you can catch all sort of exceptions if you want to handle them and react accordingly. In addition to a rich set of exceptions that Shiro offers, you can create your own if you need custom functionality. For more information, follow this link documentation on <a href="/static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html">AuthenticationException</a>.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -425,9 +425,9 @@ Once the subject is authenticated, they are no longer considered only remembered
 </div>
 <div class="paragraph">
 <p>Let&#8217;s say you&#8217;re using Amazon.com.
-You log in and you add some books to your shopping cart.
+You log in, and you add some books to your shopping cart.
 A day goes by.
-Of course your user session has expired and you&#8217;ve been logged out.
+Of course your user session has expired, and you&#8217;ve been logged out.
 But Amazon "remembers" you, greets you by name, and is still giving you personalized book recommendations. To Amazon, <code>isRemembered()</code> would return <code>TRUE</code>.
 What happens if you try to use one of the credit cards on file or change your account information?
 While Amazon "remembers" you, <code>isRemembered() = TRUE</code>, it is not certain that you are in fact you, <code>isAuthenticated()=FALSE</code>.

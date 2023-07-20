@@ -36,7 +36,7 @@
     <meta property="article:tag" content='manual'/>
     <meta property="article:tag" content='spring'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//spring-boot.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/spring-boot.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -204,7 +204,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Shiro&#8217;s Spring-Boot integration is the easiest way to integrate Shiro into a Spring-base application, for more general Spring Framework integration, take a the <a href="spring-framework.html">annotation</a> or <a href="spring-xml.html">XML</a> guides.</p>
+<p>Shiro&#8217;s Spring-Boot integration is the easiest way to integrate Shiro into a Spring-base application, for more general Spring Framework integration, take the <a href="spring-framework.html">annotation</a> or <a href="spring-xml.html">XML</a> guides.</p>
 </div>
 </div>
 </div>
@@ -215,7 +215,7 @@
 <p>Shiro has first-class support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a main Shiro Filter. This filter itself is extremely powerful, allowing for ad-hoc custom filter chains to be executed based on any URL path expression.</p>
 </div>
 <div class="paragraph">
-<p>First include the Shiro Spring web starter dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).</p>
+<p>First include the Shiro Spring web starter dependency in you application classpath (we recommend using a tool such as Apache Maven or Gradle to manage this).</p>
 </div>
 <ul class="nav nav-tabs" id="dependency-web-tab" role="tablist">
   <li class="nav-item" role="presentation">
@@ -302,7 +302,7 @@
     <pre><code class='xml language-xml'>&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-spring-boot-web-starter&lt;/artifactId&gt;
-  &lt;version&gt;1.11.0&lt;/version&gt;
+  &lt;version&gt;1.12.0&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
   </div>
@@ -312,7 +312,7 @@
     role="tabpanel"
     aria-labelledby="gradle-web-tab"
     >
-    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-spring-boot-web-starter:1.11.0'
+    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-spring-boot-web-starter:1.12.0'
 </code></pre>
   </div>
   <div
@@ -321,7 +321,7 @@
     role="tabpanel"
     aria-labelledby="sbt-web-tab"
   >
-    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-spring-boot-web-starter" % "1.11.0"
+    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-spring-boot-web-starter" % "1.12.0"
 </code></pre>
   </div>
   <div
@@ -330,7 +330,7 @@
     role="tabpanel"
     aria-labelledby="ivy-web-tab"
     >
-    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-spring-boot-web-starter" rev="1.11.0"/&gt;
+    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-spring-boot-web-starter" rev="1.12.0"/&gt;
 </code></pre>
   </div>
   <div
@@ -339,7 +339,7 @@
     role="tabpanel"
     aria-labelledby="leiningen-web-tab"
     >
-    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-spring-boot-web-starter "1.11.0"]
+    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-spring-boot-web-starter "1.12.0"]
 </code></pre>
   </div>
   <div
@@ -348,7 +348,7 @@
     role="tabpanel"
     aria-labelledby="buildr-web-tab"
   >
-    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-spring-boot-web-starter:jar:1.11.0'
+    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-spring-boot-web-starter:jar:1.12.0'
 </code></pre>
   </div>
 </div>
@@ -388,7 +388,7 @@ public ShiroFilterChainDefinition shiroFilterChainDefinition() {
 <p>If you are using Shiro&#8217;s annotations see the <a href="#annotations_and_web_applications">annotation</a> section below.</p>
 </div>
 <div class="paragraph">
-<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/main/samples/spring-boot-web">samples on Github</a>.</p>
+<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/main/samples/spring-boot-web">samples on GitHub</a>.</p>
 </div>
 <div class="sect2">
 <h3 id="enabling_shiro_annotations">Enabling Shiro Annotations</h3>
@@ -410,7 +410,7 @@ public void readDocument() {
 <div class="sect2">
 <h3 id="annotations_and_web_applications">Annotations and Web Applications</h3>
 <div class="paragraph">
-<p>Shiro annotations are fully supported for use in <code>@Controller</code> classes, for example:</p>
+<p>Shiro&#8217;s annotations are fully supported for use in <code>@Controller</code> classes, for example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -426,7 +426,7 @@ public class AccountInfoController {
 </div>
 </div>
 <div class="paragraph">
-<p>A <code>ShiroFilterChainDefinition</code> bean with at least one definition is still required for this to work, either configure all paths to be accessable via the <code>anon</code> filter or a filter in 'permissive' mode, for example: <code>authcBasic[permissive]</code>.</p>
+<p>A <code>ShiroFilterChainDefinition</code> bean with at least one definition is still required for this to work, either configure all paths to be accessible via the <code>anon</code> filter or a filter in 'permissive' mode, for example: <code>authcBasic[permissive]</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -581,7 +581,7 @@ protected CacheManager cacheManager() {
 <h2 id="standalone_applications">Standalone Applications</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Include the Shiro Spring starter dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).</p>
+<p>Include the Shiro Spring starter dependency in you application classpath (we recommend using a tool such as Apache Maven or Gradle to manage this).</p>
 </div>
 <ul class="nav nav-tabs" id="dependency-cli-tab" role="tablist">
   <li class="nav-item" role="presentation">
@@ -668,7 +668,7 @@ protected CacheManager cacheManager() {
     <pre><code class='xml language-xml'>&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-spring-boot-starter&lt;/artifactId&gt;
-  &lt;version&gt;1.11.0&lt;/version&gt;
+  &lt;version&gt;1.12.0&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
   </div>
@@ -678,7 +678,7 @@ protected CacheManager cacheManager() {
     role="tabpanel"
     aria-labelledby="gradle-cli-tab"
     >
-    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-spring-boot-starter:1.11.0'
+    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-spring-boot-starter:1.12.0'
 </code></pre>
   </div>
   <div
@@ -687,7 +687,7 @@ protected CacheManager cacheManager() {
     role="tabpanel"
     aria-labelledby="sbt-cli-tab"
   >
-    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-spring-boot-starter" % "1.11.0"
+    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-spring-boot-starter" % "1.12.0"
 </code></pre>
   </div>
   <div
@@ -696,7 +696,7 @@ protected CacheManager cacheManager() {
     role="tabpanel"
     aria-labelledby="ivy-cli-tab"
     >
-    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-spring-boot-starter" rev="1.11.0"/&gt;
+    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-spring-boot-starter" rev="1.12.0"/&gt;
 </code></pre>
   </div>
   <div
@@ -705,7 +705,7 @@ protected CacheManager cacheManager() {
     role="tabpanel"
     aria-labelledby="leiningen-cli-tab"
     >
-    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-spring-boot-starter "1.11.0"]
+    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-spring-boot-starter "1.12.0"]
 </code></pre>
   </div>
   <div
@@ -714,7 +714,7 @@ protected CacheManager cacheManager() {
     role="tabpanel"
     aria-labelledby="buildr-cli-tab"
   >
-    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-spring-boot-starter:jar:1.11.0'
+    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-spring-boot-starter:jar:1.12.0'
 </code></pre>
   </div>
 </div>
@@ -730,7 +730,7 @@ public Realm realm() {
 </div>
 </div>
 <div class="paragraph">
-<p>The easiest way to setup Shiro, so that all SecurityUtils.* methods work in all cases, is to make the <code>SecurityManager</code> bean a static singleton.  DO NOT do this in web applications - see the <a href="#web_applications">Web Applications</a> section below instead.</p>
+<p>The easiest way to set up Shiro, so that all SecurityUtils.* methods work in all cases, is to make the <code>SecurityManager</code> bean a static singleton.  DO NOT do this in web applications - see the <a href="#web_applications">Web Applications</a> section below instead.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -752,7 +752,7 @@ private SecurityManager securityManager;
 </div>
 </div>
 <div class="paragraph">
-<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/main/samples/spring-boot">samples on Github</a>.</p>
+<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/main/samples/spring-boot">samples on GitHub</a>.</p>
 </div>
 </div>
 </div>

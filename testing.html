@@ -35,7 +35,7 @@
     <meta property="article:tag" content='documentation'/>
     <meta property="article:tag" content='testing'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//testing.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/testing.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -354,7 +354,7 @@ These methods are covered in the reference on <a href="/subject.html#Subject-Thr
 <p>But as stated above, the key in Shiro tests is to remember that any Subject instance (mock or real) must be bound to the thread during test execution. So all we need to do is bind the mock Subject to ensure things work as expected.</p>
 </div>
 <div class="paragraph">
-<p>(this example uses EasyMock, but Mockito works equally as well):</p>
+<p>(this example uses EasyMock, but Mockito works equally well):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -398,7 +398,7 @@ public class ExampleShiroUnitTest extends AbstractShiroTest {
 <p>As you can see, we&#8217;re not setting up a Shiro <code>SecurityManager</code> instance or configuring a <code>Realm</code> or anything like that. We&#8217;re simply creating a mock <code>Subject</code> instance and binding it to the thread via the <code>setSubject</code> method call. This will ensure that any calls in our test code or in the code we&#8217;re testing to <code>SecurityUtils.getSubject()</code> will work correctly.</p>
 </div>
 <div class="paragraph">
-<p>Note that the <code>setSubject</code> method implementation will bind your mock Subject to the thread and it will remain there until you call <code>setSubject</code> with a different <code>Subject</code> instance or until you explicitly clear it from the thread via the <code>clearSubject()</code> call.</p>
+<p>Note that the <code>setSubject</code> method implementation will bind your mock Subject to the thread, and it will remain there until you call <code>setSubject</code> with a different <code>Subject</code> instance or until you explicitly clear it from the thread via the <code>clearSubject()</code> call.</p>
 </div>
 <div class="paragraph">
 <p>How long you keep the subject bound to the thread (or swap it out for a new instance in a different test) is up to you and your testing requirements.</p>
@@ -410,7 +410,7 @@ public class ExampleShiroUnitTest extends AbstractShiroTest {
 <p>The <code>tearDownSubject()</code> method in the example uses a Junit 4 annotation to ensure that the Subject is cleared from the thread after every test method is executed, no matter what. This requires you to set up a new <code>Subject</code> instance and set it (via <code>setSubject</code>) for every test that executes.</p>
 </div>
 <div class="paragraph">
-<p>This is not strictly necessary however. For example, you could just bind a new Subject instance (via <code>setSujbect</code>) at the beginning of every test, say, in an <code>@Before</code>-annotated method. But if you&#8217;re going to do that, you might as well have the <code>@After tearDownSubject()</code> method to keep things symmetrical and 'clean'.</p>
+<p>This is not strictly necessary, however. For example, you could just bind a new Subject instance (via <code>setSujbect</code>) at the beginning of every test, say, in an <code>@Before</code>-annotated method. But if you&#8217;re going to do that, you might as well have the <code>@After tearDownSubject()</code> method to keep things symmetrical and 'clean'.</p>
 </div>
 <div class="paragraph">
 <p>You can mix and match this setup/teardown logic in each method manually or use the @Before and @After annotations as you see fit. The <code>AbstractShiroTest</code> super class will however unbind the Subject from the thread after all tests because of the <code>@AfterClass</code> annotation in its <code>tearDownShiro()</code> method.</p>
@@ -425,12 +425,12 @@ public class ExampleShiroUnitTest extends AbstractShiroTest {
 <p>Now that we&#8217;ve covered unit test setup, let&#8217;s talk a bit about integration testing. Integration testing is testing implementations across API boundaries. For example, testing that implementation A works when calling implementation B and that implementation B does what it is supposed to.</p>
 </div>
 <div class="paragraph">
-<p>You can easily perform integration testing in Shiro as well. Shiro&#8217;s <code>SecurityManager</code> instance and things it wraps (like Realms and SessionManager, etc) are all very lightweight POJOs that use very little memory. This means you can create and tear down a <code>SecurityManager</code> instance for every test class you execute. When your integration tests run, they will be using 'real' <code>SecurityManager</code> and <code>Subject</code> instances like your application will be using at runtime.</p>
+<p>You can easily perform integration testing in Shiro as well. Shiro&#8217;s <code>SecurityManager</code> instance and things it wraps (like Realms and SessionManager, etc.) are all very lightweight POJOs that use very little memory. This means you can create and tear down a <code>SecurityManager</code> instance for every test class you execute. When your integration tests run, they will be using 'real' <code>SecurityManager</code> and <code>Subject</code> instances like your application will be using at runtime.</p>
 </div>
 <div class="sect2">
 <h3 id="Testing-ExampleShiroIntegrationTest">ExampleShiroIntegrationTest</h3>
 <div class="paragraph">
-<p>The example code below looks almost identical to the Unit Test example above, but the 3 step process is slightly different:</p>
+<p>The example code below looks almost identical to the Unit Test example above, but the 3-step process is slightly different:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">

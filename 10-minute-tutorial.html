@@ -37,7 +37,7 @@
     <meta property="article:tag" content='documentation'/>
     <meta property="article:tag" content='manual'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//10-minute-tutorial.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/10-minute-tutorial.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -192,7 +192,7 @@
 <h2 id="introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Welcome to Apache Shiro&#8217;s 10 Minute Tutorial!</p>
+<p>Welcome to Apache Shiro&#8217;s 10-Minute Tutorial!</p>
 </div>
 <div class="paragraph">
 <p>By going through this quick and simple tutorial you should fully understand how a developer uses Shiro in their application.
@@ -235,7 +235,7 @@ Now let&#8217;s actually do something!</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Shiro can be run in any environment, from the simplest command line application to the biggest enterprise web and clustered applications, but we''ll use the simplest possible example in a simple <code>main</code> method for this QuickStart so you can get a feel for the API.')</p>
+<p>Shiro can be run in any environment, from the simplest command line application to the biggest enterprise web and clustered applications, but we''ll use the simplest possible example in a simple <code>main</code> method for this QuickStart, so you can get a feel for the API.')</p>
 </div>
 </td>
 </tr>
@@ -254,13 +254,13 @@ Now let&#8217;s actually do something!</p>
 </li>
 <li>
 <p>Download the lastest "Source Code Distribution" from the <a href="download.html">Download</a> page.
-In this example, we&#8217;re using the 1.11.0 release distribution.</p>
+In this example, we&#8217;re using the 1.12.0 release distribution.</p>
 </li>
 <li>
 <p>Unzip the source package:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ unzip shiro-root-1.11.0-source-release.zip</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ unzip shiro-root-1.12.0-source-release.zip</code></pre>
 </div>
 </div>
 </li>
@@ -268,7 +268,7 @@ In this example, we&#8217;re using the 1.11.0 release distribution.</p>
 <p>Enter the quickstart directory:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ cd shiro-root-1.11.0/samples/quickstart</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ cd shiro-root-1.12.0/samples/quickstart</code></pre>
 </div>
 </div>
 </li>
@@ -294,7 +294,7 @@ Change that file and run the above <code>mvn compile exec:java</code> command as
 <div class="sectionbody">
 <div class="paragraph">
 <p>The <code>Quickstart.java</code> file referenced above contains all the code that will get you familiar with the API.
-Now lets break it down in chunks here so you can easily understand what is going on.</p>
+Now lets break it down in chunks here, so you can easily understand what is going on.</p>
 </div>
 <div class="paragraph">
 <p>In almost all environments, you can obtain the currently executing user via the following call:</p>
@@ -397,7 +397,7 @@ Well, they&#8217;re anonymous - that is, until they log in at least once.So, let
 </table>
 </div>
 <div class="paragraph">
-<p>Ok, so by now, we have a logged in user.
+<p>Ok, so by now, we have a logged-in user.
 What else can we do?</p>
 </div>
 <div class="paragraph">
@@ -462,7 +462,7 @@ log.info( "User [" + currentUser.getPrincipal() + "] logged in successfully." );
 And although there is some pretty sophisticated stuff going on under the hood to make this work so elegantly, that&#8217;s really all there is to it.</p>
 </div>
 <div class="paragraph">
-<p>But you might ask yourself, "But who is responsible for getting the user data during a login (usernames and passwords, role and permissions, etc), and who actually performs those security checks during runtime?" Well, you do, by implementing what Shiro calls a [Realm](realm.html "Realm") and plugging that <code>Realm</code> into Shiro&#8217;s configuration.</p>
+<p>But you might ask yourself, "But who is responsible for getting the user data during a login (usernames and passwords, role and permissions, etc.), and who actually performs those security checks during runtime?" Well, you do, by implementing what Shiro calls a [Realm](realm.html "Realm") and plugging that <code>Realm</code> into Shiro&#8217;s configuration.</p>
 </div>
 <div class="paragraph">
 <p>However, how you configure a [Realm](realm.html "Realm") is largely dependent upon your runtime environment.

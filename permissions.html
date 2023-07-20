@@ -35,7 +35,7 @@
     <meta property="article:tag" content='permissions'/>
     <meta property="article:tag" content='authorization'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//permissions.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/permissions.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -256,7 +256,7 @@
 <h2 id="wildcard_permissions">Wildcard Permissions</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The above examples of permissions, "Open a file", "View the 'user/list' web page", etc are all valid permission statements.However, it would be very difficult computationally to interpret those natural language strings and determine if a user is allowed to perform that behavior or not.</p>
+<p>The above examples of permissions, "Open a file", "View the 'user/list' web page", etc. are all valid permission statements.However, it would be very difficult computationally to interpret those natural language strings and determine if a user is allowed to perform that behavior or not.</p>
 </div>
 <div class="paragraph">
 <p>So to enable easy-to-process yet still readable permission statements, Shiro provides powerful and intuitive permission syntax we refer to as the WildcardPermission.</p>
@@ -493,7 +493,7 @@ printer:print:epsoncolor</code></pre>
 <p>While permission assignments use the wildcard construct quite a bit ("printer:print:*" = print to any printer) for convenience and scalability, permission <strong>checks</strong> at runtime should <em>always</em> be based on the most specific permission string possible.</p>
 </div>
 <div class="paragraph">
-<p>For example, if the user had a UI and they wanted to print a document to the <code>lp7200</code> printer, you <strong>should</strong> check if the user is permitted to do so by executing this code:</p>
+<p>For example, if the user had a UI, and they wanted to print a document to the <code>lp7200</code> printer, you <strong>should</strong> check if the user is permitted to do so by executing this code:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -536,7 +536,7 @@ printer:print:epsoncolor</code></pre>
 <p>That is, if a user is assigned the <code>user:*</code> permission, this <em>implies</em> that the user can perform the <code>user:view</code> action. The string "user:*" is clearly not equal to "user:view", but the former implies the latter. "user:*" describes a superset of functionality of that defined by "user:view".</p>
 </div>
 <div class="paragraph">
-<p>To support implication rules, all permissions are translated in to object instances that implement the <code>org.apache.shiro.authz.Permission</code> interface. This is so that implication logic can be executed at runtime and that implication logic is often more complex than a simple string equality check. All of the wildcard behavior described in this document is actually made possible by the <code>org.apache.shiro.authz.permission.WildcardPermission</code> class implementation. Here are some more wildcard permission strings that show access by implication:</p>
+<p>To support implication rules, all permissions are translated in to object instances that implement the <code>org.apache.shiro.authz.Permission</code> interface. This is so that implication logic can be executed at runtime and that implication logic is often more complex than a simple string equality check. All the wildcard behavior described in this document is actually made possible by the <code>org.apache.shiro.authz.permission.WildcardPermission</code> class implementation. Here are some more wildcard permission strings that show access by implication:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -598,7 +598,7 @@ printer:print:epsoncolor</code></pre>
 <p>This is usually extremely fast when users, roles and permissions are cached in memory when using a proper <a href="cachemanager.html">CacheManager</a>, which Shiro does support for Realm implementations. Just know that with this default behavior, as the number of permissions assigned to a user or their roles or groups increase, the time to perform the check will necessarily increase.</p>
 </div>
 <div class="paragraph">
-<p>If a Realm implementor has a more efficient way of checking permissions and performing this implication logic, especially if based on the applicaton&#8217;s data model, they should implement that as part of their Realm isPermitted* method implementations. The default Realm/WildcardPermission support exists to cover 80-90% of most use cases, but it might not be the best solution for applications that have massive amounts of permissions to store and/or check at runtime.</p>
+<p>If a Realm implementor has a more efficient way of checking permissions and performing this implication logic, especially if based on the application&#8217;s data model, they should implement that as part of their Realm isPermitted* method implementations. The default Realm/WildcardPermission support exists to cover 80-90% of most use cases, but it might not be the best solution for applications that have massive amounts of permissions to store and/or check at runtime.</p>
 </div>
 </div>
 </div>

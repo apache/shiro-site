@@ -36,7 +36,7 @@
     <meta property="article:tag" content='manual'/>
     <meta property="article:tag" content='spring'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//spring-framework.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/spring-framework.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -212,7 +212,7 @@
 <h2 id="standalone_applications">Standalone Applications</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Include the Shiro Spring dependency in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).</p>
+<p>Include the Shiro Spring dependency in you application classpath (we recommend using a tool such as Apache Maven or Gradle to manage this).</p>
 </div>
 <ul class="nav nav-tabs" id="dependency-cli-tab" role="tablist">
   <li class="nav-item" role="presentation">
@@ -299,7 +299,7 @@
     <pre><code class='xml language-xml'>&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-spring&lt;/artifactId&gt;
-  &lt;version&gt;1.11.0&lt;/version&gt;
+  &lt;version&gt;1.12.0&lt;/version&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
   &lt;groupId&gt;org.springframework&lt;/groupId&gt;
@@ -314,7 +314,7 @@
     role="tabpanel"
     aria-labelledby="gradle-cli-tab"
     >
-    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-spring:1.11.0'
+    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-spring:1.12.0'
 compile 'org.springframework:spring-context:${spring.version}'
 </code></pre>
   </div>
@@ -324,7 +324,7 @@ compile 'org.springframework:spring-context:${spring.version}'
     role="tabpanel"
     aria-labelledby="sbt-cli-tab"
   >
-    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-spring" % "1.11.0"
+    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-spring" % "1.12.0"
 libraryDependencies += "org.springframework" % "spring-context" % "${spring.version}"
 </code></pre>
   </div>
@@ -334,7 +334,7 @@ libraryDependencies += "org.springframework" % "spring-context" % "${spring.vers
     role="tabpanel"
     aria-labelledby="ivy-cli-tab"
     >
-    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-spring" rev="1.11.0"/&gt;
+    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-spring" rev="1.12.0"/&gt;
 &lt;dependency org="org.springframework" name="spring-context" rev="${spring.version}"/&gt;
 </code></pre>
   </div>
@@ -344,7 +344,7 @@ libraryDependencies += "org.springframework" % "spring-context" % "${spring.vers
     role="tabpanel"
     aria-labelledby="leiningen-cli-tab"
     >
-    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-spring "1.11.0"]
+    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-spring "1.12.0"]
 [org.springframework/spring-context "${spring.version}"]
 </code></pre>
   </div>
@@ -354,7 +354,7 @@ libraryDependencies += "org.springframework" % "spring-context" % "${spring.vers
     role="tabpanel"
     aria-labelledby="buildr-cli-tab"
   >
-    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-spring:jar:1.11.0'
+    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-spring:jar:1.12.0'
 'org.springframework:spring-context:jar:${spring.version}'
 </code></pre>
   </div>
@@ -414,7 +414,7 @@ public Realm realm() {
 </div>
 </div>
 <div class="paragraph">
-<p>The easiest way to setup Shiro, so that all SecurityUtils.* methods work in all cases, is to make the <code>SecurityManager</code> bean a static singleton.
+<p>The easiest way to set up Shiro, so that all SecurityUtils.* methods work in all cases, is to make the <code>SecurityManager</code> bean a static singleton.
 DO NOT do this in web applications - see the <a href="#web_applications">Web Applications</a> section below instead.</p>
 </div>
 <div class="listingblock">
@@ -437,7 +437,7 @@ private SecurityManager securityManager;
 </div>
 </div>
 <div class="paragraph">
-<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/main/samples/spring">samples on Github</a>.</p>
+<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/main/samples/spring">samples on GitHub</a>.</p>
 </div>
 </div>
 </div>
@@ -448,7 +448,7 @@ private SecurityManager securityManager;
 <p>Shiro has first-class support for Spring web applications. In a web application, all Shiro-accessible web requests must go through a main Shiro Filter. This filter itself is extremely powerful, allowing for ad-hoc custom filter chains to be executed based on any URL path expression.</p>
 </div>
 <div class="paragraph">
-<p>Include the Shiro Spring web dependencies in you application classpath (we recomend using a tool such as Apache Maven or Gradle to manage this).</p>
+<p>Include the Shiro Spring web dependencies in you application classpath (we recommend using a tool such as Apache Maven or Gradle to manage this).</p>
 </div>
 <ul class="nav nav-tabs" id="dependency-web-tab" role="tablist">
   <li class="nav-item" role="presentation">
@@ -535,12 +535,12 @@ private SecurityManager securityManager;
     <pre><code class='xml language-xml'>&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-spring&lt;/artifactId&gt;
-  &lt;version&gt;1.11.0&lt;/version&gt;
+  &lt;version&gt;1.12.0&lt;/version&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-web&lt;/artifactId&gt;
-  &lt;version&gt;1.11.0&lt;/version&gt;
+  &lt;version&gt;1.12.0&lt;/version&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
   &lt;groupId&gt;org.springframework&lt;/groupId&gt;
@@ -555,8 +555,8 @@ private SecurityManager securityManager;
     role="tabpanel"
     aria-labelledby="gradle-web-tab"
     >
-    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-spring:1.11.0'
-compile 'org.apache.shiro:shiro-web:1.11.0'
+    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-spring:1.12.0'
+compile 'org.apache.shiro:shiro-web:1.12.0'
 compile 'org.springframework:spring-webmvc:${spring.version}'
 </code></pre>
   </div>
@@ -566,8 +566,8 @@ compile 'org.springframework:spring-webmvc:${spring.version}'
     role="tabpanel"
     aria-labelledby="sbt-web-tab"
   >
-    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-spring" % "1.11.0"
-libraryDependencies += "org.apache.shiro" % "shiro-web" % "1.11.0"
+    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-spring" % "1.12.0"
+libraryDependencies += "org.apache.shiro" % "shiro-web" % "1.12.0"
 libraryDependencies += "org.springframework" % "spring-webmvc" % "${spring.version}"
 </code></pre>
   </div>
@@ -577,8 +577,8 @@ libraryDependencies += "org.springframework" % "spring-webmvc" % "${spring.versi
     role="tabpanel"
     aria-labelledby="ivy-web-tab"
     >
-    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-spring" rev="1.11.0"/&gt;
-&lt;dependency org="org.apache.shiro" name="shiro-web" rev="1.11.0"/&gt;
+    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-spring" rev="1.12.0"/&gt;
+&lt;dependency org="org.apache.shiro" name="shiro-web" rev="1.12.0"/&gt;
 &lt;dependency org="org.springframework" name="spring-webmvc" rev="${spring.version}"/&gt;
 </code></pre>
   </div>
@@ -588,8 +588,8 @@ libraryDependencies += "org.springframework" % "spring-webmvc" % "${spring.versi
     role="tabpanel"
     aria-labelledby="leiningen-web-tab"
     >
-    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-spring "1.11.0"]
-[org.apache.shiro/shiro-web "1.11.0"]
+    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-spring "1.12.0"]
+[org.apache.shiro/shiro-web "1.12.0"]
 [org.springframework/spring-webmvc "${spring.version}"]
 </code></pre>
   </div>
@@ -599,8 +599,8 @@ libraryDependencies += "org.springframework" % "spring-webmvc" % "${spring.versi
     role="tabpanel"
     aria-labelledby="buildr-web-tab"
   >
-    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-spring:jar:1.11.0'
-'org.apache.shiro:shiro-web:jar:1.11.0'
+    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-spring:jar:1.12.0'
+'org.apache.shiro:shiro-web:jar:1.12.0'
 'org.springframework:spring-webmvc:jar:${spring.version}'
 </code></pre>
   </div>
@@ -694,7 +694,7 @@ public ShiroFilterChainDefinition shiroFilterChainDefinition() {
 <p>If you are using Shiro&#8217;s annotations see the <a href="#annotations_and_web_applications">annotation</a> section below.</p>
 </div>
 <div class="paragraph">
-<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/main/samples/spring-mvc">samples on Github</a>.</p>
+<p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/main/samples/spring-mvc">samples on GitHub</a>.</p>
 </div>
 </div>
 </div>
@@ -734,7 +734,7 @@ public class AccountInfoController {
 </div>
 </div>
 <div class="paragraph">
-<p>A <code>ShiroFilterChainDefinition</code> bean with at least one definition is still required for this to work, either configure all paths to be accessable via the <code>anon</code> filter or a filter in 'permissive' mode, for example: <code>authcBasic[permissive]</code>.</p>
+<p>A <code>ShiroFilterChainDefinition</code> bean with at least one definition is still required for this to work, either configure all paths to be accessible via the <code>anon</code> filter or a filter in 'permissive' mode, for example: <code>authcBasic[permissive]</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">

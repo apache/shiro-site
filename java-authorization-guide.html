@@ -35,7 +35,7 @@
     <meta property="article:tag" content='documentation'/>
     <meta property="article:tag" content='manual'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//java-authorization-guide.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/java-authorization-guide.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -205,7 +205,7 @@
 <div class="sect2">
 <h3 id="permissions_defined">Permissions Defined</h3>
 <div class="paragraph">
-<p>Permissions are the most atomic level of a security policy and they are statements of functionality. Permissions represent what can be done in your application. A well formed permission describes a resource types and what actions are possible when you interact with those resources. Can you <em>open</em> a <em>door</em>? Can you <em>read</em> a <em>file</em>? Can you <em>delete</em> a <em>customer record</em>? Can you <em>push</em> a <em>button</em>?</p>
+<p>Permissions are the most atomic level of a security policy, and they are statements of functionality. Permissions represent what can be done in your application. A well-formed permission describes a resource types and what actions are possible when you interact with those resources. Can you <em>open</em> a <em>door</em>? Can you <em>read</em> a <em>file</em>? Can you <em>delete</em> a <em>customer record</em>? Can you <em>push</em> a <em>button</em>?</p>
 </div>
 <div class="paragraph">
 <p>Common actions for data-related resources are create, read, update, and delete, commonly referred to as CRUD.</p>
@@ -216,7 +216,7 @@
 <div class="sect3">
 <h4 id="levels_of_permission_granularity">Levels of permission granularity</h4>
 <div class="paragraph">
-<p>The permissions above all specify an actions (open, read, delete, etc) on a resource (door, file, customer record, etc). In Shiro, you can define a permission to any depth you like. Here are a few common permission levels in order of granularity.</p>
+<p>The permissions above all specify an actions (open, read, delete, etc.) on a resource (door, file, customer record, etc). In Shiro, you can define a permission to any depth you like. Here are a few common permission levels in order of granularity.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -247,16 +247,16 @@
 <div class="sect3">
 <h4 id="implicit_roles">Implicit Roles</h4>
 <div class="paragraph">
-<p>Most people view roles as what we define as an implicit role where your application <em>implies</em> a set of permissions because a user has a particular role as opposed to the role explicitly being assigned permissions or your application checking for those permissions. Role checks in code are generally a reflection of an implicit role. You can view patient data because you have the <em>administrator</em> role. You can create an account because you have the <em>bank teller</em> role. The fact that these names exist does not have a correlation to what the software can actually do. Most people use roles in this manner. It is easiest but it can create a lot of maintenance and management problems for all but the simplest application.</p>
+<p>Most people view roles as what we define as an implicit role where your application <em>implies</em> a set of permissions because a user has a particular role as opposed to the role explicitly being assigned permissions or your application checking for those permissions. Role checks in code are generally a reflection of an implicit role. You can view patient data because you have the <em>administrator</em> role. You can create an account because you have the <em>bank teller</em> role. The fact that these names exist does not have a correlation to what the software can actually do. Most people use roles in this manner. It is easiest, but it can create a lot of maintenance and management problems for all but the simplest application.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="explicit_roles">Explicit Roles</h4>
 <div class="paragraph">
-<p>An explicit role has permissions <em>explicitly</em> assigned to it and therefore is an <em>explicit</em> collection of permissions. Permission checks in code are a reflection of an explicit role. You can view patient data because because you have the <em>view patient data</em> permission as part of your <em>administrator</em> role. You can create an account because you have the <em>create account</em> permission as part of your <em>bank teller</em> role. You can perform these actions, not because of some implicit role name based on a string but because the corresponding permission was explicitly assigned to your role.</p>
+<p>An explicit role has permissions <em>explicitly</em> assigned to it and therefore is an <em>explicit</em> collection of permissions. Permission checks in code are a reflection of an explicit role. You can view patient data because you have the <em>view patient data</em> permission as part of your <em>administrator</em> role. You can create an account because you have the <em>create account</em> permission as part of your <em>bank teller</em> role. You can perform these actions, not because of some implicit role name based on a string but because the corresponding permission was explicitly assigned to your role.</p>
 </div>
 <div class="paragraph">
-<p>The big benefits of explicit roles are easier manageability and lower maintenance of your application. If you ever need to add, remove, or change a role, you can do so without touching your source code. And in Shiro, you&#8217;ll also be able to dynamically add, remove, or change roles at runtime and your authorization checks will always have up to date values. This means you won&#8217;t have to force users to log out and log back in order to get their new permissions.</p>
+<p>The big benefits of explicit roles are easier manageability and lower maintenance of your application. If you ever need to add, remove, or change a role, you can do so without touching your source code. And in Shiro, you&#8217;ll also be able to dynamically add, remove, or change roles at runtime and your authorization checks will always have up-to-date values. This means you won&#8217;t have to force users to log out and log back in order to get their new permissions.</p>
 </div>
 </div>
 </div>
@@ -280,7 +280,7 @@
 <td class="content">
 <div class="paragraph">
 <div class="title">Note</div>
-<p>Ultimately, your <a href="realm.html">Realm</a> implementation is what communicates with your data source (RDBMS, LDAP, etc). So your realm is what will tell Shiro whether or not roles or permissions exist. You have full control over how your authorization model works.</p>
+<p>Ultimately, your <a href="realm.html">Realm</a> implementation is what communicates with your data source (RDBMS, LDAP, etc). So your realm is what will tell Shiro whether roles or permissions exist. You have full control over how your authorization model works.</p>
 </div>
 </td>
 </tr>
@@ -319,7 +319,7 @@
 <p>This is an example of how you do a role check programmatically in your application. We want to check if a user has the <em>administrator</em> role and if they do, then we&#8217;ll show a special button, otherwise we won&#8217;t show it.SubjectAwareExecutor.html#execute(java.lang.Runnable)</p>
 </div>
 <div class="paragraph">
-<p>First we get access to the current user, the <a href="subject.html">Subject</a>. Then we pass the <em>adminstrator</em> to the Subject&#8217;s <a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRole(java.lang.String)"><code>.hasRole()</code></a> method. It will return <code>TRUE</code> or <code>FALSE</code>.</p>
+<p>First we get access to the current user, the <a href="subject.html">Subject</a>. Then we pass the <em>administrator</em> to the Subject&#8217;s <a href="static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRole(java.lang.String)"><code>.hasRole()</code></a> method. It will return <code>TRUE</code> or <code>FALSE</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -334,7 +334,7 @@ if (currentUser.hasRole("administrator")) {
 </div>
 </div>
 <div class="paragraph">
-<p>Now a role based check is quick and easy to implement but it has a major drawback. It is implicit.</p>
+<p>Now a role based check is quick and easy to implement, but it has a major drawback. It is implicit.</p>
 </div>
 <div class="paragraph">
 <p>What if you just want to add, remove, or redefine a role later? You&#8217;ll have to crack open your source code and change all your role checks to reflect the change in your security model. You&#8217;ll have to shut down the application, crack open the code, test it, and then restart it everytime.</p>
@@ -388,7 +388,7 @@ if(currentUser.isPermitted(perm)){
 <p>You can construct the permission string the way you want so long as your <a href="realm.html">Realm</a> knows how to work with it. In this example we use Shiro&#8217;s optional permission syntax, <a href="permissions.html">WildCardPermissions</a>. WildCardPermissions are powerful and intuitive. If you&#8217;d like to learn more about them then check out the <a href="static/current/apidocs/org/apache/shiro/authz/Permission.html">Permissions Documentation</a>.</p>
 </div>
 <div class="paragraph">
-<p>With string-based permission checks, you get the same functionality as the example before. The benefit is that you are not forced to implement a permission interface and you can construct the permission via a simple string. The downside is that you don&#8217;t have type safety and if you needed more complicated permission capabilities that are outside the scope of what this represents, you&#8217;re going to want to implement your own permission objects based on the permission interface.</p>
+<p>With string-based permission checks, you get the same functionality as the example before. The benefit is that you are not forced to implement a permission interface, and you can construct the permission via a simple string. The downside is that you don&#8217;t have type safety and if you needed more complicated permission capabilities that are outside the scope of what this represents, you&#8217;re going to want to implement your own permission objects based on the permission interface.</p>
 </div>
 </div>
 </div>
@@ -459,7 +459,7 @@ public void openAccount( Account acct ) {
 <p>In this example, we&#8217;re going to show users with the <em>users:manage</em> permission a link to the Manage Users page. If they do not have the permission, then we&#8217;ll show them a nice message.</p>
 </div>
 <div class="paragraph">
-<p>First, we&#8217;ll need to add the Shiro taglib to our web application. Next, we add the <code>&lt;shiro:hasPermission&gt;</code> tag with a check for <em>users:manage</em>. Within the <code>&lt;shiro:hasPermission&gt;</code> tags we will place the code we want to execute if the user has the permission we&#8217;re checking for. If we want to take an action if the user lacks the permission, then we need to also add the <code>&lt;shiro:lacksPermission&gt;</code> tag, again checking for <em>users:manage</em>. And any code we want to excute if the user lacks the permission will need to be placed within the <code>&lt;shiro:lacksPermission&gt;</code> tags.</p>
+<p>First, we&#8217;ll need to add the Shiro taglib to our web application. Next, we add the <code>&lt;shiro:hasPermission&gt;</code> tag with a check for <em>users:manage</em>. Within the <code>&lt;shiro:hasPermission&gt;</code> tags we will place the code we want to execute if the user has the permission we&#8217;re checking for. If we want to take an action if the user lacks the permission, then we need to also add the <code>&lt;shiro:lacksPermission&gt;</code> tag, again checking for <em>users:manage</em>. And any code we want to execute if the user lacks the permission will need to be placed within the <code>&lt;shiro:lacksPermission&gt;</code> tags.</p>
 </div>
 <div class="listingblock">
 <div class="content">

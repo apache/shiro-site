@@ -37,7 +37,7 @@
     <meta property="article:tag" content='integrations'/>
     <meta property="article:tag" content='web'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//jaxrs.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/jaxrs.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -286,12 +286,12 @@
     <pre><code class='xml language-xml'>&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-servlet-plugin&lt;/artifactId&gt;
-  &lt;version&gt;1.11.0&lt;/version&gt;
+  &lt;version&gt;1.12.0&lt;/version&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-jaxrs&lt;/artifactId&gt;
-  &lt;version&gt;1.11.0&lt;/version&gt;
+  &lt;version&gt;1.12.0&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
   </div>
@@ -301,8 +301,8 @@
     role="tabpanel"
     aria-labelledby="gradle-cli-tab"
     >
-    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-servlet-plugin:1.11.0'
-compile 'org.apache.shiro:shiro-jaxrs:1.11.0'
+    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-servlet-plugin:1.12.0'
+compile 'org.apache.shiro:shiro-jaxrs:1.12.0'
 </code></pre>
   </div>
   <div
@@ -311,8 +311,8 @@ compile 'org.apache.shiro:shiro-jaxrs:1.11.0'
     role="tabpanel"
     aria-labelledby="sbt-cli-tab"
   >
-    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-servlet-plugin" % "1.11.0"
-libraryDependencies += "org.apache.shiro" % "shiro-jaxrs" % "1.11.0"
+    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-servlet-plugin" % "1.12.0"
+libraryDependencies += "org.apache.shiro" % "shiro-jaxrs" % "1.12.0"
 </code></pre>
   </div>
   <div
@@ -321,8 +321,8 @@ libraryDependencies += "org.apache.shiro" % "shiro-jaxrs" % "1.11.0"
     role="tabpanel"
     aria-labelledby="ivy-cli-tab"
     >
-    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-servlet-plugin" rev="1.11.0"/&gt;
-&lt;dependency org="org.apache.shiro" name="shiro-jaxrs" rev="1.11.0"/&gt;
+    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-servlet-plugin" rev="1.12.0"/&gt;
+&lt;dependency org="org.apache.shiro" name="shiro-jaxrs" rev="1.12.0"/&gt;
 </code></pre>
   </div>
   <div
@@ -331,8 +331,8 @@ libraryDependencies += "org.apache.shiro" % "shiro-jaxrs" % "1.11.0"
     role="tabpanel"
     aria-labelledby="leiningen-cli-tab"
     >
-    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-servlet-plugin "1.11.0"]
-[org.apache.shiro/shiro-jaxrs "1.11.0"]
+    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-servlet-plugin "1.12.0"]
+[org.apache.shiro/shiro-jaxrs "1.12.0"]
 </code></pre>
   </div>
   <div
@@ -341,8 +341,8 @@ libraryDependencies += "org.apache.shiro" % "shiro-jaxrs" % "1.11.0"
     role="tabpanel"
     aria-labelledby="buildr-cli-tab"
   >
-    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-servlet-plugin:jar:1.11.0'
-'org.apache.shiro:shiro-jaxrs:jar:1.11.0'
+    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-servlet-plugin:jar:1.12.0'
+'org.apache.shiro:shiro-jaxrs:jar:1.12.0'
 </code></pre>
   </div>
 </div>
@@ -388,10 +388,10 @@ This is not required if using Jakarta EE module
 <p>See the <a href="web.html">web documentation</a> for more details.</p>
 </div>
 <div class="paragraph">
-<p>The other, probably more popular, option is to use Shiro&#8217;s <a href="java-annotations-list.html">annotations</a> along side other JAX-RS annotations on your resources. However you <strong>MUST</strong> still define at least one path in your <code>shiro.ini</code> file.</p>
+<p>The other, probably more popular, option is to use Shiro&#8217;s <a href="java-annotations-list.html">annotations</a> alongside other JAX-RS annotations on your resources. However, you <strong>MUST</strong> still define at least one path in your <code>shiro.ini</code> file.</p>
 </div>
 <div class="paragraph">
-<p>The below code block will allow for basic authentication but NOT require it (via the <code>permissive</code> flag). This way all of the resources under <code>/api</code> can optional require authentication and authorization based on annotations.</p>
+<p>The below code block will allow for basic authentication but NOT require it (via the <code>permissive</code> flag). This way all the resources under <code>/api</code> can optional require authentication and authorization based on annotations.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -454,7 +454,7 @@ public class HelloShiro {
 </div>
 </div>
 <div class="paragraph">
-<p>This resource has two end points, the first allows access by any logged in user, the second any user with the <a href="permissions.html">permission</a> <code>hello:define</code>.</p>
+<p>This resource has two end points, the first allows access by any logged-in user, the second any user with the <a href="permissions.html">permission</a> <code>hello:define</code>.</p>
 </div>
 <div class="paragraph">
 <p>The corresponding JAX-RS Application class:</p>
@@ -504,7 +504,7 @@ public class ExampleApp extends Application {
 <h2 id="want_to_see_more">Want to see more?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can find portable JAX-RS application that runs with <a href="https://jersey.java.net/">Jersey</a>, <a href="https://resteasy.dev/">RestEasy</a> or <a href="https://cxf.apache.org">Apache CXF</a> in the <a href="https://github.com/apache/shiro/tree/main/samples">samples</a> directory on Github.</p>
+<p>You can find portable JAX-RS application that runs with <a href="https://jersey.java.net/">Jersey</a>, <a href="https://resteasy.dev/">RestEasy</a> or <a href="https://cxf.apache.org">Apache CXF</a> in the <a href="https://github.com/apache/shiro/tree/main/samples">samples</a> directory on GitHub.</p>
 </div>
 </div>
 </div>

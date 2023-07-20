@@ -35,7 +35,7 @@
     <meta property="article:tag" content='documentation'/>
     <meta property="article:tag" content='about'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//what-is-shiro.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/what-is-shiro.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -217,7 +217,7 @@
 <p><strong>Session Management should not be tied to web or EJB applications</strong>. We believe Sessions are a business-tier concern that should be accessible in any client or server environment.</p>
 </li>
 <li>
-<p>Heterogeneous client mediums (HTTP requests, Applets, Java Web Start, C# applications, etc) should be able to participate in the same Session, regardless of the client technology.</p>
+<p>Heterogeneous client mediums (HTTP requests, Applets, Java Web Start, C# applications, etc.) should be able to participate in the same Session, regardless of the client technology.</p>
 </li>
 <li>
 <p>Security code should be eliminated as much as possible in favor of a cleaner declarative security model utilizing JDK 1.5 Annotations or XML, whichever you prefer.</p>
@@ -261,7 +261,7 @@
 <p>Like most of the Java community, I looked into <a href="https://docs.oracle.com/javase/7/docs/technotes/guides/security/jaas/JAASRefGuide.html">JAAS</a> to see if it could do what I wanted. After all, it was really the only security technology out there widely accessible to Java developers at the time. I did a <strong>lot</strong> of research, looking for ways that I might be able to coerce JAAS into doing what I wanted. Sometimes it came close. JAAS Authentication could meet my needs with a decent amount of effort, but JAAS Authorization didn&#8217;t even come close.</p>
 </div>
 <div class="paragraph">
-<p>JAAS is tied too heavily tied to virtual machine-level concerns. As an application architect, I usually didn&#8217;t care one bit about whether or not a <strong>Class</strong> could execute inside the virtual machine. What I really wanted to control is whether or not the <strong>current user</strong> could execute a given method, often based on the method&#8217;s arguments. So, I hobbled a bit, creating some functionality to piggy-back JAAS and custom-coded the rest. The result was only usable on a few applications and wasn&#8217;t nearly as robust as I wanted.</p>
+<p>JAAS is tied too heavily tied to virtual machine-level concerns. As an application architect, I usually didn&#8217;t care one bit about whether a <strong>Class</strong> could execute inside the virtual machine. What I really wanted to control is whether the <strong>current user</strong> could execute a given method, often based on the method&#8217;s arguments. So, I hobbled a bit, creating some functionality to piggyback JAAS and custom-coded the rest. The result was only usable on a few applications and wasn&#8217;t nearly as robust as I wanted.</p>
 </div>
 <div class="paragraph">
 <p>Then I came to work on a really great application that pushed the limits of application security. This application was written for government organizations and needed <strong>extremely</strong> powerful yet flexible security support. The client required the following:</p>
