@@ -51,9 +51,13 @@ Shiro will automatically enable the more secure options to ensure your data is a
 [#CryptographyFeatures-HashFeatures]
 == Hash Features
 
+* *Default KDF algorithms* *
+Shiro 2 provides argon2 and bcrypt support out of the box.
+Passwords should not be saved using hash algorithms, but modern KDFs do provide a sensible level of security against brute force attacks.
+
 * *Default interface implementations* +
-Shiro provides default Hash (aka Message Digests in the JDK) implementations out-of-the-box, such as MD5, SHA1, SHA-256, et al.
-This provides a type-safe construction method (e.g. `new Md5Hash(data)`) instead of being forced to use type-unsafe string factory methods in the JDK.
+Shiro provides default Hash (aka Message Digests in the JDK) implementations out-of-the-box, such as SHA-256, SHA-386, SHA-512, et al.
+This provides a type-safe construction method (e.g. `new Sha256Hash(data)`) instead of being forced to use type-unsafe string factory methods in the JDK.
 
 * *Built-in Hex and Base64 conversion* +
 Shiro Hash instances can automatically provide Hex and Base-64 encoding of hashed data via their `toHex()` and `toBase64()` methods.
