@@ -756,14 +756,26 @@ authc.logoutFallbackType = $fallbackType</code></pre>
 <div class="sect3">
 <h4 id="automatic_form_submit_upon_subsequent_login">Automatic form submit upon subsequent login</h4>
 <div class="paragraph">
-<p>The module will automatically submit forms upon session expiration and subsequent re-login.
-To disable this behavior, add the following to <code>web.xml</code>:</p>
+<p>Jakarta EE module will automatically resubmit forms when session expires and a subsequent re-login occurs. This will prevent users data from loss due to sessions timing out.</p>
 </div>
 <div class="listingblock">
+<div class="title">To disable this behavior, add the following to <code>web.xml</code>:</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;context-param&gt;
     &lt;param-name&gt;org.apache.shiro.form-resubmit.disabled&lt;/param-name&gt;
     &lt;param-value&gt;true&lt;/param-value&gt;
+&lt;/context-param&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>During form resubmissions, the original request is replayed, and the response is relayed back to the browser, along with any cookies genereated. Cookies are set to be secure by default.</p>
+</div>
+<div class="listingblock">
+<div class="title">To disable secure cookie attribute, add the following to <code>web.xml</code>:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;context-param&gt;
+    &lt;param-name&gt;org.apache.shiro.form-resubmit.secure-cookies&lt;/param-name&gt;
+    &lt;param-value&gt;false&lt;/param-value&gt;
 &lt;/context-param&gt;</code></pre>
 </div>
 </div>
