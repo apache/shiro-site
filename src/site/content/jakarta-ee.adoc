@@ -299,13 +299,23 @@ authc.logoutFallbackType = $fallbackType
 ----
 
 ==== Automatic form submit upon subsequent login
-The module will automatically submit forms upon session expiration and subsequent re-login.
-To disable this behavior, add the following to `web.xml`:
+Jakarta EE module will automatically resubmit forms when session expires and a subsequent re-login occurs. This will prevent users data from loss due to sessions timing out.
+
 [source,xml]
+.To disable this behavior, add the following to `web.xml`:
 ----
 <context-param>
     <param-name>org.apache.shiro.form-resubmit.disabled</param-name>
     <param-value>true</param-value>
+</context-param>
+----
+During form resubmissions, the original request is replayed, and the response is relayed back to the browser, along with any cookies genereated. Cookies are set to be secure by default.
+[source,xml]
+.To disable secure cookie attribute, add the following to `web.xml`:
+----
+<context-param>
+    <param-name>org.apache.shiro.form-resubmit.secure-cookies</param-name>
+    <param-value>false</param-value>
 </context-param>
 ----
 
