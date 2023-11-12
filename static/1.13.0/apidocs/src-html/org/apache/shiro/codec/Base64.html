@@ -1,0 +1,578 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * or more contributor license agreements.  See the NOTICE file<a name="line.3"></a>
+<span class="sourceLineNo">004</span> * distributed with this work for additional information<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * regarding copyright ownership.  The ASF licenses this file<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * to you under the Apache License, Version 2.0 (the<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * "License"); you may not use this file except in compliance<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * with the License.  You may obtain a copy of the License at<a name="line.8"></a>
+<span class="sourceLineNo">009</span> *<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<span class="sourceLineNo">011</span> *<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Unless required by applicable law or agreed to in writing,<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * software distributed under the License is distributed on an<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * KIND, either express or implied.  See the License for the<a name="line.15"></a>
+<span class="sourceLineNo">016</span> * specific language governing permissions and limitations<a name="line.16"></a>
+<span class="sourceLineNo">017</span> * under the License.<a name="line.17"></a>
+<span class="sourceLineNo">018</span> */<a name="line.18"></a>
+<span class="sourceLineNo">019</span>package org.apache.shiro.codec;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>/**<a name="line.21"></a>
+<span class="sourceLineNo">022</span> * Provides &lt;a href="http://en.wikipedia.org/wiki/Base64"&gt;Base 64&lt;/a&gt; encoding and decoding as defined by<a name="line.22"></a>
+<span class="sourceLineNo">023</span> * &lt;a href="http://www.ietf.org/rfc/rfc2045.txt"&gt;RFC 2045&lt;/a&gt;.<a name="line.23"></a>
+<span class="sourceLineNo">024</span> * &lt;p/&gt;<a name="line.24"></a>
+<span class="sourceLineNo">025</span> * This class implements section &lt;cite&gt;6.8. Base64 Content-Transfer-Encoding&lt;/cite&gt; from RFC 2045 &lt;cite&gt;Multipurpose<a name="line.25"></a>
+<span class="sourceLineNo">026</span> * Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies&lt;/cite&gt; by Freed and Borenstein.<a name="line.26"></a>
+<span class="sourceLineNo">027</span> * &lt;p/&gt;<a name="line.27"></a>
+<span class="sourceLineNo">028</span> * This class was borrowed from Apache Commons Codec SVN repository (rev. 618419) with modifications<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * to enable Base64 conversion without a full dependency on Commons Codec.  We didn't want to reinvent the wheel of<a name="line.29"></a>
+<span class="sourceLineNo">030</span> * great work they've done, but also didn't want to force every Shiro user to depend on the commons-codec.jar<a name="line.30"></a>
+<span class="sourceLineNo">031</span> * &lt;p/&gt;<a name="line.31"></a>
+<span class="sourceLineNo">032</span> * As per the Apache 2.0 license, the original copyright notice and all author and copyright information have<a name="line.32"></a>
+<span class="sourceLineNo">033</span> * remained in tact.<a name="line.33"></a>
+<span class="sourceLineNo">034</span> *<a name="line.34"></a>
+<span class="sourceLineNo">035</span> * @see &lt;a href="http://en.wikipedia.org/wiki/Base64"&gt;Wikipedia: Base 64&lt;/a&gt;<a name="line.35"></a>
+<span class="sourceLineNo">036</span> * @see &lt;a href="http://www.ietf.org/rfc/rfc2045.txt"&gt;RFC 2045&lt;/a&gt;<a name="line.36"></a>
+<span class="sourceLineNo">037</span> * @since 0.9<a name="line.37"></a>
+<span class="sourceLineNo">038</span> */<a name="line.38"></a>
+<span class="sourceLineNo">039</span>public class Base64 {<a name="line.39"></a>
+<span class="sourceLineNo">040</span><a name="line.40"></a>
+<span class="sourceLineNo">041</span>    /**<a name="line.41"></a>
+<span class="sourceLineNo">042</span>     * Chunk size per RFC 2045 section 6.8.<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     * &lt;p/&gt;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     * The character limit does not count the trailing CRLF, but counts all other characters, including any<a name="line.44"></a>
+<span class="sourceLineNo">045</span>     * equal signs.<a name="line.45"></a>
+<span class="sourceLineNo">046</span>     *<a name="line.46"></a>
+<span class="sourceLineNo">047</span>     * @see &lt;a href="http://www.ietf.org/rfc/rfc2045.txt"&gt;RFC 2045 section 6.8&lt;/a&gt;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>     */<a name="line.48"></a>
+<span class="sourceLineNo">049</span>    static final int CHUNK_SIZE = 76;<a name="line.49"></a>
+<span class="sourceLineNo">050</span><a name="line.50"></a>
+<span class="sourceLineNo">051</span>    /**<a name="line.51"></a>
+<span class="sourceLineNo">052</span>     * Chunk separator per RFC 2045 section 2.1.<a name="line.52"></a>
+<span class="sourceLineNo">053</span>     *<a name="line.53"></a>
+<span class="sourceLineNo">054</span>     * @see &lt;a href="http://www.ietf.org/rfc/rfc2045.txt"&gt;RFC 2045 section 2.1&lt;/a&gt;<a name="line.54"></a>
+<span class="sourceLineNo">055</span>     */<a name="line.55"></a>
+<span class="sourceLineNo">056</span>    static final byte[] CHUNK_SEPARATOR = "\r\n".getBytes();<a name="line.56"></a>
+<span class="sourceLineNo">057</span><a name="line.57"></a>
+<span class="sourceLineNo">058</span>    /**<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     * The base length.<a name="line.59"></a>
+<span class="sourceLineNo">060</span>     */<a name="line.60"></a>
+<span class="sourceLineNo">061</span>    private static final int BASELENGTH = 255;<a name="line.61"></a>
+<span class="sourceLineNo">062</span><a name="line.62"></a>
+<span class="sourceLineNo">063</span>    /**<a name="line.63"></a>
+<span class="sourceLineNo">064</span>     * Lookup length.<a name="line.64"></a>
+<span class="sourceLineNo">065</span>     */<a name="line.65"></a>
+<span class="sourceLineNo">066</span>    private static final int LOOKUPLENGTH = 64;<a name="line.66"></a>
+<span class="sourceLineNo">067</span><a name="line.67"></a>
+<span class="sourceLineNo">068</span>    /**<a name="line.68"></a>
+<span class="sourceLineNo">069</span>     * Used to calculate the number of bits in a byte.<a name="line.69"></a>
+<span class="sourceLineNo">070</span>     */<a name="line.70"></a>
+<span class="sourceLineNo">071</span>    private static final int EIGHTBIT = 8;<a name="line.71"></a>
+<span class="sourceLineNo">072</span><a name="line.72"></a>
+<span class="sourceLineNo">073</span>    /**<a name="line.73"></a>
+<span class="sourceLineNo">074</span>     * Used when encoding something which has fewer than 24 bits.<a name="line.74"></a>
+<span class="sourceLineNo">075</span>     */<a name="line.75"></a>
+<span class="sourceLineNo">076</span>    private static final int SIXTEENBIT = 16;<a name="line.76"></a>
+<span class="sourceLineNo">077</span><a name="line.77"></a>
+<span class="sourceLineNo">078</span>    /**<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     * Used to determine how many bits data contains.<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     */<a name="line.80"></a>
+<span class="sourceLineNo">081</span>    private static final int TWENTYFOURBITGROUP = 24;<a name="line.81"></a>
+<span class="sourceLineNo">082</span><a name="line.82"></a>
+<span class="sourceLineNo">083</span>    /**<a name="line.83"></a>
+<span class="sourceLineNo">084</span>     * Used to get the number of Quadruples.<a name="line.84"></a>
+<span class="sourceLineNo">085</span>     */<a name="line.85"></a>
+<span class="sourceLineNo">086</span>    private static final int FOURBYTE = 4;<a name="line.86"></a>
+<span class="sourceLineNo">087</span><a name="line.87"></a>
+<span class="sourceLineNo">088</span>    /**<a name="line.88"></a>
+<span class="sourceLineNo">089</span>     * Used to test the sign of a byte.<a name="line.89"></a>
+<span class="sourceLineNo">090</span>     */<a name="line.90"></a>
+<span class="sourceLineNo">091</span>    private static final int SIGN = -128;<a name="line.91"></a>
+<span class="sourceLineNo">092</span><a name="line.92"></a>
+<span class="sourceLineNo">093</span>    /**<a name="line.93"></a>
+<span class="sourceLineNo">094</span>     * Byte used to pad output.<a name="line.94"></a>
+<span class="sourceLineNo">095</span>     */<a name="line.95"></a>
+<span class="sourceLineNo">096</span>    private static final byte PAD = (byte) '=';<a name="line.96"></a>
+<span class="sourceLineNo">097</span><a name="line.97"></a>
+<span class="sourceLineNo">098</span>    /**<a name="line.98"></a>
+<span class="sourceLineNo">099</span>     * Contains the Base64 values &lt;code&gt;0&lt;/code&gt; through &lt;code&gt;63&lt;/code&gt; accessed by using character encodings as<a name="line.99"></a>
+<span class="sourceLineNo">100</span>     * indices.<a name="line.100"></a>
+<span class="sourceLineNo">101</span>     * &lt;p/&gt;<a name="line.101"></a>
+<span class="sourceLineNo">102</span>     * &lt;p&gt;For example, &lt;code&gt;base64Alphabet['+']&lt;/code&gt; returns &lt;code&gt;62&lt;/code&gt;.&lt;/p&gt;<a name="line.102"></a>
+<span class="sourceLineNo">103</span>     * &lt;p/&gt;<a name="line.103"></a>
+<span class="sourceLineNo">104</span>     * &lt;p&gt;The value of undefined encodings is &lt;code&gt;-1&lt;/code&gt;.&lt;/p&gt;<a name="line.104"></a>
+<span class="sourceLineNo">105</span>     */<a name="line.105"></a>
+<span class="sourceLineNo">106</span>    private static final byte[] base64Alphabet = new byte[BASELENGTH];<a name="line.106"></a>
+<span class="sourceLineNo">107</span><a name="line.107"></a>
+<span class="sourceLineNo">108</span>    /**<a name="line.108"></a>
+<span class="sourceLineNo">109</span>     * &lt;p&gt;Contains the Base64 encodings &lt;code&gt;A&lt;/code&gt; through &lt;code&gt;Z&lt;/code&gt;, followed by &lt;code&gt;a&lt;/code&gt; through<a name="line.109"></a>
+<span class="sourceLineNo">110</span>     * &lt;code&gt;z&lt;/code&gt;, followed by &lt;code&gt;0&lt;/code&gt; through &lt;code&gt;9&lt;/code&gt;, followed by &lt;code&gt;+&lt;/code&gt;, and<a name="line.110"></a>
+<span class="sourceLineNo">111</span>     * &lt;code&gt;/&lt;/code&gt;.&lt;/p&gt;<a name="line.111"></a>
+<span class="sourceLineNo">112</span>     * &lt;p/&gt;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>     * &lt;p&gt;This array is accessed by using character values as indices.&lt;/p&gt;<a name="line.113"></a>
+<span class="sourceLineNo">114</span>     * &lt;p/&gt;<a name="line.114"></a>
+<span class="sourceLineNo">115</span>     * &lt;p&gt;For example, &lt;code&gt;lookUpBase64Alphabet[62] &lt;/code&gt; returns &lt;code&gt;'+'&lt;/code&gt;.&lt;/p&gt;<a name="line.115"></a>
+<span class="sourceLineNo">116</span>     */<a name="line.116"></a>
+<span class="sourceLineNo">117</span>    private static final byte[] lookUpBase64Alphabet = new byte[LOOKUPLENGTH];<a name="line.117"></a>
+<span class="sourceLineNo">118</span><a name="line.118"></a>
+<span class="sourceLineNo">119</span>    // Populating the lookup and character arrays<a name="line.119"></a>
+<span class="sourceLineNo">120</span><a name="line.120"></a>
+<span class="sourceLineNo">121</span>    static {<a name="line.121"></a>
+<span class="sourceLineNo">122</span>        for (int i = 0; i &lt; BASELENGTH; i++) {<a name="line.122"></a>
+<span class="sourceLineNo">123</span>            base64Alphabet[i] = (byte) -1;<a name="line.123"></a>
+<span class="sourceLineNo">124</span>        }<a name="line.124"></a>
+<span class="sourceLineNo">125</span>        for (int i = 'Z'; i &gt;= 'A'; i--) {<a name="line.125"></a>
+<span class="sourceLineNo">126</span>            base64Alphabet[i] = (byte) (i - 'A');<a name="line.126"></a>
+<span class="sourceLineNo">127</span>        }<a name="line.127"></a>
+<span class="sourceLineNo">128</span>        for (int i = 'z'; i &gt;= 'a'; i--) {<a name="line.128"></a>
+<span class="sourceLineNo">129</span>            base64Alphabet[i] = (byte) (i - 'a' + 26);<a name="line.129"></a>
+<span class="sourceLineNo">130</span>        }<a name="line.130"></a>
+<span class="sourceLineNo">131</span>        for (int i = '9'; i &gt;= '0'; i--) {<a name="line.131"></a>
+<span class="sourceLineNo">132</span>            base64Alphabet[i] = (byte) (i - '0' + 52);<a name="line.132"></a>
+<span class="sourceLineNo">133</span>        }<a name="line.133"></a>
+<span class="sourceLineNo">134</span><a name="line.134"></a>
+<span class="sourceLineNo">135</span>        base64Alphabet['+'] = 62;<a name="line.135"></a>
+<span class="sourceLineNo">136</span>        base64Alphabet['/'] = 63;<a name="line.136"></a>
+<span class="sourceLineNo">137</span><a name="line.137"></a>
+<span class="sourceLineNo">138</span>        for (int i = 0; i &lt;= 25; i++) {<a name="line.138"></a>
+<span class="sourceLineNo">139</span>            lookUpBase64Alphabet[i] = (byte) ('A' + i);<a name="line.139"></a>
+<span class="sourceLineNo">140</span>        }<a name="line.140"></a>
+<span class="sourceLineNo">141</span><a name="line.141"></a>
+<span class="sourceLineNo">142</span>        for (int i = 26, j = 0; i &lt;= 51; i++, j++) {<a name="line.142"></a>
+<span class="sourceLineNo">143</span>            lookUpBase64Alphabet[i] = (byte) ('a' + j);<a name="line.143"></a>
+<span class="sourceLineNo">144</span>        }<a name="line.144"></a>
+<span class="sourceLineNo">145</span><a name="line.145"></a>
+<span class="sourceLineNo">146</span>        for (int i = 52, j = 0; i &lt;= 61; i++, j++) {<a name="line.146"></a>
+<span class="sourceLineNo">147</span>            lookUpBase64Alphabet[i] = (byte) ('0' + j);<a name="line.147"></a>
+<span class="sourceLineNo">148</span>        }<a name="line.148"></a>
+<span class="sourceLineNo">149</span><a name="line.149"></a>
+<span class="sourceLineNo">150</span>        lookUpBase64Alphabet[62] = (byte) '+';<a name="line.150"></a>
+<span class="sourceLineNo">151</span>        lookUpBase64Alphabet[63] = (byte) '/';<a name="line.151"></a>
+<span class="sourceLineNo">152</span>    }<a name="line.152"></a>
+<span class="sourceLineNo">153</span><a name="line.153"></a>
+<span class="sourceLineNo">154</span>    /**<a name="line.154"></a>
+<span class="sourceLineNo">155</span>     * Returns whether or not the &lt;code&gt;octet&lt;/code&gt; is in the base 64 alphabet.<a name="line.155"></a>
+<span class="sourceLineNo">156</span>     *<a name="line.156"></a>
+<span class="sourceLineNo">157</span>     * @param octect The value to test<a name="line.157"></a>
+<span class="sourceLineNo">158</span>     * @return &lt;code&gt;true&lt;/code&gt; if the value is defined in the the base 64 alphabet, &lt;code&gt;false&lt;/code&gt; otherwise.<a name="line.158"></a>
+<span class="sourceLineNo">159</span>     */<a name="line.159"></a>
+<span class="sourceLineNo">160</span>    private static boolean isBase64(byte octect) {<a name="line.160"></a>
+<span class="sourceLineNo">161</span>        if (octect == PAD) {<a name="line.161"></a>
+<span class="sourceLineNo">162</span>            return true;<a name="line.162"></a>
+<span class="sourceLineNo">163</span>        } else //noinspection RedundantIfStatement<a name="line.163"></a>
+<span class="sourceLineNo">164</span>            if (octect &lt; 0 || base64Alphabet[octect] == -1) {<a name="line.164"></a>
+<span class="sourceLineNo">165</span>                return false;<a name="line.165"></a>
+<span class="sourceLineNo">166</span>            } else {<a name="line.166"></a>
+<span class="sourceLineNo">167</span>                return true;<a name="line.167"></a>
+<span class="sourceLineNo">168</span>            }<a name="line.168"></a>
+<span class="sourceLineNo">169</span>    }<a name="line.169"></a>
+<span class="sourceLineNo">170</span><a name="line.170"></a>
+<span class="sourceLineNo">171</span>    /**<a name="line.171"></a>
+<span class="sourceLineNo">172</span>     * Tests a given byte array to see if it contains only valid characters within the Base64 alphabet.<a name="line.172"></a>
+<span class="sourceLineNo">173</span>     *<a name="line.173"></a>
+<span class="sourceLineNo">174</span>     * @param arrayOctect byte array to test<a name="line.174"></a>
+<span class="sourceLineNo">175</span>     * @return &lt;code&gt;true&lt;/code&gt; if all bytes are valid characters in the Base64 alphabet or if the byte array is<a name="line.175"></a>
+<span class="sourceLineNo">176</span>     *         empty; false, otherwise<a name="line.176"></a>
+<span class="sourceLineNo">177</span>     */<a name="line.177"></a>
+<span class="sourceLineNo">178</span>    public static boolean isBase64(byte[] arrayOctect) {<a name="line.178"></a>
+<span class="sourceLineNo">179</span><a name="line.179"></a>
+<span class="sourceLineNo">180</span>        arrayOctect = discardWhitespace(arrayOctect);<a name="line.180"></a>
+<span class="sourceLineNo">181</span><a name="line.181"></a>
+<span class="sourceLineNo">182</span>        int length = arrayOctect.length;<a name="line.182"></a>
+<span class="sourceLineNo">183</span>        if (length == 0) {<a name="line.183"></a>
+<span class="sourceLineNo">184</span>            // shouldn't a 0 length array be valid base64 data?<a name="line.184"></a>
+<span class="sourceLineNo">185</span>            // return false;<a name="line.185"></a>
+<span class="sourceLineNo">186</span>            return true;<a name="line.186"></a>
+<span class="sourceLineNo">187</span>        }<a name="line.187"></a>
+<span class="sourceLineNo">188</span>        for (int i = 0; i &lt; length; i++) {<a name="line.188"></a>
+<span class="sourceLineNo">189</span>            if (!isBase64(arrayOctect[i])) {<a name="line.189"></a>
+<span class="sourceLineNo">190</span>                return false;<a name="line.190"></a>
+<span class="sourceLineNo">191</span>            }<a name="line.191"></a>
+<span class="sourceLineNo">192</span>        }<a name="line.192"></a>
+<span class="sourceLineNo">193</span>        return true;<a name="line.193"></a>
+<span class="sourceLineNo">194</span>    }<a name="line.194"></a>
+<span class="sourceLineNo">195</span><a name="line.195"></a>
+<span class="sourceLineNo">196</span>    /**<a name="line.196"></a>
+<span class="sourceLineNo">197</span>     * Discards any whitespace from a base-64 encoded block.<a name="line.197"></a>
+<span class="sourceLineNo">198</span>     *<a name="line.198"></a>
+<span class="sourceLineNo">199</span>     * @param data The base-64 encoded data to discard the whitespace from.<a name="line.199"></a>
+<span class="sourceLineNo">200</span>     * @return The data, less whitespace (see RFC 2045).<a name="line.200"></a>
+<span class="sourceLineNo">201</span>     */<a name="line.201"></a>
+<span class="sourceLineNo">202</span>    static byte[] discardWhitespace(byte[] data) {<a name="line.202"></a>
+<span class="sourceLineNo">203</span>        byte groomedData[] = new byte[data.length];<a name="line.203"></a>
+<span class="sourceLineNo">204</span>        int bytesCopied = 0;<a name="line.204"></a>
+<span class="sourceLineNo">205</span><a name="line.205"></a>
+<span class="sourceLineNo">206</span>        for (byte aByte : data) {<a name="line.206"></a>
+<span class="sourceLineNo">207</span>            switch (aByte) {<a name="line.207"></a>
+<span class="sourceLineNo">208</span>                case (byte) ' ':<a name="line.208"></a>
+<span class="sourceLineNo">209</span>                case (byte) '\n':<a name="line.209"></a>
+<span class="sourceLineNo">210</span>                case (byte) '\r':<a name="line.210"></a>
+<span class="sourceLineNo">211</span>                case (byte) '\t':<a name="line.211"></a>
+<span class="sourceLineNo">212</span>                    break;<a name="line.212"></a>
+<span class="sourceLineNo">213</span>                default:<a name="line.213"></a>
+<span class="sourceLineNo">214</span>                    groomedData[bytesCopied++] = aByte;<a name="line.214"></a>
+<span class="sourceLineNo">215</span>            }<a name="line.215"></a>
+<span class="sourceLineNo">216</span>        }<a name="line.216"></a>
+<span class="sourceLineNo">217</span><a name="line.217"></a>
+<span class="sourceLineNo">218</span>        byte packedData[] = new byte[bytesCopied];<a name="line.218"></a>
+<span class="sourceLineNo">219</span><a name="line.219"></a>
+<span class="sourceLineNo">220</span>        System.arraycopy(groomedData, 0, packedData, 0, bytesCopied);<a name="line.220"></a>
+<span class="sourceLineNo">221</span><a name="line.221"></a>
+<span class="sourceLineNo">222</span>        return packedData;<a name="line.222"></a>
+<span class="sourceLineNo">223</span>    }<a name="line.223"></a>
+<span class="sourceLineNo">224</span><a name="line.224"></a>
+<span class="sourceLineNo">225</span>    /**<a name="line.225"></a>
+<span class="sourceLineNo">226</span>     * Base64 encodes the specified byte array and then encodes it as a String using Shiro's preferred character<a name="line.226"></a>
+<span class="sourceLineNo">227</span>     * encoding (UTF-8).<a name="line.227"></a>
+<span class="sourceLineNo">228</span>     *<a name="line.228"></a>
+<span class="sourceLineNo">229</span>     * @param bytes the byte array to Base64 encode.<a name="line.229"></a>
+<span class="sourceLineNo">230</span>     * @return a UTF-8 encoded String of the resulting Base64 encoded byte array.<a name="line.230"></a>
+<span class="sourceLineNo">231</span>     */<a name="line.231"></a>
+<span class="sourceLineNo">232</span>    public static String encodeToString(byte[] bytes) {<a name="line.232"></a>
+<span class="sourceLineNo">233</span>        byte[] encoded = encode(bytes);<a name="line.233"></a>
+<span class="sourceLineNo">234</span>        return CodecSupport.toString(encoded);<a name="line.234"></a>
+<span class="sourceLineNo">235</span>    }<a name="line.235"></a>
+<span class="sourceLineNo">236</span><a name="line.236"></a>
+<span class="sourceLineNo">237</span>    /**<a name="line.237"></a>
+<span class="sourceLineNo">238</span>     * Encodes binary data using the base64 algorithm and chunks the encoded output into 76 character blocks<a name="line.238"></a>
+<span class="sourceLineNo">239</span>     *<a name="line.239"></a>
+<span class="sourceLineNo">240</span>     * @param binaryData binary data to encodeToChars<a name="line.240"></a>
+<span class="sourceLineNo">241</span>     * @return Base64 characters chunked in 76 character blocks<a name="line.241"></a>
+<span class="sourceLineNo">242</span>     */<a name="line.242"></a>
+<span class="sourceLineNo">243</span>    public static byte[] encodeChunked(byte[] binaryData) {<a name="line.243"></a>
+<span class="sourceLineNo">244</span>        return encode(binaryData, true);<a name="line.244"></a>
+<span class="sourceLineNo">245</span>    }<a name="line.245"></a>
+<span class="sourceLineNo">246</span><a name="line.246"></a>
+<span class="sourceLineNo">247</span>    /**<a name="line.247"></a>
+<span class="sourceLineNo">248</span>     * Encodes a byte[] containing binary data, into a byte[] containing characters in the Base64 alphabet.<a name="line.248"></a>
+<span class="sourceLineNo">249</span>     *<a name="line.249"></a>
+<span class="sourceLineNo">250</span>     * @param pArray a byte array containing binary data<a name="line.250"></a>
+<span class="sourceLineNo">251</span>     * @return A byte array containing only Base64 character data<a name="line.251"></a>
+<span class="sourceLineNo">252</span>     */<a name="line.252"></a>
+<span class="sourceLineNo">253</span>    public static byte[] encode(byte[] pArray) {<a name="line.253"></a>
+<span class="sourceLineNo">254</span>        return encode(pArray, false);<a name="line.254"></a>
+<span class="sourceLineNo">255</span>    }<a name="line.255"></a>
+<span class="sourceLineNo">256</span><a name="line.256"></a>
+<span class="sourceLineNo">257</span>    /**<a name="line.257"></a>
+<span class="sourceLineNo">258</span>     * Encodes binary data using the base64 algorithm, optionally chunking the output into 76 character blocks.<a name="line.258"></a>
+<span class="sourceLineNo">259</span>     *<a name="line.259"></a>
+<span class="sourceLineNo">260</span>     * @param binaryData Array containing binary data to encodeToChars.<a name="line.260"></a>
+<span class="sourceLineNo">261</span>     * @param isChunked  if &lt;code&gt;true&lt;/code&gt; this encoder will chunk the base64 output into 76 character blocks<a name="line.261"></a>
+<span class="sourceLineNo">262</span>     * @return Base64-encoded data.<a name="line.262"></a>
+<span class="sourceLineNo">263</span>     * @throws IllegalArgumentException Thrown when the input array needs an output array bigger than {@link Integer#MAX_VALUE}<a name="line.263"></a>
+<span class="sourceLineNo">264</span>     */<a name="line.264"></a>
+<span class="sourceLineNo">265</span>    public static byte[] encode(byte[] binaryData, boolean isChunked) {<a name="line.265"></a>
+<span class="sourceLineNo">266</span>        long binaryDataLength = binaryData.length;<a name="line.266"></a>
+<span class="sourceLineNo">267</span>        long lengthDataBits = binaryDataLength * EIGHTBIT;<a name="line.267"></a>
+<span class="sourceLineNo">268</span>        long fewerThan24bits = lengthDataBits % TWENTYFOURBITGROUP;<a name="line.268"></a>
+<span class="sourceLineNo">269</span>        long tripletCount = lengthDataBits / TWENTYFOURBITGROUP;<a name="line.269"></a>
+<span class="sourceLineNo">270</span>        long encodedDataLengthLong;<a name="line.270"></a>
+<span class="sourceLineNo">271</span>        int chunckCount = 0;<a name="line.271"></a>
+<span class="sourceLineNo">272</span><a name="line.272"></a>
+<span class="sourceLineNo">273</span>        if (fewerThan24bits != 0) {<a name="line.273"></a>
+<span class="sourceLineNo">274</span>            // data not divisible by 24 bit<a name="line.274"></a>
+<span class="sourceLineNo">275</span>            encodedDataLengthLong = (tripletCount + 1) * 4;<a name="line.275"></a>
+<span class="sourceLineNo">276</span>        } else {<a name="line.276"></a>
+<span class="sourceLineNo">277</span>            // 16 or 8 bit<a name="line.277"></a>
+<span class="sourceLineNo">278</span>            encodedDataLengthLong = tripletCount * 4;<a name="line.278"></a>
+<span class="sourceLineNo">279</span>        }<a name="line.279"></a>
+<span class="sourceLineNo">280</span><a name="line.280"></a>
+<span class="sourceLineNo">281</span>        // If the output is to be "chunked" into 76 character sections,<a name="line.281"></a>
+<span class="sourceLineNo">282</span>        // for compliance with RFC 2045 MIME, then it is important to<a name="line.282"></a>
+<span class="sourceLineNo">283</span>        // allow for extra length to account for the separator(s)<a name="line.283"></a>
+<span class="sourceLineNo">284</span>        if (isChunked) {<a name="line.284"></a>
+<span class="sourceLineNo">285</span><a name="line.285"></a>
+<span class="sourceLineNo">286</span>            chunckCount = (CHUNK_SEPARATOR.length == 0 ? 0 : (int) Math<a name="line.286"></a>
+<span class="sourceLineNo">287</span>                    .ceil((float) encodedDataLengthLong / CHUNK_SIZE));<a name="line.287"></a>
+<span class="sourceLineNo">288</span>            encodedDataLengthLong += chunckCount * CHUNK_SEPARATOR.length;<a name="line.288"></a>
+<span class="sourceLineNo">289</span>        }<a name="line.289"></a>
+<span class="sourceLineNo">290</span><a name="line.290"></a>
+<span class="sourceLineNo">291</span>        if (encodedDataLengthLong &gt; Integer.MAX_VALUE) {<a name="line.291"></a>
+<span class="sourceLineNo">292</span>            throw new IllegalArgumentException(<a name="line.292"></a>
+<span class="sourceLineNo">293</span>                    "Input array too big, output array would be bigger than Integer.MAX_VALUE=" + Integer.MAX_VALUE);<a name="line.293"></a>
+<span class="sourceLineNo">294</span>        }<a name="line.294"></a>
+<span class="sourceLineNo">295</span>        int encodedDataLength = (int) encodedDataLengthLong;<a name="line.295"></a>
+<span class="sourceLineNo">296</span>        byte encodedData[] = new byte[encodedDataLength];<a name="line.296"></a>
+<span class="sourceLineNo">297</span><a name="line.297"></a>
+<span class="sourceLineNo">298</span>        byte k, l, b1, b2, b3;<a name="line.298"></a>
+<span class="sourceLineNo">299</span><a name="line.299"></a>
+<span class="sourceLineNo">300</span>        int encodedIndex = 0;<a name="line.300"></a>
+<span class="sourceLineNo">301</span>        int dataIndex;<a name="line.301"></a>
+<span class="sourceLineNo">302</span>        int i;<a name="line.302"></a>
+<span class="sourceLineNo">303</span>        int nextSeparatorIndex = CHUNK_SIZE;<a name="line.303"></a>
+<span class="sourceLineNo">304</span>        int chunksSoFar = 0;<a name="line.304"></a>
+<span class="sourceLineNo">305</span><a name="line.305"></a>
+<span class="sourceLineNo">306</span>        // log.debug("number of triplets = " + numberTriplets);<a name="line.306"></a>
+<span class="sourceLineNo">307</span>        for (i = 0; i &lt; tripletCount; i++) {<a name="line.307"></a>
+<span class="sourceLineNo">308</span>            dataIndex = i * 3;<a name="line.308"></a>
+<span class="sourceLineNo">309</span>            b1 = binaryData[dataIndex];<a name="line.309"></a>
+<span class="sourceLineNo">310</span>            b2 = binaryData[dataIndex + 1];<a name="line.310"></a>
+<span class="sourceLineNo">311</span>            b3 = binaryData[dataIndex + 2];<a name="line.311"></a>
+<span class="sourceLineNo">312</span><a name="line.312"></a>
+<span class="sourceLineNo">313</span>            // log.debug("b1= " + b1 +", b2= " + b2 + ", b3= " + b3);<a name="line.313"></a>
+<span class="sourceLineNo">314</span><a name="line.314"></a>
+<span class="sourceLineNo">315</span>            l = (byte) (b2 &amp; 0x0f);<a name="line.315"></a>
+<span class="sourceLineNo">316</span>            k = (byte) (b1 &amp; 0x03);<a name="line.316"></a>
+<span class="sourceLineNo">317</span><a name="line.317"></a>
+<span class="sourceLineNo">318</span>            byte val1 = ((b1 &amp; SIGN) == 0) ? (byte) (b1 &gt;&gt; 2) : (byte) ((b1) &gt;&gt; 2 ^ 0xc0);<a name="line.318"></a>
+<span class="sourceLineNo">319</span>            byte val2 = ((b2 &amp; SIGN) == 0) ? (byte) (b2 &gt;&gt; 4) : (byte) ((b2) &gt;&gt; 4 ^ 0xf0);<a name="line.319"></a>
+<span class="sourceLineNo">320</span>            byte val3 = ((b3 &amp; SIGN) == 0) ? (byte) (b3 &gt;&gt; 6) : (byte) ((b3) &gt;&gt; 6 ^ 0xfc);<a name="line.320"></a>
+<span class="sourceLineNo">321</span><a name="line.321"></a>
+<span class="sourceLineNo">322</span>            encodedData[encodedIndex] = lookUpBase64Alphabet[val1];<a name="line.322"></a>
+<span class="sourceLineNo">323</span>            // log.debug( "val2 = " + val2 );<a name="line.323"></a>
+<span class="sourceLineNo">324</span>            // log.debug( "k4 = " + (k&lt;&lt;4) );<a name="line.324"></a>
+<span class="sourceLineNo">325</span>            // log.debug( "vak = " + (val2 | (k&lt;&lt;4)) );<a name="line.325"></a>
+<span class="sourceLineNo">326</span>            encodedData[encodedIndex + 1] = lookUpBase64Alphabet[val2 | (k &lt;&lt; 4)];<a name="line.326"></a>
+<span class="sourceLineNo">327</span>            encodedData[encodedIndex + 2] = lookUpBase64Alphabet[(l &lt;&lt; 2) | val3];<a name="line.327"></a>
+<span class="sourceLineNo">328</span>            encodedData[encodedIndex + 3] = lookUpBase64Alphabet[b3 &amp; 0x3f];<a name="line.328"></a>
+<span class="sourceLineNo">329</span><a name="line.329"></a>
+<span class="sourceLineNo">330</span>            encodedIndex += 4;<a name="line.330"></a>
+<span class="sourceLineNo">331</span><a name="line.331"></a>
+<span class="sourceLineNo">332</span>            // If we are chunking, let's put a chunk separator down.<a name="line.332"></a>
+<span class="sourceLineNo">333</span>            if (isChunked) {<a name="line.333"></a>
+<span class="sourceLineNo">334</span>                // this assumes that CHUNK_SIZE % 4 == 0<a name="line.334"></a>
+<span class="sourceLineNo">335</span>                if (encodedIndex == nextSeparatorIndex) {<a name="line.335"></a>
+<span class="sourceLineNo">336</span>                    System.arraycopy(CHUNK_SEPARATOR, 0, encodedData, encodedIndex, CHUNK_SEPARATOR.length);<a name="line.336"></a>
+<span class="sourceLineNo">337</span>                    chunksSoFar++;<a name="line.337"></a>
+<span class="sourceLineNo">338</span>                    nextSeparatorIndex = (CHUNK_SIZE * (chunksSoFar + 1)) + (chunksSoFar * CHUNK_SEPARATOR.length);<a name="line.338"></a>
+<span class="sourceLineNo">339</span>                    encodedIndex += CHUNK_SEPARATOR.length;<a name="line.339"></a>
+<span class="sourceLineNo">340</span>                }<a name="line.340"></a>
+<span class="sourceLineNo">341</span>            }<a name="line.341"></a>
+<span class="sourceLineNo">342</span>        }<a name="line.342"></a>
+<span class="sourceLineNo">343</span><a name="line.343"></a>
+<span class="sourceLineNo">344</span>        // form integral number of 6-bit groups<a name="line.344"></a>
+<span class="sourceLineNo">345</span>        dataIndex = i * 3;<a name="line.345"></a>
+<span class="sourceLineNo">346</span><a name="line.346"></a>
+<span class="sourceLineNo">347</span>        if (fewerThan24bits == EIGHTBIT) {<a name="line.347"></a>
+<span class="sourceLineNo">348</span>            b1 = binaryData[dataIndex];<a name="line.348"></a>
+<span class="sourceLineNo">349</span>            k = (byte) (b1 &amp; 0x03);<a name="line.349"></a>
+<span class="sourceLineNo">350</span>            // log.debug("b1=" + b1);<a name="line.350"></a>
+<span class="sourceLineNo">351</span>            // log.debug("b1&lt;&lt;2 = " + (b1&gt;&gt;2) );<a name="line.351"></a>
+<span class="sourceLineNo">352</span>            byte val1 = ((b1 &amp; SIGN) == 0) ? (byte) (b1 &gt;&gt; 2) : (byte) ((b1) &gt;&gt; 2 ^ 0xc0);<a name="line.352"></a>
+<span class="sourceLineNo">353</span>            encodedData[encodedIndex] = lookUpBase64Alphabet[val1];<a name="line.353"></a>
+<span class="sourceLineNo">354</span>            encodedData[encodedIndex + 1] = lookUpBase64Alphabet[k &lt;&lt; 4];<a name="line.354"></a>
+<span class="sourceLineNo">355</span>            encodedData[encodedIndex + 2] = PAD;<a name="line.355"></a>
+<span class="sourceLineNo">356</span>            encodedData[encodedIndex + 3] = PAD;<a name="line.356"></a>
+<span class="sourceLineNo">357</span>        } else if (fewerThan24bits == SIXTEENBIT) {<a name="line.357"></a>
+<span class="sourceLineNo">358</span><a name="line.358"></a>
+<span class="sourceLineNo">359</span>            b1 = binaryData[dataIndex];<a name="line.359"></a>
+<span class="sourceLineNo">360</span>            b2 = binaryData[dataIndex + 1];<a name="line.360"></a>
+<span class="sourceLineNo">361</span>            l = (byte) (b2 &amp; 0x0f);<a name="line.361"></a>
+<span class="sourceLineNo">362</span>            k = (byte) (b1 &amp; 0x03);<a name="line.362"></a>
+<span class="sourceLineNo">363</span><a name="line.363"></a>
+<span class="sourceLineNo">364</span>            byte val1 = ((b1 &amp; SIGN) == 0) ? (byte) (b1 &gt;&gt; 2) : (byte) ((b1) &gt;&gt; 2 ^ 0xc0);<a name="line.364"></a>
+<span class="sourceLineNo">365</span>            byte val2 = ((b2 &amp; SIGN) == 0) ? (byte) (b2 &gt;&gt; 4) : (byte) ((b2) &gt;&gt; 4 ^ 0xf0);<a name="line.365"></a>
+<span class="sourceLineNo">366</span><a name="line.366"></a>
+<span class="sourceLineNo">367</span>            encodedData[encodedIndex] = lookUpBase64Alphabet[val1];<a name="line.367"></a>
+<span class="sourceLineNo">368</span>            encodedData[encodedIndex + 1] = lookUpBase64Alphabet[val2 | (k &lt;&lt; 4)];<a name="line.368"></a>
+<span class="sourceLineNo">369</span>            encodedData[encodedIndex + 2] = lookUpBase64Alphabet[l &lt;&lt; 2];<a name="line.369"></a>
+<span class="sourceLineNo">370</span>            encodedData[encodedIndex + 3] = PAD;<a name="line.370"></a>
+<span class="sourceLineNo">371</span>        }<a name="line.371"></a>
+<span class="sourceLineNo">372</span><a name="line.372"></a>
+<span class="sourceLineNo">373</span>        if (isChunked) {<a name="line.373"></a>
+<span class="sourceLineNo">374</span>            // we also add a separator to the end of the final chunk.<a name="line.374"></a>
+<span class="sourceLineNo">375</span>            if (chunksSoFar &lt; chunckCount) {<a name="line.375"></a>
+<span class="sourceLineNo">376</span>                System.arraycopy(CHUNK_SEPARATOR, 0, encodedData, encodedDataLength - CHUNK_SEPARATOR.length,<a name="line.376"></a>
+<span class="sourceLineNo">377</span>                        CHUNK_SEPARATOR.length);<a name="line.377"></a>
+<span class="sourceLineNo">378</span>            }<a name="line.378"></a>
+<span class="sourceLineNo">379</span>        }<a name="line.379"></a>
+<span class="sourceLineNo">380</span><a name="line.380"></a>
+<span class="sourceLineNo">381</span>        return encodedData;<a name="line.381"></a>
+<span class="sourceLineNo">382</span>    }<a name="line.382"></a>
+<span class="sourceLineNo">383</span><a name="line.383"></a>
+<span class="sourceLineNo">384</span>    /**<a name="line.384"></a>
+<span class="sourceLineNo">385</span>     * Converts the specified UTF-8 Base64 encoded String and decodes it to a resultant UTF-8 encoded string.<a name="line.385"></a>
+<span class="sourceLineNo">386</span>     *<a name="line.386"></a>
+<span class="sourceLineNo">387</span>     * @param base64Encoded a UTF-8 Base64 encoded String<a name="line.387"></a>
+<span class="sourceLineNo">388</span>     * @return the decoded String, UTF-8 encoded.<a name="line.388"></a>
+<span class="sourceLineNo">389</span>     */<a name="line.389"></a>
+<span class="sourceLineNo">390</span>    public static String decodeToString(String base64Encoded) {<a name="line.390"></a>
+<span class="sourceLineNo">391</span>        byte[] encodedBytes = CodecSupport.toBytes(base64Encoded);<a name="line.391"></a>
+<span class="sourceLineNo">392</span>        return decodeToString(encodedBytes);<a name="line.392"></a>
+<span class="sourceLineNo">393</span>    }<a name="line.393"></a>
+<span class="sourceLineNo">394</span><a name="line.394"></a>
+<span class="sourceLineNo">395</span>    /**<a name="line.395"></a>
+<span class="sourceLineNo">396</span>     * Decodes the specified Base64 encoded byte array and returns the decoded result as a UTF-8 encoded.<a name="line.396"></a>
+<span class="sourceLineNo">397</span>     *<a name="line.397"></a>
+<span class="sourceLineNo">398</span>     * @param base64Encoded a Base64 encoded byte array<a name="line.398"></a>
+<span class="sourceLineNo">399</span>     * @return the decoded String, UTF-8 encoded.<a name="line.399"></a>
+<span class="sourceLineNo">400</span>     */<a name="line.400"></a>
+<span class="sourceLineNo">401</span>    public static String decodeToString(byte[] base64Encoded) {<a name="line.401"></a>
+<span class="sourceLineNo">402</span>        byte[] decoded = decode(base64Encoded);<a name="line.402"></a>
+<span class="sourceLineNo">403</span>        return CodecSupport.toString(decoded);<a name="line.403"></a>
+<span class="sourceLineNo">404</span>    }<a name="line.404"></a>
+<span class="sourceLineNo">405</span><a name="line.405"></a>
+<span class="sourceLineNo">406</span>    /**<a name="line.406"></a>
+<span class="sourceLineNo">407</span>     * Converts the specified UTF-8 Base64 encoded String and decodes it to a raw Base64 decoded byte array.<a name="line.407"></a>
+<span class="sourceLineNo">408</span>     *<a name="line.408"></a>
+<span class="sourceLineNo">409</span>     * @param base64Encoded a UTF-8 Base64 encoded String<a name="line.409"></a>
+<span class="sourceLineNo">410</span>     * @return the raw Base64 decoded byte array.<a name="line.410"></a>
+<span class="sourceLineNo">411</span>     */<a name="line.411"></a>
+<span class="sourceLineNo">412</span>    public static byte[] decode(String base64Encoded) {<a name="line.412"></a>
+<span class="sourceLineNo">413</span>        byte[] bytes = CodecSupport.toBytes(base64Encoded);<a name="line.413"></a>
+<span class="sourceLineNo">414</span>        return decode(bytes);<a name="line.414"></a>
+<span class="sourceLineNo">415</span>    }<a name="line.415"></a>
+<span class="sourceLineNo">416</span><a name="line.416"></a>
+<span class="sourceLineNo">417</span>    /**<a name="line.417"></a>
+<span class="sourceLineNo">418</span>     * Decodes Base64 data into octets<a name="line.418"></a>
+<span class="sourceLineNo">419</span>     *<a name="line.419"></a>
+<span class="sourceLineNo">420</span>     * @param base64Data Byte array containing Base64 data<a name="line.420"></a>
+<span class="sourceLineNo">421</span>     * @return Array containing decoded data.<a name="line.421"></a>
+<span class="sourceLineNo">422</span>     */<a name="line.422"></a>
+<span class="sourceLineNo">423</span>    public static byte[] decode(byte[] base64Data) {<a name="line.423"></a>
+<span class="sourceLineNo">424</span>        // RFC 2045 requires that we discard ALL non-Base64 characters<a name="line.424"></a>
+<span class="sourceLineNo">425</span>        base64Data = discardNonBase64(base64Data);<a name="line.425"></a>
+<span class="sourceLineNo">426</span><a name="line.426"></a>
+<span class="sourceLineNo">427</span>        // handle the edge case, so we don't have to worry about it later<a name="line.427"></a>
+<span class="sourceLineNo">428</span>        if (base64Data.length == 0) {<a name="line.428"></a>
+<span class="sourceLineNo">429</span>            return new byte[0];<a name="line.429"></a>
+<span class="sourceLineNo">430</span>        }<a name="line.430"></a>
+<span class="sourceLineNo">431</span><a name="line.431"></a>
+<span class="sourceLineNo">432</span>        int numberQuadruple = base64Data.length / FOURBYTE;<a name="line.432"></a>
+<span class="sourceLineNo">433</span>        byte decodedData[];<a name="line.433"></a>
+<span class="sourceLineNo">434</span>        byte b1, b2, b3, b4, marker0, marker1;<a name="line.434"></a>
+<span class="sourceLineNo">435</span><a name="line.435"></a>
+<span class="sourceLineNo">436</span>        // Throw away anything not in base64Data<a name="line.436"></a>
+<span class="sourceLineNo">437</span><a name="line.437"></a>
+<span class="sourceLineNo">438</span>        int encodedIndex = 0;<a name="line.438"></a>
+<span class="sourceLineNo">439</span>        int dataIndex;<a name="line.439"></a>
+<span class="sourceLineNo">440</span>        {<a name="line.440"></a>
+<span class="sourceLineNo">441</span>            // this sizes the output array properly - rlw<a name="line.441"></a>
+<span class="sourceLineNo">442</span>            int lastData = base64Data.length;<a name="line.442"></a>
+<span class="sourceLineNo">443</span>            // ignore the '=' padding<a name="line.443"></a>
+<span class="sourceLineNo">444</span>            while (base64Data[lastData - 1] == PAD) {<a name="line.444"></a>
+<span class="sourceLineNo">445</span>                if (--lastData == 0) {<a name="line.445"></a>
+<span class="sourceLineNo">446</span>                    return new byte[0];<a name="line.446"></a>
+<span class="sourceLineNo">447</span>                }<a name="line.447"></a>
+<span class="sourceLineNo">448</span>            }<a name="line.448"></a>
+<span class="sourceLineNo">449</span>            decodedData = new byte[lastData - numberQuadruple];<a name="line.449"></a>
+<span class="sourceLineNo">450</span>        }<a name="line.450"></a>
+<span class="sourceLineNo">451</span><a name="line.451"></a>
+<span class="sourceLineNo">452</span>        for (int i = 0; i &lt; numberQuadruple; i++) {<a name="line.452"></a>
+<span class="sourceLineNo">453</span>            dataIndex = i * 4;<a name="line.453"></a>
+<span class="sourceLineNo">454</span>            marker0 = base64Data[dataIndex + 2];<a name="line.454"></a>
+<span class="sourceLineNo">455</span>            marker1 = base64Data[dataIndex + 3];<a name="line.455"></a>
+<span class="sourceLineNo">456</span><a name="line.456"></a>
+<span class="sourceLineNo">457</span>            b1 = base64Alphabet[base64Data[dataIndex]];<a name="line.457"></a>
+<span class="sourceLineNo">458</span>            b2 = base64Alphabet[base64Data[dataIndex + 1]];<a name="line.458"></a>
+<span class="sourceLineNo">459</span><a name="line.459"></a>
+<span class="sourceLineNo">460</span>            if (marker0 != PAD &amp;&amp; marker1 != PAD) {<a name="line.460"></a>
+<span class="sourceLineNo">461</span>                // No PAD e.g 3cQl<a name="line.461"></a>
+<span class="sourceLineNo">462</span>                b3 = base64Alphabet[marker0];<a name="line.462"></a>
+<span class="sourceLineNo">463</span>                b4 = base64Alphabet[marker1];<a name="line.463"></a>
+<span class="sourceLineNo">464</span><a name="line.464"></a>
+<span class="sourceLineNo">465</span>                decodedData[encodedIndex] = (byte) (b1 &lt;&lt; 2 | b2 &gt;&gt; 4);<a name="line.465"></a>
+<span class="sourceLineNo">466</span>                decodedData[encodedIndex + 1] = (byte) (((b2 &amp; 0xf) &lt;&lt; 4) | ((b3 &gt;&gt; 2) &amp; 0xf));<a name="line.466"></a>
+<span class="sourceLineNo">467</span>                decodedData[encodedIndex + 2] = (byte) (b3 &lt;&lt; 6 | b4);<a name="line.467"></a>
+<span class="sourceLineNo">468</span>            } else if (marker0 == PAD) {<a name="line.468"></a>
+<span class="sourceLineNo">469</span>                // Two PAD e.g. 3c[Pad][Pad]<a name="line.469"></a>
+<span class="sourceLineNo">470</span>                decodedData[encodedIndex] = (byte) (b1 &lt;&lt; 2 | b2 &gt;&gt; 4);<a name="line.470"></a>
+<span class="sourceLineNo">471</span>            } else {<a name="line.471"></a>
+<span class="sourceLineNo">472</span>                // One PAD e.g. 3cQ[Pad]<a name="line.472"></a>
+<span class="sourceLineNo">473</span>                b3 = base64Alphabet[marker0];<a name="line.473"></a>
+<span class="sourceLineNo">474</span>                decodedData[encodedIndex] = (byte) (b1 &lt;&lt; 2 | b2 &gt;&gt; 4);<a name="line.474"></a>
+<span class="sourceLineNo">475</span>                decodedData[encodedIndex + 1] = (byte) (((b2 &amp; 0xf) &lt;&lt; 4) | ((b3 &gt;&gt; 2) &amp; 0xf));<a name="line.475"></a>
+<span class="sourceLineNo">476</span>            }<a name="line.476"></a>
+<span class="sourceLineNo">477</span>            encodedIndex += 3;<a name="line.477"></a>
+<span class="sourceLineNo">478</span>        }<a name="line.478"></a>
+<span class="sourceLineNo">479</span>        return decodedData;<a name="line.479"></a>
+<span class="sourceLineNo">480</span>    }<a name="line.480"></a>
+<span class="sourceLineNo">481</span><a name="line.481"></a>
+<span class="sourceLineNo">482</span>    /**<a name="line.482"></a>
+<span class="sourceLineNo">483</span>     * Discards any characters outside of the base64 alphabet, per the requirements on page 25 of RFC 2045 - "Any<a name="line.483"></a>
+<span class="sourceLineNo">484</span>     * characters outside of the base64 alphabet are to be ignored in base64 encoded data."<a name="line.484"></a>
+<span class="sourceLineNo">485</span>     *<a name="line.485"></a>
+<span class="sourceLineNo">486</span>     * @param data The base-64 encoded data to groom<a name="line.486"></a>
+<span class="sourceLineNo">487</span>     * @return The data, less non-base64 characters (see RFC 2045).<a name="line.487"></a>
+<span class="sourceLineNo">488</span>     */<a name="line.488"></a>
+<span class="sourceLineNo">489</span>    static byte[] discardNonBase64(byte[] data) {<a name="line.489"></a>
+<span class="sourceLineNo">490</span>        byte groomedData[] = new byte[data.length];<a name="line.490"></a>
+<span class="sourceLineNo">491</span>        int bytesCopied = 0;<a name="line.491"></a>
+<span class="sourceLineNo">492</span><a name="line.492"></a>
+<span class="sourceLineNo">493</span>        for (byte aByte : data) {<a name="line.493"></a>
+<span class="sourceLineNo">494</span>            if (isBase64(aByte)) {<a name="line.494"></a>
+<span class="sourceLineNo">495</span>                groomedData[bytesCopied++] = aByte;<a name="line.495"></a>
+<span class="sourceLineNo">496</span>            }<a name="line.496"></a>
+<span class="sourceLineNo">497</span>        }<a name="line.497"></a>
+<span class="sourceLineNo">498</span><a name="line.498"></a>
+<span class="sourceLineNo">499</span>        byte packedData[] = new byte[bytesCopied];<a name="line.499"></a>
+<span class="sourceLineNo">500</span><a name="line.500"></a>
+<span class="sourceLineNo">501</span>        System.arraycopy(groomedData, 0, packedData, 0, bytesCopied);<a name="line.501"></a>
+<span class="sourceLineNo">502</span><a name="line.502"></a>
+<span class="sourceLineNo">503</span>        return packedData;<a name="line.503"></a>
+<span class="sourceLineNo">504</span>    }<a name="line.504"></a>
+<span class="sourceLineNo">505</span><a name="line.505"></a>
+<span class="sourceLineNo">506</span>}<a name="line.506"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
