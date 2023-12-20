@@ -228,14 +228,14 @@ They are outdated and all considered insecure!</p>
 <h2 id="CommandLineHasher-Usage">Usage</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Ensure you have access to the <code>shiro-tools-hasher-1.12.0-cli.jar</code> file.
+<p>Ensure you have access to the <code>shiro-tools-hasher-1.13.0-cli.jar</code> file.
 You can either find this in a source build in the <em>buildroot</em>`/tools/hasher/target` directory or via download through Maven.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Use the following to download from Maven Central into
-# ~/.m2/repository/org/apache/shiro/tools/shiro-tools-hasher/1.12.0/shiro-tools-hasher-1.12.0-cli.jar
-$ mvn dependency:get -DgroupId=org.apache.shiro.tools -DartifactId=shiro-tools-hasher -Dclassifier=cli -Dversion=1.12.0</code></pre>
+# ~/.m2/repository/org/apache/shiro/tools/shiro-tools-hasher/1.13.0/shiro-tools-hasher-1.13.0-cli.jar
+$ mvn dependency:get -DgroupId=org.apache.shiro.tools -DartifactId=shiro-tools-hasher -Dclassifier=cli -Dversion=1.13.0</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -243,11 +243,11 @@ $ mvn dependency:get -DgroupId=org.apache.shiro.tools -DartifactId=shiro-tools-h
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ java -jar shiro-tools-hasher-1.12.0-cli.jar</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ java -jar shiro-tools-hasher-1.13.0-cli.jar</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This will print all available options for both standard (MD5, SHA1) and more complex password hashing scenarios.</p>
+<p>This will print all available options for standard (argon2, bcrypt) and less secure hashing scenarios.</p>
 </div>
 </div>
 </div>
@@ -255,7 +255,9 @@ $ mvn dependency:get -DgroupId=org.apache.shiro.tools -DartifactId=shiro-tools-h
 <h2 id="CommandLineHasher-CommonScenarios">Common Scenarios</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Please read the printed instructions for the above command. It will provide an exhaustive list of instructions which will help you use the hasher depending on your needs. However, we&#8217;ve provided some quick reference usages/scenarios below for convenience.</p>
+<p>Please read the printed instructions for the above command.
+It will provide an exhaustive list of instructions which will help you use the hasher depending on your needs.
+However, we&#8217;ve provided some quick reference usages/scenarios below for convenience.</p>
 </div>
 <div class="sect2 iniUserPasswords">
 <h3 id="CommandLineHasher-shiro"><code>shiro.ini</code> User Passwords</h3>
@@ -264,7 +266,7 @@ $ mvn dependency:get -DgroupId=org.apache.shiro.tools -DartifactId=shiro-tools-h
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ java -jar shiro-tools-hasher-1.12.0-cli.jar -p</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ java -jar shiro-tools-hasher-1.13.0-cli.jar -p</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -277,11 +279,12 @@ Password to hash (confirm):</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>When this command executes, it will print out the securely-salted-iterated-and-hashed password. For example:</p>
+<p>When this command executes, it will print out the securely-salted-iterated-and-hashed password.
+For example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$shiro1$SHA-256$500000$eWpVX2tGX7WCP2J+jMCNqw==$it/NRclMOHrfOvhAEFZ0mxIZRdbcfqIBdwdwdDXW2dM=</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[INFO ] $shiro2$argon2id$v=19$t=1,m=65536,p=4$H5z81Jpr4ntZr3MVtbOUBw$fJDgZCLZjMC6A2HhnSpxULMmvVdW3su+/GCU3YbxfFQ</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -291,11 +294,12 @@ Password to hash (confirm):</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[users]
 ...
-user1 = $shiro1$SHA-256$500000$eWpVX2tGX7WCP2J+jMCNqw==$it/NRclMOHrfOvhAEFZ0mxIZRdbcfqIBdwdwdDXW2dM=</code></pre>
+user1 = $shiro2$argon2id$v=19$t=1,m=65536,p=4$H5z81Jpr4ntZr3MVtbOUBw$fJDgZCLZjMC6A2HhnSpxULMmvVdW3su+/GCU3YbxfFQ</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You will also need to ensure that the implicit <code>iniRealm</code> uses a <code>CredentialsMatcher</code> that knows how to perform secure hashed password comparisons. So configure this in the <code>[main]</code> section as well:</p>
+<p>You will also need to ensure that the implicit <code>iniRealm</code> uses a <code>CredentialsMatcher</code> that knows how to perform secure hashed password comparisons.
+So configure this in the <code>[main]</code> section as well:</p>
 </div>
 <div class="listingblock">
 <div class="content">
