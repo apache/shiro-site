@@ -318,6 +318,9 @@ During form resubmissions, the original request is replayed, and the response is
     <param-value>false</param-value>
 </context-param>
 ----
+Alternatively, you can set `org.apache.shiro.form-resubmit.secure-cookies` system property in the same manner as above.
+
+By default, form resubmission logic replays the request to the original URI. This works for most cases, but in some deployments, such as certain Docker or Kubernetes, host, port or both need to be modified during resubmission. There are two system properties to allow this: `org.apache.shiro.form-resubmit-host` (String) and `org.apache.shiro.form-resubmit-port` (Integer).
 
 ==== Configuring for Tomcat / Jetty (or without Jakarta Faces)
 If Jakarta Faces (JSF) is not available in your environment, you need to put the following into your `web.xml` to enable proper OmniFaces initialization:
