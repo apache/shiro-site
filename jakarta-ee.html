@@ -779,6 +779,12 @@ authc.logoutFallbackType = $fallbackType</code></pre>
 &lt;/context-param&gt;</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Alternatively, you can set <code>org.apache.shiro.form-resubmit.secure-cookies</code> system property in the same manner as above.</p>
+</div>
+<div class="paragraph">
+<p>By default, form resubmission logic replays the request to the original URI. This works for most cases, but in some deployments, such as certain Docker or Kubernetes, host, port or both need to be modified during resubmission. There are two system properties to allow this: <code>org.apache.shiro.form-resubmit-host</code> (String) and <code>org.apache.shiro.form-resubmit-port</code> (Integer).</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="configuring_for_tomcat_jetty_or_without_jakarta_faces">Configuring for Tomcat / Jetty (or without Jakarta Faces)</h4>
@@ -927,7 +933,7 @@ See <a href="jaxrs.html">Jax-RS documentation</a> for more details.</p>
           <div class="copyright-footer justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
             <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
-            <p class="text-muted">Copyright &copy; 2008-2023 The Apache Software Foundation</p>
+            <p class="text-muted">Copyright &copy; 2008-2024 The Apache Software Foundation</p>
           </div>
         </div>
 
