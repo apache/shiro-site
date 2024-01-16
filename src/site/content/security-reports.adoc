@@ -29,6 +29,12 @@ A https://www.apache.org/security/committers.html[more detailed description of t
 
 == Apache Shiro Vulnerability Reports
 
+=== link:https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-46749[CVE-2023-46749]
+
+Apache Shiro before 1.13.0 or 2.0.0-alpha-4, may be susceptible to a path traversal attack that results in an authentication bypass when used together with path rewriting
+
+**Mitigation:** Update to Apache Shiro 1.13.0+ or 2.0.0-alpha-4+, or ensure `blockSemicolon` is enabled (this is the default).
+
 === link:https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-46750[CVE-2023-46750]
 
 URL Redirection to Untrusted Site ('Open Redirect') vulnerability when "form" authentication is used in Apache Shiro.
