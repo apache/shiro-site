@@ -50,7 +50,7 @@ jobs:
 
       - name: 'Copy build to site repo'
         run: |
-          rsync -a src/target/website/. ./asf-site
+          rsync -avP --delete --exclude .git src/target/website/. ./asf-site
         shell: bash
 
       - name: 'commit site'

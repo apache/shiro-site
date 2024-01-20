@@ -59,7 +59,7 @@ jobs:
 
       - name: 'Copy to staging'
         run: |
-          rsync -a src/target/website/. ./site-staging 
+          rsync -avP --delete --exclude .git src/target/website/. ./asf-staging
         shell: bash
 
       - name: 'commit staging'
