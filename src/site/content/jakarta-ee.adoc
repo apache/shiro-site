@@ -25,7 +25,7 @@ Jakarta EE module depends on CDI and Jax-RS submodules to fully integrate with t
 
 == Features
 * Configure Shiro automatically with sensible defaults for Jakarta EE, with minimal, or no configuration aside from shiro.ini.
-* Use shiro.ini as usual to secure web application, Jax-RS paths and endpoints.
+* Use shiro.ini as usual to secure web applications, Jax-RS paths and endpoints.
 * Forms are automatically saved if sessions expire and seamlessly submitted upon subsequent login.
 * Use Shiro-secured application behind a load balancer or an SSL-terminating proxy (haproxy, nginx, etc.) easily.
 * Use `@Named` CDI beans in shiro.ini.
@@ -38,7 +38,7 @@ Jakarta EE module depends on CDI and Jax-RS submodules to fully integrate with t
 === Jakarta EE Security Annotations (JSR-250)
 In addition to all Shiro annotations, Jakarta EE module allows to specify Jakarta EE security annotations such as `@RolesAllowed`, `@DenyAll` and `@PermitAll` on your beans
 
-=== How to use Jakarta 9+ (jakarta.* namespace) - replace LATEST with the version number
+=== How to use Jakarta 9+ (jakarta.* namespace)
 Use the Shiro artifacts with Jakarta classifiers:
 [source,xml]
 ----
@@ -69,11 +69,12 @@ Use the Shiro artifacts with Jakarta classifiers:
 <dependency>
   <groupId>org.omnifaces</groupId>
   <artifactId>omnifaces</artifactId>
+  <!-- replace LATEST with a version number -->
   <version>LATEST</version>
 </dependency>
 ----
 
-Import the Shiro BOM as seen below (replace LATEST with the version number):
+Import the Shiro BOM as seen below:
 [source,xml]
 ----
 <dependencyManagement>
@@ -81,7 +82,7 @@ Import the Shiro BOM as seen below (replace LATEST with the version number):
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-bom</artifactId>
-            <version>LATEST</version>
+            <version>${versions.latestAlphaRelease}</version>
             <scope>import</scope>
             <type>pom</type>
         </dependency>
