@@ -4,16 +4,16 @@
 :jbake-type: page
 :jbake-status: published
 :jbake-tags: documentation, hashes, command-line, cli, hasher, tool
-:shiro-hasv2: true
 :idprefix:
 :icons: font
 :toc:
 
-Shiro 1.2.0 and later provides a command line program that can hash strings and resources (files, URLs, classpath entries) of almost any type. To use it, you must have a Java Virtual Machine installed and the 'java' command must be accessible in your `$PATH` environment variable.
+Shiro 2.0.0 and later provides a command line program that can hash strings and resources (files, URLs, classpath entries) of almost any type.
+To use it, you must have a Java Virtual Machine installed and the 'java' command must be accessible in your `$PATH` environment variable.
 
 [CAUTION]
 ====
-Do not use the hashes provided in the command line hasher 1.x versions anymore!
+Do not use the hashes provided in the link:../command-line-hasher.html[command line hasher v1.x] versions anymore!
 They are outdated and all considered insecure!
 ====
 
@@ -38,12 +38,14 @@ Once you have access to the jar, you can run the following command:
 $ java -jar shiro-tools-hasher-${versions.latestRelease}-cli.jar
 ----
 
-This will print all available options for both standard (MD5, SHA1) and more complex password hashing scenarios.
+This will print all available options for standard (argon2, bcrypt) and less secure hashing scenarios.
 
 [#CommandLineHasher-CommonScenarios]
 == Common Scenarios
 
-Please read the printed instructions for the above command. It will provide an exhaustive list of instructions which will help you use the hasher depending on your needs. However, we've provided some quick reference usages/scenarios below for convenience.
+Please read the printed instructions for the above command.
+It will provide an exhaustive list of instructions which will help you use the hasher depending on your needs.
+However, we've provided some quick reference usages/scenarios below for convenience.
 
 [#CommandLineHasher-shiro.iniUserPasswords]
 === `shiro.ini` User Passwords
@@ -63,11 +65,12 @@ Password to hash:
 Password to hash (confirm):
 ----
 
-When this command executes, it will print out the securely-salted-iterated-and-hashed password. For example:
+When this command executes, it will print out the securely-salted-iterated-and-hashed password.
+For example:
 
 [source,bash]
 ----
-$shiro1$SHA-256$500000$eWpVX2tGX7WCP2J+jMCNqw==$it/NRclMOHrfOvhAEFZ0mxIZRdbcfqIBdwdwdDXW2dM=
+[INFO ] $shiro2$argon2id$v=19$t=1,m=65536,p=4$H5z81Jpr4ntZr3MVtbOUBw$fJDgZCLZjMC6A2HhnSpxULMmvVdW3su+/GCU3YbxfFQ
 ----
 
 Take this value and place it as the password in the user definition line (followed by any optional roles) as defined in the link:/configuration.html#Configuration-INIConfiguration-Sections-users[INI Users Configuration] documentation. For example:
@@ -76,10 +79,11 @@ Take this value and place it as the password in the user definition line (follow
 ----
 [users]
 ...
-user1 = $shiro1$SHA-256$500000$eWpVX2tGX7WCP2J+jMCNqw==$it/NRclMOHrfOvhAEFZ0mxIZRdbcfqIBdwdwdDXW2dM=
+user1 = $shiro2$argon2id$v=19$t=1,m=65536,p=4$H5z81Jpr4ntZr3MVtbOUBw$fJDgZCLZjMC6A2HhnSpxULMmvVdW3su+/GCU3YbxfFQ
 ----
 
-You will also need to ensure that the implicit `iniRealm` uses a `CredentialsMatcher` that knows how to perform secure hashed password comparisons. So configure this in the `[main]` section as well:
+You will also need to ensure that the implicit `iniRealm` uses a `CredentialsMatcher` that knows how to perform secure hashed password comparisons.
+So configure this in the `[main]` section as well:
 
 [source,ini]
 ----
