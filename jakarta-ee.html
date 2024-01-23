@@ -369,7 +369,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
 <p>Configure Shiro automatically with sensible defaults for Jakarta EE, with minimal, or no configuration aside from shiro.ini.</p>
 </li>
 <li>
-<p>Use shiro.ini as usual to secure web application, Jax-RS paths and endpoints.</p>
+<p>Use shiro.ini as usual to secure web applications, Jax-RS paths and endpoints.</p>
 </li>
 <li>
 <p>Forms are automatically saved if sessions expire and seamlessly submitted upon subsequent login.</p>
@@ -404,7 +404,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
 </div>
 </div>
 <div class="sect2">
-<h3 id="how_to_use_jakarta_9_jakarta_namespace_replace_latest_with_the_version_number">How to use Jakarta 9+ (jakarta.* namespace) - replace LATEST with the version number</h3>
+<h3 id="how_to_use_jakarta_9_jakarta_namespace">How to use Jakarta 9+ (jakarta.* namespace)</h3>
 <div class="paragraph">
 <p>Use the Shiro artifacts with Jakarta classifiers:</p>
 </div>
@@ -437,12 +437,13 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
 &lt;dependency&gt;
   &lt;groupId&gt;org.omnifaces&lt;/groupId&gt;
   &lt;artifactId&gt;omnifaces&lt;/artifactId&gt;
+  &lt;!-- replace LATEST with a version number --&gt;
   &lt;version&gt;LATEST&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Import the Shiro BOM as seen below (replace LATEST with the version number):</p>
+<p>Import the Shiro BOM as seen below:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -451,7 +452,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
         &lt;dependency&gt;
             &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
             &lt;artifactId&gt;shiro-bom&lt;/artifactId&gt;
-            &lt;version&gt;LATEST&lt;/version&gt;
+            &lt;version&gt;2.0.0-alpha-4&lt;/version&gt;
             &lt;scope&gt;import&lt;/scope&gt;
             &lt;type&gt;pom&lt;/type&gt;
         &lt;/dependency&gt;
