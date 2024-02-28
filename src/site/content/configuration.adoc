@@ -439,40 +439,33 @@ Each line in the [users] section must conform to the following format:
 [#Configuration-INIConfiguration-Sections-users-EncryptingPasswords]
 ===== Encrypting Passwords
 
-If you don't want the [users] section passwords to be in plain-text, you can encrypt them using your favorite hash algorithm (MD5, Sha1, Sha256, etc.) however you like and use the resulting string as the password value. By default, the password string is expected to be Hex encoded, but can be configured to be Base64 encoded instead (see below).
+Since Shiro 2.0, the `[users]` section cannot contain plain-text passwords.
+You can encrypt them using https://en.wikipedia.org/wiki/Key_derivation_function[key derivation functions].
+Shiro provides implementations for bcrypt and argon2.
+If unsure, use argon2 derived passwords.
+
+The algorithms from Shiro 1 (e.g. md5, SHA1, SHA256, etc.) are long deemed insecure and not supported anymore.
+There is neither a direct migration path nor backward compatibility.
+
 
 [NOTE]
 ====
 .Easy Secure Passwords
-To save time and use best-practices, you might want to use Shiro's link:command-line-hasher.html[Command Line Hasher], which will hash passwords as well as any other type of resource. It is especially convenient for encrypting INI `[users]` passwords.
+To save time and use best-practices, you might want to use Shiro's link:command-line-hasher.html[Command Line Hasher], which will apply one of the secure KDFs to a given password as well as any other type of resources.
+It is especially convenient for encrypting INI `[users]` passwords.
 ====
 
-Once you've specified the hashed text password values, you have to tell Shiro that these are encrypted. You do that by configuring the implicitly created `iniRealm` in the [main] section to use an appropriate `CredentialsMatcher` implementation corresponding to the hash algorithm you've specified:
+Once you've specified the derived text password values, you have to tell Shiro that these are encrypted.
+You do that by configuring the implicitly created `iniRealm` in the [main] section to use an appropriate `CredentialsMatcher` implementation corresponding to the hash algorithm you've specified:
 
 [source,ini]
 ----
 [main]
-...
-sha256Matcher = org.apache.shiro.authc.credential.Sha256CredentialsMatcher
-...
-iniRealm.credentialsMatcher = $sha256Matcher
-...
+# Shiro2CryptFormat
 
 [users]
 # user1 = sha256-hashed-hex-encoded password, role1, role2, ...
-user1 = 2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b, role1, role2, ...
-----
-
-You can configure any properties on the `CredentialsMatcher` like any other object to reflect your hashing strategy, for example, to specify if salting is used or how many hash iterations to execute. See the link:static/current/apidocs/org/apache/shiro/authc/credential/HashedCredentialsMatcher.html[`org.apache.shiro.authc.credential.HashedCredentialsMatcher`] JavaDoc to better understand hashing strategies and if they might be useful to you.
-
-For example, if your users' password strings were Base64 encoded instead of the default Hex, you could specify:
-
-[source,ini]
-----
-[main]
-...
-# true = hex, false = base64:
-sha256Matcher.storedCredentialsHexEncoded = false
+user1 = $shiro2$argon2id$v=19$t=1,m=65536,p=4$H5z81Jpr4ntZr3MVtbOUBw$fJDgZCLZjMC6A2HhnSpxULMmvVdW3su+/GCU3YbxfFQ, role1, role2, ...
 ----
 
 [#Configuration-INIConfiguration-Sections-roles]

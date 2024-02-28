@@ -31,6 +31,15 @@
 		</div>
 	</#if>
 
+	<#import "macros/versions.ftl" as versions>
+  <#if (content.uri)?contains("/v2/") || (content.uri)?starts_with("v2/")>
+		<@versions.shirov2 />
+	<#else>
+		<#-- this is a shiro v1 page -->
+		<#assign hasv2=((content["shiro-hasv2"])?? && (content["shiro-hasv2"]) == "true") />
+		<@versions.shirov1 (content.uri) hasv2 />
+  </#if>
+
 	<@content.body?interpret />
 
 	<hr />
