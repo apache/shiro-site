@@ -90,6 +90,11 @@ Import the Shiro BOM as seen below:
 </dependencyManagement>
 ----
 
+== Configuration
+No additional configuration is required to use Shiro Jakarta EE module. The module is bootstrapped automatically. +
+Only `shiro.ini` is needed and can be configured as described in link:web.html#web_ini[Web Configuration] +
+See configuration options below if any customization is needed.
+
 == CDI Features
 Use Shiro and Jakarta Security annotations on any CDI bean, with no additional annotations required:
 [source,java]
@@ -102,29 +107,6 @@ public class MyBean { }
 @RolesAllowed("role")
 public class MyRoleBean { }
 ----
-=== Configuring CDI without Jakarta EE module or shiro.ini
-Below is an example of Shiro configuration in Java code with CDI only (no shiro.ini):
-[source,java]
-----
-@ApplicationScoped
-public class MyBean {
-    private DefaultSecurityManager securityManager;
-
-    void configureSecurityManager(@Observes @Initialized(ApplicationScoped.class) Object nothing) {
-        var realm = new SimpleAccountRealm();
-        securityManager = new DefaultSecurityManager(realm);
-        realm.addAccount("powerful", "awesome", "admin");
-        realm.addAccount("regular", "meh", "user");
-        SecurityUtils.setSecurityManager(securityManager);
-    }
-
-    void destroySecurityManager(@Observes @Destroyed(ApplicationScoped.class) Object nothing) {
-        securityManager.destroy();
-        SecurityUtils.setSecurityManager(null);
-    }
-}
-----
-
 === Injecting Shiro components and APIs
 Shiro APIs can be `@Inject` into CDI and EJB beans:
 
@@ -154,6 +136,7 @@ public class MyBean {
 If `Session` is annotated with `@NoSessionCreation` and there is no existing session, `InvalidSessionException` is thrown when accessing the Injected session. +
 Any Shiro principal object can be injected if annotated by `@Principal`. It must be injected as `Supplier<MyPrincipalClass>`, and `Supplier.get()` may return null if there are no principals available of the injected type.
 
+[#ee_module]
 == Jakarta EE Integration Module
 Jakarta EE integration module was inspired by this link:https://balusc.omnifaces.org/2013/01/apache-shiro-is-it-ready-for-java-ee-6.html[OmniFaces article] and brings everything together to seamlessly create secure Jakarta EE applications easily and with minimal configuration. The module works "the Shiro way" and uses shiro.ini in a straight-forward and intuitive way.
 
@@ -299,6 +282,7 @@ authc.loginFallbackType = $fallbackType
 authc.logoutFallbackType = $fallbackType
 ----
 
+[#form_resubmit]
 ==== Automatic form submit upon subsequent login
 Jakarta EE module will automatically resubmit forms when session expires and a subsequent re-login occurs. This will prevent users data from loss due to sessions timing out.
 
@@ -331,6 +315,29 @@ If Jakarta Faces (JSF) is not available in your environment, you need to put the
     <param-name>org.omnifaces.SKIP_DEPLOYMENT_EXCEPTION</param-name>
     <param-value>true</param-value>
 </context-param>
+----
+
+=== Configuring CDI without Jakarta EE module or shiro.ini
+Below is an example of Shiro configuration in Java code with CDI only (no shiro.ini):
+[source,java]
+----
+@ApplicationScoped
+public class MyBean {
+    private DefaultSecurityManager securityManager;
+
+    void configureSecurityManager(@Observes @Initialized(ApplicationScoped.class) Object nothing) {
+        var realm = new SimpleAccountRealm();
+        securityManager = new DefaultSecurityManager(realm);
+        realm.addAccount("powerful", "awesome", "admin");
+        realm.addAccount("regular", "meh", "user");
+        SecurityUtils.setSecurityManager(securityManager);
+    }
+
+    void destroySecurityManager(@Observes @Destroyed(ApplicationScoped.class) Object nothing) {
+        securityManager.destroy();
+        SecurityUtils.setSecurityManager(null);
+    }
+}
 ----
 
 [#principal_propagation]
