@@ -482,6 +482,16 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
 </div>
 </div>
 <div class="sect1">
+<h2 id="configuration">Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>No additional configuration is required to use Shiro Jakarta EE module. The module is bootstrapped automatically.<br>
+Only <code>shiro.ini</code> is needed and can be configured as described in <a href="web.html#web_ini">Web Configuration</a><br>
+See configuration options below if any customization is needed.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="cdi_features">CDI Features</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -496,33 +506,6 @@ public class MyBean { }
 @RequestScoped
 @RolesAllowed("role")
 public class MyRoleBean { }</code></pre>
-</div>
-</div>
-<div class="sect2">
-<h3 id="configuring_cdi_without_jakarta_ee_module_or_shiro_ini">Configuring CDI without Jakarta EE module or shiro.ini</h3>
-<div class="paragraph">
-<p>Below is an example of Shiro configuration in Java code with CDI only (no shiro.ini):</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ApplicationScoped
-public class MyBean {
-    private DefaultSecurityManager securityManager;
-
-    void configureSecurityManager(@Observes @Initialized(ApplicationScoped.class) Object nothing) {
-        var realm = new SimpleAccountRealm();
-        securityManager = new DefaultSecurityManager(realm);
-        realm.addAccount("powerful", "awesome", "admin");
-        realm.addAccount("regular", "meh", "user");
-        SecurityUtils.setSecurityManager(securityManager);
-    }
-
-    void destroySecurityManager(@Observes @Destroyed(ApplicationScoped.class) Object nothing) {
-        securityManager.destroy();
-        SecurityUtils.setSecurityManager(null);
-    }
-}</code></pre>
-</div>
 </div>
 </div>
 <div class="sect2">
@@ -562,13 +545,13 @@ Any Shiro principal object can be injected if annotated by <code>@Principal</cod
 </div>
 </div>
 <div class="sect1">
-<h2 id="jakarta_ee_integration_module">Jakarta EE Integration Module</h2>
+<h2 id="ee_module">Jakarta EE Integration Module</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Jakarta EE integration module was inspired by this <a href="https://balusc.omnifaces.org/2013/01/apache-shiro-is-it-ready-for-java-ee-6.html">OmniFaces article</a> and brings everything together to seamlessly create secure Jakarta EE applications easily and with minimal configuration. The module works "the Shiro way" and uses shiro.ini in a straight-forward and intuitive way.</p>
 </div>
 <div class="sect2">
-<h3 id="configuration">Configuration</h3>
+<h3 id="configuration_2">Configuration</h3>
 <div class="sect3">
 <h4 id="enabling_rememberme_functionality">Enabling RememberMe functionality</h4>
 <div class="paragraph">
@@ -773,7 +756,7 @@ authc.logoutFallbackType = $fallbackType</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="automatic_form_submit_upon_subsequent_login">Automatic form submit upon subsequent login</h4>
+<h4 id="form_resubmit">Automatic form submit upon subsequent login</h4>
 <div class="paragraph">
 <p>Jakarta EE module will automatically resubmit forms when session expires and a subsequent re-login occurs. This will prevent users data from loss due to sessions timing out.</p>
 </div>
@@ -817,6 +800,33 @@ authc.logoutFallbackType = $fallbackType</code></pre>
     &lt;param-value&gt;true&lt;/param-value&gt;
 &lt;/context-param&gt;</code></pre>
 </div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuring_cdi_without_jakarta_ee_module_or_shiro_ini">Configuring CDI without Jakarta EE module or shiro.ini</h3>
+<div class="paragraph">
+<p>Below is an example of Shiro configuration in Java code with CDI only (no shiro.ini):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ApplicationScoped
+public class MyBean {
+    private DefaultSecurityManager securityManager;
+
+    void configureSecurityManager(@Observes @Initialized(ApplicationScoped.class) Object nothing) {
+        var realm = new SimpleAccountRealm();
+        securityManager = new DefaultSecurityManager(realm);
+        realm.addAccount("powerful", "awesome", "admin");
+        realm.addAccount("regular", "meh", "user");
+        SecurityUtils.setSecurityManager(securityManager);
+    }
+
+    void destroySecurityManager(@Observes @Destroyed(ApplicationScoped.class) Object nothing) {
+        securityManager.destroy();
+        SecurityUtils.setSecurityManager(null);
+    }
+}</code></pre>
 </div>
 </div>
 <div class="sect3">
