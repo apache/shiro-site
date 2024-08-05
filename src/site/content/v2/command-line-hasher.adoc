@@ -79,7 +79,7 @@ Take this value and place it as the password in the user definition line (follow
 ----
 [users]
 ...
-user1 = $shiro2$argon2id$v=19$t=1,m=65536,p=4$H5z81Jpr4ntZr3MVtbOUBw$fJDgZCLZjMC6A2HhnSpxULMmvVdW3su+/GCU3YbxfFQ
+user1 = "$shiro2$argon2id$v=19$t=1,m=65536,p=4$H5z81Jpr4ntZr3MVtbOUBw$fJDgZCLZjMC6A2HhnSpxULMmvVdW3su+/GCU3YbxfFQ"
 ----
 
 You will also need to ensure that the implicit `iniRealm` uses a `CredentialsMatcher` that knows how to perform secure hashed password comparisons.
