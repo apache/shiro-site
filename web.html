@@ -736,7 +736,7 @@ For example, let&#8217;s assume that there are the following chain definitions:<
 <p>Being able to react to path specific configuration, i.e. the <code>[optional_configN]</code> part of a filter token, is a unique feature available to Shiro filters.</p>
 </div>
 <div class="paragraph">
-<p>If you want to create your own <code>javax.servlet.Filter</code> implementation that can also do this, make sure your filter subclasses <a href="static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html">org.apache.shiro.web.filter.PathMatchingFilter</a>.</p>
+<p>If you want to create your own <code>javax.servlet.Filter</code> implementation that can also do this, make sure your filter subclasses <a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/PathMatchingFilter.html">org.apache.shiro.web.filter.PathMatchingFilter</a>.</p>
 </div>
 </td>
 </tr>
@@ -791,7 +791,7 @@ authc.loginUrl = /login.jsp
 </div>
 </div>
 <div class="paragraph">
-<p>The default Filter instances available automatically are defined by the <a href="static/current/apidocs/org/apache/shiro/web/filter/mgt/DefaultFilter.html">DefaultFilter enum</a> and the enum&#8217;s <code>name</code> field is the name available for configuration. They are:</p>
+<p>The default Filter instances available automatically are defined by the <a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/mgt/DefaultFilter.html">DefaultFilter enum</a> and the enum&#8217;s <code>name</code> field is the name available for configuration. They are:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -807,55 +807,55 @@ authc.loginUrl = /login.jsp
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">anon</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authc/AnonymousFilter.html">org.apache.shiro.web.filter.authc.AnonymousFilter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authc/AnonymousFilter.html">org.apache.shiro.web.filter.authc.AnonymousFilter</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">authc</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html">org.apache.shiro.web.filter.authc.FormAuthenticationFilter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html">org.apache.shiro.web.filter.authc.FormAuthenticationFilter</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">authcBasic</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authc/BasicHttpAuthenticationFilter.html">org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authc/BasicHttpAuthenticationFilter.html">org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">authcBearer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authc/BearerHttpAuthenticationFilter.html">org.apache.shiro.web.filter.authc.BearerHttpAuthenticationFilter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authc/BearerHttpAuthenticationFilter.html">org.apache.shiro.web.filter.authc.BearerHttpAuthenticationFilter</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">invalidRequest</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/InvalidRequestFilter.html">org.apache.shiro.web.filter.InvalidRequestFilter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/InvalidRequestFilter.html">org.apache.shiro.web.filter.InvalidRequestFilter</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">logout</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authc/LogoutFilter.html">org.apache.shiro.web.filter.authc.LogoutFilter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authc/LogoutFilter.html">org.apache.shiro.web.filter.authc.LogoutFilter</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">noSessionCreation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/session/NoSessionCreationFilter.html">org.apache.shiro.web.filter.session.NoSessionCreationFilter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/session/NoSessionCreationFilter.html">org.apache.shiro.web.filter.session.NoSessionCreationFilter</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">perms</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authz/PermissionsAuthorizationFilter.html">org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authz/PermissionsAuthorizationFilter.html">org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">port</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authz/PortFilter.html">org.apache.shiro.web.filter.authz.PortFilter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authz/PortFilter.html">org.apache.shiro.web.filter.authz.PortFilter</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">rest</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authz/HttpMethodPermissionFilter.html">org.apache.shiro.web.filter.authz.HttpMethodPermissionFilter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authz/HttpMethodPermissionFilter.html">org.apache.shiro.web.filter.authz.HttpMethodPermissionFilter</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">roles</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authz/RolesAuthorizationFilter.html">org.apache.shiro.web.filter.authz.RolesAuthorizationFilter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authz/RolesAuthorizationFilter.html">org.apache.shiro.web.filter.authz.RolesAuthorizationFilter</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ssl</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authz/SslFilter.html">org.apache.shiro.web.filter.authz.SslFilter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authz/SslFilter.html">org.apache.shiro.web.filter.authz.SslFilter</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/org/apache/shiro/web/filter/authc/UserFilter.html">org.apache.shiro.web.filter.authc.UserFilter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authc/UserFilter.html">org.apache.shiro.web.filter.authc.UserFilter</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -874,7 +874,7 @@ authc.loginUrl = /login.jsp
 <p>This is a powerful concept because it is often more convenient to enable or disable a filter based on certain requirements than to change the static filter chain definition, which would be permanent and inflexible.</p>
 </div>
 <div class="paragraph">
-<p>Shiro accomplishes this via its <a href="static/current/apidocs/org/apache/shiro/web/servlet/OncePerRequestFilter.html">OncePerRequestFilter</a> abstract parent class. All of Shiro&#8217;s out-of-the-box Filter implementations subclass this one and therefore are able to be enabled or disabled without removing them from the filter chain. You can subclass this class for your own filter implementations if you need this functionality as well*.</p>
+<p>Shiro accomplishes this via its <a href="static/current/apidocs/shiro-web/org/apache/shiro/web/servlet/OncePerRequestFilter.html">OncePerRequestFilter</a> abstract parent class. All of Shiro&#8217;s out-of-the-box Filter implementations subclass this one and therefore are able to be enabled or disabled without removing them from the filter chain. You can subclass this class for your own filter implementations if you need this functionality as well*.</p>
 </div>
 <div class="paragraph">
 <p>*https://issues.apache.org/jira/browse/SHIRO-224[SHIRO-224] will hopefully enable this feature for any filter, not just those subclassing <code>OncePerRequestFilter</code>. If this is important to you, please vote for the issue.</p>
@@ -882,7 +882,7 @@ authc.loginUrl = /login.jsp
 <div class="sect2">
 <h3 id="general_enablingdisabling">General Enabling/Disabling</h3>
 <div class="paragraph">
-<p>The <a href="static/current/apidocs/org/apache/shiro/web/servlet/OncePerRequestFilter.html">OncePerRequestFilter</a> (and all of its subclasses) supports enabling/disabling across all requests as well as on a per-request basis.</p>
+<p>The <a href="static/current/apidocs/shiro-web/org/apache/shiro/web/servlet/OncePerRequestFilter.html">OncePerRequestFilter</a> (and all of its subclasses) supports enabling/disabling across all requests as well as on a per-request basis.</p>
 </div>
 <div class="paragraph">
 <p>General enabling or disabling of a filter for all requests is done by setting its <code>enabled</code> property to true or false. The default setting is <code>true</code> since most filters inherently need to execute if they are configured in a chain.</p>
@@ -920,7 +920,7 @@ ssl.enabled = false
 <div class="sect2">
 <h3 id="path_specific_enablingdisabling">Path-specific Enabling/Disabling</h3>
 <div class="paragraph">
-<p>Shiro&#8217;s <a href="static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html">PathMatchingFilter</a> (a subclass of <code>OncePerRequestFilter</code> has the ability to react to configuration based on a <em>specific path</em> being filtered. This means you can enable or disable a filter based on the path and the path-specific configuration in addition to the incoming request and response.</p>
+<p>Shiro&#8217;s <a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/PathMatchingFilter.html">PathMatchingFilter</a> (a subclass of <code>OncePerRequestFilter</code> has the ability to react to configuration based on a <em>specific path</em> being filtered. This means you can enable or disable a filter based on the path and the path-specific configuration in addition to the incoming request and response.</p>
 </div>
 <div class="paragraph">
 <p>If you need to be able to react to the matching path and the path-specific configuration to determine if a filter is enabled or disabled, instead of overriding <code>OncePerRequestFilter</code> <code>isEnabled(request,response)</code> method, you would override the <code>PathMatchingFilter</code> <code>isEnabled(request,response,path,pathConfig)</code> method instead.</p>
@@ -989,7 +989,7 @@ invalidRequest.blockNonAscii = true
 <div class="sect2">
 <h3 id="http_strict_transport_security_hsts">HTTP Strict Transport Security (HSTS)</h3>
 <div class="paragraph">
-<p>The <a href="static/current/apidocs/org/apache/shiro/web/filter/authz/SslFilter.html">SslFilter</a> (and all of its subclasses) supports enabling/disabling HTTP Strict Transport Security (HSTS).</p>
+<p>The <a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authz/SslFilter.html">SslFilter</a> (and all of its subclasses) supports enabling/disabling HTTP Strict Transport Security (HSTS).</p>
 </div>
 <div class="paragraph">
 <p>For example, in shiro.ini:</p>
@@ -1055,7 +1055,7 @@ It is essentially a bridge for Shiro&#8217;s session API to the servlet containe
 <div class="sect3">
 <h4 id="defaultwebsessionmanager"><code>DefaultWebSessionManager</code></h4>
 <div class="paragraph">
-<p>To enable native session management for your web application, you will need to configure a native web-capable session manager to override the default servlet container-based one. You can do that by configuring an instance of <a href="static/current/apidocs/org/apache/shiro/web/session/mgt/DefaultWebSessionManager.html"><code>DefaultWebSessionManager</code></a> on Shiro&#8217;s <code>SecurityManager</code>. For example, in <code>shiro.ini</code>:</p>
+<p>To enable native session management for your web application, you will need to configure a native web-capable session manager to override the default servlet container-based one. You can do that by configuring an instance of <a href="static/current/apidocs/shiro-web/org/apache/shiro/web/session/mgt/DefaultWebSessionManager.html"><code>DefaultWebSessionManager</code></a> on Shiro&#8217;s <code>SecurityManager</code>. For example, in <code>shiro.ini</code>:</p>
 </div>
 <div class="paragraph">
 <p><strong>shiro.ini native web session management</strong></p>
@@ -1091,7 +1091,7 @@ securityManager.sessionManager = $sessionManager</code></pre>
 <p><code>sessionIdCookieEnabled</code> (a boolean)</p>
 </li>
 <li>
-<p><code>sessionIdCookie</code>, a <a href="static/current/apidocs/org/apache/shiro/web/servlet/Cookie.html">Cookie</a> instance.</p>
+<p><code>sessionIdCookie</code>, a <a href="static/current/apidocs/shiro-web/org/apache/shiro/web/servlet/Cookie.html">Cookie</a> instance.</p>
 </li>
 </ul>
 </div>
@@ -1106,7 +1106,7 @@ securityManager.sessionManager = $sessionManager</code></pre>
 <div class="sect5">
 <h6 id="session_cookie_configuration">Session Cookie Configuration</h6>
 <div class="paragraph">
-<p>The DefaultWebSessionManager&#8217;s <code>sessionIdCookie</code> default instance is a <a href="static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html"><code>SimpleCookie</code></a>. This simple implementation allows JavaBeans-style property configuration for all the relevant properties you would want to configure on an http Cookie.</p>
+<p>The DefaultWebSessionManager&#8217;s <code>sessionIdCookie</code> default instance is a <a href="static/current/apidocs/shiro-web/org/apache/shiro/web/servlet/SimpleCookie.html"><code>SimpleCookie</code></a>. This simple implementation allows JavaBeans-style property configuration for all the relevant properties you would want to configure on an http Cookie.</p>
 </div>
 <div class="paragraph">
 <p>For example, you could set the Cookie domain:</p>
@@ -1119,7 +1119,7 @@ securityManager.sessionManager.sessionIdCookie.domain = foo.com</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>See the <a href="static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html">SimpleCookie JavaDoc</a> for additional properties.</p>
+<p>See the <a href="static/current/apidocs/shiro-web/org/apache/shiro/web/servlet/SimpleCookie.html">SimpleCookie JavaDoc</a> for additional properties.</p>
 </div>
 <div class="paragraph">
 <p>The cookie&#8217;s default name is <code>JSESSIONID</code> in accordance with the servlet specification. Additionally, Shiro&#8217;s cookie supports the <a href="https://en.wikipedia.org/wiki/HTTP_cookie#HttpOnly_cookie"><code>HttpOnly</code></a> and <a href="https://en.wikipedia.org/wiki/HTTP_cookie#Same-site_cookie"><code>SameSite</code></a> flags. The <code>sessionIdCookie</code> sets <code>HttpOnly</code> to <code>true</code> and <code>SameSite</code> to <code>LAX</code> by default for extra security.</p>
@@ -1208,7 +1208,7 @@ SecurityUtils.getSubject().login(token);
 <div class="sect2">
 <h3 id="form_based_login">Form-based Login</h3>
 <div class="paragraph">
-<p>For web applications, the <code>authc</code> filter is by default a <a href="static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html"><code>FormAuthenticationFilter</code></a>. This supports reading the 'rememberMe' boolean as a form/request parameter. By default, it expects the request param to be named <code>rememberMe</code>. Here is an example shiro.ini config supporting this:</p>
+<p>For web applications, the <code>authc</code> filter is by default a <a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html"><code>FormAuthenticationFilter</code></a>. This supports reading the 'rememberMe' boolean as a form/request parameter. By default, it expects the request param to be named <code>rememberMe</code>. Here is an example shiro.ini config supporting this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1267,7 +1267,7 @@ securityManager.rememberMeManager.cookie.maxAge = blah
 </div>
 </div>
 <div class="paragraph">
-<p>See the <a href="static/current/apidocs/org/apache/shiro/web/mgt/CookieRememberMeManager.html"><code>CookieRememberMeManager</code></a> and the supporting <a href="static/current/apidocs/src-html/org/apache/shiro/web/servlet/SimpleCookie.html"><code>SimpleCookie</code></a> JavaDoc for configuration properties.</p>
+<p>See the <a href="static/current/apidocs/shiro-web/org/apache/shiro/web/mgt/CookieRememberMeManager.html"><code>CookieRememberMeManager</code></a> and the supporting <a href="static/current/apidocs/shiro-web/org/apache/shiro/web/servlet/SimpleCookie.html"><code>SimpleCookie</code></a> JavaDoc for configuration properties.</p>
 </div>
 </div>
 <div class="sect2">

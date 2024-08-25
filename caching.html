@@ -231,7 +231,7 @@ end-user to configure any cache mechanism they prefer.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="static/current/apidocs/org/apache/shiro/cache/CacheManager.html"><code>CacheManager</code></a></p>
+<p><a href="static/current/apidocs/shiro-cache/org/apache/shiro/cache/CacheManager.html"><code>CacheManager</code></a></p>
 <div class="ulist">
 <ul>
 <li>
@@ -242,7 +242,7 @@ instances.</p>
 </div>
 </li>
 <li>
-<p><a href="static/current/apidocs/org/apache/shiro/cache/Cache.html"><code>Cache</code></a></p>
+<p><a href="static/current/apidocs/shiro-cache/org/apache/shiro/cache/Cache.html"><code>Cache</code></a></p>
 <div class="ulist">
 <ul>
 <li>
@@ -252,7 +252,7 @@ instances.</p>
 </div>
 </li>
 <li>
-<p><a href="static/current/apidocs/org/apache/shiro/cache/CacheManagerAware.html"><code>CacheManagerAware</code></a></p>
+<p><a href="static/current/apidocs/shiro-cache/org/apache/shiro/cache/CacheManagerAware.html"><code>CacheManagerAware</code></a></p>
 <div class="ulist">
 <ul>
 <li>
@@ -308,13 +308,13 @@ own.</p>
 <h3 id="memoryconstrainedcachemanager"><code>MemoryConstrainedCacheManager</code></h3>
 <div class="paragraph">
 <p>The
-<a href="static/current/apidocs/org/apache/shiro/cache/MemoryConstrainedCacheManager.html"><code>MemoryConstrainedCacheManager</code></a>
+<a href="static/current/apidocs/shiro-cache/org/apache/shiro/cache/MemoryConstrainedCacheManager.html"><code>MemoryConstrainedCacheManager</code></a>
 is a <code>CacheManager</code> implementation suitable for single-JVM production
 environments.
 It is not clustered/distributed, so if your application spans across more than one JVM (e.g. web app running on multiple web servers), and you want cache entries to be accessible across JVMs, you will need to use a distributed cache implement instead.</p>
 </div>
 <div class="paragraph">
-<p>The <code>MemoryConstrainedCacheManager</code> manages <a href="static/current/apidocs/org/apache/shiro/cache/MapCache.html"><code>MapCache</code></a> instances, one <code>MapCache</code> instance per named cache.
+<p>The <code>MemoryConstrainedCacheManager</code> manages <a href="static/current/apidocs/shiro-cache/org/apache/shiro/cache/MapCache.html"><code>MapCache</code></a> instances, one <code>MapCache</code> instance per named cache.
 Each <code>MapCache</code> instance is backed by a Shiro <a href="static/current/apidocs/org/apache/shiro/util/SoftHashMap.html"><code>SoftHashMap</code></a> which can auto-resize itself based on an application’s runtime memory constraints/needs (by leveraging JDK <a href="https://docs.oracle.com/javase/7/docs/api/java/lang/ref/SoftReference.html"><code>SoftReference</code></a> instances).</p>
 </div>
 <div class="paragraph">
