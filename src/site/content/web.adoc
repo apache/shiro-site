@@ -312,7 +312,7 @@ Finally, each filter is free to handle the response however it wants if its nece
 ====
 Being able to react to path specific configuration, i.e. the `[optional_configN]` part of a filter token, is a unique feature available to Shiro filters.
 
-If you want to create your own `javax.servlet.Filter` implementation that can also do this, make sure your filter subclasses link:static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html[org.apache.shiro.web.filter.PathMatchingFilter].
+If you want to create your own `javax.servlet.Filter` implementation that can also do this, make sure your filter subclasses link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/PathMatchingFilter.html[org.apache.shiro.web.filter.PathMatchingFilter].
 ====
 
 ===== Available Filters
@@ -355,24 +355,24 @@ authc.loginUrl = /login.jsp
 ...
 ----
 
-The default Filter instances available automatically are defined by the link:static/current/apidocs/org/apache/shiro/web/filter/mgt/DefaultFilter.html[DefaultFilter enum] and the enum's `name` field is the name available for configuration. They are:
+The default Filter instances available automatically are defined by the link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/mgt/DefaultFilter.html[DefaultFilter enum] and the enum's `name` field is the name available for configuration. They are:
 
 |===
 |Filter Name |Class 
 
-|anon |link:static/current/apidocs/org/apache/shiro/web/filter/authc/AnonymousFilter.html[org.apache.shiro.web.filter.authc.AnonymousFilter] 
-|authc |link:static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html[org.apache.shiro.web.filter.authc.FormAuthenticationFilter] 
-|authcBasic |link:static/current/apidocs/org/apache/shiro/web/filter/authc/BasicHttpAuthenticationFilter.html[org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter] 
-|authcBearer |link:static/current/apidocs/org/apache/shiro/web/filter/authc/BearerHttpAuthenticationFilter.html[org.apache.shiro.web.filter.authc.BearerHttpAuthenticationFilter] 
-|invalidRequest |link:static/current/apidocs/org/apache/shiro/web/filter/InvalidRequestFilter.html[org.apache.shiro.web.filter.InvalidRequestFilter] 
-|logout |link:static/current/apidocs/org/apache/shiro/web/filter/authc/LogoutFilter.html[org.apache.shiro.web.filter.authc.LogoutFilter] 
-|noSessionCreation |link:static/current/apidocs/org/apache/shiro/web/filter/session/NoSessionCreationFilter.html[org.apache.shiro.web.filter.session.NoSessionCreationFilter] 
-|perms |link:static/current/apidocs/org/apache/shiro/web/filter/authz/PermissionsAuthorizationFilter.html[org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter] 
-|port |link:static/current/apidocs/org/apache/shiro/web/filter/authz/PortFilter.html[org.apache.shiro.web.filter.authz.PortFilter] 
-|rest |link:static/current/apidocs/org/apache/shiro/web/filter/authz/HttpMethodPermissionFilter.html[org.apache.shiro.web.filter.authz.HttpMethodPermissionFilter] 
-|roles |link:static/current/apidocs/org/apache/shiro/web/filter/authz/RolesAuthorizationFilter.html[org.apache.shiro.web.filter.authz.RolesAuthorizationFilter] 
-|ssl |link:static/current/apidocs/org/apache/shiro/web/filter/authz/SslFilter.html[org.apache.shiro.web.filter.authz.SslFilter] 
-|user |link:static/current/apidocs/org/apache/shiro/web/filter/authc/UserFilter.html[org.apache.shiro.web.filter.authc.UserFilter] 
+|anon |link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authc/AnonymousFilter.html[org.apache.shiro.web.filter.authc.AnonymousFilter]
+|authc |link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html[org.apache.shiro.web.filter.authc.FormAuthenticationFilter]
+|authcBasic |link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authc/BasicHttpAuthenticationFilter.html[org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter]
+|authcBearer |link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authc/BearerHttpAuthenticationFilter.html[org.apache.shiro.web.filter.authc.BearerHttpAuthenticationFilter]
+|invalidRequest |link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/InvalidRequestFilter.html[org.apache.shiro.web.filter.InvalidRequestFilter]
+|logout |link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authc/LogoutFilter.html[org.apache.shiro.web.filter.authc.LogoutFilter]
+|noSessionCreation |link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/session/NoSessionCreationFilter.html[org.apache.shiro.web.filter.session.NoSessionCreationFilter]
+|perms |link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authz/PermissionsAuthorizationFilter.html[org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter]
+|port |link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authz/PortFilter.html[org.apache.shiro.web.filter.authz.PortFilter]
+|rest |link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authz/HttpMethodPermissionFilter.html[org.apache.shiro.web.filter.authz.HttpMethodPermissionFilter]
+|roles |link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authz/RolesAuthorizationFilter.html[org.apache.shiro.web.filter.authz.RolesAuthorizationFilter]
+|ssl |link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authz/SslFilter.html[org.apache.shiro.web.filter.authz.SslFilter]
+|user |link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authc/UserFilter.html[org.apache.shiro.web.filter.authc.UserFilter]
 |===
 
 == Enabling and Disabling Filters
@@ -383,13 +383,13 @@ But a new feature added in Shiro 1.2 is the ability to enable or disable filters
 
 This is a powerful concept because it is often more convenient to enable or disable a filter based on certain requirements than to change the static filter chain definition, which would be permanent and inflexible.
 
-Shiro accomplishes this via its link:static/current/apidocs/org/apache/shiro/web/servlet/OncePerRequestFilter.html[OncePerRequestFilter] abstract parent class. All of Shiro's out-of-the-box Filter implementations subclass this one and therefore are able to be enabled or disabled without removing them from the filter chain. You can subclass this class for your own filter implementations if you need this functionality as well*.
+Shiro accomplishes this via its link:static/current/apidocs/shiro-web/org/apache/shiro/web/servlet/OncePerRequestFilter.html[OncePerRequestFilter] abstract parent class. All of Shiro's out-of-the-box Filter implementations subclass this one and therefore are able to be enabled or disabled without removing them from the filter chain. You can subclass this class for your own filter implementations if you need this functionality as well*.
 
 *https://issues.apache.org/jira/browse/SHIRO-224[SHIRO-224] will hopefully enable this feature for any filter, not just those subclassing `OncePerRequestFilter`. If this is important to you, please vote for the issue.
 
 === General Enabling/Disabling
 
-The link:static/current/apidocs/org/apache/shiro/web/servlet/OncePerRequestFilter.html[OncePerRequestFilter] (and all of its subclasses) supports enabling/disabling across all requests as well as on a per-request basis.
+The link:static/current/apidocs/shiro-web/org/apache/shiro/web/servlet/OncePerRequestFilter.html[OncePerRequestFilter] (and all of its subclasses) supports enabling/disabling across all requests as well as on a per-request basis.
 
 General enabling or disabling of a filter for all requests is done by setting its `enabled` property to true or false. The default setting is `true` since most filters inherently need to execute if they are configured in a chain.
 
@@ -419,7 +419,7 @@ This method defaults to returning the value of the `enabled` property, which is 
 
 === Path-specific Enabling/Disabling
 
-Shiro's link:static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html[PathMatchingFilter] (a subclass of `OncePerRequestFilter` has the ability to react to configuration based on a _specific path_ being filtered. This means you can enable or disable a filter based on the path and the path-specific configuration in addition to the incoming request and response.
+Shiro's link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/PathMatchingFilter.html[PathMatchingFilter] (a subclass of `OncePerRequestFilter` has the ability to react to configuration based on a _specific path_ being filtered. This means you can enable or disable a filter based on the path and the path-specific configuration in addition to the incoming request and response.
 
 If you need to be able to react to the matching path and the path-specific configuration to determine if a filter is enabled or disabled, instead of overriding `OncePerRequestFilter` `isEnabled(request,response)` method, you would override the `PathMatchingFilter` `isEnabled(request,response,path,pathConfig)` method instead.
 
@@ -470,7 +470,7 @@ URL rewriting for `jsessionid` is defined in section "7.1.3" of the Java Servlet
 
 === HTTP Strict Transport Security (HSTS)
 
-The link:static/current/apidocs/org/apache/shiro/web/filter/authz/SslFilter.html[SslFilter] (and all of its subclasses) supports enabling/disabling HTTP Strict Transport Security (HSTS).
+The link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authz/SslFilter.html[SslFilter] (and all of its subclasses) supports enabling/disabling HTTP Strict Transport Security (HSTS).
 
 For example, in shiro.ini:
 
@@ -523,7 +523,7 @@ The word 'Native' here means that Shiro's own enterprise session management impl
 
 ==== `DefaultWebSessionManager`
 
-To enable native session management for your web application, you will need to configure a native web-capable session manager to override the default servlet container-based one. You can do that by configuring an instance of link:static/current/apidocs/org/apache/shiro/web/session/mgt/DefaultWebSessionManager.html[`DefaultWebSessionManager`] on Shiro's `SecurityManager`. For example, in `shiro.ini`:
+To enable native session management for your web application, you will need to configure a native web-capable session manager to override the default servlet container-based one. You can do that by configuring an instance of link:static/current/apidocs/shiro-web/org/apache/shiro/web/session/mgt/DefaultWebSessionManager.html[`DefaultWebSessionManager`] on Shiro's `SecurityManager`. For example, in `shiro.ini`:
 
 *shiro.ini native web session management*
 
@@ -549,7 +549,7 @@ After configuring the `DefaultWebSessionManager` instance, session timeout is co
 The `DefaultWebSessionManager` supports two web-specific configuration properties:
 
 * `sessionIdCookieEnabled` (a boolean)
-* `sessionIdCookie`, a link:static/current/apidocs/org/apache/shiro/web/servlet/Cookie.html[Cookie] instance.
+* `sessionIdCookie`, a link:static/current/apidocs/shiro-web/org/apache/shiro/web/servlet/Cookie.html[Cookie] instance.
 
 [INFO]
 .Cookie as a template
@@ -559,7 +559,7 @@ The `sessionIdCookie` property is essentially a template - you configure the `Co
 
 ====== Session Cookie Configuration
 
-The DefaultWebSessionManager's `sessionIdCookie` default instance is a link:static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html[`SimpleCookie`]. This simple implementation allows JavaBeans-style property configuration for all the relevant properties you would want to configure on an http Cookie.
+The DefaultWebSessionManager's `sessionIdCookie` default instance is a link:static/current/apidocs/shiro-web/org/apache/shiro/web/servlet/SimpleCookie.html[`SimpleCookie`]. This simple implementation allows JavaBeans-style property configuration for all the relevant properties you would want to configure on an http Cookie.
 
 For example, you could set the Cookie domain:
 
@@ -570,7 +570,7 @@ For example, you could set the Cookie domain:
 securityManager.sessionManager.sessionIdCookie.domain = foo.com
 ----
 
-See the link:static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html[SimpleCookie JavaDoc] for additional properties.
+See the link:static/current/shiro-web/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html[SimpleCookie JavaDoc] for additional properties.
 
 The cookie's default name is `JSESSIONID` in accordance with the servlet specification. Additionally, Shiro's cookie supports the https://en.wikipedia.org/wiki/HTTP_cookie#HttpOnly_cookie[`HttpOnly`] and https://en.wikipedia.org/wiki/HTTP_cookie#Same-site_cookie[`SameSite`] flags. The `sessionIdCookie` sets `HttpOnly` to `true` and `SameSite` to `LAX` by default for extra security.
 
@@ -626,7 +626,7 @@ SecurityUtils.getSubject().login(token);
 
 === Form-based Login
 
-For web applications, the `authc` filter is by default a link:static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html[`FormAuthenticationFilter`]. This supports reading the 'rememberMe' boolean as a form/request parameter. By default, it expects the request param to be named `rememberMe`. Here is an example shiro.ini config supporting this:
+For web applications, the `authc` filter is by default a link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html[`FormAuthenticationFilter`]. This supports reading the 'rememberMe' boolean as a form/request parameter. By default, it expects the request param to be named `rememberMe`. Here is an example shiro.ini config supporting this:
 
 [source,ini]
 ----
@@ -680,7 +680,7 @@ securityManager.rememberMeManager.cookie.maxAge = blah
 ...
 ----
 
-See the link:static/current/apidocs/org/apache/shiro/web/mgt/CookieRememberMeManager.html[`CookieRememberMeManager`] and the supporting link:static/current/apidocs/src-html/org/apache/shiro/web/servlet/SimpleCookie.html[`SimpleCookie`] JavaDoc for configuration properties.
+See the link:static/current/apidocs/shiro-web/org/apache/shiro/web/mgt/CookieRememberMeManager.html[`CookieRememberMeManager`] and the supporting link:static/current/apidocs/src-html/org/apache/shiro/web/servlet/SimpleCookie.html[`SimpleCookie`] JavaDoc for configuration properties.
 
 === Custom `RememberMeManager`
 

@@ -51,6 +51,10 @@ RedirectMatch /static/(.*)/tools/apidocs/(.*) /static/$1/shiro-tools/$2
 RedirectMatch /static/1.1.0(.*) /static/current$1
 RedirectMatch /static/1.0.0-incubating(.*) /static/current$1
 
+# Rediect Javadoc
+RedirectMatch /static/current/apidocs/shiro-(.*)/(.*) https://javadoc.io/doc/org.apache.shiro/shiro-$1/latest/$2
+RedirectMatch /static/current/apidocs/(.*) https://javadoc.io/doc/org.apache.shiro/shiro-core/latest/$1
+
 # latest
 RedirectMatch /static/current(.*) /static/2.0.0$1
 RedirectMatch /static/latest(.*) /static/2.0.0$1

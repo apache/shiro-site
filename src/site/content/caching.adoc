@@ -21,12 +21,12 @@ end-user to configure any cache mechanism they prefer.
 
 Shiro has three important cache interfaces:
 
-* link:static/current/apidocs/org/apache/shiro/cache/CacheManager.html[`+CacheManager+`]
+* link:static/current/apidocs/shiro-cache/org/apache/shiro/cache/CacheManager.html[`+CacheManager+`]
 - The primary Manager component for all caching, it returns `+Cache+`
 instances.
-* link:static/current/apidocs/org/apache/shiro/cache/Cache.html[`+Cache+`]
+* link:static/current/apidocs/shiro-cache/org/apache/shiro/cache/Cache.html[`+Cache+`]
 - Maintains key/value pairs
-* link:static/current/apidocs/org/apache/shiro/cache/CacheManagerAware.html[`+CacheManagerAware+`]
+* link:static/current/apidocs/shiro-cache/org/apache/shiro/cache/CacheManagerAware.html[`+CacheManagerAware+`]
 - Implemented by components wishing to receive and use a CacheManager
 instance
 
@@ -67,12 +67,12 @@ own.
 === `+MemoryConstrainedCacheManager+`
 
 The
-link:static/current/apidocs/org/apache/shiro/cache/MemoryConstrainedCacheManager.html[`+MemoryConstrainedCacheManager+`]
+link:static/current/apidocs/shiro-cache/org/apache/shiro/cache/MemoryConstrainedCacheManager.html[`+MemoryConstrainedCacheManager+`]
 is a `+CacheManager+` implementation suitable for single-JVM production
 environments.
 It is not clustered/distributed, so if your application spans across more than one JVM (e.g. web app running on multiple web servers), and you want cache entries to be accessible across JVMs, you will need to use a distributed cache implement instead.
 
-The `+MemoryConstrainedCacheManager+` manages link:static/current/apidocs/org/apache/shiro/cache/MapCache.html[`+MapCache+`] instances, one `+MapCache+` instance per named cache.
+The `+MemoryConstrainedCacheManager+` manages link:static/current/apidocs/shiro-cache/org/apache/shiro/cache/MapCache.html[`+MapCache+`] instances, one `+MapCache+` instance per named cache.
 Each `+MapCache+` instance is backed by a Shiro link:static/current/apidocs/org/apache/shiro/util/SoftHashMap.html[`+SoftHashMap+`] which can auto-resize itself based on an application’s runtime memory constraints/needs (by leveraging JDK https://docs.oracle.com/javase/7/docs/api/java/lang/ref/SoftReference.html[`+SoftReference+`] instances).
 
 Because the `+MemoryConstrainedCacheManager+` can auto-resize itself

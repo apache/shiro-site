@@ -468,7 +468,7 @@ shiro.loginUrl = /login.jsp
 
 This is a special configuration directive that tells Shiro "For any of Shiro's https://shiro.apache.org/web.html#Web-DefaultFilters[default filters] that have a `loginUrl` property, I want that property value to be set to `/login.jsp`."
 
-This allows Shiro's default `authc` filter (by default, a https://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html[`FormAuthenticationFilter`]) to know about the login page. This is necessary for the `FormAuthenticationFilter` to work correctly.
+This allows Shiro's default `authc` filter (by default, a https://shiro.apache.org/static/current/apidocs/web/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html[`FormAuthenticationFilter`]) to know about the login page. This is necessary for the `FormAuthenticationFilter` to work correctly.
 
 ==== The `[urls]` section
 
@@ -502,7 +502,7 @@ The `step3` branch contains a new `src/main/webapp/login.jsp` page. This is a si
 . There is a `password` form field. The Shiro `authc` filter will automatically look for a `password` request parameter during login submission.
 . There is a `rememberMe` checkbox whose 'checked' state can be a 'truthy' value (`true`, `t`, `1`, `enabled`, `y`, `yes`, or `on`).
 
-Our login.jsp form just uses the default `username`, `password`, and `rememberMe` form field names. These names are configurable if you wish to change them - see the https://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html[`FormAuthenticationFilter` JavaDoc] for information.
+Our login.jsp form just uses the default `username`, `password`, and `rememberMe` form field names. These names are configurable if you wish to change them - see the https://shiro.apache.org/static/current/apidocs/web/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html[`FormAuthenticationFilter` JavaDoc] for information.
 
 === Step 3c: Run the webapp
 
@@ -761,7 +761,7 @@ The `&lt;shiro:lacksRole&gt;` tag will only display the contents if the current 
 
 An exercise left to the reader (not a defined step) is to create a new section of the website and restrict URL access to that section of the website based on what role is assigned to the current user.
 
-Hint: Create a https://shiro.apache.org/web.html#Web-FilterChainDefinitions[filter chain definition] for that new part of the webapp using the https://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authz/RolesAuthorizationFilter.html[`roles` filter]
+Hint: Create a https://shiro.apache.org/web.html#Web-FilterChainDefinitions[filter chain definition] for that new part of the webapp using the https://shiro.apache.org/static/current/apidocs/web/org/apache/shiro/web/filter/authz/RolesAuthorizationFilter.html[`roles` filter]
 
 === Step 6d: Run the webapp
 

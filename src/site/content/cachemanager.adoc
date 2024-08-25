@@ -9,9 +9,9 @@
 
 Shiro has three important cache interfaces:
 
-* link:static/current/apidocs/org/apache/shiro/cache/CacheManager.html[`+CacheManager+`]
-* link:static/current/apidocs/org/apache/shiro/cache/Cache.html[`+Cache+`]
-* link:static/current/apidocs/org/apache/shiro/cache/CacheManagerAware.html[`+CacheManagerAware+`]
+* link:static/current/apidocs/shiro-cache/org/apache/shiro/cache/CacheManager.html[`+CacheManager+`]
+* link:static/current/apidocs/shiro-cache/org/apache/shiro/cache/Cache.html[`+Cache+`]
+* link:static/current/apidocs/shiro-cache/org/apache/shiro/cache/CacheManagerAware.html[`+CacheManagerAware+`]
 
 A `+CacheManager+` returns `+Cache+` instances and various Shiro components use those `+Cache<+` instances to cache data as necessary.
 Any Shiro component that implements `+CacheManager+` will automatically receive a configured `+CacheManager+`, where it can be used to acquire `+Cache+` instances.
@@ -33,7 +33,7 @@ securityManager.cacheManager = $cacheManager
 # realms have been set with the cacheManager instance
 ----
 
-We have an out-of-the-box link:static/current/apidocs/org/apache/shiro/cache/ehcache/EhCacheManager.html[`+EhCacheManager+`] implementation, so you can use that today if you wanted.
+We have an out-of-the-box link:static/current/apidocs/shiro-cache/org/apache/shiro/cache/ehcache/EhCacheManager.html[`+EhCacheManager+`] implementation, so you can use that today if you wanted.
 Otherwise, you can implement your own `+CacheManager+` (e.g. with Coherence, etc.) and configure it as above, and you’ll be good to go.
 
 == Authorization Cache Invalidation [[CacheManager-AuthorizationCacheInvalidation]]
