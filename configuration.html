@@ -34,7 +34,7 @@
     <meta property="article:modification_time" content="2010-03-18T00:00:00Z"/>
     <meta property="article:tag" content='documentation'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//configuration.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/configuration.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -184,6 +184,24 @@
 		<h1>Apache Shiro Configuration</h1>
 	</div>
 
+
+  <div class="admonitionblock tip">
+    <table>
+      <tbody>
+        <tr>
+          <td class="icon">
+            <div class="title">Handy Hint</div>
+          </td>
+          <td class="content">
+            <div class="title">Shiro v1 version notice</div>
+            <div class="paragraph">
+              <p>As of February 28, 2024, Shiro v1 was superseded by v2.<p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
@@ -743,7 +761,14 @@ You can configure it like any other object as described above.</p>
 <div class="sect4">
 <h5 id="Configuration-INIConfiguration-Sections-users-EncryptingPasswords">Encrypting Passwords</h5>
 <div class="paragraph">
-<p>If you don&#8217;t want the [users] section passwords to be in plain-text, you can encrypt them using your favorite hash algorithm (MD5, Sha1, Sha256, etc.) however you like and use the resulting string as the password value. By default, the password string is expected to be Hex encoded, but can be configured to be Base64 encoded instead (see below).</p>
+<p>Since Shiro 2.0, the <code>[users]</code> section cannot contain plain-text passwords.
+You can encrypt them using <a href="https://en.wikipedia.org/wiki/Key_derivation_function">key derivation functions</a>.
+Shiro provides implementations for bcrypt and argon2.
+If unsure, use argon2 derived passwords.</p>
+</div>
+<div class="paragraph">
+<p>The algorithms from Shiro 1 (e.g. md5, SHA1, SHA256, etc.) are long deemed insecure and not supported anymore.
+There is neither a direct migration path nor backward compatibility.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -754,41 +779,25 @@ You can configure it like any other object as described above.</p>
 <td class="content">
 <div class="paragraph">
 <div class="title">Easy Secure Passwords</div>
-<p>To save time and use best-practices, you might want to use Shiro&#8217;s <a href="command-line-hasher.html">Command Line Hasher</a>, which will hash passwords as well as any other type of resource. It is especially convenient for encrypting INI <code>[users]</code> passwords.</p>
+<p>To save time and use best-practices, you might want to use Shiro&#8217;s <a href="command-line-hasher.html">Command Line Hasher</a>, which will apply one of the secure KDFs to a given password as well as any other type of resources.
+It is especially convenient for encrypting INI <code>[users]</code> passwords.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Once you&#8217;ve specified the hashed text password values, you have to tell Shiro that these are encrypted. You do that by configuring the implicitly created <code>iniRealm</code> in the [main] section to use an appropriate <code>CredentialsMatcher</code> implementation corresponding to the hash algorithm you&#8217;ve specified:</p>
+<p>Once you&#8217;ve specified the derived text password values, you have to tell Shiro that these are encrypted.
+You do that by configuring the implicitly created <code>iniRealm</code> in the [main] section to use an appropriate <code>CredentialsMatcher</code> implementation corresponding to the hash algorithm you&#8217;ve specified:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
-...
-sha256Matcher = org.apache.shiro.authc.credential.Sha256CredentialsMatcher
-...
-iniRealm.credentialsMatcher = $sha256Matcher
-...
+# Shiro2CryptFormat
 
 [users]
 # user1 = sha256-hashed-hex-encoded password, role1, role2, ...
-user1 = 2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b, role1, role2, ...</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You can configure any properties on the <code>CredentialsMatcher</code> like any other object to reflect your hashing strategy, for example, to specify if salting is used or how many hash iterations to execute. See the <a href="static/current/apidocs/org/apache/shiro/authc/credential/HashedCredentialsMatcher.html"><code>org.apache.shiro.authc.credential.HashedCredentialsMatcher</code></a> JavaDoc to better understand hashing strategies and if they might be useful to you.</p>
-</div>
-<div class="paragraph">
-<p>For example, if your users' password strings were Base64 encoded instead of the default Hex, you could specify:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
-...
-# true = hex, false = base64:
-sha256Matcher.storedCredentialsHexEncoded = false</code></pre>
+user1 = "$shiro2$argon2id$v=19$t=1,m=65536,p=4$H5z81Jpr4ntZr3MVtbOUBw$fJDgZCLZjMC6A2HhnSpxULMmvVdW3su+/GCU3YbxfFQ", role1, role2, ...</code></pre>
 </div>
 </div>
 </div>

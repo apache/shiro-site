@@ -36,7 +36,7 @@
     <meta property="article:tag" content='manual'/>
     <meta property="article:tag" content='spring'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//spring-boot.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/spring-boot.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -187,6 +187,24 @@
 	</div>
 
 
+  <div class="admonitionblock tip">
+    <table>
+      <tbody>
+        <tr>
+          <td class="icon">
+            <div class="title">Handy Hint</div>
+          </td>
+          <td class="content">
+            <div class="title">Shiro v1 version notice</div>
+            <div class="paragraph">
+              <p>As of February 28, 2024, Shiro v1 was superseded by v2.<p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -302,7 +320,7 @@
     <pre><code class='xml language-xml'>&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-spring-boot-web-starter&lt;/artifactId&gt;
-  &lt;version&gt;1.13.0&lt;/version&gt;
+  &lt;version&gt;2.0.1&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
   </div>
@@ -312,7 +330,7 @@
     role="tabpanel"
     aria-labelledby="gradle-web-tab"
     >
-    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-spring-boot-web-starter:1.13.0'
+    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-spring-boot-web-starter:2.0.1'
 </code></pre>
   </div>
   <div
@@ -321,7 +339,7 @@
     role="tabpanel"
     aria-labelledby="sbt-web-tab"
   >
-    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-spring-boot-web-starter" % "1.13.0"
+    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-spring-boot-web-starter" % "2.0.1"
 </code></pre>
   </div>
   <div
@@ -330,7 +348,7 @@
     role="tabpanel"
     aria-labelledby="ivy-web-tab"
     >
-    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-spring-boot-web-starter" rev="1.13.0"/&gt;
+    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-spring-boot-web-starter" rev="2.0.1"/&gt;
 </code></pre>
   </div>
   <div
@@ -339,7 +357,7 @@
     role="tabpanel"
     aria-labelledby="leiningen-web-tab"
     >
-    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-spring-boot-web-starter "1.13.0"]
+    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-spring-boot-web-starter "2.0.1"]
 </code></pre>
   </div>
   <div
@@ -348,7 +366,7 @@
     role="tabpanel"
     aria-labelledby="buildr-web-tab"
   >
-    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-spring-boot-web-starter:jar:1.13.0'
+    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-spring-boot-web-starter:jar:2.0.1'
 </code></pre>
   </div>
 </div>
@@ -668,7 +686,7 @@ protected CacheManager cacheManager() {
     <pre><code class='xml language-xml'>&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-spring-boot-starter&lt;/artifactId&gt;
-  &lt;version&gt;1.13.0&lt;/version&gt;
+  &lt;version&gt;2.0.1&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
   </div>
@@ -678,7 +696,7 @@ protected CacheManager cacheManager() {
     role="tabpanel"
     aria-labelledby="gradle-cli-tab"
     >
-    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-spring-boot-starter:1.13.0'
+    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-spring-boot-starter:2.0.1'
 </code></pre>
   </div>
   <div
@@ -687,7 +705,7 @@ protected CacheManager cacheManager() {
     role="tabpanel"
     aria-labelledby="sbt-cli-tab"
   >
-    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-spring-boot-starter" % "1.13.0"
+    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-spring-boot-starter" % "2.0.1"
 </code></pre>
   </div>
   <div
@@ -696,7 +714,7 @@ protected CacheManager cacheManager() {
     role="tabpanel"
     aria-labelledby="ivy-cli-tab"
     >
-    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-spring-boot-starter" rev="1.13.0"/&gt;
+    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-spring-boot-starter" rev="2.0.1"/&gt;
 </code></pre>
   </div>
   <div
@@ -705,7 +723,7 @@ protected CacheManager cacheManager() {
     role="tabpanel"
     aria-labelledby="leiningen-cli-tab"
     >
-    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-spring-boot-starter "1.13.0"]
+    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-spring-boot-starter "2.0.1"]
 </code></pre>
   </div>
   <div
@@ -714,7 +732,7 @@ protected CacheManager cacheManager() {
     role="tabpanel"
     aria-labelledby="buildr-cli-tab"
   >
-    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-spring-boot-starter:jar:1.13.0'
+    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-spring-boot-starter:jar:2.0.1'
 </code></pre>
   </div>
 </div>

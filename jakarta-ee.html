@@ -37,7 +37,7 @@
     <meta property="article:tag" content='integrations'/>
     <meta property="article:tag" content='web'/>
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content='https://shiro.staged.apache.org//jakarta-ee.html'/>
+    <meta property="og:url" content='https://shiro.apache.org/jakarta-ee.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
     <meta property="og:image:width" content='1200'/>
     <meta property="og:image:height" content='628'/>
@@ -188,6 +188,24 @@
 	</div>
 
 
+  <div class="admonitionblock tip">
+    <table>
+      <tbody>
+        <tr>
+          <td class="icon">
+            <div class="title">Handy Hint</div>
+          </td>
+          <td class="content">
+            <div class="title">Shiro v1 version notice</div>
+            <div class="paragraph">
+              <p>As of February 28, 2024, Shiro v1 was superseded by v2.<p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
@@ -300,7 +318,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
     <pre><code class='xml language-xml'>&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-jakarta-ee&lt;/artifactId&gt;
-  &lt;version&gt;2.0.0-alpha-4&lt;/version&gt;
+  &lt;version&gt;2.0.1&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
   </div>
@@ -310,7 +328,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
     role="tabpanel"
     aria-labelledby="gradle-cli-tab"
     >
-    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-jakarta-ee:2.0.0-alpha-4'
+    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-jakarta-ee:2.0.1'
 </code></pre>
   </div>
   <div
@@ -319,7 +337,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
     role="tabpanel"
     aria-labelledby="sbt-cli-tab"
   >
-    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-jakarta-ee" % "2.0.0-alpha-4"
+    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-jakarta-ee" % "2.0.1"
 </code></pre>
   </div>
   <div
@@ -328,7 +346,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
     role="tabpanel"
     aria-labelledby="ivy-cli-tab"
     >
-    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-jakarta-ee" rev="2.0.0-alpha-4"/&gt;
+    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-jakarta-ee" rev="2.0.1"/&gt;
 </code></pre>
   </div>
   <div
@@ -337,7 +355,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
     role="tabpanel"
     aria-labelledby="leiningen-cli-tab"
     >
-    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-jakarta-ee "2.0.0-alpha-4"]
+    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-jakarta-ee "2.0.1"]
 </code></pre>
   </div>
   <div
@@ -346,7 +364,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
     role="tabpanel"
     aria-labelledby="buildr-cli-tab"
   >
-    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-jakarta-ee:jar:2.0.0-alpha-4'
+    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-jakarta-ee:jar:2.0.1'
 </code></pre>
   </div>
 </div>
@@ -369,7 +387,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
 <p>Configure Shiro automatically with sensible defaults for Jakarta EE, with minimal, or no configuration aside from shiro.ini.</p>
 </li>
 <li>
-<p>Use shiro.ini as usual to secure web application, Jax-RS paths and endpoints.</p>
+<p>Use shiro.ini as usual to secure web applications, Jax-RS paths and endpoints.</p>
 </li>
 <li>
 <p>Forms are automatically saved if sessions expire and seamlessly submitted upon subsequent login.</p>
@@ -404,7 +422,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
 </div>
 </div>
 <div class="sect2">
-<h3 id="how_to_use_jakarta_9_jakarta_namespace_replace_latest_with_the_version_number">How to use Jakarta 9+ (jakarta.* namespace) - replace LATEST with the version number</h3>
+<h3 id="how_to_use_jakarta_9_jakarta_namespace">How to use Jakarta 9+ (jakarta.* namespace)</h3>
 <div class="paragraph">
 <p>Use the Shiro artifacts with Jakarta classifiers:</p>
 </div>
@@ -437,12 +455,13 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
 &lt;dependency&gt;
   &lt;groupId&gt;org.omnifaces&lt;/groupId&gt;
   &lt;artifactId&gt;omnifaces&lt;/artifactId&gt;
+  &lt;!-- replace LATEST with a version number --&gt;
   &lt;version&gt;LATEST&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Import the Shiro BOM as seen below (replace LATEST with the version number):</p>
+<p>Import the Shiro BOM as seen below:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -451,7 +470,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
         &lt;dependency&gt;
             &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
             &lt;artifactId&gt;shiro-bom&lt;/artifactId&gt;
-            &lt;version&gt;LATEST&lt;/version&gt;
+            &lt;version&gt;2.0.1&lt;/version&gt;
             &lt;scope&gt;import&lt;/scope&gt;
             &lt;type&gt;pom&lt;/type&gt;
         &lt;/dependency&gt;
@@ -459,6 +478,16 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
 &lt;/dependencyManagement&gt;</code></pre>
 </div>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuration">Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>No additional configuration is required to use Shiro Jakarta EE module. The module is bootstrapped automatically.<br>
+Only <code>shiro.ini</code> is needed and can be configured as described in <a href="web.html#web_ini">Web Configuration</a><br>
+See configuration options below if any customization is needed.</p>
 </div>
 </div>
 </div>
@@ -477,33 +506,6 @@ public class MyBean { }
 @RequestScoped
 @RolesAllowed("role")
 public class MyRoleBean { }</code></pre>
-</div>
-</div>
-<div class="sect2">
-<h3 id="configuring_cdi_without_jakarta_ee_module_or_shiro_ini">Configuring CDI without Jakarta EE module or shiro.ini</h3>
-<div class="paragraph">
-<p>Below is an example of Shiro configuration in Java code with CDI only (no shiro.ini):</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ApplicationScoped
-public class MyBean {
-    private DefaultSecurityManager securityManager;
-
-    void configureSecurityManager(@Observes @Initialized(ApplicationScoped.class) Object nothing) {
-        var realm = new SimpleAccountRealm();
-        securityManager = new DefaultSecurityManager(realm);
-        realm.addAccount("powerful", "awesome", "admin");
-        realm.addAccount("regular", "meh", "user");
-        SecurityUtils.setSecurityManager(securityManager);
-    }
-
-    void destroySecurityManager(@Observes @Destroyed(ApplicationScoped.class) Object nothing) {
-        securityManager.destroy();
-        SecurityUtils.setSecurityManager(null);
-    }
-}</code></pre>
-</div>
 </div>
 </div>
 <div class="sect2">
@@ -543,13 +545,13 @@ Any Shiro principal object can be injected if annotated by <code>@Principal</cod
 </div>
 </div>
 <div class="sect1">
-<h2 id="jakarta_ee_integration_module">Jakarta EE Integration Module</h2>
+<h2 id="ee_module">Jakarta EE Integration Module</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Jakarta EE integration module was inspired by this <a href="https://balusc.omnifaces.org/2013/01/apache-shiro-is-it-ready-for-java-ee-6.html">OmniFaces article</a> and brings everything together to seamlessly create secure Jakarta EE applications easily and with minimal configuration. The module works "the Shiro way" and uses shiro.ini in a straight-forward and intuitive way.</p>
 </div>
 <div class="sect2">
-<h3 id="configuration">Configuration</h3>
+<h3 id="configuration_2">Configuration</h3>
 <div class="sect3">
 <h4 id="enabling_rememberme_functionality">Enabling RememberMe functionality</h4>
 <div class="paragraph">
@@ -754,7 +756,7 @@ authc.logoutFallbackType = $fallbackType</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="automatic_form_submit_upon_subsequent_login">Automatic form submit upon subsequent login</h4>
+<h4 id="form_resubmit">Automatic form submit upon subsequent login</h4>
 <div class="paragraph">
 <p>Jakarta EE module will automatically resubmit forms when session expires and a subsequent re-login occurs. This will prevent users data from loss due to sessions timing out.</p>
 </div>
@@ -797,6 +799,33 @@ authc.logoutFallbackType = $fallbackType</code></pre>
     &lt;param-name&gt;org.omnifaces.SKIP_DEPLOYMENT_EXCEPTION&lt;/param-name&gt;
     &lt;param-value&gt;true&lt;/param-value&gt;
 &lt;/context-param&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="configuring_cdi_without_jakarta_ee_module_or_shiro_ini">Configuring CDI without Jakarta EE module or shiro.ini</h4>
+<div class="paragraph">
+<p>Below is an example of Shiro configuration in Java code with CDI only (no shiro.ini):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ApplicationScoped
+public class MyBean {
+    private DefaultSecurityManager securityManager;
+
+    void configureSecurityManager(@Observes @Initialized(ApplicationScoped.class) Object nothing) {
+        var realm = new SimpleAccountRealm();
+        securityManager = new DefaultSecurityManager(realm);
+        realm.addAccount("powerful", "awesome", "admin");
+        realm.addAccount("regular", "meh", "user");
+        SecurityUtils.setSecurityManager(securityManager);
+    }
+
+    void destroySecurityManager(@Observes @Destroyed(ApplicationScoped.class) Object nothing) {
+        securityManager.destroy();
+        SecurityUtils.setSecurityManager(null);
+    }
+}</code></pre>
 </div>
 </div>
 </div>
