@@ -211,12 +211,15 @@ ssl.alwaysEnabled = true
 ==== Using Enhanced SSL filter with HAProxy or other load balancers
 When behind SSL-terminating proxy, Shiro may not be able to determine if SSL was used.
 `X-Forwarded-Proto` header can mitigate this. You can configure your proxy set this header to `https` to tell Shiro
-when SSL is used. Below is a haproxy configuration excerpt:
+when SSL is used. In addition, it's always good practice to rewrite redirect response headers.
+Below is a haproxy configuration excerpt:
 [source]
 ----
 ....
 frontend tcp-in
     http-request set-header X-Forwarded-Proto https if { ssl_fc }
+backend server1
+    http-response replace-header Location ^http://(.*)$ https://\1
 ...
 ----
 
