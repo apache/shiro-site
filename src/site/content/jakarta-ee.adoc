@@ -223,6 +223,17 @@ backend server1
 ...
 ----
 
+As an optimization technique, Shiro tries to issue all redirection according to the `X-Forwarded-Proto` header. If the header is not present, Shiro will use the current request scheme.
+If this behavior is not desired, you can add the following property into `web.xml`
+[source,xml]
+.Disable redirection optimization
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.redirect.disabled</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+
 ==== Using CDI Beans in shiro.ini
 Below is an example of using a CDI bean and assign its property to a variable in shiro.ini
 [source,java]
