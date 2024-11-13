@@ -318,7 +318,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
     <pre><code class='xml language-xml'>&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-jakarta-ee&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.2&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
   </div>
@@ -328,7 +328,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
     role="tabpanel"
     aria-labelledby="gradle-cli-tab"
     >
-    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-jakarta-ee:2.0.1'
+    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-jakarta-ee:2.0.2'
 </code></pre>
   </div>
   <div
@@ -337,7 +337,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
     role="tabpanel"
     aria-labelledby="sbt-cli-tab"
   >
-    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-jakarta-ee" % "2.0.1"
+    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-jakarta-ee" % "2.0.2"
 </code></pre>
   </div>
   <div
@@ -346,7 +346,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
     role="tabpanel"
     aria-labelledby="ivy-cli-tab"
     >
-    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-jakarta-ee" rev="2.0.1"/&gt;
+    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-jakarta-ee" rev="2.0.2"/&gt;
 </code></pre>
   </div>
   <div
@@ -355,7 +355,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
     role="tabpanel"
     aria-labelledby="leiningen-cli-tab"
     >
-    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-jakarta-ee "2.0.1"]
+    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-jakarta-ee "2.0.2"]
 </code></pre>
   </div>
   <div
@@ -364,7 +364,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
     role="tabpanel"
     aria-labelledby="buildr-cli-tab"
   >
-    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-jakarta-ee:jar:2.0.1'
+    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-jakarta-ee:jar:2.0.2'
 </code></pre>
   </div>
 </div>
@@ -470,7 +470,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
         &lt;dependency&gt;
             &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
             &lt;artifactId&gt;shiro-bom&lt;/artifactId&gt;
-            &lt;version&gt;2.0.1&lt;/version&gt;
+            &lt;version&gt;2.0.2&lt;/version&gt;
             &lt;scope&gt;import&lt;/scope&gt;
             &lt;type&gt;pom&lt;/type&gt;
         &lt;/dependency&gt;
@@ -667,14 +667,30 @@ To disable port filter, put the following in your <code>shiro.ini</code>:</p>
 <div class="paragraph">
 <p>When behind SSL-terminating proxy, Shiro may not be able to determine if SSL was used.
 <code>X-Forwarded-Proto</code> header can mitigate this. You can configure your proxy set this header to <code>https</code> to tell Shiro
-when SSL is used. Below is a haproxy configuration excerpt:</p>
+when SSL is used. In addition, it&#8217;s always good practice to rewrite redirect response headers.
+Below is a haproxy configuration excerpt:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">....
 frontend tcp-in
     http-request set-header X-Forwarded-Proto https if { ssl_fc }
+backend server1
+    http-response replace-header Location ^http://(.*)$ https://\1
 ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As an optimization technique, Shiro tries to issue all redirection according to the <code>X-Forwarded-Proto</code> header. If the header is not present, Shiro will use the current request scheme.
+If this behavior is not desired, you can add the following property into <code>web.xml</code></p>
+</div>
+<div class="listingblock">
+<div class="title">Disable redirection optimization</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;context-param&gt;
+    &lt;param-name&gt;org.apache.shiro.ee.redirect.disabled&lt;/param-name&gt;
+    &lt;param-value&gt;true&lt;/param-value&gt;
+&lt;/context-param&gt;</code></pre>
 </div>
 </div>
 </div>
