@@ -45,11 +45,11 @@
 
   <h3 id="${release.version?replace(".", "")}Source">${release.version} Source Code Distribution</h3>
 
-  <p>The source bundle requires JDK 1.8 and Maven 3.0.3+ to build:
+  <p>The source bundle requires JDK 11+ and Maven 3.8+ to build:
 
   <code><a class="external-link" href="${downloadUrl}${release.version}/shiro-root-${release.version}-source-release.zip">shiro-root-${release.version}-source-release.zip</a></code>
     (<a class="external-link"
-        href="${downloadHashUrl}${release.version}/shiro-root-${release.version}-source-release.zip.asc">pgp</a>, <a
+        href="${downloadHashUrl}${release.version}/shiro-root-${release.version}-source-release.zip.asc.txt">pgp</a>, <a
             class="external-link"
             href="${downloadHashUrl}${release.version}/shiro-root-${release.version}-source-release.zip.sha512">sha512</a>)
   </code>
