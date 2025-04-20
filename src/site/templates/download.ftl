@@ -14,10 +14,12 @@
 <#if ((content.releases).versions)??>
   <#assign displayReleases=((content.releases).versions)![] />
   <#assign downloadUrl="https://www.apache.org/dyn/closer.lua/shiro/" />
+  <#assign appendToGpg=".txt" />
 <#else>
   <#-- if not releases are given using :jbake-release:, assume oldReleases (release-archive.html). -->
   <#assign displayReleases=versions.oldReleases />
   <#assign downloadUrl="https://archive.apache.org/dist/shiro/" />
+  <#assign appendToGpg="" />
 </#if>
 
 <#assign downloadHashUrl="https://downloads.apache.org/shiro/" />
@@ -36,7 +38,7 @@
   </ul>
 </p>
 
-
+q
 
 <#list displayReleases as version>
   <#assign release=versions.releases[version] />
@@ -49,7 +51,7 @@
 
   <code><a class="external-link" href="${downloadUrl}${release.version}/shiro-root-${release.version}-source-release.zip">shiro-root-${release.version}-source-release.zip</a></code>
     (<a class="external-link"
-        href="${downloadHashUrl}${release.version}/shiro-root-${release.version}-source-release.zip.asc.txt">pgp</a>, <a
+        href="${downloadHashUrl}${release.version}/shiro-root-${release.version}-source-release.zip.asc${appendToGpg}">pgp</a>, <a
             class="external-link"
             href="${downloadHashUrl}${release.version}/shiro-root-${release.version}-source-release.zip.sha512">sha512</a>)
   </code>
