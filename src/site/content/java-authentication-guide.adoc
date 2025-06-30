@@ -44,12 +44,12 @@ Here is some code on how you do this in Shiro Specifically.
 
 [source,java]
 ----
-//Example using most common scenario: 
-//String username and password.  Acquire in 
+//Example using most common scenario:
+//String username and password.  Acquire in
 //system-specific manner (HTTP request, GUI, etc)
 UsernamePasswordToken token = new UsernamePasswordToken( username, password );
 
-//”Remember Me” built-in, just do this: 
+//”Remember Me” built-in, just do this:
 token.setRememberMe(true);
 
 ----
@@ -76,13 +76,13 @@ In Shiro, we try to make this part as quick and easy as humanly possible. We hav
 
 [source,java]
 ----
-//With most of Shiro, you'll always want to make sure you're working with the currently 
-//executing user, referred to as the subject 
+//With most of Shiro, you'll always want to make sure you're working with the currently
+//executing user, referred to as the subject
 Subject currentUser = SecurityUtils.getSubject();
 
-//Authenticate the subject by passing 
-//the user name and password token 
-//into the login method 
+//Authenticate the subject by passing
+//the user name and password token
+//into the login method
 currentUser.login(token);
 ----
 

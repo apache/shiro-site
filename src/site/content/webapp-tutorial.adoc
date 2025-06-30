@@ -63,7 +63,7 @@ Now that you have forked the repository to your own GitHub account, clone it on 
 
 [source,bash]
 ----
-$ git clone git@github.com:$YOUR_GITHUB_USERNAME/apache-shiro-tutorial-webapp.git    
+$ git clone git@github.com:$YOUR_GITHUB_USERNAME/apache-shiro-tutorial-webapp.git
 
 ----
 
@@ -124,7 +124,7 @@ Now that you've cloned the project, you can run the web application by executing
 $ mvn jetty:run
 ----
 
-Next, open your web browser to http://localhost:8080[localhost:8080], and you'll see the home page with a *Hello, World!* greeting. 
+Next, open your web browser to http://localhost:8080[localhost:8080], and you'll see the home page with a *Hello, World!* greeting.
 
 Hit `ctl-C` to shut down the web app.
 
@@ -237,13 +237,13 @@ Before we can log in, or logout, or perform role-based or permission-based acces
 
 We will need to configure Shiro to access a _User Store_ of some type, so it can look up users to perform login attempts, or check roles for security decisions, etc. There are many types of user stores that any application might need to access: maybe you store users in a MySQL database, maybe in MongoDB, maybe your company stores user accounts in LDAP or Active Directory, maybe you store them in a simple file, or some other proprietary data store.
 
-Shiro does this via what it calls a https://shiro.apache.org/architecture.html[`Realm`]. From Shiro's documentation: 
+Shiro does this via what it calls a https://shiro.apache.org/architecture.html[`Realm`]. From Shiro's documentation:
 
 ____
 
-Realms act as the ‘bridge’ or ‘connector’ between Shiro and your application’s security data. When it comes time to actually interact with security-related data like user accounts to perform authentication (login) and authorization (access control), Shiro looks up many of these things from one or more Realms configured for an application. 
+Realms act as the ‘bridge’ or ‘connector’ between Shiro and your application’s security data. When it comes time to actually interact with security-related data like user accounts to perform authentication (login) and authorization (access control), Shiro looks up many of these things from one or more Realms configured for an application.
 
-In this sense a Realm is essentially a security-specific https://en.wikipedia.org/wiki/Data_access_object[DAO]: it encapsulates connection details for data sources and makes the associated data available to Shiro as needed. When configuring Shiro, you must specify at least one Realm to use for authentication and/or authorization. The SecurityManager may be configured with multiple Realms, but at least one is required. 
+In this sense a Realm is essentially a security-specific https://en.wikipedia.org/wiki/Data_access_object[DAO]: it encapsulates connection details for data sources and makes the associated data available to Shiro as needed. When configuring Shiro, you must specify at least one Realm to use for authentication and/or authorization. The SecurityManager may be configured with multiple Realms, but at least one is required.
 
 Shiro provides out-of-the-box Realms to connect to a number of security data sources (aka directories) such as LDAP, relational databases (JDBC), text configuration sources like INI and properties files, and more. You can plug in your own Realm implementations to represent custom data sources if the default Realms do not meet your needs.
 
@@ -342,7 +342,7 @@ curl -u $API_KEY_ID:$API_KEY_SECRET \
      '$TENANT_HREF/applications?name=My%20Application'
 ----
 
-where: 
+where:
 
 * $YOUR_API_KEY_ID is the apiKey.id value in apiKey.properties and
 * $YOUR_API_KEY_SECRET is the apiKey.secret value in apiKey.properties
@@ -400,7 +400,7 @@ Once you choose at least one user store to connect to for Shiro's needs, we'll n
 
 If you've checked out the `step2` branch, you'll notice the `src/main/webapp/WEB-INF/shiro.ini` file's `[main]` section now has the following additions:
 
-Note the optional lines: 
+Note the optional lines:
 
 * If you have been using Stormpath for a while, and you have more than one Stormpath application, the `stormpathRealm.applicationRestUrl` property must be set.
 
@@ -735,7 +735,7 @@ We update the `/home.jsp` page to let the user know what roles they have and whi
 
 <p>Here are the roles you have and don't have. Log out and log back in under different user
     accounts to see different roles.</p>
-    
+
 <h3>Roles you have:</h3>
 
 <p>
@@ -813,7 +813,7 @@ This adds two permissions directly to the Stormpath Account:
 * `ship:NCC-1701-D:command`
 * `user:jlpicard:edit`
 
-These use Shiro's https://shiro.apache.org/permissions.html[WildcardPermission] syntax. 
+These use Shiro's https://shiro.apache.org/permissions.html[WildcardPermission] syntax.
 
 The first basically means _the ability to 'command' the 'ship' with identifier 'NCC-1701-D'_. This is an example of an _instance-level_ permission: controlling access to a specific _instance_ `NCC-1701-D` of a resource `ship`. The second is also an instance-level permission that states _the ability to `edit` the `user` with identifier `jlpicard`_.
 
