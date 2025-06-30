@@ -189,7 +189,7 @@ How long you keep the subject bound to the thread (or swap it out for a new inst
 
 The `tearDownSubject()` method in the example uses a Junit 4 annotation to ensure that the Subject is cleared from the thread after every test method is executed, no matter what. This requires you to set up a new `Subject` instance and set it (via `setSubject`) for every test that executes.
 
-This is not strictly necessary, however. For example, you could just bind a new Subject instance (via `setSujbect`) at the beginning of every test, say, in an `@Before`-annotated method. But if you're going to do that, you might as well have the `@After tearDownSubject()` method to keep things symmetrical and 'clean'.
+This is not strictly necessary, however. For example, you could just bind a new Subject instance (via `setSubject`) at the beginning of every test, say, in an `@Before`-annotated method. But if you're going to do that, you might as well have the `@After tearDownSubject()` method to keep things symmetrical and 'clean'.
 
 You can mix and match this setup/teardown logic in each method manually or use the @Before and @After annotations as you see fit. The `AbstractShiroTest` super class will however unbind the Subject from the thread after all tests because of the `@AfterClass` annotation in its `tearDownShiro()` method.
 

@@ -92,7 +92,7 @@
           <h2 class="panel-title"> Integrations</h2>
         </div>
         <div class="card-body shadow-sm pb-2">
-          <p>API&#8217;s giving you power and simplicty beyond what Java provides by default...</p>
+          <p>API&#8217;s giving you power and simplicity beyond what Java provides by default...</p>
           <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>integration.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
         </div>
       </div>

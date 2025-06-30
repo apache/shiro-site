@@ -15,13 +15,13 @@
   <#assign displayReleases=((content.releases).versions)![] />
   <#assign downloadUrl="https://www.apache.org/dyn/closer.lua/shiro/" />
   <#assign appendToGpg=".txt" />
-  <#assign buildRequitements="The source bundle requires JDK 11+ and Maven 3.8+ to build:"/>
+  <#assign buildRequirements="The source bundle requires JDK 11+ and Maven 3.8+ to build:"/>
 <#else>
   <#-- if not releases are given using :jbake-release:, assume oldReleases (release-archive.html). -->
   <#assign displayReleases=versions.oldReleases />
   <#assign downloadUrl="https://archive.apache.org/dist/shiro/" />
   <#assign appendToGpg="" />
-  <#assign buildRequitements="The source bundle requires JDK 1.8 and Maven 3.0.3+ to build:"/>
+  <#assign buildRequirements="The source bundle requires JDK 1.8 and Maven 3.0.3+ to build:"/>
 </#if>
 
 <#assign downloadHashUrl="https://downloads.apache.org/shiro/" />
@@ -48,7 +48,7 @@
 
   <h3 id="${release.version?replace(".", "")}Source">${release.version} Source Code Distribution</h3>
 
-  <p>${buildRequitements}
+  <p>${buildRequirements}
 
   <code><a class="external-link" href="${downloadUrl}${release.version}/shiro-root-${release.version}-source-release.zip">shiro-root-${release.version}-source-release.zip</a></code>
     (<a class="external-link"
