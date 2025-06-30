@@ -101,8 +101,8 @@ casRealm.casService = http://application.examples.com/shiro-cas
 ----
 
 The _casServerUrlPrefix_ is the url of the CAS server (for example: https://server.cas.com).
-The _casService_ is the application service url, the url on wich the application receives CAS service ticket (for example: http://application.examples.com/shiro-cas).
-The _validationProcol_ can be SAML or CAS (default): attributes and remember me information are only pushed throught the SAML validation procotol (except specific customizations). It depends on the version of the CAS server: SAML protocol can be used with CAS server version &gt;= 3.1.
+The _casService_ is the application service url, the url on which the application receives CAS service ticket (for example: http://application.examples.com/shiro-cas).
+The _validationProcol_ can be SAML or CAS (default): attributes and remember me information are only pushed through the SAML validation protocol (except specific customizations). It depends on the version of the CAS server: SAML protocol can be used with CAS server version &gt;= 3.1.
 
 [CAUTION]
 ====
@@ -116,7 +116,7 @@ If you choose SAML validation, you need some more specific dependencies:
 The _defaultRoles_ is the default roles given to the authenticated user after CAS authentication success.
 The _defaultPermissions_ is the default permissions given to the authenticated user after CAS authentication success.
 The _roleAttributeNames_ defines the names of the attributes received from CAS response which define roles to give to the authenticated user (the roles are separated by comas).
-The _permissionAttributeNames_ defines the names of the attributes received from CAS response which define permissions to give to the autnewhenticated user (the permissions are separated by comas).
+The _permissionAttributeNames_ defines the names of the attributes received from CAS response which define permissions to give to the authenticated user (the permissions are separated by comas).
 
 === CasSubjectFactory
 
@@ -151,7 +151,7 @@ And the login url if the user is not authenticated is to be defined on the CAS s
 roles.loginUrl = https://server.cas.com/login?service=http://application.examples.com/shiro-cas
 ----
 
-This way, if you are not authenticated and try to acces a _/protected/**_ url, you are redirected to the CAS server for authentication.
+This way, if you are not authenticated and try to access a _/protected/**_ url, you are redirected to the CAS server for authentication.
 
 === Complete configuration sample
 
