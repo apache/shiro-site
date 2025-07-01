@@ -27,7 +27,7 @@ The absolute simplest way to create a SecurityManager and make it available to t
 Realm realm = //instantiate or acquire a Realm instance.  We'll discuss Realms later.
 SecurityManager securityManager = new DefaultSecurityManager(realm);
 
-//Make the SecurityManager instance available to the entire application via static memory: 
+//Make the SecurityManager instance available to the entire application via static memory:
 SecurityUtils.setSecurityManager(securityManager);
 
 ----

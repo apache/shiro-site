@@ -40,5 +40,5 @@
 	${content.body}
 
 	<hr />
-	
+
 <#include "footer.ftl">

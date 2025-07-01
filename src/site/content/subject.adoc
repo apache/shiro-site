@@ -111,7 +111,7 @@ Let's say who they are:
 
 [source,java]
 ----
-//print their identifying principal (in this case, a username): 
+//print their identifying principal (in this case, a username):
 log.info( "User [" + currentUser.getPrincipal() + "] logged in successfully." );
 ----
 
@@ -210,7 +210,7 @@ The default, no-arg `Subject.Builder()` constructor shown above will use the app
 
 [source,java]
 ----
-SecurityManager securityManager = //acquired from somewhere 
+SecurityManager securityManager = //acquired from somewhere
 Subject subject = new Subject.Builder(securityManager).buildSubject();
 ----
 
@@ -219,7 +219,7 @@ For example, if you have a session ID and want to acquire the `Subject` that 'ow
 
 [source,java]
 ----
-Serializable sessionId = //acquired from somewhere 
+Serializable sessionId = //acquired from somewhere
 Subject subject = new Subject.Builder().sessionId(sessionId).buildSubject();
 ----
 
@@ -227,7 +227,7 @@ Similarly, if you want to create a `Subject` instance that reflects a certain id
 
 [source,java]
 ----
-Object userIdentity = //a long ID or String username, or whatever the "myRealm" requires 
+Object userIdentity = //a long ID or String username, or whatever the "myRealm" requires
 String realmName = "myRealm";
 PrincipalCollection principals = new SimplePrincipalCollection(userIdentity, realmName);
 Subject subject = new Subject.Builder().principals(principals).buildSubject();
@@ -265,7 +265,7 @@ For example, let's say that you had some logic to perform when the system starts
 
 [source,java]
 ----
-Subject subject = //build or acquire subject 
+Subject subject = //build or acquire subject
 subject.execute( new Runnable() {
     public void run() {
         //subject is 'bound' to the current thread now
@@ -273,7 +273,7 @@ subject.execute( new Runnable() {
         //code called from here will work
     }
 });
-//At this point, the Subject is no longer associated 
+//At this point, the Subject is no longer associated
 //with the current thread and everything is as it was before
 ----
 
@@ -281,7 +281,7 @@ Of course `Callable` instances are supported as well, so you can have return val
 
 [source,java]
 ----
-Subject subject = //build or acquire subject 
+Subject subject = //build or acquire subject
 MyResult result = subject.execute( new Callable<MyResult>() {
     public MyResult call() throws Exception {
         //subject is 'bound' to the current thread now
@@ -293,7 +293,7 @@ MyResult result = subject.execute( new Callable<MyResult>() {
         return myResult;
     }
 });
-//At this point, the Subject is no longer associated 
+//At this point, the Subject is no longer associated
 //with the current thread and everything is as it was before
 ----
 
@@ -356,11 +356,11 @@ Callable example:
 [source,java]
 ----
 Subject subject = new Subject.Builder()...
-Callable work = //build/acquire a Callable instance. 
-//associate the work with the built subject so SecurityUtils.getSubject() calls works properly: 
+Callable work = //build/acquire a Callable instance.
+//associate the work with the built subject so SecurityUtils.getSubject() calls works properly:
 work = subject.associateWith(work);
 ExecutorService executor = java.util.concurrent.Executors.newCachedThreadPool();
-//execute the work on a different thread as the built Subject: 
+//execute the work on a different thread as the built Subject:
 executor.execute(work);
 ----
 
@@ -369,8 +369,8 @@ Runnable example:
 [source,java]
 ----
 Subject subject = new Subject.Builder()...
-Runnable work = //build/acquire a Runnable instance. 
-//associate the work with the built subject so SecurityUtils.getSubject() calls works properly: 
+Runnable work = //build/acquire a Runnable instance.
+//associate the work with the built subject so SecurityUtils.getSubject() calls works properly:
 work = subject.associateWith(work);
 ExecutorService executor = java.util.concurrent.Executors.newCachedThreadPool();
 //execute the work on a different thread as the built Subject:
