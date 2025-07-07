@@ -39,7 +39,7 @@ var hljs = (function () {
 
     var deepFreeze$1 = deepFreezeEs6.exports;
 
-    
+
     /** @typedef {import('highlight.js').CompiledMode} CompiledMode */
     /** @implements CallbackResponse */
 
