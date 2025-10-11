@@ -93,6 +93,7 @@ By default, the `EnvironmentLoaderListener` will create an `IniWebEnvironment` i
 
 This allows you to customize how a configuration format is parsed and represented as a `WebEnvironment` instance. You could subclass the existing `IniWebEnvironment` for custom behavior, or support different configuration formats entirely. For example, if someone wanted to configure Shiro in XML instead of INI, they could create an XML-based implementation, e.g. `com.foo.bar.shiro.XmlWebEnvironment`.
 
+[#custom_configuration_locations]
 ===== Custom Configuration Locations
 
 The `IniWebEnvironment` class expects to read and load INI configuration files. By default, this class will automatically look in the following two locations for the Shiro `.ini` configuration (in order):

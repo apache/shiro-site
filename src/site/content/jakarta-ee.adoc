@@ -180,6 +180,24 @@ The module adds `ShiroFilter` to the Servlet configuration. For most cases, the 
 </filter-mapping>
 ... other filters ...
 ----
+Shiro Jakarta EE filter forces request encoding to UTF-8. This is the desired outcome for most, if not all cases. However, if this is not desired, you can disable it by adding the following parameter to `web.xml`:
+[source,xml]
+.Note: this parameter is only available in Shiro 2.0.6 or later
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.disable-character-encoding</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+If you need to set a different encoding than UTF-8, add the following parameter to `web.xml`:
+[source,xml]
+.Note: this parameter is only available in Shiro 2.0.6 or later
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.character-encoding</param-name>
+    <param-value>ISO-8859-2</param-value>
+</context-param>
+----
 
 ==== Shiro.ini file locations
 The module finds shiro.ini in the same manner as link:web.html#custom_configuration_locations[Web Configuration] (WEB-INF/shiro.ini by default). Additionally, configuration is enhanced to merge two separate configuration files:
