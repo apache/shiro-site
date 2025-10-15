@@ -180,6 +180,24 @@ The module adds `ShiroFilter` to the Servlet configuration. For most cases, the 
 </filter-mapping>
 ... other filters ...
 ----
+Ordinarily, Jakarta EE integration module will remove URL session tracking mode from the configuration, overriding any other session tracking configuration specified in `web.xml`. This is to align with good security practices. If URL tracking mode is desired (such as for testing or historical reasons), add the following to `web.xml`:
+[source,xml]
+.Note: this parameter is only available in Shiro 2.0.6 or later
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.enable-url-session-tracking</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+If no manipulation of session tracking modes is desired at all, add the following to `web.xml`:
+[source,xml]
+.Note: this parameter is only available in Shiro 2.0.6 or later
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.session-tracking-configuration.disabled</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
 Shiro Jakarta EE filter forces request encoding to UTF-8. This is the desired outcome for most, if not all cases. However, if this is not desired, you can disable it by adding the following parameter to `web.xml`:
 [source,xml]
 .Note: this parameter is only available in Shiro 2.0.6 or later
