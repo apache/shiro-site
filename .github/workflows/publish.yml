@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: 'Checkout main'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           path: 'src'
           persist-credentials: false
@@ -42,7 +42,7 @@ jobs:
         working-directory: ./src
 
       - name: 'Checkout target'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: 'apache/shiro-site'
           ref: 'asf-site'
