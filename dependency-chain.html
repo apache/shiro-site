@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-  2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Using FlowLogix Dependency Chains with Apache Shiro | Apache Shiro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content='documentation,jakarta-ee,dependencies,integrations'>
+    <meta name="generator" content="JBake">
+    <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
+    <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
+    <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
+
+    <meta property="og:title" content="Using FlowLogix Dependency Chains with Apache Shiro | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2026-01-03T00:00:00Z"/>
+    <meta property="article:tag" content='documentation'/>
+    <meta property="article:tag" content='jakarta-ee'/>
+    <meta property="article:tag" content='dependencies'/>
+    <meta property="article:tag" content='integrations'/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content='https://shiro.apache.org/dependency-chain.html'/>
+    <meta property="og:image" content='images/shiro-featured-image.png'/>
+    <meta property="og:image:width" content='1200'/>
+    <meta property="og:image:height" content='628'/>
+    <meta property="og:site_name" content="Apache Shiro"/>
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/asciidoctor.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="highlight.js-11.2.0/styles/default.min.css" rel="stylesheet">
+    <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Matomo -->
+    <script>
+     var _paq = window._paq = window._paq || [];
+     /* tracker methods like "setCustomDimension" should be called before
+    "trackPageView" */
+     _paq.push(["setDoNotTrack", true]);
+     _paq.push(["disableCookies"]);
+     _paq.push(['trackPageView']);
+     _paq.push(['enableLinkTracking']);
+     (function() {
+       var u="https://analytics.apache.org/";
+       _paq.push(['setTrackerUrl', u+'matomo.php']);
+       _paq.push(['setSiteId', '2']);
+       var d=document, g=d.createElement('script'),
+    s=d.getElementsByTagName('script')[0];
+       g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+     })();
+    </script>
+    <!-- End Matomo Code -->
+  </head>
+  <body>
+    <div id="top-bar"></div>
+    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
+
+    <div id="wrap">
+
+      <div class="masthead">
+        <p class="lead">
+          <a href="index.html"><img src="images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <span class="tagline">Simple. Java. Security.</span>
+          <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
+          </a>
+        </p>
+      </div>
+
+	<!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="get-started.html">Get Started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="documentation.html">Docs</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-webapps" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Web Apps
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
+                <li><a class="dropdown-item" href="web.html">General</a></li>
+                <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><a class="dropdown-item" href="jakarta-ee.html">Jakarta EE</a></li>
+                <li><a class="dropdown-item" href="dependency-chain.html">Jakarta EE with Dependency Chains</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="web-features.html">Features</a></li>
+              </ul>
+            </li>
+
+            <li><a class="nav-link" href="features.html">Features</a></li>
+
+            <!-- integrations -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-integrations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Integrations
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
+                <li><a class="dropdown-item" href="spring-boot.html">Spring</a></li>
+                <li><a class="dropdown-item" href="guice.html">Guice</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="integration.html">Third-Party Integrations</a></li>
+              </ul>
+            </li>
+
+            <!-- Community -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-community" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Community
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
+                <li><a class="dropdown-item" href="forums.html">Community Forums</a></li>
+                <li><a class="dropdown-item" href="mailing-lists.html">Mailing Lists</a></li>
+                <li><a class="dropdown-item" href="articles.html">Articles</a></li>
+                <li><a class="dropdown-item" href="news.html">News</a></li>
+                <li><a class="dropdown-item" href="events.html">Events</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="community.html">More</a></li>
+              </ul>
+            </li>
+
+            <!-- About -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-about" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                About
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
+                <li><a class="dropdown-item" href="about.html">About</a></li>
+                <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a class="dropdown-item" href="security-model.html">Security Model</a></li>
+                <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="d-flex justify-content-end navbar-nav mb-2 mb-lg-0">
+            <!-- The ASF -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-asf" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apache Software Foundation
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
+                <li><a class="dropdown-item" href="https://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/security/">Security</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+	<div class="page-header">
+		<h1>Using FlowLogix Dependency Chains with Apache Shiro</h1>
+	</div>
+
+
+  <div class="admonitionblock tip">
+    <table>
+      <tbody>
+        <tr>
+          <td class="icon">
+            <div class="title">Handy Hint</div>
+          </td>
+          <td class="content">
+            <div class="title">Shiro v1 version notice</div>
+            <div class="paragraph">
+              <p>As of February 28, 2024, Shiro v1 was superseded by v2.<p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Managing Apache Shiro dependencies in Jakarta EE projects can be simplified using the FlowLogix Dependency Chains. This approach provides a cleaner alternative to managing the BOM (Bill of Materials) directly, reducing configuration complexity and common errors.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="applicability">Applicability</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This guide is intended for Jakarta EE projects using Apache Shiro for security.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Dependency chains are not suitable for Spring or SpringBoot projects</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For Spring / SpringBoot projects, you need to use a <a href="jakarta-ee.html#bom_approach">traditional BOM approach</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what_is_the_flowlogix_dependency_chain">What is the FlowLogix Dependency Chain?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>FlowLogix provides pre-configured Maven dependency chains that bundle related dependencies together. For Apache Shiro with Jakarta EE, the <code>shiro-jakarta</code> module includes all necessary Shiro components with the correct Jakarta classifier, eliminating the need to declare each dependency individually.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="why_use_dependency_chains_instead_of_bom">Why Use Dependency Chains Instead of BOM?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Traditional BOM usage requires importing the BOM in <code>&lt;dependencyManagement&gt;</code> and then declaring each individual dependency. This approach can lead to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Forgetting to include required transitive dependencies</p>
+</li>
+<li>
+<p>Inconsistent versions when mixing dependencies</p>
+</li>
+<li>
+<p>Verbose configuration with multiple dependency declarations</p>
+</li>
+<li>
+<p>Missing the <code>jakarta</code> classifier on artifacts</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The dependency chain approach bundles everything you need in a single dependency, automatically including:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>shiro-core</code> (jakarta classifier)</p>
+</li>
+<li>
+<p><code>shiro-web</code> (jakarta classifier)</p>
+</li>
+<li>
+<p><code>shiro-jakarta-ee</code> (jakarta classifier)</p>
+</li>
+<li>
+<p><code>shiro-cdi</code> (jakarta classifier)</p>
+</li>
+<li>
+<p><code>shiro-jaxrs</code> (jakarta classifier)</p>
+</li>
+<li>
+<p><code>commons-configuration2</code></p>
+</li>
+<li>
+<p><code>omnifaces</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="maven_configuration">Maven Configuration</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="using_the_dependency_chain_recommended">Using the Dependency Chain (Recommended)</h3>
+<div class="paragraph">
+<p>Add a single dependency to include all Shiro Jakarta EE components:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.flowlogix.depchain&lt;/groupId&gt;
+        &lt;artifactId&gt;shiro-jakarta&lt;/artifactId&gt;
+        &lt;!-- replace LATEST with a version number --&gt;
+        &lt;version&gt;LATEST&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="comparison_with_traditional_bom_approach">Comparison with Traditional BOM Approach</h3>
+<div class="paragraph">
+<p>For reference, the traditional BOM approach requires significantly more configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;!-- Traditional BOM Approach (more verbose) --&gt;
+&lt;dependencyManagement&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+            &lt;artifactId&gt;shiro-bom&lt;/artifactId&gt;
+            &lt;version&gt;2.0.6&lt;/version&gt;
+            &lt;scope&gt;import&lt;/scope&gt;
+            &lt;type&gt;pom&lt;/type&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;
+
+&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+        &lt;artifactId&gt;shiro-jakarta-ee&lt;/artifactId&gt;
+        &lt;classifier&gt;jakarta&lt;/classifier&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+        &lt;artifactId&gt;shiro-cdi&lt;/artifactId&gt;
+        &lt;classifier&gt;jakarta&lt;/classifier&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+        &lt;artifactId&gt;shiro-core&lt;/artifactId&gt;
+        &lt;classifier&gt;jakarta&lt;/classifier&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+        &lt;artifactId&gt;shiro-web&lt;/artifactId&gt;
+        &lt;classifier&gt;jakarta&lt;/classifier&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.omnifaces&lt;/groupId&gt;
+        &lt;artifactId&gt;omnifaces&lt;/artifactId&gt;
+        &lt;version&gt;LATEST&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="gradle_configuration">Gradle Configuration</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="using_the_dependency_chain">Using the Dependency Chain</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">dependencies {
+    // replace LATEST with a version number
+    implementation platform('com.flowlogix.depchain:shiro-jakarta:LATEST')
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For Kotlin DSL:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">dependencies {
+    // replace LATEST with a version number
+    implementation(platform("com.flowlogix.depchain:shiro-jakarta:LATEST"))
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional_resources">Additional Resources</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.flowlogix.com/depchains">FlowLogix Dependency Chains Documentation</a></p>
+</li>
+<li>
+<p><a href="https://github.com/flowlogix/depchain">Dependency Chain - GitHub Repository</a></p>
+</li>
+<li>
+<p><a href="https://github.com/flowlogix/base-pom">FlowLogix Base POM - GitHub Repository</a></p>
+</li>
+<li>
+<p><a href="https://github.com/flowlogix/flowlogix">FlowLogix Jakarta EE Components - GitHub Repository</a></p>
+</li>
+<li>
+<p><a href="jakarta-ee.html">Apache Shiro Jakarta EE Integration Guide</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="complete_example_project">Complete Example Project</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can create a complete, testable project using the <a href="https://start.flowlogix.com">FlowLogix Starter</a> that supports Shiro with Jakarta EE, Jakarta Faces, PrimeFaces, and Omnifaces.</p>
+</div>
+<div class="paragraph">
+<p>Here is a minimal <code>pom.xml</code> for a Jakarta EE web application with Shiro security:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;com.example&lt;/groupId&gt;
+    &lt;artifactId&gt;shiro-jakarta-demo&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;packaging&gt;war&lt;/packaging&gt;
+
+    &lt;properties&gt;
+        &lt;maven.compiler.source&gt;17&lt;/maven.compiler.source&gt;
+        &lt;maven.compiler.target&gt;17&lt;/maven.compiler.target&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;!-- Jakarta EE API --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;jakarta.platform&lt;/groupId&gt;
+            &lt;artifactId&gt;jakarta.jakartaee-api&lt;/artifactId&gt;
+            &lt;version&gt;11.0.0&lt;/version&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
+
+        &lt;!-- Shiro Jakarta EE - All-in-one dependency --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.flowlogix.depchain&lt;/groupId&gt;
+            &lt;artifactId&gt;shiro-jakarta&lt;/artifactId&gt;
+            &lt;!-- replace with latest version --&gt;
+            &lt;version&gt;106&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="migrating_from_bom_to_dependency_chain">Migrating from BOM to Dependency Chain</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To migrate an existing project from the traditional BOM approach:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Remove the <code>shiro-bom</code> import from <code>&lt;dependencyManagement&gt;</code></p>
+</li>
+<li>
+<p>Remove individual Shiro dependency declarations</p>
+</li>
+<li>
+<p>Add the single <code>shiro-jakarta</code> dependency chain</p>
+</li>
+<li>
+<p>Remove any manually specified <code>jakarta</code> classifiers</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The dependency chain automatically handles classifier configuration and ensures all required components are included with compatible versions.</p>
+</div>
+</div>
+</div>
+	<hr />
+
+</div> 
+
+    <div class="footer-padding"></div>
+
+    <div class="container-fluid pt-2 border-top" id="custom-footer">
+      <footer class="row justify-content-between align-items-center">
+        <div class=" col-md-5">
+          <div class="copyright-footer justify-content-start">
+            <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
+            <p class="text-muted">Copyright &copy; 2008-2026 The Apache Software Foundation</p>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center col-md-1">
+          <a class="btn btn-social"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
+        </div>
+
+        <div class="d-flex justify-content-end col-md-4" id="editThisPage">
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/dependency-chain.adoc"/>
+        </div>
+
+        <div class="d-flex col-md-2 justify-content-end" style="position: relative">
+          <div class="footer-shield"></div>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="highlight.js-11.2.0/highlight.min.js"></script>
+    <script src="js/shiro.js"></script>
+
+    <script>
+        docReady(
+          addPageEditLink()
+      );
+    </script>
+    <script>hljs.highlightAll();</script>
+
+    </body>
+</html>

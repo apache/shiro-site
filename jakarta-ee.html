@@ -118,6 +118,7 @@
                 <li><a class="dropdown-item" href="web.html">General</a></li>
                 <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
                 <li><a class="dropdown-item" href="jakarta-ee.html">Jakarta EE</a></li>
+                <li><a class="dropdown-item" href="dependency-chain.html">Jakarta EE with Dependency Chains</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="web-features.html">Features</a></li>
               </ul>
@@ -162,6 +163,7 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
                 <li><a class="dropdown-item" href="about.html">About</a></li>
                 <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a class="dropdown-item" href="security-model.html">Security Model</a></li>
                 <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
               </ul>
             </li>
@@ -427,7 +429,80 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
 <div class="sect2">
 <h3 id="how_to_use_jakarta_9_jakarta_namespace">How to use Jakarta 9+ (jakarta.* namespace)</h3>
 <div class="paragraph">
-<p>Use the Shiro artifacts with Jakarta classifiers:</p>
+<p>There are two approaches to include Shiro Jakarta EE dependencies in your project:</p>
+</div>
+<div class="sect3">
+<h4 id="option_1_flowlogix_dependency_chain_recommended">Option 1: FlowLogix Dependency Chain (Recommended)</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This option is applicable only to Jakarta EE, not Spring / SpringBoot.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The simplest approach is to use the FlowLogix dependency chain, which bundles all required Shiro Jakarta EE components in a single dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.flowlogix.depchain&lt;/groupId&gt;
+        &lt;artifactId&gt;shiro-jakarta&lt;/artifactId&gt;
+        &lt;!-- replace LATEST with a version number --&gt;
+        &lt;version&gt;LATEST&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This approach automatically includes all Shiro modules (<code>shiro-core</code>, <code>shiro-web</code>, <code>shiro-jakarta-ee</code>, <code>shiro-cdi</code>, <code>shiro-jaxrs</code>) with the correct Jakarta classifier, plus required dependencies like OmniFaces. See the <a href="dependency-chain.html">Dependency Chain Guide</a> for more details, Gradle examples, and migration instructions.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="bom_approach">Option 2: Traditional BOM with Individual Dependencies</h4>
+<div class="paragraph">
+<p>Alternatively, use the Shiro artifacts with Jakarta classifiers directly</p>
+</div>
+<div class="paragraph">
+<p>Import the Shiro BOM as seen below</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Shiro BOM is a <strong>necessary</strong> step, unless you are using FlowLogix Depchain as described above.
+The BOM is needed if you are using Spring / SpringBoot.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependencyManagement&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+            &lt;artifactId&gt;shiro-bom&lt;/artifactId&gt;
+            &lt;version&gt;2.0.6&lt;/version&gt;
+            &lt;scope&gt;import&lt;/scope&gt;
+            &lt;type&gt;pom&lt;/type&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;</code></pre>
+</div>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -462,23 +537,6 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
   &lt;version&gt;LATEST&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>Import the Shiro BOM as seen below:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependencyManagement&gt;
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
-            &lt;artifactId&gt;shiro-bom&lt;/artifactId&gt;
-            &lt;version&gt;2.0.6&lt;/version&gt;
-            &lt;scope&gt;import&lt;/scope&gt;
-            &lt;type&gt;pom&lt;/type&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-&lt;/dependencyManagement&gt;</code></pre>
 </div>
 </div>
 </div>
@@ -567,7 +625,7 @@ Any Shiro principal object can be injected if annotated by <code>@Principal</cod
 </div>
 </div>
 <div class="sect3">
-<h4 id="automatic_delay_when_login_failed">Automatic delay when login failed</h4>
+<h4 id="rate_limiting">Rate limiting: Automatic delay when login failed</h4>
 <div class="paragraph">
 <p>When user fails to log in, Shiro will automatically delay the failure response for a number of seconds. This can be one of the strategies to prevent brute force attacks.</p>
 </div>
@@ -1029,7 +1087,7 @@ See <a href="jaxrs.html">Jax-RS documentation</a> for more details.</p>
           <div class="copyright-footer justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
             <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
-            <p class="text-muted">Copyright &copy; 2008-2025 The Apache Software Foundation</p>
+            <p class="text-muted">Copyright &copy; 2008-2026 The Apache Software Foundation</p>
           </div>
         </div>
 

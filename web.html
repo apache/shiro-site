@@ -116,6 +116,7 @@
                 <li><a class="dropdown-item" href="web.html">General</a></li>
                 <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
                 <li><a class="dropdown-item" href="jakarta-ee.html">Jakarta EE</a></li>
+                <li><a class="dropdown-item" href="dependency-chain.html">Jakarta EE with Dependency Chains</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="web-features.html">Features</a></li>
               </ul>
@@ -160,6 +161,7 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
                 <li><a class="dropdown-item" href="about.html">About</a></li>
                 <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a class="dropdown-item" href="security-model.html">Security Model</a></li>
                 <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
               </ul>
             </li>
@@ -248,6 +250,7 @@
 <li><a href="#request_specific_enablingdisabling">Request-specific Enabling/Disabling</a></li>
 <li><a href="#path_specific_enablingdisabling">Path-specific Enabling/Disabling</a></li>
 <li><a href="#global_filters">Global Filters</a></li>
+<li><a href="#cors_support">CORS Support</a></li>
 <li><a href="#http_strict_transport_security_hsts">HTTP Strict Transport Security (HSTS)</a></li>
 </ul>
 </li>
@@ -990,6 +993,44 @@ invalidRequest.blockNonAscii = true
 </div>
 </div>
 <div class="sect2">
+<h3 id="cors_support">CORS Support</h3>
+<div class="paragraph">
+<p>When using HTTP-based authentication (like Basic Auth or Bearer Token) in a browser-based application, Cross-Origin Resource Sharing (CORS) pre-flight <code>OPTIONS</code> requests are often sent by the browser. By default, these requests might be rejected if they do not contain authentication headers.</p>
+</div>
+<div class="paragraph">
+<p>To allow pre-flight <code>OPTIONS</code> requests to pass through the authentication filter without requiring credentials, you can configure the <code>allowPreFlightRequests</code> property on any filter extending <code>HttpAuthenticationFilter</code>.</p>
+</div>
+<div class="paragraph">
+<p>This is commonly used with <code>authcBasic</code> (Basic Auth) or <code>authcBearer</code> (Bearer Token / JWT).</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>this feature is only available in Shiro 2.0.7 or later</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+# Example 1: Configuring Basic Auth for CORS
+authcBasic.allowPreFlightRequests = true
+
+# Example 2: Configuring Bearer Auth (if used) for CORS
+authcBearer.allowPreFlightRequests = true
+...</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="http_strict_transport_security_hsts">HTTP Strict Transport Security (HSTS)</h3>
 <div class="paragraph">
 <p>The <a href="static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authz/SslFilter.html">SslFilter</a> (and all of its subclasses) supports enabling/disabling HTTP Strict Transport Security (HSTS).</p>
@@ -1595,7 +1636,7 @@ securityManager.rememberMeManager = $rememberMeManager</code></pre>
           <div class="copyright-footer justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
             <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
-            <p class="text-muted">Copyright &copy; 2008-2025 The Apache Software Foundation</p>
+            <p class="text-muted">Copyright &copy; 2008-2026 The Apache Software Foundation</p>
           </div>
         </div>
 
