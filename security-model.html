@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-  2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Apache Shiro Security Model | Apache Shiro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content='documentation,security'>
+    <meta name="generator" content="JBake">
+    <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
+    <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
+    <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
+
+    <meta property="og:title" content="Apache Shiro Security Model | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2025-01-03T00:00:00Z"/>
+    <meta property="article:tag" content='documentation'/>
+    <meta property="article:tag" content='security'/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content='https://shiro.apache.org/security-model.html'/>
+    <meta property="og:image" content='images/shiro-featured-image.png'/>
+    <meta property="og:image:width" content='1200'/>
+    <meta property="og:image:height" content='628'/>
+    <meta property="og:site_name" content="Apache Shiro"/>
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-icons-1.5.0/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/asciidoctor.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="highlight.js-11.2.0/styles/default.min.css" rel="stylesheet">
+    <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Matomo -->
+    <script>
+     var _paq = window._paq = window._paq || [];
+     /* tracker methods like "setCustomDimension" should be called before
+    "trackPageView" */
+     _paq.push(["setDoNotTrack", true]);
+     _paq.push(["disableCookies"]);
+     _paq.push(['trackPageView']);
+     _paq.push(['enableLinkTracking']);
+     (function() {
+       var u="https://analytics.apache.org/";
+       _paq.push(['setTrackerUrl', u+'matomo.php']);
+       _paq.push(['setSiteId', '2']);
+       var d=document, g=d.createElement('script'),
+    s=d.getElementsByTagName('script')[0];
+       g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+     })();
+    </script>
+    <!-- End Matomo Code -->
+  </head>
+  <body>
+    <div id="top-bar"></div>
+    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
+
+    <div id="wrap">
+
+      <div class="masthead">
+        <p class="lead">
+          <a href="index.html"><img src="images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <span class="tagline">Simple. Java. Security.</span>
+          <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
+          </a>
+        </p>
+      </div>
+
+	<!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="get-started.html">Get Started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="documentation.html">Docs</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-webapps" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Web Apps
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
+                <li><a class="dropdown-item" href="web.html">General</a></li>
+                <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><a class="dropdown-item" href="jakarta-ee.html">Jakarta EE</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="web-features.html">Features</a></li>
+              </ul>
+            </li>
+
+            <li><a class="nav-link" href="features.html">Features</a></li>
+
+            <!-- integrations -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-integrations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Integrations
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
+                <li><a class="dropdown-item" href="spring-boot.html">Spring</a></li>
+                <li><a class="dropdown-item" href="guice.html">Guice</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="integration.html">Third-Party Integrations</a></li>
+              </ul>
+            </li>
+
+            <!-- Community -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-community" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Community
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
+                <li><a class="dropdown-item" href="forums.html">Community Forums</a></li>
+                <li><a class="dropdown-item" href="mailing-lists.html">Mailing Lists</a></li>
+                <li><a class="dropdown-item" href="articles.html">Articles</a></li>
+                <li><a class="dropdown-item" href="news.html">News</a></li>
+                <li><a class="dropdown-item" href="events.html">Events</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="community.html">More</a></li>
+              </ul>
+            </li>
+
+            <!-- About -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-about" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                About
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
+                <li><a class="dropdown-item" href="about.html">About</a></li>
+                <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="d-flex justify-content-end navbar-nav mb-2 mb-lg-0">
+            <!-- The ASF -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-asf" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apache Software Foundation
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
+                <li><a class="dropdown-item" href="https://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/security/">Security</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+	<div class="page-header">
+		<h1>Apache Shiro Security Model</h1>
+	</div>
+
+
+  <div class="admonitionblock tip">
+    <table>
+      <tbody>
+        <tr>
+          <td class="icon">
+            <div class="title">Handy Hint</div>
+          </td>
+          <td class="content">
+            <div class="title">Shiro v1 version notice</div>
+            <div class="paragraph">
+              <p>As of February 28, 2024, Shiro v1 was superseded by v2.<p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#overview">Overview</a></li>
+<li><a href="#trust_boundaries">Trust Boundaries</a>
+<ul class="sectlevel2">
+<li><a href="#application_level_trust">Application-Level Trust</a></li>
+<li><a href="#input_trust">Input Trust</a></li>
+</ul>
+</li>
+<li><a href="#authentication_guarantees">Authentication Guarantees</a>
+<ul class="sectlevel2">
+<li><a href="#what_shiro_provides">What Shiro Provides</a></li>
+<li><a href="#operator_responsibilities">Operator Responsibilities</a></li>
+<li><a href="#username_enumeration">Username Enumeration</a></li>
+</ul>
+</li>
+<li><a href="#authorization_guarantees">Authorization Guarantees</a>
+<ul class="sectlevel2">
+<li><a href="#what_shiro_provides_2">What Shiro Provides</a></li>
+<li><a href="#operator_responsibilities_2">Operator Responsibilities</a></li>
+</ul>
+</li>
+<li><a href="#session_management">Session Management</a>
+<ul class="sectlevel2">
+<li><a href="#what_shiro_provides_3">What Shiro Provides</a></li>
+<li><a href="#security_considerations">Security Considerations</a></li>
+</ul>
+</li>
+<li><a href="#cryptography">Cryptography</a>
+<ul class="sectlevel2">
+<li><a href="#what_shiro_provides_4">What Shiro Provides</a></li>
+<li><a href="#important_notes">Important Notes</a></li>
+</ul>
+</li>
+<li><a href="#web_security">Web Security</a>
+<ul class="sectlevel2">
+<li><a href="#what_shiro_provides_5">What Shiro Provides</a></li>
+<li><a href="#path_traversal_considerations">Path Traversal Considerations</a></li>
+</ul>
+</li>
+<li><a href="#version_discovery">Version Discovery</a></li>
+<li><a href="#logging">Logging</a></li>
+<li><a href="#deployment_recommendations">Deployment Recommendations</a>
+<ul class="sectlevel2">
+<li><a href="#minimum_security_baseline">Minimum Security Baseline</a></li>
+<li><a href="#defense_in_depth">Defense in Depth</a></li>
+</ul>
+</li>
+<li><a href="#reporting_security_vulnerabilities">Reporting Security Vulnerabilities</a></li>
+<li><a href="#additional_resources">Additional Resources</a></li>
+<li><a href="#document_history">Document History</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This document describes Apache Shiro&#8217;s security model, including the assumptions and guarantees the framework makes with respect to security. It serves as a reference for operators deploying Shiro-secured applications and security researchers assessing potential vulnerabilities.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="overview">Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apache Shiro is an application security framework that provides authentication, authorization, cryptography, and session management. Shiro is designed to be used as a <em>library</em> integrated into your application—it is not a standalone security service or server.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Shiro is a security framework, not a security solution. The security of your application depends on how you configure and integrate Shiro, your application&#8217;s architecture, and your operational environment.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trust_boundaries">Trust Boundaries</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="application_level_trust">Application-Level Trust</h3>
+<div class="paragraph">
+<p>Shiro operates within the trust boundary of your application&#8217;s JVM process. It assumes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The application code invoking Shiro APIs is trusted.</p>
+</li>
+<li>
+<p>Configuration files (INI, properties, Spring beans, etc.) are controlled by trusted administrators.</p>
+</li>
+<li>
+<p>The JVM and underlying operating system are secure.</p>
+</li>
+<li>
+<p>Any <code>Realm</code> implementations and their backing data sources are trustworthy.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="input_trust">Input Trust</h3>
+<div class="paragraph">
+<p>Shiro does <strong>not</strong> assume that end-user input is trustworthy. Authentication credentials, session tokens, and other user-provided data are validated through configured security mechanisms.</p>
+</div>
+<div class="paragraph">
+<p>However, Shiro relies on the application to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Properly sanitize and validate any user input before passing it to Shiro APIs.</p>
+</li>
+<li>
+<p>Protect sensitive configuration values from exposure.</p>
+</li>
+<li>
+<p>Implement proper transport-layer security (TLS/SSL) for credential transmission.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="authentication_guarantees">Authentication Guarantees</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="what_shiro_provides">What Shiro Provides</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Credential Matching</strong>: Shiro verifies submitted credentials against stored credentials using configurable <code>CredentialsMatcher</code> implementations.</p>
+</li>
+<li>
+<p><strong>Realm Coordination</strong>: When multiple <code>Realms</code> are configured, the <code>AuthenticationStrategy</code> determines success/failure criteria.</p>
+</li>
+<li>
+<p><strong>Subject Identity</strong>: Upon successful authentication, Shiro establishes a <code>Subject</code> with verified principals.</p>
+</li>
+<li>
+<p><strong>Remember Me</strong>: Optional functionality to recognize returning users without full re-authentication (with weaker security guarantees than full authentication).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="operator_responsibilities">Operator Responsibilities</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Credential Storage</strong>: Operators must ensure credentials are stored securely (hashed with appropriate algorithms like bcrypt, Argon2, or PBKDF2).</p>
+</li>
+<li>
+<p><strong>Brute-Force Protection</strong>: Shiro does not include built-in rate limiting or account lockout. Operators should implement these controls at the application or infrastructure level.</p>
+</li>
+<li>
+<p><strong>Multi-Factor Authentication</strong>: MFA is not built into core Shiro; operators requiring MFA must implement custom <code>Realm</code> or <code>AuthenticationStrategy</code> extensions.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="username_enumeration">Username Enumeration</h3>
+<div class="paragraph">
+<p>By default, Shiro may reveal whether a username exists through different error responses for "unknown account" vs "incorrect password" scenarios. If username enumeration is a concern for your deployment:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Configure your <code>Realm</code> to throw consistent exceptions regardless of failure reason.</p>
+</li>
+<li>
+<p>Return generic authentication failure messages to end users.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="authorization_guarantees">Authorization Guarantees</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="what_shiro_provides_2">What Shiro Provides</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Permission Resolution</strong>: Shiro resolves whether a <code>Subject</code> has specific permissions through configured <code>Realm</code> instances and permission resolvers.</p>
+</li>
+<li>
+<p><strong>Role Checking</strong>: Both implicit role checks (<code>hasRole</code>) and explicit permission-based checks (<code>isPermitted</code>) are supported.</p>
+</li>
+<li>
+<p><strong>Wildcard Permissions</strong>: The <code>WildcardPermission</code> implementation provides flexible, hierarchical permission strings (e.g., <code>printer:print:lp7200</code>).</p>
+</li>
+<li>
+<p><strong>Annotation Support</strong>: Declarative security via <code>@RequiresAuthentication</code>, <code>@RequiresPermissions</code>, <code>@RequiresRoles</code>, and related annotations.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="operator_responsibilities_2">Operator Responsibilities</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Permission Assignment</strong>: Operators must correctly configure permission-to-role and role-to-user mappings in their data model.</p>
+</li>
+<li>
+<p><strong>Least Privilege</strong>: Shiro enforces permissions as configured; designing an appropriate permission model is the operator&#8217;s responsibility.</p>
+</li>
+<li>
+<p><strong>Realm Security</strong>: Authorization data sources (LDAP, databases, etc.) must be secured appropriately.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="session_management">Session Management</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="what_shiro_provides_3">What Shiro Provides</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Container-Independent Sessions</strong>: Shiro can manage sessions without a Servlet container or EJB.</p>
+</li>
+<li>
+<p><strong>Session Validation</strong>: Configurable session timeout and validation scheduling.</p>
+</li>
+<li>
+<p><strong>Session Persistence</strong>: Pluggable <code>SessionDAO</code> for persisting sessions to any data store.</p>
+</li>
+<li>
+<p><strong>Session Fixation Prevention</strong>: Shiro can regenerate session IDs upon authentication when properly configured.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="security_considerations">Security Considerations</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Session ID Exposure</strong>: Session identifiers should be treated as sensitive credentials. Transmit only over secure channels.</p>
+</li>
+<li>
+<p><strong>Session Storage</strong>: If using persistent sessions (e.g., database-backed <code>SessionDAO</code>), secure the backing store appropriately.</p>
+</li>
+<li>
+<p><strong>Clustering</strong>: In clustered deployments, ensure session serialization and shared storage are configured securely.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="cryptography">Cryptography</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="what_shiro_provides_4">What Shiro Provides</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Hashing</strong>: Simplified APIs for cryptographic hashing (SHA-256, SHA-512, MD5, etc.) with salt and iteration support.</p>
+</li>
+<li>
+<p><strong>Encryption/Decryption</strong>: <code>CipherService</code> implementations for symmetric encryption (AES, Blowfish, etc.).</p>
+</li>
+<li>
+<p><strong>Password Hashing</strong>: <code>PasswordService</code> for secure credential hashing with configurable algorithms.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="important_notes">Important Notes</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Shiro&#8217;s cryptographic utilities are wrappers around standard Java cryptography (JCA/JCE).</p>
+</li>
+<li>
+<p><strong>Algorithm Selection</strong>: Operators must choose appropriate algorithms. Avoid deprecated algorithms (MD5, SHA-1 for security purposes).</p>
+</li>
+<li>
+<p><strong>Key Management</strong>: Shiro does not provide key management infrastructure. Secure key storage and rotation is the operator&#8217;s responsibility.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="web_security">Web Security</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="what_shiro_provides_5">What Shiro Provides</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Filter Chain</strong>: URL-based security through configurable filter chains.</p>
+</li>
+<li>
+<p><strong>CSRF Protection</strong>: Not built-in; operators should implement CSRF tokens in their applications.</p>
+</li>
+<li>
+<p><strong>Path Matching</strong>: Shiro matches request paths against configured patterns using Ant-style path matching by default.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="path_traversal_considerations">Path Traversal Considerations</h3>
+<div class="paragraph">
+<p>Shiro relies on the Servlet container&#8217;s path normalization. When integrating with certain frameworks or configurations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Ensure consistent path interpretation between Shiro and your web framework.</p>
+</li>
+<li>
+<p>Review <a href="security-reports.html">Security Reports</a> for historical path traversal issues and mitigations.</p>
+</li>
+<li>
+<p>Keep Shiro updated to receive security fixes.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="version_discovery">Version Discovery</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Shiro does not actively prevent discovery of its version through error messages or HTTP headers. If version disclosure is a concern:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Configure custom error pages that do not reveal framework details.</p>
+</li>
+<li>
+<p>Remove or modify any version-revealing response headers at the web server or proxy level.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="logging">Logging</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Shiro logs security events (authentication attempts, authorization failures, etc.) using SLF4J. By default:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Credentials are not logged</strong>: Shiro does not log plaintext passwords or sensitive credentials.</p>
+</li>
+<li>
+<p><strong>Principals may be logged</strong>: Usernames and other identifying information may appear in logs.</p>
+</li>
+<li>
+<p><strong>Session IDs may be logged</strong>: Debug-level logging may include session identifiers.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Operators should:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Review logging configuration for appropriate verbosity in production.</p>
+</li>
+<li>
+<p>Secure log files with appropriate access controls.</p>
+</li>
+<li>
+<p>Consider log aggregation and monitoring for security event detection.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deployment_recommendations">Deployment Recommendations</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="minimum_security_baseline">Minimum Security Baseline</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use the latest stable Shiro release.</p>
+</li>
+<li>
+<p>Configure TLS for all credential transmission.</p>
+</li>
+<li>
+<p>Use strong password hashing (bcrypt, Argon2, or PBKDF2 with appropriate work factors).</p>
+</li>
+<li>
+<p>Implement session fixation prevention.</p>
+</li>
+<li>
+<p>Review and restrict default configurations.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="defense_in_depth">Defense in Depth</h3>
+<div class="paragraph">
+<p>Shiro should be one layer in a defense-in-depth security strategy:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Implement network-level access controls.</p>
+</li>
+<li>
+<p>Use Web Application Firewalls (WAF) for additional request filtering.</p>
+</li>
+<li>
+<p>Employ rate limiting and brute-force protection at the infrastructure level.</p>
+</li>
+<li>
+<p>Conduct regular security assessments and penetration testing.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="reporting_security_vulnerabilities">Reporting Security Vulnerabilities</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you discover a security vulnerability in Apache Shiro, please report it privately to the security team:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Email</strong>: <a href="mailto:security@shiro.apache.org">security@shiro.apache.org</a></p>
+</li>
+<li>
+<p><strong>Process</strong>: See <a href="security-reports.html">Security Reports</a> for the full vulnerability handling process.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Do not disclose security vulnerabilities publicly until a fix is available and an advisory has been published.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional_resources">Additional Resources</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="architecture.html">Apache Shiro Architecture</a> - Detailed component overview</p>
+</li>
+<li>
+<p><a href="authentication.html">Authentication</a> - Authentication concepts and implementation</p>
+</li>
+<li>
+<p><a href="authorization.html">Authorization</a> - Authorization and access control</p>
+</li>
+<li>
+<p><a href="session-management.html">Session Management</a> - Session handling documentation</p>
+</li>
+<li>
+<p><a href="cryptography.html">Cryptography</a> - Cryptographic utilities</p>
+</li>
+<li>
+<p><a href="security-reports.html">Security Reports</a> - Known vulnerabilities and mitigations</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="document_history">Document History</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Date</th>
+<th class="tableblock halign-left valign-top">Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-01-03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial security model documentation</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+	<hr />
+
+</div> 
+
+    <div class="footer-padding"></div>
+
+    <div class="container-fluid pt-2 border-top" id="custom-footer">
+      <footer class="row justify-content-between align-items-center">
+        <div class=" col-md-5">
+          <div class="copyright-footer justify-content-start">
+            <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
+            <p class="text-muted">Copyright &copy; 2008-2026 The Apache Software Foundation</p>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center col-md-1">
+          <a class="btn btn-social"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
+        </div>
+
+        <div class="d-flex justify-content-end col-md-4" id="editThisPage">
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/security-model.adoc"/>
+        </div>
+
+        <div class="d-flex col-md-2 justify-content-end" style="position: relative">
+          <div class="footer-shield"></div>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="highlight.js-11.2.0/highlight.min.js"></script>
+    <script src="js/shiro.js"></script>
+
+    <script>
+        docReady(
+          addPageEditLink()
+      );
+    </script>
+    <script>hljs.highlightAll();</script>
+
+    </body>
+</html>

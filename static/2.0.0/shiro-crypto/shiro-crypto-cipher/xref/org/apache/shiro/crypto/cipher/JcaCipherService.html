@@ -448,7 +448,7 @@
 <a class="jxr_linenumber" name="L440" href="#L440">440</a> <em class="jxr_javadoccomment">     * @param key   the key to use to perform the encryption or decryption.</em>
 <a class="jxr_linenumber" name="L441" href="#L441">441</a> <em class="jxr_javadoccomment">     * @param iv    the initialization vector to use for the crypt operation (optional, may be {@code null}).</em>
 <a class="jxr_linenumber" name="L442" href="#L442">442</a> <em class="jxr_javadoccomment">     * @param mode  the JDK Cipher behavior mode (Cipher.ENCRYPT_MODE or Cipher.DECRYPT_MODE).</em>
-<a class="jxr_linenumber" name="L443" href="#L443">443</a> <em class="jxr_javadoccomment">     * @return the resulting crypted byte array</em>
+<a class="jxr_linenumber" name="L443" href="#L443">443</a> <em class="jxr_javadoccomment">     * @return the resulting encrypted byte array</em>
 <a class="jxr_linenumber" name="L444" href="#L444">444</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if {@code bytes} are null or empty.</em>
 <a class="jxr_linenumber" name="L445" href="#L445">445</a> <em class="jxr_javadoccomment">     * @throws CryptoException          if Cipher initialization or the crypt operation fails</em>
 <a class="jxr_linenumber" name="L446" href="#L446">446</a> <em class="jxr_javadoccomment">     */</em>
@@ -466,7 +466,7 @@
 <a class="jxr_linenumber" name="L458" href="#L458">458</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L459" href="#L459">459</a> <em class="jxr_javadoccomment">     * @param cipher the JDK Cipher to finalize (perform the actual encryption)</em>
 <a class="jxr_linenumber" name="L460" href="#L460">460</a> <em class="jxr_javadoccomment">     * @param bytes  the bytes to crypt</em>
-<a class="jxr_linenumber" name="L461" href="#L461">461</a> <em class="jxr_javadoccomment">     * @return the resulting crypted byte array.</em>
+<a class="jxr_linenumber" name="L461" href="#L461">461</a> <em class="jxr_javadoccomment">     * @return the resulting encrypted byte array.</em>
 <a class="jxr_linenumber" name="L462" href="#L462">462</a> <em class="jxr_javadoccomment">     * @throws CryptoException if there is an illegal block size or bad padding</em>
 <a class="jxr_linenumber" name="L463" href="#L463">463</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L464" href="#L464">464</a>     <strong class="jxr_keyword">private</strong> byte[] crypt(javax.crypto.Cipher cipher, byte[] bytes) <strong class="jxr_keyword">throws</strong> CryptoException {

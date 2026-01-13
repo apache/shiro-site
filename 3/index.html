@@ -51,18 +51,21 @@
 
     <!-- Matomo -->
     <script>
-        var _paq = window._paq = window._paq || [];
-        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-        _paq.push(['disableCookies']);
-        _paq.push(['trackPageView']);
-        _paq.push(['enableLinkTracking']);
-        (function() {
-            var u="//matomo.privacy.apache.org/";
-            _paq.push(['setTrackerUrl', u+'matomo.php']);
-            _paq.push(['setSiteId', '2']);
-            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-        })();
+     var _paq = window._paq = window._paq || [];
+     /* tracker methods like "setCustomDimension" should be called before
+    "trackPageView" */
+     _paq.push(["setDoNotTrack", true]);
+     _paq.push(["disableCookies"]);
+     _paq.push(['trackPageView']);
+     _paq.push(['enableLinkTracking']);
+     (function() {
+       var u="https://analytics.apache.org/";
+       _paq.push(['setTrackerUrl', u+'matomo.php']);
+       _paq.push(['setSiteId', '2']);
+       var d=document, g=d.createElement('script'),
+    s=d.getElementsByTagName('script')[0];
+       g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+     })();
     </script>
     <!-- End Matomo Code -->
   </head>
@@ -266,7 +269,7 @@
           <h2 class="panel-title"> Integrations</h2>
         </div>
         <div class="card-body shadow-sm pb-2">
-          <p>API&#8217;s giving you power and simplicty beyond what Java provides by default...</p>
+          <p>API&#8217;s giving you power and simplicity beyond what Java provides by default...</p>
           <a href="../integration.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
         </div>
       </div>
@@ -291,24 +294,24 @@
 
         <div class="card-body">
           <div>
+            <a href="../blog/2022/11/19/apache-shiro-1101-released.html"><h4 class="news-title">Apache Shiro 1.10.1 available</h4></a>
+            <p><small>by Benjamin Marwell on 2022-11-19</small></p>
+          </div>
+          <div>
+            <a href="../blog/2022/10/10/apache-shiro-1100-released.html"><h4 class="news-title">1.10.0 available with fix CVE-2022-40664</h4></a>
+            <p><small>by Brian Demers on 2022-10-10</small></p>
+          </div>
+          <div>
+            <a href="../blog/2022/06/30/jakarta-work.html"><h4 class="news-title">Ongoing work on the Jakarta namespace transition</h4></a>
+            <p><small>by Richard Zowalla on 2022-06-30</small></p>
+          </div>
+          <div>
+            <a href="../blog/2022/06/28/apache-shiro-191-released.html"><h4 class="news-title">1.9.1 available with fix CVE-2022-32532</h4></a>
+            <p><small>by Brian Demers on 2022-06-28</small></p>
+          </div>
+          <div>
             <a href="../blog/2022/03/22/apache-shiro-190-released.html"><h4 class="news-title">Apache Shiro 1.9.0 Released</h4></a>
             <p><small>by Benjamin Marwell on 2022-03-22</small></p>
-          </div>
-          <div>
-            <a href="../blog/2022/02/09/new-shiro-website.html"><h4 class="news-title">The new Apache Shiro website is live!</h4></a>
-            <p><small>by Benjamin Marwell on 2022-02-09</small></p>
-          </div>
-          <div>
-            <a href="../blog/2021/v1.8.0.html"><h4 class="news-title">Apache Shiro v1.8.0 released</h4></a>
-            <p><small>by Benjamin Marwell on 2021-08-26</small></p>
-          </div>
-          <div>
-            <a href="../blog/2021/v1.7.1.html"><h4 class="news-title">1.7.1 available with fix CVE-2020-17523</h4></a>
-            <p><small>by Brian Demers on 2021-01-31</small></p>
-          </div>
-          <div>
-            <a href="../blog/2020/v1.7.0.html"><h4 class="news-title">1.7.0 available with fix CVE-2020-17510</h4></a>
-            <p><small>by François Papon on 2020-10-29</small></p>
           </div>
           <hr/>
 
@@ -363,7 +366,7 @@
           <div class="copyright-footer justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
             <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
-            <p class="text-muted">Copyright &copy; 2008-2024 The Apache Software Foundation</p>
+            <p class="text-muted">Copyright &copy; 2008-2026 The Apache Software Foundation</p>
           </div>
         </div>
 

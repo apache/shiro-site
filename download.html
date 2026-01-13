@@ -55,18 +55,21 @@
 
     <!-- Matomo -->
     <script>
-        var _paq = window._paq = window._paq || [];
-        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-        _paq.push(['disableCookies']);
-        _paq.push(['trackPageView']);
-        _paq.push(['enableLinkTracking']);
-        (function() {
-            var u="//matomo.privacy.apache.org/";
-            _paq.push(['setTrackerUrl', u+'matomo.php']);
-            _paq.push(['setSiteId', '2']);
-            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-        })();
+     var _paq = window._paq = window._paq || [];
+     /* tracker methods like "setCustomDimension" should be called before
+    "trackPageView" */
+     _paq.push(["setDoNotTrack", true]);
+     _paq.push(["disableCookies"]);
+     _paq.push(['trackPageView']);
+     _paq.push(['enableLinkTracking']);
+     (function() {
+       var u="https://analytics.apache.org/";
+       _paq.push(['setTrackerUrl', u+'matomo.php']);
+       _paq.push(['setSiteId', '2']);
+       var d=document, g=d.createElement('script'),
+    s=d.getElementsByTagName('script')[0];
+       g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+     })();
     </script>
     <!-- End Matomo Code -->
   </head>
@@ -186,7 +189,7 @@
 <p><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Apache Shiro 2.0.1 is the current stable release (Java 11+).</p>
+<p>Apache Shiro 2.0.5 is the current stable release (Java 11+).</p>
 </div>
 <div class="paragraph">
 <p>To download Shiro please follow the instructions below.</p>
@@ -205,7 +208,7 @@
 <h2 id="current_release">Current Release</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The current release is 2.0.1.
+<p>The current release is 2.0.5.
 For older releases, please visit our <a href="release-archive.html">release archive</a>.</p>
 </div>
 </div>
@@ -215,42 +218,41 @@ For older releases, please visit our <a href="release-archive.html">release arch
 
 <p>
   <ul>
-    <li><a href="#201">Apache Shiro Release v2.0.1</a></li>
+    <li><a href="#205">Apache Shiro Release v2.0.5</a></li>
     <ul>
-      <li><a href="#201Source">2.0.1 Source Code Distribution</a></li>
-      <li><a href="#201Git">2.0.1 Git Source repository</a></li>
-      <li><a href="#201Binary">2.0.1 Binaries</a></li>
+      <li><a href="#205Source">2.0.5 Source Code Distribution</a></li>
+      <li><a href="#205Git">2.0.5 Git Source repository</a></li>
+      <li><a href="#205Binary">2.0.5 Binaries</a></li>
     </ul>
   </ul>
 </p>
 
 
+  <section id="205">
+  <h2>Release 2.0.5</h2>
 
-  <section id="201">
-  <h2>Release 2.0.1</h2>
+  <h3 id="205Source">2.0.5 Source Code Distribution</h3>
 
-  <h3 id="201Source">2.0.1 Source Code Distribution</h3>
+  <p>The source bundle requires JDK 11+ and Maven 3.8+ to build:
 
-  <p>The source bundle requires JDK 1.8 and Maven 3.0.3+ to build:
-
-  <code><a class="external-link" href="https://www.apache.org/dyn/closer.lua/shiro/2.0.1/shiro-root-2.0.1-source-release.zip">shiro-root-2.0.1-source-release.zip</a></code>
+  <code><a class="external-link" href="https://www.apache.org/dyn/closer.lua/shiro/2.0.5/shiro-root-2.0.5-source-release.zip">shiro-root-2.0.5-source-release.zip</a></code>
     (<a class="external-link"
-        href="https://downloads.apache.org/shiro/2.0.1/shiro-root-2.0.1-source-release.zip.asc">pgp</a>, <a
+        href="https://downloads.apache.org/shiro/2.0.5/shiro-root-2.0.5-source-release.zip.asc.txt">pgp</a>, <a
             class="external-link"
-            href="https://downloads.apache.org/shiro/2.0.1/shiro-root-2.0.1-source-release.zip.sha512">sha512</a>)
+            href="https://downloads.apache.org/shiro/2.0.5/shiro-root-2.0.5-source-release.zip.sha512">sha512</a>)
   </code>
 
   <p>Associated documentation can be found <a href="documentation.html" title="Documentation">here</a></p>
 
-  <h3 id="201Git">2.0.1 Git Source repository</h3>
+  <h3 id="205Git">2.0.5 Git Source repository</h3>
 
   <p>The source can be cloned anonymously from Git with this command:</p>
   <pre><code class="language-bash bash">git clone https://github.com/apache/shiro.git
-git checkout shiro-root-2.0.1
+git checkout shiro-root-2.0.5
 </code>
 </pre>
 
-  <h3 id="201Binary">2.0.1 Binaries</h3>
+  <h3 id="205Binary">2.0.5 Binaries</h3>
 
   <p>If you don't want to build yourself, you can download pre-built binaries from Maven Central, just click the link in the "Artifact" column. If you would like
     acquire Shiro through Maven, then please use the markup listed under "Maven Usage"</p>
@@ -271,15 +273,15 @@ git checkout shiro-root-2.0.1
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-core/2.0.1/shiro-core-2.0.1.jar">shiro-core</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-core/2.0.1/shiro-core-2.0.1.jar.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-core/2.0.5/shiro-core-2.0.5.jar">shiro-core</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-core/2.0.5/shiro-core-2.0.5.jar.asc">pgp</a>)
     </td>
 
     <td>
         <pre><code class="xml language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-core&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
     </td>
 
@@ -293,15 +295,15 @@ and one of its binding jars is required.
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-web/2.0.1/shiro-web-2.0.1.jar">shiro-web</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-web/2.0.1/shiro-web-2.0.1.jar.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-web/2.0.5/shiro-web-2.0.5.jar">shiro-web</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-web/2.0.5/shiro-web-2.0.5.jar.asc">pgp</a>)
     </td>
 
     <td>
         <pre><code class="xml language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-web&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
     </td>
 
@@ -311,15 +313,15 @@ and one of its binding jars is required.
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-servlet-plugin/2.0.1/shiro-servlet-plugin-2.0.1.jar">shiro-servlet-plugin</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-servlet-plugin/2.0.1/shiro-servlet-plugin-2.0.1.jar.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-servlet-plugin/2.0.5/shiro-servlet-plugin-2.0.5.jar">shiro-servlet-plugin</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-servlet-plugin/2.0.5/shiro-servlet-plugin-2.0.5.jar.asc">pgp</a>)
     </td>
 
     <td>
         <pre><code class="xml language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-servlet-plugin&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
     </td>
 
@@ -329,15 +331,15 @@ and one of its binding jars is required.
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-cdi/2.0.1/shiro-cdi-2.0.1.jar">shiro-cdi</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-cdi/2.0.1/shiro-cdi-2.0.1.jar.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-cdi/2.0.5/shiro-cdi-2.0.5.jar">shiro-cdi</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-cdi/2.0.5/shiro-cdi-2.0.5.jar.asc">pgp</a>)
     </td>
 
     <td>
         <pre><code class="xml language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-cdi&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
     </td>
 
@@ -347,15 +349,15 @@ and one of its binding jars is required.
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-jakarta-ee/2.0.1/shiro-jakarta-ee-2.0.1.jar">shiro-jakarta-ee</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-jakarta-ee/2.0.1/shiro-jakarta-ee-2.0.1.jar.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-jakarta-ee/2.0.5/shiro-jakarta-ee-2.0.5.jar">shiro-jakarta-ee</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-jakarta-ee/2.0.5/shiro-jakarta-ee-2.0.5.jar.asc">pgp</a>)
     </td>
 
     <td>
         <pre><code class="xml language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-jakarta-ee&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
     </td>
 
@@ -365,15 +367,15 @@ and one of its binding jars is required.
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-jaxrs/2.0.1/shiro-jaxrs-2.0.1.jar">shiro-jaxrs</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-jaxrs/2.0.1/shiro-jaxrs-2.0.1.jar.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-jaxrs/2.0.5/shiro-jaxrs-2.0.5.jar">shiro-jaxrs</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-jaxrs/2.0.5/shiro-jaxrs-2.0.5.jar.asc">pgp</a>)
     </td>
 
     <td>
         <pre><code class="xml language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-jaxrs&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
     </td>
 
@@ -383,15 +385,15 @@ and one of its binding jars is required.
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-aspectj/2.0.1/shiro-aspectj-2.0.1.jar">shiro-aspectj</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-aspectj/2.0.1/shiro-aspectj-2.0.1.jar.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-aspectj/2.0.5/shiro-aspectj-2.0.5.jar">shiro-aspectj</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-aspectj/2.0.5/shiro-aspectj-2.0.5.jar.asc">pgp</a>)
     </td>
 
     <td>
         <pre><code class="xml language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-aspectj&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
     </td>
 
@@ -402,15 +404,15 @@ and one of its binding jars is required.
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-cas/2.0.1/shiro-cas-2.0.1.jar">shiro-cas</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-cas/2.0.1/shiro-cas-2.0.1.jar.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-cas/2.0.5/shiro-cas-2.0.5.jar">shiro-cas</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-cas/2.0.5/shiro-cas-2.0.5.jar.asc">pgp</a>)
     </td>
 
     <td>
         <pre><code class="xml language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-cas&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
     </td>
 
@@ -424,15 +426,15 @@ to the Apache Shiro based <a href='https://github.com/bujiio/buji-pac4j'>buji-pa
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-ehcache/2.0.1/shiro-ehcache-2.0.1.jar">shiro-ehcache</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-ehcache/2.0.1/shiro-ehcache-2.0.1.jar.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-ehcache/2.0.5/shiro-ehcache-2.0.5.jar">shiro-ehcache</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-ehcache/2.0.5/shiro-ehcache-2.0.5.jar.asc">pgp</a>)
     </td>
 
     <td>
         <pre><code class="xml language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-ehcache&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
     </td>
 
@@ -442,15 +444,15 @@ to the Apache Shiro based <a href='https://github.com/bujiio/buji-pac4j'>buji-pa
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-hazelcast/2.0.1/shiro-hazelcast-2.0.1.jar">shiro-hazelcast</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-hazelcast/2.0.1/shiro-hazelcast-2.0.1.jar.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-hazelcast/2.0.5/shiro-hazelcast-2.0.5.jar">shiro-hazelcast</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-hazelcast/2.0.5/shiro-hazelcast-2.0.5.jar.asc">pgp</a>)
     </td>
 
     <td>
         <pre><code class="xml language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-hazelcast&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
     </td>
 
@@ -460,15 +462,15 @@ to the Apache Shiro based <a href='https://github.com/bujiio/buji-pac4j'>buji-pa
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-features/2.0.1/shiro-features-2.0.1-features.xml">shiro-features</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-features/2.0.1/shiro-features-2.0.1-features.xml.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-features/2.0.5/shiro-features-2.0.5-features.xml">shiro-features</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-features/2.0.5/shiro-features-2.0.5-features.xml.asc">pgp</a>)
     </td>
 
     <td>
         <pre><code class="xml language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-features&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
     </td>
 
@@ -478,15 +480,15 @@ to the Apache Shiro based <a href='https://github.com/bujiio/buji-pac4j'>buji-pa
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-guice/2.0.1/shiro-guice-2.0.1.jar">shiro-guice</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-guice/2.0.1/shiro-guice-2.0.1.jar.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-guice/2.0.5/shiro-guice-2.0.5.jar">shiro-guice</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-guice/2.0.5/shiro-guice-2.0.5.jar.asc">pgp</a>)
     </td>
 
     <td>
         <pre><code class="xml language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-guice&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
     </td>
 
@@ -496,15 +498,15 @@ to the Apache Shiro based <a href='https://github.com/bujiio/buji-pac4j'>buji-pa
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-quartz/2.0.1/shiro-quartz-2.0.1.jar">shiro-quartz</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-quartz/2.0.1/shiro-quartz-2.0.1.jar.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-quartz/2.0.5/shiro-quartz-2.0.5.jar">shiro-quartz</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-quartz/2.0.5/shiro-quartz-2.0.5.jar.asc">pgp</a>)
     </td>
 
     <td>
         <pre><code class="xml language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-quartz&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
     </td>
 
@@ -515,15 +517,15 @@ to the Apache Shiro based <a href='https://github.com/bujiio/buji-pac4j'>buji-pa
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-spring/2.0.1/shiro-spring-2.0.1.jar">shiro-spring</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-spring/2.0.1/shiro-spring-2.0.1.jar.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-spring/2.0.5/shiro-spring-2.0.5.jar">shiro-spring</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-spring/2.0.5/shiro-spring-2.0.5.jar.asc">pgp</a>)
     </td>
 
     <td>
         <pre><code class="xml language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-spring&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
     </td>
 
@@ -533,15 +535,15 @@ to the Apache Shiro based <a href='https://github.com/bujiio/buji-pac4j'>buji-pa
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-spring-boot-starter/2.0.1/shiro-spring-boot-starter-2.0.1.jar">shiro-spring-boot-starter</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-spring-boot-starter/2.0.1/shiro-spring-boot-starter-2.0.1.jar.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-spring-boot-starter/2.0.5/shiro-spring-boot-starter-2.0.5.jar">shiro-spring-boot-starter</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-spring-boot-starter/2.0.5/shiro-spring-boot-starter-2.0.5.jar.asc">pgp</a>)
     </td>
 
     <td>
         <pre><code class="xml language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-spring-boot-starter&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
     </td>
 
@@ -551,15 +553,15 @@ to the Apache Shiro based <a href='https://github.com/bujiio/buji-pac4j'>buji-pa
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-spring-boot-web-starter/2.0.1/shiro-spring-boot-web-starter-2.0.1.jar">shiro-spring-boot-web-starter</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-spring-boot-web-starter/2.0.1/shiro-spring-boot-web-starter-2.0.1.jar.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-spring-boot-web-starter/2.0.5/shiro-spring-boot-web-starter-2.0.5.jar">shiro-spring-boot-web-starter</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/shiro-spring-boot-web-starter/2.0.5/shiro-spring-boot-web-starter-2.0.5.jar.asc">pgp</a>)
     </td>
 
     <td>
         <pre><code class="xml language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-spring-boot-web-starter&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
     </td>
 
@@ -569,8 +571,8 @@ to the Apache Shiro based <a href='https://github.com/bujiio/buji-pac4j'>buji-pa
   <tr>
 
     <td style="white-space: nowrap;">
-      <a href="https://repo1.maven.org/maven2/org/apache/shiro/tools/shiro-tools-hasher/2.0.1/shiro-tools-hasher-2.0.1-cli.jar">shiro-tools-hasher</a><br/>
-      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/tools/shiro-tools-hasher/2.0.1/shiro-tools-hasher-2.0.1-cli.jar.asc">pgp</a>)
+      <a href="https://repo1.maven.org/maven2/org/apache/shiro/tools/shiro-tools-hasher/2.0.5/shiro-tools-hasher-2.0.5-cli.jar">shiro-tools-hasher</a><br/>
+      (<a href="https://repo1.maven.org/maven2/org/apache/shiro/tools/shiro-tools-hasher/2.0.5/shiro-tools-hasher-2.0.5-cli.jar.asc">pgp</a>)
     </td>
 
     <td>
@@ -580,7 +582,7 @@ to the Apache Shiro based <a href='https://github.com/bujiio/buji-pac4j'>buji-pa
     <td>A command-line program to perform hashing (MD5, SHA, etc) for files, streams and passwords.
 Note that this is a command line program and not intended to be used as a Maven/program dependency.
 It is intended to be downloaded and executed:
-<pre><code class='bash'> java -jar shiro-tools-hasher-2.0.1-cli.jar</code></pre>
+<pre><code class='bash'> java -jar shiro-tools-hasher-2.0.5-cli.jar</code></pre>
 </td>
 
   </tr>
@@ -603,7 +605,7 @@ It is intended to be downloaded and executed:
           <div class="copyright-footer justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
             <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
-            <p class="text-muted">Copyright &copy; 2008-2024 The Apache Software Foundation</p>
+            <p class="text-muted">Copyright &copy; 2008-2026 The Apache Software Foundation</p>
           </div>
         </div>
 

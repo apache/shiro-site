@@ -58,18 +58,21 @@
 
     <!-- Matomo -->
     <script>
-        var _paq = window._paq = window._paq || [];
-        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-        _paq.push(['disableCookies']);
-        _paq.push(['trackPageView']);
-        _paq.push(['enableLinkTracking']);
-        (function() {
-            var u="//matomo.privacy.apache.org/";
-            _paq.push(['setTrackerUrl', u+'matomo.php']);
-            _paq.push(['setSiteId', '2']);
-            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-        })();
+     var _paq = window._paq = window._paq || [];
+     /* tracker methods like "setCustomDimension" should be called before
+    "trackPageView" */
+     _paq.push(["setDoNotTrack", true]);
+     _paq.push(["disableCookies"]);
+     _paq.push(['trackPageView']);
+     _paq.push(['enableLinkTracking']);
+     (function() {
+       var u="https://analytics.apache.org/";
+       _paq.push(['setTrackerUrl', u+'matomo.php']);
+       _paq.push(['setSiteId', '2']);
+       var d=document, g=d.createElement('script'),
+    s=d.getElementsByTagName('script')[0];
+       g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+     })();
     </script>
     <!-- End Matomo Code -->
   </head>
@@ -428,7 +431,7 @@ public class ExampleShiroUnitTest extends AbstractShiroTest {
 <p>The <code>tearDownSubject()</code> method in the example uses a Junit 4 annotation to ensure that the Subject is cleared from the thread after every test method is executed, no matter what. This requires you to set up a new <code>Subject</code> instance and set it (via <code>setSubject</code>) for every test that executes.</p>
 </div>
 <div class="paragraph">
-<p>This is not strictly necessary, however. For example, you could just bind a new Subject instance (via <code>setSujbect</code>) at the beginning of every test, say, in an <code>@Before</code>-annotated method. But if you&#8217;re going to do that, you might as well have the <code>@After tearDownSubject()</code> method to keep things symmetrical and 'clean'.</p>
+<p>This is not strictly necessary, however. For example, you could just bind a new Subject instance (via <code>setSubject</code>) at the beginning of every test, say, in an <code>@Before</code>-annotated method. But if you&#8217;re going to do that, you might as well have the <code>@After tearDownSubject()</code> method to keep things symmetrical and 'clean'.</p>
 </div>
 <div class="paragraph">
 <p>You can mix and match this setup/teardown logic in each method manually or use the @Before and @After annotations as you see fit. The <code>AbstractShiroTest</code> super class will however unbind the Subject from the thread after all tests because of the <code>@AfterClass</code> annotation in its <code>tearDownShiro()</code> method.</p>
@@ -529,7 +532,7 @@ public class ExampleShiroIntegrationTest extends AbstractShiroTest {
           <div class="copyright-footer justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
             <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
-            <p class="text-muted">Copyright &copy; 2008-2024 The Apache Software Foundation</p>
+            <p class="text-muted">Copyright &copy; 2008-2026 The Apache Software Foundation</p>
           </div>
         </div>
 

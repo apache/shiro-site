@@ -51,18 +51,21 @@
 
     <!-- Matomo -->
     <script>
-        var _paq = window._paq = window._paq || [];
-        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-        _paq.push(['disableCookies']);
-        _paq.push(['trackPageView']);
-        _paq.push(['enableLinkTracking']);
-        (function() {
-            var u="//matomo.privacy.apache.org/";
-            _paq.push(['setTrackerUrl', u+'matomo.php']);
-            _paq.push(['setSiteId', '2']);
-            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-        })();
+     var _paq = window._paq = window._paq || [];
+     /* tracker methods like "setCustomDimension" should be called before
+    "trackPageView" */
+     _paq.push(["setDoNotTrack", true]);
+     _paq.push(["disableCookies"]);
+     _paq.push(['trackPageView']);
+     _paq.push(['enableLinkTracking']);
+     (function() {
+       var u="https://analytics.apache.org/";
+       _paq.push(['setTrackerUrl', u+'matomo.php']);
+       _paq.push(['setSiteId', '2']);
+       var d=document, g=d.createElement('script'),
+    s=d.getElementsByTagName('script')[0];
+       g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+     })();
     </script>
     <!-- End Matomo Code -->
   </head>
@@ -266,7 +269,7 @@
           <h2 class="panel-title"> Integrations</h2>
         </div>
         <div class="card-body shadow-sm pb-2">
-          <p>API&#8217;s giving you power and simplicty beyond what Java provides by default...</p>
+          <p>API&#8217;s giving you power and simplicity beyond what Java provides by default...</p>
           <a href="../integration.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
         </div>
       </div>
@@ -291,16 +294,24 @@
 
         <div class="card-body">
           <div>
-            <a href="../blog/2010/06/01/apache-shiro-100-incubating-released.html"><h4 class="news-title">Apache Shiro 1.0.0-incubating Released!</h4></a>
-            <p><small>by Les Hazlewood on 2010-06-01</small></p>
+            <a href="../blog/2010/11/03/apache-shiro-110-released.html"><h4 class="news-title">Apache Shiro 1.1.0 Released</h4></a>
+            <p><small>by Les Hazlewood on 2010-11-03</small></p>
+          </div>
+          <div>
+            <a href="../blog/2010/09/24/apache-shiro-becomes-an-apache-top-level-project.html"><h4 class="news-title">Apache Shiro becomes an Apache Top Level Project</h4></a>
+            <p><small>by Les Hazlewood on 2010-09-24</small></p>
+          </div>
+          <div>
+            <a href="../blog/2010/09/20/san-francisco-jug-presentation.html"><h4 class="news-title">San Francisco JUG presentation</h4></a>
+            <p><small>by Les Hazlewood on 2010-09-20</small></p>
+          </div>
+          <div>
+            <a href="../blog/2010/09/14/ibm-developerworks-introduction-to-apache-shiro.html"><h4 class="news-title">IBM DeveloperWorks - Introduction to Apache Shiro</h4></a>
+            <p><small>by Les Hazlewood on 2010-09-14</small></p>
           </div>
           <div>
             <a href="../blog/2010/06/01/sdforum-java-sig-apache-shiro-presentation.html"><h4 class="news-title">SDForum Java SIG Apache Shiro Presentation</h4></a>
             <p><small>by Les Hazlewood on 2010-06-01</small></p>
-          </div>
-          <div>
-            <a href="../blog/2010/03/18/great-source-comments.html"><h4 class="news-title">Great Source Comments</h4></a>
-            <p><small>by Les Hazlewood on 2010-03-18</small></p>
           </div>
           <hr/>
 
@@ -308,7 +319,7 @@
             <ul class="pagination justify-content-center">
               <li class="page-item"><a class="page-link" rel="prev" href="../9">Previous</a></li>
               <li class="page-item"><a class="page-link" rel="self" href="../10">10</a></li>
-              <li class="page-item disabled" aria-disabled="true" disabled><a class="page-link" rel="prev" href="#">Next</a></li>
+              <li class="page-item"><a class="page-link" rel="next" href="../11">Next</a></li>
               <li class="page-item"><a class="page-link" href="../news.html">Archive</a></li>
             </ul>
           </nav>
@@ -355,7 +366,7 @@
           <div class="copyright-footer justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
             <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
-            <p class="text-muted">Copyright &copy; 2008-2024 The Apache Software Foundation</p>
+            <p class="text-muted">Copyright &copy; 2008-2026 The Apache Software Foundation</p>
           </div>
         </div>
 

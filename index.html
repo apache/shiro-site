@@ -51,18 +51,21 @@
 
     <!-- Matomo -->
     <script>
-        var _paq = window._paq = window._paq || [];
-        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-        _paq.push(['disableCookies']);
-        _paq.push(['trackPageView']);
-        _paq.push(['enableLinkTracking']);
-        (function() {
-            var u="//matomo.privacy.apache.org/";
-            _paq.push(['setTrackerUrl', u+'matomo.php']);
-            _paq.push(['setSiteId', '2']);
-            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-        })();
+     var _paq = window._paq = window._paq || [];
+     /* tracker methods like "setCustomDimension" should be called before
+    "trackPageView" */
+     _paq.push(["setDoNotTrack", true]);
+     _paq.push(["disableCookies"]);
+     _paq.push(['trackPageView']);
+     _paq.push(['enableLinkTracking']);
+     (function() {
+       var u="https://analytics.apache.org/";
+       _paq.push(['setTrackerUrl', u+'matomo.php']);
+       _paq.push(['setSiteId', '2']);
+       var d=document, g=d.createElement('script'),
+    s=d.getElementsByTagName('script')[0];
+       g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+     })();
     </script>
     <!-- End Matomo Code -->
   </head>
@@ -266,7 +269,7 @@
           <h2 class="panel-title"> Integrations</h2>
         </div>
         <div class="card-body shadow-sm pb-2">
-          <p>API&#8217;s giving you power and simplicty beyond what Java provides by default...</p>
+          <p>API&#8217;s giving you power and simplicity beyond what Java provides by default...</p>
           <a href="integration.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
         </div>
       </div>
@@ -291,24 +294,24 @@
 
         <div class="card-body">
           <div>
+            <a href="blog/2025/07/apache-shiro-205-released.html"><h4 class="news-title">2.0.5 available</h4></a>
+            <p><small>by Lenny Primak on 2025-07-07</small></p>
+          </div>
+          <div>
+            <a href="blog/2025/04/apache-shiro-204-released.html"><h4 class="news-title">2.0.4 available</h4></a>
+            <p><small>by Lenny Primak on 2025-04-20</small></p>
+          </div>
+          <div>
+            <a href="blog/2025/04/apache-shiro-203-released.html"><h4 class="news-title">2.0.3 available</h4></a>
+            <p><small>by Lenny Primak on 2025-04-06</small></p>
+          </div>
+          <div>
+            <a href="blog/2024/11/apache-shiro-202-released.html"><h4 class="news-title">2.0.2 available</h4></a>
+            <p><small>by Lenny Primak on 2024-11-13</small></p>
+          </div>
+          <div>
             <a href="blog/2024/05/apache-shiro-201-released.html"><h4 class="news-title">2.0.1 available</h4></a>
             <p><small>by Lenny Primak on 2024-05-30</small></p>
-          </div>
-          <div>
-            <a href="blog/2024/02/apache-shiro-200-released.html"><h4 class="news-title">2.0.0 available</h4></a>
-            <p><small>by Lenny Primak on 2024-02-28</small></p>
-          </div>
-          <div>
-            <a href="blog/2023/11/10/apache-shiro-1130-released.html"><h4 class="news-title">1.13.0 available with fix CVE-2023-46750</h4></a>
-            <p><small>by Francois Papon on 2023-11-10</small></p>
-          </div>
-          <div>
-            <a href="blog/2023/07/18/apache-shiro-1120-released.html"><h4 class="news-title">1.12.0 available with fix CVE-2023-34478</h4></a>
-            <p><small>by Francois Papon on 2023-07-18</small></p>
-          </div>
-          <div>
-            <a href="blog/2023/05/04/apache-shiro-200-alpha-1-released.html"><h4 class="news-title">2.0.0-alpha available</h4></a>
-            <p><small>by Lenny Primak on 2023-05-04</small></p>
           </div>
           <hr/>
 
@@ -363,7 +366,7 @@
           <div class="copyright-footer justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
             <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
-            <p class="text-muted">Copyright &copy; 2008-2024 The Apache Software Foundation</p>
+            <p class="text-muted">Copyright &copy; 2008-2026 The Apache Software Foundation</p>
           </div>
         </div>
 

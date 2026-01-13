@@ -59,18 +59,21 @@
 
     <!-- Matomo -->
     <script>
-        var _paq = window._paq = window._paq || [];
-        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-        _paq.push(['disableCookies']);
-        _paq.push(['trackPageView']);
-        _paq.push(['enableLinkTracking']);
-        (function() {
-            var u="//matomo.privacy.apache.org/";
-            _paq.push(['setTrackerUrl', u+'matomo.php']);
-            _paq.push(['setSiteId', '2']);
-            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-        })();
+     var _paq = window._paq = window._paq || [];
+     /* tracker methods like "setCustomDimension" should be called before
+    "trackPageView" */
+     _paq.push(["setDoNotTrack", true]);
+     _paq.push(["disableCookies"]);
+     _paq.push(['trackPageView']);
+     _paq.push(['enableLinkTracking']);
+     (function() {
+       var u="https://analytics.apache.org/";
+       _paq.push(['setTrackerUrl', u+'matomo.php']);
+       _paq.push(['setSiteId', '2']);
+       var d=document, g=d.createElement('script'),
+    s=d.getElementsByTagName('script')[0];
+       g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+     })();
     </script>
     <!-- End Matomo Code -->
   </head>
@@ -317,7 +320,7 @@
     <pre><code class='xml language-xml'>&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-spring&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
   &lt;groupId&gt;org.springframework&lt;/groupId&gt;
@@ -332,7 +335,7 @@
     role="tabpanel"
     aria-labelledby="gradle-cli-tab"
     >
-    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-spring:2.0.1'
+    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-spring:2.0.5'
 compile 'org.springframework:spring-context:${spring.version}'
 </code></pre>
   </div>
@@ -342,7 +345,7 @@ compile 'org.springframework:spring-context:${spring.version}'
     role="tabpanel"
     aria-labelledby="sbt-cli-tab"
   >
-    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-spring" % "2.0.1"
+    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-spring" % "2.0.5"
 libraryDependencies += "org.springframework" % "spring-context" % "${spring.version}"
 </code></pre>
   </div>
@@ -352,7 +355,7 @@ libraryDependencies += "org.springframework" % "spring-context" % "${spring.vers
     role="tabpanel"
     aria-labelledby="ivy-cli-tab"
     >
-    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-spring" rev="2.0.1"/&gt;
+    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-spring" rev="2.0.5"/&gt;
 &lt;dependency org="org.springframework" name="spring-context" rev="${spring.version}"/&gt;
 </code></pre>
   </div>
@@ -362,7 +365,7 @@ libraryDependencies += "org.springframework" % "spring-context" % "${spring.vers
     role="tabpanel"
     aria-labelledby="leiningen-cli-tab"
     >
-    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-spring "2.0.1"]
+    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-spring "2.0.5"]
 [org.springframework/spring-context "${spring.version}"]
 </code></pre>
   </div>
@@ -372,7 +375,7 @@ libraryDependencies += "org.springframework" % "spring-context" % "${spring.vers
     role="tabpanel"
     aria-labelledby="buildr-cli-tab"
   >
-    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-spring:jar:2.0.1'
+    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-spring:jar:2.0.5'
 'org.springframework:spring-context:jar:${spring.version}'
 </code></pre>
   </div>
@@ -553,12 +556,12 @@ private SecurityManager securityManager;
     <pre><code class='xml language-xml'>&lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-spring&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
   &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
   &lt;artifactId&gt;shiro-web&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.0.5&lt;/version&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
   &lt;groupId&gt;org.springframework&lt;/groupId&gt;
@@ -573,8 +576,8 @@ private SecurityManager securityManager;
     role="tabpanel"
     aria-labelledby="gradle-web-tab"
     >
-    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-spring:2.0.1'
-compile 'org.apache.shiro:shiro-web:2.0.1'
+    <pre><code class='groovy language-groovy'>compile 'org.apache.shiro:shiro-spring:2.0.5'
+compile 'org.apache.shiro:shiro-web:2.0.5'
 compile 'org.springframework:spring-webmvc:${spring.version}'
 </code></pre>
   </div>
@@ -584,8 +587,8 @@ compile 'org.springframework:spring-webmvc:${spring.version}'
     role="tabpanel"
     aria-labelledby="sbt-web-tab"
   >
-    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-spring" % "2.0.1"
-libraryDependencies += "org.apache.shiro" % "shiro-web" % "2.0.1"
+    <pre><code class='scala language-scala'>libraryDependencies += "org.apache.shiro" % "shiro-spring" % "2.0.5"
+libraryDependencies += "org.apache.shiro" % "shiro-web" % "2.0.5"
 libraryDependencies += "org.springframework" % "spring-webmvc" % "${spring.version}"
 </code></pre>
   </div>
@@ -595,8 +598,8 @@ libraryDependencies += "org.springframework" % "spring-webmvc" % "${spring.versi
     role="tabpanel"
     aria-labelledby="ivy-web-tab"
     >
-    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-spring" rev="2.0.1"/&gt;
-&lt;dependency org="org.apache.shiro" name="shiro-web" rev="2.0.1"/&gt;
+    <pre><code class='xml language-xml'>&lt;dependency org="org.apache.shiro" name="shiro-spring" rev="2.0.5"/&gt;
+&lt;dependency org="org.apache.shiro" name="shiro-web" rev="2.0.5"/&gt;
 &lt;dependency org="org.springframework" name="spring-webmvc" rev="${spring.version}"/&gt;
 </code></pre>
   </div>
@@ -606,8 +609,8 @@ libraryDependencies += "org.springframework" % "spring-webmvc" % "${spring.versi
     role="tabpanel"
     aria-labelledby="leiningen-web-tab"
     >
-    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-spring "2.0.1"]
-[org.apache.shiro/shiro-web "2.0.1"]
+    <pre><code class='clojure language-clojure'>[org.apache.shiro/shiro-spring "2.0.5"]
+[org.apache.shiro/shiro-web "2.0.5"]
 [org.springframework/spring-webmvc "${spring.version}"]
 </code></pre>
   </div>
@@ -617,8 +620,8 @@ libraryDependencies += "org.springframework" % "spring-webmvc" % "${spring.versi
     role="tabpanel"
     aria-labelledby="buildr-web-tab"
   >
-    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-spring:jar:2.0.1'
-'org.apache.shiro:shiro-web:jar:2.0.1'
+    <pre><code class='groovy language-groovy'>'org.apache.shiro:shiro-spring:jar:2.0.5'
+'org.apache.shiro:shiro-web:jar:2.0.5'
 'org.springframework:spring-webmvc:jar:${spring.version}'
 </code></pre>
   </div>
@@ -914,7 +917,7 @@ unauthorized (403 page)</p></td>
           <div class="copyright-footer justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
             <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
-            <p class="text-muted">Copyright &copy; 2008-2024 The Apache Software Foundation</p>
+            <p class="text-muted">Copyright &copy; 2008-2026 The Apache Software Foundation</p>
           </div>
         </div>
 

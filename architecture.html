@@ -58,18 +58,21 @@
 
     <!-- Matomo -->
     <script>
-        var _paq = window._paq = window._paq || [];
-        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-        _paq.push(['disableCookies']);
-        _paq.push(['trackPageView']);
-        _paq.push(['enableLinkTracking']);
-        (function() {
-            var u="//matomo.privacy.apache.org/";
-            _paq.push(['setTrackerUrl', u+'matomo.php']);
-            _paq.push(['setSiteId', '2']);
-            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-        })();
+     var _paq = window._paq = window._paq || [];
+     /* tracker methods like "setCustomDimension" should be called before
+    "trackPageView" */
+     _paq.push(["setDoNotTrack", true]);
+     _paq.push(["disableCookies"]);
+     _paq.push(['trackPageView']);
+     _paq.push(['enableLinkTracking']);
+     (function() {
+       var u="https://analytics.apache.org/";
+       _paq.push(['setTrackerUrl', u+'matomo.php']);
+       _paq.push(['setSiteId', '2']);
+       var d=document, g=d.createElement('script'),
+    s=d.getElementsByTagName('script')[0];
+       g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+     })();
     </script>
     <!-- End Matomo Code -->
   </head>
@@ -310,7 +313,7 @@ The <code>CacheManager</code> creates and manages <code>Cache</code> instance li
 </li>
 <li>
 <p><strong>Cryptography</strong> (<a href="static/current/apidocs/shiro-crypto-cipher/org/apache/shiro/crypto/cipher/package-summary.html">org.apache.shiro.crypto.cipher.*</a>)
-Cryptography is a natural addition to an enterprise security framework. Shiro&#8217;s <code>crypto</code> package contains easy-to-use and understand representations of crytographic Ciphers, Hashes (aka digests) and different codec implementations. All the classes in this package are carefully designed to be very easy to use and easy to understand. Anyone who has used Java&#8217;s native cryptography support knows it can be a challenging animal to tame. Shiro&#8217;s crypto APIs simplify the complicated Java mechanisms and make cryptography easy to use for normal mortal human beings.</p>
+Cryptography is a natural addition to an enterprise security framework. Shiro&#8217;s <code>crypto</code> package contains easy-to-use and understand representations of cryptographic Ciphers, Hashes (aka digests) and different codec implementations. All the classes in this package are carefully designed to be very easy to use and easy to understand. Anyone who has used Java&#8217;s native cryptography support knows it can be a challenging animal to tame. Shiro&#8217;s crypto APIs simplify the complicated Java mechanisms and make cryptography easy to use for normal mortal human beings.</p>
 </li>
 <li>
 <p><strong>Realms</strong> (<a href="static/current/apidocs/org/apache/shiro/realm/Realm.html">org.apache.shiro.realm.Realm</a>)
@@ -408,7 +411,7 @@ As mentioned above, Realms act as the &#8216;bridge&#8217; or &#8216;connector&#
           <div class="copyright-footer justify-content-start">
             <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
             <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
-            <p class="text-muted">Copyright &copy; 2008-2024 The Apache Software Foundation</p>
+            <p class="text-muted">Copyright &copy; 2008-2026 The Apache Software Foundation</p>
           </div>
         </div>
 
