@@ -118,6 +118,7 @@
                 <li><a class="dropdown-item" href="web.html">General</a></li>
                 <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
                 <li><a class="dropdown-item" href="jakarta-ee.html">Jakarta EE</a></li>
+                <li><a class="dropdown-item" href="dependency-chain.html">Jakarta EE with Dependency Chains</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="web-features.html">Features</a></li>
               </ul>
@@ -316,8 +317,8 @@
     &lt;dependency&gt;
         &lt;groupId&gt;com.flowlogix.depchain&lt;/groupId&gt;
         &lt;artifactId&gt;shiro-jakarta&lt;/artifactId&gt;
-        &lt;version&gt;11&lt;/version&gt;
-        &lt;type&gt;pom&lt;/type&gt;
+        &lt;!-- replace LATEST with a version number --&gt;
+        &lt;version&gt;LATEST&lt;/version&gt;
     &lt;/dependency&gt;
 &lt;/dependencies&gt;</code></pre>
 </div>
@@ -383,7 +384,8 @@
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">dependencies {
-    implementation platform('com.flowlogix.depchain:shiro-jakarta:11')
+    // replace LATEST with a version number
+    implementation platform('com.flowlogix.depchain:shiro-jakarta:LATEST')
 }</code></pre>
 </div>
 </div>
@@ -393,31 +395,11 @@
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">dependencies {
-    implementation(platform("com.flowlogix.depchain:shiro-jakarta:11"))
+    // replace LATEST with a version number
+    implementation(platform("com.flowlogix.depchain:shiro-jakarta:LATEST"))
 }</code></pre>
 </div>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="version_information">Version Information</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The FlowLogix dependency chain version corresponds to the major release of FlowLogix components:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Version 11: Compatible with Java 17-25+ and Jakarta EE 11</p>
-</li>
-<li>
-<p>Version 10: Compatible with Java 17+ and Jakarta EE 10</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Check the <a href="https://central.sonatype.com/search?q=com.flowlogix.depchain&amp;sort=published">Maven Central</a> for the latest available version.</p>
 </div>
 </div>
 </div>
@@ -430,7 +412,13 @@
 <p><a href="https://docs.flowlogix.com/depchains">FlowLogix Dependency Chains Documentation</a></p>
 </li>
 <li>
-<p><a href="https://github.com/flowlogix/flowlogix">FlowLogix GitHub Repository</a></p>
+<p><a href="https://github.com/flowlogix/depchain">Dependency Chain - GitHub Repository</a></p>
+</li>
+<li>
+<p><a href="https://github.com/flowlogix/base-pom">FlowLogix Base POM - GitHub Repository</a></p>
+</li>
+<li>
+<p><a href="https://github.com/flowlogix/flowlogix">FlowLogix Jakarta EE Components - GitHub Repository</a></p>
 </li>
 <li>
 <p><a href="jakarta-ee.html">Apache Shiro Jakarta EE Integration Guide</a></p>
@@ -442,6 +430,9 @@
 <div class="sect1">
 <h2 id="complete_example_project">Complete Example Project</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>You can create a complete, testable project using the <a href="https://start.flowlogix.com">FlowLogix Starter</a> that supports Shiro with Jakarta EE, Jakarta Faces, PrimeFaces, and Omnifaces.</p>
+</div>
 <div class="paragraph">
 <p>Here is a minimal <code>pom.xml</code> for a Jakarta EE web application with Shiro security:</p>
 </div>
@@ -470,7 +461,7 @@
         &lt;dependency&gt;
             &lt;groupId&gt;jakarta.platform&lt;/groupId&gt;
             &lt;artifactId&gt;jakarta.jakartaee-api&lt;/artifactId&gt;
-            &lt;version&gt;10.0.0&lt;/version&gt;
+            &lt;version&gt;11.0.0&lt;/version&gt;
             &lt;scope&gt;provided&lt;/scope&gt;
         &lt;/dependency&gt;
 
@@ -478,8 +469,8 @@
         &lt;dependency&gt;
             &lt;groupId&gt;com.flowlogix.depchain&lt;/groupId&gt;
             &lt;artifactId&gt;shiro-jakarta&lt;/artifactId&gt;
-            &lt;version&gt;11&lt;/version&gt;
-            &lt;type&gt;pom&lt;/type&gt;
+            &lt;!-- replace with latest version --&gt;
+            &lt;version&gt;106&lt;/version&gt;
         &lt;/dependency&gt;
     &lt;/dependencies&gt;
 &lt;/project&gt;</code></pre>
