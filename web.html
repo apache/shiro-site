@@ -249,6 +249,7 @@
 <li><a href="#request_specific_enablingdisabling">Request-specific Enabling/Disabling</a></li>
 <li><a href="#path_specific_enablingdisabling">Path-specific Enabling/Disabling</a></li>
 <li><a href="#global_filters">Global Filters</a></li>
+<li><a href="#cors_support">CORS Support</a></li>
 <li><a href="#http_strict_transport_security_hsts">HTTP Strict Transport Security (HSTS)</a></li>
 </ul>
 </li>
@@ -988,6 +989,30 @@ invalidRequest.blockNonAscii = true
 </td>
 </tr>
 </table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cors_support">CORS Support</h3>
+<div class="paragraph">
+<p>When using HTTP-based authentication (like Basic Auth or Bearer Token) in a browser-based application, Cross-Origin Resource Sharing (CORS) pre-flight <code>OPTIONS</code> requests are often sent by the browser. By default, these requests might be rejected if they do not contain authentication headers.</p>
+</div>
+<div class="paragraph">
+<p>To allow pre-flight <code>OPTIONS</code> requests to pass through the authentication filter without requiring credentials, you can configure the <code>allowPreFlightRequests</code> property on any filter extending <code>HttpAuthenticationFilter</code>.</p>
+</div>
+<div class="paragraph">
+<p>This is commonly used with <code>authcBasic</code> (Basic Auth) or <code>authcBearer</code> (Bearer Token / JWT).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+# Example 1: Configuring Basic Auth for CORS
+authcBasic.allowPreFlightRequests = true
+
+# Example 2: Configuring Bearer Auth (if used) for CORS
+authcBearer.allowPreFlightRequests = true
+...</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
