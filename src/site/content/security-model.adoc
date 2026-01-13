@@ -1,5 +1,5 @@
 = Apache Shiro Security Model
-:jbake-date: 2025-01-03 00:00:00
+:jbake-date: 2026-01-03 00:00:00
 :jbake-type: page
 :jbake-status: published
 :jbake-tags: documentation, security
@@ -50,8 +50,10 @@ However, Shiro relies on the application to:
 
 === Operator Responsibilities
 
-* **Credential Storage**: Operators must ensure credentials are stored securely (hashed with appropriate algorithms like bcrypt, Argon2, or PBKDF2).
-* **Brute-Force Protection**: Shiro does not include built-in rate limiting or account lockout. Operators should implement these controls at the application or infrastructure level.
+* **Credential Storage**: Operators must ensure credentials are stored securely (hashed with appropriate algorithms like bcrypt or Argon2).
+* **Brute-Force Protection**: Shiro only includes built-in basic rate limiting for
+link:jakarta-ee.html#rate_limiting[Jakarta EE only], but does not include account lockout.
+Operators should implement these controls at the application or infrastructure level.
 * **Multi-Factor Authentication**: MFA is not built into core Shiro; operators requiring MFA must implement custom `Realm` or `AuthenticationStrategy` extensions.
 
 === Username Enumeration
@@ -101,7 +103,7 @@ By default, Shiro may reveal whether a username exists through different error r
 
 === Important Notes
 
-* Shiro's cryptographic utilities are wrappers around standard Java cryptography (JCA/JCE).
+* Shiro's cryptographic utilities are wrappers around standard Java cryptography (JCA/JCE) and `BouncyCastle` libraries.
 * **Algorithm Selection**: Operators must choose appropriate algorithms. Avoid deprecated algorithms (MD5, SHA-1 for security purposes).
 * **Key Management**: Shiro does not provide key management infrastructure. Secure key storage and rotation is the operator's responsibility.
 
@@ -148,7 +150,7 @@ Operators should:
 
 . Use the latest stable Shiro release.
 . Configure TLS for all credential transmission.
-. Use strong password hashing (bcrypt, Argon2, or PBKDF2 with appropriate work factors).
+. Use strong password hashing (bcrypt or Argon2 with appropriate work factors).
 . Implement session fixation prevention.
 . Review and restrict default configurations.
 
@@ -178,13 +180,3 @@ Do not disclose security vulnerabilities publicly until a fix is available and a
 * link:session-management.html[Session Management] - Session handling documentation
 * link:cryptography.html[Cryptography] - Cryptographic utilities
 * link:security-reports.html[Security Reports] - Known vulnerabilities and mitigations
-
-== Document History
-
-[cols="1,3"]
-|===
-|Date |Change
-
-|2025-01-03
-|Initial security model documentation
-|===

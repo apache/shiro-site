@@ -171,7 +171,8 @@ RememberMe functionality is disabled by default. You can enable it easily by add
 authc.useRemembered = true
 ----
 
-==== Automatic delay when login failed
+[#rate_limiting]
+==== Rate limiting: Automatic delay when login failed
 When user fails to log in, Shiro will automatically delay the failure response for a number of seconds. This can be one of the strategies to prevent brute force attacks.
 
 NOTE: Be careful utilizing this technique, as it could be a vector for a denial-of-service attack. Servers with virtual thread support (Project Loom) will not be affected by the DDOS vector.
@@ -202,6 +203,42 @@ The module adds `ShiroFilter` to the Servlet configuration. For most cases, the 
     <url-pattern/>
 </filter-mapping>
 ... other filters ...
+----
+Ordinarily, Jakarta EE integration module will remove URL session tracking mode from the configuration, overriding any other session tracking configuration specified in `web.xml`. This is to align with good security practices. If URL tracking mode is desired (such as for testing or historical reasons), add the following to `web.xml`:
+[source,xml]
+.Note: this parameter is only available in Shiro 2.0.6 or later
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.enable-url-session-tracking</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+If no manipulation of session tracking modes is desired at all, add the following to `web.xml`:
+[source,xml]
+.Note: this parameter is only available in Shiro 2.0.6 or later
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.session-tracking-configuration.disabled</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+Shiro Jakarta EE filter forces request encoding to UTF-8. This is the desired outcome for most, if not all cases. However, if this is not desired, you can disable it by adding the following parameter to `web.xml`:
+[source,xml]
+.Note: this parameter is only available in Shiro 2.0.6 or later
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.disable-character-encoding</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+If you need to set a different encoding than UTF-8, add the following parameter to `web.xml`:
+[source,xml]
+.Note: this parameter is only available in Shiro 2.0.6 or later
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.character-encoding</param-name>
+    <param-value>ISO-8859-2</param-value>
+</context-param>
 ----
 
 ==== Shiro.ini file locations

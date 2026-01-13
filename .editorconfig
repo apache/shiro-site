@@ -6,7 +6,7 @@
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
-#       http://www.apache.org/licenses/LICENSE-2.0
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -15,31 +15,13 @@
 # specific language governing permissions and limitations
 # under the License.
 
-version: 2
-# Add Maven Central explicitly to work around:
-#   https://github.com/dependabot/dependabot-core/issues/8329
-registries:
-  maven-central:
-    type: maven-repository
-    url: https://repo.maven.apache.org/maven2
+# EditorConfig is awesome: https://editorconfig.org
 
-updates:
-  # Dependencies for Maven
-  - package-ecosystem: 'maven'
-    directory: '/'
-    schedule:
-      interval: 'daily'
-    open-pull-requests-limit: 50
-    registries:
-      - maven-central
+# top-most EditorConfig file
+root = true
 
-  # Dependencies for GitHub Actions
-  - package-ecosystem: 'github-actions'
-    directory: '/'
-    schedule:
-      interval: 'daily'
-    open-pull-requests-limit: 10
-    groups:
-      github-dependencies:
-        patterns:
-          - '*'
+# Unix-style newlines with a newline ending every file
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true

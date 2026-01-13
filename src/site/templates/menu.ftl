@@ -66,6 +66,7 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>about.html">About</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>privacy-policy.html">Privacy Policy</a></li>
+                <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>security-model.html">Security Model</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>security-reports.html">Vulnerability Reports</a></li>
               </ul>
             </li>
