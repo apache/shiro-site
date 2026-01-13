@@ -366,10 +366,12 @@
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Credential Storage</strong>: Operators must ensure credentials are stored securely (hashed with appropriate algorithms like bcrypt, Argon2, or PBKDF2).</p>
+<p><strong>Credential Storage</strong>: Operators must ensure credentials are stored securely (hashed with appropriate algorithms like bcrypt or Argon2).</p>
 </li>
 <li>
-<p><strong>Brute-Force Protection</strong>: Shiro does not include built-in rate limiting or account lockout. Operators should implement these controls at the application or infrastructure level.</p>
+<p><strong>Brute-Force Protection</strong>: Shiro only includes built-in basic rate limiting for
+<a href="jakarta-ee.html#rate_limiting">Jakarta EE only</a>, but does not include account lockout.
+Operators should implement these controls at the application or infrastructure level.</p>
 </li>
 <li>
 <p><strong>Multi-Factor Authentication</strong>: MFA is not built into core Shiro; operators requiring MFA must implement custom <code>Realm</code> or <code>AuthenticationStrategy</code> extensions.</p>
@@ -621,7 +623,7 @@
 <p>Configure TLS for all credential transmission.</p>
 </li>
 <li>
-<p>Use strong password hashing (bcrypt, Argon2, or PBKDF2 with appropriate work factors).</p>
+<p>Use strong password hashing (bcrypt or Argon2 with appropriate work factors).</p>
 </li>
 <li>
 <p>Implement session fixation prevention.</p>
