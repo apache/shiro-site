@@ -8,6 +8,14 @@
 
 Managing Apache Shiro dependencies in Jakarta EE projects can be simplified using the FlowLogix Dependency Chains. This approach provides a cleaner alternative to managing the BOM (Bill of Materials) directly, reducing configuration complexity and common errors.
 
+== Applicability
+This guide is intended for Jakarta EE projects using Apache Shiro for security.
+[NOTE]
+====
+Dependency chains are not suitable for Spring or SpringBoot projects
+====
+For Spring / SpringBoot projects, you need to use a link:jakarta-ee.html#bom_approach[traditional BOM approach]
+
 == What is the FlowLogix Dependency Chain?
 
 FlowLogix provides pre-configured Maven dependency chains that bundle related dependencies together. For Apache Shiro with Jakarta EE, the `shiro-jakarta` module includes all necessary Shiro components with the correct Jakarta classifier, eliminating the need to declare each dependency individually.
@@ -43,8 +51,8 @@ Add a single dependency to include all Shiro Jakarta EE components:
     <dependency>
         <groupId>com.flowlogix.depchain</groupId>
         <artifactId>shiro-jakarta</artifactId>
-        <version>11</version>
-        <type>pom</type>
+        <!-- replace LATEST with a version number -->
+        <version>LATEST</version>
     </dependency>
 </dependencies>
 ----
@@ -61,7 +69,7 @@ For reference, the traditional BOM approach requires significantly more configur
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-bom</artifactId>
-            <version>${shiro.version}</version>
+            <version>${versions.latestRelease}</version>
             <scope>import</scope>
             <type>pom</type>
         </dependency>
@@ -104,7 +112,8 @@ For reference, the traditional BOM approach requires significantly more configur
 [source,groovy]
 ----
 dependencies {
-    implementation platform('com.flowlogix.depchain:shiro-jakarta:11')
+    // replace LATEST with a version number
+    implementation platform('com.flowlogix.depchain:shiro-jakarta:LATEST')
 }
 ----
 
@@ -113,26 +122,22 @@ For Kotlin DSL:
 [source,kotlin]
 ----
 dependencies {
-    implementation(platform("com.flowlogix.depchain:shiro-jakarta:11"))
+    // replace LATEST with a version number
+    implementation(platform("com.flowlogix.depchain:shiro-jakarta:LATEST"))
 }
 ----
-
-== Version Information
-
-The FlowLogix dependency chain version corresponds to the major release of FlowLogix components:
-
-* Version 11: Compatible with Java 17-25+ and Jakarta EE 11
-* Version 10: Compatible with Java 17+ and Jakarta EE 10
-
-Check the https://central.sonatype.com/search?q=com.flowlogix.depchain&sort=published[Maven Central] for the latest available version.
 
 == Additional Resources
 
 * https://docs.flowlogix.com/depchains[FlowLogix Dependency Chains Documentation]
-* https://github.com/flowlogix/flowlogix[FlowLogix GitHub Repository]
+* https://github.com/flowlogix/depchain[Dependency Chain - GitHub Repository]
+* https://github.com/flowlogix/base-pom[FlowLogix Base POM - GitHub Repository]
+* https://github.com/flowlogix/flowlogix[FlowLogix Jakarta EE Components - GitHub Repository]
 * link:jakarta-ee.html[Apache Shiro Jakarta EE Integration Guide]
 
 == Complete Example Project
+
+You can create a complete, testable project using the https://start.flowlogix.com[FlowLogix Starter] that supports Shiro with Jakarta EE, Jakarta Faces, PrimeFaces, and Omnifaces.
 
 Here is a minimal `pom.xml` for a Jakarta EE web application with Shiro security:
 
@@ -161,7 +166,7 @@ Here is a minimal `pom.xml` for a Jakarta EE web application with Shiro security
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>10.0.0</version>
+            <version>11.0.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -169,14 +174,10 @@ Here is a minimal `pom.xml` for a Jakarta EE web application with Shiro security
         <dependency>
             <groupId>com.flowlogix.depchain</groupId>
             <artifactId>shiro-jakarta</artifactId>
-            <version>11</version>
-            <type>pom</type>
+            <!-- replace with latest version -->
+            <version>106</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <finalName>${project.artifactId}</finalName>
-    </build>
 </project>
 ----
 

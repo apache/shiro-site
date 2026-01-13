@@ -43,6 +43,10 @@ In addition to all Shiro annotations, Jakarta EE module allows to specify Jakart
 There are two approaches to include Shiro Jakarta EE dependencies in your project:
 
 ==== Option 1: FlowLogix Dependency Chain (Recommended)
+[NOTE]
+====
+This option is applicable only to Jakarta EE, not Spring / SpringBoot.
+====
 
 The simplest approach is to use the FlowLogix dependency chain, which bundles all required Shiro Jakarta EE components in a single dependency:
 
@@ -52,17 +56,41 @@ The simplest approach is to use the FlowLogix dependency chain, which bundles al
     <dependency>
         <groupId>com.flowlogix.depchain</groupId>
         <artifactId>shiro-jakarta</artifactId>
-        <version>11</version>
-        <type>pom</type>
+        <!-- replace LATEST with a version number -->
+        <version>LATEST</version>
     </dependency>
 </dependencies>
 ----
 
 This approach automatically includes all Shiro modules (`shiro-core`, `shiro-web`, `shiro-jakarta-ee`, `shiro-cdi`, `shiro-jaxrs`) with the correct Jakarta classifier, plus required dependencies like OmniFaces. See the link:dependency-chain.html[Dependency Chain Guide] for more details, Gradle examples, and migration instructions.
 
+[#bom_approach]
 ==== Option 2: Traditional BOM with Individual Dependencies
 
-Alternatively, use the Shiro artifacts with Jakarta classifiers directly:
+Alternatively, use the Shiro artifacts with Jakarta classifiers directly
+
+Import the Shiro BOM as seen below
+[NOTE]
+====
+Shiro BOM is a *necessary* step, unless you are using FlowLogix Depchain as described above.
+The BOM is needed if you are using Spring / SpringBoot.
+====
+
+[source,xml]
+----
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-bom</artifactId>
+            <version>${versions.latestRelease}</version>
+            <scope>import</scope>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+----
+
 [source,xml]
 ----
 <dependency>
@@ -95,22 +123,6 @@ Alternatively, use the Shiro artifacts with Jakarta classifiers directly:
   <!-- replace LATEST with a version number -->
   <version>LATEST</version>
 </dependency>
-----
-
-Import the Shiro BOM as seen below:
-[source,xml]
-----
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-bom</artifactId>
-            <version>${versions.latestRelease}</version>
-            <scope>import</scope>
-            <type>pom</type>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
 ----
 
 == Configuration
