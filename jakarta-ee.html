@@ -432,6 +432,20 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
 </div>
 <div class="sect3">
 <h4 id="option_1_flowlogix_dependency_chain_recommended">Option 1: FlowLogix Dependency Chain (Recommended)</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This option is applicable only to Jakarta EE, not Spring / SpringBoot.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>The simplest approach is to use the FlowLogix dependency chain, which bundles all required Shiro Jakarta EE components in a single dependency:</p>
 </div>
@@ -441,8 +455,8 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
     &lt;dependency&gt;
         &lt;groupId&gt;com.flowlogix.depchain&lt;/groupId&gt;
         &lt;artifactId&gt;shiro-jakarta&lt;/artifactId&gt;
-        &lt;version&gt;11&lt;/version&gt;
-        &lt;type&gt;pom&lt;/type&gt;
+        &lt;!-- replace LATEST with a version number --&gt;
+        &lt;version&gt;LATEST&lt;/version&gt;
     &lt;/dependency&gt;
 &lt;/dependencies&gt;</code></pre>
 </div>
@@ -454,7 +468,40 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
 <div class="sect3">
 <h4 id="option_2_traditional_bom_with_individual_dependencies">Option 2: Traditional BOM with Individual Dependencies</h4>
 <div class="paragraph">
-<p>Alternatively, use the Shiro artifacts with Jakarta classifiers directly:</p>
+<p>Alternatively, use the Shiro artifacts with Jakarta classifiers directly</p>
+</div>
+<div class="paragraph">
+<p>Import the Shiro BOM as seen below</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Shiro BOM is a <strong>necessary</strong> step, unless you are using FlowLogix Depchain as described above.
+The BOM is needed if you are using Spring / SpringBoot.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependencyManagement&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
+            &lt;artifactId&gt;shiro-bom&lt;/artifactId&gt;
+            &lt;version&gt;2.0.6&lt;/version&gt;
+            &lt;scope&gt;import&lt;/scope&gt;
+            &lt;type&gt;pom&lt;/type&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;</code></pre>
+</div>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -488,24 +535,6 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
   &lt;!-- replace LATEST with a version number --&gt;
   &lt;version&gt;LATEST&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Import the Shiro BOM as seen below:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependencyManagement&gt;
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;
-            &lt;artifactId&gt;shiro-bom&lt;/artifactId&gt;
-            &lt;version&gt;2.0.6&lt;/version&gt;
-            &lt;scope&gt;import&lt;/scope&gt;
-            &lt;type&gt;pom&lt;/type&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-&lt;/dependencyManagement&gt;</code></pre>
 </div>
 </div>
 </div>
