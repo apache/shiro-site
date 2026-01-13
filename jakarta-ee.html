@@ -428,7 +428,33 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
 <div class="sect2">
 <h3 id="how_to_use_jakarta_9_jakarta_namespace">How to use Jakarta 9+ (jakarta.* namespace)</h3>
 <div class="paragraph">
-<p>Use the Shiro artifacts with Jakarta classifiers:</p>
+<p>There are two approaches to include Shiro Jakarta EE dependencies in your project:</p>
+</div>
+<div class="sect3">
+<h4 id="option_1_flowlogix_dependency_chain_recommended">Option 1: FlowLogix Dependency Chain (Recommended)</h4>
+<div class="paragraph">
+<p>The simplest approach is to use the FlowLogix dependency chain, which bundles all required Shiro Jakarta EE components in a single dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.flowlogix.depchain&lt;/groupId&gt;
+        &lt;artifactId&gt;shiro-jakarta&lt;/artifactId&gt;
+        &lt;version&gt;11&lt;/version&gt;
+        &lt;type&gt;pom&lt;/type&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This approach automatically includes all Shiro modules (<code>shiro-core</code>, <code>shiro-web</code>, <code>shiro-jakarta-ee</code>, <code>shiro-cdi</code>, <code>shiro-jaxrs</code>) with the correct Jakarta classifier, plus required dependencies like OmniFaces. See the <a href="dependency-chain.html">Dependency Chain Guide</a> for more details, Gradle examples, and migration instructions.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="option_2_traditional_bom_with_individual_dependencies">Option 2: Traditional BOM with Individual Dependencies</h4>
+<div class="paragraph">
+<p>Alternatively, use the Shiro artifacts with Jakarta classifiers directly:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -480,6 +506,7 @@ The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may w
         &lt;/dependency&gt;
     &lt;/dependencies&gt;
 &lt;/dependencyManagement&gt;</code></pre>
+</div>
 </div>
 </div>
 </div>
