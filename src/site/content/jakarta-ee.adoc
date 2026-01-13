@@ -39,7 +39,30 @@ Jakarta EE module depends on CDI and Jax-RS submodules to fully integrate with t
 In addition to all Shiro annotations, Jakarta EE module allows to specify Jakarta EE security annotations such as `@RolesAllowed`, `@DenyAll` and `@PermitAll` on your beans
 
 === How to use Jakarta 9+ (jakarta.* namespace)
-Use the Shiro artifacts with Jakarta classifiers:
+
+There are two approaches to include Shiro Jakarta EE dependencies in your project:
+
+==== Option 1: FlowLogix Dependency Chain (Recommended)
+
+The simplest approach is to use the FlowLogix dependency chain, which bundles all required Shiro Jakarta EE components in a single dependency:
+
+[source,xml]
+----
+<dependencies>
+    <dependency>
+        <groupId>com.flowlogix.depchain</groupId>
+        <artifactId>shiro-jakarta</artifactId>
+        <version>11</version>
+        <type>pom</type>
+    </dependency>
+</dependencies>
+----
+
+This approach automatically includes all Shiro modules (`shiro-core`, `shiro-web`, `shiro-jakarta-ee`, `shiro-cdi`, `shiro-jaxrs`) with the correct Jakarta classifier, plus required dependencies like OmniFaces. See the link:dependency-chain.html[Dependency Chain Guide] for more details, Gradle examples, and migration instructions.
+
+==== Option 2: Traditional BOM with Individual Dependencies
+
+Alternatively, use the Shiro artifacts with Jakarta classifiers directly:
 [source,xml]
 ----
 <dependency>

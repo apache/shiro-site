@@ -1,0 +1,192 @@
+= Using FlowLogix Dependency Chains with Apache Shiro
+:jbake-date: 2026-01-03 00:00:00
+:jbake-type: page
+:jbake-status: published
+:jbake-tags: documentation, jakarta-ee, dependencies, integrations
+:idprefix:
+:icons: font
+
+Managing Apache Shiro dependencies in Jakarta EE projects can be simplified using the FlowLogix Dependency Chains. This approach provides a cleaner alternative to managing the BOM (Bill of Materials) directly, reducing configuration complexity and common errors.
+
+== What is the FlowLogix Dependency Chain?
+
+FlowLogix provides pre-configured Maven dependency chains that bundle related dependencies together. For Apache Shiro with Jakarta EE, the `shiro-jakarta` module includes all necessary Shiro components with the correct Jakarta classifier, eliminating the need to declare each dependency individually.
+
+== Why Use Dependency Chains Instead of BOM?
+
+Traditional BOM usage requires importing the BOM in `<dependencyManagement>` and then declaring each individual dependency. This approach can lead to:
+
+* Forgetting to include required transitive dependencies
+* Inconsistent versions when mixing dependencies
+* Verbose configuration with multiple dependency declarations
+* Missing the `jakarta` classifier on artifacts
+
+The dependency chain approach bundles everything you need in a single dependency, automatically including:
+
+* `shiro-core` (jakarta classifier)
+* `shiro-web` (jakarta classifier)
+* `shiro-jakarta-ee` (jakarta classifier)
+* `shiro-cdi` (jakarta classifier)
+* `shiro-jaxrs` (jakarta classifier)
+* `commons-configuration2`
+* `omnifaces`
+
+== Maven Configuration
+
+=== Using the Dependency Chain (Recommended)
+
+Add a single dependency to include all Shiro Jakarta EE components:
+
+[source,xml]
+----
+<dependencies>
+    <dependency>
+        <groupId>com.flowlogix.depchain</groupId>
+        <artifactId>shiro-jakarta</artifactId>
+        <version>11</version>
+        <type>pom</type>
+    </dependency>
+</dependencies>
+----
+
+=== Comparison with Traditional BOM Approach
+
+For reference, the traditional BOM approach requires significantly more configuration:
+
+[source,xml]
+----
+<!-- Traditional BOM Approach (more verbose) -->
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-bom</artifactId>
+            <version>${shiro.version}</version>
+            <scope>import</scope>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+
+<dependencies>
+    <dependency>
+        <groupId>org.apache.shiro</groupId>
+        <artifactId>shiro-jakarta-ee</artifactId>
+        <classifier>jakarta</classifier>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.shiro</groupId>
+        <artifactId>shiro-cdi</artifactId>
+        <classifier>jakarta</classifier>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.shiro</groupId>
+        <artifactId>shiro-core</artifactId>
+        <classifier>jakarta</classifier>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.shiro</groupId>
+        <artifactId>shiro-web</artifactId>
+        <classifier>jakarta</classifier>
+    </dependency>
+    <dependency>
+        <groupId>org.omnifaces</groupId>
+        <artifactId>omnifaces</artifactId>
+        <version>LATEST</version>
+    </dependency>
+</dependencies>
+----
+
+== Gradle Configuration
+
+=== Using the Dependency Chain
+
+[source,groovy]
+----
+dependencies {
+    implementation platform('com.flowlogix.depchain:shiro-jakarta:11')
+}
+----
+
+For Kotlin DSL:
+
+[source,kotlin]
+----
+dependencies {
+    implementation(platform("com.flowlogix.depchain:shiro-jakarta:11"))
+}
+----
+
+== Version Information
+
+The FlowLogix dependency chain version corresponds to the major release of FlowLogix components:
+
+* Version 11: Compatible with Java 17-25+ and Jakarta EE 11
+* Version 10: Compatible with Java 17+ and Jakarta EE 10
+
+Check the https://central.sonatype.com/search?q=com.flowlogix.depchain&sort=published[Maven Central] for the latest available version.
+
+== Additional Resources
+
+* https://docs.flowlogix.com/depchains[FlowLogix Dependency Chains Documentation]
+* https://github.com/flowlogix/flowlogix[FlowLogix GitHub Repository]
+* link:jakarta-ee.html[Apache Shiro Jakarta EE Integration Guide]
+
+== Complete Example Project
+
+Here is a minimal `pom.xml` for a Jakarta EE web application with Shiro security:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>shiro-jakarta-demo</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- Jakarta EE API -->
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>10.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Shiro Jakarta EE - All-in-one dependency -->
+        <dependency>
+            <groupId>com.flowlogix.depchain</groupId>
+            <artifactId>shiro-jakarta</artifactId>
+            <version>11</version>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+    </build>
+</project>
+----
+
+== Migrating from BOM to Dependency Chain
+
+To migrate an existing project from the traditional BOM approach:
+
+1. Remove the `shiro-bom` import from `<dependencyManagement>`
+2. Remove individual Shiro dependency declarations
+3. Add the single `shiro-jakarta` dependency chain
+4. Remove any manually specified `jakarta` classifiers
+
+The dependency chain automatically handles classifier configuration and ensures all required components are included with compatible versions.
