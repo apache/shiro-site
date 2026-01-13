@@ -148,7 +148,8 @@ RememberMe functionality is disabled by default. You can enable it easily by add
 authc.useRemembered = true
 ----
 
-==== Automatic delay when login failed
+[#rate_limiting]
+==== Rate limiting: Automatic delay when login failed
 When user fails to log in, Shiro will automatically delay the failure response for a number of seconds. This can be one of the strategies to prevent brute force attacks.
 
 NOTE: Be careful utilizing this technique, as it could be a vector for a denial-of-service attack. Servers with virtual thread support (Project Loom) will not be affected by the DDOS vector.
