@@ -349,14 +349,9 @@ Repeated hashes are important when hashing …
 <div class="sect2">
 <h3 id="examples_of_how_to_use_hashes_in_your_code">Examples of how to use Hashes in your code</h3>
 <div class="listingblock">
+<div class="title">Note: MD5 is no longer considered secure and has been deprecated since Shiro 2.0. Use SHA-256 or stronger algorithms for secure hashing.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">//some examples:
-new Md5Hash("foo").toHex();
-
-//File MD5 Hash value for checksum:
-new MD5Hash( aFile ).toHex();
-
-//store a password, but not raw:
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">//store a password, but not raw:
 new Sha256(aPassword, salt, 1024).toBase64();</code></pre>
 </div>
 </div>
