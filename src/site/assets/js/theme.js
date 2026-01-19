@@ -1,5 +1,10 @@
 (function () {
-  var storedTheme = localStorage.getItem("theme");
+  var storedTheme;
+  try {
+    storedTheme = localStorage.getItem("theme");
+  } catch (e) {
+    storedTheme = null;
+  }
 
   var theme = storedTheme || "light";
   document.documentElement.setAttribute("data-theme", theme);
@@ -22,7 +27,11 @@
         var current = document.documentElement.getAttribute("data-theme");
         var next = current === "dark" ? "light" : "dark";
         document.documentElement.setAttribute("data-theme", next);
-        localStorage.setItem("theme", next);
+        try {
+          localStorage.setItem("theme", next);
+        } catch (e) {
+          // localStorage not available
+        }
         updateIcon(next);
       });
     }

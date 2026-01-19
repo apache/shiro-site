@@ -88,7 +88,7 @@
             </li>
             <!-- Theme toggle -->
             <li class="nav-item d-flex align-items-center">
-              <button id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+              <button id="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
                 <span id="theme-icon">🌙</span>
               </button>
             </li>
