@@ -1,0 +1,514 @@
+= Troubleshooting & FAQ
+:jbake-date: 2026-01-18 00:00:00
+:jbake-type: page
+:jbake-status: published
+:jbake-tags: documentation, troubleshooting, faq
+:idprefix:
+:icons: font
+:toc:
+
+This page covers common issues that users encounter when configuring and using Apache Shiro. Each section provides practical solutions and debugging tips to help you resolve problems quickly.
+
+== Session Management Issues
+
+=== Why do my sessions expire too quickly?
+
+By default, Shiro sessions have a 30-minute timeout. If your sessions expire faster than expected, check your `SessionManager` configuration.
+
+You can adjust the global session timeout in your `shiro.ini`:
+
+[source,ini]
+----
+[main]
+# Set session timeout to 1 hour (in milliseconds)
+securityManager.sessionManager.globalSessionTimeout = 3600000
+----
+
+For Spring Boot applications, you can configure this in `application.properties`:
+
+[source,properties]
+----
+shiro.sessionManager.globalSessionTimeout = 3600000
+----
+
+Also verify that your application is calling `session.touch()` when needed for long-running operations, particularly in RIA (Rich Internet Application) scenarios.
+
+See the link:session-management.html[Session Management] documentation for more details.
+
+=== How do I configure session clustering?
+
+Shiro supports session clustering through its `SessionDAO` abstraction. To enable clustering, you need to:
+
+1. Configure a distributed cache (such as Ehcache, Redis, or Hazelcast)
+2. Implement or configure an appropriate `SessionDAO`
+3. Set up the `CacheManager`
+
+Example configuration using Ehcache:
+
+[source,ini]
+----
+[main]
+cacheManager = org.apache.shiro.cache.ehcache.EhCacheManager
+cacheManager.cacheManagerConfigFile = classpath:ehcache.xml
+
+sessionDAO = org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO
+sessionDAO.activeSessionsCacheName = shiro-activeSessionCache
+
+sessionManager = org.apache.shiro.web.session.mgt.DefaultWebSessionManager
+sessionManager.sessionDAO = $sessionDAO
+sessionManager.cacheManager = $cacheManager
+
+securityManager.sessionManager = $sessionManager
+securityManager.cacheManager = $cacheManager
+----
+
+Make sure your `ehcache.xml` includes a properly configured distributed cache for the `shiro-activeSessionCache`.
+
+=== Why are my sessions not persisting across server restarts?
+
+By default, Shiro uses an in-memory `SessionDAO` that does not persist sessions. To maintain sessions across restarts, you need to configure a persistent `SessionDAO` backed by a database, file system, or distributed cache.
+
+Consider using `EnterpriseCacheSessionDAO` with a persistent cache or implementing a custom `SessionDAO` that stores sessions in your preferred data store.
+
+== Authentication Issues
+
+=== Why is authentication failing even though the credentials are correct?
+
+There are several common causes for this issue:
+
+1. **Password encoding mismatch**: Ensure the password stored in your data source uses the same hashing algorithm configured in your Realm.
+
+2. **Realm not finding the account**: Verify your Realm can locate the user account. Enable debug logging to see what Shiro is doing:
++
+[source,properties]
+----
+log4j.logger.org.apache.shiro = DEBUG
+----
+
+3. **Multiple Realms configured incorrectly**: If you have multiple Realms, check your `AuthenticationStrategy`. The default `AtLeastOneSuccessfulStrategy` requires at least one Realm to succeed.
+
+4. **Case sensitivity**: Usernames may be case-sensitive depending on your Realm implementation. Verify the case matches exactly.
+
+=== How do I debug authentication failures?
+
+Enable Shiro's debug logging to trace the authentication flow:
+
+[source,xml]
+----
+<!-- For Log4j2 -->
+<Logger name="org.apache.shiro" level="DEBUG"/>
+<Logger name="org.apache.shiro.realm" level="TRACE"/>
+----
+
+You can also catch and inspect the `AuthenticationException` for more details:
+
+[source,java]
+----
+try {
+    currentUser.login(token);
+} catch (UnknownAccountException uae) {
+    log.info("No account found for user: " + token.getPrincipal());
+} catch (IncorrectCredentialsException ice) {
+    log.info("Incorrect password for user: " + token.getPrincipal());
+} catch (LockedAccountException lae) {
+    log.info("Account is locked: " + token.getPrincipal());
+} catch (AuthenticationException ae) {
+    log.error("Unexpected authentication error", ae);
+}
+----
+
+See the link:authentication.html[Authentication] documentation for a complete overview.
+
+=== What does "There is no configured realm" error mean?
+
+This error indicates that Shiro cannot find any Realm to authenticate against. You must configure at least one Realm in your application.
+
+In `shiro.ini`:
+
+[source,ini]
+----
+[main]
+myRealm = com.mycompany.security.MyCustomRealm
+securityManager.realms = $myRealm
+----
+
+For Spring Boot, define a Realm bean:
+
+[source,java]
+----
+@Bean
+public Realm realm() {
+    return new MyCustomRealm();
+}
+----
+
+== Authorization Issues
+
+=== Why are my permission checks not working as expected?
+
+Common reasons for permission check failures:
+
+1. **Incorrect permission string format**: Shiro uses a colon-delimited format. Ensure you're using consistent formatting:
++
+[source,java]
+----
+// These are different permissions
+subject.isPermitted("document:read");    // domain:action
+subject.isPermitted("document:read:123"); // domain:action:instance
+----
+
+2. **Wildcard permissions**: Understand how wildcards work. `document:*` grants all actions on documents, while `*:read` is typically not valid (wildcards work left-to-right).
+
+3. **Role vs Permission confusion**: Roles and permissions are different. Use `hasRole()` for role checks and `isPermitted()` for permission checks.
+
+See the link:permissions.html[Permissions] documentation for the complete wildcard permission syntax.
+
+=== How do I configure role-based authorization?
+
+Roles can be assigned to users in your Realm implementation. In your Realm's `doGetAuthorizationInfo` method:
+
+[source,java]
+----
+@Override
+protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+    String username = (String) principals.getPrimaryPrincipal();
+    
+    SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+    
+    // Add roles
+    info.addRole("user");
+    if (isAdmin(username)) {
+        info.addRole("admin");
+    }
+    
+    // Add permissions
+    info.addStringPermission("document:read");
+    
+    return info;
+}
+----
+
+For web applications, you can also use filter chain definitions:
+
+[source,ini]
+----
+[urls]
+/admin/** = authc, roles[admin]
+/user/** = authc, roles[user]
+----
+
+== Spring Boot Integration
+
+=== Why is Shiro not auto-configuring in my Spring Boot application?
+
+Ensure you have the correct starter dependency:
+
+For web applications:
+
+++++
+<@dependencies.dependencies anchorId="web-starter" deps=[{"g":"org.apache.shiro", "a":"shiro-spring-boot-web-starter", "v":"${versions.latestRelease}"}] />
+++++
+
+For non-web applications:
+
+++++
+<@dependencies.dependencies anchorId="cli-starter" deps=[{"g":"org.apache.shiro", "a":"shiro-spring-boot-starter", "v":"${versions.latestRelease}"}] />
+++++
+
+Also verify that you have defined a `Realm` bean in your configuration.
+
+See the link:spring-boot.html[Spring Boot Integration] guide for complete setup instructions.
+
+=== How do I configure Shiro filter chains in Spring Boot?
+
+Define a `ShiroFilterChainDefinition` bean in your configuration:
+
+[source,java]
+----
+@Bean
+public ShiroFilterChainDefinition shiroFilterChainDefinition() {
+    DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
+    
+    // Static resources
+    chainDefinition.addPathDefinition("/css/**", "anon");
+    chainDefinition.addPathDefinition("/js/**", "anon");
+    
+    // Login page
+    chainDefinition.addPathDefinition("/login", "anon");
+    
+    // Admin section requires admin role
+    chainDefinition.addPathDefinition("/admin/**", "authc, roles[admin]");
+    
+    // Everything else requires authentication
+    chainDefinition.addPathDefinition("/**", "authc");
+    
+    return chainDefinition;
+}
+----
+
+Remember that filter chain order matters. More specific paths should be defined before general ones.
+
+== Remember Me Issues
+
+=== Why is "Remember Me" not working?
+
+Several factors can cause Remember Me to fail:
+
+1. **Cookie configuration**: The Remember Me cookie may not be set correctly. Check your cookie settings:
++
+[source,ini]
+----
+[main]
+securityManager.rememberMeManager.cookie.name = rememberMe
+securityManager.rememberMeManager.cookie.maxAge = 2592000
+securityManager.rememberMeManager.cookie.path = /
+----
+
+2. **Cipher key not set**: In production, you should set a consistent cipher key across cluster nodes:
++
+[source,java]
+----
+@Bean
+public CookieRememberMeManager rememberMeManager() {
+    CookieRememberMeManager manager = new CookieRememberMeManager();
+    manager.setCipherKey(Base64.decode("your-base64-encoded-key"));
+    return manager;
+}
+----
+
+3. **Using `isAuthenticated()` instead of `isRemembered()`**: These are different states. A remembered user is NOT fully authenticated:
++
+[source,java]
+----
+// User who logged in this session
+subject.isAuthenticated();
+
+// User recognized via Remember Me cookie
+subject.isRemembered();
+----
+
+=== How do I generate a cipher key for Remember Me?
+
+Generate a secure key using Shiro's `AesCipherService`:
+
+[source,java]
+----
+AesCipherService cipherService = new AesCipherService();
+Key key = cipherService.generateNewKey();
+String base64Key = Base64.encodeToString(key.getEncoded());
+System.out.println("Cipher key: " + base64Key);
+----
+
+Store this key securely and use the same key across all nodes in a clustered environment.
+
+== Realm Configuration
+
+=== How do I configure multiple Realms?
+
+Define each Realm and assign them to the `SecurityManager`:
+
+[source,ini]
+----
+[main]
+ldapRealm = org.apache.shiro.realm.ldap.JndiLdapRealm
+ldapRealm.contextFactory.url = ldap://localhost:389
+
+jdbcRealm = org.apache.shiro.realm.jdbc.JdbcRealm
+jdbcRealm.dataSource = $dataSource
+
+securityManager.realms = $ldapRealm, $jdbcRealm
+----
+
+By default, Shiro uses `AtLeastOneSuccessfulStrategy` for authentication, meaning the user is authenticated if any Realm succeeds.
+
+See the link:realm.html[Realm] documentation for more advanced configurations.
+
+=== Why is my custom Realm not being used?
+
+Verify the following:
+
+1. The Realm is properly registered with the `SecurityManager`
+2. The Realm supports the `AuthenticationToken` type being submitted
+3. The Realm is enabled (check `isAuthenticationCachingEnabled` if using caching)
+
+Override `supports()` in your Realm if you need to handle specific token types:
+
+[source,java]
+----
+@Override
+public boolean supports(AuthenticationToken token) {
+    return token instanceof UsernamePasswordToken;
+}
+----
+
+== Cache Configuration
+
+=== How do I enable caching for authentication and authorization?
+
+Configure a `CacheManager` and enable caching in your Realms:
+
+[source,ini]
+----
+[main]
+cacheManager = org.apache.shiro.cache.ehcache.EhCacheManager
+cacheManager.cacheManagerConfigFile = classpath:ehcache.xml
+
+securityManager.cacheManager = $cacheManager
+
+myRealm = com.mycompany.security.MyRealm
+myRealm.authenticationCachingEnabled = true
+myRealm.authorizationCachingEnabled = true
+----
+
+Caching can significantly improve performance, especially for authorization lookups that may involve database queries.
+
+=== Why are my authorization changes not taking effect immediately?
+
+If you have caching enabled, authorization information is cached for performance. When a user's permissions change, you need to clear their cached authorization:
+
+[source,java]
+----
+// Clear authorization cache for a specific user
+PrincipalCollection principals = subject.getPrincipals();
+realm.getAuthorizationCache().remove(principals);
+----
+
+Or clear the entire cache:
+
+[source,java]
+----
+realm.getAuthorizationCache().clear();
+----
+
+== Debug Logging
+
+=== How do I enable detailed Shiro logging?
+
+For Log4j2, add these entries to your logging configuration:
+
+[source,xml]
+----
+<Loggers>
+    <Logger name="org.apache.shiro" level="DEBUG"/>
+    <Logger name="org.apache.shiro.realm" level="TRACE"/>
+    <Logger name="org.apache.shiro.session" level="DEBUG"/>
+    <Logger name="org.apache.shiro.web" level="DEBUG"/>
+</Loggers>
+----
+
+For Logback (common in Spring Boot):
+
+[source,xml]
+----
+<logger name="org.apache.shiro" level="DEBUG"/>
+----
+
+Or in `application.properties`:
+
+[source,properties]
+----
+logging.level.org.apache.shiro=DEBUG
+----
+
+== Filter Chain Issues
+
+=== Why are my URL patterns not matching correctly?
+
+Shiro uses Ant-style path matching. Remember these rules:
+
+* `*` matches any characters within a path segment
+* `**` matches any path segments
+* Patterns are evaluated in order; first match wins
+
+Example patterns:
+
+[source,ini]
+----
+[urls]
+/login = anon
+/logout = logout
+/admin/** = authc, roles[admin]
+/api/** = authc, rest
+/** = authc
+----
+
+Place more specific patterns before general ones. The `/**` catch-all should always be last.
+
+=== What is the difference between authc and anon filters?
+
+* **anon**: Allows anonymous access; no authentication required
+* **authc**: Requires the user to be authenticated (logged in during this session)
+* **user**: Allows access if the user is authenticated OR remembered
+
+Common filter chain:
+
+[source,ini]
+----
+[urls]
+/public/** = anon
+/login = anon
+/account/** = user
+/admin/** = authc, roles[admin]
+/** = authc
+----
+
+== Startup and Initialization
+
+=== Why do I get "SecurityManager is not available" error?
+
+This error occurs when Shiro's `SecurityUtils.getSubject()` is called before the `SecurityManager` is initialized.
+
+Ensure the `SecurityManager` is set up before any security operations:
+
+[source,java]
+----
+Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");
+SecurityManager securityManager = factory.getInstance();
+SecurityUtils.setSecurityManager(securityManager);
+----
+
+In web applications, verify that Shiro's filter is configured in your `web.xml` or equivalent configuration and loads before your application code runs.
+
+=== How do I troubleshoot Shiro initialization in a web application?
+
+Check the following:
+
+1. **Filter configuration**: Ensure `ShiroFilter` is mapped correctly in your `web.xml`:
++
+[source,xml]
+----
+<filter>
+    <filter-name>ShiroFilter</filter-name>
+    <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
+</filter>
+<filter-mapping>
+    <filter-name>ShiroFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+----
+
+2. **Environment listener**: Add the environment loader listener:
++
+[source,xml]
+----
+<listener>
+    <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
+</listener>
+----
+
+3. **Configuration file location**: By default, Shiro looks for `/WEB-INF/shiro.ini`. You can customize this with a context parameter.
+
+== Additional Resources
+
+For more detailed information, refer to these documentation pages:
+
+* link:reference.html[Reference Manual] - Complete Shiro reference documentation
+* link:10-minute-tutorial.html[10 Minute Tutorial] - Quick start guide
+* link:java-authentication-guide.html[Authentication Guide] - Detailed authentication walkthrough
+* link:java-authorization-guide.html[Authorization Guide] - Detailed authorization walkthrough
+* link:configuration.html[Configuration] - Configuration options and formats
+
+If you cannot find a solution here, consider reaching out to the community:
+
+* link:mailing-lists.html[Mailing Lists] - Ask questions and get help from the community
+* link:issues.html[Issue Tracker] - Report bugs or request features
