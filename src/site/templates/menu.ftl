@@ -55,6 +55,7 @@
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>news.html">News</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>events.html">Events</a></li>
                 <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>commercial-support.html">Commercial Support</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>community.html">More</a></li>
               </ul>
             </li>
