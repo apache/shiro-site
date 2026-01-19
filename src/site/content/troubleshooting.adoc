@@ -31,7 +31,7 @@ For Spring Boot applications, you can configure this in `application.properties`
 shiro.sessionManager.globalSessionTimeout = 3600000
 ----
 
-Also verify that your application is calling `session.touch()` when needed for long-running operations, particularly in RIA (Rich Internet Application) scenarios.
+Also verify that your application is calling `session.touch()` when needed for long-running operations, particularly in Rich Internet Application (RIA) scenarios where users may be active on the page without triggering server requests.
 
 See the link:session-management.html[Session Management] documentation for more details.
 
