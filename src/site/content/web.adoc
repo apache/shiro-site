@@ -469,6 +469,24 @@ If you're currently allowing URL rewriting to allow for a <code>jsessionid</code
 URL rewriting for `jsessionid` is defined in section "7.1.3" of the Java Servlet Specification, but it is generally NOT recommended.
 ====
 
+=== Filter Chain Resolver Options
+
+The filter chain resolver supports additional configuration options:
+
+[source,ini]
+----
+[main]
+...
+# Enable case-insensitive path matching.
+# Can be set to true for Shiro 2.x.
+# Defaults to true in Shiro 3.x.
+filterChainResolver.caseInsensitive = true
+
+# Allow access when no filter chain matches the request path.
+# Defaults to false in Shiro 3.x.
+filterChainResolver.allowAccessByDefault = false
+----
+
 === CORS Support
 
 When using HTTP-based authentication (like Basic Auth or Bearer Token) in a browser-based application, Cross-Origin Resource Sharing (CORS) pre-flight `OPTIONS` requests are often sent by the browser. By default, these requests might be rejected if they do not contain authentication headers.
