@@ -1,0 +1,343 @@
+= Apache Shiro Migration Guide
+:jbake-date: 2026-01-19 00:00:00
+:jbake-type: page
+:jbake-status: published
+:jbake-tags: documentation, migration, upgrade
+:idprefix:
+:icons: font
+:toc:
+
+This guide covers the significant changes between major Shiro releases and provides practical guidance for upgrading your applications. Whether you are moving from 1.x to 2.x or from 2.x to 3.x, this document explains what changed, why it matters, and how to adapt your code and configuration.
+
+[#overview]
+== Overview
+
+Apache Shiro has evolved considerably across its major versions. Each release brings improvements in security defaults, compatibility with modern Java and Jakarta EE specifications, and better integration with Spring ecosystems. However, these improvements sometimes require changes to existing applications.
+
+The migration path depends on your starting point:
+
+* *1.x to 2.x*: Focuses on Java 11 adoption and optional Jakarta EE namespace support via classifiers
+* *2.x to 3.x*: Brings Java 17 as the baseline, native Jakarta EE 10+ support, and several security behavior changes that affect default application behavior
+
+Before upgrading, review your current Shiro version and dependencies, then follow the appropriate section below.
+
+[#migrating-1x-to-2x]
+== Migrating from Shiro 1.x to 2.x
+
+Shiro 2.x represents a significant step forward in terms of Java platform requirements and Jakarta EE support. If your application currently runs on Shiro 1.x, this section covers everything you need to consider.
+
+[#1x-java-version]
+=== Java Version Requirements
+
+Shiro 1.x supported Java 8 as its minimum runtime. Starting with Shiro 2.x, the minimum Java version is *Java 11*.
+
+This change reflects the broader ecosystem shift away from Java 8. If your application still runs on Java 8, you will need to upgrade your runtime before adopting Shiro 2.x. Most application servers and cloud platforms now support Java 11 or later, so this should not present significant obstacles for most deployments.
+
+[#1x-jakarta-ee]
+=== Jakarta EE Support
+
+One of the most notable changes in Shiro 2.x is support for Jakarta EE 8 through 11. However, there is an important distinction in how this support is provided.
+
+For applications that require the `jakarta.*` namespace (Jakarta EE 9 and later), Shiro 2.x artifacts are published with a `jakarta` classifier. This means you need to explicitly request the Jakarta-namespaced version of each dependency.
+
+Here is an example Maven configuration for Jakarta EE 9+ applications:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.shiro</groupId>
+    <artifactId>shiro-core</artifactId>
+    <version>2.0.0</version>
+    <classifier>jakarta</classifier>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.shiro</groupId>
+    <artifactId>shiro-web</artifactId>
+    <version>2.0.0</version>
+    <classifier>jakarta</classifier>
+</dependency>
+----
+
+If your application still uses the `javax.*` namespace (Java EE 8 or Jakarta EE 8), you can use the standard artifacts without any classifier:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.shiro</groupId>
+    <artifactId>shiro-core</artifactId>
+    <version>2.0.0</version>
+</dependency>
+----
+
+This dual-artifact approach allows Shiro 2.x to support both legacy and modern Jakarta EE applications without forcing an immediate namespace migration.
+
+[#1x-spring]
+=== Spring and Spring Boot Compatibility
+
+Shiro 2.x provides compatibility with both Spring Boot 2.x and Spring Boot 3.x. However, the dependency you choose depends on your Spring version and namespace requirements.
+
+For Spring Boot 2.x applications (using `javax.*` namespace):
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.shiro</groupId>
+    <artifactId>shiro-spring-boot-web-starter</artifactId>
+    <version>2.0.0</version>
+</dependency>
+----
+
+For Spring Boot 3.x applications (using `jakarta.*` namespace):
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.shiro</groupId>
+    <artifactId>shiro-spring-boot-web-starter</artifactId>
+    <version>2.0.0</version>
+    <classifier>jakarta</classifier>
+</dependency>
+----
+
+Make sure all Shiro dependencies in your project use consistent classifiers. Mixing classifier and non-classifier artifacts will result in classpath conflicts.
+
+[#1x-breaking-changes]
+=== What Might Break
+
+Most applications migrating from 1.x to 2.x will not encounter breaking changes in Shiro itself, assuming you meet the Java 11 requirement. The primary areas to watch are:
+
+* *Third-party integrations* that depend on specific Shiro internal classes or behaviors
+* *Custom Realm implementations* that override deprecated methods
+* *Direct usage of servlet APIs* where namespace changes apply
+
+Review your custom Shiro code and test thoroughly after upgrading.
+
+[#migrating-2x-to-3x]
+== Migrating from Shiro 2.x to 3.x
+
+Shiro 3.x introduces more substantial changes compared to the 2.x release. Beyond the platform requirements, several default behaviors have changed to improve security out of the box. Applications upgrading to 3.x should carefully review each section below.
+
+[#2x-java-version]
+=== Java Version Requirements
+
+The minimum Java version for Shiro 3.x is *Java 17*. This aligns with the long-term support releases favored by enterprise environments and ensures compatibility with modern language features and performance improvements.
+
+If your application runs on Java 11, you will need to upgrade to Java 17 or later before adopting Shiro 3.x.
+
+[#2x-jakarta-ee]
+=== Jakarta EE Native Support
+
+Unlike Shiro 2.x, which required classifiers for Jakarta namespace support, Shiro 3.x uses the Jakarta EE 10+ namespace natively. There are no classifiers needed—the standard artifacts already use `jakarta.*` packages.
+
+This simplifies dependency management considerably:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.shiro</groupId>
+    <artifactId>shiro-core</artifactId>
+    <version>3.0.0</version>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.shiro</groupId>
+    <artifactId>shiro-web</artifactId>
+    <version>3.0.0</version>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.shiro</groupId>
+    <artifactId>shiro-jakarta-ee</artifactId>
+    <version>3.0.0</version>
+</dependency>
+----
+
+If your application still requires `javax.*` namespace support, you must remain on Shiro 2.x or complete your Jakarta EE migration before upgrading.
+
+[#2x-spring]
+=== Spring Boot 4 Support
+
+Shiro 3.x is designed to work with Spring Boot 4 and later versions. Spring Boot 4 itself requires Jakarta EE 10+, which aligns naturally with Shiro 3.x's native Jakarta support.
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.shiro</groupId>
+    <artifactId>shiro-spring-boot-web-starter</artifactId>
+    <version>3.0.0</version>
+</dependency>
+----
+
+Applications still on Spring Boot 2.x or 3.x should use Shiro 2.x with the appropriate classifier configuration.
+
+[#security-behavior-changes]
+== Security Behavior Changes in 3.x
+
+Shiro 3.x introduces several changes to default security behavior. These changes reflect current security best practices, but they may affect existing applications that relied on previous defaults.
+
+[#deny-by-default]
+=== Deny Access by Default
+
+In earlier Shiro versions, web applications would allow access to URLs by default unless explicitly restricted. Starting with Shiro 3.x, the default behavior is reversed: access is *denied by default*.
+
+This change prevents accidental exposure of endpoints that were not explicitly configured in your filter chain. Any URL not matched by a filter definition will be blocked.
+
+If you need to restore the previous allow-by-default behavior, you can configure this explicitly.
+
+*shiro.ini configuration:*
+[source,ini]
+----
+[main]
+filterChainResolver.allowAccessByDefault = true
+----
+
+*Spring Boot (application.properties):*
+[source,properties]
+----
+shiro.allowAccessByDefault = true
+----
+
+This setting should only be enabled if your application genuinely relies on the previous behavior and you have verified that all sensitive endpoints are explicitly protected.
+
+[#case-insensitive-matching]
+=== Case-Insensitive URL Matching
+
+Shiro 3.x enables case-insensitive URL matching by default. This means that `/Admin`, `/admin`, and `/ADMIN` are all treated as equivalent when matching filter chain definitions.
+
+Case-insensitive matching is a security improvement that prevents bypasses on systems where URL handling might normalize case differently. However, if your application relies on case-sensitive URL matching, you can disable this behavior.
+
+*shiro.ini configuration:*
+[source,ini]
+----
+[main]
+filterChainResolver.caseInsensitive = false
+----
+
+*Spring Boot (application.properties):*
+[source,properties]
+----
+shiro.caseInsensitive = false
+----
+
+[#cors-preflight]
+=== CORS Preflight Enabled by Default
+
+Shiro 3.x enables CORS preflight request handling by default for authentication filters. This allows browsers to send OPTIONS requests without authentication, which is necessary for cross-origin API calls to work correctly.
+
+In previous versions, preflight requests might be blocked by authentication filters, causing CORS failures for legitimate API clients.
+
+If your application does not use CORS or you handle preflight requests separately, you can disable this behavior.
+
+*shiro.ini configuration:*
+[source,ini]
+----
+[main]
+authcBasic.allowPreFlightRequests = false
+authcBearer.allowPreFlightRequests = false
+----
+
+The setting applies per-filter, so configure it for each authentication filter you use.
+
+[#configuration-examples]
+== Configuration Examples
+
+This section provides complete configuration examples for common scenarios.
+
+[#reverting-all-behaviors]
+=== Reverting All 3.x Behaviors to Legacy Defaults
+
+If you want to preserve the exact behavior from Shiro 2.x while running on Shiro 3.x, use the following configuration:
+
+*shiro.ini:*
+[source,ini]
+----
+[main]
+# Allow access to unconfigured URLs (previous default)
+filterChainResolver.allowAccessByDefault = true
+
+# Use case-sensitive URL matching (previous default)
+filterChainResolver.caseInsensitive = false
+
+# Disable CORS preflight handling (previous default)
+authcBasic.allowPreFlightRequests = false
+authcBearer.allowPreFlightRequests = false
+----
+
+*Spring Boot (application.properties):*
+[source,properties]
+----
+# Allow access to unconfigured URLs (previous default)
+shiro.allowAccessByDefault = true
+
+# Use case-sensitive URL matching (previous default)
+shiro.caseInsensitive = false
+----
+
+For Spring Boot applications, CORS preflight settings must be configured programmatically or via custom filter configuration.
+
+[#recommended-3x-config]
+=== Recommended Secure Configuration
+
+For new applications or those completing a full migration, the 3.x defaults are recommended. You only need to configure your filter chains explicitly:
+
+*shiro.ini:*
+[source,ini]
+----
+[urls]
+/login = anon
+/logout = logout
+/static/** = anon
+/api/** = authcBearer
+/** = authc
+----
+
+With deny-by-default enabled, every path must have an explicit rule. The configuration above ensures that:
+
+* Login and logout pages are accessible without authentication
+* Static resources do not require authentication
+* API endpoints require bearer token authentication
+* All other paths require form-based authentication
+
+[#common-migration-pitfalls]
+== Common Migration Pitfalls
+
+Migrating to a new major version can surface unexpected issues. The following are problems developers commonly encounter:
+
+[#missing-filter-definitions]
+=== Missing Filter Definitions
+
+With deny-by-default in 3.x, any URL without an explicit filter chain rule will return a 403 error. If pages that previously worked now fail, check that all necessary URL patterns are defined in your configuration.
+
+[#mixed-classifiers]
+=== Mixed Dependency Classifiers
+
+When using Shiro 2.x with Jakarta support, all Shiro dependencies must use the `jakarta` classifier consistently. A single dependency without the classifier can pull in `javax.*` classes and cause NoClassDefFoundError or linkage errors at runtime.
+
+[#spring-version-mismatch]
+=== Spring Version Mismatch
+
+Shiro 3.x with Spring Boot 4 requires Jakarta EE. Attempting to use Shiro 3.x with Spring Boot 2.x will fail due to namespace conflicts. Match your Shiro version to your Spring Boot version according to the compatibility tables above.
+
+[#realm-api-changes]
+=== Realm API Changes
+
+Some deprecated methods in Realm implementations were removed in major version transitions. If you have custom Realms, review them against the current API and update any overridden methods that no longer exist in the parent class.
+
+[#session-configuration]
+=== Session Configuration Changes
+
+Session management configuration options may have moved or been renamed between versions. Review the session management documentation for your target Shiro version to ensure your session timeout and cookie settings are applied correctly.
+
+[#testing-after-migration]
+=== Insufficient Testing
+
+Security configurations can have subtle interactions. After migration, test all authentication flows, authorization checks, and edge cases thoroughly. Automated security tests are valuable for catching regressions that manual testing might miss.
+
+[#further-reading]
+== Further Reading
+
+* link:jakarta-ee.html[Jakarta EE Integration Guide]
+* link:spring-boot.html[Spring Boot Integration Guide]
+* link:web.html[Web Application Configuration]
+* link:configuration.html[General Configuration Reference]
