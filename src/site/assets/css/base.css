@@ -1,10 +1,44 @@
 /* Sticky footer styles
 -------------------------------------------------- */
 
+/* Theme color variables */
+:root {
+  --bg-color: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --text-color: #212529;
+  --text-muted: #6c757d;
+  --link-color: #0d6efd;
+  --link-hover: #0a58ca;
+  --border-color: #dee2e6;
+  --code-bg: #f5f5f5;
+  --code-text: #1f2937;
+  --navbar-bg: #f8f9fa;
+  --footer-bg: #e8e8e8;
+  --card-bg: #f2f2f2;
+}
+
+[data-theme="dark"] {
+  --bg-color: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-color: #e2e8f0;
+  --text-muted: #94a3b8;
+  --link-color: #60a5fa;
+  --link-hover: #93c5fd;
+  --border-color: #334155;
+  --code-bg: #1e293b;
+  --code-text: #e2e8f0;
+  --navbar-bg: #1e293b;
+  --footer-bg: #1e293b;
+  --card-bg: #1e293b;
+}
+
 html,
 body {
   height: 100%;
   /* The html and body elements cannot have any padding or margin. */
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Wrapper for page content to push down footer */
@@ -21,7 +55,8 @@ body {
 
 #custom-footer {
   min-height: 60px;
-  background-color: #e8e8e8;
+  background-color: var(--footer-bg);
+  transition: background-color 0.3s ease;
 }
 
 /* Lastly, apply responsive CSS fixes as necessary */
@@ -38,10 +73,16 @@ body {
 /* -------------------------------------------------- */
 a:link {
   text-decoration: none;
+  color: var(--link-color);
 }
 
 a:visited {
   text-decoration: none;
+  color: var(--link-color);
+}
+
+a:hover {
+  color: var(--link-hover);
 }
 
 /* Custom page CSS
@@ -154,22 +195,22 @@ a:visited {
 /** ======================================================= **/
 
 .authentication {
-  background:url(../images/authentication.png) no-repeat #f2f2f2 right 10px top 5px;
+  background:url(../images/authentication.png) no-repeat var(--card-bg) right 10px top 5px;
 }
 .authorization {
-  background:url(../images/authorization.png) no-repeat #f2f2f2 right 10px top 5px;
+  background:url(../images/authorization.png) no-repeat var(--card-bg) right 10px top 5px;
 }
 .cryptography {
-  background:url(../images/crypt.png) no-repeat #f2f2f2 right 10px top 5px;
+  background:url(../images/crypt.png) no-repeat var(--card-bg) right 10px top 5px;
 }
 .session-management {
-  background:url(../images/session.png) no-repeat #f2f2f2 right 10px top 5px;
+  background:url(../images/session.png) no-repeat var(--card-bg) right 10px top 5px;
 }
 .web-integration {
-  background:url(../images/web-integration.png) no-repeat #f2f2f2 right 10px top 5px;
+  background:url(../images/web-integration.png) no-repeat var(--card-bg) right 10px top 5px;
 }
 .integrations {
-  background:url(../images/integration.png) no-repeat #f2f2f2 right 10px top 5px;
+  background:url(../images/integration.png) no-repeat var(--card-bg) right 10px top 5px;
 }
 
 h2.panel-title {
@@ -212,4 +253,154 @@ div.related-content {
 
 .related-content .read-more {
   font-size: 11px;
+}
+
+/* Dark mode overrides for Bootstrap components */
+[data-theme="dark"] .navbar-light {
+  background-color: var(--navbar-bg) !important;
+}
+
+[data-theme="dark"] .navbar-light .navbar-nav .nav-link {
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .navbar-light .navbar-nav .nav-link:hover {
+  color: var(--link-color);
+}
+
+[data-theme="dark"] .dropdown-menu {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .dropdown-item {
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .dropdown-item:hover {
+  background-color: var(--border-color);
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .dropdown-divider {
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .bg-light {
+  background-color: var(--navbar-bg) !important;
+}
+
+[data-theme="dark"] .border-top {
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .text-muted {
+  color: var(--text-muted) !important;
+}
+
+[data-theme="dark"] .shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Code blocks dark mode */
+[data-theme="dark"] pre,
+[data-theme="dark"] code {
+  background-color: var(--code-bg);
+  color: var(--code-text);
+}
+
+[data-theme="dark"] .hljs {
+  background: var(--code-bg);
+  color: var(--code-text);
+}
+
+/* Theme toggle button */
+#theme-toggle {
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
+}
+
+#theme-toggle:hover {
+  background-color: var(--bg-secondary);
+}
+
+[data-theme="dark"] #theme-toggle {
+  border-color: var(--border-color);
+}
+
+/* Asciidoctor dark mode overrides */
+[data-theme="dark"] .subheader,
+[data-theme="dark"] #content #toctitle,
+[data-theme="dark"] .admonitionblock td.content > .title,
+[data-theme="dark"] .exampleblock > .title,
+[data-theme="dark"] .imageblock > .title,
+[data-theme="dark"] .listingblock > .title,
+[data-theme="dark"] .literalblock > .title,
+[data-theme="dark"] .paragraph > .title,
+[data-theme="dark"] .tableblock > .title,
+[data-theme="dark"] .dlist > .title,
+[data-theme="dark"] .olist > .title,
+[data-theme="dark"] .ulist > .title {
+  color: #f59e0b;
+}
+
+[data-theme="dark"] table {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] table thead tr th,
+[data-theme="dark"] table thead tr td,
+[data-theme="dark"] table tr th,
+[data-theme="dark"] table tr td {
+  color: var(--text-color);
+}
+
+[data-theme="dark"] table tr.even,
+[data-theme="dark"] table tr.alt,
+[data-theme="dark"] table tr:nth-of-type(even) {
+  background: var(--bg-color);
+}
+
+[data-theme="dark"] *:not(pre) > code {
+  background-color: var(--code-bg);
+  border-color: var(--border-color);
+  color: var(--code-text);
+}
+
+[data-theme="dark"] blockquote {
+  border-left-color: var(--border-color);
+}
+
+[data-theme="dark"] blockquote,
+[data-theme="dark"] blockquote p,
+[data-theme="dark"] blockquote cite {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] abbr,
+[data-theme="dark"] acronym {
+  color: var(--text-color);
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] kbd:not(.keyseq) {
+  color: var(--text-color);
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 0 2px var(--bg-color) inset;
+}
+
+[data-theme="dark"] .admonitionblock > table {
+  background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .listingblock pre {
+  background: var(--code-bg);
 }

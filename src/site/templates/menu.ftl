@@ -86,6 +86,12 @@
                 <li><a class="dropdown-item" href="https://www.apache.org/security/">Security</a></li>
               </ul>
             </li>
+            <!-- Theme toggle -->
+            <li class="nav-item d-flex align-items-center">
+              <button id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+                <span id="theme-icon">🌙</span>
+              </button>
+            </li>
           </ul>
           <#--
           <form class="d-flex">
