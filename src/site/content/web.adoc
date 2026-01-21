@@ -469,14 +469,20 @@ If you're currently allowing URL rewriting to allow for a <code>jsessionid</code
 URL rewriting for `jsessionid` is defined in section "7.1.3" of the Java Servlet Specification, but it is generally NOT recommended.
 ====
 
-=== Filter Chain Resolver Options
+=== Configuring default behavior of the access control mechanism
+[NOTE]
+====
+This feature is only available in Shiro 2.1 or later, and in Shiro 3.0.0 or later, this option will become the default (no additional configuration will be required)
+====
 
-The filter chain resolver supports additional configuration options:
+The filter chain resolver supports additional configuration options, including:
+
+- case-insensitive path matching
+- whether to allow access when no filter matches the request path
 
 [source,ini]
 ----
 [main]
-...
 # Enable case-insensitive path matching.
 # Can be set to true for Shiro 2.x.
 # Defaults to true in Shiro 3.x.
@@ -484,6 +490,7 @@ filterChainResolver.caseInsensitive = true
 
 # Allow access when no filter chain matches the request path.
 # Can be set to true to allow access when no filter chain matches.
+# Can be set to false for Shiro 2.x.
 # Defaults to false in Shiro 3.x.
 filterChainResolver.allowAccessByDefault = false
 ----
@@ -497,7 +504,7 @@ To allow pre-flight `OPTIONS` requests to pass through the authentication filter
 This is commonly used with `authcBasic` (Basic Auth) or `authcBearer` (Bearer Token / JWT).
 [NOTE]
 ====
-this feature is only available in Shiro 2.0.7 or later, and in Shiro 3.0.0 or later, this option will become the default (no additional configuration will be required)
+this feature is only available in Shiro 2.1 or later, and in Shiro 3.0.0 or later, this option will become the default (no additional configuration will be required)
 ====
 
 [source,ini]
