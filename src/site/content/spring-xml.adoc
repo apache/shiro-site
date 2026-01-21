@@ -2,7 +2,8 @@
 :jbake-date: 2010-03-18 00:00:00
 :jbake-type: page
 :jbake-status: published
-:jbake-tags: documentation, manual
+:jbake-tags: spring, xml-configuration, integration, dependency-injection
+:jbake-description: Configure Apache Shiro with Spring XML configuration for standalone and web applications using Spring's IoC container.
 :idprefix:
 
 This page covers the ways to integrate Shiro into https://spring.io[Spring]-based applications.
@@ -171,7 +172,7 @@ When a remote method invocation comes in to a Shiro-enabled server, the link:sub
 </bean>
 ----
 
-Once you have defined this bean, you must plug it in to whatever remoting `Exporter` you are using to export/expose your services. `Exporter` implementations are defined according to the remoting mechanism/protocol in use. See Spring's https://docs.spring.io/spring/docs/2.5.x/reference/remoting.html[Remoting chapter] on defining `Exporter` beans.
+Once you have defined this bean, you must plug it in to whatever remoting `Exporter` you are using to export/expose your services. `Exporter` implementations are defined according to the remoting mechanism/protocol in use. See Spring's https://docs.spring.io/spring-framework/reference/integration/remoting.html[Remoting chapter] on defining `Exporter` beans.
 
 For example, if using HTTP-based remoting (notice the property reference to the `secureRemoteInvocationExecutor` bean):
 
@@ -210,4 +211,4 @@ For example, if you were using HTTP-based remoting (notice the property referenc
 
 While we hope this documentation helps you with the work you're doing with Apache Shiro, the community is improving and expanding the documentation all the time. If you'd like to help the Shiro project, please consider correcting, expanding, or adding documentation where you see a need. Every little bit of help you provide expands the community and in turn improves Shiro.
 
-The easiest way to contribute your documentation is to send it to the http://shiro-user.582556.n2.nabble.com/[User Forum] or the link:mailing-lists.html[User Mailing List].
+The easiest way to contribute your documentation is to send it to the link:mailing-lists.html[User Mailing List].
