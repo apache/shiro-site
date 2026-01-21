@@ -255,7 +255,7 @@
 <li><a href="#request_specific_enablingdisabling">Request-specific Enabling/Disabling</a></li>
 <li><a href="#path_specific_enablingdisabling">Path-specific Enabling/Disabling</a></li>
 <li><a href="#global_filters">Global Filters</a></li>
-<li><a href="#filter_chain_resolver_options">Filter Chain Resolver Options</a></li>
+<li><a href="#configuring_default_behavior_of_the_access_control_mechanism">Configuring default behavior of the access control mechanism</a></li>
 <li><a href="#cors_support">CORS Support</a></li>
 <li><a href="#http_strict_transport_security_hsts">HTTP Strict Transport Security (HSTS)</a></li>
 </ul>
@@ -999,14 +999,37 @@ invalidRequest.blockNonAscii = true
 </div>
 </div>
 <div class="sect2">
-<h3 id="filter_chain_resolver_options">Filter Chain Resolver Options</h3>
+<h3 id="configuring_default_behavior_of_the_access_control_mechanism">Configuring default behavior of the access control mechanism</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
 <div class="paragraph">
-<p>The filter chain resolver supports additional configuration options:</p>
+<p>This feature is only available in Shiro 2.1 or later, and in Shiro 3.0.0 or later, this option will become the default (no additional configuration will be required)</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The filter chain resolver supports additional configuration options, including:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>case-insensitive path matching</p>
+</li>
+<li>
+<p>whether to allow access when no filter matches the request path</p>
+</li>
+</ul>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
-...
 # Enable case-insensitive path matching.
 # Can be set to true for Shiro 2.x.
 # Defaults to true in Shiro 3.x.
@@ -1014,6 +1037,7 @@ filterChainResolver.caseInsensitive = true
 
 # Allow access when no filter chain matches the request path.
 # Can be set to true to allow access when no filter chain matches.
+# Can be set to false for Shiro 2.x.
 # Defaults to false in Shiro 3.x.
 filterChainResolver.allowAccessByDefault = false</code></pre>
 </div>
@@ -1038,7 +1062,7 @@ filterChainResolver.allowAccessByDefault = false</code></pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>this feature is only available in Shiro 2.0.7 or later, and in Shiro 3.0.0 or later, this option will become the default (no additional configuration will be required)</p>
+<p>this feature is only available in Shiro 2.1 or later, and in Shiro 3.0.0 or later, this option will become the default (no additional configuration will be required)</p>
 </div>
 </td>
 </tr>
