@@ -20,7 +20,9 @@
     <meta charset="utf-8"/>
     <title>Apache Shiro Web Support | Apache Shiro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content='documentation,web'>
+    <meta name="description" content="Configure Apache Shiro for web applications using servlet filters, URL-based security, and session management with support for form-based and HTTP authentication.">
+    <meta property="og:description" content="Configure Apache Shiro for web applications using servlet filters, URL-based security, and session management with support for form-based and HTTP authentication.">
+    <meta name="keywords" content='web,servlet,filter,web-application,security'>
     <meta name="generator" content="JBake">
     <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
     <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
@@ -32,8 +34,11 @@
       <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@ApacheShiro" />
     <meta property="article:modification_time" content="2010-03-18T00:00:00Z"/>
-    <meta property="article:tag" content='documentation'/>
     <meta property="article:tag" content='web'/>
+    <meta property="article:tag" content='servlet'/>
+    <meta property="article:tag" content='filter'/>
+    <meta property="article:tag" content='web-application'/>
+    <meta property="article:tag" content='security'/>
     <meta property="og:locale" content="en_US" />
     <meta property="og:url" content='https://shiro.apache.org/web.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
@@ -250,6 +255,7 @@
 <li><a href="#request_specific_enablingdisabling">Request-specific Enabling/Disabling</a></li>
 <li><a href="#path_specific_enablingdisabling">Path-specific Enabling/Disabling</a></li>
 <li><a href="#global_filters">Global Filters</a></li>
+<li><a href="#filter_chain_resolver_options">Filter Chain Resolver Options</a></li>
 <li><a href="#cors_support">CORS Support</a></li>
 <li><a href="#http_strict_transport_security_hsts">HTTP Strict Transport Security (HSTS)</a></li>
 </ul>
@@ -993,6 +999,27 @@ invalidRequest.blockNonAscii = true
 </div>
 </div>
 <div class="sect2">
+<h3 id="filter_chain_resolver_options">Filter Chain Resolver Options</h3>
+<div class="paragraph">
+<p>The filter chain resolver supports additional configuration options:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+...
+# Enable case-insensitive path matching.
+# Can be set to true for Shiro 2.x.
+# Defaults to true in Shiro 3.x.
+filterChainResolver.caseInsensitive = true
+
+# Allow access when no filter chain matches the request path.
+# Can be set to true to allow access when no filter chain matches.
+# Defaults to false in Shiro 3.x.
+filterChainResolver.allowAccessByDefault = false</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="cors_support">CORS Support</h3>
 <div class="paragraph">
 <p>When using HTTP-based authentication (like Basic Auth or Bearer Token) in a browser-based application, Cross-Origin Resource Sharing (CORS) pre-flight <code>OPTIONS</code> requests are often sent by the browser. By default, these requests might be rejected if they do not contain authentication headers.</p>
@@ -1011,7 +1038,7 @@ invalidRequest.blockNonAscii = true
 </td>
 <td class="content">
 <div class="paragraph">
-<p>this feature is only available in Shiro 2.0.7 or later</p>
+<p>this feature is only available in Shiro 2.0.7 or later, and in Shiro 3.0.0 or later, this option will become the default (no additional configuration will be required)</p>
 </div>
 </td>
 </tr>
