@@ -22,6 +22,7 @@
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>web.html">General</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>jaxrs.html">JAX-RS</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>jakarta-ee.html">Jakarta EE</a></li>
+                <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>dependency-chain.html">Jakarta EE with Dependency Chains</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>web-features.html">Features</a></li>
               </ul>
@@ -53,6 +54,7 @@
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>articles.html">Articles</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>news.html">News</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>events.html">Events</a></li>
+                <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>troubleshooting.html">Troubleshooting & FAQ</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>community.html">More</a></li>
               </ul>
@@ -66,6 +68,7 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>about.html">About</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>privacy-policy.html">Privacy Policy</a></li>
+                <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>security-model.html">Security Model</a></li>
                 <li><a class="dropdown-item" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>security-reports.html">Vulnerability Reports</a></li>
               </ul>
             </li>

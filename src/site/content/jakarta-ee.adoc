@@ -2,7 +2,8 @@
 :jbake-date: 2023-02-06 00:00:00
 :jbake-type: page
 :jbake-status: published
-:jbake-tags: documentation, jakarta-ee, integrations, web
+:jbake-tags: jakarta-ee, java-ee, cdi, ejb, integration
+:jbake-description: Integrate Apache Shiro with Jakarta EE applications using CDI and EJB, enabling security annotations like @RequiresRoles in enterprise Java environments.
 :idprefix:
 :icons: font
 
@@ -39,7 +40,58 @@ Jakarta EE module depends on CDI and Jax-RS submodules to fully integrate with t
 In addition to all Shiro annotations, Jakarta EE module allows to specify Jakarta EE security annotations such as `@RolesAllowed`, `@DenyAll` and `@PermitAll` on your beans
 
 === How to use Jakarta 9+ (jakarta.* namespace)
-Use the Shiro artifacts with Jakarta classifiers:
+
+There are two approaches to include Shiro Jakarta EE dependencies in your project:
+
+==== Option 1: FlowLogix Dependency Chain (Recommended)
+[NOTE]
+====
+This option is applicable only to Jakarta EE, not Spring / SpringBoot.
+====
+
+The simplest approach is to use the FlowLogix dependency chain, which bundles all required Shiro Jakarta EE components in a single dependency:
+
+[source,xml]
+----
+<dependencies>
+    <dependency>
+        <groupId>com.flowlogix.depchain</groupId>
+        <artifactId>shiro-jakarta</artifactId>
+        <!-- replace LATEST with a version number -->
+        <version>LATEST</version>
+    </dependency>
+</dependencies>
+----
+
+This approach automatically includes all Shiro modules (`shiro-core`, `shiro-web`, `shiro-jakarta-ee`, `shiro-cdi`, `shiro-jaxrs`) with the correct Jakarta classifier, plus required dependencies like OmniFaces. See the link:dependency-chain.html[Dependency Chain Guide] for more details, Gradle examples, and migration instructions.
+
+[#bom_approach]
+==== Option 2: Traditional BOM with Individual Dependencies
+
+Alternatively, use the Shiro artifacts with Jakarta classifiers directly
+
+Import the Shiro BOM as seen below
+[NOTE]
+====
+Shiro BOM is a *necessary* step, unless you are using FlowLogix Depchain as described above.
+The BOM is needed if you are using Spring / SpringBoot.
+====
+
+[source,xml]
+----
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-bom</artifactId>
+            <version>${versions.latestRelease}</version>
+            <scope>import</scope>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+----
+
 [source,xml]
 ----
 <dependency>
@@ -72,22 +124,6 @@ Use the Shiro artifacts with Jakarta classifiers:
   <!-- replace LATEST with a version number -->
   <version>LATEST</version>
 </dependency>
-----
-
-Import the Shiro BOM as seen below:
-[source,xml]
-----
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-bom</artifactId>
-            <version>${versions.latestRelease}</version>
-            <scope>import</scope>
-            <type>pom</type>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
 ----
 
 == Configuration
@@ -148,7 +184,8 @@ RememberMe functionality is disabled by default. You can enable it easily by add
 authc.useRemembered = true
 ----
 
-==== Automatic delay when login failed
+[#rate_limiting]
+==== Rate limiting: Automatic delay when login failed
 When user fails to log in, Shiro will automatically delay the failure response for a number of seconds. This can be one of the strategies to prevent brute force attacks.
 
 NOTE: Be careful utilizing this technique, as it could be a vector for a denial-of-service attack. Servers with virtual thread support (Project Loom) will not be affected by the DDOS vector.
@@ -179,6 +216,42 @@ The module adds `ShiroFilter` to the Servlet configuration. For most cases, the 
     <url-pattern/>
 </filter-mapping>
 ... other filters ...
+----
+Ordinarily, Jakarta EE integration module will remove URL session tracking mode from the configuration, overriding any other session tracking configuration specified in `web.xml`. This is to align with good security practices. If URL tracking mode is desired (such as for testing or historical reasons), add the following to `web.xml`:
+[source,xml]
+.Note: this parameter is only available in Shiro 2.0.6 or later
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.enable-url-session-tracking</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+If no manipulation of session tracking modes is desired at all, add the following to `web.xml`:
+[source,xml]
+.Note: this parameter is only available in Shiro 2.0.6 or later
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.session-tracking-configuration.disabled</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+Shiro Jakarta EE filter forces request encoding to UTF-8. This is the desired outcome for most, if not all cases. However, if this is not desired, you can disable it by adding the following parameter to `web.xml`:
+[source,xml]
+.Note: this parameter is only available in Shiro 2.0.6 or later
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.disable-character-encoding</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+If you need to set a different encoding than UTF-8, add the following parameter to `web.xml`:
+[source,xml]
+.Note: this parameter is only available in Shiro 2.0.6 or later
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.character-encoding</param-name>
+    <param-value>ISO-8859-2</param-value>
+</context-param>
 ----
 
 ==== Shiro.ini file locations
