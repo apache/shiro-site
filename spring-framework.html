@@ -53,6 +53,9 @@
     <link href="highlight.js-11.11.1/styles/default.min.css" rel="stylesheet">
     <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
 
+    <!-- Theme toggle script (loaded early to prevent flash) -->
+    <script src="js/theme.js"></script>
+
     <!-- Fav and touch icons -->
     <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
@@ -185,6 +188,12 @@
                 <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks.html">Thanks</a></li>
                 <li><a class="dropdown-item" href="https://www.apache.org/security/">Security</a></li>
               </ul>
+            </li>
+            <!-- Theme toggle -->
+            <li class="nav-item d-flex align-items-center">
+              <button id="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+                <span id="theme-icon">🌙</span>
+              </button>
             </li>
           </ul>
         </div>
@@ -906,6 +915,16 @@ alternative cannot be found in the current session)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">null</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Page to redirect user to if they are
 unauthorized (403 page)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">shiro.caseInsensitive</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code> (2.x), <code>true</code> (3.x)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable case-insensitive path matching. Can be set to true in 2.x. Defaults to true in 3.x.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">shiro.allowAccessByDefault</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> (2.x), <code>false</code> (3.x)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allow access when no filter chain matches. Defaults to true in 2.x and false in 3.x.</p></td>
 </tr>
 </tbody>
 </table>
