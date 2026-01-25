@@ -2,7 +2,8 @@
 :jbake-date: 2010-03-18 00:00:00
 :jbake-type: page
 :jbake-status: published
-:jbake-tags: documentation, cryptography
+:jbake-tags: cryptography, guide, hashing, encryption, ciphers
+:jbake-description: Practical guide to Java cryptography with Apache Shiro covering hashing, encryption, and how Shiro simplifies the Java Cryptography Extension (JCE).
 :idprefix:
 :icons: font
 :toc:
@@ -78,13 +79,8 @@ public interface Hash {
 === Examples of how to use Hashes in your code
 
 [source,java]
+.Note: MD5 is no longer considered secure and has been deprecated since Shiro 2.0. Use SHA-256 or stronger algorithms for secure hashing.
 ----
-//some examples:
-new Md5Hash("foo").toHex();
-
-//File MD5 Hash value for checksum:
-new MD5Hash( aFile ).toHex();
-
 //store a password, but not raw:
 new Sha256(aPassword, salt, 1024).toBase64();
 ----
