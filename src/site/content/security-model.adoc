@@ -1,0 +1,182 @@
+= Apache Shiro Security Model
+:jbake-date: 2026-01-03 00:00:00
+:jbake-type: page
+:jbake-status: published
+:jbake-tags: documentation, security
+:idprefix:
+:icons: font
+:toc:
+
+This document describes Apache Shiro's security model, including the assumptions and guarantees the framework makes with respect to security. It serves as a reference for operators deploying Shiro-secured applications and security researchers assessing potential vulnerabilities.
+
+== Overview
+
+Apache Shiro is an application security framework that provides authentication, authorization, cryptography, and session management. Shiro is designed to be used as a _library_ integrated into your application—it is not a standalone security service or server.
+
+[IMPORTANT]
+====
+Shiro is a security framework, not a security solution. The security of your application depends on how you configure and integrate Shiro, your application's architecture, and your operational environment.
+====
+
+== Trust Boundaries
+
+=== Application-Level Trust
+
+Shiro operates within the trust boundary of your application's JVM process. It assumes:
+
+* The application code invoking Shiro APIs is trusted.
+* Configuration files (INI, properties, Spring beans, etc.) are controlled by trusted administrators.
+* The JVM and underlying operating system are secure.
+* Any `Realm` implementations and their backing data sources are trustworthy.
+
+=== Input Trust
+
+Shiro does **not** assume that end-user input is trustworthy. Authentication credentials, session tokens, and other user-provided data are validated through configured security mechanisms.
+
+However, Shiro relies on the application to:
+
+* Properly sanitize and validate any user input before passing it to Shiro APIs.
+* Protect sensitive configuration values from exposure.
+* Implement proper transport-layer security (TLS/SSL) for credential transmission.
+
+== Authentication Guarantees
+
+=== What Shiro Provides
+
+* **Credential Matching**: Shiro verifies submitted credentials against stored credentials using configurable `CredentialsMatcher` implementations.
+* **Realm Coordination**: When multiple `Realms` are configured, the `AuthenticationStrategy` determines success/failure criteria.
+* **Subject Identity**: Upon successful authentication, Shiro establishes a `Subject` with verified principals.
+* **Remember Me**: Optional functionality to recognize returning users without full re-authentication (with weaker security guarantees than full authentication).
+
+=== Operator Responsibilities
+
+* **Credential Storage**: Operators must ensure credentials are stored securely (hashed with appropriate algorithms like bcrypt or Argon2).
+* **Brute-Force Protection**: Shiro only includes built-in basic rate limiting for
+link:jakarta-ee.html#rate_limiting[Jakarta EE only], but does not include account lockout.
+Operators should implement these controls at the application or infrastructure level.
+* **Multi-Factor Authentication**: MFA is not built into core Shiro; operators requiring MFA must implement custom `Realm` or `AuthenticationStrategy` extensions.
+
+=== Username Enumeration
+
+By default, Shiro may reveal whether a username exists through different error responses for "unknown account" vs "incorrect password" scenarios. If username enumeration is a concern for your deployment:
+
+* Configure your `Realm` to throw consistent exceptions regardless of failure reason.
+* Return generic authentication failure messages to end users.
+
+== Authorization Guarantees
+
+=== What Shiro Provides
+
+* **Permission Resolution**: Shiro resolves whether a `Subject` has specific permissions through configured `Realm` instances and permission resolvers.
+* **Role Checking**: Both implicit role checks (`hasRole`) and explicit permission-based checks (`isPermitted`) are supported.
+* **Wildcard Permissions**: The `WildcardPermission` implementation provides flexible, hierarchical permission strings (e.g., `printer:print:lp7200`).
+* **Annotation Support**: Declarative security via `@RequiresAuthentication`, `@RequiresPermissions`, `@RequiresRoles`, and related annotations.
+
+=== Operator Responsibilities
+
+* **Permission Assignment**: Operators must correctly configure permission-to-role and role-to-user mappings in their data model.
+* **Least Privilege**: Shiro enforces permissions as configured; designing an appropriate permission model is the operator's responsibility.
+* **Realm Security**: Authorization data sources (LDAP, databases, etc.) must be secured appropriately.
+
+== Session Management
+
+=== What Shiro Provides
+
+* **Container-Independent Sessions**: Shiro can manage sessions without a Servlet container or EJB.
+* **Session Validation**: Configurable session timeout and validation scheduling.
+* **Session Persistence**: Pluggable `SessionDAO` for persisting sessions to any data store.
+* **Session Fixation Prevention**: Shiro can regenerate session IDs upon authentication when properly configured.
+
+=== Security Considerations
+
+* **Session ID Exposure**: Session identifiers should be treated as sensitive credentials. Transmit only over secure channels.
+* **Session Storage**: If using persistent sessions (e.g., database-backed `SessionDAO`), secure the backing store appropriately.
+* **Clustering**: In clustered deployments, ensure session serialization and shared storage are configured securely.
+
+== Cryptography
+
+=== What Shiro Provides
+
+* **Hashing**: Simplified APIs for cryptographic hashing (SHA-256, SHA-512, MD5, etc.) with salt and iteration support.
+* **Encryption/Decryption**: `CipherService` implementations for symmetric encryption (AES, Blowfish, etc.).
+* **Password Hashing**: `PasswordService` for secure credential hashing with configurable algorithms.
+
+=== Important Notes
+
+* Shiro's cryptographic utilities are wrappers around standard Java cryptography (JCA/JCE) and `BouncyCastle` libraries.
+* **Algorithm Selection**: Operators must choose appropriate algorithms. Avoid deprecated algorithms (MD5, SHA-1 for security purposes).
+* **Key Management**: Shiro does not provide key management infrastructure. Secure key storage and rotation is the operator's responsibility.
+
+== Web Security
+
+=== What Shiro Provides
+
+* **Filter Chain**: URL-based security through configurable filter chains.
+* **CSRF Protection**: Not built-in; operators should implement CSRF tokens in their applications.
+* **Path Matching**: Shiro matches request paths against configured patterns using Ant-style path matching by default.
+
+=== Path Traversal Considerations
+
+Shiro relies on the Servlet container's path normalization. When integrating with certain frameworks or configurations:
+
+* Ensure consistent path interpretation between Shiro and your web framework.
+* Review link:security-reports.html[Security Reports] for historical path traversal issues and mitigations.
+* Keep Shiro updated to receive security fixes.
+
+== Version Discovery
+
+Shiro does not actively prevent discovery of its version through error messages or HTTP headers. If version disclosure is a concern:
+
+* Configure custom error pages that do not reveal framework details.
+* Remove or modify any version-revealing response headers at the web server or proxy level.
+
+== Logging
+
+Shiro logs security events (authentication attempts, authorization failures, etc.) using SLF4J. By default:
+
+* **Credentials are not logged**: Shiro does not log plaintext passwords or sensitive credentials.
+* **Principals may be logged**: Usernames and other identifying information may appear in logs.
+* **Session IDs may be logged**: Debug-level logging may include session identifiers.
+
+Operators should:
+
+* Review logging configuration for appropriate verbosity in production.
+* Secure log files with appropriate access controls.
+* Consider log aggregation and monitoring for security event detection.
+
+== Deployment Recommendations
+
+=== Minimum Security Baseline
+
+. Use the latest stable Shiro release.
+. Configure TLS for all credential transmission.
+. Use strong password hashing (bcrypt or Argon2 with appropriate work factors).
+. Implement session fixation prevention.
+. Review and restrict default configurations.
+
+=== Defense in Depth
+
+Shiro should be one layer in a defense-in-depth security strategy:
+
+* Implement network-level access controls.
+* Use Web Application Firewalls (WAF) for additional request filtering.
+* Employ rate limiting and brute-force protection at the infrastructure level.
+* Conduct regular security assessments and penetration testing.
+
+== Reporting Security Vulnerabilities
+
+If you discover a security vulnerability in Apache Shiro, please report it privately to the security team:
+
+* **Email**: link:mailto:security@shiro.apache.org[security@shiro.apache.org]
+* **Process**: See link:security-reports.html[Security Reports] for the full vulnerability handling process.
+
+Do not disclose security vulnerabilities publicly until a fix is available and an advisory has been published.
+
+== Additional Resources
+
+* link:architecture.html[Apache Shiro Architecture] - Detailed component overview
+* link:authentication.html[Authentication] - Authentication concepts and implementation
+* link:authorization.html[Authorization] - Authorization and access control
+* link:session-management.html[Session Management] - Session handling documentation
+* link:cryptography.html[Cryptography] - Cryptographic utilities
+* link:security-reports.html[Security Reports] - Known vulnerabilities and mitigations
