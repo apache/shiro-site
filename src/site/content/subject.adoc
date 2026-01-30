@@ -236,24 +236,28 @@ Subject subject = new Subject.Builder().principals(principals).buildSubject();
 
 You can then use the built `Subject` instance and make calls on it as expected. But *note*:
 
-The built `Subject` instance is *not* automatically bound to the application (thread) for further use.
-If you want it to be available to any code that calls `SecurityUtils.getSubject()`, you must ensure a Thread is associated with the constructed `Subject`.
+The built `Subject` instance is *not* automatically bound to the thread's scope for further use.
+If you want it to be available to any code that calls `SecurityUtils.getSubject()`, you must ensure that thread's scope is associated with the constructed `Subject`.
 
 [#Subject-ThreadAssociation]
 === Thread Association
 
-As stated above, just building a `Subject` instance does not associate it with a thread - a usual requirement if any calls to `SecurityUtils.getSubject()` during thread execution are to work properly. There are three ways of ensuring a thread is associated with a `Subject`:
+As stated above, just building a `Subject` instance does not associate it with a thread's scope - a usual requirement if any calls to `SecurityUtils.getSubject()` during thread execution are to work properly. There are three ways of ensuring a thread's scope is associated with a `Subject`:
 
-* *Automatic Association* - A `Callable` or `Runnable` executed via the `Subject.execute`* methods will automatically bind and unbind the Subject to the thread before and after `Callable`/`Runnable` execution.
-
-* *Manual Association* - You manually bind and unbind the `Subject` instance to the currently executing thread. This is usually useful for framework developers.
+* *Automatic Association* - A `Callable` or `Runnable` executed via the `Subject.execute`* methods will automatically associate the Subject during `Callable`/`Runnable` execution.
 
 * *Different Thread* - A `Callable` or `Runnable` is associated with a `Subject` by calling the `Subject.associateWith`* methods and then the returned `Callable`/`Runnable` is executed by another thread. This is the preferred approach if you need to execute work on another thread as the `Subject`.
 
+* *Manual Association* - You manually bind and unbind the `Subject` instance to the currently executing thread. *Note:* This approach can be considered deprecated since it's error-prone and uses ThreadLocals directly instead of Java 25's ScopedValue when available.
+
+[NOTE]
+On JDK 25 and above, Shiro 3.0 or later uses Java's ScopedValue mechanism instead of ThreadLocals for associating Subjects with scopes. The principles of association remain the same, but the implementation details differ. The following explanation primarily focuses on JDK versions prior to 25, where ThreadLocals are used.
+[/NOTE]
+
 The important thing to know about thread association is that 2 things must always occur:
 
-. The Subject is _bound_ to the thread, so it is available at all points of the thread's execution. Shiro does this via its `ThreadState` mechanism which is an abstraction on top of a `ThreadLocal`.
-. The Subject is _unbound_ at some point later, even if the thread execution results in an error. This ensures the thread remains clean and clear of any previous `Subject` state in a pooled/reusable thread environment.
+. (JDK < 25) The Subject is _bound_ to the thread, so it is available at all points of the thread's execution. Shiro does this via its `ThreadState` mechanism which is an abstraction on top of a `ThreadLocal`.
+. (JDK < 25> The Subject is _unbound_ at some point later, even if the thread execution results in an error. This ensures the thread remains clean and clear of any previous `Subject` state in a pooled/reusable thread environment.
 
 These principles are guaranteed to occur in the 3 mechanisms listed above. Their usage is elaborated next.
 
@@ -314,7 +318,7 @@ return subject.execute(new Callable() {
 ----
 
 [#Subject-ManualAssociation]
-==== Manual Association
+==== Manual Association (Deprecated)
 
 While the `Subject.execute`* methods automatically clean up the thread state after they return, there might be some scenarios where you want to manage the `ThreadState` yourself. This is almost always done in framework-level development when integrating w/ Shiro and is rarely used even in bootstrap/daemon scenarios (where the `Subject.execute(callable)` example above is more frequent).
 
