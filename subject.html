@@ -226,7 +226,7 @@
 <li><a href="#Subject-ThreadAssociation">Thread Association</a>
 <ul class="sectlevel3">
 <li><a href="#Subject-AutomaticAssociation">Automatic Association</a></li>
-<li><a href="#Subject-ManualAssociation">Manual Association</a></li>
+<li><a href="#Subject-ManualAssociation">Manual Association (Deprecated)</a></li>
 <li><a href="#a_different_thread">A Different Thread</a></li>
 </ul>
 </li>
@@ -536,27 +536,40 @@ Subject subject = new Subject.Builder().principals(principals).buildSubject();</
 <p>You can then use the built <code>Subject</code> instance and make calls on it as expected. But <strong>note</strong>:</p>
 </div>
 <div class="paragraph">
-<p>The built <code>Subject</code> instance is <strong>not</strong> automatically bound to the application (thread) for further use.
-If you want it to be available to any code that calls <code>SecurityUtils.getSubject()</code>, you must ensure a Thread is associated with the constructed <code>Subject</code>.</p>
+<p>The built <code>Subject</code> instance is <strong>not</strong> automatically bound to the thread&#8217;s scope for further use.
+If you want it to be available to any code that calls <code>SecurityUtils.getSubject()</code>, you must ensure that thread&#8217;s scope is associated with the constructed <code>Subject</code>.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="Subject-ThreadAssociation">Thread Association</h3>
 <div class="paragraph">
-<p>As stated above, just building a <code>Subject</code> instance does not associate it with a thread - a usual requirement if any calls to <code>SecurityUtils.getSubject()</code> during thread execution are to work properly. There are three ways of ensuring a thread is associated with a <code>Subject</code>:</p>
+<p>As stated above, just building a <code>Subject</code> instance does not associate it with a thread&#8217;s scope - a usual requirement if any calls to <code>SecurityUtils.getSubject()</code> during thread execution are to work properly. There are three ways of ensuring a thread&#8217;s scope is associated with a <code>Subject</code>:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Automatic Association</strong> - A <code>Callable</code> or <code>Runnable</code> executed via the <code>Subject.execute</code>* methods will automatically bind and unbind the Subject to the thread before and after <code>Callable</code>/<code>Runnable</code> execution.</p>
-</li>
-<li>
-<p><strong>Manual Association</strong> - You manually bind and unbind the <code>Subject</code> instance to the currently executing thread. This is usually useful for framework developers.</p>
+<p><strong>Automatic Association</strong> - A <code>Callable</code> or <code>Runnable</code> executed via the <code>Subject.execute</code>* methods will automatically associate the Subject during <code>Callable</code>/<code>Runnable</code> execution.</p>
 </li>
 <li>
 <p><strong>Different Thread</strong> - A <code>Callable</code> or <code>Runnable</code> is associated with a <code>Subject</code> by calling the <code>Subject.associateWith</code>* methods and then the returned <code>Callable</code>/<code>Runnable</code> is executed by another thread. This is the preferred approach if you need to execute work on another thread as the <code>Subject</code>.</p>
 </li>
+<li>
+<p><strong>Manual Association</strong> - You manually bind and unbind the <code>Subject</code> instance to the currently executing thread. <strong>Note:</strong> This approach can be considered deprecated since it&#8217;s error-prone and uses ThreadLocals directly instead of Java 25&#8217;s ScopedValue when available.</p>
+</li>
 </ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+On JDK 25 and above, Shiro 3.0 or later uses Java&#8217;s ScopedValue mechanism instead of ThreadLocals for associating Subjects with scopes. The principles of association remain the same, but the implementation details differ. The following explanation primarily focuses on JDK versions prior to 25, where ThreadLocals are used.
+[/NOTE]
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>The important thing to know about thread association is that 2 things must always occur:</p>
@@ -564,10 +577,10 @@ If you want it to be available to any code that calls <code>SecurityUtils.getSub
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>The Subject is <em>bound</em> to the thread, so it is available at all points of the thread&#8217;s execution. Shiro does this via its <code>ThreadState</code> mechanism which is an abstraction on top of a <code>ThreadLocal</code>.</p>
+<p>(JDK &lt; 25) The Subject is <em>bound</em> to the thread, so it is available at all points of the thread&#8217;s execution. Shiro does this via its <code>ThreadState</code> mechanism which is an abstraction on top of a <code>ThreadLocal</code>.</p>
 </li>
 <li>
-<p>The Subject is <em>unbound</em> at some point later, even if the thread execution results in an error. This ensures the thread remains clean and clear of any previous <code>Subject</code> state in a pooled/reusable thread environment.</p>
+<p>(JDK &lt; 25&gt; The Subject is <em>unbound</em> at some point later, even if the thread execution results in an error. This ensures the thread remains clean and clear of any previous <code>Subject</code> state in a pooled/reusable thread environment.</p>
 </li>
 </ol>
 </div>
@@ -635,7 +648,7 @@ return subject.execute(new Callable() {
 </div>
 </div>
 <div class="sect3">
-<h4 id="Subject-ManualAssociation">Manual Association</h4>
+<h4 id="Subject-ManualAssociation">Manual Association (Deprecated)</h4>
 <div class="paragraph">
 <p>While the <code>Subject.execute</code>* methods automatically clean up the thread state after they return, there might be some scenarios where you want to manage the <code>ThreadState</code> yourself. This is almost always done in framework-level development when integrating w/ Shiro and is rarely used even in bootstrap/daemon scenarios (where the <code>Subject.execute(callable)</code> example above is more frequent).</p>
 </div>
