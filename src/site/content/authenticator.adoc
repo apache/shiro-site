@@ -1,8 +1,121 @@
-= Authenticator
-:jbake-type: lend_a_hand
+[#Authenticator-UnderstandingAuthenticators]
+= Apache Shiro Authenticators
+:jbake-date: 2010-03-18 00:00:00
+:jbake-type: page
 :jbake-status: published
-:jbake-tags: documentation, todo, lend-a-hand
+:jbake-tags: authenticator, authentication, security, realms
+:jbake-description: Understanding Apache Shiro Authenticators - the component responsible for verifying user identity. Learn how Authenticators work with Realms and AuthenticationStrategies.
 :idprefix:
 :icons: font
+:toc:
 
-TODO
+An `Authenticator` is a component responsible for verifying that a user actually is who they claim to be.
+It is the core component that executes the authentication process on behalf of the link:/subject.html[Subject].
+
+While the link:/authentication.html[Authentication] documentation explains the concepts and workflow of authentication in Shiro,
+the Authenticator represents the actual implementation component that performs identity verification.
+
+[#Authenticator-Role]
+== Role in the SecurityManager
+
+The link:/securitymanager.html[SecurityManager] does not perform authentication directly.
+Instead, it delegates authentication requests to its internal `Authenticator` instance.
+When a link:/subject.html[Subject] calls link:/static/current/apidocs/org/apache/shiro/subject/Subject.html#login(org.apache.shiro.authc.AuthenticationToken)[`login(token)`],
+the SecurityManager receives the request and immediately delegates to the Authenticator by calling
+link:/static/current/apidocs/org/apache/shiro/authc/Authenticator.html#authenticate(org.apache.shiro.authc.AuthenticationToken)[`authenticate(token)`].
+
+The Authenticator takes the submitted link:/static/current/apidocs/org/apache/shiro/authc/AuthenticationToken.html[`AuthenticationToken`] 
+and uses it to verify the Subject's identity.
+If verification succeeds, it returns an link:/static/current/apidocs/org/apache/shiro/authc/AuthenticationInfo.html[`AuthenticationInfo`] object.
+If verification fails, it throws an link:/static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html[`AuthenticationException`].
+
+[#Authenticator-ModularRealmAuthenticator]
+== ModularRealmAuthenticator
+
+Shiro uses the link:/static/current/apidocs/org/apache/shiro/authc/pam/ModularRealmAuthenticator.html[`ModularRealmAuthenticator`] 
+by default.
+This implementation supports coordinating one or more link:/realm.html[Realms] during the authentication process.
+
+When an authentication token is submitted, the ModularRealmAuthenticator:
+
+* Iterates through configured Realms
+* Calls each Realm's link:/static/current/apidocs/org/apache/shiro/realm/Realm.html#supports(org.apache.shiro.authc.AuthenticationToken)[`supports(token)`] method to determine if the Realm can process the token
+* If a Realm supports the token, its link:/static/current/apidocs/org/apache/shiro/realm/Realm.html#getAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken)[`getAuthenticationInfo(token)`] method is invoked
+* Returns authentication information if successful, or throws an exception if failed
+
+[#Authenticator-SingleVsMultipleRealms]
+== Single vs. Multiple Realms
+
+The ModularRealmAuthenticator supports both configurations:
+
+*Single Realm*:
+When only one Realm is configured, the Authenticator directly invokes that Realm to verify the Subject's credentials.
+
+*Multiple Realms*:
+When multiple Realms are configured, the Authenticator uses an link:/static/current/apidocs/org/apache/shiro/authc/pam/AuthenticationStrategy.html[`AuthenticationStrategy`]
+to determine how to coordinate authentication across the Realms.
+This is a link:https://en.wikipedia.org/wiki/Pluggable_Authentication_Modules[PAM]-style approach where each Realm can be consulted in sequence.
+
+[#Authenticator-AuthenticationStrategy]
+== AuthenticationStrategy
+
+When multiple Realms are configured, the Authenticator must determine if the overall authentication attempt succeeds or fails.
+The link:/static/current/apidocs/org/apache/shiro/authc/pam/AuthenticationStrategy.html[`AuthenticationStrategy`] makes this determination.
+
+Shiro provides three built-in strategies:
+
+* *FirstSuccessfulStrategy*: Consults Realms in order until one succeeds. Remaining Realms are not consulted.
+* *AtLeastOneSuccessfulStrategy*: Returns success if at least one Realm succeeds. Other Realms continue to be consulted.
+* *AllSuccessfulStrategy*: All Realms must succeed for authentication to succeed. This is the most restrictive.
+
+You can configure which strategy the Authenticator uses, or implement your own strategy for custom behavior.
+
+[#Authenticator-Configuration]
+== Configuration
+
+You can configure a custom Authenticator in your Shiro configuration if needed:
+
+[source,ini]
+----
+authenticator = com.foo.bar.CustomAuthenticator
+securityManager.authenticator = $authenticator
+----
+
+You can also configure the AuthenticationStrategy:
+
+[source,ini]
+----
+authenticationStrategy = org.apache.shiro.authc.pam.FirstSuccessfulStrategy
+authenticator.authenticationStrategy = $authenticationStrategy
+----
+
+However, in most cases, the default ModularRealmAuthenticator with the default strategy is sufficient for typical applications.
+
+[#Authenticator-RealmInteraction]
+== How Authenticators Work with Realms
+
+The Authenticator does not directly know how to verify credentials.
+Instead, it coordinates with configured Realms to perform the actual verification.
+
+A link:/realm.html[Realm] is a security-specific data access object that can locate and validate user credentials from a data source
+(database, LDAP, file system, etc.).
+The Realm is responsible for:
+
+* Determining if it understands the submitted AuthenticationToken via its `supports(token)` method
+* Looking up the user in the data source
+* Comparing submitted credentials with those stored in the data source
+* Returning the user's authentication information if credentials match
+* Throwing an exception if credentials do not match
+
+The Authenticator simply orchestrates this process by delegating to Realms in order and handling the results according to its configured strategy.
+
+[#Authenticator-SeeAlso]
+== See Also
+
+To learn more about related topics, see:
+
+* link:authentication.html[Authentication] - Conceptual overview of authentication in Shiro.
+* link:java-authentication-guide.html[Java Authentication Guide] - Practical guide to implementing authentication in your application.
+* link:realm.html[Realms] - How Realms connect Shiro to your data sources.
+* link:authorizer.html[Authorizers] - The counterpart component for authorization.
+* link:securitymanager.html[SecurityManager] - The component that orchestrates Authenticators and other Shiro components.
