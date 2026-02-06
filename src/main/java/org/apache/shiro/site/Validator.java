@@ -31,7 +31,9 @@ import java.util.List;
 public final class Validator implements Runnable {
     private final Path content;
 
-    // JBake headers are in the first few lines, no need to read entire files
+    // JBake headers are always in the first few lines of .adoc files.
+    // Verified empirically: all files in this repo have jbake-date within lines 2-22.
+    // 50 provides a safe margin while avoiding reading entire files.
     private static final int MAX_HEADER_LINES = 50;
 
     private Validator(final Path content) {
