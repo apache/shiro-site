@@ -64,7 +64,7 @@ The link:/static/current/apidocs/org/apache/shiro/authc/pam/AuthenticationStrate
 
 Shiro provides three built-in strategies:
 
-* *FirstSuccessfulStrategy*: Returns the first Realm that succeeds. Other Realms are not consulted.
+* *FirstSuccessfulStrategy*: Consults Realms in order until one succeeds. Remaining Realms are not consulted.
 * *AtLeastOneSuccessfulStrategy*: Returns success if at least one Realm succeeds. Other Realms continue to be consulted.
 * *AllSuccessfulStrategy*: All Realms must succeed for authentication to succeed. This is the most restrictive.
 
