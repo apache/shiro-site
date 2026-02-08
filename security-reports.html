@@ -232,6 +232,8 @@
 <li><a href="#vulnerability_handling_process">Vulnerability Handling Process</a></li>
 <li><a href="#apache_shiro_vulnerability_reports">Apache Shiro Vulnerability Reports</a>
 <ul class="sectlevel2">
+<li><a href="#cve_2026_23903">CVE-2026-23903</a></li>
+<li><a href="#cve_2026_23901">CVE-2026-23901</a></li>
 <li><a href="#cve_2023_46749">CVE-2023-46749</a></li>
 <li><a href="#cve_2023_46750">CVE-2023-46750</a></li>
 <li><a href="#cve_2023_34478">CVE-2023-34478</a></li>
@@ -298,6 +300,47 @@ We cannot accept regular bug reports or other queries at this address.</p>
 <div class="sect1">
 <h2 id="apache_shiro_vulnerability_reports">Apache Shiro Vulnerability Reports</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="cve_2026_23903"><a href="https://www.cve.org/CVERecord?id=CVE-2026-23903">CVE-2026-23903</a></h3>
+<div class="paragraph">
+<p>If static files are served from a case-insensitive filesystem,
+such as default macOS setup, static files may be accessed by varying the case of the filename in the request.
+If only lower-case (common default) filters are present in Shiro, they may be bypassed this way.
+The issue only effects static files.</p>
+</div>
+<div class="paragraph">
+<p>Shiro 2.1.0 and later has a new parameters to remediate this issue
+shiro.ini: <code>filterChainResolver.caseInsensitive = true</code>
+application.properties: <code>shiro.caseInsensitive=true</code></p>
+</div>
+<div class="paragraph">
+<p>Shiro 3.0.0 and later (upcoming) makes this the default.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong> Upgrade to version 2.1.0 or later, which fixes the issue.</p>
+</div>
+<div class="paragraph">
+<p><strong>Credit:</strong>
+Apache Shiro would like to thank <strong>Jesse Yang</strong> for reporting this issue.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2026_23901"><a href="https://www.cve.org/CVERecord?id=CVE-2026-23901">CVE-2026-23901</a></h3>
+<div class="paragraph">
+<p>Prior to Shiro 2.1.0, code paths for non-existent vs. existing users are different enough,
+that a brute-force attack may be able to tell, by timing the requests only, determine if
+the request failed because of a non-existent user vs. wrong password.<br>
+The most likely attack vector is a local attack only.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong> Upgrade to version 2.1.0 or later, which fixes the issue, or ensure that
+the infrastructure-level mitigations are in place to prevent brute-force attacks, such as rate-limiting or account lockout.</p>
+</div>
+<div class="paragraph">
+<p><strong>Credit:</strong>
+Apache Shiro would like to thank <strong>4ra1n</strong> and <strong>Y4tacker</strong> for reporting this issue.</p>
+</div>
+</div>
 <div class="sect2">
 <h3 id="cve_2023_46749"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-46749">CVE-2023-46749</a></h3>
 <div class="paragraph">
