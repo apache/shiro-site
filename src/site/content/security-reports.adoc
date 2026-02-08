@@ -30,6 +30,37 @@ A https://www.apache.org/security/committers.html[more detailed description of t
 
 == Apache Shiro Vulnerability Reports
 
+=== link:https://www.cve.org/CVERecord?id=CVE-2026-23903[CVE-2026-23903]
+
+If static files are served from a case-insensitive filesystem,
+such as default macOS setup, static files may be accessed by varying the case of the filename in the request.
+If only lower-case (common default) filters are present in Shiro, they may be bypassed this way.
+The issue only effects static files.
+
+Shiro 2.1.0 and later has a new parameters to remediate this issue
+shiro.ini: `filterChainResolver.caseInsensitive = true`
+application.properties: `shiro.caseInsensitive=true`
+
+Shiro 3.0.0 and later (upcoming) makes this the default.
+
+**Mitigation:** Upgrade to version 2.1.0 or later, which fixes the issue.
+
+**Credit:**
+Apache Shiro would like to thank *Jesse Yang* for reporting this issue.
+
+=== link:https://www.cve.org/CVERecord?id=CVE-2026-23901[CVE-2026-23901]
+
+Prior to Shiro 2.1.0, code paths for non-existent vs. existing users are different enough,
+that a brute-force attack may be able to tell, by timing the requests only, determine if
+the request failed because of a non-existent user vs. wrong password. +
+The most likely attack vector is a local attack only.
+
+**Mitigation:** Upgrade to version 2.1.0 or later, which fixes the issue, or ensure that
+the infrastructure-level mitigations are in place to prevent brute-force attacks, such as rate-limiting or account lockout.
+
+**Credit:**
+Apache Shiro would like to thank *4ra1n* and *Y4tacker* for reporting this issue.
+
 === link:https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-46749[CVE-2023-46749]
 
 Apache Shiro before 1.13.0 or 2.0.0-alpha-4, may be susceptible to a path traversal attack that results in an authentication bypass when used together with path rewriting
