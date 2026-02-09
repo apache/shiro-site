@@ -18,20 +18,27 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Authorizer | Apache Shiro</title>
+    <title>Apache Shiro Authorizers | Apache Shiro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content='documentation,todo,lend-a-hand'>
+    <meta name="description" content="Understanding Apache Shiro Authorizers - the component that determines what authenticated users are allowed to do. Learn how Authorizers work with Realms to evaluate permissions and roles.">
+    <meta property="og:description" content="Understanding Apache Shiro Authorizers - the component that determines what authenticated users are allowed to do. Learn how Authorizers work with Realms to evaluate permissions and roles.">
+    <meta name="keywords" content='authorizer,authorization,access-control,permissions,roles'>
     <meta name="generator" content="JBake">
     <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
     <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
     <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
     <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
 
-    <meta property="og:title" content="Authorizer | Apache Shiro"/>
-    <meta property="og:type" content="website"/>
-    <meta property="article:tag" content='documentation'/>
-    <meta property="article:tag" content='todo'/>
-    <meta property="article:tag" content='lend-a-hand'/>
+    <meta property="og:title" content="Apache Shiro Authorizers | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2010-03-18T00:00:00Z"/>
+    <meta property="article:tag" content='authorizer'/>
+    <meta property="article:tag" content='authorization'/>
+    <meta property="article:tag" content='access-control'/>
+    <meta property="article:tag" content='permissions'/>
+    <meta property="article:tag" content='roles'/>
     <meta property="og:locale" content="en_US" />
     <meta property="og:url" content='https://shiro.apache.org/authorizer.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
@@ -196,26 +203,241 @@
       </div>
     </nav>
 
-  <div class="page-header">
-    <h1>Authorizer</h1>
+	<div class="page-header">
+		<h1>Apache Shiro Authorizers</h1>
+	</div>
+
+
+  <div class="admonitionblock tip">
+    <table>
+      <tbody>
+        <tr>
+          <td class="icon">
+            <div class="title">Handy Hint</div>
+          </td>
+          <td class="content">
+            <div class="title">Shiro v1 version notice</div>
+            <div class="paragraph">
+              <p>As of February 28, 2024, Shiro v1 was superseded by v2.<p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
-<div class="paragraph">
-<p>TODO</p>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#Authorizer-Role">Role in the SecurityManager</a></li>
+<li><a href="#Authorizer-ModularRealmAuthorizer">ModularRealmAuthorizer</a></li>
+<li><a href="#Authorizer-PermissionAndRoleChecks">Permission and Role Checks</a>
+<ul class="sectlevel2">
+<li><a href="#Authorizer-PermissionChecks">Permission Checks</a></li>
+<li><a href="#Authorizer-RoleChecks">Role Checks</a></li>
+</ul>
+</li>
+<li><a href="#Authorizer-Configuration">Configuration</a></li>
+<li><a href="#Authorizer-RealmInteraction">How Authorizers Work with Realms</a></li>
+<li><a href="#Authorizer-MultipleRealms">Authorization with Multiple Realms</a></li>
+</ul>
 </div>
-<hr />
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>An <code>Authorizer</code> is a component responsible for determining whether a user is allowed to perform a certain action.
+It evaluates whether a <code>Subject</code> has the necessary permissions or roles to access a resource or perform an operation.</p>
+</div>
+<div class="paragraph">
+<p>While the <a href="/authorization.html">Authorization</a> documentation explains the concepts and workflow of access control in Shiro,
+the Authorizer represents the actual implementation component that performs access control decisions.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Authorizer-Role">Role in the SecurityManager</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="/securitymanager.html">SecurityManager</a> does not perform authorization checks directly.
+Instead, it delegates authorization decisions to its internal <code>Authorizer</code> instance.
+When a <a href="/subject.html">Subject</a> calls authorization methods such as
+<a href="/static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRole(java.lang.String)"><code>hasRole(role)</code></a>,
+<a href="/static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted(org.apache.shiro.authz.Permission)"><code>isPermitted(permission)</code></a>,
+or their variants, the SecurityManager delegates to the Authorizer.</p>
+</div>
+<div class="paragraph">
+<p>The Authorizer determines whether the Subject is permitted to perform the requested action by checking the Subject&#8217;s roles and permissions.
+If the Subject has the necessary role or permission, the authorization check passes.
+If not, an <a href="/static/current/apidocs/org/apache/shiro/authz/AuthorizationException.html"><code>AuthorizationException</code></a> may be thrown.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Authorizer-ModularRealmAuthorizer">ModularRealmAuthorizer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Shiro uses the <a href="/static/current/apidocs/org/apache/shiro/authz/ModularRealmAuthorizer.html"><code>ModularRealmAuthorizer</code></a>
+by default.
+This implementation supports coordinating one or more <a href="/realm.html">Realms</a> during the authorization process.</p>
+</div>
+<div class="paragraph">
+<p>When an authorization check is performed, the ModularRealmAuthorizer:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Iterates through configured Realms</p>
+</li>
+<li>
+<p>For each Realm that implements the <code>Authorizer</code> interface, calls the corresponding authorization method
+(<code>hasRole*</code>, <code>checkRole*</code>, <code>isPermitted*</code>, or <code>checkPermission*</code>)</p>
+</li>
+<li>
+<p>Aggregates and evaluates the results according to Shiro&#8217;s authorization semantics</p>
+</li>
+<li>
+<p>Returns the authorization decision to the caller</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>It is important to note that the ModularRealmAuthorizer treats Realms differently depending on whether they implement the <code>Authorizer</code> interface.
+If a Realm does not implement <code>Authorizer</code>, it is not consulted for authorization checks.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Authorizer-PermissionAndRoleChecks">Permission and Role Checks</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Authorizer performs two types of authorization checks:</p>
+</div>
+<div class="sect2">
+<h3 id="Authorizer-PermissionChecks">Permission Checks</h3>
+<div class="paragraph">
+<p>Permission checks verify whether a Subject is allowed to perform a specific action on a specific resource.
+Methods for permission checks include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="/static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted(org.apache.shiro.authz.Permission)"><code>isPermitted(permission)</code></a> - returns <code>true</code> or <code>false</code></p>
+</li>
+<li>
+<p><a href="/static/current/apidocs/org/apache/shiro/subject/Subject.html#checkPermission(org.apache.shiro.authz.Permission)"><code>checkPermission(permission)</code></a> - throws an exception on failure</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">if (subject.isPermitted("account:read")) {
+    //User can read accounts
+}
 
-<h2><a id="Lendahandwithdocumentation"></a>Lend a hand with documentation</h2>
+subject.checkPermission("document:delete:report123");</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Authorizer-RoleChecks">Role Checks</h3>
+<div class="paragraph">
+<p>Role checks verify whether a Subject has a specific role. Methods for role checks include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="/static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRole(java.lang.String)"><code>hasRole(role)</code></a> - returns <code>true</code> or <code>false</code></p>
+</li>
+<li>
+<p><a href="/static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRole(java.lang.String)"><code>checkRole(role)</code></a> - throws an exception on failure</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">if (subject.hasRole("admin")) {
+    //User is an administrator
+}
 
-<p>While we hope this documentation helps you with the work you're doing with Apache Shiro,
-  the community is improving and expanding the documentation all the time.
-  If you'd like to help the Shiro project, please consider correcting, expanding, or adding documentation where you see a need.
-  Every little bit of help you provide expands the community and in turn improves Shiro. </p>
-
-<p>The easiest way to contribute your documentation is to submit a pull-request by clicking on the <code>Edit</code> link below,
-  or send it to the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.</p>
-
-<hr />
+subject.checkRole("user");</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Authorizer-Configuration">Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can configure a custom Authorizer in your Shiro configuration if needed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">authorizer = com.foo.bar.CustomAuthorizer
+securityManager.authorizer = $authorizer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, in most cases, the default ModularRealmAuthorizer is sufficient for typical applications.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Authorizer-RealmInteraction">How Authorizers Work with Realms</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Authorizer does not directly know where to retrieve authorization data.
+Instead, it coordinates with configured Realms to perform the actual authorization checks.</p>
+</div>
+<div class="paragraph">
+<p>A <a href="/realm.html">Realm</a> is a security-specific data access object that knows how to retrieve authorization data from a data source
+(database, LDAP, file system, etc.).
+The Realm is responsible for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Determining if it implements the <code>Authorizer</code> interface (which indicates it can perform authorization checks)</p>
+</li>
+<li>
+<p>Retrieving the Subject&#8217;s roles and permissions from the data source</p>
+</li>
+<li>
+<p>Evaluating whether the Subject has the requested role or permission</p>
+</li>
+<li>
+<p>Returning the results of the authorization check</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The Authorizer simply orchestrates this process by delegating to Realms and aggregating their results.
+This allows you to use multiple Realms where authorization data may come from different sources,
+and Shiro will coordinate the results appropriately.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Authorizer-MultipleRealms">Authorization with Multiple Realms</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When multiple Realms are configured, the ModularRealmAuthorizer consults all Realms that implement the <code>Authorizer</code> interface.
+The results are aggregated to determine the final authorization decision.</p>
+</div>
+<div class="paragraph">
+<p>Typically, if any Realm grants permission or role membership, the authorization check succeeds.
+However, the exact behavior depends on the authorization data model and how the Realms are configured.
+Custom Authorizer implementations can be used to implement different aggregation strategies if needed.</p>
+</div>
+</div>
+</div>
+	<hr />
 
 </div> 
 

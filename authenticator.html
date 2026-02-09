@@ -18,20 +18,26 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Authenticator | Apache Shiro</title>
+    <title>Apache Shiro Authenticators | Apache Shiro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content='documentation,todo,lend-a-hand'>
+    <meta name="description" content="Understanding Apache Shiro Authenticators - the component responsible for verifying user identity. Learn how Authenticators work with Realms and AuthenticationStrategies.">
+    <meta property="og:description" content="Understanding Apache Shiro Authenticators - the component responsible for verifying user identity. Learn how Authenticators work with Realms and AuthenticationStrategies.">
+    <meta name="keywords" content='authenticator,authentication,security,realms'>
     <meta name="generator" content="JBake">
     <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
     <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
     <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
     <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
 
-    <meta property="og:title" content="Authenticator | Apache Shiro"/>
-    <meta property="og:type" content="website"/>
-    <meta property="article:tag" content='documentation'/>
-    <meta property="article:tag" content='todo'/>
-    <meta property="article:tag" content='lend-a-hand'/>
+    <meta property="og:title" content="Apache Shiro Authenticators | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2010-03-18T00:00:00Z"/>
+    <meta property="article:tag" content='authenticator'/>
+    <meta property="article:tag" content='authentication'/>
+    <meta property="article:tag" content='security'/>
+    <meta property="article:tag" content='realms'/>
     <meta property="og:locale" content="en_US" />
     <meta property="og:url" content='https://shiro.apache.org/authenticator.html'/>
     <meta property="og:image" content='images/shiro-featured-image.png'/>
@@ -196,26 +202,208 @@
       </div>
     </nav>
 
-  <div class="page-header">
-    <h1>Authenticator</h1>
+	<div class="page-header">
+		<h1>Apache Shiro Authenticators</h1>
+	</div>
+
+
+  <div class="admonitionblock tip">
+    <table>
+      <tbody>
+        <tr>
+          <td class="icon">
+            <div class="title">Handy Hint</div>
+          </td>
+          <td class="content">
+            <div class="title">Shiro v1 version notice</div>
+            <div class="paragraph">
+              <p>As of February 28, 2024, Shiro v1 was superseded by v2.<p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
-<div class="paragraph">
-<p>TODO</p>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#Authenticator-Role">Role in the SecurityManager</a></li>
+<li><a href="#Authenticator-ModularRealmAuthenticator">ModularRealmAuthenticator</a></li>
+<li><a href="#Authenticator-SingleVsMultipleRealms">Single vs. Multiple Realms</a></li>
+<li><a href="#Authenticator-AuthenticationStrategy">AuthenticationStrategy</a></li>
+<li><a href="#Authenticator-Configuration">Configuration</a></li>
+<li><a href="#Authenticator-RealmInteraction">How Authenticators Work with Realms</a></li>
+</ul>
 </div>
-<hr />
-
-<h2><a id="Lendahandwithdocumentation"></a>Lend a hand with documentation</h2>
-
-<p>While we hope this documentation helps you with the work you're doing with Apache Shiro,
-  the community is improving and expanding the documentation all the time.
-  If you'd like to help the Shiro project, please consider correcting, expanding, or adding documentation where you see a need.
-  Every little bit of help you provide expands the community and in turn improves Shiro. </p>
-
-<p>The easiest way to contribute your documentation is to submit a pull-request by clicking on the <code>Edit</code> link below,
-  or send it to the <a href="mailing-lists.html" title="Mailing Lists">User Mailing List</a>.</p>
-
-<hr />
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>An <code>Authenticator</code> is a component responsible for verifying that a user actually is who they claim to be.
+It is the core component that executes the authentication process on behalf of the <a href="/subject.html">Subject</a>.</p>
+</div>
+<div class="paragraph">
+<p>While the <a href="/authentication.html">Authentication</a> documentation explains the concepts and workflow of authentication in Shiro,
+the Authenticator represents the actual implementation component that performs identity verification.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Authenticator-Role">Role in the SecurityManager</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="/securitymanager.html">SecurityManager</a> does not perform authentication directly.
+Instead, it delegates authentication requests to its internal <code>Authenticator</code> instance.
+When a <a href="/subject.html">Subject</a> calls <a href="/static/current/apidocs/org/apache/shiro/subject/Subject.html#login(org.apache.shiro.authc.AuthenticationToken)"><code>login(token)</code></a>,
+the SecurityManager receives the request and immediately delegates to the Authenticator by calling
+<a href="/static/current/apidocs/org/apache/shiro/authc/Authenticator.html#authenticate(org.apache.shiro.authc.AuthenticationToken)"><code>authenticate(token)</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>The Authenticator takes the submitted <a href="/static/current/apidocs/org/apache/shiro/authc/AuthenticationToken.html"><code>AuthenticationToken</code></a>
+and uses it to verify the Subject&#8217;s identity.
+If verification succeeds, it returns an <a href="/static/current/apidocs/org/apache/shiro/authc/AuthenticationInfo.html"><code>AuthenticationInfo</code></a> object.
+If verification fails, it throws an <a href="/static/current/apidocs/org/apache/shiro/authc/AuthenticationException.html"><code>AuthenticationException</code></a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Authenticator-ModularRealmAuthenticator">ModularRealmAuthenticator</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Shiro uses the <a href="/static/current/apidocs/org/apache/shiro/authc/pam/ModularRealmAuthenticator.html"><code>ModularRealmAuthenticator</code></a>
+by default.
+This implementation supports coordinating one or more <a href="/realm.html">Realms</a> during the authentication process.</p>
+</div>
+<div class="paragraph">
+<p>When an authentication token is submitted, the ModularRealmAuthenticator:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Iterates through configured Realms</p>
+</li>
+<li>
+<p>Calls each Realm&#8217;s <a href="/static/current/apidocs/org/apache/shiro/realm/Realm.html#supports(org.apache.shiro.authc.AuthenticationToken)"><code>supports(token)</code></a> method to determine if the Realm can process the token</p>
+</li>
+<li>
+<p>If a Realm supports the token, its <a href="/static/current/apidocs/org/apache/shiro/realm/Realm.html#getAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken)"><code>getAuthenticationInfo(token)</code></a> method is invoked</p>
+</li>
+<li>
+<p>Returns authentication information if successful, or throws an exception if failed</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Authenticator-SingleVsMultipleRealms">Single vs. Multiple Realms</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The ModularRealmAuthenticator supports both configurations:</p>
+</div>
+<div class="paragraph">
+<p><strong>Single Realm</strong>:
+When only one Realm is configured, the Authenticator directly invokes that Realm to verify the Subject&#8217;s credentials.</p>
+</div>
+<div class="paragraph">
+<p><strong>Multiple Realms</strong>:
+When multiple Realms are configured, the Authenticator uses an <a href="/static/current/apidocs/org/apache/shiro/authc/pam/AuthenticationStrategy.html"><code>AuthenticationStrategy</code></a>
+to determine how to coordinate authentication across the Realms.
+This is a <a href="https://en.wikipedia.org/wiki/Pluggable_Authentication_Modules">PAM</a>-style approach where each Realm can be consulted in sequence.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Authenticator-AuthenticationStrategy">AuthenticationStrategy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When multiple Realms are configured, the Authenticator must determine if the overall authentication attempt succeeds or fails.
+The <a href="/static/current/apidocs/org/apache/shiro/authc/pam/AuthenticationStrategy.html"><code>AuthenticationStrategy</code></a> makes this determination.</p>
+</div>
+<div class="paragraph">
+<p>Shiro provides three built-in strategies:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>FirstSuccessfulStrategy</strong>: Consults Realms in order until one succeeds. Remaining Realms are not consulted.</p>
+</li>
+<li>
+<p><strong>AtLeastOneSuccessfulStrategy</strong>: Returns success if at least one Realm succeeds. Other Realms continue to be consulted.</p>
+</li>
+<li>
+<p><strong>AllSuccessfulStrategy</strong>: All Realms must succeed for authentication to succeed. This is the most restrictive.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can configure which strategy the Authenticator uses, or implement your own strategy for custom behavior.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Authenticator-Configuration">Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can configure a custom Authenticator in your Shiro configuration if needed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">authenticator = com.foo.bar.CustomAuthenticator
+securityManager.authenticator = $authenticator</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also configure the AuthenticationStrategy:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">authenticationStrategy = org.apache.shiro.authc.pam.FirstSuccessfulStrategy
+authenticator.authenticationStrategy = $authenticationStrategy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, in most cases, the default ModularRealmAuthenticator with the default strategy is sufficient for typical applications.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Authenticator-RealmInteraction">How Authenticators Work with Realms</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Authenticator does not directly know how to verify credentials.
+Instead, it coordinates with configured Realms to perform the actual verification.</p>
+</div>
+<div class="paragraph">
+<p>A <a href="/realm.html">Realm</a> is a security-specific data access object that can locate and validate user credentials from a data source
+(database, LDAP, file system, etc.).
+The Realm is responsible for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Determining if it understands the submitted AuthenticationToken via its <code>supports(token)</code> method</p>
+</li>
+<li>
+<p>Looking up the user in the data source</p>
+</li>
+<li>
+<p>Comparing submitted credentials with those stored in the data source</p>
+</li>
+<li>
+<p>Returning the user&#8217;s authentication information if credentials match</p>
+</li>
+<li>
+<p>Throwing an exception if credentials do not match</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The Authenticator simply orchestrates this process by delegating to Realms in order and handling the results according to its configured strategy.</p>
+</div>
+</div>
+</div>
+	<hr />
 
 </div> 
 
