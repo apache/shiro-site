@@ -287,6 +287,24 @@ subject.isAuthenticated();
 subject.isRemembered();
 ----
 
+4. **Browser cookie issues**: Ensure the browser accepts cookies and that there are no domain/path mismatches.
+By default, Shiro's Remember Me cookie is HTTP-only and secure. If you're testing in a non-HTTPS environment, you may need to adjust the secure flag for testing purposes.
+You can use system property to control this behavior. Set `org.apache.shiro.rememberMe.secure.disabled` to `true` to disable the secure flag on the Remember Me cookie for testing.
+You can also configure this in your `shiro.ini`:
++
+[source,ini]
+----
+[main]
+securityManager.rememberMeManager.cookie.secure = false
+----
+For Jakarta EE applications, the secure flag is enabled by default. You can disable it for testing purposes in Jakarta Faces' Development mode only by setting the following in your shiro.ini:
++
+[source,ini]
+----
+[main]
+securityManager.rememberMeManager.secureInDevMode = false
+----
+
 === How do I generate a cipher key for Remember Me?
 
 Generate a secure key using Shiro's `AesCipherService`:

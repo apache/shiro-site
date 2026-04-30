@@ -183,6 +183,11 @@ RememberMe functionality is disabled by default. You can enable it easily by add
 ----
 authc.useRemembered = true
 ----
+RememberMe uses secure cookies by default. If you are running in non-HTTPS environment, you can disable secure cookies in Jakarta Faces' development mode only by adding the following to `shiro.ini` (this is the recommended configuration, but make sure production is running in Faces production mode):
+[source,properties]
+----
+securityManager.rememberMeManager.secureInDevMode = false
+----
 
 [#rate_limiting]
 ==== Rate limiting: Automatic delay when login failed
