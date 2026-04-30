@@ -638,6 +638,14 @@ Any Shiro principal object can be injected if annotated by <code>@Principal</cod
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">authc.useRemembered = true</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>RememberMe uses secure cookies by default. If you are running in non-HTTPS environment, you can disable secure cookies in Jakarta Faces' development mode only by adding the following to <code>shiro.ini</code> (this is the recommended configuration, but make sure production is running in Faces production mode):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">securityManager.rememberMeManager.secureInDevMode = false</code></pre>
+</div>
+</div>
 </div>
 <div class="sect3">
 <h4 id="rate_limiting">Rate limiting: Automatic delay when login failed</h4>

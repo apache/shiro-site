@@ -917,6 +917,27 @@ subject.isRemembered();</code></pre>
 </div>
 </div>
 </li>
+<li>
+<p><strong>Browser cookie issues</strong>: Ensure the browser accepts cookies and that there are no domain/path mismatches.
+By default, Shiro&#8217;s Remember Me cookie is HTTP-only and secure. If you&#8217;re testing in a non-HTTPS environment, you may need to adjust the secure flag for testing purposes.
+You can use system property to control this behavior. Set <code>org.apache.shiro.rememberMe.secure.disabled</code> to <code>true</code> to disable the secure flag on the Remember Me cookie for testing.
+You can also configure this in your <code>shiro.ini</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+securityManager.rememberMeManager.cookie.secure = false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For Jakarta EE applications, the secure flag is enabled by default. You can disable it for testing purposes in Jakarta Faces' Development mode only by setting the following in your shiro.ini:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+securityManager.rememberMeManager.secureInDevMode = false</code></pre>
+</div>
+</div>
+</li>
 </ol>
 </div>
 </div>
