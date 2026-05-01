@@ -222,6 +222,18 @@ The module adds `ShiroFilter` to the Servlet configuration. For most cases, the 
 </filter-mapping>
 ... other filters ...
 ----
+Ordinarily, Shiro sets session cookies to be secure, unless you are in Jakarta Faces' Development mode.
+Make sure to run in other than Development mode in production, so that secure cookies are used.
+If secure session cookies are not desired, you can disable them by adding the following to `web.xml`:
+[source,xml]
+.Note: this parameter is only available in Shiro 2.1.1 or later
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.secure-session-cookie.disabled</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+
 Ordinarily, Jakarta EE integration module will remove URL session tracking mode from the configuration, overriding any other session tracking configuration specified in `web.xml`. This is to align with good security practices. If URL tracking mode is desired (such as for testing or historical reasons), add the following to `web.xml`:
 [source,xml]
 .Note: this parameter is only available in Shiro 2.0.6 or later
