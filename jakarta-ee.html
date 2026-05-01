@@ -702,6 +702,20 @@ To disable automatic bootstrapping, add the following to <code>web.xml</code>:</
 </div>
 </div>
 <div class="paragraph">
+<p>Ordinarily, Shiro sets session cookies to be secure, unless you are in Jakarta Faces' Development mode.
+Make sure to run in other than Development mode in production, so that secure cookies are used.
+If secure session cookies are not desired, you can disable them by adding the following to <code>web.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="title">Note: this parameter is only available in Shiro 2.1.1 or later</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;context-param&gt;
+    &lt;param-name&gt;org.apache.shiro.ee.secure-session-cookie.disabled&lt;/param-name&gt;
+    &lt;param-value&gt;true&lt;/param-value&gt;
+&lt;/context-param&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Ordinarily, Jakarta EE integration module will remove URL session tracking mode from the configuration, overriding any other session tracking configuration specified in <code>web.xml</code>. This is to align with good security practices. If URL tracking mode is desired (such as for testing or historical reasons), add the following to <code>web.xml</code>:</p>
 </div>
 <div class="listingblock">
