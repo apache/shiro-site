@@ -30,6 +30,15 @@ A https://www.apache.org/security/committers.html[more detailed description of t
 
 == Apache Shiro Vulnerability Reports
 
+=== link:https://www.cve.org/CVERecord?id=CVE-2026-43827[CVE-2026-43827]
+Default configurations of Apache Shiro have a session fixation vulnerability. This issue affects Apache Shiro from 1.0 to 2.1.0, and 3.0.0-alpha-1. Users are recommended to upgrade to version 2.1.1, 3.0.0-alpha-2 or later, which fixes the issue. In the affected versions, when a session already exists, it is not invalidated upon successful login, nor is a new session being generated with a new ID.
+
+**Mitigation:**
+Upgrade to version 2.1.1, 3.0.0-alpha-2 or later, which fixes the issue.
+
+**Credit:**
+Rasmus Moorats
+
 === link:https://www.cve.org/CVERecord?id=CVE-2026-23903[CVE-2026-23903]
 
 If static files are served from a case-insensitive filesystem,
