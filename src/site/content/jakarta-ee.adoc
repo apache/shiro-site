@@ -224,6 +224,7 @@ The module adds `ShiroFilter` to the Servlet configuration. For most cases, the 
 ----
 Ordinarily, Shiro sets session cookies to be secure, unless you are in Jakarta Faces' Development mode.
 Make sure to run in other than Development mode in production, so that secure cookies are used.
+This only applies to Servlet Container-managed sessions, and not Shiro native sessions. +
 If secure session cookies are not desired, you can disable them by adding the following to `web.xml`:
 [source,xml]
 .Note: this parameter is only available in Shiro 2.1.1 or later
