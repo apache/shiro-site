@@ -639,11 +639,11 @@ Any Shiro principal object can be injected if annotated by <code>@Principal</cod
 </div>
 </div>
 <div class="paragraph">
-<p>RememberMe uses secure cookies by default. If you are running in non-HTTPS environment, you can disable secure cookies in Jakarta Faces' development mode only by adding the following to <code>shiro.ini</code> (this is the recommended configuration, but make sure production is running in Faces production mode):</p>
+<p>RememberMe uses secure cookies by default. If you are running in non-HTTPS environment, you can disable secure cookies by adding the following to <code>shiro.ini</code> (this is not a recommended configuration, since it can lead to security vulnerabilities, but it is available for testing and development purposes):</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">securityManager.rememberMeManager.secureInDevMode = false</code></pre>
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">securityManager.rememberMeManager.cookie.secure = false</code></pre>
 </div>
 </div>
 </div>
@@ -704,6 +704,7 @@ To disable automatic bootstrapping, add the following to <code>web.xml</code>:</
 <div class="paragraph">
 <p>Ordinarily, Shiro sets session cookies to be secure, unless you are in Jakarta Faces' Development mode.
 Make sure to run in other than Development mode in production, so that secure cookies are used.
+This only applies to Servlet Container-managed sessions, and not Shiro native sessions.<br>
 If secure session cookies are not desired, you can disable them by adding the following to <code>web.xml</code>:</p>
 </div>
 <div class="listingblock">
