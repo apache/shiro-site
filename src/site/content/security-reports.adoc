@@ -129,9 +129,10 @@ The authentication bypass occurs when Shiro and Spring Boot are using different 
 
 **Mitigation:** Update to Apache Shiro 1.11.0, or set the following Spring Boot configuration value:
 
-```properties
+[source,properties]
+----
 spring.mvc.pathmatch.matching-strategy = ant_path_matcher
-```
+----
 
 **Credit:**
 Apache Shiro would like to thank v3ged0ge and Adamytd for reporting this issue.
