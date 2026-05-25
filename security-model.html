@@ -270,6 +270,25 @@
 <li><a href="#defense_in_depth">Defense in Depth</a></li>
 </ul>
 </li>
+<li><a href="#adversary_model">Adversary Model</a>
+<ul class="sectlevel2">
+<li><a href="#external_untrusted_adversary_in_scope">External Untrusted Adversary (in scope)</a></li>
+<li><a href="#authenticated_user_with_limited_privileges_in_scope">Authenticated User with Limited Privileges (in scope)</a></li>
+<li><a href="#adversaries_out_of_scope">Adversaries Out of Scope</a></li>
+</ul>
+</li>
+<li><a href="#known_non_findings">Known Non-Findings</a>
+<ul class="sectlevel2">
+<li><a href="#username_enumeration_via_differential_error_responses">Username Enumeration via Differential Error Responses</a></li>
+<li><a href="#username_and_session_id_appearing_in_logs">Username and Session ID Appearing in Logs</a></li>
+<li><a href="#shiro_version_disclosure">Shiro Version Disclosure</a></li>
+<li><a href="#deprecated_hash_algorithms_exposed_in_the_hashing_api">Deprecated Hash Algorithms Exposed in the Hashing API</a></li>
+<li><a href="#rememberme_with_weaker_authentication_guarantees">RememberMe with Weaker Authentication Guarantees</a></li>
+<li><a href="#pluggable_cryptography_allowing_weak_configurations">Pluggable Cryptography Allowing Weak Configurations</a></li>
+<li><a href="#csrf_mfa_account_lockout">CSRF, MFA, Account Lockout</a></li>
+</ul>
+</li>
+<li><a href="#triage_dispositions">Triage Dispositions</a></li>
 <li><a href="#reporting_security_vulnerabilities">Reporting Security Vulnerabilities</a></li>
 <li><a href="#additional_resources">Additional Resources</a></li>
 </ul>
@@ -504,7 +523,7 @@ Operators should implement these controls at the application or infrastructure l
 <p><strong>Encryption/Decryption</strong>: <code>CipherService</code> implementations for symmetric encryption (AES, Blowfish, etc.).</p>
 </li>
 <li>
-<p><strong>Password Hashing</strong>: <code>PasswordService</code> for secure credential hashing with configurable algorithms.</p>
+<p><strong>Password Hashing</strong>: <code>PasswordService</code> for secure credential hashing with configurable algorithms (Argon2, BCrypt).</p>
 </li>
 </ul>
 </div>
@@ -517,7 +536,7 @@ Operators should implement these controls at the application or infrastructure l
 <p>Shiro&#8217;s cryptographic utilities are wrappers around standard Java cryptography (JCA/JCE) and <code>BouncyCastle</code> libraries.</p>
 </li>
 <li>
-<p><strong>Algorithm Selection</strong>: Operators must choose appropriate algorithms. Avoid deprecated algorithms (MD5, SHA-1 for security purposes).</p>
+<p><strong>Algorithm Selection</strong>: Operators must choose appropriate algorithms. Avoid deprecated algorithms (MD5, SHA-1 for security purposes). Avoid weak algorithms for passwords (use Argon2 or BCrypt with appropriate work factors).</p>
 </li>
 <li>
 <p><strong>Key Management</strong>: Shiro does not provide key management infrastructure. Secure key storage and rotation is the operator&#8217;s responsibility.</p>
@@ -639,7 +658,7 @@ Operators should implement these controls at the application or infrastructure l
 <p>Use strong password hashing (bcrypt or Argon2 with appropriate work factors).</p>
 </li>
 <li>
-<p>Implement session fixation prevention.</p>
+<p>Implement session fixation prevention, if not using built-in session management.</p>
 </li>
 <li>
 <p>Review and restrict default configurations.</p>
@@ -669,6 +688,186 @@ Operators should implement these controls at the application or infrastructure l
 </ul>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="adversary_model">Adversary Model</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Shiro&#8217;s security model assumes the following adversary classes:</p>
+</div>
+<div class="sect2">
+<h3 id="external_untrusted_adversary_in_scope">External Untrusted Adversary (in scope)</h3>
+<div class="paragraph">
+<p>The primary adversary Shiro defends against is an unauthenticated or authenticated-but-low-privilege network user attempting to access an application that integrates Shiro. This adversary can:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Submit arbitrary authentication credentials, session identifiers, and request data.</p>
+</li>
+<li>
+<p>Observe authentication error responses (including timing).</p>
+</li>
+<li>
+<p>Attempt session fixation, privilege escalation, and authorization bypass.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This adversary cannot:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Run code in the application&#8217;s JVM process.</p>
+</li>
+<li>
+<p>Read or modify application configuration files.</p>
+</li>
+<li>
+<p>Tamper with <code>Realm</code> implementations or their backing data sources.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="authenticated_user_with_limited_privileges_in_scope">Authenticated User with Limited Privileges (in scope)</h3>
+<div class="paragraph">
+<p>Shiro&#8217;s authorization model defends against privilege escalation by an authenticated user. A user authenticated under one principal must not gain access to resources they are not authorized for. Applications must not allow manipulation of permission strings or other inputs that could lead to unauthorized access. Shiro&#8217;s role and permission checks are only as secure as the application&#8217;s permission model and input handling.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adversaries_out_of_scope">Adversaries Out of Scope</h3>
+<div class="paragraph">
+<p>The following adversary classes are explicitly <strong>not</strong> part of Shiro&#8217;s threat model — defending against them is the application&#8217;s or operator&#8217;s responsibility:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Application Code</strong>: As stated in <a href="#application_level_trust">Application-Level Trust</a>, Shiro trusts the code that invokes its APIs. An attacker who can execute arbitrary code in the application&#8217;s JVM has already won at Shiro&#8217;s layer.</p>
+</li>
+<li>
+<p><strong>Administrators with Configuration Access</strong>: An attacker controlling INI files, Spring beans, or other configuration sources can disable security controls. Shiro relies on operators to secure these.</p>
+</li>
+<li>
+<p><strong>Local Shell Access / Co-Tenants</strong>: An attacker with shell access to the host can read process memory, log files, and the keystore. Shiro does not defend against this; isolate Shiro-secured applications appropriately.</p>
+</li>
+<li>
+<p><strong>Compromised Realms</strong>: An attacker controlling the LDAP server, database, or other <code>Realm</code> backing data can grant arbitrary access. Realm data sources are part of the trust boundary.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="known_non_findings">Known Non-Findings</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following recurring report categories are explicitly <strong>not</strong> security vulnerabilities under Shiro&#8217;s model. Reporters should consult this list before filing — a report matching one of these will be closed with a reference back to this section.</p>
+</div>
+<div class="sect2">
+<h3 id="username_enumeration_via_differential_error_responses">Username Enumeration via Differential Error Responses</h3>
+<div class="paragraph">
+<p>By default, Shiro returns different exceptions for "unknown account" vs "incorrect password" (see <a href="#username_enumeration">Username Enumeration</a>). This is the framework&#8217;s default behavior; applications that need to prevent enumeration must configure their <code>Realm</code> to return consistent exceptions, as documented above.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="username_and_session_id_appearing_in_logs">Username and Session ID Appearing in Logs</h3>
+<div class="paragraph">
+<p>As stated in <a href="#logging">Logging</a>, principals (usernames) may appear in Shiro&#8217;s SLF4J logs, and session identifiers may appear at DEBUG level. This is by design — log content is the operator&#8217;s responsibility to secure. Plaintext passwords are not logged; that&#8217;s the property Shiro maintains.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="shiro_version_disclosure">Shiro Version Disclosure</h3>
+<div class="paragraph">
+<p>Per <a href="#version_discovery">Version Discovery</a>, Shiro does not actively prevent version disclosure through error messages or response headers. Operators who treat version disclosure as a finding must configure their web server, proxy, or custom error pages accordingly.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="deprecated_hash_algorithms_exposed_in_the_hashing_api">Deprecated Hash Algorithms Exposed in the Hashing API</h3>
+<div class="paragraph">
+<p>Shiro&#8217;s <code>Hash</code> and <code>HashService</code> APIs expose MD5, SHA-1, and other algorithms that are no longer considered safe for new password hashing. These remain available for legacy interoperability and for non-security uses (e.g., content checksums). Reports that "Shiro supports MD5" are not findings; the framework&#8217;s default for password hashing is the secure <code>PasswordService</code>. Operators must select appropriate algorithms.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="rememberme_with_weaker_authentication_guarantees">RememberMe with Weaker Authentication Guarantees</h3>
+<div class="paragraph">
+<p>Per <a href="#what_shiro_provides">What Shiro Provides</a> under <a href="#authentication_guarantees">Authentication Guarantees</a>, the RememberMe mechanism explicitly provides weaker guarantees than full authentication. Reports that RememberMe-identified subjects bypass full authentication are not findings; the security tradeoff is documented and intentional.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="pluggable_cryptography_allowing_weak_configurations">Pluggable Cryptography Allowing Weak Configurations</h3>
+<div class="paragraph">
+<p>Shiro&#8217;s <code>CipherService</code>, <code>Hash</code>, and related APIs are pluggable and accept any algorithm registered with the JCA. Configuring Shiro to use a weak cipher is an operator misconfiguration, not a framework vulnerability. Shiro&#8217;s role is to provide secure defaults and clear documentation, which it does.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="csrf_mfa_account_lockout">CSRF, MFA, Account Lockout</h3>
+<div class="paragraph">
+<p>Per <a href="#web_security">Web Security</a>, <a href="#operator_responsibilities">Operator Responsibilities</a> under <a href="#authentication_guarantees">Authentication Guarantees</a>, and elsewhere, CSRF protection, MFA, and account lockout are explicitly <strong>not</strong> built into Shiro. Operators must implement these at the application or infrastructure level. Reports that "Shiro is missing CSRF protection" are not framework vulnerabilities.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="triage_dispositions">Triage Dispositions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Shiro PMC classifies inbound vulnerability reports into one of the following dispositions. Each links to the section of this document that licenses the call.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 50%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Disposition</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+<th class="tableblock halign-left valign-top">Licensed by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VALID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The report describes a real violation of a property Shiro provides (authentication / authorization / session-handling / crypto / web-security guarantees), accessible to an in-scope adversary through an in-scope code path. Fixed via coordinated disclosure and CVE.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#authentication_guarantees">Authentication Guarantees</a>, <a href="#authorization_guarantees">Authorization Guarantees</a>, <a href="#session_management">Session Management</a>, <a href="#cryptography">Cryptography</a>, <a href="#web_security">Web Security</a>, <a href="#adversary_model">Adversary Model</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VALID-HARDENING</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No property in this model is violated, but the PMC elects to add defensive hardening (e.g., narrowing an API that&#8217;s easy to misuse). Triaged privately; fixed at PMC discretion; typically no CVE.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PMC discretion</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OUT-OF-MODEL: trusted-input</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The report requires the attacker to control a value or input Shiro treats as trusted (application code, configuration files, realm data).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#trust_boundaries">Trust Boundaries</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OUT-OF-MODEL: adversary-not-in-scope</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The report requires attacker capabilities Shiro does not defend against (local shell access, JVM control, administrator privileges).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#adversaries_out_of_scope">Adversaries Out of Scope</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BY-DESIGN: property-disclaimed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The report concerns a property Shiro explicitly does not provide (CSRF, MFA, account lockout, key management, version concealment, etc.).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#web_security">Web Security</a>, <a href="#operator_responsibilities">Operator Responsibilities</a>, <a href="#cryptography">Cryptography</a>, <a href="#version_discovery">Version Discovery</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">KNOWN-NON-FINDING</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The report matches one of the documented categories in <a href="#known_non_findings">Known Non-Findings</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#known_non_findings">Known Non-Findings</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MODEL-GAP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The report cannot be cleanly routed to any of the above. This indicates a gap in the security model itself; the PMC revises the model rather than ad-hoc-deciding the report.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">triggers a model revision</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
