@@ -99,12 +99,12 @@ By default, Shiro may reveal whether a username exists through different error r
 
 * **Hashing**: Simplified APIs for cryptographic hashing (SHA-256, SHA-512, MD5, etc.) with salt and iteration support.
 * **Encryption/Decryption**: `CipherService` implementations for symmetric encryption (AES, Blowfish, etc.).
-* **Password Hashing**: `PasswordService` for secure credential hashing with configurable algorithms.
+* **Password Hashing**: `PasswordService` for secure credential hashing with configurable algorithms (Argon2, BCrypt).
 
 === Important Notes
 
 * Shiro's cryptographic utilities are wrappers around standard Java cryptography (JCA/JCE) and `BouncyCastle` libraries.
-* **Algorithm Selection**: Operators must choose appropriate algorithms. Avoid deprecated algorithms (MD5, SHA-1 for security purposes).
+* **Algorithm Selection**: Operators must choose appropriate algorithms. Avoid deprecated algorithms (MD5, SHA-1 for security purposes). Avoid weak algorithms for passwords (use Argon2 or BCrypt with appropriate work factors).
 * **Key Management**: Shiro does not provide key management infrastructure. Secure key storage and rotation is the operator's responsibility.
 
 == Web Security
@@ -151,7 +151,7 @@ Operators should:
 . Use the latest stable Shiro release.
 . Configure TLS for all credential transmission.
 . Use strong password hashing (bcrypt or Argon2 with appropriate work factors).
-. Implement session fixation prevention.
+. Implement session fixation prevention, if not using built-in session management.
 . Review and restrict default configurations.
 
 === Defense in Depth
@@ -162,6 +162,106 @@ Shiro should be one layer in a defense-in-depth security strategy:
 * Use Web Application Firewalls (WAF) for additional request filtering.
 * Employ rate limiting and brute-force protection at the infrastructure level.
 * Conduct regular security assessments and penetration testing.
+
+== Adversary Model
+
+Shiro's security model assumes the following adversary classes:
+
+=== External Untrusted Adversary (in scope)
+
+The primary adversary Shiro defends against is an unauthenticated or authenticated-but-low-privilege network user attempting to access an application that integrates Shiro. This adversary can:
+
+* Submit arbitrary authentication credentials, session identifiers, and request data.
+* Observe authentication error responses (including timing).
+* Attempt session fixation, privilege escalation, and authorization bypass.
+
+This adversary cannot:
+
+* Run code in the application's JVM process.
+* Read or modify application configuration files.
+* Tamper with `Realm` implementations or their backing data sources.
+
+=== Authenticated User with Limited Privileges (in scope)
+
+Shiro's authorization model defends against privilege escalation by an authenticated user. A user authenticated under one principal must not gain access to resources they are not authorized for. Applications must not allow manipulation of permission strings or other inputs that could lead to unauthorized access. Shiro's role and permission checks are only as secure as the application's permission model and input handling.
+
+=== Adversaries Out of Scope
+
+The following adversary classes are explicitly *not* part of Shiro's threat model — defending against them is the application's or operator's responsibility:
+
+* **Application Code**: As stated in <<Application-Level Trust>>, Shiro trusts the code that invokes its APIs. An attacker who can execute arbitrary code in the application's JVM has already won at Shiro's layer.
+* **Administrators with Configuration Access**: An attacker controlling INI files, Spring beans, or other configuration sources can disable security controls. Shiro relies on operators to secure these.
+* **Local Shell Access / Co-Tenants**: An attacker with shell access to the host can read process memory, log files, and the keystore. Shiro does not defend against this; isolate Shiro-secured applications appropriately.
+* **Compromised Realms**: An attacker controlling the LDAP server, database, or other `Realm` backing data can grant arbitrary access. Realm data sources are part of the trust boundary.
+
+== Known Non-Findings
+
+The following recurring report categories are explicitly *not* security vulnerabilities under Shiro's model. Reporters should consult this list before filing — a report matching one of these will be closed with a reference back to this section.
+
+=== Username Enumeration via Differential Error Responses
+
+By default, Shiro returns different exceptions for "unknown account" vs "incorrect password" (see <<Username Enumeration>>). This is the framework's default behavior; applications that need to prevent enumeration must configure their `Realm` to return consistent exceptions, as documented above.
+
+=== Username and Session ID Appearing in Logs
+
+As stated in <<Logging>>, principals (usernames) may appear in Shiro's SLF4J logs, and session identifiers may appear at DEBUG level. This is by design — log content is the operator's responsibility to secure. Plaintext passwords are not logged; that's the property Shiro maintains.
+
+=== Shiro Version Disclosure
+
+Per <<Version Discovery>>, Shiro does not actively prevent version disclosure through error messages or response headers. Operators who treat version disclosure as a finding must configure their web server, proxy, or custom error pages accordingly.
+
+=== Deprecated Hash Algorithms Exposed in the Hashing API
+
+Shiro's `Hash` and `HashService` APIs expose MD5, SHA-1, and other algorithms that are no longer considered safe for new password hashing. These remain available for legacy interoperability and for non-security uses (e.g., content checksums). Reports that "Shiro supports MD5" are not findings; the framework's default for password hashing is the secure `PasswordService`. Operators must select appropriate algorithms.
+
+=== RememberMe with Weaker Authentication Guarantees
+
+Per <<What Shiro Provides>> under <<Authentication Guarantees>>, the RememberMe mechanism explicitly provides weaker guarantees than full authentication. Reports that RememberMe-identified subjects bypass full authentication are not findings; the security tradeoff is documented and intentional.
+
+=== Pluggable Cryptography Allowing Weak Configurations
+
+Shiro's `CipherService`, `Hash`, and related APIs are pluggable and accept any algorithm registered with the JCA. Configuring Shiro to use a weak cipher is an operator misconfiguration, not a framework vulnerability. Shiro's role is to provide secure defaults and clear documentation, which it does.
+
+=== CSRF, MFA, Account Lockout
+
+Per <<Web Security>>, <<Operator Responsibilities>> under <<Authentication Guarantees>>, and elsewhere, CSRF protection, MFA, and account lockout are explicitly *not* built into Shiro. Operators must implement these at the application or infrastructure level. Reports that "Shiro is missing CSRF protection" are not framework vulnerabilities.
+
+== Triage Dispositions
+
+The Shiro PMC classifies inbound vulnerability reports into one of the following dispositions. Each links to the section of this document that licenses the call.
+
+[cols="1,3,2",options="header"]
+|===
+| Disposition | Meaning | Licensed by
+
+| VALID
+| The report describes a real violation of a property Shiro provides (authentication / authorization / session-handling / crypto / web-security guarantees), accessible to an in-scope adversary through an in-scope code path. Fixed via coordinated disclosure and CVE.
+| <<Authentication Guarantees>>, <<Authorization Guarantees>>, <<Session Management>>, <<Cryptography>>, <<Web Security>>, <<Adversary Model>>
+
+| VALID-HARDENING
+| No property in this model is violated, but the PMC elects to add defensive hardening (e.g., narrowing an API that's easy to misuse). Triaged privately; fixed at PMC discretion; typically no CVE.
+| PMC discretion
+
+| OUT-OF-MODEL: trusted-input
+| The report requires the attacker to control a value or input Shiro treats as trusted (application code, configuration files, realm data).
+| <<Trust Boundaries>>
+
+| OUT-OF-MODEL: adversary-not-in-scope
+| The report requires attacker capabilities Shiro does not defend against (local shell access, JVM control, administrator privileges).
+| <<Adversaries Out of Scope>>
+
+| BY-DESIGN: property-disclaimed
+| The report concerns a property Shiro explicitly does not provide (CSRF, MFA, account lockout, key management, version concealment, etc.).
+| <<Web Security>>, <<Operator Responsibilities>>, <<Cryptography>>, <<Version Discovery>>
+
+| KNOWN-NON-FINDING
+| The report matches one of the documented categories in <<Known Non-Findings>>.
+| <<Known Non-Findings>>
+
+| MODEL-GAP
+| The report cannot be cleanly routed to any of the above. This indicates a gap in the security model itself; the PMC revises the model rather than ad-hoc-deciding the report.
+| triggers a model revision
+|===
 
 == Reporting Security Vulnerabilities
 
