@@ -30,6 +30,16 @@ A https://www.apache.org/security/committers.html[more detailed description of t
 
 == Apache Shiro Vulnerability Reports
 
+=== link:https://www.cve.org/CVERecord?id=CVE-2026-49268[CVE-2026-49268]
+A remote attacker can inject LDAP special characters into the Distinguished Name (DN) construction in `DefaultLdapRealm` class. User-supplied username input is directly concatenated into the LDAP DN template without any escaping of RFC 2253 special characters. This allows an attacker to manipulate the DN structure used for LDAP bind authentication, potentially bypassing authentication or impersonating other users.
+This issue affects all Apache Shiro versions through 2.2.0, and 3.0.0-alpha-1 when using `DefaultLdapRealm`.
+
+**Mitigation:**
+Upgrade to version 2.2.1, or 3.0.0-alpha-2 or later, which fixes the issue by escaping user-supplied DN.
+
+**Credit:**
+Apache Shiro would like to thank *zhaokaifei* for reporting this issue.
+
 === link:https://www.cve.org/CVERecord?id=CVE-2026-48589[CVE-2026-48589]
 Apache Shiro’s Jakarta EE module used the HTTP Referer header in certain cases to issue redirect after a user login. In affected versions, insufficient validation of this client-controlled value could allow an attacker to influence the redirect target in applications using the Jakarta EE module.
 This issue affects Apache Shiro from 2.0-alpha to 2.2.0, and 3.0.0-alpha-1, only when using shiro-jakarta-ee integration module.
