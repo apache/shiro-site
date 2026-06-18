@@ -316,6 +316,16 @@ securityManager.authenticator.authenticationStrategy = $authcStrategy
 ...
 ----
 
+Since Shiro 3.0.0, `AtLeastOneSuccessfulStrategy` will warn if authentication attempt fails due to a system error (e.g. a database connection failure) instead of an actual authentication failure (e.g. incorrect password). This is because in a multi-realm environment, it can be difficult to determine if an authentication failure was due to an actual authentication failure or a system error. In addition to the warning, an `AuthenticationExceptionEvent` will be published to the `EventBus` with the exception details, which can be used for logging or monitoring purposes. The warning can be disabled by setting the `warnIfAuthenticatorFailed` property to `false`.
+
+[source,ini]
+.Here is an example of shiro.ini which works only when `AtLeastOneSuccessfulStrategy` is used
+----
+[main]
+...
+securityManager.authenticator.authenticationStrategy.warnIfAuthenticatorFailed = false
+----
+
 [TIP]
 ====
 .Custom AuthenticationStrategy
