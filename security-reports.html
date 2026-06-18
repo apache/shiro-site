@@ -232,6 +232,7 @@
 <li><a href="#vulnerability_handling_process">Vulnerability Handling Process</a></li>
 <li><a href="#apache_shiro_vulnerability_reports">Apache Shiro Vulnerability Reports</a>
 <ul class="sectlevel2">
+<li><a href="#cve_2026_49268">CVE-2026-49268</a></li>
 <li><a href="#cve_2026_48589">CVE-2026-48589</a></li>
 <li><a href="#cve_2026_44598">CVE-2026-44598</a></li>
 <li><a href="#cve_2026_43827">CVE-2026-43827</a></li>
@@ -304,6 +305,21 @@ We cannot accept regular bug reports or other queries at this address.</p>
 <div class="sect1">
 <h2 id="apache_shiro_vulnerability_reports">Apache Shiro Vulnerability Reports</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="cve_2026_49268"><a href="https://www.cve.org/CVERecord?id=CVE-2026-49268">CVE-2026-49268</a></h3>
+<div class="paragraph">
+<p>A remote attacker can inject LDAP special characters into the Distinguished Name (DN) construction in <code>DefaultLdapRealm</code> class. User-supplied username input is directly concatenated into the LDAP DN template without any escaping of RFC 2253 special characters. This allows an attacker to manipulate the DN structure used for LDAP bind authentication, potentially bypassing authentication or impersonating other users.
+This issue affects all Apache Shiro versions through 2.2.0, and 3.0.0-alpha-1 when using <code>DefaultLdapRealm</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong>
+Upgrade to version 2.2.1, or 3.0.0-alpha-2 or later, which fixes the issue by escaping user-supplied DN.</p>
+</div>
+<div class="paragraph">
+<p><strong>Credit:</strong>
+Apache Shiro would like to thank <strong>zhaokaifei</strong> for reporting this issue.</p>
+</div>
+</div>
 <div class="sect2">
 <h3 id="cve_2026_48589"><a href="https://www.cve.org/CVERecord?id=CVE-2026-48589">CVE-2026-48589</a></h3>
 <div class="paragraph">
