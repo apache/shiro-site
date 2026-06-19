@@ -30,6 +30,27 @@ A https://www.apache.org/security/committers.html[more detailed description of t
 
 == Apache Shiro Vulnerability Reports
 
+=== link:https://www.cve.org/CVERecord?id=CVE-2026-56091[CVE-2026-56091]
+When using Apache Shiro with the `shiro-guice` module in a web servlet context, a specially crafted HTTP request may cause an authentication bypass.
+This vulnerability is similar to link:https://www.cve.org/CVERecord?id=CVE-2020-1957[CVE-2020-1957], except that it affects the `shiro-guice` module instead of the `shiro-spring` module.
+This issue affects all Apache Shiro versions through 2.x, and 3.0.0-alpha-1 only when using `shiro-guice` module in a web servlet context.
+
+**Mitigation:**
+Upgrade to version 3.0.0 or later, which fixes the issue.
+
+**Credit:**
+Apache Shiro would like to thank *LocalHost* for reporting this issue.
+
+=== link:https://www.cve.org/CVERecord?id=CVE-2026-49268[CVE-2026-49268]
+"Remember me" cookie age is not verified on the server. This potentially allows an attacker to intercept a valid cookie and reuse it indefinitely, even after the configured expiration time has passed.
+This issue affects all Apache Shiro versions from 1.2.4 through 2.x, and 3.0.0-alpha-1, only when RememberMe functionality is enabled.
+
+**Mitigation:**
+Upgrade to version 3.0.0 or later, which fixes the issue.
+
+**Credit:**
+Apache Shiro would like to thank *Richard Bradley* for reporting this issue.
+
 === link:https://www.cve.org/CVERecord?id=CVE-2026-49268[CVE-2026-49268]
 A remote attacker can inject LDAP special characters into the Distinguished Name (DN) construction in `DefaultLdapRealm` class. User-supplied username input is directly concatenated into the LDAP DN template without any escaping of RFC 2253 special characters. This allows an attacker to manipulate the DN structure used for LDAP bind authentication, potentially bypassing authentication or impersonating other users.
 This issue affects all Apache Shiro versions through 2.2.0, and 3.0.0-alpha-1 when using `DefaultLdapRealm`.
