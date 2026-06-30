@@ -117,9 +117,14 @@ By default, Shiro may reveal whether a username exists through different error r
 
 === Path Traversal Considerations
 
-Shiro relies on the Servlet container's path normalization. When integrating with certain frameworks or configurations:
+Shiro relies on the Servlet container's interpretation and normalization of request paths for URL-based web filter-chain matching. Shiro does not control how downstream application frameworks may subsequently decode, normalize, or route the same request.
 
-* Ensure consistent path interpretation between Shiro and your web framework.
+When integrating with web frameworks or custom routing layers (e.g. Spring):
+
+* Ensure consistent path interpretation between Shiro, the Servlet container, and your web framework, especially for encoded or otherwise ambiguous path forms.
+* Do not rely exclusively on URL-based filter-chain configuration as the only authorization boundary for security-sensitive functionality; enforce authorization within the application using Shiro's authentication and authorization APIs as well.
+* Be especially careful when using wildcard path patterns in the downstream framework like `@RequestMapping("/api/admin/**")` that may match multiple downstream routes. Ensure that Shiro's annotations and APIs are used to check permissions, not just rely on the URL pattern.
+* Where downstream routing semantics may differ from the Servlet container, consider stricter request validation at the servlet boundary, such as configuring `InvalidRequestFilter` in STRICT mode to reject ambiguous request paths before filter-chain resolution.
 * Review link:security-reports.html[Security Reports] for historical path traversal issues and mitigations.
 * Keep Shiro updated to receive security fixes.
 
@@ -225,6 +230,9 @@ Shiro's `CipherService`, `Hash`, and related APIs are pluggable and accept any a
 === CSRF, MFA, Account Lockout
 
 Per <<Web Security>>, <<Operator Responsibilities>> under <<Authentication Guarantees>>, and elsewhere, CSRF protection, MFA, and account lockout are explicitly *not* built into Shiro. Operators must implement these at the application or infrastructure level. Reports that "Shiro is missing CSRF protection" are not framework vulnerabilities.
+
+=== Path Traversal in Downstream Frameworks (e.g. Spring)
+Shiro relies on the Servlet container's interpretation and normalization of request paths for filter-chain matching. If a downstream framework interprets paths differently, this may lead to unexpected routing. Shiro cannot control downstream frameworks and operators must enforce authorization checks appropriately via Shiro's annotations and APIs. Operators must not rely solely on URL-based filter-chain configuration in combination with downstream routing for security-sensitive functionality.
 
 == Triage Dispositions
 
