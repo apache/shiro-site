@@ -260,6 +260,7 @@
 <ul class="sectlevel2">
 <li><a href="#what_shiro_provides_5">What Shiro Provides</a></li>
 <li><a href="#path_traversal_considerations">Path Traversal Considerations</a></li>
+<li><a href="#host_port_and_absolute_url_handling">Host, Port, and Absolute URL Handling</a></li>
 </ul>
 </li>
 <li><a href="#version_discovery">Version Discovery</a></li>
@@ -286,6 +287,7 @@
 <li><a href="#rememberme_with_weaker_authentication_guarantees">RememberMe with Weaker Authentication Guarantees</a></li>
 <li><a href="#pluggable_cryptography_allowing_weak_configurations">Pluggable Cryptography Allowing Weak Configurations</a></li>
 <li><a href="#csrf_mfa_account_lockout">CSRF, MFA, Account Lockout</a></li>
+<li><a href="#path_traversal_in_downstream_frameworks_e_g_spring">Path Traversal in Downstream Frameworks (e.g. Spring)</a></li>
 </ul>
 </li>
 <li><a href="#triage_dispositions">Triage Dispositions</a></li>
@@ -568,12 +570,24 @@ Operators should implement these controls at the application or infrastructure l
 <div class="sect2">
 <h3 id="path_traversal_considerations">Path Traversal Considerations</h3>
 <div class="paragraph">
-<p>Shiro relies on the Servlet container&#8217;s path normalization. When integrating with certain frameworks or configurations:</p>
+<p>Shiro relies on the Servlet container&#8217;s interpretation and normalization of request paths for URL-based web filter-chain matching. Shiro does not control how downstream application frameworks may subsequently decode, normalize, or route the same request.</p>
+</div>
+<div class="paragraph">
+<p>When integrating with web frameworks or custom routing layers (e.g. Spring):</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Ensure consistent path interpretation between Shiro and your web framework.</p>
+<p>Ensure consistent path interpretation between Shiro, the Servlet container, and your web framework, especially for encoded or otherwise ambiguous path forms.</p>
+</li>
+<li>
+<p>Do not rely exclusively on URL-based filter-chain configuration as the only authorization boundary for security-sensitive functionality; enforce authorization within the application using Shiro&#8217;s authentication and authorization APIs as well.</p>
+</li>
+<li>
+<p>Be especially careful when using wildcard path patterns in the downstream framework like <code>@RequestMapping("/api/admin/**")</code> that may match multiple downstream routes. Ensure that Shiro&#8217;s annotations and APIs are used to check permissions, not just rely on the URL pattern.</p>
+</li>
+<li>
+<p>Where downstream routing semantics may differ from the Servlet container, consider stricter request validation at the servlet boundary, such as configuring <code>InvalidRequestFilter</code> in STRICT mode to reject ambiguous request paths before filter-chain resolution.</p>
 </li>
 <li>
 <p>Review <a href="security-reports.html">Security Reports</a> for historical path traversal issues and mitigations.</p>
@@ -582,6 +596,34 @@ Operators should implement these controls at the application or infrastructure l
 <p>Keep Shiro updated to receive security fixes.</p>
 </li>
 </ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="host_port_and_absolute_url_handling">Host, Port, and Absolute URL Handling</h3>
+<div class="paragraph">
+<p>Some Shiro web features may depend on request-derived absolute URLs, including the request scheme, host, and port as interpreted by the Servlet container. In deployments behind reverse proxies, load balancers, or custom forwarding layers, operators must ensure these values are trustworthy and consistently normalized before requests reach the application.</p>
+</div>
+<div class="paragraph">
+<p>Operators should:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Ensure reverse proxies and load balancers reject, rewrite, or normalize unexpected <code>Host</code> headers and related forwarding metadata before passing requests upstream.</p>
+</li>
+<li>
+<p>Configure the Servlet container or application server to accept only expected hosts and connector ports.</p>
+</li>
+<li>
+<p>Avoid exposing application containers directly to untrusted networks unless host and port validation is enforced at the container boundary.</p>
+</li>
+<li>
+<p>Where available, configure explicit host and port settings for features that reconstruct absolute URLs or resend requests.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Applications should not assume that request-derived scheme, host, and port values are trustworthy unless the deployment boundary explicitly guarantees that property.</p>
 </div>
 </div>
 </div>
@@ -807,6 +849,12 @@ Operators should implement these controls at the application or infrastructure l
 <h3 id="csrf_mfa_account_lockout">CSRF, MFA, Account Lockout</h3>
 <div class="paragraph">
 <p>Per <a href="#web_security">Web Security</a>, <a href="#operator_responsibilities">Operator Responsibilities</a> under <a href="#authentication_guarantees">Authentication Guarantees</a>, and elsewhere, CSRF protection, MFA, and account lockout are explicitly <strong>not</strong> built into Shiro. Operators must implement these at the application or infrastructure level. Reports that "Shiro is missing CSRF protection" are not framework vulnerabilities.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="path_traversal_in_downstream_frameworks_e_g_spring">Path Traversal in Downstream Frameworks (e.g. Spring)</h3>
+<div class="paragraph">
+<p>Shiro relies on the Servlet container&#8217;s interpretation and normalization of request paths for filter-chain matching. If a downstream framework interprets paths differently, this may lead to unexpected routing. Shiro cannot control downstream frameworks and operators must enforce authorization checks appropriately via Shiro&#8217;s annotations and APIs. Operators must not rely solely on URL-based filter-chain configuration in combination with downstream routing for security-sensitive functionality.</p>
 </div>
 </div>
 </div>
