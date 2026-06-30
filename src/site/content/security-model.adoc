@@ -128,6 +128,19 @@ When integrating with web frameworks or custom routing layers (e.g. Spring):
 * Review link:security-reports.html[Security Reports] for historical path traversal issues and mitigations.
 * Keep Shiro updated to receive security fixes.
 
+=== Host, Port, and Absolute URL Handling
+
+Some Shiro web features may depend on request-derived absolute URLs, including the request scheme, host, and port as interpreted by the Servlet container. In deployments behind reverse proxies, load balancers, or custom forwarding layers, operators must ensure these values are trustworthy and consistently normalized before requests reach the application.
+
+Operators should:
+
+* Ensure reverse proxies and load balancers reject, rewrite, or normalize unexpected `Host` headers and related forwarding metadata before passing requests upstream.
+* Configure the Servlet container or application server to accept only expected hosts and connector ports.
+* Avoid exposing application containers directly to untrusted networks unless host and port validation is enforced at the container boundary.
+* Where available, configure explicit host and port settings for features that reconstruct absolute URLs or resend requests.
+
+Applications should not assume that request-derived scheme, host, and port values are trustworthy unless the deployment boundary explicitly guarantees that property.
+
 == Version Discovery
 
 Shiro does not actively prevent discovery of its version through error messages or HTTP headers. If version disclosure is a concern:
