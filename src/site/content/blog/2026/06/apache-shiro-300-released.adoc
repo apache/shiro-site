@@ -1,0 +1,75 @@
+////
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+////
+
+= 3.0.0 available
+:jbake-author: Lenny Primak
+:jbake-date: 2026-06-29 00:00:00
+:jbake-type: post
+:jbake-status: published
+:jbake-tags: blog, release
+:idprefix:
+:icons: font
+
+The Apache Shiro team is pleased to announce the release of Apache Shiro version 3.0.0.
+
+image::/images/shiro-3.0.0-release.jpg[Shiro 3.0.0 Release Logo, width="50%"]
+
+This release is available for download now.
+
+== Release Highlights
+
+This is a new major release of Apache Shiro, with many new features and improvements, culminating more than two years of work.
+
+* JDK 17 is the new minimum baseline
+* Jakarta EE 9/10/11+ (no javax.* namespace)
+* Spring 6/7+ and SpringBoot 3/4+
+* Guice 7/8+
+* Using Java Scoped values for Subject and SecurityManager instead of ThreadLocals on JDK 25+
+* Improved thread-safety of Shiro-native sessions (SimpleSession, SimpleSessionFactory, CachingSessionDAO)
+
+== Breaking API Changes
+* Made default implementation of PrincipalCollection immutable (ImmutablePrincipalCollection)
+
+== Security Enhancements
+* Case-insensitive path matching is now enabled by default (hardened by default)
+* Added NoAccessFilter and add it to the default filter chain (breaking change, hardened-by-default)
+* Enable CORS preflight requests by default
+
+== Thank you to the following contributors!
+
+* https://github.com/janitza-mage[Martin Geisse]
+* https://github.com/timtebeek[Tim te Beek]
+* https://github.com/rgcv[Rui Ventura]
+* https://github.com/nsoft[Patrick (Gus) Heck]
+
+== All changes
+
+You can learn more on link:https://github.com/apache/shiro/releases/tag/shiro-root-3.0.0[GitHub, Release 3.0.0].
+
+== Download
+
+Download and verification instructions are available link:/download.html[on our download page].
+
+== Documentation
+
+For more information on link:/documentation.html[Shiro, please read the documentation.]
+
+Enjoy!
+
+The Apache Shiro Team
