@@ -23,12 +23,7 @@
       </div>
 
       <div class="col-md-6 col-sm-6 col-padded-top col-center">
-        <div style="width: 100%; max-width: 272px; display: inline-block; text-align: center; margin-left: 50px; padding-bottom: 15px;">
-          <iframe width="310" height="233"
-                  src="https://www.youtube.com/embed/YJByiDvOhsc?rel=0"
-                  allowfullscreen>
-          </iframe>
-        </div>
+        <img style="padding-bottom: 15px;" alt="Shiro 3.0.0 release" src="images/shiro-3.0.0-release.jpg"/>
       </div>
     </div>
 
