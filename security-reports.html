@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-  2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Security Reports | Apache Shiro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Report security vulnerabilities in Apache Shiro and view the list of published CVEs with their severity, affected versions, and fixes.">
+    <meta property="og:description" content="Report security vulnerabilities in Apache Shiro and view the list of published CVEs with their severity, affected versions, and fixes.">
+    <meta name="keywords" content='security,vulnerabilities,cve,reporting'>
+    <meta name="generator" content="JBake">
+    <meta name="google-site-verification" content="QIax6uT5UX3enoU0G8Pz2pXbQ45KaQuHZ3nCh9V27mw">
+    <meta name="google-site-verification" content="ecFap6dWJgS_GCCtxmJQJ_nFYQhM6EgSpBPZDU7xsCE">
+    <meta name="google-site-verification" content="gBTYOG8lMfNb_jrWrH3kFbudpEs_WrAJ2lb2-zLRaso"/>
+    <meta name="msvalidate.01" content="0B57EB46CBFAD8FD45008D2DB6B6C68C">
+
+    <meta property="og:title" content="Security Reports | Apache Shiro"/>
+    <meta property="og:type" content="article"/>
+      <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ApacheShiro" />
+    <meta property="article:modification_time" content="2010-03-18T00:00:00Z"/>
+    <meta property="article:tag" content='security'/>
+    <meta property="article:tag" content='vulnerabilities'/>
+    <meta property="article:tag" content='cve'/>
+    <meta property="article:tag" content='reporting'/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content='https://shiro.apache.org/security-reports.html'/>
+    <meta property="og:image" content='images/shiro-featured-image.png'/>
+    <meta property="og:image:width" content='1200'/>
+    <meta property="og:image:height" content='628'/>
+    <meta property="og:site_name" content="Apache Shiro"/>
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-icons-1.13.1/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/asciidoctor.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="highlight.js-11.11.1/styles/default.min.css" rel="stylesheet">
+    <link href="css/gh-pages/gh-fork-ribbon.css" rel="stylesheet"/>
+
+    <!-- Theme toggle script (loaded early to prevent flash) -->
+    <script src="js/theme.js"></script>
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Matomo -->
+    <script>
+     var _paq = window._paq = window._paq || [];
+     /* tracker methods like "setCustomDimension" should be called before
+    "trackPageView" */
+     _paq.push(["setDoNotTrack", true]);
+     _paq.push(["disableCookies"]);
+     _paq.push(['trackPageView']);
+     _paq.push(['enableLinkTracking']);
+     (function() {
+       var u="https://analytics.apache.org/";
+       _paq.push(['setTrackerUrl', u+'matomo.php']);
+       _paq.push(['setSiteId', '2']);
+       var d=document, g=d.createElement('script'),
+    s=d.getElementsByTagName('script')[0];
+       g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+     })();
+    </script>
+    <!-- End Matomo Code -->
+  </head>
+  <body>
+    <div id="top-bar"></div>
+    <a class="github-fork-ribbon right-top" href="https://github.com/apache/shiro" title="Fork me on GitHub">Fork me on GitHub</a>
+
+    <div id="wrap">
+
+      <div class="masthead">
+        <p class="lead">
+          <a href="index.html"><img src="images/apache-shiro-logo.png" style="height:100px; width:auto; vertical-align: bottom; margin-top: 20px;" alt="Apache Shiro Logo"></a>
+          <span class="tagline">Simple. Java. Security.</span>
+          <a class="pull-right" href="https://www.apache.org/events/current-event.html">
+            <img style="padding-top: 8px" src="https://www.apache.org/events/current-event-125x125.png" alt="Apache Software Foundation Event Banner"/>
+          </a>
+        </p>
+      </div>
+
+	<!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="get-started.html">Get Started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="documentation.html">Docs</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-webapps" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Web Apps
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-webapps">
+                <li><a class="dropdown-item" href="web.html">General</a></li>
+                <li><a class="dropdown-item" href="jaxrs.html">JAX-RS</a></li>
+                <li><a class="dropdown-item" href="jakarta-ee.html">Jakarta EE</a></li>
+                <li><a class="dropdown-item" href="dependency-chain.html">Jakarta EE with Dependency Chains</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="web-features.html">Features</a></li>
+              </ul>
+            </li>
+
+            <li><a class="nav-link" href="features.html">Features</a></li>
+
+            <!-- integrations -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-integrations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Integrations
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-integrations">
+                <li><a class="dropdown-item" href="spring-boot.html">Spring</a></li>
+                <li><a class="dropdown-item" href="guice.html">Guice</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="integration.html">Third-Party Integrations</a></li>
+              </ul>
+            </li>
+
+            <!-- Community -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-community" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Community
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-community">
+                <li><a class="dropdown-item" href="forums.html">Community Forums</a></li>
+                <li><a class="dropdown-item" href="mailing-lists.html">Mailing Lists</a></li>
+                <li><a class="dropdown-item" href="articles.html">Articles</a></li>
+                <li><a class="dropdown-item" href="news.html">News</a></li>
+                <li><a class="dropdown-item" href="events.html">Events</a></li>
+                <li><a class="dropdown-item" href="troubleshooting.html">Troubleshooting & FAQ</a></li>
+                  <li><a class="dropdown-item" href="support.html">Community Support</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="commercial-support.html">Commercial Support</a></li>
+                <li><a class="dropdown-item" href="community.html">More</a></li>
+              </ul>
+            </li>
+
+            <!-- About -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-about" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                About
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-about">
+                <li><a class="dropdown-item" href="about.html">About</a></li>
+                <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a class="dropdown-item" href="security-model.html">Security Model</a></li>
+                <li><a class="dropdown-item" href="security-reports.html">Vulnerability Reports</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="d-flex justify-content-end navbar-nav mb-2 mb-lg-0">
+            <!-- The ASF -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-asf" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apache Software Foundation
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown-asf">
+                <li><a class="dropdown-item" href="https://www.apache.org/">Apache Homepage</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                <li><a class="dropdown-item" href="https://www.apache.org/security/">Security</a></li>
+              </ul>
+            </li>
+            <!-- Theme toggle -->
+            <li class="nav-item d-flex align-items-center">
+              <button id="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+                <span id="theme-icon">🌙</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+	<div class="page-header">
+		<h1>Security Reports</h1>
+	</div>
+
+
+  <div class="admonitionblock tip">
+    <table>
+      <tbody>
+        <tr>
+          <td class="icon">
+            <div class="title">Handy Hint</div>
+          </td>
+          <td class="content">
+            <div class="title">Shiro v1 version notice</div>
+            <div class="paragraph">
+              <p>As of February 28, 2024, Shiro v1 was superseded by v2.<p>
+              <p>As of June 29, 2026, Shiro v2 was superseded by v3.<p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#reporting_a_vulnerability">Reporting a vulnerability</a></li>
+<li><a href="#vulnerability_handling_process">Vulnerability Handling Process</a></li>
+<li><a href="#apache_shiro_vulnerability_reports">Apache Shiro Vulnerability Reports</a>
+<ul class="sectlevel2">
+<li><a href="#cve_2026_56091">CVE-2026-56091</a></li>
+<li><a href="#cve_2026_56130">CVE-2026-56130</a></li>
+<li><a href="#cve_2026_49268">CVE-2026-49268</a></li>
+<li><a href="#cve_2026_48589">CVE-2026-48589</a></li>
+<li><a href="#cve_2026_44598">CVE-2026-44598</a></li>
+<li><a href="#cve_2026_43827">CVE-2026-43827</a></li>
+<li><a href="#cve_2026_43828">CVE-2026-43828</a></li>
+<li><a href="#cve_2026_23903">CVE-2026-23903</a></li>
+<li><a href="#cve_2026_23901">CVE-2026-23901</a></li>
+<li><a href="#cve_2023_46749">CVE-2023-46749</a></li>
+<li><a href="#cve_2023_46750">CVE-2023-46750</a></li>
+<li><a href="#cve_2023_34478">CVE-2023-34478</a></li>
+<li><a href="#cve_2023_22602">CVE-2023-22602</a></li>
+<li><a href="#cve_2022_40664">CVE-2022-40664</a></li>
+<li><a href="#cve_2022_32532">CVE-2022-32532</a></li>
+<li><a href="#cve_2021_41303">CVE-2021-41303</a></li>
+<li><a href="#cve_2020_17523">CVE-2020-17523</a></li>
+<li><a href="#cve_2020_17510">CVE-2020-17510</a></li>
+<li><a href="#cve_2020_13933">CVE-2020-13933</a></li>
+<li><a href="#cve_2020_11989">CVE-2020-11989</a></li>
+<li><a href="#cve_2020_1957">CVE-2020-1957</a></li>
+<li><a href="#cve_2019_12422">CVE-2019-12422</a></li>
+<li><a href="#cve_2016_6802">CVE-2016-6802</a></li>
+<li><a href="#cve_2016_4437">CVE-2016-4437</a></li>
+<li><a href="#cve_2014_0074">CVE-2014-0074</a></li>
+<li><a href="#cve_2010_3863">CVE-2010-3863</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="reporting_a_vulnerability">Reporting a vulnerability</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We strongly encourage people to report security vulnerabilities privately to our security list before disclosing them in a public forum.</p>
+</div>
+<div class="paragraph">
+<p>Please note that the e-mail address below should only be used for reporting undisclosed security vulnerabilities in Apache Shiro and managing the process of fixing such vulnerabilities.
+We cannot accept regular bug reports or other queries at this address.</p>
+</div>
+<div class="paragraph">
+<p><a href="mailto:security@shiro.apache.org">security@shiro.apache.org</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="vulnerability_handling_process">Vulnerability Handling Process</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>An overview of the vulnerability handling process is:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The reporter reports the vulnerability privately to <a href="mailto:security@shiro.apache.org">security@shiro.apache.org</a>.</p>
+</li>
+<li>
+<p>The Apache Shiro PMC team works privately with the reporter to resolve the vulnerability.</p>
+</li>
+<li>
+<p>A new release of the Apache Shiro concerned is made that includes the fix.</p>
+</li>
+<li>
+<p>The vulnerability is publicly announced.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A <a href="https://www.apache.org/security/committers.html">more detailed description of the process</a> has been written for committers. Reporters of security vulnerabilities may also find it useful.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="apache_shiro_vulnerability_reports">Apache Shiro Vulnerability Reports</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="cve_2026_56091"><a href="https://www.cve.org/CVERecord?id=CVE-2026-56091">CVE-2026-56091</a></h3>
+<div class="paragraph">
+<p>When using Apache Shiro with the <code>shiro-guice</code> module in a web servlet context, a specially crafted HTTP request may cause an authentication bypass.
+This vulnerability is similar to <a href="https://www.cve.org/CVERecord?id=CVE-2020-1957">CVE-2020-1957</a>, except that it affects the <code>shiro-guice</code> module instead of the <code>shiro-spring</code> module.
+This issue affects all Apache Shiro versions through 2.x, and 3.0.0-alpha-1 only when using <code>shiro-guice</code> module in a web servlet context.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong>
+Upgrade to version 3.0.0 or later, which fixes the issue.</p>
+</div>
+<div class="paragraph">
+<p><strong>Credit:</strong>
+Apache Shiro would like to thank <strong>LocalHost</strong> for reporting this issue.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2026_56130"><a href="https://www.cve.org/CVERecord?id=CVE-2026-56130">CVE-2026-56130</a></h3>
+<div class="paragraph">
+<p>"Remember me" cookie age is not verified on the server. This potentially allows an attacker to intercept a valid cookie and reuse it indefinitely, even after the configured expiration time has passed.
+This issue affects all Apache Shiro versions from 1.2.4 through 2.x, and 3.0.0-alpha-1, only when RememberMe functionality is enabled.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong>
+Upgrade to version 3.0.0 or later, which fixes the issue.</p>
+</div>
+<div class="paragraph">
+<p><strong>Credit:</strong>
+Apache Shiro would like to thank <strong>Richard Bradley</strong> for reporting this issue.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2026_49268"><a href="https://www.cve.org/CVERecord?id=CVE-2026-49268">CVE-2026-49268</a></h3>
+<div class="paragraph">
+<p>A remote attacker can inject LDAP special characters into the Distinguished Name (DN) construction in <code>DefaultLdapRealm</code> class. User-supplied username input is directly concatenated into the LDAP DN template without any escaping of RFC 2253 special characters. This allows an attacker to manipulate the DN structure used for LDAP bind authentication, potentially bypassing authentication or impersonating other users.
+This issue affects all Apache Shiro versions through 2.2.0, and 3.0.0-alpha-1 when using <code>DefaultLdapRealm</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong>
+Upgrade to version 2.2.1, or 3.0.0-alpha-2 or later, which fixes the issue by escaping user-supplied DN.</p>
+</div>
+<div class="paragraph">
+<p><strong>Credit:</strong>
+Apache Shiro would like to thank <strong>zhaokaifei</strong> for reporting this issue.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2026_48589"><a href="https://www.cve.org/CVERecord?id=CVE-2026-48589">CVE-2026-48589</a></h3>
+<div class="paragraph">
+<p>Apache Shiro’s Jakarta EE module used the HTTP Referer header in certain cases to issue redirect after a user login. In affected versions, insufficient validation of this client-controlled value could allow an attacker to influence the redirect target in applications using the Jakarta EE module.
+This issue affects Apache Shiro from 2.0-alpha to 2.2.0, and 3.0.0-alpha-1, only when using shiro-jakarta-ee integration module.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong>
+Upgrade to version 2.2.1, or 3.0.0-alpha-2 or later, which fixes the issue by validating the Referer header and restricting redirects only to relative paths within the current application context.</p>
+</div>
+<div class="paragraph">
+<p><strong>Credit:</strong>
+Apache Shiro would like to thank <strong>Bartlomiej Dmitruk</strong> for reporting this issue.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2026_44598"><a href="https://www.cve.org/CVERecord?id=CVE-2026-44598">CVE-2026-44598</a></h3>
+<div class="paragraph">
+<p>With valid login credentials, URL Redirection to Untrusted Site ('Open Redirect'), Server-Side Request Forgery (SSRF) vulnerability in Apache Shiro.
+After successful login, Jakarta EE integration module uses shiroSavedRequest cookie to redirect to a particular web page after login. This cookie was not validated, and can be forged to send an HTTP GET request from the server itself to an arbitrary URL from the cookie.
+This issue affects Apache Shiro from 2.0-alpha to 2.1.0, and 3.0.0-alpha-1, only when using shiro-jakarta-ee integration module.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong>
+Upgrade to version 2.2.0, or 3.0.0-alpha-2 or later, which fixes the issue by encrypting the cookie.</p>
+</div>
+<div class="paragraph">
+<p><strong>Credit:</strong>
+Apache Shiro would like to thank <strong>James Love</strong> for reporting this issue.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2026_43827"><a href="https://www.cve.org/CVERecord?id=CVE-2026-43827">CVE-2026-43827</a></h3>
+<div class="paragraph">
+<p>Default configurations of Apache Shiro have a session fixation vulnerability. This issue affects Apache Shiro from 1.0 to 2.1.0, and 3.0.0-alpha-1. In the affected versions, when a session already exists, it is not invalidated upon successful login, nor is a new session being generated with a new ID.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong>
+Upgrade to version 2.2.0, 3.0.0-alpha-2 or later, which fixes the issue by invalidating the existing session and creating a new session with a new ID upon successful login.</p>
+</div>
+<div class="paragraph">
+<p><strong>Credit:</strong>
+Apache Shiro would like to thank <strong>Rasmus Moorats</strong> for reporting this issue.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2026_43828"><a href="https://www.cve.org/CVERecord?id=CVE-2026-43828">CVE-2026-43828</a></h3>
+<div class="paragraph">
+<p>Default configurations of Apache Shiro send sensitive cookies in HTTPS session without 'Secure' attribute. This issue affects Apache Shiro from 1.0 to 2.1.0, and 3.0.0-alpha-1.
+In the affected versions, Shiro-native session manager, as well as Remember-Me manager sends JSESSIONID and rememberMe cookies without <code>secure</code> attribute by default.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong>
+Upgrade to version 2.2.0, 3.0.0-alpha-2 or later, which fixes the issue by setting the <code>secure</code> attribute.</p>
+</div>
+<div class="paragraph">
+<p><strong>Credit:</strong>
+Apache Shiro would like to thank <strong>Meteor_Kai</strong> for reporting this issue.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2026_23903"><a href="https://www.cve.org/CVERecord?id=CVE-2026-23903">CVE-2026-23903</a></h3>
+<div class="paragraph">
+<p>If static files are served from a case-insensitive filesystem,
+such as default macOS setup, static files may be accessed by varying the case of the filename in the request.
+If only lower-case (common default) filters are present in Shiro, they may be bypassed this way.
+The issue only affects static files.</p>
+</div>
+<div class="paragraph">
+<p>Shiro 2.1.0 and later has a new parameters to remediate this issue
+shiro.ini: <code>filterChainResolver.caseInsensitive = true</code>
+application.properties: <code>shiro.caseInsensitive=true</code></p>
+</div>
+<div class="paragraph">
+<p>Shiro 3.0.0 and later (upcoming) makes this the default.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong> Upgrade to version 2.1.0 or later, which fixes the issue.</p>
+</div>
+<div class="paragraph">
+<p><strong>Credit:</strong>
+Apache Shiro would like to thank <strong>Jesse Yang</strong> for reporting this issue.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2026_23901"><a href="https://www.cve.org/CVERecord?id=CVE-2026-23901">CVE-2026-23901</a></h3>
+<div class="paragraph">
+<p>Prior to Shiro 2.1.0, code paths for non-existent vs. existing users are different enough,
+that a brute-force attack may be able to tell, by timing the requests only, determine if
+the request failed because of a non-existent user vs. wrong password.<br>
+The most likely attack vector is a local attack only.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong> Upgrade to version 2.1.0 or later, which fixes the issue, or ensure that
+the infrastructure-level mitigations are in place to prevent brute-force attacks, such as rate-limiting or account lockout.</p>
+</div>
+<div class="paragraph">
+<p><strong>Credit:</strong>
+Apache Shiro would like to thank <strong>4ra1n</strong> and <strong>Y4tacker</strong> for reporting this issue.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2023_46749"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-46749">CVE-2023-46749</a></h3>
+<div class="paragraph">
+<p>Apache Shiro before 1.13.0 or 2.0.0-alpha-4, may be susceptible to a path traversal attack that results in an authentication bypass when used together with path rewriting</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong> Update to Apache Shiro 1.13.0+ or 2.0.0-alpha-4+, or ensure <code>blockSemicolon</code> is enabled (this is the default).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2023_46750"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-46750">CVE-2023-46750</a></h3>
+<div class="paragraph">
+<p>URL Redirection to Untrusted Site ('Open Redirect') vulnerability when "form" authentication is used in Apache Shiro.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong> Update to Apache Shiro 1.13.0+ or 2.0.0-alpha-4+.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2023_34478"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-34478">CVE-2023-34478</a></h3>
+<div class="paragraph">
+<p>Apache Shiro, before 1.12.0 or 2.0.0-alpha-3, may be susceptible to a path traversal attack that results in an authentication bypass when used together with APIs or other web frameworks that route requests based on non-normalized requests.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong> Update to Apache Shiro 1.12.0+ or 2.0.0-alpha-3+.</p>
+</div>
+<div class="paragraph">
+<p><strong>Credit:</strong>
+Apache Shiro would like to thank <strong>swifty tk</strong> for reporting this issue.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2023_22602"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-22602">CVE-2023-22602</a></h3>
+<div class="paragraph">
+<p>When using Apache Shiro before 1.11.0 together with Spring Boot 2.6+, a specially crafted HTTP request may cause an authentication bypass.
+The authentication bypass occurs when Shiro and Spring Boot are using different pattern-matching techniques. Both Shiro and Spring Boot &lt; 2.6 default to Ant style pattern matching.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong> Update to Apache Shiro 1.11.0, or set the following Spring Boot configuration value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">spring.mvc.pathmatch.matching-strategy = ant_path_matcher</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Credit:</strong>
+Apache Shiro would like to thank v3ged0ge and Adamytd for reporting this issue.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2022_40664"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-40664">CVE-2022-40664</a></h3>
+<div class="paragraph">
+<p>Apache Shiro before 1.10.0, Authentication Bypass Vulnerability in Shiro when forwarding or including via RequestDispatcher.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2022_32532"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-32532">CVE-2022-32532</a></h3>
+<div class="paragraph">
+<p>Apache Shiro before 1.9.1, A RegexRequestMatcher can be misconfigured to be bypassed on some servlet containers. Applications using RegExPatternMatcher with <code>.</code> in the regular expression are possibly vulnerable to an authorization bypass.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2021_41303"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-41303">CVE-2021-41303</a></h3>
+<div class="paragraph">
+<p>Apache Shiro before 1.8.0, when using Apache Shiro with Spring Boot, a specially crafted HTTP request may cause an authentication bypass.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2020_17523"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-17523">CVE-2020-17523</a></h3>
+<div class="paragraph">
+<p>Apache Shiro before 1.7.1, when using Apache Shiro with Spring, a specially crafted HTTP request may cause an authentication bypass.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2020_17510"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-17510">CVE-2020-17510</a></h3>
+<div class="paragraph">
+<p>Apache Shiro before 1.7.0, when using Apache Shiro with Spring, a specially crafted HTTP request may cause an authentication bypass.</p>
+</div>
+<div class="paragraph">
+<p>If you are NOT using Shiro&#8217;s Spring Boot Starter (<code>shiro-spring-boot-web-starter</code>), you must configure add the <a href="/spring-framework.html#web_applications"><code>ShiroRequestMappingConfig</code> autoconfiguration to your application</a> or configure the <a href="https://github.com/apache/shiro/blob/shiro-root-1.7.0/support/spring/src/main/java/org/apache/shiro/spring/web/config/ShiroRequestMappingConfig.java#L28-L30">equivalent manually</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2020_13933"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-13933">CVE-2020-13933</a></h3>
+<div class="paragraph">
+<p>Apache Shiro before 1.6.0, when using Apache Shiro, a specially crafted HTTP request may cause an authentication bypass.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2020_11989"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-11989">CVE-2020-11989</a></h3>
+<div class="paragraph">
+<p>Apache Shiro before 1.5.3, when using Apache Shiro with Spring dynamic controllers, a specially crafted request may cause an authentication bypass.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2020_1957"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-1957">CVE-2020-1957</a></h3>
+<div class="paragraph">
+<p>Apache Shiro before 1.5.2, when using Apache Shiro with Spring dynamic controllers, a specially crafted request may cause an authentication bypass.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2019_12422"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-12422">CVE-2019-12422</a></h3>
+<div class="paragraph">
+<p>Apache Shiro before 1.4.2, when using the default "remember me" configuration, cookies could be susceptible to a padding attack.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2016_6802"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-6802">CVE-2016-6802</a></h3>
+<div class="paragraph">
+<p>Apache Shiro before 1.3.2 allows attackers to bypass intended servlet filters and gain access by leveraging use of a non-root servlet context path.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2016_4437"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-4437">CVE-2016-4437</a></h3>
+<div class="paragraph">
+<p>Apache Shiro before 1.2.5, when a cipher key has not been configured for the "remember me" feature, allows remote attackers to execute arbitrary code or bypass intended access restrictions via an unspecified request parameter.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2014_0074"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0074">CVE-2014-0074</a></h3>
+<div class="paragraph">
+<p>Apache Shiro 1.x before 1.2.3, when using an LDAP server with unauthenticated bind enabled, allows remote attackers to bypass authentication via an empty (1) username or (2) password.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cve_2010_3863"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2010-3863">CVE-2010-3863</a></h3>
+<div class="paragraph">
+<p>Apache Shiro before 1.1.0, and JSecurity 0.9.x, does not canonicalize URI paths before comparing them to entries in the shiro.ini file, which allows remote attackers to bypass intended access restrictions via a crafted request, as demonstrated by the /./account/index.jsp URI.</p>
+</div>
+</div>
+</div>
+</div>
+	<hr />
+
+</div> 
+
+    <div class="footer-padding"></div>
+
+    <div class="container-fluid pt-2 border-top" id="custom-footer">
+      <footer class="row justify-content-between align-items-center">
+        <div class=" col-md-5">
+          <div class="copyright-footer justify-content-start">
+            <a href="https://www.apache.org/foundation/contributing.html">Donate to the ASF</a>&nbsp;|&nbsp;
+            <a href="https://www.apache.org/licenses/LICENSE-2.0.html">License</a>&nbsp;
+            <p class="text-muted">Copyright &copy; 2008-2026 The Apache Software Foundation</p>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center col-md-1">
+          <a class="btn btn-social"><span class="social-icon social-twitter"><i class="bi bi-twitter"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-facebook"><i class="bi bi-facebook"></i></span></a>
+          <a class="btn btn-social"><span class="social-icon social-linkedin"><i class="bi bi-linkedin"></i></span></a>
+        </div>
+
+        <div class="d-flex justify-content-end col-md-4" id="editThisPage">
+          <input type="hidden" id="ghEditPage" value="https://github.com/apache/shiro-site/edit/main/src/site/content/security-reports.adoc"/>
+        </div>
+
+        <div class="d-flex col-md-2 justify-content-end" style="position: relative">
+          <div class="footer-shield"></div>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="highlight.js-11.11.1/highlight.min.js"></script>
+    <script src="js/shiro.js"></script>
+
+    <script>
+        docReady(
+          addPageEditLink()
+      );
+    </script>
+    <script>hljs.highlightAll();</script>
+
+    </body>
+</html>
