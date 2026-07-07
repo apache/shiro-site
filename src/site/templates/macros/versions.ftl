@@ -18,6 +18,7 @@
             <div class="title">Shiro v1 version notice</div>
             <div class="paragraph">
               <p>As of February 28, 2024, Shiro v1 was superseded by v2.<p>
+              <p>As of June 29, 2026, Shiro v2 was superseded by v3.<p>
               <#if (sourcepage)?? && (sourcepage)?is_string && (sourcepage) != "" && hasv2 == true>
                 <p>
                   <a href="./v2/${sourcepage}">Read this page in the v2 documentation</a>.

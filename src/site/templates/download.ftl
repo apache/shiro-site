@@ -15,13 +15,13 @@
   <#assign displayReleases=((content.releases).versions)![] />
   <#assign downloadUrl="https://www.apache.org/dyn/closer.lua/shiro/" />
   <#assign appendToGpg=".txt" />
-  <#assign buildRequirements="The source bundle requires JDK 11+ and Maven 3.8+ to build:"/>
+  <#assign buildRequirements="The source bundle requires JDK 25+ and Maven 3.9+ to build:"/>
 <#else>
   <#-- if not releases are given using :jbake-release:, assume oldReleases (release-archive.html). -->
   <#assign displayReleases=versions.oldReleases />
   <#assign downloadUrl="https://archive.apache.org/dist/shiro/" />
   <#assign appendToGpg="" />
-  <#assign buildRequirements="The source bundle requires JDK 1.8 and Maven 3.0.3+ to build:"/>
+  <#assign buildRequirements="The source bundle requires JDK 11 and Maven 3.8+ to build:"/>
 </#if>
 
 <#assign downloadHashUrl="https://downloads.apache.org/shiro/" />
