@@ -4,7 +4,7 @@
   <subtitle>Simple. Java. Security.</subtitle>
   <link href="https://shiro.apache.org/"/>
   <link rel="self" href="https://shiro.apache.org/feed.xml" />
-  <updated>2026-06-30T00:58:00Z</updated>
+  <updated>2026-07-07T00:50:16Z</updated>
 
   <author>
     <name>Les Hazlewood</name>
@@ -34,6 +34,152 @@
   <generator uri="https://jbake.org/">JBake.org</generator>
   <icon>/images/favicon128.png</icon>
   <logo>/images/apache-shiro-logo.png</logo>
+
+  <entry>
+    <title>3.0.0 available</title>
+    <link href="https://shiro.apache.org/blog/2026/06/apache-shiro-300-released.html"/>
+    <id>https://shiro.apache.org/blog/2026/06/apache-shiro-300-released.html</id>
+    <updated>2026-06-29T00:00:00Z</updated>
+    <author>
+      <name>Lenny Primak</name>
+    </author>
+    <content type="html">
+      &lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Apache Shiro team is pleased to announce the release of Apache Shiro version 3.0.0.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/shiro-3.0.0-release.jpg&quot; alt=&quot;Shiro 3.0.0 Release Logo&quot; width=&quot;50%&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This release is available for download now.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;release_highlights&quot;&gt;Release Highlights&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This is a new major release of Apache Shiro, with many new features and improvements, culminating more than two years of work.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;JDK 17 is the new minimum baseline&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Jakarta EE 9/10/11+ (no javax.* namespace)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Spring 6/7+ and SpringBoot 3/4+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Guice 7/8+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Using Java Scoped values for Subject and SecurityManager instead of ThreadLocals on JDK 25+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Improved thread-safety of Shiro-native sessions (SimpleSession, SimpleSessionFactory, CachingSessionDAO)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;breaking_api_changes&quot;&gt;Breaking API Changes&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Made default implementation of PrincipalCollection immutable (ImmutablePrincipalCollection)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;security_enhancements&quot;&gt;Security Enhancements&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Case-insensitive path matching is now enabled by default (hardened by default)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Added NoAccessFilter and add it to the default filter chain (breaking change, hardened-by-default)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Enable CORS preflight requests by default&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;end_of_life_notice&quot;&gt;End-of-life notice&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Apache Shiro 1.x and 2.x are now considered end-of-life. If support for these versions is required, please check &lt;a href=&quot;/commercial-support.html&quot;&gt;Commercial Support&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;thank_you_to_the_following_contributors&quot;&gt;Thank you to the following contributors!&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/janitza-mage&quot;&gt;Martin Geisse&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/timtebeek&quot;&gt;Tim te Beek&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/rgcv&quot;&gt;Rui Ventura&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/nsoft&quot;&gt;Patrick (Gus) Heck&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;all_changes&quot;&gt;All changes&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You can learn more on &lt;a href=&quot;https://github.com/apache/shiro/releases/tag/shiro-root-3.0.0&quot;&gt;GitHub, Release 3.0.0&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;download&quot;&gt;Download&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Download and verification instructions are available &lt;a href=&quot;/download.html&quot;&gt;on our download page&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;documentation&quot;&gt;Documentation&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For more information on &lt;a href=&quot;/documentation.html&quot;&gt;Shiro, please read the documentation.&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Enjoy!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Apache Shiro Team&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+    </content>
+  </entry>
 
   <entry>
     <title>2.2.1 available</title>
@@ -867,86 +1013,6 @@
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;You can learn more on &lt;a href=&quot;https://github.com/apache/shiro/releases/tag/shiro-root-2.0.1&quot;&gt;GitHub, Release 2.0.1&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;download&quot;&gt;Download&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Download and verification instructions are available &lt;a href=&quot;/download.html&quot;&gt;on our download page&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;documentation&quot;&gt;Documentation&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;For more information on &lt;a href=&quot;/documentation.html&quot;&gt;Shiro, please read the documentation.&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Enjoy!&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The Apache Shiro Team&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-    </content>
-  </entry>
-
-  <entry>
-    <title>2.0.0 available</title>
-    <link href="https://shiro.apache.org/blog/2024/02/apache-shiro-200-released.html"/>
-    <id>https://shiro.apache.org/blog/2024/02/apache-shiro-200-released.html</id>
-    <updated>2024-02-28T00:00:00Z</updated>
-    <author>
-      <name>Lenny Primak</name>
-    </author>
-    <content type="html">
-      &lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The Apache Shiro team is pleased to announce the release of Apache Shiro version 2.0.0.
-This is the first major release for Shiro 2.x&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This release is available for download now.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;release_highlights&quot;&gt;Release Highlights&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;ulist&quot;&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Java 11 is the minimum supported JVM version&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Stronger default password hashing algorithms (Argon2 and BCrypt)&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Jakarta EE 10 support (Java/Jakarta EE 8 is also supported)&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;New Jakarta EE integration module (see &lt;a href=&quot;https://shiro.apache.org/jakarta-ee.html&quot;&gt;Jakarta EE Integration&lt;/a&gt; for more information)&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;SpringBoot 3.x support (SpringBoot 2.x is also supported)&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Automatic form resubmission when session expired (Jakarta EE only)&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;all_changes&quot;&gt;All changes&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;You can learn more on &lt;a href=&quot;https://github.com/apache/shiro/releases/tag/shiro-root-2.0.0&quot;&gt;GitHub, Release 2.0.0&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
