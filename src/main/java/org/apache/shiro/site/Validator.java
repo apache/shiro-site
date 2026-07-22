@@ -18,6 +18,7 @@
  */
 package org.apache.shiro.site;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -29,6 +30,9 @@ import java.util.List;
 
 public final class Validator implements Runnable {
     private final Path content;
+
+    // JBake headers are in the first few lines, no need to read entire files
+    private static final int MAX_HEADER_LINES = 50;
 
     private Validator(final Path content) {
         this.content = content;
@@ -61,25 +65,40 @@ public final class Validator implements Runnable {
     }
 
     private void doValidateContent(final Path file, final List<String> errors) throws IOException {
-        final var lines = Files.readAllLines(file); // don't use asciidoctorj to parse properly the adoc, it is way too slow to start
-        if (missDate(lines) &&
-                isNotRedirect(lines) &&
-                isNotTODO(lines)) {
-            errors.add("Missing date in '" + content.relativize(file) + "'");
+        // Only read header lines - JBake metadata is always at the top
+        // This avoids reading entire files which can be hundreds of lines
+        try (BufferedReader reader = Files.newBufferedReader(file)) {
+            String line;
+            int lineCount = 0;
+            boolean hasDate = false;
+            boolean isRedirect = false;
+            boolean hasTodo = false;
+
+            while ((line = reader.readLine()) != null && lineCount < MAX_HEADER_LINES) {
+                lineCount++;
+
+                if (line.startsWith(":jbake-date:")) {
+                    hasDate = true;
+                    return; // valid, no need to check further
+                }
+                if (":jbake-type: redirect".equals(line)) {
+                    isRedirect = true;
+                    return; // redirect pages don't need date validation
+                }
+                if ("TODO".equals(line)) {
+                    hasTodo = true;
+                }
+            }
+
+            // If page is a TODO stub (small file with TODO marker), skip validation
+            if (lineCount < 10 && hasTodo) {
+                return;
+            }
+
+            if (!hasDate && !isRedirect) {
+                errors.add("Missing date in '" + content.relativize(file) + "'");
+            }
         }
-    }
-
-    // if the page is not written, no big deal to be broken
-    private boolean isNotTODO(final List<String> lines) {
-        return !(lines.size() < 10 && lines.contains("TODO"));
-    }
-
-    private boolean isNotRedirect(final List<String> lines) {
-        return lines.stream().noneMatch(":jbake-type: redirect"::equals);
-    }
-
-    private boolean missDate(final List<String> lines) {
-        return lines.stream().noneMatch(l -> l.startsWith(":jbake-date:"));
     }
 
     public static void main(final String... args) throws IOException {
