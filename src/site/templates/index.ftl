@@ -23,7 +23,7 @@
       </div>
 
       <div class="col-md-6 col-sm-6 col-padded-top col-center">
-        <img style="padding-bottom: 15px;" alt="Shiro 3.0.0 release" src="images/shiro-3.0.0-release.jpg"/>
+        <img style="padding-bottom: 15px;" alt="Shiro 3.0.1 release" src="images/shiro-3.0.1-release.jpg"/>
       </div>
     </div>
 
