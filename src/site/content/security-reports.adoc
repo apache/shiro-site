@@ -30,6 +30,18 @@ A https://www.apache.org/security/committers.html[more detailed description of t
 
 == Apache Shiro Vulnerability Reports
 
+=== link:https://www.cve.org/CVERecord?id=CVE-2026-58301[CVE-2026-58301]
+When Apache Shiro is used with the Jakarta EE integration module, a low-privileged user can craft an HTTP request that causes the server to initiate a connection to an attacker-controlled URL and transmit attacker-controlled data. This vulnerability affects Apache Shiro versions 2.x through 3.0.0 only in deployments that use the Jakarta EE integration module.
+
+**Mitigation:**
+Upgrade to version 3.0.1 or later, which fixes the issue. +
+Alternatively, you can set the `org.apache.shiro.form-resubmit-host` (String) and `org.apache.shiro.form-resubmit-port` (Integer) system properties to restrict the host and port that Shiro will connect to when resubmitting a form.
+
+**Credit:**
+Apache Shiro would like to thank the following people for reporting this issue: *https://lzhou1110.github.io/[Liyi]*, *https://zyy0530.github.io/[Ziyue]*,
+*https://str1ckl4nd.github.io/[Strick]*, *http://maurice.busystar.org/[Maurice]*, and *https://7thparkk.github.io/[Chenchen]*.
+We would also like to thank *Andrea Cosentino* for finding a weakness in the remediation and reporting it to us.
+
 === link:https://www.cve.org/CVERecord?id=CVE-2026-56091[CVE-2026-56091]
 When using Apache Shiro with the `shiro-guice` module in a web servlet context, a specially crafted HTTP request may cause an authentication bypass.
 This vulnerability is similar to link:https://www.cve.org/CVERecord?id=CVE-2020-1957[CVE-2020-1957], except that it affects the `shiro-guice` module instead of the `shiro-spring` module.
