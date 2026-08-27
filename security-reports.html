@@ -233,6 +233,7 @@
 <li><a href="#vulnerability_handling_process">Vulnerability Handling Process</a></li>
 <li><a href="#apache_shiro_vulnerability_reports">Apache Shiro Vulnerability Reports</a>
 <ul class="sectlevel2">
+<li><a href="#cve_2026_58301">CVE-2026-58301</a></li>
 <li><a href="#cve_2026_56091">CVE-2026-56091</a></li>
 <li><a href="#cve_2026_56130">CVE-2026-56130</a></li>
 <li><a href="#cve_2026_49268">CVE-2026-49268</a></li>
@@ -308,6 +309,23 @@ We cannot accept regular bug reports or other queries at this address.</p>
 <div class="sect1">
 <h2 id="apache_shiro_vulnerability_reports">Apache Shiro Vulnerability Reports</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="cve_2026_58301"><a href="https://www.cve.org/CVERecord?id=CVE-2026-58301">CVE-2026-58301</a></h3>
+<div class="paragraph">
+<p>When Apache Shiro is used with the Jakarta EE integration module, a low-privileged user can craft an HTTP request that causes the server to initiate a connection to an attacker-controlled URL and transmit attacker-controlled data. This vulnerability affects Apache Shiro versions 2.x through 3.0.0 only in deployments that use the Jakarta EE integration module.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mitigation:</strong>
+Upgrade to version 3.0.1 or later, which fixes the issue.<br>
+Alternatively, you can set the <code>org.apache.shiro.form-resubmit-host</code> (String) and <code>org.apache.shiro.form-resubmit-port</code> (Integer) system properties to restrict the host and port that Shiro will connect to when resubmitting a form.</p>
+</div>
+<div class="paragraph">
+<p><strong>Credit:</strong>
+Apache Shiro would like to thank the following people for reporting this issue: <strong><a href="https://lzhou1110.github.io/">Liyi</a></strong>, <strong><a href="https://zyy0530.github.io/">Ziyue</a></strong>,
+<strong><a href="https://str1ckl4nd.github.io/">Strick</a></strong>, <strong><a href="http://maurice.busystar.org/">Maurice</a></strong>, and <strong><a href="https://7thparkk.github.io/">Chenchen</a></strong>.
+We would also like to thank <strong>Andrea Cosentino</strong> for finding a weakness in the remediation and reporting it to us.</p>
+</div>
+</div>
 <div class="sect2">
 <h3 id="cve_2026_56091"><a href="https://www.cve.org/CVERecord?id=CVE-2026-56091">CVE-2026-56091</a></h3>
 <div class="paragraph">
