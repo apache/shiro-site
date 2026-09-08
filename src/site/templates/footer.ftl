@@ -35,7 +35,12 @@
     </div>
 
 
-    <!-- Le javascript
+    <#if config.site_scarf_trackingid?has_content>
+        <img referrerpolicy="no-referrer-when-downgrade"
+             src="https://static.scarf.sh/a.png?x-pxid=${config.site_scarf_trackingid}" />
+    </#if>
+
+<!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>js/bootstrap.min.js"></script>
