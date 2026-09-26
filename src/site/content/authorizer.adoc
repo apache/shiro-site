@@ -1,8 +1,146 @@
-= Authorizer
-:jbake-type: lend_a_hand
+[#Authorizer-UnderstandingAuthorizers]
+= Apache Shiro Authorizers
+:jbake-date: 2010-03-18 00:00:00
+:jbake-type: page
 :jbake-status: published
-:jbake-tags: documentation, todo, lend-a-hand
+:jbake-tags: authorizer, authorization, access-control, permissions, roles
+:jbake-description: Understanding Apache Shiro Authorizers - the component that determines what authenticated users are allowed to do. Learn how Authorizers work with Realms to evaluate permissions and roles.
 :idprefix:
 :icons: font
+:toc:
 
-TODO
+An `Authorizer` is a component responsible for determining whether a user is allowed to perform a certain action.
+It evaluates whether a `Subject` has the necessary permissions or roles to access a resource or perform an operation.
+
+While the link:/authorization.html[Authorization] documentation explains the concepts and workflow of access control in Shiro,
+the Authorizer represents the actual implementation component that performs access control decisions.
+
+[#Authorizer-Role]
+== Role in the SecurityManager
+
+The link:/securitymanager.html[SecurityManager] does not perform authorization checks directly.
+Instead, it delegates authorization decisions to its internal `Authorizer` instance.
+When a link:/subject.html[Subject] calls authorization methods such as
+link:/static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRole(java.lang.String)[`hasRole(role)`],
+link:/static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted(org.apache.shiro.authz.Permission)[`isPermitted(permission)`],
+or their variants, the SecurityManager delegates to the Authorizer.
+
+The Authorizer determines whether the Subject is permitted to perform the requested action by checking the Subject's roles and permissions.
+If the Subject has the necessary role or permission, the authorization check passes.
+If not, an link:/static/current/apidocs/org/apache/shiro/authz/AuthorizationException.html[`AuthorizationException`] may be thrown.
+
+[#Authorizer-ModularRealmAuthorizer]
+== ModularRealmAuthorizer
+
+Shiro uses the link:/static/current/apidocs/org/apache/shiro/authz/ModularRealmAuthorizer.html[`ModularRealmAuthorizer`] 
+by default.
+This implementation supports coordinating one or more link:/realm.html[Realms] during the authorization process.
+
+When an authorization check is performed, the ModularRealmAuthorizer:
+
+* Iterates through configured Realms
+* For each Realm that implements the `Authorizer` interface, calls the corresponding authorization method
+  (`hasRole*`, `checkRole*`, `isPermitted*`, or `checkPermission*`)
+* Aggregates and evaluates the results according to Shiro's authorization semantics
+* Returns the authorization decision to the caller
+
+It is important to note that the ModularRealmAuthorizer treats Realms differently depending on whether they implement the `Authorizer` interface.
+If a Realm does not implement `Authorizer`, it is not consulted for authorization checks.
+
+[#Authorizer-PermissionAndRoleChecks]
+== Permission and Role Checks
+
+The Authorizer performs two types of authorization checks:
+
+[#Authorizer-PermissionChecks]
+=== Permission Checks
+
+Permission checks verify whether a Subject is allowed to perform a specific action on a specific resource.
+Methods for permission checks include:
+
+* link:/static/current/apidocs/org/apache/shiro/subject/Subject.html#isPermitted(org.apache.shiro.authz.Permission)[`isPermitted(permission)`] - returns `true` or `false`
+* link:/static/current/apidocs/org/apache/shiro/subject/Subject.html#checkPermission(org.apache.shiro.authz.Permission)[`checkPermission(permission)`] - throws an exception on failure
+
+For example:
+
+[source,java]
+----
+if (subject.isPermitted("account:read")) {
+    //User can read accounts
+}
+
+subject.checkPermission("document:delete:report123");
+----
+
+[#Authorizer-RoleChecks]
+=== Role Checks
+
+Role checks verify whether a Subject has a specific role. Methods for role checks include:
+
+* link:/static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRole(java.lang.String)[`hasRole(role)`] - returns `true` or `false`
+* link:/static/current/apidocs/org/apache/shiro/subject/Subject.html#checkRole(java.lang.String)[`checkRole(role)`] - throws an exception on failure
+
+For example:
+
+[source,java]
+----
+if (subject.hasRole("admin")) {
+    //User is an administrator
+}
+
+subject.checkRole("user");
+----
+
+[#Authorizer-Configuration]
+== Configuration
+
+You can configure a custom Authorizer in your Shiro configuration if needed:
+
+[source,ini]
+----
+authorizer = com.foo.bar.CustomAuthorizer
+securityManager.authorizer = $authorizer
+----
+
+However, in most cases, the default ModularRealmAuthorizer is sufficient for typical applications.
+
+[#Authorizer-RealmInteraction]
+== How Authorizers Work with Realms
+
+The Authorizer does not directly know where to retrieve authorization data.
+Instead, it coordinates with configured Realms to perform the actual authorization checks.
+
+A link:/realm.html[Realm] is a security-specific data access object that knows how to retrieve authorization data from a data source
+(database, LDAP, file system, etc.).
+The Realm is responsible for:
+
+* Determining if it implements the `Authorizer` interface (which indicates it can perform authorization checks)
+* Retrieving the Subject's roles and permissions from the data source
+* Evaluating whether the Subject has the requested role or permission
+* Returning the results of the authorization check
+
+The Authorizer simply orchestrates this process by delegating to Realms and aggregating their results.
+This allows you to use multiple Realms where authorization data may come from different sources,
+and Shiro will coordinate the results appropriately.
+
+[#Authorizer-MultipleRealms]
+== Authorization with Multiple Realms
+
+When multiple Realms are configured, the ModularRealmAuthorizer consults all Realms that implement the `Authorizer` interface.
+The results are aggregated to determine the final authorization decision.
+
+Typically, if any Realm grants permission or role membership, the authorization check succeeds.
+However, the exact behavior depends on the authorization data model and how the Realms are configured.
+Custom Authorizer implementations can be used to implement different aggregation strategies if needed.
+
+[#Authorizer-SeeAlso]
+== See Also
+
+To learn more about related topics, see:
+
+* link:authorization.html[Authorization] - Conceptual overview of authorization in Shiro.
+* link:java-authorization-guide.html[Java Authorization Guide] - Practical guide to implementing authorization in your application.
+* link:permissions.html[Permissions] - Understanding Shiro's permission model.
+* link:realm.html[Realms] - How Realms connect Shiro to your data sources.
+* link:authenticator.html[Authenticators] - The counterpart component for authentication.
+* link:securitymanager.html[SecurityManager] - The component that orchestrates Authorizers and other Shiro components.
