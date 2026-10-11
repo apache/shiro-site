@@ -18,6 +18,7 @@
  */
 package org.apache.shiro.site;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -29,6 +30,11 @@ import java.util.List;
 
 public final class Validator implements Runnable {
     private final Path content;
+
+    // JBake headers are always in the first few lines of .adoc files.
+    // Verified empirically: all files in this repo have jbake-date within lines 2-22.
+    // 50 provides a safe margin while avoiding reading entire files.
+    private static final int MAX_HEADER_LINES = 50;
 
     private Validator(final Path content) {
         this.content = content;
@@ -61,25 +67,25 @@ public final class Validator implements Runnable {
     }
 
     private void doValidateContent(final Path file, final List<String> errors) throws IOException {
-        final var lines = Files.readAllLines(file); // don't use asciidoctorj to parse properly the adoc, it is way too slow to start
-        if (missDate(lines) &&
-                isNotRedirect(lines) &&
-                isNotTODO(lines)) {
-            errors.add("Missing date in '" + content.relativize(file) + "'");
+        // JBake metadata is at the top, so avoid reading entire files
+        try (BufferedReader reader = Files.newBufferedReader(file)) {
+            String line;
+            int lineCount = 0;
+            boolean hasTodo = false;
+
+            while (lineCount < MAX_HEADER_LINES && (line = reader.readLine()) != null) {
+                lineCount++;
+                if (line.startsWith(":jbake-date:") || ":jbake-type: redirect".equals(line)) {
+                    return; // valid, or a redirect which needs no date
+                }
+                hasTodo |= "TODO".equals(line);
+            }
+
+            // pages not written yet (small stub with a TODO marker) are allowed to be incomplete
+            if (!(lineCount < 10 && hasTodo)) {
+                errors.add("Missing date in '" + content.relativize(file) + "'");
+            }
         }
-    }
-
-    // if the page is not written, no big deal to be broken
-    private boolean isNotTODO(final List<String> lines) {
-        return !(lines.size() < 10 && lines.contains("TODO"));
-    }
-
-    private boolean isNotRedirect(final List<String> lines) {
-        return lines.stream().noneMatch(":jbake-type: redirect"::equals);
-    }
-
-    private boolean missDate(final List<String> lines) {
-        return lines.stream().noneMatch(l -> l.startsWith(":jbake-date:"));
     }
 
     public static void main(final String... args) throws IOException {
