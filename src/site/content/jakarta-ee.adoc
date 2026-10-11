@@ -301,8 +301,8 @@ authc.logoutFallbackType = $fallbackType
 ----
 
 [#form_resubmit]
-==== Automatic form submit upon subsequent login
-Jakarta EE module will automatically resubmit forms when session expires and a subsequent re-login occurs. This will prevent users data from loss due to sessions timing out.
+==== Saving form data when the session expires
+Jakarta EE module will automatically save form data when the session expires, and submit it for the user once the request is permitted, either right away or after a subsequent login. This prevents data loss due to sessions timing out.
 
 [source,xml]
 .To disable this behavior, add the following to `web.xml`:
@@ -312,7 +312,29 @@ Jakarta EE module will automatically resubmit forms when session expires and a s
     <param-value>true</param-value>
 </context-param>
 ----
-During form resubmissions, the original request is replayed, and the response is relayed back to the browser, along with any cookies generated. Cookies are set to be secure by default.
+If the page doesn't require login, and the user is remembered or anonymous, the form is submitted right away without any login or "session expired" page. This is not done with client-side Faces state saving, where the view state is not lost with the session.
+
+[source,xml]
+.To limit this to remembered users only, add the following to `web.xml`:
+----
+<context-param>
+    <param-name>org.apache.shiro.form-resubmit.anonymous.disabled</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+For Jakarta Faces Ajax forms, the whole view (`@all`) is re-rendered after the form data is submitted, so that the page and all of its forms are back in sync with the server.
+
+[source,xml]
+.To re-render only the form's own render targets instead, add the following to `web.xml`:
+----
+<context-param>
+    <param-name>org.apache.shiro.form-resubmit.ajax-render-all.disabled</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+Components outside those targets, and other forms on the page, may then keep their pre-expiry state.
+
+Cookies are set to be secure by default.
 [source,xml]
 .To disable secure cookie attribute, add the following to `web.xml`:
 ----
@@ -323,7 +345,14 @@ During form resubmissions, the original request is replayed, and the response is
 ----
 Alternatively, you can set `org.apache.shiro.form-resubmit.secure-cookies` system property in the same manner as above.
 
-By default, form resubmission logic replays the request to the original URI. This works for most cases, but in some deployments, such as certain Docker or Kubernetes, host, port or both need to be modified during resubmission. There are two system properties to allow this: `org.apache.shiro.form-resubmit-host` (String) and `org.apache.shiro.form-resubmit-port` (Integer).
+To tell users that their form data was saved, and let them discard it (useful on shared browsers), add the following inside the login form:
+[source,xml]
+----
+xmlns:shiro="http://shiro.apache.org/tags"
+...
+<shiro:formDataNotice/>
+----
+The `message` and `discardLabel` attributes override the default wording.
 
 ==== Configuring for Tomcat / Jetty (or without Jakarta Faces)
 If Jakarta Faces (JSF) is not available in your environment, you need to put the following into your `web.xml` to enable proper OmniFaces initialization:
@@ -374,16 +403,17 @@ To disable this behavior, you can put the following in your `web.xml`:
 The module works transparently to enable Shiro (`@RequiresRole`) and Jakarta Security (`@RolesAllowed`) annotations,
 without any additional annotations or configuration.
 
-=== Automatic form resubmit when logged out and subsequently logged in
+=== Saving form data when the session expires
 Users get frustrated when they lose data. For example, while filling out a complicated form,
 the user get side-tracked with another browser tab or window. Then lunch. After getting back to the form,
 they will fill out the rest of the form and submit it. However, since it took a long time, they are now thrown
 back to the login screen. Once they log in, all their data entry vanished! +
 There are few workarounds for his issue, like a periodic ping of the back-end or something similar, but that causes unnecessary load and memory pressure on the server. These methods are also very brittle. +
-Jakarta EE module will automatically save the form data into Shiro cache when a user is redirected to a login screen.
-The cache is encrypted. And when the user subsequently logs back in, the form is automatically submitted and
-the data entry is never lost. +
-Form resubmission works with JSP, Jakarta Faces partial page rendering (Ajax) and with PrimeFaces components.
+Jakarta EE module will automatically save the form data into Shiro cache when the session has expired.
+The cache is encrypted. If the page doesn't require login, the saved data is submitted right away, without any login screen.
+Otherwise, when the user subsequently logs back in, the saved data is submitted automatically and
+the data entry is never lost. See <<form_resubmit,details and configuration>>. +
+Saving form data works with JSP, Jakarta Faces partial page rendering (Ajax) and with PrimeFaces components.
 
 === Using CDI `@SessionScoped` and `@ViewScoped` beans
 Both CDI and OmniFaces Session and ViewScoped beans work correctly and transparently with both web container and Shiro native sessions.
