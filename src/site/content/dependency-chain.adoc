@@ -9,12 +9,13 @@
 Managing Apache Shiro dependencies in Jakarta EE projects can be simplified using the FlowLogix Dependency Chains. This approach provides a cleaner alternative to managing the BOM (Bill of Materials) directly, reducing configuration complexity and common errors.
 
 == Applicability
-This guide is intended for Jakarta EE projects using Apache Shiro for security.
+This guide is intended for Jakarta EE projects using Apache Shiro 2.x for security.
+It is not applicable to Shiro 3.x
 [NOTE]
 ====
 Dependency chains are not suitable for Spring or SpringBoot projects
 ====
-For Spring / SpringBoot projects, you need to use a link:jakarta-ee.html#bom_approach[traditional BOM approach]
+For Spring / SpringBoot projects, you need to use a link:#bom_approach[traditional BOM approach]
 
 == What is the FlowLogix Dependency Chain?
 
@@ -191,3 +192,64 @@ To migrate an existing project from the traditional BOM approach:
 4. Remove any manually specified `jakarta` classifiers
 
 The dependency chain automatically handles classifier configuration and ensures all required components are included with compatible versions.
+
+[#bom_approach]
+=== Traditional BOM with Individual Dependencies
+
+Alternatively, use the Shiro artifacts with Jakarta classifiers directly
+
+Import the Shiro BOM as seen below
+[NOTE]
+====
+Shiro BOM is a *necessary* step, unless you are using FlowLogix Depchain as described above.
+The BOM is needed if you are using Spring / SpringBoot.
+====
+
+[source,xml]
+----
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-bom</artifactId>
+            <version>${versions.latestRelease}</version>
+            <scope>import</scope>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+----
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.apache.shiro</groupId>
+  <artifactId>shiro-jakarta-ee</artifactId>
+  <classifier>jakarta</classifier>
+</dependency>
+
+<dependency>
+  <groupId>org.apache.shiro</groupId>
+  <artifactId>shiro-cdi</artifactId>
+  <classifier>jakarta</classifier>
+</dependency>
+
+<dependency>
+  <groupId>org.apache.shiro</groupId>
+  <artifactId>shiro-core</artifactId>
+  <classifier>jakarta</classifier>
+</dependency>
+
+<dependency>
+  <groupId>org.apache.shiro</groupId>
+  <artifactId>shiro-web</artifactId>
+  <classifier>jakarta</classifier>
+</dependency>
+
+<dependency>
+  <groupId>org.omnifaces</groupId>
+  <artifactId>omnifaces</artifactId>
+  <!-- replace LATEST with a version number -->
+  <version>LATEST</version>
+</dependency>
+----

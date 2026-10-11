@@ -11,7 +11,7 @@ Apache Shiro Jakarta EE module makes it transparent to use Shiro features in Jak
 with minimal configuration. It makes annotations such as `@RequiresRoles` available in Jakarta EE (CDI, EJB, etc.) code.
 
 NOTE: Jakarta EE integration is available in Shiro 2.0 or later. +
-The module is compatible with Java EE 8 through Jakarta EE 10 or later. It may work with earlier versions of Jakarta EE but was not tested with those.
+The module is compatible with Jakarta EE 10 through Jakarta EE 11 or later. It may work with earlier versions of Jakarta EE but was not tested with those.
 
 == Dependencies
 
@@ -38,93 +38,6 @@ Jakarta EE module depends on CDI and Jax-RS submodules to fully integrate with t
 
 === Jakarta EE Security Annotations (JSR-250)
 In addition to all Shiro annotations, Jakarta EE module allows to specify Jakarta EE security annotations such as `@RolesAllowed`, `@DenyAll` and `@PermitAll` on your beans
-
-=== How to use Jakarta 9+ (jakarta.* namespace)
-
-There are two approaches to include Shiro Jakarta EE dependencies in your project:
-
-==== Option 1: FlowLogix Dependency Chain (Recommended)
-[NOTE]
-====
-This option is applicable only to Jakarta EE, not Spring / SpringBoot.
-====
-
-The simplest approach is to use the FlowLogix dependency chain, which bundles all required Shiro Jakarta EE components in a single dependency:
-
-[source,xml]
-----
-<dependencies>
-    <dependency>
-        <groupId>com.flowlogix.depchain</groupId>
-        <artifactId>shiro-jakarta</artifactId>
-        <!-- replace LATEST with a version number -->
-        <version>LATEST</version>
-    </dependency>
-</dependencies>
-----
-
-This approach automatically includes all Shiro modules (`shiro-core`, `shiro-web`, `shiro-jakarta-ee`, `shiro-cdi`, `shiro-jaxrs`) with the correct Jakarta classifier, plus required dependencies like OmniFaces. See the link:dependency-chain.html[Dependency Chain Guide] for more details, Gradle examples, and migration instructions.
-
-[#bom_approach]
-==== Option 2: Traditional BOM with Individual Dependencies
-
-Alternatively, use the Shiro artifacts with Jakarta classifiers directly
-
-Import the Shiro BOM as seen below
-[NOTE]
-====
-Shiro BOM is a *necessary* step, unless you are using FlowLogix Depchain as described above.
-The BOM is needed if you are using Spring / SpringBoot.
-====
-
-[source,xml]
-----
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-bom</artifactId>
-            <version>${versions.latestRelease}</version>
-            <scope>import</scope>
-            <type>pom</type>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
-----
-
-[source,xml]
-----
-<dependency>
-  <groupId>org.apache.shiro</groupId>
-  <artifactId>shiro-jakarta-ee</artifactId>
-  <classifier>jakarta</classifier>
-</dependency>
-
-<dependency>
-  <groupId>org.apache.shiro</groupId>
-  <artifactId>shiro-cdi</artifactId>
-  <classifier>jakarta</classifier>
-</dependency>
-
-<dependency>
-  <groupId>org.apache.shiro</groupId>
-  <artifactId>shiro-core</artifactId>
-  <classifier>jakarta</classifier>
-</dependency>
-
-<dependency>
-  <groupId>org.apache.shiro</groupId>
-  <artifactId>shiro-web</artifactId>
-  <classifier>jakarta</classifier>
-</dependency>
-
-<dependency>
-  <groupId>org.omnifaces</groupId>
-  <artifactId>omnifaces</artifactId>
-  <!-- replace LATEST with a version number -->
-  <version>LATEST</version>
-</dependency>
-----
 
 == Configuration
 No additional configuration is required to use Shiro Jakarta EE module. The module is bootstrapped automatically. +
@@ -183,6 +96,11 @@ RememberMe functionality is disabled by default. You can enable it easily by add
 ----
 authc.useRemembered = true
 ----
+RememberMe uses secure cookies by default. If you are running in non-HTTPS environment, you can disable secure cookies by adding the following to `shiro.ini` (this is not a recommended configuration, since it can lead to security vulnerabilities, but it is available for testing and development purposes):
+[source,properties]
+----
+securityManager.rememberMeManager.cookie.secure = false
+----
 
 [#rate_limiting]
 ==== Rate limiting: Automatic delay when login failed
@@ -217,6 +135,19 @@ The module adds `ShiroFilter` to the Servlet configuration. For most cases, the 
 </filter-mapping>
 ... other filters ...
 ----
+Ordinarily, Shiro sets session cookies to be secure, unless you are in Jakarta Faces' Development mode.
+Make sure to run in other than Development mode in production, so that secure cookies are used.
+This only applies to Servlet Container-managed sessions, and not Shiro native sessions. +
+If secure session cookies are not desired, you can disable them by adding the following to `web.xml`:
+[source,xml]
+.Note: this parameter is only available in Shiro 2.1.1 or later
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.secure-session-cookie.disabled</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+
 Ordinarily, Jakarta EE integration module will remove URL session tracking mode from the configuration, overriding any other session tracking configuration specified in `web.xml`. This is to align with good security practices. If URL tracking mode is desired (such as for testing or historical reasons), add the following to `web.xml`:
 [source,xml]
 .Note: this parameter is only available in Shiro 2.0.6 or later
