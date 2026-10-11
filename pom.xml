@@ -36,6 +36,17 @@
   </properties>
 
   <build>
+    <resources>
+      <!-- publish the root .gitignore along with the site -->
+      <resource>
+        <directory>${project.basedir}</directory>
+        <includes>
+          <include>.gitignore</include>
+        </includes>
+        <!-- relative to target/classes -->
+        <targetPath>../website</targetPath>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
