@@ -526,6 +526,8 @@ We've taken our previous architecture diagram from the link:architecture.html[Ar
 [#Authentication-AuthorizingSubjects-ModularRealmAuthorizer]
 === Modular Realm Authorizer
 
+For a standalone overview of the component, see link:authorizer.html[Apache Shiro Authorizers].
+
 As mentioned earlier, the Shiro `SecurityManager` implementations default to using a link:static/current/apidocs/org/apache/shiro/authz/ModularRealmAuthorizer.html[`ModularRealmAuthorizer`] instance. The `ModularRealmAuthorizer` equally supports applications with single Realm as well as those with multiple realms.
 
 For any authorization operation, the `ModularRealmAuthorizer` will iterate over its internal collection of `Realms` and interact with each one in iteration order. Each `Realm` interaction functions as follows:
