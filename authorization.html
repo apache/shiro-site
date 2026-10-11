@@ -240,7 +240,7 @@
 <li><a href="#Authentication-AuthorizingSubjects">Authorizing Subjects</a>
 <ul class="sectlevel2">
 <li><a href="#Authentication-AuthorizingSubjects-ProgrammaticAuthorization">Programmatic Authorization</a></li>
-<li><a href="#Authentication-AuthorizingSubjects-NotationBasedAuthorization">Notation-based Authorization</a></li>
+<li><a href="#Authentication-AuthorizingSubjects-AnnotationBasedAuthorization">Annotation-based Authorization</a></li>
 <li><a href="#Authentication-AuthorizingSubjects-JSPTagLibAuthorization">JSP TagLib Authorization</a></li>
 </ul>
 </li>
@@ -799,12 +799,12 @@ openBankAccount();</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="Authentication-AuthorizingSubjects-NotationBasedAuthorization">Notation-based Authorization</h3>
+<h3 id="Authentication-AuthorizingSubjects-AnnotationBasedAuthorization">Annotation-based Authorization</h3>
 <div class="paragraph">
 <p>In addition to the <code>Subject</code> API calls, Shiro provides a collection of Java 5+ annotations if you prefer meta-based authorization control.</p>
 </div>
 <div class="sect3">
-<h4 id="Authentication-AuthorizingSubjects-NotationBasedAuthorization-Configuration">Configuration</h4>
+<h4 id="Authentication-AuthorizingSubjects-AnnotationBasedAuthorization-Configuration">Configuration</h4>
 <div class="paragraph">
 <p>Before you can use Java annotations, you&#8217;ll need to enable AOP support in your application. There are a number of different AOP frameworks so, unfortunately, there is no standard way to enable AOP in an application.</p>
 </div>
@@ -819,7 +819,7 @@ openBankAccount();</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="Authentication-AuthorizingSubjects-NotationBasedAuthorization-TheRequiresAuthenticationAnnotation">The <code>RequiresAuthentication</code> annotation</h4>
+<h4 id="Authentication-AuthorizingSubjects-AnnotationBasedAuthorization-TheRequiresAuthenticationAnnotation">The <code>RequiresAuthentication</code> annotation</h4>
 <div class="paragraph">
 <p>The <a href="static/current/apidocs/org/apache/shiro/authz/annotation/RequiresAuthentication.html">RequiresAuthentication</a> annotation requires the current <code>Subject</code> to have been authenticated during their current session for the annotated class/instance/method to be accessed or invoked.</p>
 </div>
@@ -853,7 +853,7 @@ public void updateAccount(Account userAccount) {
 </div>
 </div>
 <div class="sect3">
-<h4 id="Authentication-AuthorizingSubjects-NotationBasedAuthorization-TheRequiresGuestAnnotation">The <code>RequiresGuest</code> annotation</h4>
+<h4 id="Authentication-AuthorizingSubjects-AnnotationBasedAuthorization-TheRequiresGuestAnnotation">The <code>RequiresGuest</code> annotation</h4>
 <div class="paragraph">
 <p>The <a href="static/current/apidocs/org/apache/shiro/authz/annotation/RequiresGuest.html">RequiresGuest</a> annotation requires the current Subject to be a "guest", that is, they are not authenticated or remembered from a previous session for the annotated class/instance/method to be accessed or invoked.</p>
 </div>
@@ -914,7 +914,7 @@ public void createAccount(Account account) {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public void createAccount(Account account) {
     Subject currentUser = SecurityUtils.getSubject();
-    if (!subject.isPermitted("account:create")) {
+    if (!currentUser.isPermitted("account:create")) {
         throw new AuthorizationException(...);
     }
 
@@ -925,7 +925,7 @@ public void createAccount(Account account) {
 </div>
 </div>
 <div class="sect3">
-<h4 id="Authentication-AuthorizingSubjects-NotationBasedAuthorization-TheRequiresRolesPermission">The <code>RequiresRoles</code> permission</h4>
+<h4 id="Authentication-AuthorizingSubjects-AnnotationBasedAuthorization-TheRequiresRolesPermission">The <code>RequiresRoles</code> permission</h4>
 <div class="paragraph">
 <p>The <a href="static/current/apidocs/org/apache/shiro/authz/annotation/RequiresRoles.html">RequiresRoles</a> annotation requires the current Subject to have all of the specified roles. If they do not have the role(s), the method will not be executed and an AuthorizationException is thrown.</p>
 </div>
