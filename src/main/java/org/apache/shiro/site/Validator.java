@@ -67,37 +67,22 @@ public final class Validator implements Runnable {
     }
 
     private void doValidateContent(final Path file, final List<String> errors) throws IOException {
-        // Only read header lines - JBake metadata is always at the top
-        // This avoids reading entire files which can be hundreds of lines
+        // JBake metadata is at the top, so avoid reading entire files
         try (BufferedReader reader = Files.newBufferedReader(file)) {
             String line;
             int lineCount = 0;
-            boolean hasDate = false;
-            boolean isRedirect = false;
             boolean hasTodo = false;
 
-            while ((line = reader.readLine()) != null && lineCount < MAX_HEADER_LINES) {
+            while (lineCount < MAX_HEADER_LINES && (line = reader.readLine()) != null) {
                 lineCount++;
-
-                if (line.startsWith(":jbake-date:")) {
-                    hasDate = true;
-                    return; // valid, no need to check further
+                if (line.startsWith(":jbake-date:") || ":jbake-type: redirect".equals(line)) {
+                    return; // valid, or a redirect which needs no date
                 }
-                if (":jbake-type: redirect".equals(line)) {
-                    isRedirect = true;
-                    return; // redirect pages don't need date validation
-                }
-                if ("TODO".equals(line)) {
-                    hasTodo = true;
-                }
+                hasTodo |= "TODO".equals(line);
             }
 
-            // If page is a TODO stub (small file with TODO marker), skip validation
-            if (lineCount < 10 && hasTodo) {
-                return;
-            }
-
-            if (!hasDate && !isRedirect) {
+            // pages not written yet (small stub with a TODO marker) are allowed to be incomplete
+            if (!(lineCount < 10 && hasTodo)) {
                 errors.add("Missing date in '" + content.relativize(file) + "'");
             }
         }
