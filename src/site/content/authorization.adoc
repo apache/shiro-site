@@ -325,12 +325,12 @@ There are few permission-oriented `Subject` assertion methods you can call, depe
 |link:++static/current/apidocs/org/apache/shiro/subject/Subject.html#checkPermissions(java.lang.String...)++[`checkPermissions(String... perms)`] |Same effect as the `checkPermissions` method above, but using `String`-based permissions.
 |===
 
-[#Authentication-AuthorizingSubjects-NotationBasedAuthorization]
-=== Notation-based Authorization
+[#Authentication-AuthorizingSubjects-AnnotationBasedAuthorization]
+=== Annotation-based Authorization
 
 In addition to the `Subject` API calls, Shiro provides a collection of Java 5+ annotations if you prefer meta-based authorization control.
 
-[#Authentication-AuthorizingSubjects-NotationBasedAuthorization-Configuration]
+[#Authentication-AuthorizingSubjects-AnnotationBasedAuthorization-Configuration]
 ==== Configuration
 
 Before you can use Java annotations, you'll need to enable AOP support in your application. There are a number of different AOP frameworks so, unfortunately, there is no standard way to enable AOP in an application.
@@ -341,7 +341,7 @@ For Spring applications, you can look into our link:spring-framework.html[Spring
 
 For Guice applications, you can look into our link:guice.html[Guice Integration] documentation.
 
-[#Authentication-AuthorizingSubjects-NotationBasedAuthorization-TheRequiresAuthenticationAnnotation]
+[#Authentication-AuthorizingSubjects-AnnotationBasedAuthorization-TheRequiresAuthenticationAnnotation]
 ==== The `RequiresAuthentication` annotation
 
 The link:static/current/apidocs/org/apache/shiro/authz/annotation/RequiresAuthentication.html[RequiresAuthentication] annotation requires the current `Subject` to have been authenticated during their current session for the annotated class/instance/method to be accessed or invoked.
@@ -372,7 +372,7 @@ public void updateAccount(Account userAccount) {
 }
 ----
 
-[#Authentication-AuthorizingSubjects-NotationBasedAuthorization-TheRequiresGuestAnnotation]
+[#Authentication-AuthorizingSubjects-AnnotationBasedAuthorization-TheRequiresGuestAnnotation]
 ==== The `RequiresGuest` annotation
 
 The link:static/current/apidocs/org/apache/shiro/authz/annotation/RequiresGuest.html[RequiresGuest] annotation requires the current Subject to be a "guest", that is, they are not authenticated or remembered from a previous session for the annotated class/instance/method to be accessed or invoked.
@@ -429,7 +429,7 @@ This is mostly equivalent to the following Subject-based logic:
 ----
 public void createAccount(Account account) {
     Subject currentUser = SecurityUtils.getSubject();
-    if (!subject.isPermitted("account:create")) {
+    if (!currentUser.isPermitted("account:create")) {
         throw new AuthorizationException(...);
     }
 
@@ -438,7 +438,7 @@ public void createAccount(Account account) {
 }
 ----
 
-[#Authentication-AuthorizingSubjects-NotationBasedAuthorization-TheRequiresRolesPermission]
+[#Authentication-AuthorizingSubjects-AnnotationBasedAuthorization-TheRequiresRolesPermission]
 ==== The `RequiresRoles` permission
 
 The link:static/current/apidocs/org/apache/shiro/authz/annotation/RequiresRoles.html[RequiresRoles] annotation requires the current Subject to have all of the specified roles. If they do not have the role(s), the method will not be executed and an AuthorizationException is thrown.
