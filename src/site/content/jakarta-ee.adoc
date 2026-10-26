@@ -301,18 +301,39 @@ authc.logoutFallbackType = $fallbackType
 ----
 
 [#form_resubmit]
-==== Automatic form submit upon subsequent login
-Jakarta EE module will automatically resubmit forms when session expires and a subsequent re-login occurs. This will prevent users data from loss due to sessions timing out.
+==== Automatic form data saving and replay after session expiry
+Imagine a user filling out a long form, getting distracted by another browser tab, and stepping away for lunch.
+When they return, finish the form, and submit it, their session has expired and they are sent to the login page.
+Without form recovery, they would have to enter their work all over again.
+
+Shiro solves this problem. No more "your session has expired" messages and lost work.
+
+If a user submits a form after their session has expired, Shiro saves the entered data before sending them to the login page.
+After they sign in again, Shiro automatically replays the saved form data, so they do not have to re-enter their work.
+This works with JSP, Jakarta Faces forms (including Ajax), and PrimeFaces components.
+File uploads are not saved.
+
+For pages that do not require the user to sign in, the form data saving and submission works even without visiting the login page.
+This applies to remembered users and visitors who are not signed in, even after their session expires.
+
+When an Ajax form continues after session expiry without another login, Shiro updates the whole page by default so its other forms remain usable too.
+To update only the parts normally updated by that form, set the `org.apache.shiro.form-resubmit.ajax-render-all.disabled` context parameter to `true`.
+To disable the no-login recovery for visitors who are not signed in while keeping it for remembered users, set `org.apache.shiro.form-resubmit.anonymous.disabled` to `true`.
 
 [source,xml]
-.To disable this behavior, add the following to `web.xml`:
+.To disable automatic form saving and recovery, add the following to `web.xml`:
 ----
 <context-param>
     <param-name>org.apache.shiro.form-resubmit.disabled</param-name>
     <param-value>true</param-value>
 </context-param>
 ----
-During form resubmissions, the original request is replayed, and the response is relayed back to the browser, along with any cookies generated. Cookies are set to be secure by default.
+If a saved submission cannot be completed after login, Shiro returns the user to the original page.
+
+NOTE: If your application uses custom servlet filters that must also run when Shiro replays a saved form, map them to `FORWARD` as well as `REQUEST`.
+Leave Shiro's `filterOncePerRequest` disabled.
+
+Form-resubmission cookies are secure by default.
 [source,xml]
 .To disable secure cookie attribute, add the following to `web.xml`:
 ----
@@ -323,7 +344,7 @@ During form resubmissions, the original request is replayed, and the response is
 ----
 Alternatively, you can set `org.apache.shiro.form-resubmit.secure-cookies` system property in the same manner as above.
 
-By default, form resubmission logic replays the request to the original URI. This works for most cases, but in some deployments, such as certain Docker or Kubernetes, host, port or both need to be modified during resubmission. There are two system properties to allow this: `org.apache.shiro.form-resubmit-host` (String) and `org.apache.shiro.form-resubmit-port` (Integer).
+The `org.apache.shiro.form-resubmit-host` and `org.apache.shiro.form-resubmit-port` system properties used by older releases are no longer needed or used.
 
 ==== Configuring for Tomcat / Jetty (or without Jakarta Faces)
 If Jakarta Faces (JSF) is not available in your environment, you need to put the following into your `web.xml` to enable proper OmniFaces initialization:
@@ -373,17 +394,6 @@ To disable this behavior, you can put the following in your `web.xml`:
 === Security Annotations (Shiro and EE)
 The module works transparently to enable Shiro (`@RequiresRole`) and Jakarta Security (`@RolesAllowed`) annotations,
 without any additional annotations or configuration.
-
-=== Automatic form resubmit when logged out and subsequently logged in
-Users get frustrated when they lose data. For example, while filling out a complicated form,
-the user get side-tracked with another browser tab or window. Then lunch. After getting back to the form,
-they will fill out the rest of the form and submit it. However, since it took a long time, they are now thrown
-back to the login screen. Once they log in, all their data entry vanished! +
-There are few workarounds for his issue, like a periodic ping of the back-end or something similar, but that causes unnecessary load and memory pressure on the server. These methods are also very brittle. +
-Jakarta EE module will automatically save the form data into Shiro cache when a user is redirected to a login screen.
-The cache is encrypted. And when the user subsequently logs back in, the form is automatically submitted and
-the data entry is never lost. +
-Form resubmission works with JSP, Jakarta Faces partial page rendering (Ajax) and with PrimeFaces components.
 
 === Using CDI `@SessionScoped` and `@ViewScoped` beans
 Both CDI and OmniFaces Session and ViewScoped beans work correctly and transparently with both web container and Shiro native sessions.
