@@ -196,6 +196,15 @@ Shiro 3.x is designed to work with Spring Boot 4 and later versions. Spring Boot
 
 Applications still on Spring Boot 2.x or 3.x should use Shiro 2.x with the appropriate classifier configuration.
 
+==== Path Matching with Spring Boot 4.2
+
+Spring Boot 4.2 removes the Ant matching strategy.
+Shiro keeps Ant matching where supported and switches to Spring-parsed patterns when Ant parser is no longer available.
+
+Review Shiro chain definitions for Spring path-pattern compatibility, as invalid patterns will fail at startup.
+Shiro's case-insensitive default, trailing-slash retry, first-match chain ordering, and deny-by-default fallback are preserved.
+See link:spring-boot.html#path-matching[Spring Boot path matching] for details.
+
 [#security-behavior-changes]
 == Security Behavior Changes in 3.x
 

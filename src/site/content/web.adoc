@@ -264,6 +264,14 @@ Next we'll cover exactly what these lines mean.
 
 The token on the left of the equals sign (=) is an https://ant.apache.org[Ant]-style path expression relative to your web application's context root.
 
+[NOTE]
+====
+For Spring Boot 4.2 or later applications, Shiro uses Spring-native parsed patterns instead of Ant.
+This applies to both filter-chain selection and path-aware filters.
+Shiro retains its case-insensitive default and trailing-slash retry.
+See link:spring-boot.html#path-matching[Spring Boot path matching] before migrating Ant chain definitions.
+====
+
 For example, let's say you had the following `[urls]` line:
 
 [source,ini]
