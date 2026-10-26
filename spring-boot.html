@@ -231,6 +231,7 @@
 <ul class="sectlevel1">
 <li><a href="#web_applications">Web Applications</a>
 <ul class="sectlevel2">
+<li><a href="#path-matching">Path Matching</a></li>
 <li><a href="#enabling_shiro_annotations">Enabling Shiro Annotations</a></li>
 <li><a href="#annotations_and_web_applications">Annotations and Web Applications</a></li>
 <li><a href="#caching">Caching</a></li>
@@ -428,6 +429,26 @@ public ShiroFilterChainDefinition shiroFilterChainDefinition() {
 </div>
 <div class="paragraph">
 <p>You can see a full example in our <a href="https://github.com/apache/shiro/tree/main/samples/spring-boot-web">samples on GitHub</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="path-matching">Path Matching</h3>
+<div class="paragraph">
+<p>The starter requests Ant path matching from Spring MVC while Boot supports that setting.
+Spring Boot 4.2 removes the Ant matching strategy.
+When MVC uses Spring-native <code>PathPatternParser</code> instead, the starter uses Spring parsed patterns for both Shiro filter-chain selection and path-aware filters.</p>
+</div>
+<div class="paragraph">
+<p>In Spring-pattern mode, chain definitions must use <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/util/pattern/PathPattern.html">Spring path-pattern syntax</a>.
+Invalid configured patterns fail at startup.
+Review existing Ant patterns when upgrading, as the two pattern languages are not necessarily interchangeable.</p>
+</div>
+<div class="paragraph">
+<p>Shiro retains its case-insensitive default (<code>shiro.caseInsensitive=true</code>), independently of MVC&#8217;s case sensitivity.
+This helps protect static resources on case-insensitive filesystems.
+Set <code>shiro.caseInsensitive=false</code> only if case-sensitive authorization matching is intended.
+Shiro also retains its trailing-slash retry, so a restriction on <code>/admin</code> applies to <code>/admin/</code> and vice versa, even if MVC distinguishes those paths.
+Filter chains still use first-match ordering and deny access by default when no configured chain matches.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="enabling_shiro_annotations">Enabling Shiro Annotations</h3>

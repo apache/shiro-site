@@ -679,6 +679,23 @@ For example, <code>/WEB-INF/some/path/shiro.ini</code></p>
 <div class="paragraph">
 <p>The token on the left of the equals sign (=) is an <a href="https://ant.apache.org">Ant</a>-style path expression relative to your web application&#8217;s context root.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For Spring Boot 4.2 or later applications, Shiro uses Spring-native parsed patterns instead of Ant.
+This applies to both filter-chain selection and path-aware filters.
+Shiro retains its case-insensitive default and trailing-slash retry.
+See <a href="spring-boot.html#path-matching">Spring Boot path matching</a> before migrating Ant chain definitions.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>For example, let&#8217;s say you had the following <code>[urls]</code> line:</p>
 </div>

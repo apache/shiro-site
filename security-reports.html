@@ -518,6 +518,22 @@ The authentication bypass occurs when Shiro and Spring Boot are using different 
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">spring.mvc.pathmatch.matching-strategy = ant_path_matcher</code></pre>
 </div>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The configuration workaround above applies only to Spring Boot versions that support Ant matching.
+Boot 4.2 removes that setting&#8217;s Ant option.
+For Shiro&#8217;s automatic Spring-pattern integration, see <a href="spring-boot.html#path-matching">Spring Boot path matching</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p><strong>Credit:</strong>
 Apache Shiro would like to thank v3ged0ge and Adamytd for reporting this issue.</p>

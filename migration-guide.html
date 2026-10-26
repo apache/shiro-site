@@ -524,6 +524,18 @@
 <div class="paragraph">
 <p>Applications still on Spring Boot 2.x or 3.x should use Shiro 2.x with the appropriate classifier configuration.</p>
 </div>
+<div class="sect3">
+<h4 id="path_matching_with_spring_boot_4_2">Path Matching with Spring Boot 4.2</h4>
+<div class="paragraph">
+<p>Spring Boot 4.2 removes the Ant matching strategy.
+Shiro keeps Ant matching where supported and switches to Spring-parsed patterns when Ant parser is no longer available.</p>
+</div>
+<div class="paragraph">
+<p>Review Shiro chain definitions for Spring path-pattern compatibility, as invalid patterns will fail at startup.
+Shiro&#8217;s case-insensitive default, trailing-slash retry, first-match chain ordering, and deny-by-default fallback are preserved.
+See <a href="spring-boot.html#path-matching">Spring Boot path matching</a> for details.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
