@@ -840,7 +840,29 @@ To disable the no-login recovery for visitors who are not signed in while keepin
 </div>
 </div>
 <div class="paragraph">
-<p>If a saved submission cannot be completed after login, Shiro returns the user to the original page.</p>
+<p>If the page doesn&#8217;t require login, and the user is remembered or anonymous, the form is submitted right away without any login or "session expired" page. This does not apply to client-side Faces state saving, where the view state is not lost with the session.</p>
+</div>
+<div class="listingblock">
+<div class="title">To limit this to remembered users only, add the following to <code>web.xml</code>:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;context-param&gt;
+    &lt;param-name&gt;org.apache.shiro.form-resubmit.anonymous.disabled&lt;/param-name&gt;
+    &lt;param-value&gt;true&lt;/param-value&gt;
+&lt;/context-param&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">To re-render only the form&#8217;s own render targets instead, add the following to <code>web.xml</code>:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;context-param&gt;
+    &lt;param-name&gt;org.apache.shiro.form-resubmit.ajax-render-all.disabled&lt;/param-name&gt;
+    &lt;param-value&gt;true&lt;/param-value&gt;
+&lt;/context-param&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Components outside those targets, and other forms on the page, may then keep their pre-expiry state.
+If a saved submission cannot be completed after login, Shiro returns the user to the original page.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -871,7 +893,18 @@ Leave Shiro&#8217;s <code>filterOncePerRequest</code> disabled.
 <p>Alternatively, you can set <code>org.apache.shiro.form-resubmit.secure-cookies</code> system property in the same manner as above.</p>
 </div>
 <div class="paragraph">
-<p>The <code>org.apache.shiro.form-resubmit-host</code> and <code>org.apache.shiro.form-resubmit-port</code> system properties used by older releases are no longer needed or used.</p>
+<p>To tell users that their form data was saved, and let them discard it (useful on shared browsers), add the following inside the login form:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">xmlns:shiro="http://shiro.apache.org/tags"
+...
+&lt;shiro:formDataNotice/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>message</code> and <code>discardLabel</code> attributes override the default wording.
+The <code>org.apache.shiro.form-resubmit-host</code> and <code>org.apache.shiro.form-resubmit-port</code> system properties used by older releases are no longer needed or used.</p>
 </div>
 </div>
 <div class="sect3">
