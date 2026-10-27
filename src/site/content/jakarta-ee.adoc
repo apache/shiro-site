@@ -301,18 +301,34 @@ authc.logoutFallbackType = $fallbackType
 ----
 
 [#form_resubmit]
-==== Saving form data when the session expires
-Jakarta EE module will automatically save form data when the session expires, and submit it for the user once the request is permitted, either right away or after a subsequent login. This prevents data loss due to sessions timing out.
+==== Automatic form data saving and replay after session expiry
+Imagine a user filling out a long form, getting distracted by another browser tab, and stepping away for lunch.
+When they return, finish the form, and submit it, their session has expired and they are sent to the login page.
+Without form recovery, they would have to enter their work all over again.
+
+Shiro solves this problem. No more "your session has expired" messages and lost work.
+
+If a user submits a form after their session has expired, Shiro saves the entered data before sending them to the login page.
+After they sign in again, Shiro automatically replays the saved form data, so they do not have to re-enter their work.
+This works with JSP, Jakarta Faces forms (including Ajax), and PrimeFaces components.
+File uploads are not saved.
+
+For pages that do not require the user to sign in, the form data saving and submission works even without visiting the login page.
+This applies to remembered users and visitors who are not signed in, even after their session expires.
+
+When an Ajax form continues after session expiry without another login, Shiro updates the whole page by default so its other forms remain usable too.
+To update only the parts normally updated by that form, set the `org.apache.shiro.form-resubmit.ajax-render-all.disabled` context parameter to `true`.
+To disable the no-login recovery for visitors who are not signed in while keeping it for remembered users, set `org.apache.shiro.form-resubmit.anonymous.disabled` to `true`.
 
 [source,xml]
-.To disable this behavior, add the following to `web.xml`:
+.To disable automatic form saving and recovery, add the following to `web.xml`:
 ----
 <context-param>
     <param-name>org.apache.shiro.form-resubmit.disabled</param-name>
     <param-value>true</param-value>
 </context-param>
 ----
-If the page doesn't require login, and the user is remembered or anonymous, the form is submitted right away without any login or "session expired" page. This is not done with client-side Faces state saving, where the view state is not lost with the session.
+If the page doesn't require login, and the user is remembered or anonymous, the form is submitted right away without any login or "session expired" page. This does not apply to client-side Faces state saving, where the view state is not lost with the session.
 
 [source,xml]
 .To limit this to remembered users only, add the following to `web.xml`:
@@ -322,7 +338,6 @@ If the page doesn't require login, and the user is remembered or anonymous, the 
     <param-value>true</param-value>
 </context-param>
 ----
-For Jakarta Faces Ajax forms, the whole view (`@all`) is re-rendered after the form data is submitted, so that the page and all of its forms are back in sync with the server.
 
 [source,xml]
 .To re-render only the form's own render targets instead, add the following to `web.xml`:
@@ -333,8 +348,12 @@ For Jakarta Faces Ajax forms, the whole view (`@all`) is re-rendered after the f
 </context-param>
 ----
 Components outside those targets, and other forms on the page, may then keep their pre-expiry state.
+If a saved submission cannot be completed after login, Shiro returns the user to the original page.
 
-Cookies are set to be secure by default.
+NOTE: If your application uses custom servlet filters that must also run when Shiro replays a saved form, map them to `FORWARD` as well as `REQUEST`.
+Leave Shiro's `filterOncePerRequest` disabled.
+
+Form-resubmission cookies are secure by default.
 [source,xml]
 .To disable secure cookie attribute, add the following to `web.xml`:
 ----
@@ -353,6 +372,7 @@ xmlns:shiro="http://shiro.apache.org/tags"
 <shiro:formDataNotice/>
 ----
 The `message` and `discardLabel` attributes override the default wording.
+The `org.apache.shiro.form-resubmit-host` and `org.apache.shiro.form-resubmit-port` system properties used by older releases are no longer needed or used.
 
 ==== Configuring for Tomcat / Jetty (or without Jakarta Faces)
 If Jakarta Faces (JSF) is not available in your environment, you need to put the following into your `web.xml` to enable proper OmniFaces initialization:
@@ -402,18 +422,6 @@ To disable this behavior, you can put the following in your `web.xml`:
 === Security Annotations (Shiro and EE)
 The module works transparently to enable Shiro (`@RequiresRole`) and Jakarta Security (`@RolesAllowed`) annotations,
 without any additional annotations or configuration.
-
-=== Saving form data when the session expires
-Users get frustrated when they lose data. For example, while filling out a complicated form,
-the user get side-tracked with another browser tab or window. Then lunch. After getting back to the form,
-they will fill out the rest of the form and submit it. However, since it took a long time, they are now thrown
-back to the login screen. Once they log in, all their data entry vanished! +
-There are few workarounds for his issue, like a periodic ping of the back-end or something similar, but that causes unnecessary load and memory pressure on the server. These methods are also very brittle. +
-Jakarta EE module will automatically save the form data into Shiro cache when the session has expired.
-The cache is encrypted. If the page doesn't require login, the saved data is submitted right away, without any login screen.
-Otherwise, when the user subsequently logs back in, the saved data is submitted automatically and
-the data entry is never lost. See <<form_resubmit,details and configuration>>. +
-Saving form data works with JSP, Jakarta Faces partial page rendering (Ajax) and with PrimeFaces components.
 
 === Using CDI `@SessionScoped` and `@ViewScoped` beans
 Both CDI and OmniFaces Session and ViewScoped beans work correctly and transparently with both web container and Shiro native sessions.

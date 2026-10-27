@@ -53,6 +53,23 @@ If you are using Shiro's annotations see the link:#annotations_and_web_applicati
 
 You can see a full example in our link:https://github.com/apache/shiro/tree/main/samples/spring-boot-web[samples on GitHub].
 
+[#path-matching]
+=== Path Matching
+
+The starter requests Ant path matching from Spring MVC while Boot supports that setting.
+Spring Boot 4.2 removes the Ant matching strategy.
+When MVC uses Spring-native `PathPatternParser` instead, the starter uses Spring parsed patterns for both Shiro filter-chain selection and path-aware filters.
+
+In Spring-pattern mode, chain definitions must use https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/util/pattern/PathPattern.html[Spring path-pattern syntax].
+Invalid configured patterns fail at startup.
+Review existing Ant patterns when upgrading, as the two pattern languages are not necessarily interchangeable.
+
+Shiro retains its case-insensitive default (`shiro.caseInsensitive=true`), independently of MVC's case sensitivity.
+This helps protect static resources on case-insensitive filesystems.
+Set `shiro.caseInsensitive=false` only if case-sensitive authorization matching is intended.
+Shiro also retains its trailing-slash retry, so a restriction on `/admin` applies to `/admin/` and vice versa, even if MVC distinguishes those paths.
+Filter chains still use first-match ordering and deny access by default when no configured chain matches.
+
 === Enabling Shiro Annotations
 
 In both standalone and web applications, you might want to use Shiro's Annotations for security checks (for example, `@RequiresRoles`, `@RequiresPermissions`, etc.) These annotations are enabled automatically in both starters listed above.
