@@ -328,6 +328,26 @@ To disable the no-login recovery for visitors who are not signed in while keepin
     <param-value>true</param-value>
 </context-param>
 ----
+If the page doesn't require login, and the user is remembered or anonymous, the form is submitted right away without any login or "session expired" page. This does not apply to client-side Faces state saving, where the view state is not lost with the session.
+
+[source,xml]
+.To limit this to remembered users only, add the following to `web.xml`:
+----
+<context-param>
+    <param-name>org.apache.shiro.form-resubmit.anonymous.disabled</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+
+[source,xml]
+.To re-render only the form's own render targets instead, add the following to `web.xml`:
+----
+<context-param>
+    <param-name>org.apache.shiro.form-resubmit.ajax-render-all.disabled</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+Components outside those targets, and other forms on the page, may then keep their pre-expiry state.
 If a saved submission cannot be completed after login, Shiro returns the user to the original page.
 
 NOTE: If your application uses custom servlet filters that must also run when Shiro replays a saved form, map them to `FORWARD` as well as `REQUEST`.
@@ -344,6 +364,14 @@ Form-resubmission cookies are secure by default.
 ----
 Alternatively, you can set `org.apache.shiro.form-resubmit.secure-cookies` system property in the same manner as above.
 
+To tell users that their form data was saved, and let them discard it (useful on shared browsers), add the following inside the login form:
+[source,xml]
+----
+xmlns:shiro="http://shiro.apache.org/tags"
+...
+<shiro:formDataNotice/>
+----
+The `message` and `discardLabel` attributes override the default wording.
 The `org.apache.shiro.form-resubmit-host` and `org.apache.shiro.form-resubmit-port` system properties used by older releases are no longer needed or used.
 
 ==== Configuring for Tomcat / Jetty (or without Jakarta Faces)
