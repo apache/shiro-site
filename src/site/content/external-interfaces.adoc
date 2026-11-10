@@ -1,0 +1,72 @@
+= Apache Shiro External Interfaces
+:jbake-date: 2026-11-09 00:00:00
+:jbake-type: page
+:jbake-status: published
+:jbake-tags: documentation, api, interfaces, configuration, security
+:jbake-description: The external software interfaces of Apache Shiro: the Java API, configuration formats, web and framework integration points, and the command line tools.
+:idprefix:
+:icons: font
+:toc:
+
+This page describes every external software interface of the released Apache Shiro artifacts, and points to the detailed documentation for each.
+Shiro is a library embedded in an application; it does not open network ports or run as a service of its own.
+
+== Java API
+
+The public Java API is the primary interface.
+Types and packages in the released artifacts are documented in the https://shiro.apache.org/static/current/apidocs/[API documentation] (also available at https://javadoc.io/doc/org.apache.shiro[javadoc.io]).
+The main entry points are:
+
+[cols="1,3",options="header"]
+|===
+| Interface | Purpose
+
+| `org.apache.shiro.SecurityUtils`, `Subject`
+| Obtain the current user and perform authentication, authorization and session operations.
+See link:architecture.html[Architecture] and link:authentication.html[Authentication].
+
+| `SecurityManager`, `Realm`, `AuthenticationStrategy`, `CredentialsMatcher`
+| Extension points for credential verification and data sources.
+See link:realm.html[Realms].
+
+| `Authorizer`, permissions, annotations (`@RequiresAuthentication`, `@RequiresPermissions`, `@RequiresRoles`)
+| Authorization checks. See link:authorization.html[Authorization].
+
+| `SessionManager`, `SessionDAO`
+| Session management and persistence. See link:session-management.html[Session Management].
+
+| `CipherService`, `Hash`, `HashService`, `PasswordService`
+| Cryptography. See link:cryptography.html[Cryptography].
+
+| `CacheManager`
+| Caching of authentication and authorization data. See link:caching.html[Caching].
+|===
+
+== Configuration interfaces
+
+Configuration is supplied by the application's operator and is trusted input.
+See link:configuration.html[Configuration] for the full reference.
+
+* The INI format (`shiro.ini`), including the `[main]`, `[users]`, `[roles]` and `[urls]` sections.
+* Programmatic configuration through the Java API, and Spring, Spring Boot, Guice, CDI and Jakarta EE configuration.
+* Java system properties and environment settings documented for individual features.
+
+== Web interfaces
+
+The web modules integrate through standard Jakarta Servlet mechanisms.
+They consume HTTP requests (path, headers, cookies, form parameters) from untrusted clients, apply the configured filter chains and cookie handling, and produce redirects and responses.
+See link:web.html[Web Support], link:web-features.html[Web Features], link:jakarta-ee.html[Jakarta EE] and the link:security-model.html[security model] for the trust assumptions that apply.
+
+== Framework integrations
+
+Optional modules integrate Shiro with Spring, Spring Boot, Guice, CDI, EJB, JAX-RS, AspectJ, Quartz and JCache.
+Each integration is documented on its own page linked from the link:documentation.html[documentation hub] and in the link:reference.html[reference manual].
+
+== Command line tools
+
+The command line hasher (`shiro-tools-hasher`) hashes passwords and data from the command line.
+See link:command-line-hasher.html[Command Line Hasher].
+
+== Compatibility
+
+Supported release lines are listed on the link:support.html#supported-versions[support page].

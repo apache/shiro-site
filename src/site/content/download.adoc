@@ -20,3 +20,12 @@ You may link:https://infra.apache.org/release-signing.html#verifying-signature[v
 
 The current release is ${versions.latestRelease}.
 For older releases, please visit our link:release-archive.html[release archive].
+
+== Release process
+
+Releases are built, signed and published by a committer acting as release manager, following the https://www.apache.org/legal/release-policy.html[ASF release policy] and the project's link:performing-a-release.html[Performing a Release] guide.
+A release candidate is staged, voted on by the PMC on the `dev` mailing list, and only then published as the official source release, with binary artifacts on Maven Central.
+Each release is signed with the release manager's PGP key and accompanied by a SHA-512 checksum.
+To verify a download, import the link:https://downloads.apache.org/shiro/KEYS[KEYS] file, check the `.asc` signature and compare the checksum, as described in the https://www.apache.org/info/verification.html[ASF verification guide].
+Release notes are published with each release on https://github.com/apache/shiro/releases[GitHub Releases] and on the project blog.
+Which release lines are supported is described on the link:support.html#supported-versions[support page].
