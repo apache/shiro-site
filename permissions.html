@@ -526,6 +526,15 @@ printer:print:epsoncolor</code></pre>
 </div>
 </div>
 </div>
+<div class="sect3">
+<h4 id="empty_parts">Empty Parts</h4>
+<div class="paragraph">
+<p>Empty or blank parts and subparts, including trailing separators such as <code>printer:print:</code>, are rejected with an exception by default as of Shiro 3.1. Earlier versions silently discarded trailing separators, which could broaden a grant. Leave parts off the end of the string, or use <code>*</code>, to say "all values". To restore the legacy parsing, start the JVM with <code>-Dshiro.authz.strictConfig=false</code>.</p>
+</div>
+<div class="paragraph">
+<p>To build permissions from untrusted data, use <code>WildcardPermission.fromLiteralParts(&#8230;&#8203;)</code>, which always validates its input.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
