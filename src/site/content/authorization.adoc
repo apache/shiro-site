@@ -438,6 +438,8 @@ public void createAccount(Account account) {
 }
 ----
 
+NOTE: As of Shiro 3.1, `@RequiresPermissions` and `@RequiresRoles` with an empty value, such as `@RequiresPermissions({})`, are rejected with a `ConfigurationException` at startup, because they perform no check. Set `-Dshiro.authz.strictConfig=false` to restore the legacy behavior, which logs a warning instead.
+
 [#Authentication-AuthorizingSubjects-AnnotationBasedAuthorization-TheRequiresRolesPermission]
 ==== The `RequiresRoles` permission
 

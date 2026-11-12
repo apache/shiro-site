@@ -385,6 +385,8 @@ The default Filter instances available automatically are defined by the link:sta
 |user |link:static/current/apidocs/shiro-web/org/apache/shiro/web/filter/authc/UserFilter.html[org.apache.shiro.web.filter.authc.UserFilter]
 |===
 
+NOTE: As of Shiro 3.1, the `perms` and `roles` filters reject a definition without arguments (such as `/admin/** = perms`) with a `ConfigurationException` at startup, because it performs no check. Set `-Dshiro.authz.strictConfig=false` to restore the legacy behavior, which logs a warning instead.
+
 == Enabling and Disabling Filters
 
 As is the case with any filter chain definition mechanism (`web.xml`, Shiro's INI, etc.), you enable a filter just by including it in the filter chain definition, and you disable it by removing it from the chain definition.

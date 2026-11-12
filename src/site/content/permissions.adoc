@@ -218,6 +218,12 @@ is *_not_* equivalent to
 printer:*:lp7200
 ----
 
+==== Empty Parts
+
+Empty or blank parts and subparts, including trailing separators such as `printer:print:`, are rejected with an exception by default as of Shiro 3.1. Earlier versions silently discarded trailing separators, which could broaden a grant. Leave parts off the end of the string, or use `*`, to say "all values". To restore the legacy parsing, start the JVM with `-Dshiro.authz.strictConfig=false`.
+
+To build permissions from untrusted data, use `WildcardPermission.fromLiteralParts(...)`, which always validates its input.
+
 == Checking Permissions
 
 While permission assignments use the wildcard construct quite a bit ("printer:print:*" = print to any printer) for convenience and scalability, permission *checks* at runtime should _always_ be based on the most specific permission string possible.

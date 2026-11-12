@@ -273,6 +273,23 @@ authcBearer.allowPreFlightRequests = false
 
 The setting applies per-filter, so configure it for each authentication filter you use.
 
+[#strict-authorization-config]
+=== Strict Authorization Configuration (3.1)
+
+Starting with Shiro 3.1, strict authorization configuration is enabled by default. One setting controls two checks:
+
+* Authorization filters (such as `perms` and `roles`) configured without arguments, and `@RequiresPermissions` or `@RequiresRoles` annotations with empty values, are rejected with a `ConfigurationException` at startup. Such configuration performs no check, which is almost always a mistake.
+* `WildcardPermission` strings with empty or blank parts or subparts, including trailing separators such as `newsletter:edit:`, are rejected. Legacy parsing silently discarded trailing separators, which could broaden a grant.
+
+In Shiro 3.0.2 the same behavior is available as an opt-in. To keep the legacy behavior, with a logged warning for empty configuration, set the following system property:
+
+[source,text]
+----
+-Dshiro.authz.strictConfig=false
+----
+
+`WildcardPermission.fromLiteralParts(...)` always validates its input, regardless of this property.
+
 [#configuration-examples]
 == Configuration Examples
 
@@ -297,6 +314,8 @@ filterChainResolver.caseInsensitive = false
 authcBasic.allowPreFlightRequests = false
 authcBearer.allowPreFlightRequests = false
 ----
+
+To also restore the lenient handling of empty authorization configuration (Shiro 3.1 and later), start the JVM with `-Dshiro.authz.strictConfig=false`.
 
 *Spring Boot (application.properties):*
 [source,properties]
