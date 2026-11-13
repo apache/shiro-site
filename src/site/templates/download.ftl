@@ -14,13 +14,11 @@
 <#if ((content.releases).versions)??>
   <#assign displayReleases=((content.releases).versions)![] />
   <#assign downloadUrl="https://www.apache.org/dyn/closer.lua/shiro/" />
-  <#assign appendToGpg=".txt" />
   <#assign buildRequirements="The source bundle requires JDK 25+ and Maven 3.9+ to build:"/>
 <#else>
   <#-- if not releases are given using :jbake-release:, assume oldReleases (release-archive.html). -->
   <#assign displayReleases=versions.oldReleases />
   <#assign downloadUrl="https://archive.apache.org/dist/shiro/" />
-  <#assign appendToGpg="" />
   <#assign buildRequirements="The source bundle requires JDK 11 and Maven 3.8+ to build:"/>
 </#if>
 
@@ -43,6 +41,7 @@
 
 <#list displayReleases as version>
   <#assign release=versions.releases[version] />
+  <#assign appendToGpg=(release.version == "3.0.0")?then(".txt", "") />
   <section id="${release.version?replace(".", "")}">
   <h2>Release ${release.version}</h2>
 
