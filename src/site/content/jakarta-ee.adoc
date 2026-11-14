@@ -227,6 +227,21 @@ backend server1
 ...
 ----
 
+[IMPORTANT]
+====
+`HttpServletRequest.isSecure()` and related behavior in this integration are derived from `X-Forwarded-Proto` when present, so they may be client-controlled and must not be trusted for security decisions unless the header source itself is trusted.
+If `X-Forwarded-Proto` is trusted in your deployment, the proxy must overwrite or strip any client-supplied value; otherwise, disable this functionality in Shiro as described below.
+
+Starting with Shiro 3.0.2, if the header is not to be honored, add the following property into `web.xml`:
+[source,xml]
+----
+<context-param>
+    <param-name>org.apache.shiro.ee.x-forwarded-proto.disabled</param-name>
+    <param-value>true</param-value>
+</context-param>
+----
+====
+
 As an optimization technique, Shiro tries to issue all redirection according to the `X-Forwarded-Proto` header. If the header is not present, Shiro will use the current request scheme.
 If this behavior is not desired, you can add the following property into `web.xml`
 [source,xml]

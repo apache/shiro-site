@@ -471,6 +471,13 @@ public void deleteUser(User user) {
 }
 ----
 
+NOTE: Always specify at least one value in `@RequiresPermissions` and `@RequiresRoles`.
+An annotation with an empty value does not protect the method.
+Starting with Shiro 3.0.2, such an annotation logs a warning.
+To reject it instead, set the `shiro.authz.strictConfig` system property to `true` (`-Dshiro.authz.strictConfig=true`).
+A `ConfigurationException` is then thrown when the application starts, if you use the CDI, Guice, Spring or JAX-RS integration, or otherwise when the annotated method is first checked.
+Rejecting an empty value will become the default in a future release.
+
 [#Authentication-AuthorizingSubjects-NotationBasedAuthorization-TheRequiresUserAnnotation]
 ==== The `RequiresUser` annotation
 
@@ -622,7 +629,7 @@ securityManager.authorizer.rolePermissionResolver = $globalRolePermissionResolve
 ====
 .RolePermissionResolverAware
 If you want to configure a global `RolePermissionResolver`, each `Realm` that is to receive the configured `RolePermissionResolver` *must* implement the
-link:static/current/apidocs/org/apache/shiro/authz/permission/RolePermissionResolverAware.html[`RolePermissionResolverAware`] interface.
+link:static/current/apidics/org/apache/shiro/authz/permission/RolePermissionResolverAware.html[`RolePermissionResolverAware`] interface.
 This guarantees that the configured global `RolePermissionResolver` instance can be relayed to each `Realm` that supports such configuration.
 If you don't want to use a global `RolePermissionResolver` or you don't want to be bothered with the `RolePermissionResolverAware` interface, you can always configure
 a realm with a `RolePermissionResolver` instance explicitly (assuming there is a JavaBeans-compatible setRolePermissionResolver method).

@@ -116,6 +116,8 @@ securityManager.sessionManager.globalSessionTimeout = 3600000
 
 The above `globalSessionTimeout` value is the default for all newly created `Sessions`. You can control session timeout on a per-Session basis by setting the individual Session's link:static/current/apidocs/org/apache/shiro/session/Session.html#setTimeout(long)[`timeout`] value. Like the above `globalSessionTimeout`, the value is time in *milliseconds* (not seconds).
 
+NOTE: When Shiro is configured with servlet container sessions, the timeout is converted to whole seconds. Before Shiro 3.0.2, a positive timeout below 1000 milliseconds was truncated to 0, which the Servlet specification treats as "never expires". Starting with 3.0.2, positive sub-second values are rounded up to the next whole second and a negative value stays -1 (never expires).
+
 [#SessionManagement-SessionManager-Listeners]
 === Session Listeners
 

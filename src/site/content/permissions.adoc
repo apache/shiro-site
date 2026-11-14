@@ -174,6 +174,41 @@ printer:query,print:lp7200
 
 The '*' wildcard and ',' sub-part separator can be used in any part of the permission.
 
+==== Permission Values from Application Data
+
+The string constructors interpret `:`, `,`, and `*` as permission syntax, not as literal data.
+Do not concatenate untrusted instance IDs, names, or other values into permission strings on either the grant side or the check side.
+A value containing a separator can change the number of parts or create a multi-value grant, and an empty trailing instance ID can broaden a grant to all instances.
+
+Use `WildcardPermission.fromLiteralParts` for permissions constructed from data.
+The factory throws `IllegalArgumentException` for null or blank values, surrounding whitespace, or reserved characters (`:`, `,`, `*`), regardless of strict mode.
+Identifiers containing reserved characters require an unambiguous safe mapping or a custom `Permission` implementation.
+Use string constructors only for trusted wildcard or multi-value expressions.
+Include every required permission level, since omitted levels still imply all values (see below).
+
+[source,java]
+----
+Permission permission = WildcardPermission.fromLiteralParts("printer", "print", printerId);
+subject.checkPermission(permission);
+// Use the same factory when creating permissions assigned to users or roles.
+----
+
+Permissions are case-insensitive by default.
+For case-sensitive identifiers, use `WildcardPermission.fromLiteralParts(true, "printer", "print", printerId)` for both grants and checks.
+If your realm loads grants from strings, configure its `WildcardPermissionResolver` with `caseSensitive=true` so it preserves the case of those identifiers too.
+
+==== Strict Permission Parsing
+
+Setting `-Dshiro.authz.strictConfig=true` also rejects empty or blank permission parts and subparts.
+This reuses the property that rejects empty authorization annotations and filter configurations.
+For example, `printer:print:`, `printer::lp7200`, `printer:print,`, and `printer:print,,query` throw `IllegalArgumentException` when parsed.
+This applies to both string constructors and the default `WildcardPermissionResolver`, on grants as well as checks.
+
+Strict parsing is opt-in before Shiro 3.1 and will be enabled by default in Shiro 3.1.
+Setting `-Dshiro.authz.strictConfig=false` preserves legacy parsing.
+In particular, trailing separators are discarded: `printer:print:` is treated as `printer:print`, which grants access to all printer instances.
+Use the literal-parts factory whenever values come from application data, even with strict parsing enabled.
+
 ==== Missing Parts
 
 One final thing to note about permission assignments: missing parts imply that the user has access to all values corresponding to that part. In other words,
@@ -311,3 +346,12 @@ Shiro's default behavior for Realm implementations is that, for every permission
 This is usually extremely fast when users, roles and permissions are cached in memory when using a proper link:cachemanager.html[CacheManager], which Shiro does support for Realm implementations. Just know that with this default behavior, as the number of permissions assigned to a user or their roles or groups increase, the time to perform the check will necessarily increase.
 
 If a Realm implementer has a more efficient way of checking permissions and performing this implication logic, especially if based on the application's data model, they should implement that as part of their Realm isPermitted* method implementations. The default Realm/WildcardPermission support exists to cover 80-90% of most use cases, but it might not be the best solution for applications that have massive amounts of permissions to store and/or check at runtime.
+
+=== Case Sensitivity and Untrusted Values
+
+By default, `WildcardPermission` is case-insensitive. All parts, including instance identifiers, are converted to lower case before they are compared, so `document:read:Alice` and `document:read:alice` are the same permission.
+Starting with Shiro 3.0.2, the conversion does not depend on the JVM's default locale.
+If instance identifiers are case-sensitive in your application, create the permission with `new WildcardPermission(permissionString, true)` or use a custom `PermissionResolver`.
+
+Also keep in mind that `:`, `,` and `*` are part of the permission syntax, and that a trailing separator is ignored, so `document:read:` is the same as `document:read`.
+Do not build permission strings from values you do not control, such as user input, without validating them first. A value that is empty or that contains these characters changes the meaning of the permission.

@@ -138,8 +138,8 @@ Operators should:
 * Configure the Servlet container or application server to accept only expected hosts and connector ports.
 * Avoid exposing application containers directly to untrusted networks unless host and port validation is enforced at the container boundary.
 * Where available, configure explicit host and port settings for features that reconstruct absolute URLs or resend requests.
-
-Applications should not assume that request-derived scheme, host, and port values are trustworthy unless the deployment boundary explicitly guarantees that property.
+* Overwrite or strip any client-supplied `X-Forwarded-Proto` header at the proxy. Shiro's Jakarta EE module honors it for `HttpServletRequest.isSecure()` and related behavior. See link:jakarta-ee.html[Jakarta EE] for the 3.0.2 option to disable the header.
+* Do not use `PortFilter` for access control. It only redirects by comparing the configured port to the container's `getServerPort()`, which is usually derived from the `Host` header. Use network-level controls to protect internal-only listeners. In Shiro 3.0.2+, the optional `useLocalPort` setting compares the local listener port instead, but keep it disabled behind proxies and treat request-derived scheme/host/port values as untrusted unless your deployment boundary guarantees them.
 
 == Version Discovery
 
@@ -243,6 +243,10 @@ Shiro's `CipherService`, `Hash`, and related APIs are pluggable and accept any a
 === CSRF, MFA, Account Lockout
 
 Per <<Web Security>>, <<Operator Responsibilities>> under <<Authentication Guarantees>>, and elsewhere, CSRF protection, MFA, and account lockout are explicitly *not* built into Shiro. Operators must implement these at the application or infrastructure level. Reports that "Shiro is missing CSRF protection" are not framework vulnerabilities.
+
+=== CORS Preflight Requests Bypassing HTTP Authentication Filters
+
+With `allowPreFlightRequests=true` (the default), any `OPTIONS` request carrying `Origin` and `Access-Control-Request-Method` headers skips authentication. Those headers are client-controlled, so any client can send them. This is the purpose of the setting, not a bypass. Protect `OPTIONS` handlers with Shiro's authorization annotations / APIs, or disable `allowPreFlightRequests` setting and use a  CORS filter in front of Shiro. See link:web.html#cors-support[CORS Support].
 
 === Path Traversal in Downstream Frameworks (e.g. Spring)
 Shiro relies on the Servlet container's interpretation and normalization of request paths for filter-chain matching. If a downstream framework interprets paths differently, this may lead to unexpected routing. Shiro cannot control downstream frameworks and operators must enforce authorization checks appropriately via Shiro's annotations and APIs. Operators must not rely solely on URL-based filter-chain configuration in combination with downstream routing for security-sensitive functionality.

@@ -180,6 +180,15 @@ The `SimpleCredentialsMatcher` performs direct equality comparisons for more tha
 It can work with most common byte sources, such as Strings, character arrays, byte arrays, Files and InputStreams.
 See its JavaDoc for more.
 
+[NOTE]
+====
+Starting with Shiro 3.0.2, an empty or `null` stored credential never matches, not even an empty or `null` submitted password.
+This applies to `SimpleCredentialsMatcher` and to both `passwordsMatch` methods of `DefaultPasswordService`.
+In earlier versions, an account with an empty stored credential could log in with a blank password.
+
+If you intentionally relied on this behavior, for example for accounts with no password, you must handle those accounts in your own `Realm` or `CredentialsMatcher`.
+====
+
 [#Realm-HashingCredentials]
 ==== Hashing Credentials
 
