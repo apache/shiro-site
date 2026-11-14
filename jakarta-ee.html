@@ -714,6 +714,32 @@ backend server1
 ...</code></pre>
 </div>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>HttpServletRequest.isSecure()</code> and related behavior in this integration are derived from <code>X-Forwarded-Proto</code> when present, so they may be client-controlled and must not be trusted for security decisions unless the header source itself is trusted.
+If <code>X-Forwarded-Proto</code> is trusted in your deployment, the proxy must overwrite or strip any client-supplied value; otherwise, disable this functionality in Shiro as described below.</p>
+</div>
+<div class="paragraph">
+<p>Starting with Shiro 3.0.2, if the header is not to be honored, add the following property into <code>web.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;context-param&gt;
+    &lt;param-name&gt;org.apache.shiro.ee.x-forwarded-proto.disabled&lt;/param-name&gt;
+    &lt;param-value&gt;true&lt;/param-value&gt;
+&lt;/context-param&gt;</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>As an optimization technique, Shiro tries to issue all redirection according to the <code>X-Forwarded-Proto</code> header. If the header is not present, Shiro will use the current request scheme.
 If this behavior is not desired, you can add the following property into <code>web.xml</code></p>

@@ -476,6 +476,48 @@ printer:print:epsoncolor</code></pre>
 <p>The '*' wildcard and ',' sub-part separator can be used in any part of the permission.</p>
 </div>
 <div class="sect3">
+<h4 id="permission_values_from_application_data">Permission Values from Application Data</h4>
+<div class="paragraph">
+<p>The string constructors interpret <code>:</code>, <code>,</code>, and <code>*</code> as permission syntax, not as literal data.
+Do not concatenate untrusted instance IDs, names, or other values into permission strings on either the grant side or the check side.
+A value containing a separator can change the number of parts or create a multi-value grant, and an empty trailing instance ID can broaden a grant to all instances.</p>
+</div>
+<div class="paragraph">
+<p>Use <code>WildcardPermission.fromLiteralParts</code> for permissions constructed from data.
+The factory throws <code>IllegalArgumentException</code> for null or blank values, surrounding whitespace, or reserved characters (<code>:</code>, <code>,</code>, <code>*</code>), regardless of strict mode.
+Identifiers containing reserved characters require an unambiguous safe mapping or a custom <code>Permission</code> implementation.
+Use string constructors only for trusted wildcard or multi-value expressions.
+Include every required permission level, since omitted levels still imply all values (see below).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Permission permission = WildcardPermission.fromLiteralParts("printer", "print", printerId);
+subject.checkPermission(permission);
+// Use the same factory when creating permissions assigned to users or roles.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Permissions are case-insensitive by default.
+For case-sensitive identifiers, use <code>WildcardPermission.fromLiteralParts(true, "printer", "print", printerId)</code> for both grants and checks.
+If your realm loads grants from strings, configure its <code>WildcardPermissionResolver</code> with <code>caseSensitive=true</code> so it preserves the case of those identifiers too.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="strict_permission_parsing">Strict Permission Parsing</h4>
+<div class="paragraph">
+<p>Setting <code>-Dshiro.authz.strictConfig=true</code> also rejects empty or blank permission parts and subparts.
+This reuses the property that rejects empty authorization annotations and filter configurations.
+For example, <code>printer:print:</code>, <code>printer::lp7200</code>, <code>printer:print,</code>, and <code>printer:print,,query</code> throw <code>IllegalArgumentException</code> when parsed.
+This applies to both string constructors and the default <code>WildcardPermissionResolver</code>, on grants as well as checks.</p>
+</div>
+<div class="paragraph">
+<p>Strict parsing is opt-in before Shiro 3.1 and will be enabled by default in Shiro 3.1.
+Setting <code>-Dshiro.authz.strictConfig=false</code> preserves legacy parsing.
+In particular, trailing separators are discarded: <code>printer:print:</code> is treated as <code>printer:print</code>, which grants access to all printer instances.
+Use the literal-parts factory whenever values come from application data, even with strict parsing enabled.</p>
+</div>
+</div>
+<div class="sect3">
 <h4 id="missing_parts">Missing Parts</h4>
 <div class="paragraph">
 <p>One final thing to note about permission assignments: missing parts imply that the user has access to all values corresponding to that part. In other words,</p>
@@ -651,6 +693,18 @@ printer:print:epsoncolor</code></pre>
 </div>
 <div class="paragraph">
 <p>If a Realm implementer has a more efficient way of checking permissions and performing this implication logic, especially if based on the application&#8217;s data model, they should implement that as part of their Realm isPermitted* method implementations. The default Realm/WildcardPermission support exists to cover 80-90% of most use cases, but it might not be the best solution for applications that have massive amounts of permissions to store and/or check at runtime.</p>
+</div>
+<div class="sect2">
+<h3 id="case_sensitivity_and_untrusted_values">Case Sensitivity and Untrusted Values</h3>
+<div class="paragraph">
+<p>By default, <code>WildcardPermission</code> is case-insensitive. All parts, including instance identifiers, are converted to lower case before they are compared, so <code>document:read:Alice</code> and <code>document:read:alice</code> are the same permission.
+Starting with Shiro 3.0.2, the conversion does not depend on the JVM&#8217;s default locale.
+If instance identifiers are case-sensitive in your application, create the permission with <code>new WildcardPermission(permissionString, true)</code> or use a custom <code>PermissionResolver</code>.</p>
+</div>
+<div class="paragraph">
+<p>Also keep in mind that <code>:</code>, <code>,</code> and <code>*</code> are part of the permission syntax, and that a trailing separator is ignored, so <code>document:read:</code> is the same as <code>document:read</code>.
+Do not build permission strings from values you do not control, such as user input, without validating them first. A value that is empty or that contains these characters changes the meaning of the permission.</p>
+</div>
 </div>
 </div>
 </div>

@@ -288,6 +288,7 @@
 <li><a href="#rememberme_with_weaker_authentication_guarantees">RememberMe with Weaker Authentication Guarantees</a></li>
 <li><a href="#pluggable_cryptography_allowing_weak_configurations">Pluggable Cryptography Allowing Weak Configurations</a></li>
 <li><a href="#csrf_mfa_account_lockout">CSRF, MFA, Account Lockout</a></li>
+<li><a href="#cors_preflight_requests_bypassing_http_authentication_filters">CORS Preflight Requests Bypassing HTTP Authentication Filters</a></li>
 <li><a href="#path_traversal_in_downstream_frameworks_e_g_spring">Path Traversal in Downstream Frameworks (e.g. Spring)</a></li>
 </ul>
 </li>
@@ -621,10 +622,13 @@ Operators should implement these controls at the application or infrastructure l
 <li>
 <p>Where available, configure explicit host and port settings for features that reconstruct absolute URLs or resend requests.</p>
 </li>
+<li>
+<p>Overwrite or strip any client-supplied <code>X-Forwarded-Proto</code> header at the proxy. Shiro&#8217;s Jakarta EE module honors it for <code>HttpServletRequest.isSecure()</code> and related behavior. See <a href="jakarta-ee.html">Jakarta EE</a> for the 3.0.2 option to disable the header.</p>
+</li>
+<li>
+<p>Do not use <code>PortFilter</code> for access control. It only redirects by comparing the configured port to the container&#8217;s <code>getServerPort()</code>, which is usually derived from the <code>Host</code> header. Use network-level controls to protect internal-only listeners. In Shiro 3.0.2+, the optional <code>useLocalPort</code> setting compares the local listener port instead, but keep it disabled behind proxies and treat request-derived scheme/host/port values as untrusted unless your deployment boundary guarantees them.</p>
+</li>
 </ul>
-</div>
-<div class="paragraph">
-<p>Applications should not assume that request-derived scheme, host, and port values are trustworthy unless the deployment boundary explicitly guarantees that property.</p>
 </div>
 </div>
 </div>
@@ -850,6 +854,12 @@ Operators should implement these controls at the application or infrastructure l
 <h3 id="csrf_mfa_account_lockout">CSRF, MFA, Account Lockout</h3>
 <div class="paragraph">
 <p>Per <a href="#web_security">Web Security</a>, <a href="#operator_responsibilities">Operator Responsibilities</a> under <a href="#authentication_guarantees">Authentication Guarantees</a>, and elsewhere, CSRF protection, MFA, and account lockout are explicitly <strong>not</strong> built into Shiro. Operators must implement these at the application or infrastructure level. Reports that "Shiro is missing CSRF protection" are not framework vulnerabilities.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cors_preflight_requests_bypassing_http_authentication_filters">CORS Preflight Requests Bypassing HTTP Authentication Filters</h3>
+<div class="paragraph">
+<p>With <code>allowPreFlightRequests=true</code> (the default), any <code>OPTIONS</code> request carrying <code>Origin</code> and <code>Access-Control-Request-Method</code> headers skips authentication. Those headers are client-controlled, so any client can send them. This is the purpose of the setting, not a bypass. Protect <code>OPTIONS</code> handlers with Shiro&#8217;s authorization annotations / APIs, or disable <code>allowPreFlightRequests</code> setting and use a  CORS filter in front of Shiro. See <a href="web.html#cors-support">CORS Support</a>.</p>
 </div>
 </div>
 <div class="sect2">

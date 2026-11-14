@@ -969,6 +969,23 @@ public void deleteUser(User user) {
 }</code></pre>
 </div>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Always specify at least one value in <code>@RequiresPermissions</code> and <code>@RequiresRoles</code>.
+An annotation with an empty value does not protect the method.
+Starting with Shiro 3.0.2, such an annotation logs a warning.
+To reject it instead, set the <code>shiro.authz.strictConfig</code> system property to <code>true</code> (<code>-Dshiro.authz.strictConfig=true</code>).
+A <code>ConfigurationException</code> is then thrown when the application starts, if you use the CDI, Guice, Spring or JAX-RS integration, or otherwise when the annotated method is first checked.
+Rejecting an empty value will become the default in a future release.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect3">
 <h4 id="Authentication-AuthorizingSubjects-NotationBasedAuthorization-TheRequiresUserAnnotation">The <code>RequiresUser</code> annotation</h4>
@@ -1181,7 +1198,7 @@ securityManager.authorizer.rolePermissionResolver = $globalRolePermissionResolve
 <div class="paragraph">
 <div class="title">RolePermissionResolverAware</div>
 <p>If you want to configure a global <code>RolePermissionResolver</code>, each <code>Realm</code> that is to receive the configured <code>RolePermissionResolver</code> <strong>must</strong> implement the
-<a href="static/current/apidocs/org/apache/shiro/authz/permission/RolePermissionResolverAware.html"><code>RolePermissionResolverAware</code></a> interface.
+<a href="static/current/apidics/org/apache/shiro/authz/permission/RolePermissionResolverAware.html"><code>RolePermissionResolverAware</code></a> interface.
 This guarantees that the configured global <code>RolePermissionResolver</code> instance can be relayed to each <code>Realm</code> that supports such configuration.
 If you don&#8217;t want to use a global <code>RolePermissionResolver</code> or you don&#8217;t want to be bothered with the <code>RolePermissionResolverAware</code> interface, you can always configure
 a realm with a <code>RolePermissionResolver</code> instance explicitly (assuming there is a JavaBeans-compatible setRolePermissionResolver method).</p>

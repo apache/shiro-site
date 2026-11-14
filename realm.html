@@ -503,6 +503,25 @@ The <code>SimpleCredentialsMatcher</code> performs a plain direct equality check
 It can work with most common byte sources, such as Strings, character arrays, byte arrays, Files and InputStreams.
 See its JavaDoc for more.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Starting with Shiro 3.0.2, an empty or <code>null</code> stored credential never matches, not even an empty or <code>null</code> submitted password.
+This applies to <code>SimpleCredentialsMatcher</code> and to both <code>passwordsMatch</code> methods of <code>DefaultPasswordService</code>.
+In earlier versions, an account with an empty stored credential could log in with a blank password.</p>
+</div>
+<div class="paragraph">
+<p>If you intentionally relied on this behavior, for example for accounts with no password, you must handle those accounts in your own <code>Realm</code> or <code>CredentialsMatcher</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect3">
 <h4 id="Realm-HashingCredentials">Hashing Credentials</h4>
