@@ -4,7 +4,7 @@
   <subtitle>Simple. Java. Security.</subtitle>
   <link href="https://shiro.apache.org/"/>
   <link rel="self" href="https://shiro.apache.org/feed.xml" />
-  <updated>2026-11-14T05:44:50Z</updated>
+  <updated>2026-11-15T01:25:29Z</updated>
 
   <author>
     <name>Les Hazlewood</name>
@@ -34,6 +34,124 @@
   <generator uri="https://jbake.org/">JBake.org</generator>
   <icon>/images/favicon128.png</icon>
   <logo>/images/apache-shiro-logo.png</logo>
+
+  <entry>
+    <title>Critical security advisories: LDAP realm and cookie fixes</title>
+    <link href="https://shiro.apache.org/blog/2026/11/apache-shiro-security-advisories.html"/>
+    <id>https://shiro.apache.org/blog/2026/11/apache-shiro-security-advisories.html</id>
+    <updated>2026-11-14T00:00:00Z</updated>
+    <author>
+      <name>Lenny Primak</name>
+    </author>
+    <content type="html">
+      &lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Apache Shiro team has published three critical security advisories. Two affect &lt;code&gt;DefaultLdapRealm&lt;/code&gt; and one affects the default cookie settings. Please review them and upgrade if you are affected. The full list is on the &lt;a href=&quot;/security-reports.html&quot;&gt;Vulnerability Reports&lt;/a&gt; page.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;cve_2026_129349_any_password_accepted_with_ldap_authentication_caching&quot;&gt;CVE-2026-129349: any password accepted with LDAP authentication caching&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;When authentication caching is enabled on &lt;code&gt;DefaultLdapRealm&lt;/code&gt;, a user who has logged in successfully once can log in again with any password. A cached authentication skips the LDAP bind, and the &lt;code&gt;AllowAllCredentialsMatcher&lt;/code&gt; installed by default accepts any credentials. An attacker who knows a valid username can authenticate as that user.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Severity:&lt;/strong&gt; Critical&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Affected:&lt;/strong&gt; all Shiro versions through 3.0.0, only when using &lt;code&gt;DefaultLdapRealm&lt;/code&gt; (or &lt;code&gt;JndiLdapRealm&lt;/code&gt;) with &lt;code&gt;authenticationCachingEnabled&lt;/code&gt; set to &lt;code&gt;true&lt;/code&gt;. This is not the default.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Fix:&lt;/strong&gt; upgrade to 3.0.1 or later. &lt;code&gt;AllowAllCredentialsMatcher&lt;/code&gt; is no longer installed by default.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Workarounds:&lt;/strong&gt; keep authentication caching disabled on the LDAP realm (the default), or configure a credentials matcher such as &lt;code&gt;SimpleCredentialsMatcher&lt;/code&gt; that verifies credentials against the cached authentication info.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Credit:&lt;/strong&gt; thanks to Joshua Rogers for reporting this issue.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;cve_2026_49268_ldap_dn_injection_in_defaultldaprealm&quot;&gt;CVE-2026-49268: LDAP DN injection in DefaultLdapRealm&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;A remote attacker can inject LDAP special characters into the Distinguished Name (DN) built by &lt;code&gt;DefaultLdapRealm&lt;/code&gt;. The username was concatenated into the DN template without escaping the RFC 2253 special characters. This lets an attacker change the DN structure used for the LDAP bind, which can bypass authentication or impersonate other users.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Severity:&lt;/strong&gt; Critical&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Affected:&lt;/strong&gt; all Shiro versions through 2.2.0, and 3.0.0-alpha-1, when using &lt;code&gt;DefaultLdapRealm&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Fix:&lt;/strong&gt; upgrade to 2.2.1, or 3.0.0-alpha-2 or later. User-supplied DN values are now escaped.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Credit:&lt;/strong&gt; thanks to zhaokaifei for reporting this issue.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;cve_2026_43828_session_cookies_sent_without_the_secure_attribute&quot;&gt;CVE-2026-43828: session cookies sent without the Secure attribute&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;By default, the Shiro-native session manager and the Remember-Me manager sent the &lt;code&gt;JSESSIONID&lt;/code&gt; and &lt;code&gt;rememberMe&lt;/code&gt; cookies without the &lt;code&gt;Secure&lt;/code&gt; attribute, even over HTTPS.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Severity:&lt;/strong&gt; Critical&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Affected:&lt;/strong&gt; Shiro 1.0 to 2.1.0, and 3.0.0-alpha-1.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Fix:&lt;/strong&gt; upgrade to 2.2.0, or 3.0.0-alpha-2 or later. The &lt;code&gt;Secure&lt;/code&gt; attribute is now set.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Credit:&lt;/strong&gt; thanks to Meteor_Kai for reporting this issue.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;what_you_should_do&quot;&gt;What you should do&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Upgrade to the latest release listed on the &lt;a href=&quot;/download.html&quot;&gt;download page&lt;/a&gt;. Version 3.0.2 or later covers all three issues on the 3.x line, and 2.2.1 or later covers them on the 2.x line.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Review your LDAP realm configuration, especially if authentication caching is enabled.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check that your session and Remember-Me cookies carry the &lt;code&gt;Secure&lt;/code&gt; attribute.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you find a security issue, please report it by following the instructions on the &lt;a href=&quot;/security-reports.html&quot;&gt;Vulnerability Reports&lt;/a&gt; page.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Apache Shiro Team&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+    </content>
+  </entry>
 
   <entry>
     <title>3.0.2 available</title>
@@ -1050,79 +1168,6 @@
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;You can learn more on &lt;a href=&quot;https://github.com/apache/shiro/releases/tag/shiro-root-2.0.4&quot;&gt;GitHub, Release 2.0.4&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;download&quot;&gt;Download&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Download and verification instructions are available &lt;a href=&quot;/download.html&quot;&gt;on our download page&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;documentation&quot;&gt;Documentation&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;For more information on &lt;a href=&quot;/documentation.html&quot;&gt;Shiro, please read the documentation.&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Enjoy!&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The Apache Shiro Team&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-    </content>
-  </entry>
-
-  <entry>
-    <title>2.0.3 available</title>
-    <link href="https://shiro.apache.org/blog/2025/04/apache-shiro-203-released.html"/>
-    <id>https://shiro.apache.org/blog/2025/04/apache-shiro-203-released.html</id>
-    <updated>2025-04-06T00:00:00Z</updated>
-    <author>
-      <name>Lenny Primak</name>
-    </author>
-    <content type="html">
-      &lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The Apache Shiro team is pleased to announce the release of Apache Shiro version 2.0.3.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This release is available for download now.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;release_highlights&quot;&gt;Release Highlights&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This is a maintenance release that includes several bug fixes and improvements, and many dependency updates. It is recommended for all users to upgrade to this version.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;ulist&quot;&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Clean up invalid Javadoc syntax and broken references&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Clean up comments and make log messages in AuthenticatingRealm consistent&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Catch IllegalStateException in validate() and do not log incorrect error messages&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;all_changes&quot;&gt;All changes&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;You can learn more on &lt;a href=&quot;https://github.com/apache/shiro/releases/tag/shiro-root-2.0.3&quot;&gt;GitHub, Release 2.0.3&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
