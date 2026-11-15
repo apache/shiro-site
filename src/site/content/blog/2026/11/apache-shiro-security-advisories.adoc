@@ -1,0 +1,67 @@
+////
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+////
+
+= Critical security advisories: LDAP realm and cookie fixes
+:jbake-author: Lenny Primak
+:jbake-date: 2026-11-14 00:00:00
+:jbake-type: post
+:jbake-status: published
+:jbake-tags: blog, security
+:idprefix:
+:icons: font
+
+The Apache Shiro team has published three critical security advisories. Two affect `DefaultLdapRealm` and one affects the default cookie settings. Please review them and upgrade if you are affected. The full list is on the link:/security-reports.html[Vulnerability Reports] page.
+
+== CVE-2026-129349: any password accepted with LDAP authentication caching
+
+When authentication caching is enabled on `DefaultLdapRealm`, a user who has logged in successfully once can log in again with any password. A cached authentication skips the LDAP bind, and the `AllowAllCredentialsMatcher` installed by default accepts any credentials. An attacker who knows a valid username can authenticate as that user.
+
+* *Severity:* Critical
+* *Affected:* all Shiro versions through 3.0.0, only when using `DefaultLdapRealm` (or `JndiLdapRealm`) with `authenticationCachingEnabled` set to `true`. This is not the default.
+* *Fix:* upgrade to 3.0.1 or later. `AllowAllCredentialsMatcher` is no longer installed by default.
+* *Workarounds:* keep authentication caching disabled on the LDAP realm (the default), or configure a credentials matcher such as `SimpleCredentialsMatcher` that verifies credentials against the cached authentication info.
+* *Credit:* thanks to Joshua Rogers for reporting this issue.
+
+== CVE-2026-49268: LDAP DN injection in DefaultLdapRealm
+
+A remote attacker can inject LDAP special characters into the Distinguished Name (DN) built by `DefaultLdapRealm`. The username was concatenated into the DN template without escaping the RFC 2253 special characters. This lets an attacker change the DN structure used for the LDAP bind, which can bypass authentication or impersonate other users.
+
+* *Severity:* Critical
+* *Affected:* all Shiro versions through 2.2.0, and 3.0.0-alpha-1, when using `DefaultLdapRealm`.
+* *Fix:* upgrade to 2.2.1, or 3.0.0-alpha-2 or later. User-supplied DN values are now escaped.
+* *Credit:* thanks to zhaokaifei for reporting this issue.
+
+== CVE-2026-43828: session cookies sent without the Secure attribute
+
+By default, the Shiro-native session manager and the Remember-Me manager sent the `JSESSIONID` and `rememberMe` cookies without the `Secure` attribute, even over HTTPS.
+
+* *Severity:* Critical
+* *Affected:* Shiro 1.0 to 2.1.0, and 3.0.0-alpha-1.
+* *Fix:* upgrade to 2.2.0, or 3.0.0-alpha-2 or later. The `Secure` attribute is now set.
+* *Credit:* thanks to Meteor_Kai for reporting this issue.
+
+== What you should do
+
+* Upgrade to the latest release listed on the link:/download.html[download page]. Version 3.0.2 or later covers all three issues on the 3.x line, and 2.2.1 or later covers them on the 2.x line.
+* Review your LDAP realm configuration, especially if authentication caching is enabled.
+* Check that your session and Remember-Me cookies carry the `Secure` attribute.
+
+If you find a security issue, please report it by following the instructions on the link:/security-reports.html[Vulnerability Reports] page.
+
+The Apache Shiro Team
