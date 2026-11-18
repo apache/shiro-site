@@ -4,7 +4,7 @@
   <subtitle>Simple. Java. Security.</subtitle>
   <link href="https://shiro.apache.org/"/>
   <link rel="self" href="https://shiro.apache.org/feed.xml" />
-  <updated>2026-11-15T01:25:29Z</updated>
+  <updated>2026-11-18T17:55:52Z</updated>
 
   <author>
     <name>Les Hazlewood</name>
@@ -34,6 +34,96 @@
   <generator uri="https://jbake.org/">JBake.org</generator>
   <icon>/images/favicon128.png</icon>
   <logo>/images/apache-shiro-logo.png</logo>
+
+  <entry>
+    <title>Java4Shell (CVE-2026-114938): what Shiro users should know</title>
+    <link href="https://shiro.apache.org/blog/2026/11/apache-shiro-java4shell.html"/>
+    <id>https://shiro.apache.org/blog/2026/11/apache-shiro-java4shell.html</id>
+    <updated>2026-11-18T00:00:00Z</updated>
+    <author>
+      <name>Lenny Primak</name>
+    </author>
+    <content type="html">
+      &lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The OpenJDK team has published a security advisory for CVE-2026-114938, also known as Java4Shell. This is a vulnerability in the OpenJDK HotSpot Base64 decoder, not a vulnerability in Apache Shiro itself. Shiro applications can still be vulnerable because Shiro decodes Base64 data using the JDK.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;what_is_affected&quot;&gt;What is affected&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The vulnerable code is an optimized Base64 decoding path in HotSpot JVM. Exploitation requires a vulnerable Java runtime and an x86-64 processor with AVX-512 VBMI support. This is a CPU capability, not a condition limited to Intel processors; some AMD processors support it as well. ARM64 systems are not known to be affected.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Java runtime vendor and version matter. OpenJDK and Oracle have published affected-version details, and other Java distributors may publish their own build-specific guidance. Check the advisory for the vendor and runtime you deploy, including JDKs bundled with applications, containers, and appliances.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;how_this_relates_to_shiro&quot;&gt;How this relates to Shiro&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Shiro&amp;#8217;s web &lt;code&gt;CookieRememberMeManager&lt;/code&gt; Base64-encodes serialized identity data in the remember-me cookie and decodes that cookie when reading it. Shiro&amp;#8217;s Base64 decoder delegates to &lt;code&gt;java.util.Base64&lt;/code&gt;, so a request handled through this path may be vulnerable.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This does not mean every Shiro deployment is exploitable. Exposure depends on the Java runtime, CPU capabilities, and whether an application reaches the affected decoder path. Base64 is an encoding, not encryption, and changing Shiro versions alone does not fix a vulnerable JDK.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;remediation&quot;&gt;Remediation&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Upgrade to a fixed Java runtime from your distributor as soon as possible. Inventory all JVMs, including those bundled with services and container images, and follow the affected-version and update guidance from the Java vendor. Prioritize internet-facing systems.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Until you can apply the update, the following JVM option mitigates this issue on runtimes that support it:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlightjs highlight&quot;&gt;&lt;code class=&quot;language-bash hljs&quot; data-lang=&quot;bash&quot;&gt;JAVA_TOOL_OPTIONS=&apos;-XX:-UseBASE64Intrinsics&apos; java -jar your-app.jar&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For managed services and containers, configure the option on the actual application JVM and restart the service. Treat this as a temporary mitigation, verify that your runtime accepts the option, and still apply the vendor&amp;#8217;s fixed runtime update.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;further_information&quot;&gt;Further information&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://openjdk.org/groups/vulnerability/advisories/2026-11-17&quot;&gt;OpenJDK Vulnerability Advisory, 2026/11/17&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.oracle.com/security-alerts/cspunov2026.html&quot;&gt;Oracle Critical Security Patch Update Advisory, November 2026&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.cisa.gov/news-events/alerts/2026/11/17/critical-java-vulnerability-requires-immediate-patching&quot;&gt;CISA: Critical Java Vulnerability Requires Immediate Patching&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://calif.io/java4shell&quot;&gt;Java4Shell technical write-up and recommendations&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/apache/shiro/blob/shiro-root-3.0.2/web/src/main/java/org/apache/shiro/web/mgt/CookieRememberMeManager.java&quot;&gt;Shiro 3.0.2 CookieRememberMeManager&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/apache/shiro/blob/shiro-root-3.0.2/lang/src/main/java/org/apache/shiro/lang/codec/Base64.java&quot;&gt;Shiro 3.0.2 Base64 codec&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Apache Shiro Team&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+    </content>
+  </entry>
 
   <entry>
     <title>Critical security advisories: LDAP realm and cookie fixes</title>
@@ -1098,76 +1188,6 @@
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;You can learn more on &lt;a href=&quot;https://github.com/apache/shiro/releases/tag/shiro-root-2.0.5&quot;&gt;GitHub, Release 2.0.5&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;download&quot;&gt;Download&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Download and verification instructions are available &lt;a href=&quot;/download.html&quot;&gt;on our download page&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;documentation&quot;&gt;Documentation&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;For more information on &lt;a href=&quot;/documentation.html&quot;&gt;Shiro, please read the documentation.&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Enjoy!&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The Apache Shiro Team&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-    </content>
-  </entry>
-
-  <entry>
-    <title>2.0.4 available</title>
-    <link href="https://shiro.apache.org/blog/2025/04/apache-shiro-204-released.html"/>
-    <id>https://shiro.apache.org/blog/2025/04/apache-shiro-204-released.html</id>
-    <updated>2025-04-20T00:00:00Z</updated>
-    <author>
-      <name>Lenny Primak</name>
-    </author>
-    <content type="html">
-      &lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The Apache Shiro team is pleased to announce the release of Apache Shiro version 2.0.4.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This release is available for download now.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;release_highlights&quot;&gt;Release Highlights&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This is a maintenance release that includes several bug fixes, improvements and dependency updates. It is recommended for all users to upgrade to this version.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;ulist&quot;&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Fixes a possible ThreadLocal variable leak when Servlet starts threads&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Fixes issues with Remember Me functionality in Apache Karaf and OSGi environments&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;all_changes&quot;&gt;All changes&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;You can learn more on &lt;a href=&quot;https://github.com/apache/shiro/releases/tag/shiro-root-2.0.4&quot;&gt;GitHub, Release 2.0.4&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
