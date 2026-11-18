@@ -1,0 +1,65 @@
+////
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+////
+
+= Java4Shell (CVE-2026-114938): what Shiro users should know
+:jbake-author: Lenny Primak
+:jbake-date: 2026-11-18 00:00:00
+:jbake-type: post
+:jbake-status: published
+:jbake-tags: blog, security
+:idprefix:
+:icons: font
+
+The OpenJDK team has published a security advisory for CVE-2026-114938, also known as Java4Shell. This is a vulnerability in the OpenJDK HotSpot Base64 decoder, not a vulnerability in Apache Shiro itself. Shiro applications can still be vulnerable because Shiro decodes Base64 data using the JDK.
+
+== What is affected
+
+The vulnerable code is an optimized Base64 decoding path in HotSpot JVM. Exploitation requires a vulnerable Java runtime and an x86-64 processor with AVX-512 VBMI support. This is a CPU capability, not a condition limited to Intel processors; some AMD processors support it as well. ARM64 systems are not known to be affected.
+
+The Java runtime vendor and version matter. OpenJDK and Oracle have published affected-version details, and other Java distributors may publish their own build-specific guidance. Check the advisory for the vendor and runtime you deploy, including JDKs bundled with applications, containers, and appliances.
+
+== How this relates to Shiro
+
+Shiro's web `CookieRememberMeManager` Base64-encodes serialized identity data in the remember-me cookie and decodes that cookie when reading it. Shiro's Base64 decoder delegates to `java.util.Base64`, so a request handled through this path may be vulnerable.
+
+This does not mean every Shiro deployment is exploitable. Exposure depends on the Java runtime, CPU capabilities, and whether an application reaches the affected decoder path. Base64 is an encoding, not encryption, and changing Shiro versions alone does not fix a vulnerable JDK.
+
+== Remediation
+
+Upgrade to a fixed Java runtime from your distributor as soon as possible. Inventory all JVMs, including those bundled with services and container images, and follow the affected-version and update guidance from the Java vendor. Prioritize internet-facing systems.
+
+Until you can apply the update, the following JVM option mitigates this issue on runtimes that support it:
+
+[source,bash]
+----
+JAVA_TOOL_OPTIONS='-XX:-UseBASE64Intrinsics' java -jar your-app.jar
+----
+
+For managed services and containers, configure the option on the actual application JVM and restart the service. Treat this as a temporary mitigation, verify that your runtime accepts the option, and still apply the vendor's fixed runtime update.
+
+== Further information
+
+* link:https://openjdk.org/groups/vulnerability/advisories/2026-11-17[OpenJDK Vulnerability Advisory, 2026/11/17]
+* link:https://www.oracle.com/security-alerts/cspunov2026.html[Oracle Critical Security Patch Update Advisory, November 2026]
+* link:https://www.cisa.gov/news-events/alerts/2026/11/17/critical-java-vulnerability-requires-immediate-patching[CISA: Critical Java Vulnerability Requires Immediate Patching]
+* link:https://calif.io/java4shell[Java4Shell technical write-up and recommendations]
+* link:https://github.com/apache/shiro/blob/shiro-root-3.0.2/web/src/main/java/org/apache/shiro/web/mgt/CookieRememberMeManager.java[Shiro 3.0.2 CookieRememberMeManager]
+* link:https://github.com/apache/shiro/blob/shiro-root-3.0.2/lang/src/main/java/org/apache/shiro/lang/codec/Base64.java[Shiro 3.0.2 Base64 codec]
+
+The Apache Shiro Team
