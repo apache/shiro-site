@@ -18,6 +18,8 @@
         <ul>
           <li><a href="https://www.infoq.com/articles/apache-shiro">What is Apache Shiro?</a></li>
           <li><a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>10-minute-tutorial.html">10 Minute Tutorial</a></li>
+          <li><a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>support.html">Support</a></li>
+          <li><a href="https://start.flowlogix.com">Generate Quick Starter</a></li>
           <li><a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>articles.html">More articles...</a></li>
         </ul>
       </div>
@@ -89,6 +91,17 @@
         <div class="card-body shadow-sm pb-2">
           <p>API&#8217;s giving you power and simplicity beyond what Java provides by default...</p>
           <a href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>integration.html"><span class="more">Read More &gt;&gt;&gt;</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row row-padded">
+      <div class="col-md-6 col-sm-6 panel mb-3">
+        <div class="panel-heading credentials">
+          <h2 class="panel-title"> Credentials</h2>
+        </div>
+        <div class="card-body shadow-sm pb-2">
+          <div data-iframe-width="320" data-iframe-height="360" data-share-badge-id="56f64713-d104-4720-8afe-b7b5d083f47b" data-share-badge-host="https://www.credly.com"></div><script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
         </div>
       </div>
     </div>
