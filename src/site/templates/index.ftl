@@ -101,7 +101,8 @@
           <h2 class="panel-title"> Credentials</h2>
         </div>
         <div class="card-body shadow-sm pb-2">
-          <div data-iframe-width="320" data-iframe-height="360" data-share-badge-id="56f64713-d104-4720-8afe-b7b5d083f47b" data-share-badge-host="https://www.credly.com"></div><script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
+          <a href="https://www.credly.com/badges/56f64713-d104-4720-8afe-b7b5d083f47b"><img src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>images/security-slam-2026-cra-badge.png" alt="Security Slam 2026 CRA Readiness Badge" width="150" height="150"/></a>
+          <p><a href="https://www.credly.com/badges/56f64713-d104-4720-8afe-b7b5d083f47b">Security Slam 2026 CRA Readiness Badge</a> issued by The Linux Foundation to Flow Logix.</p>
         </div>
       </div>
     </div>
