@@ -661,12 +661,52 @@ If secure session cookies are not desired, you can disable them by adding the fo
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;context-param&gt;
     &lt;param-name&gt;shiroConfigLocations&lt;/param-name&gt;
-    &lt;param-value&gt;classpath:META-INF/shiro.ini, classpath:META-INF/shiro2.ini&lt;/param-value&gt;
+    &lt;param-value&gt;classpath:META-INF/shiro.ini, classpath:META-INF/framework.ini&lt;/param-value&gt;
 &lt;/context-param&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Only two files are supported. More than two file will result in an error.</p>
+<p>Only two files are supported. More than two files will result in an error.</p>
+</div>
+<div class="paragraph">
+<p>The first file is the user configuration. The second file is the framework configuration, which provides defaults. The user configuration takes precedence. A setting in the user configuration replaces the same setting in the framework configuration, and the <code>[urls]</code> rules of the user configuration are matched before those of the framework configuration. The user configuration can also refer to objects defined in the <code>[main]</code> section of the framework configuration.</p>
+</div>
+<div class="paragraph">
+<p>In the following example, requests to <code>/app/**</code> use form login from the user configuration, and all other requests use HTTP Basic authentication from the framework configuration. The user configuration uses the <code>sessionManager</code> defined in the framework configuration.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini"># framework.ini
+[main]
+sessionManager = org.apache.shiro.web.session.mgt.DefaultWebSessionManager
+
+[urls]
+/** = authcBasic</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini"># shiro.ini
+[main]
+securityManager.sessionManager = $sessionManager
+
+[urls]
+/app/** = authc</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Before Shiro 3.1, a bug reversed the <code>[urls]</code> matching order, so the rules of the framework configuration were matched first. See the <a href="migration-guide.html#ini-merge-urls-order">migration guide</a>.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect3">
