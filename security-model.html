@@ -290,6 +290,7 @@
 <li><a href="#csrf_mfa_account_lockout">CSRF, MFA, Account Lockout</a></li>
 <li><a href="#cors_preflight_requests_bypassing_http_authentication_filters">CORS Preflight Requests Bypassing HTTP Authentication Filters</a></li>
 <li><a href="#path_traversal_in_downstream_frameworks_e_g_spring">Path Traversal in Downstream Frameworks (e.g. Spring)</a></li>
+<li><a href="#annotations_not_enforced_outside_the_invoked_method_or_its_class">Annotations Not Enforced Outside the Invoked Method or Its Class</a></li>
 </ul>
 </li>
 <li><a href="#triage_dispositions">Triage Dispositions</a></li>
@@ -450,7 +451,7 @@ Operators should implement these controls at the application or infrastructure l
 <p><strong>Wildcard Permissions</strong>: The <code>WildcardPermission</code> implementation provides flexible, hierarchical permission strings (e.g., <code>printer:print:lp7200</code>).</p>
 </li>
 <li>
-<p><strong>Annotation Support</strong>: Declarative security via <code>@RequiresAuthentication</code>, <code>@RequiresPermissions</code>, <code>@RequiresRoles</code>, and related annotations.</p>
+<p><strong>Annotation Support</strong>: Declarative security via <code>@RequiresAuthentication</code>, <code>@RequiresPermissions</code>, <code>@RequiresRoles</code>, and related annotations, on the method or its class. Shiro also recognizes them on interfaces, superclasses, and in composed annotations. If Shiro misses an annotation in some combination of these, it is treated as a bug, not a vulnerability (see <a href="#annotations_not_enforced_outside_the_invoked_method_or_its_class">Annotations Not Enforced Outside the Invoked Method or Its Class</a>).</p>
 </li>
 </ul>
 </div>
@@ -467,6 +468,9 @@ Operators should implement these controls at the application or infrastructure l
 </li>
 <li>
 <p><strong>Realm Security</strong>: Authorization data sources (LDAP, databases, etc.) must be secured appropriately.</p>
+</li>
+<li>
+<p><strong>Annotation Enforcement</strong>: If you place authorization annotations anywhere other than the invoked method or its class, test that each protected method correctly rejects an unauthorized caller.</p>
 </li>
 </ul>
 </div>
@@ -866,6 +870,15 @@ Operators should implement these controls at the application or infrastructure l
 <h3 id="path_traversal_in_downstream_frameworks_e_g_spring">Path Traversal in Downstream Frameworks (e.g. Spring)</h3>
 <div class="paragraph">
 <p>Shiro relies on the Servlet container&#8217;s interpretation and normalization of request paths for filter-chain matching. If a downstream framework interprets paths differently, this may lead to unexpected routing. Shiro cannot control downstream frameworks and operators must enforce authorization checks appropriately via Shiro&#8217;s annotations and APIs. Operators must not rely solely on URL-based filter-chain configuration in combination with downstream routing for security-sensitive functionality.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="annotations_not_enforced_outside_the_invoked_method_or_its_class">Annotations Not Enforced Outside the Invoked Method or Its Class</h3>
+<div class="paragraph">
+<p>If an integration does not recognize an annotation on an interface, a superclass, or in a composed annotation, that is a bug in the integration, not a vulnerability. Such reports are fixed as regular bugs, without a CVE. To rely on enforcement, put the annotation on the method or its class.</p>
+</div>
+<div class="paragraph">
+<p>Earlier advisories, such as CVE-2026-74763, treated some of these cases as vulnerabilities. That is no longer the case, and those advisories are not a precedent for new reports.</p>
 </div>
 </div>
 </div>
