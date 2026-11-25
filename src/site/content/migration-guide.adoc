@@ -274,7 +274,7 @@ authcBearer.allowPreFlightRequests = false
 The setting applies per-filter, so configure it for each authentication filter you use.
 
 [#strict-authorization-config]
-=== Strict Authorization Configuration (3.1)
+=== Strict Authorization Configuration in Shiro 3.1+
 
 Starting with Shiro 3.1, strict authorization configuration is enabled by default. One setting controls two checks:
 
@@ -289,6 +289,16 @@ In Shiro 3.0.2 the same behavior is available as an opt-in. To keep the legacy b
 ----
 
 `WildcardPermission.fromLiteralParts(...)` always validates its input, regardless of this property.
+
+[#ini-merge-urls-order]
+=== Merged INI `[urls]` Order in Shiro 3.1+
+
+When a framework INI is merged into the user INI, the user's `[urls]` rules now come first, followed by the rules only the framework INI has. Before, the framework rules came first and could override paths configured in the user INI. This applies to the second file of `shiroConfigLocations` in the link:jakarta-ee.html[Jakarta EE] module and to `IniWebEnvironment.getFrameworkIni()`.
+
+[NOTE]
+====
+If your framework configuration has `[urls]` rules that must match before the rules of the user configuration, move them to the user configuration.
+====
 
 [#configuration-examples]
 == Configuration Examples

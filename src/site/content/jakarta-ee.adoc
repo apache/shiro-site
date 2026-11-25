@@ -191,10 +191,39 @@ The module finds shiro.ini in the same manner as link:web.html#custom_configurat
 ----
 <context-param>
     <param-name>shiroConfigLocations</param-name>
-    <param-value>classpath:META-INF/shiro.ini, classpath:META-INF/shiro2.ini</param-value>
+    <param-value>classpath:META-INF/shiro.ini, classpath:META-INF/framework.ini</param-value>
 </context-param>
 ----
-Only two files are supported. More than two file will result in an error.
+Only two files are supported. More than two files will result in an error.
+
+The first file is the user configuration. The second file is the framework configuration, which provides defaults. The user configuration takes precedence. A setting in the user configuration replaces the same setting in the framework configuration, and the `[urls]` rules of the user configuration are matched before those of the framework configuration. The user configuration can also refer to objects defined in the `[main]` section of the framework configuration.
+
+In the following example, requests to `/app/**` use form login from the user configuration, and all other requests use HTTP Basic authentication from the framework configuration. The user configuration uses the `sessionManager` defined in the framework configuration.
+
+[source,ini]
+----
+# framework.ini
+[main]
+sessionManager = org.apache.shiro.web.session.mgt.DefaultWebSessionManager
+
+[urls]
+/** = authcBasic
+----
+
+[source,ini]
+----
+# shiro.ini
+[main]
+securityManager.sessionManager = $sessionManager
+
+[urls]
+/app/** = authc
+----
+
+[NOTE]
+====
+Before Shiro 3.1, a bug reversed the `[urls]` matching order, so the rules of the framework configuration were matched first. See the link:migration-guide.html#ini-merge-urls-order[migration guide].
+====
 
 ==== Custom WebEnvironment class
 Custom class is supported, provided it's inherited from `org.apache.shiro.ee.listeners.IniEnvironment` or has the same functionality.
