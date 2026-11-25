@@ -70,13 +70,14 @@ By default, Shiro may reveal whether a username exists through different error r
 * **Permission Resolution**: Shiro resolves whether a `Subject` has specific permissions through configured `Realm` instances and permission resolvers.
 * **Role Checking**: Both implicit role checks (`hasRole`) and explicit permission-based checks (`isPermitted`) are supported.
 * **Wildcard Permissions**: The `WildcardPermission` implementation provides flexible, hierarchical permission strings (e.g., `printer:print:lp7200`).
-* **Annotation Support**: Declarative security via `@RequiresAuthentication`, `@RequiresPermissions`, `@RequiresRoles`, and related annotations.
+* **Annotation Support**: Declarative security via `@RequiresAuthentication`, `@RequiresPermissions`, `@RequiresRoles`, and related annotations, on the method or its class. Shiro also recognizes them on interfaces, superclasses, and in composed annotations. If Shiro misses an annotation in some combination of these, it is treated as a bug, not a vulnerability (see <<Annotations Not Enforced Outside the Invoked Method or Its Class>>).
 
 === Operator Responsibilities
 
 * **Permission Assignment**: Operators must correctly configure permission-to-role and role-to-user mappings in their data model.
 * **Least Privilege**: Shiro enforces permissions as configured; designing an appropriate permission model is the operator's responsibility.
 * **Realm Security**: Authorization data sources (LDAP, databases, etc.) must be secured appropriately.
+* **Annotation Enforcement**: If you place authorization annotations anywhere other than the invoked method or its class, test that each protected method correctly rejects an unauthorized caller.
 
 == Session Management
 
@@ -250,6 +251,12 @@ With `allowPreFlightRequests=true` (the default), any `OPTIONS` request carrying
 
 === Path Traversal in Downstream Frameworks (e.g. Spring)
 Shiro relies on the Servlet container's interpretation and normalization of request paths for filter-chain matching. If a downstream framework interprets paths differently, this may lead to unexpected routing. Shiro cannot control downstream frameworks and operators must enforce authorization checks appropriately via Shiro's annotations and APIs. Operators must not rely solely on URL-based filter-chain configuration in combination with downstream routing for security-sensitive functionality.
+
+=== Annotations Not Enforced Outside the Invoked Method or Its Class
+
+If an integration does not recognize an annotation on an interface, a superclass, or in a composed annotation, that is a bug in the integration, not a vulnerability. Such reports are fixed as regular bugs, without a CVE. To rely on enforcement, put the annotation on the method or its class.
+
+Earlier advisories, such as CVE-2026-74763, treated some of these cases as vulnerabilities. That is no longer the case, and those advisories are not a precedent for new reports.
 
 == Triage Dispositions
 
