@@ -45,7 +45,7 @@ A https://www.apache.org/security/committers.html[more detailed description of t
 === link:https://www.cve.org/CVERecord?id=CVE-2026-137686[CVE-2026-137686]
 The fix for link:https://www.cve.org/CVERecord?id=CVE-2014-0074[CVE-2014-0074] was incomplete for `ActiveDirectoryRealm`, which still accepted an empty username and password as an anonymous LDAP bind.
 This allowed an unauthenticated user to log in with an empty principal.
-This issue affects Apache Shiro versions 1.2.3 through 3.0.1, only when `ActiveDirectoryRealm` is used without `principalSuffix` and the directory server allows anonymous binds.
+This issue affects all Apache Shiro versions through 3.0.1, only when `ActiveDirectoryRealm` is used without `principalSuffix` and the directory server allows anonymous binds.
 
 **Severity:** Medium
 
