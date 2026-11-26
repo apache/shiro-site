@@ -1,0 +1,55 @@
+////
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+////
+
+= Jakarta EE 11 no longer has an umbrella JAR
+:jbake-author: Lenny Primak
+:jbake-date: 2026-11-26 00:00:00
+:jbake-type: post
+:jbake-status: published
+:jbake-tags: blog, jakartaee
+:idprefix:
+:icons: font
+
+Jakarta EE 11 no longer has an umbrella JAR. Not smaller. Gone.
+
+Many Shiro users build Jakarta EE applications, and almost all of them start with the same dependency:
+
+[source,xml]
+----
+<dependency>
+    <groupId>jakarta.platform</groupId>
+    <artifactId>jakarta.jakartaee-api</artifactId>
+    <version>11.0.0</version>
+    <scope>provided</scope>
+</dependency>
+----
+
+In Jakarta EE 10, this pulled in a JAR with a copy of every API class in the platform, plus every specification JAR as a transitive dependency.
+Each class was on the classpath twice, which caused JPMS split packages, OSGi deployment issues and confusing duplicate classes.
+
+In Jakarta EE 11, `jakarta.jakartaee-api` is just a POM that lists the specification JARs:
+
+* One copy of each API class, no more split packages.
+* The Platform, Web Profile and Core Profile build on each other, as the specifications describe them.
+* No more `<type>pom</type>` workaround.
+
+And the best part: you do not need to change your build.
+
+Read the rest of the story, including why Maven Central still has a `jakarta.jakartaee-api` JAR with no classes in it, on foojay:
+https://foojay.io/today/jakarta-ee-11-umbrella-jar/[Jakarta EE 11 No Longer Has an Umbrella JAR].
